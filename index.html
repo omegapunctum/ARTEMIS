@@ -478,14 +478,10 @@
 
   // ── ПРОВЕРКА ВИДИМОСТИ ПО ВРЕМЕНИ ────────────────────────
   function visibleInTime(feature) {
-    const start    = parseInt(feature.date_start);
-    // Если date_end не задан — объект существует по сей день (конца нет)
-    const hasEnd   = feature.date_end != null && feature.date_end !== '';
-    const end      = hasEnd ? parseInt(feature.date_end) : Infinity;
-
+    const start = parseInt(feature.date_start);
     return state.rangeMode
-      ? start <= state.rangeTo && end >= state.rangeFrom
-      : state.currentYear >= start && state.currentYear <= end;
+      ? start <= state.rangeTo      // в диапазоне: построен до конца диапазона
+      : start <= state.currentYear; // одиночный год: уже построен
   }
 
   // ── ГЕНЕРАЦИЯ ПОЛИГОНА ОКРУЖНОСТИ ────────────────────────
@@ -528,8 +524,8 @@
       `;
 
       const dateStr = feature.date_end
-        ? `${feature.date_start} — ${feature.date_end}`
-        : `${feature.date_start} — по наст. время`;
+        ? `Построен: ${feature.date_start} — ${feature.date_end}`
+        : `Построен: ${feature.date_start}`;
 
       const popup = new maplibregl.Popup({ offset: 14, closeButton: true, maxWidth: '300px' })
         .setHTML(`
