@@ -433,28 +433,32 @@
     if (map.getLayer('routes-line')) map.removeLayer('routes-line');
     if (map.getSource('routes'))     map.removeSource('routes');
 
-    // Собираем точки маршрута по слоям
+    // Собираем точки маршрута по слоям — только видимые по времени
     const byLayer = {};
     state.features
       .filter(f =>
         state.activeLayerIds.has(f.layer_id) &&
         f.layer_type === 'route_point' &&
         f.longitude != null && f.latitude != null &&
-        f.sequence_order != null
+        f.sequence_order != null &&
+        routePointVisible(f)   // фильтр по шкале времени
       )
       .forEach(f => {
         (byLayer[f.layer_id] = byLayer[f.layer_id] || []).push(f);
       });
 
-    const features = Object.entries(byLayer).map(([layerId, pts]) => {
-      const sorted = pts.sort((a, b) => a.sequence_order - b.sequence_order);
-      const color  = (LAYERS_CONFIG.find(l => l.layer_id === layerId) || {}).color_hex || '#fff';
-      return {
-        type: 'Feature',
-        geometry: { type: 'LineString', coordinates: sorted.map(p => [p.longitude, p.latitude]) },
-        properties: { color }
-      };
-    });
+    // Линия строится только если есть минимум 2 точки
+    const features = Object.entries(byLayer)
+      .filter(([, pts]) => pts.length >= 2)
+      .map(([layerId, pts]) => {
+        const sorted = pts.sort((a, b) => a.sequence_order - b.sequence_order);
+        const color  = (LAYERS_CONFIG.find(l => l.layer_id === layerId) || {}).color_hex || '#fff';
+        return {
+          type: 'Feature',
+          geometry: { type: 'LineString', coordinates: sorted.map(p => [p.longitude, p.latitude]) },
+          properties: { color }
+        };
+      });
 
     if (!features.length) return;
 
@@ -464,6 +468,17 @@
       layout: { 'line-join': 'round', 'line-cap': 'round' },
       paint: { 'line-color': ['get','color'], 'line-width': 1.5, 'line-opacity': 0.5, 'line-dasharray': [2, 2] }
     });
+  }
+
+  // Точка маршрута видна если её date_start попадает в текущий временной срез
+  function routePointVisible(f) {
+    const start = parseInt(f.date_start);
+    if (state.rangeMode) {
+      // В режиме диапазона — точка внутри диапазона
+      return start >= state.rangeFrom && start <= state.rangeTo;
+    }
+    // В режиме одного года — все точки до текущего года включительно
+    return start <= state.currentYear;
   }
 
   // ── ШКАЛА — ОДИНОЧНЫЙ ГОД ────────────────────────────────
