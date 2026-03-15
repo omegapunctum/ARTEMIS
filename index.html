@@ -699,7 +699,8 @@
       // Данные для попапа
       const styleName  = layer ? layer.ru : f.layer_id;
       const builtStr   = f.date_start || '—';
-      const destroyStr = f.date_end   || null;
+      // date_end = реальная дата разрушения/утраты; пустое = существует до сих пор
+      const destroyStr = (f.date_end && f.date_end.toString().trim() !== '') ? f.date_end : null;
       const archStr    = f.architect  || null;
 
       // Изображение: referrerpolicy="no-referrer" решает проблему с блокировкой Wikimedia
