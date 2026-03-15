@@ -327,8 +327,22 @@
       letter-spacing: 1px;
       padding: 2px 7px;
       border-radius: 10px;
-      margin-bottom: 7px;
+      margin-bottom: 4px;
+      margin-right: 4px;
       font-weight: 700;
+    }
+    .pm-exists {
+      display: inline-block;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-bottom: 7px;
+      font-weight: 600;
+      background: rgba(58, 184, 122, 0.12);
+      color: #3ab87a;
+      border: 1px solid rgba(58, 184, 122, 0.25);
     }
     .popup-title {
       font-size: 14px;
@@ -584,20 +598,26 @@
   }
 
   // ── КОНВЕРТАЦИЯ ЗАПИСЕЙ ───────────────────────────────────
+  // Семантика дат:
+  //   date_start            = год начала строительства
+  //   date_construction_end = год завершения строительства (только для отображения)
+  //   date_end              = год разрушения/утраты (ПУСТО = объект существует до сих пор)
   function parse(records) {
     return records
-      // is_active хранится как строка "TRUE"/"FALSE"
       .filter(r => String(r.fields.is_active || '').toLowerCase() === 'true')
       .map(r => {
         const f = r.fields;
+        // date_end: пустая строка, null, undefined → объект существует, null в состоянии
+        const rawDestroyed = f.date_end && String(f.date_end).trim() !== '' ? String(f.date_end).trim() : null;
         return {
-          id:        r.id,
-          layer_id:  f.layer_id     || '',
-          name_ru:   f.name_ru      || '',
-          date_start: f.date_start  || null,
-          date_end:   f.date_end    || null,
-          lon:   f.longitude != null ? parseFloat(f.longitude) : null,
-          lat:   f.latitude  != null ? parseFloat(f.latitude)  : null,
+          id:                    r.id,
+          layer_id:              f.layer_id     || '',
+          name_ru:               f.name_ru      || '',
+          date_start:            f.date_start   || null,
+          date_construction_end: f.date_construction_end || null, // год завершения стройки (для попапа)
+          date_end:              rawDestroyed,                    // год разрушения или null
+          lon:      f.longitude != null ? parseFloat(f.longitude) : null,
+          lat:      f.latitude  != null ? parseFloat(f.latitude)  : null,
           radius:   f.influence_radius_km ? parseInt(f.influence_radius_km) : null,
           desc:     f.title_short   || '',
           architect:f.architect     || null,
@@ -697,11 +717,18 @@
       });
 
       // Данные для попапа
-      const styleName  = layer ? layer.ru : f.layer_id;
-      const builtStr   = f.date_start || '—';
-      // date_end = реальная дата разрушения/утраты; пустое = существует до сих пор
-      const destroyStr = (f.date_end && f.date_end.toString().trim() !== '') ? f.date_end : null;
-      const archStr    = f.architect  || null;
+      const styleName = layer ? layer.ru : f.layer_id;
+
+      // Строка периода строительства: "1344" или "1344 — 1929"
+      const builtStr = f.date_start
+        ? (f.date_construction_end && f.date_construction_end !== f.date_start
+            ? `${f.date_start} — ${f.date_construction_end}`
+            : f.date_start)
+        : '—';
+
+      // date_end = дата разрушения; пусто = существует сегодня
+      const destroyStr = f.date_end || null;
+      const archStr    = f.architect || null;
 
       // Изображение: referrerpolicy="no-referrer" решает проблему с блокировкой Wikimedia
       const imgTag = f.img
@@ -709,11 +736,14 @@
         : '';
 
       // Метаданные в попапе (только непустые строки)
+      const existsToday = !destroyStr
+        ? `<span class="pm-exists">существует сегодня</span>`
+        : '';
       const metaRows = [
-        ['Построен',   builtStr],
+        ['Построен',    builtStr],
         destroyStr ? ['Разрушен', destroyStr] : null,
         archStr    ? ['Архитектор', archStr]  : null,
-        ['Стиль',    styleName],
+        ['Стиль',      styleName],
       ].filter(Boolean).map(([k,v]) =>
         `<span class="pm-k">${k}</span><span class="pm-v">${v}</span>`
       ).join('');
@@ -723,6 +753,7 @@
           ${imgTag}
           <div class="popup-body">
             <span class="popup-badge" style="background:${color}22;color:${color}">${styleName}</span>
+            ${existsToday}
             <div class="popup-title">${f.name_ru}</div>
             <div class="popup-meta">${metaRows}</div>
             ${f.desc ? `<div class="popup-desc">${f.desc}</div>` : ''}
