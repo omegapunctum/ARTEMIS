@@ -1,75 +1,453 @@
-import requests
+#!/usr/bin/env python3
+"""
+Экспорт таблицы Airtable (обычно Features) в локальные JSON/GeoJSON файлы.
+
+Пример запуска:
+  AIRTABLE_TOKEN=pat_xxx AIRTABLE_BASE=appHmf8ubeUF9 AIRTABLE_TABLE=Features \
+  python3 scripts/export_airtable.py --out-dir data
+
+Переменные окружения:
+  - AIRTABLE_TOKEN: персональный токен Airtable (Bearer)
+  - AIRTABLE_BASE: ID базы Airtable (например appHmf8ubeUF9)
+  - AIRTABLE_TABLE: имя таблицы (например Features)
+
+Выходные файлы:
+  - data/features.json        : сырые записи Airtable (records)
+  - data/features.geojson     : GeoJSON FeatureCollection
+  - data/layers.json          : агрегированные метаданные слоёв
+  - data/export_errors.log    : ошибки в формате JSON Lines
+
+Если нет обязательных переменных/параметров для API, скрипт автоматически переходит
+в dry-run режим: читает tests/sample_airtable_response.json (если существует) и пишет
+выход в data/_test_*.json.
+"""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import importlib.util
 import json
 import os
+import re
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-BASE_ID = os.environ["AIRTABLE_BASE"]
-TABLE_ID = os.environ["AIRTABLE_TABLE"]
-TOKEN = os.environ["AIRTABLE_TOKEN"]
+# Установка зависимости: pip install requests
+REQUESTS_AVAILABLE = importlib.util.find_spec("requests") is not None
+if REQUESTS_AVAILABLE:
+    import requests
+else:
+    requests = None  # type: ignore[assignment]
 
-url = f"https://api.airtable.com/v0/{BASE_ID}/{TABLE_ID}"
+DATE_RE = re.compile(r"^-?\d{4}(?:-\d{2}-\d{2})?$")
+TRUE_SET = {True, 1, "1", "true", "yes", "y", "да"}
+FALSE_SET = {False, 0, "0", "false", "no", "n", "нет"}
 
-headers = {
-    "Authorization": f"Bearer {TOKEN}"
-}
 
-records = []
-offset = None
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Экспорт данных Features из Airtable")
+    parser.add_argument("--base", help="Airtable base id (или AIRTABLE_BASE)")
+    parser.add_argument("--table", help="Airtable table name (или AIRTABLE_TABLE)")
+    parser.add_argument("--out-dir", default="data", help="Каталог для выходных файлов (по умолчанию: data)")
+    parser.add_argument("--dry-run", action="store_true", help="Не ходить в сеть, читать локальный sample JSON")
+    parser.add_argument("--max-records", type=int, default=None, help="Ограничить число записей (для тестирования)")
+    parser.add_argument("--commit", action="store_true", help="После экспорта выполнить git add/commit")
+    parser.add_argument("--self-test", action="store_true", help="Запустить минимальную самопроверку и выйти")
+    return parser.parse_args()
 
-while True:
-    params = {}
-    if offset:
-        params["offset"] = offset
 
-    r = requests.get(url, headers=headers, params=params)
-    data = r.json()
+def log_error(error_log_path: Path, payload: Dict[str, Any]) -> None:
+    """Пишем ошибку в JSON Lines файл, не прерывая основной процесс."""
+    try:
+        error_log_path.parent.mkdir(parents=True, exist_ok=True)
+        with error_log_path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    except Exception as exc:  # noqa: BLE001
+        print(f"Не удалось записать ошибку в лог: {exc}", file=sys.stderr)
 
-    records.extend(data["records"])
-    offset = data.get("offset")
 
-    if not offset:
-        break
+def to_date_or_none(value: Any, record_id: str, field: str, errors: List[Dict[str, Any]]) -> Optional[str]:
+    if value in (None, ""):
+        return None
+    value_str = str(value).strip()
+    if DATE_RE.match(value_str):
+        return value_str
+    errors.append({"record_id": record_id, "field": field, "error": f"invalid date: {value}"})
+    return None
 
-features = []
 
-for r in records:
-    f = r["fields"]
+def to_float_or_none(value: Any, record_id: str, field: str, errors: List[Dict[str, Any]]) -> Optional[float]:
+    if value in (None, ""):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        errors.append({"record_id": record_id, "field": field, "error": f"invalid float: {value}"})
+        return None
 
-    if str(f.get("is_active", "")).lower() != "true":
-        continue
 
-    lon = f.get("longitude")
-    lat = f.get("latitude")
+def to_int_or_none(value: Any, record_id: str, field: str, errors: List[Dict[str, Any]]) -> Optional[int]:
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        errors.append({"record_id": record_id, "field": field, "error": f"invalid int: {value}"})
+        return None
 
-    if lon is None or lat is None:
-        continue
 
-    features.append({
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [lon, lat]
+def to_bool_or_none(value: Any, record_id: str, field: str, errors: List[Dict[str, Any]]) -> Optional[bool]:
+    if value in (None, ""):
+        return None
+    normalized = value.strip().lower() if isinstance(value, str) else value
+    if normalized in TRUE_SET:
+        return True
+    if normalized in FALSE_SET:
+        return False
+    errors.append({"record_id": record_id, "field": field, "error": f"invalid bool: {value}"})
+    return None
+
+
+def to_tags(value: Any) -> List[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        tags = [str(v).strip().lower() for v in value if str(v).strip()]
+        return tags
+    if isinstance(value, str):
+        return [chunk.strip().lower() for chunk in value.split(",") if chunk.strip()]
+    return []
+
+
+def safe_str(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text if text else None
+
+
+def map_record(record: Dict[str, Any], errors: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Преобразование записи Airtable в нормализованную структуру properties."""
+    record_id = record.get("id", "")
+    fields = record.get("fields", {}) or {}
+
+    mapped = {
+        "id": record_id,
+        "layer_id": safe_str(fields.get("layer_id")),
+        "layer_type": safe_str(fields.get("layer_type")),
+        "name_ru": safe_str(fields.get("name_ru")),
+        "name_en": safe_str(fields.get("name_en")),
+        "date_start": to_date_or_none(fields.get("date_start"), record_id, "date_start", errors),
+        "date_construction_end": to_date_or_none(
+            fields.get("date_construction_end"), record_id, "date_construction_end", errors
+        ),
+        "date_end": to_date_or_none(fields.get("date_end"), record_id, "date_end", errors),
+        "longitude": to_float_or_none(fields.get("longitude"), record_id, "longitude", errors),
+        "latitude": to_float_or_none(fields.get("latitude"), record_id, "latitude", errors),
+        "influence_radius_km": to_int_or_none(
+            fields.get("influence_radius_km"), record_id, "influence_radius_km", errors
+        ),
+        "title_short": safe_str(fields.get("title_short")),
+        "description": safe_str(fields.get("description")),
+        "image_url": safe_str(fields.get("image_url")),
+        "source_url": safe_str(fields.get("source_url")),
+        "source_license": safe_str(fields.get("source_license")),
+        "tags": to_tags(fields.get("tags")),
+        "is_active": to_bool_or_none(fields.get("is_active"), record_id, "is_active", errors),
+        # Доп. поля для слоёв (если в таблице присутствуют)
+        "layer_name_ru": safe_str(fields.get("layer_name_ru") or fields.get("layer_name")),
+        "layer_color_hex": safe_str(fields.get("layer_color_hex") or fields.get("color_hex")),
+        "layer_icon": safe_str(fields.get("layer_icon") or fields.get("icon")),
+    }
+    return mapped
+
+
+def airtable_get_with_retry(
+    session: requests.Session,
+    url: str,
+    headers: Dict[str, str],
+    params: Dict[str, Any],
+    max_retries_429: int = 5,
+) -> requests.Response:
+    """GET с обработкой 429 (экспоненциальный бэкофф) и сетевых ошибок."""
+    backoff = 30
+    attempts_429 = 0
+
+    while True:
+        try:
+            resp = session.get(url, headers=headers, params=params, timeout=30)
+        except requests.RequestException as exc:
+            raise RuntimeError(f"Сетевая ошибка при запросе к Airtable: {exc}") from exc
+
+        if resp.status_code == 429:
+            attempts_429 += 1
+            if attempts_429 > max_retries_429:
+                raise RuntimeError("Превышено число ретраев после 429 (rate limit)")
+            print(f"Получен 429, ждём {backoff}s и повторяем ({attempts_429}/{max_retries_429})...")
+            time.sleep(backoff)
+            backoff *= 2
+            continue
+
+        return resp
+
+
+def fetch_airtable_records(
+    token: str,
+    base: str,
+    table: str,
+    max_records: Optional[int],
+) -> List[Dict[str, Any]]:
+    """Чтение всех страниц Airtable по offset (pageSize=100)."""
+    url = f"https://api.airtable.com/v0/{base}/{table}"
+    headers = {"Authorization": f"Bearer {token}"}
+    records: List[Dict[str, Any]] = []
+    offset: Optional[str] = None
+    page_no = 0
+
+    with requests.Session() as session:
+        while True:
+            params: Dict[str, Any] = {"pageSize": 100}
+            if offset:
+                params["offset"] = offset
+
+            resp = airtable_get_with_retry(session, url, headers, params)
+            if resp.status_code in (401, 403):
+                raise PermissionError("Ошибка авторизации Airtable (401/403). Проверьте AIRTABLE_TOKEN и права доступа.")
+            if resp.status_code >= 400:
+                raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:500]}")
+
+            try:
+                payload = resp.json()
+            except ValueError as exc:
+                raise RuntimeError(f"Некорректный JSON в ответе Airtable: {exc}") from exc
+
+            page_records = payload.get("records", [])
+            page_no += 1
+            records.extend(page_records)
+            print(f"Страница {page_no}: +{len(page_records)} записей (всего: {len(records)})")
+
+            if max_records is not None and len(records) >= max_records:
+                return records[:max_records]
+
+            offset = payload.get("offset")
+            if not offset:
+                break
+
+            # Соблюдение лимита Airtable: до 5 req/s
+            time.sleep(0.25)
+
+    return records
+
+
+def load_sample_records(sample_file: Path) -> List[Dict[str, Any]]:
+    if not sample_file.exists():
+        print(f"Dry-run: файл {sample_file} не найден, используем пустой набор.")
+        return []
+    with sample_file.open("r", encoding="utf-8") as f:
+        payload = json.load(f)
+    if isinstance(payload, dict) and "records" in payload:
+        return payload.get("records", [])
+    if isinstance(payload, list):
+        return payload
+    raise ValueError("Некорректный формат sample JSON: ожидается {records: [...]} или [...]")
+
+
+def build_geojson_features(mapped_records: Iterable[Dict[str, Any]]) -> Dict[str, Any]:
+    features = []
+    for m in mapped_records:
+        lon = m.get("longitude")
+        lat = m.get("latitude")
+        geometry = {"type": "Point", "coordinates": [lon, lat]} if lon is not None and lat is not None else None
+
+        features.append(
+            {
+                "type": "Feature",
+                "id": m.get("id"),
+                "geometry": geometry,
+                "properties": {
+                    "id": m.get("id"),
+                    "layer_id": m.get("layer_id"),
+                    "layer_type": m.get("layer_type"),
+                    "name_ru": m.get("name_ru"),
+                    "name_en": m.get("name_en"),
+                    "date_start": m.get("date_start"),
+                    "date_construction_end": m.get("date_construction_end"),
+                    "date_end": m.get("date_end"),
+                    "longitude": m.get("longitude"),
+                    "latitude": m.get("latitude"),
+                    "radius_km": m.get("influence_radius_km"),
+                    "title_short": m.get("title_short"),
+                    "description": m.get("description"),
+                    "image_url": m.get("image_url"),
+                    "source_url": m.get("source_url"),
+                    "source_license": m.get("source_license"),
+                    "tags": m.get("tags"),
+                    "is_active": m.get("is_active"),
+                },
+            }
+        )
+    return {"type": "FeatureCollection", "features": features}
+
+
+def build_layers(mapped_records: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    by_layer: Dict[str, Dict[str, Any]] = {}
+    for m in mapped_records:
+        lid = m.get("layer_id")
+        if not lid:
+            continue
+        if lid not in by_layer:
+            by_layer[lid] = {
+                "id": lid,
+                "name_ru": m.get("layer_name_ru") or lid,
+                "color_hex": m.get("layer_color_hex"),
+                "icon": m.get("layer_icon"),
+                "is_enabled": True,
+            }
+    return [by_layer[k] for k in sorted(by_layer.keys())]
+
+
+def write_json(path: Path, data: Any) -> None:
+    """Безопасная сериализация JSON в файл."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    tmp.replace(path)
+
+
+def maybe_commit(paths: List[Path], records_count: int) -> None:
+    message = f"Export Airtable: {dt.date.today().isoformat()} {records_count} records"
+    existing = [str(p) for p in paths if p.exists()]
+    if not existing:
+        return
+    try:
+        subprocess.run(["git", "add", *existing], check=True)
+        subprocess.run(["git", "commit", "-m", message], check=True)
+        print(f"Создан git commit: {message}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"Флаг --commit указан, но git commit не выполнен: {exc}", file=sys.stderr)
+
+
+def run_self_test() -> int:
+    errors: List[Dict[str, Any]] = []
+    sample = {
+        "id": "recTEST",
+        "fields": {
+            "layer_id": "history",
+            "layer_type": "timeline",
+            "name_ru": "Тест",
+            "date_start": "-0753",
+            "longitude": "37.6173",
+            "latitude": "55.7558",
+            "influence_radius_km": "12",
+            "tags": "A, b ,C",
+            "is_active": "true",
         },
-        "properties": {
-            "id": r["id"],
-            "name": f.get("name_ru"),
-            "layer": f.get("layer_id"),
-            "start": f.get("date_start"),
-            "end": f.get("date_end"),
-            "radius": f.get("influence_radius_km"),
-            "desc": f.get("title_short"),
-            "architect": f.get("architect"),
-            "img": f.get("image_url"),
-            "src": f.get("source_url"),
-            "tags": f.get("tags")
-        }
-    })
+    }
+    m = map_record(sample, errors)
+    assert m["date_start"] == "-0753"
+    assert m["tags"] == ["a", "b", "c"]
+    assert m["is_active"] is True
+    assert m["influence_radius_km"] == 12
+    assert not errors
+    print("Self-test OK")
+    return 0
 
-geojson = {
-    "type": "FeatureCollection",
-    "features": features
-}
 
-os.makedirs("data", exist_ok=True)
+def main() -> int:
+    args = parse_args()
 
-with open("data/features.geojson", "w", encoding="utf-8") as f:
-    json.dump(geojson, f, ensure_ascii=False, indent=2)
+    if args.self_test:
+        return run_self_test()
+
+    token = os.getenv("AIRTABLE_TOKEN")
+    base = args.base or os.getenv("AIRTABLE_BASE")
+    table = args.table or os.getenv("AIRTABLE_TABLE")
+
+    dry_run = bool(args.dry_run)
+    if not dry_run and (not token or not base or not table):
+        dry_run = True
+        print("Не заданы AIRTABLE_TOKEN/AIRTABLE_BASE/AIRTABLE_TABLE — включён dry-run.")
+
+    if not dry_run and not REQUESTS_AVAILABLE:
+        print("Не найден модуль 'requests'. Установите его: pip install requests", file=sys.stderr)
+        return 1
+
+    out_dir = Path(args.out_dir)
+    sample_file = Path("tests/sample_airtable_response.json")
+
+    # В dry-run пишем в _test_* файлы, чтобы не затирать рабочие данные.
+    prefix = "_test_" if dry_run else ""
+    raw_path = out_dir / f"{prefix}features.json"
+    geojson_path = out_dir / f"{prefix}features.geojson"
+    layers_path = out_dir / f"{prefix}layers.json"
+    error_log_path = out_dir / f"{prefix}export_errors.log"
+
+    records: List[Dict[str, Any]]
+    try:
+        if dry_run:
+            records = load_sample_records(sample_file)
+            if args.max_records is not None:
+                records = records[: args.max_records]
+            print(f"Dry-run: загружено {len(records)} записей из локального sample.")
+        else:
+            assert token is not None and base is not None and table is not None
+            records = fetch_airtable_records(token, base, table, args.max_records)
+    except PermissionError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    except RuntimeError as exc:
+        print(f"Критическая ошибка: {exc}", file=sys.stderr)
+        return 1
+    except Exception as exc:  # noqa: BLE001
+        print(f"Непредвиденная ошибка: {exc}", file=sys.stderr)
+        return 1
+
+    errors: List[Dict[str, Any]] = []
+    mapped_records = [map_record(r, errors) for r in records]
+
+    geojson = build_geojson_features(mapped_records)
+    layers = build_layers(mapped_records)
+
+    try:
+        write_json(raw_path, records)
+        write_json(geojson_path, geojson)
+        write_json(layers_path, layers)
+
+        # Перезаписываем лог ошибок на каждый запуск
+        if error_log_path.exists():
+            error_log_path.unlink()
+        for err in errors:
+            log_error(error_log_path, err)
+    except Exception as exc:  # noqa: BLE001
+        print(f"Критическая ошибка сериализации/записи: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"Успешно: {len(mapped_records)} | Ошибок: {len(errors)}")
+
+    if args.commit:
+        maybe_commit([raw_path, geojson_path, layers_path, error_log_path], len(mapped_records))
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+# --- Пример запуска ---
+# AIRTABLE_TOKEN=pat_xxx AIRTABLE_BASE=appHmf8ubeUF9 AIRTABLE_TABLE=Features python3 scripts/export_airtable.py
+# python3 scripts/export_airtable.py --dry-run --out-dir data --max-records 20
+#
+# --- Чеклист после запуска ---
+# 1) Созданы файлы data/features.json, data/features.geojson, data/layers.json (или data/_test_* в dry-run).
+# 2) В data/*export_errors.log есть JSON Lines с ошибками валидации (если были).
+# 3) features.geojson имеет type=FeatureCollection и корректный массив features.
+# 4) Количество записей в features.json совпадает с количеством features в features.geojson.
+#
+# Пример строки вывода:
+# Успешно: N | Ошибок: M
