@@ -27,6 +27,11 @@
       <ul id="drafts-list"></ul>
     </section>
 
+    <section id="moderation-panel" hidden>
+      <h3>Moderation</h3>
+      <div id="moderation-list"></div>
+    </section>
+
     <section class="filters-panel" aria-label="Фильтры">
       <label for="search-input">Поиск по названию</label>
       <input id="search-input" type="search" placeholder="Введите название" autocomplete="off" />
@@ -117,6 +122,7 @@
     import { initUI } from './js/ui.js';
     import { refreshToken } from './js/auth.js';
     import { initUGCUI } from './js/ui.ugc.js';
+    import { initModerationUI } from './js/ui.moderation.js';
 
     const statusMessage = document.getElementById('status-message');
     const statusError = document.getElementById('status-error');
@@ -147,6 +153,7 @@
       setStatus('Инициализация интерфейса…', { loading: true });
       const uiState = await initUI(map, features);
       await initUGCUI();
+      await initModerationUI();
 
       const foundCount = uiState?.getVisibleCounts?.().listCount ?? features.features?.length ?? 0;
       const mapCount = uiState?.getVisibleCounts?.().mapCount ?? 0;

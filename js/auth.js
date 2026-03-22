@@ -1,8 +1,31 @@
 let accessToken = null;
 let refreshPromise = null;
 
+function notifyAuthChanged() {
+  window.dispatchEvent(new CustomEvent('artemis:auth-changed', { detail: getCurrentUser() }));
+}
+
+
 function authRequired() {
   window.dispatchEvent(new CustomEvent('artemis:auth-required'));
+}
+
+function parseTokenClaims(token) {
+  try {
+    const [, payload] = String(token || '').split('.');
+    if (!payload) return {};
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
+    return JSON.parse(atob(padded));
+  } catch (_error) {
+    return {};
+  }
+}
+
+function normalizeRoles(claims) {
+  if (Array.isArray(claims?.roles)) return claims.roles.map((role) => String(role));
+  if (typeof claims?.role === 'string' && claims.role) return [claims.role];
+  return [];
 }
 
 function withAuthHeaders(headers = {}) {
@@ -18,11 +41,13 @@ async function parseAccessToken(response) {
   const token = data?.access_token ?? data?.accessToken ?? null;
   if (!token) throw new Error('Access token missing');
   accessToken = token;
+  notifyAuthChanged();
   return data;
 }
 
 export function setAccessToken(token) {
   accessToken = token || null;
+  notifyAuthChanged();
 }
 
 export function getAccessToken() {
@@ -31,10 +56,23 @@ export function getAccessToken() {
 
 export function clearAuth() {
   accessToken = null;
+  notifyAuthChanged();
 }
 
 export function getCurrentUser() {
-  return accessToken ? { accessToken } : null;
+  if (!accessToken) return null;
+
+  const claims = parseTokenClaims(accessToken);
+  const roles = normalizeRoles(claims);
+  const role = typeof claims?.role === 'string' ? claims.role : (roles[0] || null);
+
+  return {
+    accessToken,
+    ...claims,
+    role,
+    roles,
+    isAdmin: role === 'admin' || roles.includes('admin')
+  };
 }
 
 export async function login(email, password) {
