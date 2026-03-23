@@ -136,9 +136,8 @@ python -m http.server
 
 ---
 
-### Project structure
+## Project structure
 
-```text
 .
 ├── index.html
 ├── css/
