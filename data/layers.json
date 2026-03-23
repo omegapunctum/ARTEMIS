@@ -1,0 +1,79 @@
+[
+  {
+    "id": "ancient_architecture",
+    "name_ru": "ancient_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "baroque_architecture",
+    "name_ru": "baroque_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "byzantine_architecture",
+    "name_ru": "byzantine_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "classicism",
+    "name_ru": "classicism",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "gothic_architecture",
+    "name_ru": "gothic_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "islamic_architecture",
+    "name_ru": "islamic_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "medieval_architecture",
+    "name_ru": "medieval_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "modern_architecture",
+    "name_ru": "modern_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "mughal_architecture",
+    "name_ru": "mughal_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "renaissance_architecture",
+    "name_ru": "renaissance_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  },
+  {
+    "id": "romanesque_architecture",
+    "name_ru": "romanesque_architecture",
+    "color_hex": "#999999",
+    "icon": null,
+    "is_enabled": true
+  }
+]
