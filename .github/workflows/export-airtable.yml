@@ -29,8 +29,8 @@ jobs:
 
       - name: Run Airtable export
         env:
-          AIRTABLE_TOKEN: AIRTABLE_TOKEN
-          AIRTABLE_BASE: AIRTABLE_BASE
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+          AIRTABLE_BASE: ${{ secrets.AIRTABLE_BASE }}
           AIRTABLE_TABLE: Features
         run: |
           set -euo pipefail
