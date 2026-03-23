@@ -448,7 +448,7 @@ def build_geojson_features(mapped_records: Iterable[Dict[str, Any]], warnings: L
                 add_issue(errors, "critical", m.get("id") or "<missing>", "invalid coordinates, skipped in geojson", "geometry")
                 continue
                 
-            geometry = { "type": "Point", "coordinates": [lon, lat] }
+            geometry = {"type": "Point", "coordinates": [lon, lat]}
     
         features.append(
             {
