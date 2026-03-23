@@ -670,9 +670,9 @@ def main() -> int:
     if args.self_test:
         return run_self_test()
 
-    AIRTABLE_TOKEN = os.getenv("AIRTABLE_TOKEN")
-    AIRTABLE_BASE = args.base or os.getenv("AIRTABLE_BASE")
-    AIRTABLE_TABLE = args.table or os.getenv("AIRTABLE_TABLE")
+    token = os.getenv("AIRTABLE_TOKEN")
+    base = args.base or os.getenv("AIRTABLE_BASE")
+    table = args.table or os.getenv("AIRTABLE_TABLE")
 
     dry_run = bool(args.dry_run)
     if not dry_run and (not token or not base or not table):
