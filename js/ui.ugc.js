@@ -521,7 +521,8 @@ function syncAuthUI(els) {
 function bindModalClosers(els) {
   [els.loginModal, els.draftModal].forEach((modal) => {
     modal.addEventListener('click', (event) => {
-      if (event.target === modal || event.target.matches('[data-close-modal]')) {
+      const closeBtn = event.target.closest?.('[data-close-modal]');
+      if (event.target === modal || closeBtn) {
         closeModal(modal);
       }
     });
