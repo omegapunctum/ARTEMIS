@@ -53,7 +53,7 @@ HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 TRUE_SET = {True, 1, "1", "true", "yes", "y", "да"}
 FALSE_SET = {False, 0, "0", "false", "no", "n", "нет"}
 ALLOWED_LICENSES = {"CC0", "CC BY", "CC BY-SA", "PD"}
-ALLOWED_COORDINATES_CONFIDENCE = {"ТОЧНО", "ПРИБЛИЗИТЕЛЬНО±Nкм", "УСЛОВНО"}
+ALLOWED_COORDINATES_CONFIDENCE = {"EXACT", "APPROXIMATELY", "CONDITIONAL"}
 ALLOWED_LAYER_TYPES = {"architecture", "route_point", "biogeography", "biography"}
 
 
@@ -288,10 +288,9 @@ def map_record(record: Dict[str, Any], errors: List[Dict[str, Any]]) -> Dict[str
 
     longitude = validate_coordinate_range(longitude, -180.0, 180.0, record_id, "longitude", errors)
     latitude = validate_coordinate_range(latitude, -90.0, 90.0, record_id, "latitude", errors)
-    source_url = safe_str(fields.get("source_url"))
-    if source_url is None:
-        errors.append({"record_id": record_id, "field": "source_url", "warning": "missing source_url", "value": None})
-
+    if not mapped.get("source_url"):
+    warning("source_url", "missing source_url")
+    
     mapped = {
         "id": record_id,
         "layer_id": safe_str(fields.get("layer_id")),
@@ -420,7 +419,7 @@ def generate_mock_records() -> List[Dict[str, Any]]:
                 "tags": "test",
                 "is_active_bool": True,
                 "source_license": "CC BY",
-                "coordinates_confidence": "ТОЧНО",
+                "coordinates_confidence": "EXACT",
                 "source_url": "https://example.com/source",
                 "coordinates_source": "Wikipedia",
                 "sequence_order": 1,
@@ -510,7 +509,7 @@ def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List
     if not mapped.get("name_ru"):
         critical("name_ru", "missing name_ru")
     if not mapped.get("source_url"):
-        critical("source_url", "missing source_url")
+        warning("source_url", "missing source_url")
     if mapped.get("latitude") is not None and not (-90 <= mapped["latitude"] <= 90):
         critical("latitude", "latitude out of range")
     if mapped.get("longitude") is not None and not (-180 <= mapped["longitude"] <= 180):
@@ -747,9 +746,9 @@ def main() -> int:
     skipped_inactive = 0
     for record in records:
         mapped = map_record(record, warnings)
-        if not mapped.get("is_active") and not args.include_inactive:
-            skipped_inactive += 1
-            continue
+        if mapped.get("is_active") is False and not args.include_inactive:
+             skipped_inactive += 1
+             continue
         candidate_records.append(mapped)
 
     layers = build_layers(candidate_records, warnings)
