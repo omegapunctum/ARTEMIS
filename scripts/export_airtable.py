@@ -53,7 +53,7 @@ HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 TRUE_SET = {True, 1, "1", "true", "yes", "y", "да"}
 FALSE_SET = {False, 0, "0", "false", "no", "n", "нет"}
 ALLOWED_LICENSES = {"CC0", "CC BY", "CC BY-SA", "PD"}
-ALLOWED_COORDINATES_CONFIDENCE = {"EXACT", "APPROXIMATELY", "CONDITIONAL"}
+ALLOWED_COORDINATES_CONFIDENCE = {"EXACT", "APPROXIMATELY±Nkm", "CONDITIONAL"}
 ALLOWED_LAYER_TYPES = {"architecture", "route_point", "biogeography", "biography"}
 
 
@@ -291,7 +291,7 @@ def map_record(record: Dict[str, Any], errors: List[Dict[str, Any]]) -> Dict[str
     source_url = safe_str(fields.get("source_url"))
     if source_url is None:
         errors.append({"record_id": record_id, "field": "source_url", "warning": "missing source_url", "value": None})
-    
+        
     mapped = {
         "id": record_id,
         "layer_id": safe_str(fields.get("layer_id")),
@@ -747,9 +747,9 @@ def main() -> int:
     skipped_inactive = 0
     for record in records:
         mapped = map_record(record, warnings)
-        if mapped.get("is_active") is False and not args.include_inactive:
-             skipped_inactive += 1
-             continue
+        if not mapped.get("is_active") and not args.include_inactive:
+            skipped_inactive += 1
+            continue
         candidate_records.append(mapped)
 
     layers = build_layers(candidate_records, warnings)
