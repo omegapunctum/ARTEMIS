@@ -143,18 +143,17 @@ function loadGeoJSON(map, featureCollection) {
     });
   }
 
-  map.addLayer({
+  const pointLayer = {
     id: LAYER_ID,
     type: 'circle',
     source: SOURCE_ID,
-    filter: shouldCluster ? ['!', ['has', 'point_count']] : undefined,
     paint: {
-      'circle-radius': 6,
+      'circle-radius': 7,
       'circle-color': '#2563eb',
       'circle-stroke-color': '#ffffff',
-      'circle-stroke-width': 1
+      'circle-stroke-width': 2
     }
-  });
+  };
 }
 
 function bindPopupHandlers(map) {
