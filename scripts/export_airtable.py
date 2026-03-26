@@ -749,7 +749,7 @@ def main() -> int:
         mapped = map_record(record, warnings)
         if mapped.get("is_active") is False and not args.include_inactive:
             skipped_inactive += 1
-            continue
+                continue
         candidate_records.append(mapped)
 
     layers = build_layers(candidate_records, warnings)
