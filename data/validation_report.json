@@ -1,9 +1,9 @@
 {
   "total_records": 244,
-  "valid_records": 240,
-  "skipped_records": 4,
+  "valid_records": 0,
+  "skipped_records": 244,
   "warnings_count": 1434,
-  "errors_count": 4,
+  "errors_count": 244,
   "warnings": [
     {
       "record_id": "rec0NKPnOP37pAzhn",
@@ -33,7 +33,7 @@
       "record_id": "rec0NKPnOP37pAzhn",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec0NKPnOP37pAzhn",
@@ -69,7 +69,7 @@
       "record_id": "rec0ROnkEtbnhvq5j",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec0f7j6tjzOOFSSx",
@@ -99,7 +99,7 @@
       "record_id": "rec0f7j6tjzOOFSSx",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec0tThK5GUoUijbM",
@@ -129,7 +129,7 @@
       "record_id": "rec0tThK5GUoUijbM",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec0tbySJLPLUgM7D",
@@ -159,7 +159,7 @@
       "record_id": "rec0tbySJLPLUgM7D",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec18BV4mzvmfeHXH",
@@ -189,7 +189,7 @@
       "record_id": "rec18BV4mzvmfeHXH",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec1GrmHA5SeFTlHy",
@@ -219,7 +219,7 @@
       "record_id": "rec1GrmHA5SeFTlHy",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec1It3yUpd9oacQ2",
@@ -249,7 +249,7 @@
       "record_id": "rec1It3yUpd9oacQ2",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec1K7VBOKElfQBe5",
@@ -279,7 +279,7 @@
       "record_id": "rec1K7VBOKElfQBe5",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec1QS1km3J2sdqql",
@@ -309,7 +309,7 @@
       "record_id": "rec1QS1km3J2sdqql",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec1RQwUh3gm5QURN",
@@ -339,7 +339,7 @@
       "record_id": "rec1RQwUh3gm5QURN",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec1RQwUh3gm5QURN",
@@ -375,7 +375,7 @@
       "record_id": "rec1dT3ubwAwsh6Dq",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec2BrE7KvYE9e818",
@@ -405,7 +405,7 @@
       "record_id": "rec2BrE7KvYE9e818",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec2REHt1Bb1E1V46",
@@ -435,7 +435,7 @@
       "record_id": "rec2REHt1Bb1E1V46",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec2iHcqFui57lxcg",
@@ -465,7 +465,7 @@
       "record_id": "rec2iHcqFui57lxcg",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec3Ni4VSwSTOE6Tf",
@@ -495,7 +495,7 @@
       "record_id": "rec3Ni4VSwSTOE6Tf",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec3zu0PFJliyYSw3",
@@ -525,7 +525,7 @@
       "record_id": "rec3zu0PFJliyYSw3",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec4Sd5VbTPC3dC2b",
@@ -555,7 +555,7 @@
       "record_id": "rec4Sd5VbTPC3dC2b",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec4aKxckDkLNdJTc",
@@ -585,7 +585,7 @@
       "record_id": "rec4aKxckDkLNdJTc",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec4gbJ1YBUua60CR",
@@ -615,7 +615,7 @@
       "record_id": "rec4gbJ1YBUua60CR",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec4sbs6Wg8JO4Vzp",
@@ -645,7 +645,7 @@
       "record_id": "rec4sbs6Wg8JO4Vzp",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec55DNu9Gzo8tqM7",
@@ -675,7 +675,7 @@
       "record_id": "rec55DNu9Gzo8tqM7",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec5HxHJVvS4AWLE0",
@@ -705,7 +705,7 @@
       "record_id": "rec5HxHJVvS4AWLE0",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec5IEqaHblvfyV0v",
@@ -735,7 +735,7 @@
       "record_id": "rec5IEqaHblvfyV0v",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec5eLRQBYiR0Cr5W",
@@ -765,7 +765,7 @@
       "record_id": "rec5eLRQBYiR0Cr5W",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec5fhzye74VFo3QU",
@@ -795,7 +795,7 @@
       "record_id": "rec5fhzye74VFo3QU",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec5fhzye74VFo3QU",
@@ -831,7 +831,7 @@
       "record_id": "rec6NLYM8A4VBLius",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec6SX0uLvy3YuTCJ",
@@ -861,7 +861,7 @@
       "record_id": "rec6SX0uLvy3YuTCJ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec6SX0uLvy3YuTCJ",
@@ -897,7 +897,7 @@
       "record_id": "rec6evqXlC5yjLshI",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec6hFBIbqqEWUmY4",
@@ -927,7 +927,7 @@
       "record_id": "rec6hFBIbqqEWUmY4",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec6phbkzL0M7e16L",
@@ -957,7 +957,7 @@
       "record_id": "rec6phbkzL0M7e16L",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec7FPxnP6VbgpgJh",
@@ -987,7 +987,7 @@
       "record_id": "rec7FPxnP6VbgpgJh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec7NlPSpaEk2SYK8",
@@ -1017,7 +1017,7 @@
       "record_id": "rec7NlPSpaEk2SYK8",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec7j9rx9dJq1QKQh",
@@ -1047,7 +1047,7 @@
       "record_id": "rec7j9rx9dJq1QKQh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec89ozpfE4FonQgM",
@@ -1077,7 +1077,7 @@
       "record_id": "rec89ozpfE4FonQgM",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec8IEhudMIDVJFvF",
@@ -1107,7 +1107,7 @@
       "record_id": "rec8IEhudMIDVJFvF",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec8d3SeZIeGrCfz9",
@@ -1137,7 +1137,7 @@
       "record_id": "rec8d3SeZIeGrCfz9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec8kKQuf7gAcB5wZ",
@@ -1167,7 +1167,7 @@
       "record_id": "rec8kKQuf7gAcB5wZ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec99jKFoZT1cIfpW",
@@ -1197,7 +1197,7 @@
       "record_id": "rec99jKFoZT1cIfpW",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec9XzSznh8aKaTim",
@@ -1227,7 +1227,7 @@
       "record_id": "rec9XzSznh8aKaTim",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rec9XzSznh8aKaTim",
@@ -1263,7 +1263,7 @@
       "record_id": "rec9aKp73EfutUXzi",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recAKMDVbsB2AUoGn",
@@ -1293,7 +1293,7 @@
       "record_id": "recAKMDVbsB2AUoGn",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recAX7cpyzXGXSZvh",
@@ -1323,7 +1323,7 @@
       "record_id": "recAX7cpyzXGXSZvh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recAgIfrjVOVIh1tO",
@@ -1353,7 +1353,7 @@
       "record_id": "recAgIfrjVOVIh1tO",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recAh3gRsAV5mYUzm",
@@ -1383,7 +1383,7 @@
       "record_id": "recAh3gRsAV5mYUzm",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recAh3gRsAV5mYUzm",
@@ -1419,7 +1419,7 @@
       "record_id": "recB2b046YTc4DkN0",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recB2b046YTc4DkN0",
@@ -1455,7 +1455,7 @@
       "record_id": "recBIlybZNYLE4dsj",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recCccSdJZyxDUFBP",
@@ -1485,7 +1485,7 @@
       "record_id": "recCccSdJZyxDUFBP",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recD3iR5R0aKzjDPT",
@@ -1515,7 +1515,7 @@
       "record_id": "recD3iR5R0aKzjDPT",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recD3iR5R0aKzjDPT",
@@ -1551,7 +1551,7 @@
       "record_id": "recDgK7v7TM1AALGX",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recDi3KaRVlFkM6cW",
@@ -1581,7 +1581,7 @@
       "record_id": "recDi3KaRVlFkM6cW",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recDtQggHC5cJsvlp",
@@ -1611,7 +1611,7 @@
       "record_id": "recDtQggHC5cJsvlp",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recEhyWGhRjiYHI8X",
@@ -1641,7 +1641,7 @@
       "record_id": "recEhyWGhRjiYHI8X",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recEkdprNYlGt7OPt",
@@ -1671,7 +1671,7 @@
       "record_id": "recEkdprNYlGt7OPt",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recEm3TXNoWXe3i8C",
@@ -1701,7 +1701,7 @@
       "record_id": "recEm3TXNoWXe3i8C",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recFNRfA6q5fKlMG1",
@@ -1731,7 +1731,7 @@
       "record_id": "recFNRfA6q5fKlMG1",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recFSSeGD6gPVvacD",
@@ -1761,7 +1761,7 @@
       "record_id": "recFSSeGD6gPVvacD",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recFhw9ZiGdJObqpR",
@@ -1791,7 +1791,7 @@
       "record_id": "recFhw9ZiGdJObqpR",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recG9K0454H34bzxK",
@@ -1821,7 +1821,7 @@
       "record_id": "recG9K0454H34bzxK",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recGE0SIp7Qqp9Sw5",
@@ -1851,7 +1851,7 @@
       "record_id": "recGE0SIp7Qqp9Sw5",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recGMbn40gTGfCbW5",
@@ -1881,7 +1881,7 @@
       "record_id": "recGMbn40gTGfCbW5",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recGMbn40gTGfCbW5",
@@ -1917,7 +1917,7 @@
       "record_id": "recGgWBTCZvyTv8QD",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recGgWBTCZvyTv8QD",
@@ -1953,7 +1953,7 @@
       "record_id": "recGmnehn1iVhxezb",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recGo4rE1NXZFBMFA",
@@ -1983,7 +1983,7 @@
       "record_id": "recGo4rE1NXZFBMFA",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recGo4rE1NXZFBMFA",
@@ -2019,7 +2019,7 @@
       "record_id": "recGwVP4ebxEmLnHg",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recH5ygd7R04v9yuv",
@@ -2049,7 +2049,7 @@
       "record_id": "recH5ygd7R04v9yuv",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recH64UlBAO2Dbc8L",
@@ -2079,7 +2079,7 @@
       "record_id": "recH64UlBAO2Dbc8L",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recHFomYES6029HoC",
@@ -2109,7 +2109,7 @@
       "record_id": "recHFomYES6029HoC",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recHRG0jA2UQ47Zxh",
@@ -2139,7 +2139,7 @@
       "record_id": "recHRG0jA2UQ47Zxh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recHxk0SARZN8QsGY",
@@ -2169,7 +2169,7 @@
       "record_id": "recHxk0SARZN8QsGY",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recI1H44C77J3JpX3",
@@ -2199,7 +2199,7 @@
       "record_id": "recI1H44C77J3JpX3",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recI1eRGCnZcujR03",
@@ -2229,7 +2229,7 @@
       "record_id": "recI1eRGCnZcujR03",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recIGds2FjClYGmoE",
@@ -2259,7 +2259,7 @@
       "record_id": "recIGds2FjClYGmoE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recIZXDNVRVxZeJpS",
@@ -2289,7 +2289,7 @@
       "record_id": "recIZXDNVRVxZeJpS",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recIvNFRTVpDW5Pkc",
@@ -2319,7 +2319,7 @@
       "record_id": "recIvNFRTVpDW5Pkc",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJ50QI2wjG6biaq",
@@ -2349,7 +2349,7 @@
       "record_id": "recJ50QI2wjG6biaq",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJ50QI2wjG6biaq",
@@ -2385,7 +2385,7 @@
       "record_id": "recJOyWaVJmJOjqGC",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJaOsnJOxAxfoNl",
@@ -2415,7 +2415,7 @@
       "record_id": "recJaOsnJOxAxfoNl",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJdXTPO8JIiJ9g5",
@@ -2445,7 +2445,7 @@
       "record_id": "recJdXTPO8JIiJ9g5",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJgC6tJzbNYwLux",
@@ -2475,7 +2475,7 @@
       "record_id": "recJgC6tJzbNYwLux",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJgC6tJzbNYwLux",
@@ -2511,7 +2511,7 @@
       "record_id": "recJvdQDL6FW8sFVX",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recJvdQDL6FW8sFVX",
@@ -2547,7 +2547,7 @@
       "record_id": "recK7WR0dyxqSotab",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recKd8iqRCs8AFdfw",
@@ -2577,7 +2577,7 @@
       "record_id": "recKd8iqRCs8AFdfw",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recKd8iqRCs8AFdfw",
@@ -2613,7 +2613,7 @@
       "record_id": "recKshTFpZst7qOPp",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recL2AWcgmRuUmGBP",
@@ -2643,7 +2643,7 @@
       "record_id": "recL2AWcgmRuUmGBP",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recLHuXMxukl2BkqH",
@@ -2673,7 +2673,7 @@
       "record_id": "recLHuXMxukl2BkqH",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recLaXOf9APVCka6q",
@@ -2703,7 +2703,7 @@
       "record_id": "recLaXOf9APVCka6q",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recM7Bo4QAexoUl3f",
@@ -2733,7 +2733,7 @@
       "record_id": "recM7Bo4QAexoUl3f",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recM7Bo4QAexoUl3f",
@@ -2769,7 +2769,7 @@
       "record_id": "recN5TtuAMWeR4EhN",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recNL2MmwDypGf7nd",
@@ -2799,7 +2799,7 @@
       "record_id": "recNL2MmwDypGf7nd",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recNSy46OK5vXNIYe",
@@ -2829,7 +2829,7 @@
       "record_id": "recNSy46OK5vXNIYe",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recNovzIVSUC6Gb7l",
@@ -2859,7 +2859,7 @@
       "record_id": "recNovzIVSUC6Gb7l",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recNtwKvvUHOYexVp",
@@ -2889,7 +2889,7 @@
       "record_id": "recNtwKvvUHOYexVp",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recO16RY3AHt0JWqW",
@@ -2919,7 +2919,7 @@
       "record_id": "recO16RY3AHt0JWqW",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recOBKVEfmZGsgMP9",
@@ -2949,7 +2949,7 @@
       "record_id": "recOBKVEfmZGsgMP9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recODJNFlBLqyAtNI",
@@ -2979,7 +2979,7 @@
       "record_id": "recODJNFlBLqyAtNI",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recObRHD37nkHrZp8",
@@ -3009,7 +3009,7 @@
       "record_id": "recObRHD37nkHrZp8",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recObRHD37nkHrZp8",
@@ -3045,7 +3045,7 @@
       "record_id": "recP2oek5TyZp1IWf",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recPO0X6RiiGdjYrV",
@@ -3075,7 +3075,7 @@
       "record_id": "recPO0X6RiiGdjYrV",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recPeRauMU4ztWJ4l",
@@ -3105,7 +3105,7 @@
       "record_id": "recPeRauMU4ztWJ4l",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recPhrWdVgGOrUBBr",
@@ -3135,7 +3135,7 @@
       "record_id": "recPhrWdVgGOrUBBr",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recQK0cXeSfco3W5l",
@@ -3165,7 +3165,7 @@
       "record_id": "recQK0cXeSfco3W5l",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recQQTMhowlLJjFLx",
@@ -3195,7 +3195,7 @@
       "record_id": "recQQTMhowlLJjFLx",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recQkppbwctfZt8zF",
@@ -3225,7 +3225,7 @@
       "record_id": "recQkppbwctfZt8zF",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recQkppbwctfZt8zF",
@@ -3261,7 +3261,7 @@
       "record_id": "recQnYHmOMzY39UpH",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recR6g7OjenCeYwLU",
@@ -3291,7 +3291,7 @@
       "record_id": "recR6g7OjenCeYwLU",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recRFMiArVAh4DrZ3",
@@ -3321,7 +3321,7 @@
       "record_id": "recRFMiArVAh4DrZ3",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recRFMiArVAh4DrZ3",
@@ -3357,7 +3357,7 @@
       "record_id": "recS8MJKf6DSYXQxj",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recSMAhIDAb50H4IT",
@@ -3387,7 +3387,7 @@
       "record_id": "recSMAhIDAb50H4IT",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recTGO5PU3ZS19SMN",
@@ -3417,7 +3417,7 @@
       "record_id": "recTGO5PU3ZS19SMN",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recTblAqT6nvQhz9W",
@@ -3447,7 +3447,7 @@
       "record_id": "recTblAqT6nvQhz9W",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recTwMjRZ4VgkkTXU",
@@ -3477,7 +3477,7 @@
       "record_id": "recTwMjRZ4VgkkTXU",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recU5jN0YwyxBAbUL",
@@ -3507,7 +3507,7 @@
       "record_id": "recU5jN0YwyxBAbUL",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recUc0H2Oz6sWMKDE",
@@ -3537,7 +3537,7 @@
       "record_id": "recUc0H2Oz6sWMKDE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recUgB5IRDFciaABJ",
@@ -3567,7 +3567,7 @@
       "record_id": "recUgB5IRDFciaABJ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recUgB5IRDFciaABJ",
@@ -3603,7 +3603,7 @@
       "record_id": "recUq3kQ8E3RjuU8P",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recV7fdeW22dzh3ua",
@@ -3633,7 +3633,7 @@
       "record_id": "recV7fdeW22dzh3ua",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recVMQXkB3q52Ps78",
@@ -3663,7 +3663,7 @@
       "record_id": "recVMQXkB3q52Ps78",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recVq9JJw4BQmiBx7",
@@ -3693,7 +3693,7 @@
       "record_id": "recVq9JJw4BQmiBx7",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recVxsNtS8TMo9ZuT",
@@ -3723,7 +3723,7 @@
       "record_id": "recVxsNtS8TMo9ZuT",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recWHAVvk4VeKnZVE",
@@ -3753,7 +3753,7 @@
       "record_id": "recWHAVvk4VeKnZVE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recWe9Ve8TkOpFHcq",
@@ -3783,7 +3783,7 @@
       "record_id": "recWe9Ve8TkOpFHcq",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recXJsg4idg71MLNx",
@@ -3813,7 +3813,7 @@
       "record_id": "recXJsg4idg71MLNx",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recXJsg4idg71MLNx",
@@ -3849,7 +3849,7 @@
       "record_id": "recXnJ04zsDszLCLi",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recYN7TDIiDx8JsXU",
@@ -3879,7 +3879,7 @@
       "record_id": "recYN7TDIiDx8JsXU",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "approximate"
+      "value": "APPROXIMATE±Nkm"
     },
     {
       "record_id": "recYOEzmpMZrJpjJO",
@@ -3909,7 +3909,7 @@
       "record_id": "recYOEzmpMZrJpjJO",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recYRjk9iHEs5L4dR",
@@ -3939,7 +3939,7 @@
       "record_id": "recYRjk9iHEs5L4dR",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recYWieedUOhvgKB9",
@@ -3969,7 +3969,7 @@
       "record_id": "recYWieedUOhvgKB9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recYZlsilWMInLG0D",
@@ -3999,7 +3999,7 @@
       "record_id": "recYZlsilWMInLG0D",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recYZlsilWMInLG0D",
@@ -4035,7 +4035,7 @@
       "record_id": "recZIrbK7pm4NuHJv",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recZhYQiZqMRXmmOE",
@@ -4065,7 +4065,7 @@
       "record_id": "recZhYQiZqMRXmmOE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recZj2xktIGORSK3a",
@@ -4095,7 +4095,7 @@
       "record_id": "recZj2xktIGORSK3a",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recZj2xktIGORSK3a",
@@ -4131,7 +4131,7 @@
       "record_id": "reca4PIX1HldYGIIn",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reca7q9oMYcmktSdv",
@@ -4161,7 +4161,7 @@
       "record_id": "reca7q9oMYcmktSdv",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "approximate"
+      "value": "APPROXIMATE±Nkm"
     },
     {
       "record_id": "recaGT6agenbkaaTE",
@@ -4191,7 +4191,7 @@
       "record_id": "recaGT6agenbkaaTE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recaOgT8yltifxyy6",
@@ -4221,7 +4221,7 @@
       "record_id": "recaOgT8yltifxyy6",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recaT6GLpRSS1mOw6",
@@ -4251,7 +4251,7 @@
       "record_id": "recaT6GLpRSS1mOw6",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recaVOr8W67UfOviE",
@@ -4281,7 +4281,7 @@
       "record_id": "recaVOr8W67UfOviE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recb51c1257Nl4RfI",
@@ -4311,7 +4311,7 @@
       "record_id": "recb51c1257Nl4RfI",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recbf7md6uZP8eOME",
@@ -4341,7 +4341,7 @@
       "record_id": "recbf7md6uZP8eOME",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recbhJwtA10n9ACI8",
@@ -4371,7 +4371,7 @@
       "record_id": "recbhJwtA10n9ACI8",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recbviReFrVuaJlsZ",
@@ -4401,7 +4401,7 @@
       "record_id": "recbviReFrVuaJlsZ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recbwNEOU2Rwf5Zrz",
@@ -4431,7 +4431,7 @@
       "record_id": "recbwNEOU2Rwf5Zrz",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recbwNEOU2Rwf5Zrz",
@@ -4467,7 +4467,7 @@
       "record_id": "reccEEEwDPO0YtFDL",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reccIqUAwsabrLQzG",
@@ -4497,7 +4497,7 @@
       "record_id": "reccIqUAwsabrLQzG",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reccRqUsH7nOoWGAR",
@@ -4527,7 +4527,7 @@
       "record_id": "reccRqUsH7nOoWGAR",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reccWbs49T02DRkBs",
@@ -4557,7 +4557,7 @@
       "record_id": "reccWbs49T02DRkBs",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reccWbs49T02DRkBs",
@@ -4593,7 +4593,7 @@
       "record_id": "reccdWI8EiNSBF5Rg",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reccdWI8EiNSBF5Rg",
@@ -4629,7 +4629,7 @@
       "record_id": "reccuC9fzqkfxoGfi",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reccv4NnoCryhPOvI",
@@ -4659,7 +4659,7 @@
       "record_id": "reccv4NnoCryhPOvI",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recd7wPmmOtgSW5ip",
@@ -4689,7 +4689,7 @@
       "record_id": "recd7wPmmOtgSW5ip",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recdXcfPWTJbH1Ij1",
@@ -4719,7 +4719,7 @@
       "record_id": "recdXcfPWTJbH1Ij1",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recdz0JeO3ZAKDI1T",
@@ -4749,7 +4749,7 @@
       "record_id": "recdz0JeO3ZAKDI1T",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rece9TtkaPHpb7Fh9",
@@ -4779,7 +4779,7 @@
       "record_id": "rece9TtkaPHpb7Fh9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "receKSKIqFgVgfM7v",
@@ -4809,7 +4809,7 @@
       "record_id": "receKSKIqFgVgfM7v",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "receUDhkfTyyew3Nk",
@@ -4839,7 +4839,7 @@
       "record_id": "receUDhkfTyyew3Nk",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "receWYgdhdouKOav2",
@@ -4869,7 +4869,7 @@
       "record_id": "receWYgdhdouKOav2",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "receWYgdhdouKOav2",
@@ -4905,7 +4905,7 @@
       "record_id": "recen4kmdDkwvhF79",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recev6hhPw0l6YKVJ",
@@ -4935,7 +4935,7 @@
       "record_id": "recev6hhPw0l6YKVJ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recfE8fOBK3aaAqhj",
@@ -4965,7 +4965,7 @@
       "record_id": "recfE8fOBK3aaAqhj",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recfMGrT2IBdS4buM",
@@ -4995,7 +4995,7 @@
       "record_id": "recfMGrT2IBdS4buM",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recfc43H1j8EuThhC",
@@ -5025,7 +5025,7 @@
       "record_id": "recfc43H1j8EuThhC",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recfcHr6YKflHzPai",
@@ -5055,7 +5055,7 @@
       "record_id": "recfcHr6YKflHzPai",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "approximate"
+      "value": "APPROXIMATE±Nkm"
     },
     {
       "record_id": "recfcHr6YKflHzPai",
@@ -5091,7 +5091,7 @@
       "record_id": "recgNJpBYgOLvquee",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recgTvX9Rl3zOv0mQ",
@@ -5121,7 +5121,7 @@
       "record_id": "recgTvX9Rl3zOv0mQ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recgTvX9Rl3zOv0mQ",
@@ -5157,7 +5157,7 @@
       "record_id": "recgWhrnz1ptd2Uoq",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recgqiGTKNiaI7QLs",
@@ -5187,7 +5187,7 @@
       "record_id": "recgqiGTKNiaI7QLs",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rechclOcbQA2E1YLS",
@@ -5217,7 +5217,7 @@
       "record_id": "rechclOcbQA2E1YLS",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rechks3UwphapTEdG",
@@ -5247,7 +5247,7 @@
       "record_id": "rechks3UwphapTEdG",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rechmTrlsFD3HoU83",
@@ -5277,7 +5277,7 @@
       "record_id": "rechmTrlsFD3HoU83",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rechmTrlsFD3HoU83",
@@ -5313,7 +5313,7 @@
       "record_id": "reciJJW2Eqpx1H50x",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recipMfM0ZvcnoKZb",
@@ -5343,7 +5343,7 @@
       "record_id": "recipMfM0ZvcnoKZb",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recjDdMlPM6lfIfmw",
@@ -5373,7 +5373,7 @@
       "record_id": "recjDdMlPM6lfIfmw",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recjDdMlPM6lfIfmw",
@@ -5409,7 +5409,7 @@
       "record_id": "recjQb9IjcJiI6sx2",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reckAuerKU3A7JKWc",
@@ -5439,7 +5439,7 @@
       "record_id": "reckAuerKU3A7JKWc",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reckAuerKU3A7JKWc",
@@ -5475,7 +5475,7 @@
       "record_id": "reckbLVsxbURnKINw",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reckplwCdLtqshhuu",
@@ -5505,7 +5505,7 @@
       "record_id": "reckplwCdLtqshhuu",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reckplwCdLtqshhuu",
@@ -5541,7 +5541,7 @@
       "record_id": "reckqdGNnV76VSZ9h",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recks5SwQhH08H3mB",
@@ -5571,7 +5571,7 @@
       "record_id": "recks5SwQhH08H3mB",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reckt4FwkKGKrwi7Z",
@@ -5601,7 +5601,7 @@
       "record_id": "reckt4FwkKGKrwi7Z",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recktt0uo2g9o0qSI",
@@ -5631,7 +5631,7 @@
       "record_id": "recktt0uo2g9o0qSI",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recl80qjnxC6cD5pj",
@@ -5661,7 +5661,7 @@
       "record_id": "recl80qjnxC6cD5pj",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reclSjI5C9dw686jC",
@@ -5691,7 +5691,7 @@
       "record_id": "reclSjI5C9dw686jC",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reclbRikjaywJvxCi",
@@ -5721,7 +5721,7 @@
       "record_id": "reclbRikjaywJvxCi",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recliuO65W9brQXs9",
@@ -5751,7 +5751,7 @@
       "record_id": "recliuO65W9brQXs9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recm62tzGXpmzUwNO",
@@ -5781,7 +5781,7 @@
       "record_id": "recm62tzGXpmzUwNO",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recmSuLaCe5luUsNo",
@@ -5811,7 +5811,7 @@
       "record_id": "recmSuLaCe5luUsNo",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recmclGJdidPUDXxV",
@@ -5841,7 +5841,7 @@
       "record_id": "recmclGJdidPUDXxV",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recmo6PazYR51d5Jy",
@@ -5871,7 +5871,7 @@
       "record_id": "recmo6PazYR51d5Jy",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reco7GtdQrKSIkYEA",
@@ -5901,7 +5901,7 @@
       "record_id": "reco7GtdQrKSIkYEA",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recoGjUbTkOwI7FMb",
@@ -5931,7 +5931,7 @@
       "record_id": "recoGjUbTkOwI7FMb",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recoNxoBxJ7aZcDGp",
@@ -5961,7 +5961,7 @@
       "record_id": "recoNxoBxJ7aZcDGp",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recokYP5uUKJd0WVN",
@@ -5991,7 +5991,7 @@
       "record_id": "recokYP5uUKJd0WVN",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recotDjupTrmLLDOF",
@@ -6021,7 +6021,7 @@
       "record_id": "recotDjupTrmLLDOF",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recp73FfaCtMgFNMV",
@@ -6051,7 +6051,7 @@
       "record_id": "recp73FfaCtMgFNMV",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recpKPP8LMv7FDddh",
@@ -6081,7 +6081,7 @@
       "record_id": "recpKPP8LMv7FDddh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqgEl9ZVy1oT6BH",
@@ -6111,7 +6111,7 @@
       "record_id": "recqgEl9ZVy1oT6BH",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqitXztZm8j5RdN",
@@ -6141,7 +6141,7 @@
       "record_id": "recqitXztZm8j5RdN",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqkOR58iWGn6ylD",
@@ -6171,7 +6171,7 @@
       "record_id": "recqkOR58iWGn6ylD",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqkSPGhdCHvgODl",
@@ -6201,7 +6201,7 @@
       "record_id": "recqkSPGhdCHvgODl",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqlDtF6FYdA7axf",
@@ -6231,7 +6231,7 @@
       "record_id": "recqlDtF6FYdA7axf",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqnfGiY0ulkfGhq",
@@ -6261,7 +6261,7 @@
       "record_id": "recqnfGiY0ulkfGhq",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqs8qN2tqOxfe4x",
@@ -6291,7 +6291,7 @@
       "record_id": "recqs8qN2tqOxfe4x",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqs8qN2tqOxfe4x",
@@ -6327,7 +6327,7 @@
       "record_id": "recqutsnyEC9ini6K",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recqzdKNo6b2ciSrA",
@@ -6357,7 +6357,7 @@
       "record_id": "recqzdKNo6b2ciSrA",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recrROssI0SI1TVmu",
@@ -6387,7 +6387,7 @@
       "record_id": "recrROssI0SI1TVmu",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recraNNg0uVXOZwJC",
@@ -6417,7 +6417,7 @@
       "record_id": "recraNNg0uVXOZwJC",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recsCdGoAQggbjxFG",
@@ -6447,7 +6447,7 @@
       "record_id": "recsCdGoAQggbjxFG",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recsE07ld9LaMHCYM",
@@ -6477,7 +6477,7 @@
       "record_id": "recsE07ld9LaMHCYM",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recsEv1bP8eAgIxrj",
@@ -6507,7 +6507,7 @@
       "record_id": "recsEv1bP8eAgIxrj",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recshRCkGSw13t3qh",
@@ -6537,7 +6537,7 @@
       "record_id": "recshRCkGSw13t3qh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recshm95hmq82YCW9",
@@ -6567,7 +6567,7 @@
       "record_id": "recshm95hmq82YCW9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rect7rs3kLYH4CjVa",
@@ -6597,7 +6597,7 @@
       "record_id": "rect7rs3kLYH4CjVa",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rectAR6xa0dosidOF",
@@ -6627,7 +6627,7 @@
       "record_id": "rectAR6xa0dosidOF",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rectCka8y93ENc4jh",
@@ -6657,7 +6657,7 @@
       "record_id": "rectCka8y93ENc4jh",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rectbH4GIiIONUdK7",
@@ -6687,7 +6687,7 @@
       "record_id": "rectbH4GIiIONUdK7",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rectbH4GIiIONUdK7",
@@ -6723,7 +6723,7 @@
       "record_id": "rectqCsDxSPeZ7EyE",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "rectsGzcnmGhYTmVl",
@@ -6753,7 +6753,7 @@
       "record_id": "rectsGzcnmGhYTmVl",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recu2STn8ovIjhzSL",
@@ -6783,7 +6783,7 @@
       "record_id": "recu2STn8ovIjhzSL",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recuPnk8qMbgZOKgT",
@@ -6813,7 +6813,7 @@
       "record_id": "recuPnk8qMbgZOKgT",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recuSMrkFSr3c9Rsk",
@@ -6843,7 +6843,7 @@
       "record_id": "recuSMrkFSr3c9Rsk",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "approximate"
+      "value": "APPROXIMATE±Nkm"
     },
     {
       "record_id": "recuVnS8iSJLnzV2M",
@@ -6873,7 +6873,7 @@
       "record_id": "recuVnS8iSJLnzV2M",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recudantcRwG63Ogf",
@@ -6903,7 +6903,7 @@
       "record_id": "recudantcRwG63Ogf",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recudzAb7ZARY3ZfK",
@@ -6933,7 +6933,7 @@
       "record_id": "recudzAb7ZARY3ZfK",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recus50ALLaU6aNIo",
@@ -6963,7 +6963,7 @@
       "record_id": "recus50ALLaU6aNIo",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recvCAd0tNNZvEXDx",
@@ -6993,7 +6993,7 @@
       "record_id": "recvCAd0tNNZvEXDx",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recvJZ8tkUnkyixbT",
@@ -7023,7 +7023,7 @@
       "record_id": "recvJZ8tkUnkyixbT",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recvJZ8tkUnkyixbT",
@@ -7059,7 +7059,7 @@
       "record_id": "recvJrpkIzlbjVuOn",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recvJrpkIzlbjVuOn",
@@ -7095,7 +7095,7 @@
       "record_id": "recwEwZrmSYjzySel",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recwEwZrmSYjzySel",
@@ -7131,7 +7131,7 @@
       "record_id": "recwNogCWSpTEQ378",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recwQWzaQ3H7dgJwo",
@@ -7161,7 +7161,7 @@
       "record_id": "recwQWzaQ3H7dgJwo",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recwbY4WyRviRENt7",
@@ -7191,7 +7191,7 @@
       "record_id": "recwbY4WyRviRENt7",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recwnw0nHTPsYWrYQ",
@@ -7221,7 +7221,7 @@
       "record_id": "recwnw0nHTPsYWrYQ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recwx7j5M9gAMrrzf",
@@ -7251,7 +7251,7 @@
       "record_id": "recwx7j5M9gAMrrzf",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recwx7j5M9gAMrrzf",
@@ -7287,7 +7287,7 @@
       "record_id": "recxUZ4XorQ9YT4BS",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recxycsGkdNrhspBr",
@@ -7317,7 +7317,7 @@
       "record_id": "recxycsGkdNrhspBr",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recxz7nGL7QwWWga6",
@@ -7347,7 +7347,7 @@
       "record_id": "recxz7nGL7QwWWga6",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recxz7nGL7QwWWga6",
@@ -7383,7 +7383,7 @@
       "record_id": "recy9uzjFtNWYkAt9",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recyDbDjsvg7mVOrm",
@@ -7413,7 +7413,7 @@
       "record_id": "recyDbDjsvg7mVOrm",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "recyx59jaSyoGd1vZ",
@@ -7443,7 +7443,7 @@
       "record_id": "recyx59jaSyoGd1vZ",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reczLZAp2HVLJJaLo",
@@ -7473,7 +7473,7 @@
       "record_id": "reczLZAp2HVLJJaLo",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reczOfB8lb6CYNV0b",
@@ -7503,7 +7503,7 @@
       "record_id": "reczOfB8lb6CYNV0b",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reczWOyr7n6AB1s6p",
@@ -7533,7 +7533,7 @@
       "record_id": "reczWOyr7n6AB1s6p",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "record_id": "reczkNmn6dNDL1OCT",
@@ -7563,7 +7563,7 @@
       "record_id": "reczkNmn6dNDL1OCT",
       "field": "coordinates_confidence",
       "warning": "using legacy fallback field",
-      "value": "exact"
+      "value": "EXACT"
     },
     {
       "id": "rec0NKPnOP37pAzhn",
@@ -8612,7 +8612,799 @@
   ],
   "errors": [
     {
+      "id": "rec0NKPnOP37pAzhn",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec0ROnkEtbnhvq5j",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec0f7j6tjzOOFSSx",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec0tThK5GUoUijbM",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec0tbySJLPLUgM7D",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec18BV4mzvmfeHXH",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec1GrmHA5SeFTlHy",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec1It3yUpd9oacQ2",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec1K7VBOKElfQBe5",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec1QS1km3J2sdqql",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec1RQwUh3gm5QURN",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec1dT3ubwAwsh6Dq",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec2BrE7KvYE9e818",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec2REHt1Bb1E1V46",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec2iHcqFui57lxcg",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec3Ni4VSwSTOE6Tf",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec3zu0PFJliyYSw3",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec4Sd5VbTPC3dC2b",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec4aKxckDkLNdJTc",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec4gbJ1YBUua60CR",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec4sbs6Wg8JO4Vzp",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec55DNu9Gzo8tqM7",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec5HxHJVvS4AWLE0",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec5IEqaHblvfyV0v",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec5eLRQBYiR0Cr5W",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec5fhzye74VFo3QU",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec6NLYM8A4VBLius",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec6SX0uLvy3YuTCJ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec6evqXlC5yjLshI",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec6hFBIbqqEWUmY4",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec6phbkzL0M7e16L",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec7FPxnP6VbgpgJh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec7NlPSpaEk2SYK8",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec7j9rx9dJq1QKQh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec89ozpfE4FonQgM",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec8IEhudMIDVJFvF",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec8d3SeZIeGrCfz9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec8kKQuf7gAcB5wZ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec99jKFoZT1cIfpW",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec9XzSznh8aKaTim",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rec9aKp73EfutUXzi",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recAKMDVbsB2AUoGn",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recAX7cpyzXGXSZvh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recAgIfrjVOVIh1tO",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recAh3gRsAV5mYUzm",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recB2b046YTc4DkN0",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recBIlybZNYLE4dsj",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recCccSdJZyxDUFBP",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recD3iR5R0aKzjDPT",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recDgK7v7TM1AALGX",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recDi3KaRVlFkM6cW",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recDtQggHC5cJsvlp",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recEhyWGhRjiYHI8X",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recEkdprNYlGt7OPt",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recEm3TXNoWXe3i8C",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recFNRfA6q5fKlMG1",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recFSSeGD6gPVvacD",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recFhw9ZiGdJObqpR",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recG9K0454H34bzxK",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recGE0SIp7Qqp9Sw5",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recGMbn40gTGfCbW5",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recGgWBTCZvyTv8QD",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recGmnehn1iVhxezb",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recGo4rE1NXZFBMFA",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recGwVP4ebxEmLnHg",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recH5ygd7R04v9yuv",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recH64UlBAO2Dbc8L",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recHFomYES6029HoC",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recHRG0jA2UQ47Zxh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recHxk0SARZN8QsGY",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recI1H44C77J3JpX3",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recI1eRGCnZcujR03",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recIGds2FjClYGmoE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recIZXDNVRVxZeJpS",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recIvNFRTVpDW5Pkc",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recJ50QI2wjG6biaq",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recJOyWaVJmJOjqGC",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recJaOsnJOxAxfoNl",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recJdXTPO8JIiJ9g5",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recJgC6tJzbNYwLux",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recJvdQDL6FW8sFVX",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recK7WR0dyxqSotab",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recKd8iqRCs8AFdfw",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recKshTFpZst7qOPp",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recL2AWcgmRuUmGBP",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recLHuXMxukl2BkqH",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recLaXOf9APVCka6q",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recM7Bo4QAexoUl3f",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recN5TtuAMWeR4EhN",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recNL2MmwDypGf7nd",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recNSy46OK5vXNIYe",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recNovzIVSUC6Gb7l",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recNtwKvvUHOYexVp",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recO16RY3AHt0JWqW",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recOBKVEfmZGsgMP9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recODJNFlBLqyAtNI",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recObRHD37nkHrZp8",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recP2oek5TyZp1IWf",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recPO0X6RiiGdjYrV",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recPeRauMU4ztWJ4l",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recPhrWdVgGOrUBBr",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recQK0cXeSfco3W5l",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recQQTMhowlLJjFLx",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recQkppbwctfZt8zF",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recQnYHmOMzY39UpH",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recR6g7OjenCeYwLU",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recRFMiArVAh4DrZ3",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recS8MJKf6DSYXQxj",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recSMAhIDAb50H4IT",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recTGO5PU3ZS19SMN",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recTblAqT6nvQhz9W",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recTwMjRZ4VgkkTXU",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recU5jN0YwyxBAbUL",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recUc0H2Oz6sWMKDE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recUgB5IRDFciaABJ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recUq3kQ8E3RjuU8P",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recV7fdeW22dzh3ua",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recVMQXkB3q52Ps78",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recVq9JJw4BQmiBx7",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recVxsNtS8TMo9ZuT",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recWHAVvk4VeKnZVE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recWe9Ve8TkOpFHcq",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recXJsg4idg71MLNx",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recXnJ04zsDszLCLi",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
       "id": "recYN7TDIiDx8JsXU",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recYOEzmpMZrJpjJO",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recYRjk9iHEs5L4dR",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recYWieedUOhvgKB9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recYZlsilWMInLG0D",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recZIrbK7pm4NuHJv",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recZhYQiZqMRXmmOE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recZj2xktIGORSK3a",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reca4PIX1HldYGIIn",
       "reason": "invalid coordinates_confidence",
       "severity": "critical",
       "field": "coordinates_confidence"
@@ -8624,13 +9416,661 @@
       "field": "coordinates_confidence"
     },
     {
+      "id": "recaGT6agenbkaaTE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recaOgT8yltifxyy6",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recaT6GLpRSS1mOw6",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recaVOr8W67UfOviE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recb51c1257Nl4RfI",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recbf7md6uZP8eOME",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recbhJwtA10n9ACI8",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recbviReFrVuaJlsZ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recbwNEOU2Rwf5Zrz",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccEEEwDPO0YtFDL",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccIqUAwsabrLQzG",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccRqUsH7nOoWGAR",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccWbs49T02DRkBs",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccdWI8EiNSBF5Rg",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccuC9fzqkfxoGfi",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reccv4NnoCryhPOvI",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recd7wPmmOtgSW5ip",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recdXcfPWTJbH1Ij1",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recdz0JeO3ZAKDI1T",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rece9TtkaPHpb7Fh9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "receKSKIqFgVgfM7v",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "receUDhkfTyyew3Nk",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "receWYgdhdouKOav2",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recen4kmdDkwvhF79",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recev6hhPw0l6YKVJ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recfE8fOBK3aaAqhj",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recfMGrT2IBdS4buM",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recfc43H1j8EuThhC",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
       "id": "recfcHr6YKflHzPai",
       "reason": "invalid coordinates_confidence",
       "severity": "critical",
       "field": "coordinates_confidence"
     },
     {
+      "id": "recgNJpBYgOLvquee",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recgTvX9Rl3zOv0mQ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recgWhrnz1ptd2Uoq",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recgqiGTKNiaI7QLs",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rechclOcbQA2E1YLS",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rechks3UwphapTEdG",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rechmTrlsFD3HoU83",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reciJJW2Eqpx1H50x",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recipMfM0ZvcnoKZb",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recjDdMlPM6lfIfmw",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recjQb9IjcJiI6sx2",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reckAuerKU3A7JKWc",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reckbLVsxbURnKINw",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reckplwCdLtqshhuu",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reckqdGNnV76VSZ9h",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recks5SwQhH08H3mB",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reckt4FwkKGKrwi7Z",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recktt0uo2g9o0qSI",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recl80qjnxC6cD5pj",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reclSjI5C9dw686jC",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reclbRikjaywJvxCi",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recliuO65W9brQXs9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recm62tzGXpmzUwNO",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recmSuLaCe5luUsNo",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recmclGJdidPUDXxV",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recmo6PazYR51d5Jy",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reco7GtdQrKSIkYEA",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recoGjUbTkOwI7FMb",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recoNxoBxJ7aZcDGp",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recokYP5uUKJd0WVN",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recotDjupTrmLLDOF",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recp73FfaCtMgFNMV",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recpKPP8LMv7FDddh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqgEl9ZVy1oT6BH",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqitXztZm8j5RdN",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqkOR58iWGn6ylD",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqkSPGhdCHvgODl",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqlDtF6FYdA7axf",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqnfGiY0ulkfGhq",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqs8qN2tqOxfe4x",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqutsnyEC9ini6K",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recqzdKNo6b2ciSrA",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recrROssI0SI1TVmu",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recraNNg0uVXOZwJC",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recsCdGoAQggbjxFG",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recsE07ld9LaMHCYM",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recsEv1bP8eAgIxrj",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recshRCkGSw13t3qh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recshm95hmq82YCW9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rect7rs3kLYH4CjVa",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rectAR6xa0dosidOF",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rectCka8y93ENc4jh",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rectbH4GIiIONUdK7",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rectqCsDxSPeZ7EyE",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "rectsGzcnmGhYTmVl",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recu2STn8ovIjhzSL",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recuPnk8qMbgZOKgT",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
       "id": "recuSMrkFSr3c9Rsk",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recuVnS8iSJLnzV2M",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recudantcRwG63Ogf",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recudzAb7ZARY3ZfK",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recus50ALLaU6aNIo",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recvCAd0tNNZvEXDx",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recvJZ8tkUnkyixbT",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recvJrpkIzlbjVuOn",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recwEwZrmSYjzySel",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recwNogCWSpTEQ378",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recwQWzaQ3H7dgJwo",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recwbY4WyRviRENt7",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recwnw0nHTPsYWrYQ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recwx7j5M9gAMrrzf",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recxUZ4XorQ9YT4BS",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recxycsGkdNrhspBr",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recxz7nGL7QwWWga6",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recy9uzjFtNWYkAt9",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recyDbDjsvg7mVOrm",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "recyx59jaSyoGd1vZ",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reczLZAp2HVLJJaLo",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reczOfB8lb6CYNV0b",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reczWOyr7n6AB1s6p",
+      "reason": "invalid coordinates_confidence",
+      "severity": "critical",
+      "field": "coordinates_confidence"
+    },
+    {
+      "id": "reczkNmn6dNDL1OCT",
       "reason": "invalid coordinates_confidence",
       "severity": "critical",
       "field": "coordinates_confidence"
