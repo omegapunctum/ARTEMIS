@@ -1258,421 +1258,491 @@
 {"record_id": "reczkNmn6dNDL1OCT", "field": "is_active", "warning": "using legacy fallback field", "value": true}
 {"record_id": "reczkNmn6dNDL1OCT", "field": "source_license", "warning": "using legacy fallback field", "value": "CC BY-SA"}
 {"record_id": "reczkNmn6dNDL1OCT", "field": "coordinates_confidence", "warning": "using legacy fallback field", "value": "EXACT"}
-{"id": "rec0NKPnOP37pAzhn", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec0ROnkEtbnhvq5j", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec0f7j6tjzOOFSSx", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec0tThK5GUoUijbM", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec18BV4mzvmfeHXH", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec1GrmHA5SeFTlHy", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec1It3yUpd9oacQ2", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec1QS1km3J2sdqql", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec1RQwUh3gm5QURN", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec1dT3ubwAwsh6Dq", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec2BrE7KvYE9e818", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec3Ni4VSwSTOE6Tf", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec4Sd5VbTPC3dC2b", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec4gbJ1YBUua60CR", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec55DNu9Gzo8tqM7", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec5HxHJVvS4AWLE0", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec5IEqaHblvfyV0v", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec5fhzye74VFo3QU", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec6NLYM8A4VBLius", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec6SX0uLvy3YuTCJ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec7NlPSpaEk2SYK8", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec7j9rx9dJq1QKQh", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec89ozpfE4FonQgM", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec8IEhudMIDVJFvF", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec9XzSznh8aKaTim", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rec9aKp73EfutUXzi", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recAKMDVbsB2AUoGn", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recAh3gRsAV5mYUzm", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recB2b046YTc4DkN0", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recCccSdJZyxDUFBP", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recD3iR5R0aKzjDPT", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recDgK7v7TM1AALGX", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recEhyWGhRjiYHI8X", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recEm3TXNoWXe3i8C", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recFNRfA6q5fKlMG1", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recFSSeGD6gPVvacD", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recFhw9ZiGdJObqpR", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recG9K0454H34bzxK", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recGE0SIp7Qqp9Sw5", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recGgWBTCZvyTv8QD", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recGmnehn1iVhxezb", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recGo4rE1NXZFBMFA", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recGwVP4ebxEmLnHg", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recH5ygd7R04v9yuv", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recHFomYES6029HoC", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recHxk0SARZN8QsGY", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recI1H44C77J3JpX3", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recIGds2FjClYGmoE", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recIZXDNVRVxZeJpS", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recIvNFRTVpDW5Pkc", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recJ50QI2wjG6biaq", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recJOyWaVJmJOjqGC", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recJaOsnJOxAxfoNl", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recJdXTPO8JIiJ9g5", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recJgC6tJzbNYwLux", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recJvdQDL6FW8sFVX", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recK7WR0dyxqSotab", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recKd8iqRCs8AFdfw", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recL2AWcgmRuUmGBP", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recLHuXMxukl2BkqH", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recLaXOf9APVCka6q", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recM7Bo4QAexoUl3f", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recNL2MmwDypGf7nd", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recNSy46OK5vXNIYe", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recNovzIVSUC6Gb7l", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recNtwKvvUHOYexVp", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recO16RY3AHt0JWqW", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recODJNFlBLqyAtNI", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recObRHD37nkHrZp8", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recP2oek5TyZp1IWf", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recPO0X6RiiGdjYrV", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recPeRauMU4ztWJ4l", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recPhrWdVgGOrUBBr", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recQK0cXeSfco3W5l", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recQQTMhowlLJjFLx", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recQkppbwctfZt8zF", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recQnYHmOMzY39UpH", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recR6g7OjenCeYwLU", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recRFMiArVAh4DrZ3", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recS8MJKf6DSYXQxj", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recSMAhIDAb50H4IT", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recTblAqT6nvQhz9W", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recTwMjRZ4VgkkTXU", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recU5jN0YwyxBAbUL", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recUc0H2Oz6sWMKDE", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recUgB5IRDFciaABJ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recUq3kQ8E3RjuU8P", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recV7fdeW22dzh3ua", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recVMQXkB3q52Ps78", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recWe9Ve8TkOpFHcq", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recXJsg4idg71MLNx", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recXnJ04zsDszLCLi", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recYN7TDIiDx8JsXU", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recYOEzmpMZrJpjJO", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recYRjk9iHEs5L4dR", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recYZlsilWMInLG0D", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recZhYQiZqMRXmmOE", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recZj2xktIGORSK3a", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reca7q9oMYcmktSdv", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recaT6GLpRSS1mOw6", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recaVOr8W67UfOviE", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recb51c1257Nl4RfI", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recbf7md6uZP8eOME", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recbviReFrVuaJlsZ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recbwNEOU2Rwf5Zrz", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reccEEEwDPO0YtFDL", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reccIqUAwsabrLQzG", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reccRqUsH7nOoWGAR", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reccWbs49T02DRkBs", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reccdWI8EiNSBF5Rg", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reccv4NnoCryhPOvI", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recd7wPmmOtgSW5ip", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recdXcfPWTJbH1Ij1", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recdz0JeO3ZAKDI1T", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "receKSKIqFgVgfM7v", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "receUDhkfTyyew3Nk", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "receWYgdhdouKOav2", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recev6hhPw0l6YKVJ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recfE8fOBK3aaAqhj", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recfMGrT2IBdS4buM", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recfcHr6YKflHzPai", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recgTvX9Rl3zOv0mQ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recgWhrnz1ptd2Uoq", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rechmTrlsFD3HoU83", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recipMfM0ZvcnoKZb", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recjDdMlPM6lfIfmw", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recjQb9IjcJiI6sx2", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reckAuerKU3A7JKWc", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reckbLVsxbURnKINw", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reckplwCdLtqshhuu", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recks5SwQhH08H3mB", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recktt0uo2g9o0qSI", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recl80qjnxC6cD5pj", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reclbRikjaywJvxCi", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recliuO65W9brQXs9", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recmclGJdidPUDXxV", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recoNxoBxJ7aZcDGp", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recokYP5uUKJd0WVN", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recotDjupTrmLLDOF", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recpKPP8LMv7FDddh", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqgEl9ZVy1oT6BH", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqkOR58iWGn6ylD", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqkSPGhdCHvgODl", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqlDtF6FYdA7axf", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqnfGiY0ulkfGhq", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqs8qN2tqOxfe4x", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recqzdKNo6b2ciSrA", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recrROssI0SI1TVmu", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recraNNg0uVXOZwJC", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recsCdGoAQggbjxFG", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recshRCkGSw13t3qh", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rect7rs3kLYH4CjVa", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rectAR6xa0dosidOF", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rectCka8y93ENc4jh", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rectbH4GIiIONUdK7", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "rectqCsDxSPeZ7EyE", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recuPnk8qMbgZOKgT", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recuSMrkFSr3c9Rsk", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recudantcRwG63Ogf", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recus50ALLaU6aNIo", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recvJZ8tkUnkyixbT", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recwEwZrmSYjzySel", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recwNogCWSpTEQ378", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recwQWzaQ3H7dgJwo", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recwbY4WyRviRENt7", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recwnw0nHTPsYWrYQ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recwx7j5M9gAMrrzf", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recxUZ4XorQ9YT4BS", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recxycsGkdNrhspBr", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recy9uzjFtNWYkAt9", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recyDbDjsvg7mVOrm", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "recyx59jaSyoGd1vZ", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reczOfB8lb6CYNV0b", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
-{"id": "reczWOyr7n6AB1s6p", "reason": "missing image_url", "severity": "warning", "field": "image_url"}
 {"id": "rec0NKPnOP37pAzhn", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec0NKPnOP37pAzhn", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec0ROnkEtbnhvq5j", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec0ROnkEtbnhvq5j", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec0f7j6tjzOOFSSx", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec0f7j6tjzOOFSSx", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec0tThK5GUoUijbM", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec0tThK5GUoUijbM", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec0tbySJLPLUgM7D", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec0tbySJLPLUgM7D", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec18BV4mzvmfeHXH", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec18BV4mzvmfeHXH", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec1GrmHA5SeFTlHy", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec1GrmHA5SeFTlHy", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec1It3yUpd9oacQ2", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec1It3yUpd9oacQ2", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec1K7VBOKElfQBe5", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec1K7VBOKElfQBe5", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec1QS1km3J2sdqql", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec1QS1km3J2sdqql", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec1RQwUh3gm5QURN", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec1RQwUh3gm5QURN", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec1dT3ubwAwsh6Dq", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec1dT3ubwAwsh6Dq", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec2BrE7KvYE9e818", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec2BrE7KvYE9e818", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec2REHt1Bb1E1V46", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec2REHt1Bb1E1V46", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec2iHcqFui57lxcg", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec2iHcqFui57lxcg", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec3Ni4VSwSTOE6Tf", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec3Ni4VSwSTOE6Tf", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec3zu0PFJliyYSw3", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec3zu0PFJliyYSw3", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec4Sd5VbTPC3dC2b", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec4Sd5VbTPC3dC2b", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec4aKxckDkLNdJTc", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec4aKxckDkLNdJTc", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec4gbJ1YBUua60CR", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec4gbJ1YBUua60CR", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec4sbs6Wg8JO4Vzp", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec4sbs6Wg8JO4Vzp", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec55DNu9Gzo8tqM7", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec55DNu9Gzo8tqM7", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec5HxHJVvS4AWLE0", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec5HxHJVvS4AWLE0", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec5IEqaHblvfyV0v", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec5IEqaHblvfyV0v", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec5eLRQBYiR0Cr5W", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec5eLRQBYiR0Cr5W", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec5fhzye74VFo3QU", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec5fhzye74VFo3QU", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec6NLYM8A4VBLius", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec6NLYM8A4VBLius", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec6SX0uLvy3YuTCJ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec6SX0uLvy3YuTCJ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec6evqXlC5yjLshI", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec6evqXlC5yjLshI", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec6hFBIbqqEWUmY4", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec6hFBIbqqEWUmY4", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec6phbkzL0M7e16L", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec6phbkzL0M7e16L", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec7FPxnP6VbgpgJh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec7FPxnP6VbgpgJh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec7NlPSpaEk2SYK8", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec7NlPSpaEk2SYK8", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec7j9rx9dJq1QKQh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec7j9rx9dJq1QKQh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec89ozpfE4FonQgM", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec89ozpfE4FonQgM", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec8IEhudMIDVJFvF", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec8IEhudMIDVJFvF", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec8d3SeZIeGrCfz9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec8d3SeZIeGrCfz9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec8kKQuf7gAcB5wZ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec8kKQuf7gAcB5wZ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec99jKFoZT1cIfpW", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec99jKFoZT1cIfpW", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec9XzSznh8aKaTim", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec9XzSznh8aKaTim", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rec9aKp73EfutUXzi", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rec9aKp73EfutUXzi", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recAKMDVbsB2AUoGn", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recAKMDVbsB2AUoGn", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recAX7cpyzXGXSZvh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recAX7cpyzXGXSZvh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recAgIfrjVOVIh1tO", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recAgIfrjVOVIh1tO", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recAh3gRsAV5mYUzm", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recAh3gRsAV5mYUzm", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recB2b046YTc4DkN0", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recB2b046YTc4DkN0", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recBIlybZNYLE4dsj", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recBIlybZNYLE4dsj", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recCccSdJZyxDUFBP", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recCccSdJZyxDUFBP", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recD3iR5R0aKzjDPT", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recD3iR5R0aKzjDPT", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recDgK7v7TM1AALGX", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recDgK7v7TM1AALGX", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recDi3KaRVlFkM6cW", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recDi3KaRVlFkM6cW", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recDtQggHC5cJsvlp", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recDtQggHC5cJsvlp", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recEhyWGhRjiYHI8X", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recEhyWGhRjiYHI8X", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recEkdprNYlGt7OPt", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recEkdprNYlGt7OPt", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recEm3TXNoWXe3i8C", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recEm3TXNoWXe3i8C", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recFNRfA6q5fKlMG1", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recFNRfA6q5fKlMG1", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recFSSeGD6gPVvacD", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recFSSeGD6gPVvacD", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recFhw9ZiGdJObqpR", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recFhw9ZiGdJObqpR", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recG9K0454H34bzxK", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recG9K0454H34bzxK", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recGE0SIp7Qqp9Sw5", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recGE0SIp7Qqp9Sw5", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recGMbn40gTGfCbW5", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recGMbn40gTGfCbW5", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recGgWBTCZvyTv8QD", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recGgWBTCZvyTv8QD", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recGmnehn1iVhxezb", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recGmnehn1iVhxezb", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recGo4rE1NXZFBMFA", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recGo4rE1NXZFBMFA", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recGwVP4ebxEmLnHg", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recGwVP4ebxEmLnHg", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recH5ygd7R04v9yuv", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recH5ygd7R04v9yuv", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recH64UlBAO2Dbc8L", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recH64UlBAO2Dbc8L", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recHFomYES6029HoC", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recHFomYES6029HoC", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recHRG0jA2UQ47Zxh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recHRG0jA2UQ47Zxh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recHxk0SARZN8QsGY", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recHxk0SARZN8QsGY", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recI1H44C77J3JpX3", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recI1H44C77J3JpX3", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recI1eRGCnZcujR03", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recI1eRGCnZcujR03", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recIGds2FjClYGmoE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recIGds2FjClYGmoE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recIZXDNVRVxZeJpS", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recIZXDNVRVxZeJpS", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recIvNFRTVpDW5Pkc", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recIvNFRTVpDW5Pkc", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recJ50QI2wjG6biaq", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recJ50QI2wjG6biaq", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recJOyWaVJmJOjqGC", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recJOyWaVJmJOjqGC", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recJaOsnJOxAxfoNl", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recJaOsnJOxAxfoNl", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recJdXTPO8JIiJ9g5", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recJdXTPO8JIiJ9g5", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recJgC6tJzbNYwLux", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recJgC6tJzbNYwLux", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recJvdQDL6FW8sFVX", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recJvdQDL6FW8sFVX", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recK7WR0dyxqSotab", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recK7WR0dyxqSotab", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recKd8iqRCs8AFdfw", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recKd8iqRCs8AFdfw", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recKshTFpZst7qOPp", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recKshTFpZst7qOPp", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recL2AWcgmRuUmGBP", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recL2AWcgmRuUmGBP", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recLHuXMxukl2BkqH", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recLHuXMxukl2BkqH", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recLaXOf9APVCka6q", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recLaXOf9APVCka6q", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recM7Bo4QAexoUl3f", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recM7Bo4QAexoUl3f", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recN5TtuAMWeR4EhN", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recN5TtuAMWeR4EhN", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recNL2MmwDypGf7nd", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recNL2MmwDypGf7nd", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recNSy46OK5vXNIYe", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recNSy46OK5vXNIYe", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recNovzIVSUC6Gb7l", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recNovzIVSUC6Gb7l", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recNtwKvvUHOYexVp", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recNtwKvvUHOYexVp", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recO16RY3AHt0JWqW", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recO16RY3AHt0JWqW", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recOBKVEfmZGsgMP9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recOBKVEfmZGsgMP9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recODJNFlBLqyAtNI", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recODJNFlBLqyAtNI", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recObRHD37nkHrZp8", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recObRHD37nkHrZp8", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recP2oek5TyZp1IWf", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recP2oek5TyZp1IWf", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recPO0X6RiiGdjYrV", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recPO0X6RiiGdjYrV", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recPeRauMU4ztWJ4l", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recPeRauMU4ztWJ4l", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recPhrWdVgGOrUBBr", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recPhrWdVgGOrUBBr", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recQK0cXeSfco3W5l", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recQK0cXeSfco3W5l", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recQQTMhowlLJjFLx", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recQQTMhowlLJjFLx", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recQkppbwctfZt8zF", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recQkppbwctfZt8zF", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recQnYHmOMzY39UpH", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recQnYHmOMzY39UpH", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recR6g7OjenCeYwLU", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recR6g7OjenCeYwLU", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recRFMiArVAh4DrZ3", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recRFMiArVAh4DrZ3", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recS8MJKf6DSYXQxj", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recS8MJKf6DSYXQxj", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recSMAhIDAb50H4IT", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recSMAhIDAb50H4IT", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recTGO5PU3ZS19SMN", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recTGO5PU3ZS19SMN", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recTblAqT6nvQhz9W", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recTblAqT6nvQhz9W", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recTwMjRZ4VgkkTXU", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recTwMjRZ4VgkkTXU", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recU5jN0YwyxBAbUL", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recU5jN0YwyxBAbUL", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recUc0H2Oz6sWMKDE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recUc0H2Oz6sWMKDE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recUgB5IRDFciaABJ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recUgB5IRDFciaABJ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recUq3kQ8E3RjuU8P", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recUq3kQ8E3RjuU8P", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recV7fdeW22dzh3ua", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recV7fdeW22dzh3ua", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recVMQXkB3q52Ps78", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recVMQXkB3q52Ps78", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recVq9JJw4BQmiBx7", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recVq9JJw4BQmiBx7", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recVxsNtS8TMo9ZuT", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recVxsNtS8TMo9ZuT", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recWHAVvk4VeKnZVE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recWHAVvk4VeKnZVE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recWe9Ve8TkOpFHcq", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recWe9Ve8TkOpFHcq", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recXJsg4idg71MLNx", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recXJsg4idg71MLNx", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recXnJ04zsDszLCLi", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recXnJ04zsDszLCLi", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recYN7TDIiDx8JsXU", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recYN7TDIiDx8JsXU", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recYOEzmpMZrJpjJO", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recYOEzmpMZrJpjJO", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recYRjk9iHEs5L4dR", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recYRjk9iHEs5L4dR", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recYWieedUOhvgKB9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recYWieedUOhvgKB9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recYZlsilWMInLG0D", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recYZlsilWMInLG0D", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recZIrbK7pm4NuHJv", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recZIrbK7pm4NuHJv", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recZhYQiZqMRXmmOE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recZhYQiZqMRXmmOE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recZj2xktIGORSK3a", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recZj2xktIGORSK3a", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reca4PIX1HldYGIIn", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reca4PIX1HldYGIIn", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reca7q9oMYcmktSdv", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reca7q9oMYcmktSdv", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recaGT6agenbkaaTE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recaGT6agenbkaaTE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recaOgT8yltifxyy6", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recaOgT8yltifxyy6", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recaT6GLpRSS1mOw6", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recaT6GLpRSS1mOw6", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recaVOr8W67UfOviE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recaVOr8W67UfOviE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recb51c1257Nl4RfI", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recb51c1257Nl4RfI", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recbf7md6uZP8eOME", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recbf7md6uZP8eOME", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recbhJwtA10n9ACI8", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recbhJwtA10n9ACI8", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recbviReFrVuaJlsZ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recbviReFrVuaJlsZ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recbwNEOU2Rwf5Zrz", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recbwNEOU2Rwf5Zrz", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccEEEwDPO0YtFDL", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccEEEwDPO0YtFDL", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccIqUAwsabrLQzG", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccIqUAwsabrLQzG", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccRqUsH7nOoWGAR", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccRqUsH7nOoWGAR", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccWbs49T02DRkBs", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccWbs49T02DRkBs", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccdWI8EiNSBF5Rg", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccdWI8EiNSBF5Rg", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccuC9fzqkfxoGfi", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccuC9fzqkfxoGfi", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reccv4NnoCryhPOvI", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reccv4NnoCryhPOvI", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recd7wPmmOtgSW5ip", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recd7wPmmOtgSW5ip", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recdXcfPWTJbH1Ij1", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recdXcfPWTJbH1Ij1", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recdz0JeO3ZAKDI1T", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recdz0JeO3ZAKDI1T", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rece9TtkaPHpb7Fh9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rece9TtkaPHpb7Fh9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "receKSKIqFgVgfM7v", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "receKSKIqFgVgfM7v", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "receUDhkfTyyew3Nk", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "receUDhkfTyyew3Nk", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "receWYgdhdouKOav2", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "receWYgdhdouKOav2", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recen4kmdDkwvhF79", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recen4kmdDkwvhF79", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recev6hhPw0l6YKVJ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recev6hhPw0l6YKVJ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recfE8fOBK3aaAqhj", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recfE8fOBK3aaAqhj", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recfMGrT2IBdS4buM", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recfMGrT2IBdS4buM", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recfc43H1j8EuThhC", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recfc43H1j8EuThhC", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recfcHr6YKflHzPai", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recfcHr6YKflHzPai", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recgNJpBYgOLvquee", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recgNJpBYgOLvquee", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recgTvX9Rl3zOv0mQ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recgTvX9Rl3zOv0mQ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recgWhrnz1ptd2Uoq", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recgWhrnz1ptd2Uoq", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recgqiGTKNiaI7QLs", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recgqiGTKNiaI7QLs", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rechclOcbQA2E1YLS", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rechclOcbQA2E1YLS", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rechks3UwphapTEdG", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rechks3UwphapTEdG", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rechmTrlsFD3HoU83", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rechmTrlsFD3HoU83", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reciJJW2Eqpx1H50x", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reciJJW2Eqpx1H50x", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recipMfM0ZvcnoKZb", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recipMfM0ZvcnoKZb", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recjDdMlPM6lfIfmw", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recjDdMlPM6lfIfmw", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recjQb9IjcJiI6sx2", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recjQb9IjcJiI6sx2", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reckAuerKU3A7JKWc", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reckAuerKU3A7JKWc", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reckbLVsxbURnKINw", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reckbLVsxbURnKINw", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reckplwCdLtqshhuu", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reckplwCdLtqshhuu", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reckqdGNnV76VSZ9h", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reckqdGNnV76VSZ9h", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recks5SwQhH08H3mB", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recks5SwQhH08H3mB", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reckt4FwkKGKrwi7Z", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reckt4FwkKGKrwi7Z", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recktt0uo2g9o0qSI", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recktt0uo2g9o0qSI", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recl80qjnxC6cD5pj", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recl80qjnxC6cD5pj", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reclSjI5C9dw686jC", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reclSjI5C9dw686jC", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reclbRikjaywJvxCi", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reclbRikjaywJvxCi", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recliuO65W9brQXs9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recliuO65W9brQXs9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recm62tzGXpmzUwNO", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recm62tzGXpmzUwNO", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recmSuLaCe5luUsNo", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recmSuLaCe5luUsNo", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recmclGJdidPUDXxV", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recmclGJdidPUDXxV", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recmo6PazYR51d5Jy", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recmo6PazYR51d5Jy", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reco7GtdQrKSIkYEA", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reco7GtdQrKSIkYEA", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recoGjUbTkOwI7FMb", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recoGjUbTkOwI7FMb", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recoNxoBxJ7aZcDGp", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recoNxoBxJ7aZcDGp", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recokYP5uUKJd0WVN", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recokYP5uUKJd0WVN", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recotDjupTrmLLDOF", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recotDjupTrmLLDOF", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recp73FfaCtMgFNMV", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recp73FfaCtMgFNMV", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recpKPP8LMv7FDddh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recpKPP8LMv7FDddh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqgEl9ZVy1oT6BH", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqgEl9ZVy1oT6BH", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqitXztZm8j5RdN", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqitXztZm8j5RdN", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqkOR58iWGn6ylD", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqkOR58iWGn6ylD", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqkSPGhdCHvgODl", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqkSPGhdCHvgODl", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqlDtF6FYdA7axf", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqlDtF6FYdA7axf", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqnfGiY0ulkfGhq", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqnfGiY0ulkfGhq", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqs8qN2tqOxfe4x", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqs8qN2tqOxfe4x", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqutsnyEC9ini6K", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqutsnyEC9ini6K", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recqzdKNo6b2ciSrA", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recqzdKNo6b2ciSrA", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recrROssI0SI1TVmu", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recrROssI0SI1TVmu", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recraNNg0uVXOZwJC", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recraNNg0uVXOZwJC", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recsCdGoAQggbjxFG", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recsCdGoAQggbjxFG", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recsE07ld9LaMHCYM", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recsE07ld9LaMHCYM", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recsEv1bP8eAgIxrj", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recsEv1bP8eAgIxrj", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recshRCkGSw13t3qh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recshRCkGSw13t3qh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recshm95hmq82YCW9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recshm95hmq82YCW9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rect7rs3kLYH4CjVa", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rect7rs3kLYH4CjVa", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rectAR6xa0dosidOF", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rectAR6xa0dosidOF", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rectCka8y93ENc4jh", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rectCka8y93ENc4jh", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rectbH4GIiIONUdK7", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rectbH4GIiIONUdK7", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rectqCsDxSPeZ7EyE", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rectqCsDxSPeZ7EyE", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "rectsGzcnmGhYTmVl", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "rectsGzcnmGhYTmVl", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recu2STn8ovIjhzSL", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recu2STn8ovIjhzSL", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recuPnk8qMbgZOKgT", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recuPnk8qMbgZOKgT", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recuSMrkFSr3c9Rsk", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recuSMrkFSr3c9Rsk", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recuVnS8iSJLnzV2M", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recuVnS8iSJLnzV2M", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recudantcRwG63Ogf", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recudantcRwG63Ogf", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recudzAb7ZARY3ZfK", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recudzAb7ZARY3ZfK", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recus50ALLaU6aNIo", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recus50ALLaU6aNIo", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recvCAd0tNNZvEXDx", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recvCAd0tNNZvEXDx", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recvJZ8tkUnkyixbT", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recvJZ8tkUnkyixbT", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recvJrpkIzlbjVuOn", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recvJrpkIzlbjVuOn", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recwEwZrmSYjzySel", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recwEwZrmSYjzySel", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recwNogCWSpTEQ378", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recwNogCWSpTEQ378", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recwQWzaQ3H7dgJwo", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recwQWzaQ3H7dgJwo", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recwbY4WyRviRENt7", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recwbY4WyRviRENt7", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recwnw0nHTPsYWrYQ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recwnw0nHTPsYWrYQ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recwx7j5M9gAMrrzf", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recwx7j5M9gAMrrzf", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recxUZ4XorQ9YT4BS", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recxUZ4XorQ9YT4BS", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recxycsGkdNrhspBr", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recxycsGkdNrhspBr", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recxz7nGL7QwWWga6", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recxz7nGL7QwWWga6", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recy9uzjFtNWYkAt9", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recy9uzjFtNWYkAt9", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recyDbDjsvg7mVOrm", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recyDbDjsvg7mVOrm", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "recyx59jaSyoGd1vZ", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "recyx59jaSyoGd1vZ", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reczLZAp2HVLJJaLo", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reczLZAp2HVLJJaLo", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reczOfB8lb6CYNV0b", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reczOfB8lb6CYNV0b", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reczWOyr7n6AB1s6p", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reczWOyr7n6AB1s6p", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
 {"id": "reczkNmn6dNDL1OCT", "reason": "invalid coordinates_confidence", "severity": "critical", "field": "coordinates_confidence"}
+{"id": "reczkNmn6dNDL1OCT", "reason": "invalid_coordinates_source", "severity": "critical", "field": "coordinates_source"}
