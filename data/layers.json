@@ -1,133 +1,152 @@
 [
   {
-    "id": "['rec14Pg6aG1qbuorT']",
-    "name_ru": "['rec14Pg6aG1qbuorT']",
+    "layer_id": "rec14Pg6aG1qbuorT",
+    "name_ru": "rec14Pg6aG1qbuorT",
+    "name_en": "Great Ziggurat of Ur",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['rec2ncluHiLODNnaq']",
-    "name_ru": "['rec2ncluHiLODNnaq']",
+    "layer_id": "rec2ncluHiLODNnaq",
+    "name_ru": "rec2ncluHiLODNnaq",
+    "name_en": "Jewish Museum Berlin",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['rec9Uig4TqQTf9Mic']",
-    "name_ru": "['rec9Uig4TqQTf9Mic']",
+    "layer_id": "rec9Uig4TqQTf9Mic",
+    "name_ru": "rec9Uig4TqQTf9Mic",
+    "name_en": "Burj Khalifa",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recGFqZ87FnbU0yS2']",
-    "name_ru": "['recGFqZ87FnbU0yS2']",
+    "layer_id": "recGFqZ87FnbU0yS2",
+    "name_ru": "recGFqZ87FnbU0yS2",
+    "name_en": "Villa Savoye",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recJXK27B03UlbFeK']",
-    "name_ru": "['recJXK27B03UlbFeK']",
+    "layer_id": "recJXK27B03UlbFeK",
+    "name_ru": "recJXK27B03UlbFeK",
+    "name_en": "Great Pyramid of Giza",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recLxj4PljgKcqGCj']",
-    "name_ru": "['recLxj4PljgKcqGCj']",
+    "layer_id": "recLxj4PljgKcqGCj",
+    "name_ru": "recLxj4PljgKcqGCj",
+    "name_en": "Royal National Theatre",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recMn3l81rTXSOwlU']",
-    "name_ru": "['recMn3l81rTXSOwlU']",
+    "layer_id": "recMn3l81rTXSOwlU",
+    "name_ru": "recMn3l81rTXSOwlU",
+    "name_en": "Palace of Versailles",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recOvzuZeUOl81TVz']",
-    "name_ru": "['recOvzuZeUOl81TVz']",
+    "layer_id": "recOvzuZeUOl81TVz",
+    "name_ru": "recOvzuZeUOl81TVz",
+    "name_en": "Santiago de Compostela Cathedral",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recXiwpjwSqzGVjdK']",
-    "name_ru": "['recXiwpjwSqzGVjdK']",
+    "layer_id": "recXiwpjwSqzGVjdK",
+    "name_ru": "recXiwpjwSqzGVjdK",
+    "name_en": "Panthéon (Paris)",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['reccBhhL2wUa80Qqo']",
-    "name_ru": "['reccBhhL2wUa80Qqo']",
+    "layer_id": "reccBhhL2wUa80Qqo",
+    "name_ru": "reccBhhL2wUa80Qqo",
+    "name_en": "Stonehenge",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recd5a9BoEUWzKe26']",
-    "name_ru": "['recd5a9BoEUWzKe26']",
+    "layer_id": "recd5a9BoEUWzKe26",
+    "name_ru": "recd5a9BoEUWzKe26",
+    "name_en": "St. Peter's Basilica",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recdRYJNImF7gWIFV']",
-    "name_ru": "['recdRYJNImF7gWIFV']",
+    "layer_id": "recdRYJNImF7gWIFV",
+    "name_ru": "recdRYJNImF7gWIFV",
+    "name_en": "Casa Batlló",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recfoIIqDhG0Y4Xho']",
-    "name_ru": "['recfoIIqDhG0Y4Xho']",
+    "layer_id": "recfoIIqDhG0Y4Xho",
+    "name_ru": "recfoIIqDhG0Y4Xho",
+    "name_en": "Pantheon (Rome)",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recixNuq3MDPJPRZD']",
-    "name_ru": "['recixNuq3MDPJPRZD']",
+    "layer_id": "recixNuq3MDPJPRZD",
+    "name_ru": "recixNuq3MDPJPRZD",
+    "name_en": "Centre Pompidou",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['reclYzFlRbskL24cq']",
-    "name_ru": "['reclYzFlRbskL24cq']",
+    "layer_id": "reclYzFlRbskL24cq",
+    "name_ru": "reclYzFlRbskL24cq",
+    "name_en": "Chrysler Building",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['rectnuWteYliOpxow']",
-    "name_ru": "['rectnuWteYliOpxow']",
+    "layer_id": "rectnuWteYliOpxow",
+    "name_ru": "rectnuWteYliOpxow",
+    "name_en": "Parthenon",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recw3ji9ZL9VpwG5F']",
-    "name_ru": "['recw3ji9ZL9VpwG5F']",
+    "layer_id": "recw3ji9ZL9VpwG5F",
+    "name_ru": "recw3ji9ZL9VpwG5F",
+    "name_en": "Hagia Sophia",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recyYqRibiQRn7aY7']",
-    "name_ru": "['recyYqRibiQRn7aY7']",
+    "layer_id": "recyYqRibiQRn7aY7",
+    "name_ru": "recyYqRibiQRn7aY7",
+    "name_en": "Alhambra",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
   },
   {
-    "id": "['recyseSDjnvVbf4kd']",
-    "name_ru": "['recyseSDjnvVbf4kd']",
+    "layer_id": "recyseSDjnvVbf4kd",
+    "name_ru": "recyseSDjnvVbf4kd",
+    "name_en": "Chartres Cathedral",
     "color_hex": "#999999",
     "icon": null,
     "is_enabled": true
