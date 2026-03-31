@@ -118,7 +118,6 @@ class RateLimitUnitTests(unittest.TestCase):
                 name_ru='Name',
                 date_start='2026-01-01',
                 source_url='https://example.com',
-                description='desc',
                 source_license='GPL',
             )
 
@@ -128,7 +127,6 @@ class RateLimitUnitTests(unittest.TestCase):
                 name_ru='Name',
                 date_start='2026-01-01',
                 source_url='https://example.com',
-                description='desc',
                 latitude=100,
                 longitude=40,
             )
@@ -137,16 +135,7 @@ class RateLimitUnitTests(unittest.TestCase):
                 name_ru='Name',
                 date_start='2026-01-01',
                 source_url='https://example.com',
-                description='desc',
                 latitude=40,
-            )
-        with self.assertRaises(ValidationError):
-            DraftCreate(
-                name_ru='Name',
-                date_start='2026-01-01',
-                source_url='https://example.com',
-                description='desc',
-                geometry={'type': 'Point', 'coordinates': [37.6, 55.7]},
             )
 
     def test_draft_payload_blocks_system_fields_and_status_update(self):
@@ -155,11 +144,36 @@ class RateLimitUnitTests(unittest.TestCase):
                 name_ru='Name',
                 date_start='2026-01-01',
                 source_url='https://example.com',
-                description='desc',
                 etl_status='ready',
             )
         with self.assertRaises(ValidationError):
+            DraftCreate(name_ru='Name', date_start='2026-01-01', source_url='https://example.com', status='review')
+        with self.assertRaises(ValidationError):
             DraftUpdate(status='approved')
+
+    def test_draft_create_rejects_invalid_source_url(self):
+        with self.assertRaises(ValidationError):
+            DraftCreate(name_ru='Name', date_start='2026-01-01', source_url='not-url')
+
+    def test_draft_create_rejects_invalid_date_start(self):
+        with self.assertRaises(ValidationError):
+            DraftCreate(name_ru='Name', date_start='2026/01/01', source_url='https://example.com')
+
+    def test_draft_create_rejects_too_long_fields(self):
+        with self.assertRaises(ValidationError):
+            DraftCreate(
+                name_ru='Name',
+                date_start='2026-01-01',
+                source_url='https://example.com',
+                title_short='a' * 121,
+            )
+        with self.assertRaises(ValidationError):
+            DraftCreate(
+                name_ru='Name',
+                date_start='2026-01-01',
+                source_url='https://example.com',
+                description='a' * 2001,
+            )
 
     def test_valid_draft_payload_passes_validation(self):
         payload = DraftCreate(
@@ -176,6 +190,10 @@ class RateLimitUnitTests(unittest.TestCase):
             geometry={'type': 'Point', 'coordinates': [37.6173, 55.7558]},
         )
         self.assertEqual(payload.name_ru, 'Feature')
+
+    def test_draft_update_rejects_status_escalation(self):
+        with self.assertRaises(ValidationError):
+            DraftUpdate(status='approved')
 
 
 if __name__ == '__main__':

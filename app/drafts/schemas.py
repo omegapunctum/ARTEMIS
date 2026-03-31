@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator, model_validator
@@ -22,20 +23,30 @@ FORBIDDEN_DRAFT_FIELDS = {
     "published_at",
     "id",
     "user_id",
+    "validated",
+    "is_active",
 }
+
+DATE_START_PATTERN = re.compile(r"^-?\d{4}(?:-\d{2}-\d{2})?$")
 
 
 class DraftPayloadBase(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     layer_type: str | None = None
+    name_en: str | None = None
     coordinates_confidence: str | None = None
+    coordinates_source: str | None = None
     source_license: str | None = None
     source_url: HttpUrl | None = None
     latitude: float | None = None
     longitude: float | None = None
     title_short: str | None = Field(default=None, max_length=120)
     description: str | None = Field(default=None, max_length=2000)
+    tags: list[str] | None = None
+    image_url: HttpUrl | None = None
+    sequence_order: int | None = None
+    influence_radius_km: float | None = None
     geometry: dict[str, Any] | None = None
 
     @model_validator(mode="before")
@@ -102,8 +113,6 @@ class DraftPayloadBase(BaseModel):
         has_longitude = self.longitude is not None
         if has_latitude != has_longitude:
             raise ValueError("latitude and longitude must be provided together")
-        if self.geometry is not None and (not has_latitude or not has_longitude):
-            raise ValueError("latitude and longitude are required when geometry is provided")
         return self
 
 
@@ -111,7 +120,20 @@ class DraftCreate(DraftPayloadBase):
     name_ru: str = Field(min_length=1)
     date_start: str = Field(min_length=1)
     source_url: HttpUrl
-    description: str = Field(min_length=1, max_length=2000)
+
+    @field_validator("name_ru")
+    @classmethod
+    def validate_name_ru(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("name_ru must not be empty")
+        return value
+
+    @field_validator("date_start")
+    @classmethod
+    def validate_date_start(cls, value: str) -> str:
+        if not DATE_START_PATTERN.fullmatch(value):
+            raise ValueError("date_start must be YYYY, YYYY-MM-DD, or -YYYY")
+        return value
 
     @field_validator("geometry")
     @classmethod
@@ -125,6 +147,24 @@ class DraftCreate(DraftPayloadBase):
 class DraftUpdate(DraftPayloadBase):
     name_ru: str | None = Field(default=None, min_length=1)
     date_start: str | None = Field(default=None, min_length=1)
+
+    @field_validator("name_ru")
+    @classmethod
+    def validate_name_ru(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        if not value.strip():
+            raise ValueError("name_ru must not be empty")
+        return value
+
+    @field_validator("date_start")
+    @classmethod
+    def validate_date_start(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        if not DATE_START_PATTERN.fullmatch(value):
+            raise ValueError("date_start must be YYYY, YYYY-MM-DD, or -YYYY")
+        return value
 
     @field_validator("geometry")
     @classmethod

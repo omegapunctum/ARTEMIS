@@ -49,8 +49,22 @@ def list_drafts(db: Session, user: User) -> list[Draft]:
     return db.query(Draft).filter(Draft.user_id == user.id).order_by(Draft.updated_at.desc()).all()
 
 
-def create_draft(db: Session, user: User, title: str, description: str, geometry: dict | None) -> Draft:
-    draft = Draft(user_id=user.id, title=title, description=description, geometry=geometry, status="draft")
+def create_draft(
+    db: Session,
+    user: User,
+    title: str,
+    description: str,
+    geometry: dict | None,
+    image_url: str | None = None,
+) -> Draft:
+    draft = Draft(
+        user_id=user.id,
+        title=title,
+        description=description,
+        geometry=geometry,
+        image_url=image_url,
+        status="draft",
+    )
     db.add(draft)
     db.commit()
     db.refresh(draft)
