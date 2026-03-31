@@ -43,6 +43,8 @@ const uiState = {
   activeDraftId: null,
   mode: 'create',
   formState: 'pristine',
+  ugcBusy: false,
+  busyControl: null,
   readOnly: false,
   pendingAfterLogin: null,
   layers: []
@@ -430,16 +432,17 @@ function syncModeUI(els, draft = null) {
     setText(els.ugcSubtitle, `Draft status: ${STATUS_TEXT[uiState.formState] || uiState.formState}`);
   }
 
-  const disableEdit = uiState.readOnly;
+  const disableEdit = uiState.readOnly || uiState.ugcBusy;
   FORM_FIELDS.forEach((field) => {
     if (els.form[field]) els.form[field].disabled = disableEdit;
   });
 
-  els.saveBtn.disabled = disableEdit;
-  els.submitBtn.disabled = disableEdit || !isEdit;
+  const pending = uiState.formState === 'saving' || uiState.formState === 'submitting';
+  els.saveBtn.disabled = disableEdit || pending;
+  els.submitBtn.disabled = disableEdit || !isEdit || pending;
   els.deleteBtn.hidden = !isEdit;
-  els.deleteBtn.disabled = disableEdit;
-  els.useMapCenterBtn.disabled = disableEdit;
+  els.deleteBtn.disabled = disableEdit || pending;
+  els.useMapCenterBtn.disabled = disableEdit || pending;
 }
 
 function setFormState(els, nextState) {
@@ -448,9 +451,11 @@ function setFormState(els, nextState) {
   const suffix = uiState.readOnly ? ' (read-only)' : '';
   setText(els.ugcSubtitle, `Draft status: ${label}${suffix}`);
   const pending = nextState === 'saving' || nextState === 'submitting';
-  els.saveBtn.disabled = uiState.readOnly || pending;
-  els.submitBtn.disabled = uiState.readOnly || uiState.mode !== 'edit' || pending;
-  els.deleteBtn.disabled = uiState.readOnly || pending;
+  const disableEdit = uiState.readOnly || uiState.ugcBusy;
+  els.saveBtn.disabled = disableEdit || pending;
+  els.submitBtn.disabled = disableEdit || uiState.mode !== 'edit' || pending;
+  els.deleteBtn.disabled = disableEdit || pending;
+  els.useMapCenterBtn.disabled = disableEdit || pending;
 }
 
 function normalizeDraftStatus(status) {
@@ -462,6 +467,7 @@ function normalizeDraftStatus(status) {
 }
 
 async function saveDraft(els) {
+  if (uiState.ugcBusy) return;
   if (!ensureOnlineAction()) {
     setGlobalError(els, 'You are offline. Draft save needs connection.');
     return;
@@ -475,6 +481,7 @@ async function saveDraft(els) {
     return;
   }
 
+  setUgcBusyState(els, true, els.saveBtn);
   setFormState(els, 'saving');
   setGlobalError(els, '');
   showLoading();
@@ -508,10 +515,12 @@ async function saveDraft(els) {
     setFormState(els, 'server');
   } finally {
     hideLoading();
+    setUgcBusyState(els, false);
   }
 }
 
 async function submitDraft(els) {
+  if (uiState.ugcBusy) return;
   if (!ensureOnlineAction()) {
     setGlobalError(els, 'You are offline. Cannot submit for review.');
     return;
@@ -522,6 +531,7 @@ async function submitDraft(els) {
     return;
   }
 
+  setUgcBusyState(els, true, els.submitBtn);
   setFormState(els, 'submitting');
   setGlobalError(els, '');
   showLoading();
@@ -558,10 +568,12 @@ async function submitDraft(els) {
     setFormState(els, 'server');
   } finally {
     hideLoading();
+    setUgcBusyState(els, false);
   }
 }
 
 async function deleteActiveDraft(els) {
+  if (uiState.ugcBusy) return;
   if (!ensureOnlineAction()) {
     setGlobalError(els, 'You are offline. Cannot delete draft.');
     return;
@@ -570,6 +582,7 @@ async function deleteActiveDraft(els) {
   const id = uiState.activeDraftId;
   if (!id) return;
 
+  setUgcBusyState(els, true, els.deleteBtn);
   setGlobalError(els, '');
   showLoading();
   try {
@@ -584,6 +597,7 @@ async function deleteActiveDraft(els) {
     setGlobalError(els, message, { retry: () => deleteActiveDraft(els) });
   } finally {
     hideLoading();
+    setUgcBusyState(els, false);
   }
 }
 
@@ -758,6 +772,28 @@ function setLoading(container, loading) {
   container?.querySelectorAll('button,input,select,textarea').forEach((node) => {
     if (node.tagName === 'BUTTON') node.disabled = loading;
   });
+}
+
+function setUgcBusyState(els, busy, control = null) {
+  uiState.ugcBusy = Boolean(busy);
+  if (busy) {
+    uiState.busyControl = control || null;
+    if (uiState.busyControl) uiState.busyControl.classList.add('is-loading');
+    els.form?.classList.add('ugc-form-busy');
+    els.form?.setAttribute('aria-busy', 'true');
+  } else {
+    if (uiState.busyControl) uiState.busyControl.classList.remove('is-loading');
+    uiState.busyControl = null;
+    els.form?.classList.remove('ugc-form-busy');
+    els.form?.removeAttribute('aria-busy');
+  }
+
+  syncModeUI(els, getActiveDraft());
+}
+
+function getActiveDraft() {
+  if (!uiState.activeDraftId) return null;
+  return uiState.drafts.find((draft) => String(draft?.id) === String(uiState.activeDraftId)) || null;
 }
 
 function setGlobalError(els, message, { retry = null } = {}) {
