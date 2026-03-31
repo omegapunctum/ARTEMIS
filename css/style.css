@@ -715,6 +715,13 @@ button:focus-visible {
 .ugc-field-errors { display: grid; gap: 4px; }
 .ugc-form-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .ugc-form-actions button[disabled] { opacity: .55; cursor: not-allowed; }
+.ugc-form-busy {
+  opacity: 0.92;
+}
+.ugc-form-busy .ugc-form-actions button,
+.ugc-form-busy #ugc-use-map-center-btn {
+  cursor: progress;
+}
 .ugc-draft-item strong,
 .ugc-draft-meta,
 .ugc-field-errors,
