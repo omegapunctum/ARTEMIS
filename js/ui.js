@@ -5,6 +5,22 @@ import { normalizeSafeUrl, setSafeLink } from './safe-dom.js';
 
 let globalDataErrorRetryHandler = null;
 
+export function showGlobalDataLoading(message = 'Загрузка карты…') {
+  const host = document.getElementById('global-data-loading');
+  const text = document.getElementById('global-data-loading-text');
+  if (!host || !text) return;
+  text.textContent = message;
+  host.hidden = false;
+  host.setAttribute('aria-hidden', 'false');
+}
+
+export function hideGlobalDataLoading() {
+  const host = document.getElementById('global-data-loading');
+  if (!host) return;
+  host.hidden = true;
+  host.setAttribute('aria-hidden', 'true');
+}
+
 export function showGlobalDataError({ message, onRetry } = {}) {
   const host = document.getElementById('global-data-error');
   const text = document.getElementById('global-data-error-text');
