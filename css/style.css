@@ -130,6 +130,23 @@ body { overflow: hidden; }
 
 #app-shell { position: relative; width: 100%; height: 100%; }
 #map-container, #map { position: absolute; inset: 0; }
+.global-data-loading {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--z-top-header) + 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: rgba(11, 15, 20, 0.62);
+}
+.global-data-loading[hidden] { display: none; }
+.global-data-loading-text {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--font-panel-title);
+}
 .global-data-error {
   position: absolute;
   inset: 0;
