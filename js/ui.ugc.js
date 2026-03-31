@@ -241,6 +241,7 @@ function bindForm(els) {
 function openUgcPanel(els) {
   els.ugcPanel.hidden = false;
   els.ugcPanel.setAttribute('aria-hidden', 'false');
+  document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'ugc' } }));
 
   const loggedIn = Boolean(getCurrentUser());
   els.ugcAuthCta.hidden = loggedIn;
@@ -270,6 +271,7 @@ function openUgcPanel(els) {
 function closeUgcPanel(els) {
   els.ugcPanel.hidden = true;
   els.ugcPanel.setAttribute('aria-hidden', 'true');
+  document.dispatchEvent(new CustomEvent('artemis:overlay-close', { detail: { source: 'ugc' } }));
   setGlobalError(els, '');
 }
 

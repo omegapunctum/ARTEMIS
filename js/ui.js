@@ -26,6 +26,8 @@ export async function initUI(map, features) {
     layersPanel: document.getElementById('layers-panel'),
     bookmarksPanel: document.getElementById('bookmarks-panel'),
     topHeader: document.getElementById('top-header'),
+    topActions: document.querySelector('#top-header .top-actions'),
+    overflowBtn: document.getElementById('overflow-btn'),
     timelineStart: document.getElementById('timeline-start'),
     timelineEnd: document.getElementById('timeline-end'),
     timelineLabel: document.getElementById('timeline-range-label'),
@@ -63,7 +65,9 @@ export async function initUI(map, features) {
     selectedFeatureId: null,
     enabledLayerIds: new Set(layers.filter((layer) => layer?.is_enabled !== false).map((layer) => String(layer.layer_id || layer.id || '').trim()).filter(Boolean)),
     confidenceFilter: 'all',
-    overlay: { activePrimary: null },
+    overlay: { activePrimary: null, activeModal: null },
+    viewport: { mode: 'desktop', isMobile: false, isTablet: false },
+    detailSheetExpanded: false,
     searchResults: [],
     bookmarks: [],
     applyState: null,
@@ -78,7 +82,8 @@ export async function initUI(map, features) {
   }
 
   hydrateTimeline(elements, years, state);
-  setupOverlayManager(elements, state);
+  setupOverlayManager(elements, state, map);
+  setupResponsiveUi(elements, state, map);
   renderTopPanels(elements, state, layers, confidenceValues, map);
   renderCardsState(elements, state);
 
@@ -141,6 +146,11 @@ export async function initUI(map, features) {
   elements.filtersBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'filters'));
   elements.layersBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'layers'));
   elements.bookmarksBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'bookmarks'));
+  elements.overflowBtn?.addEventListener('click', () => {
+    if (!elements.topActions) return;
+    const expanded = elements.topActions.classList.toggle('is-expanded');
+    elements.overflowBtn.setAttribute('aria-expanded', String(expanded));
+  });
 
   setMapFeatureClickHandler(map, (feature, coordinates) => {
     selectFeature(state, elements, map, feature, {
@@ -150,6 +160,7 @@ export async function initUI(map, features) {
     });
   });
   elements.detailPanelClose?.addEventListener('click', () => clearSelection(state, elements, map));
+  document.getElementById('detail-panel-expand')?.addEventListener('click', () => toggleDetailSheetState(state, elements));
   document.addEventListener('click', (event) => {
     const target = event.target;
     if (state.overlay.activePrimary) {
@@ -176,6 +187,7 @@ export async function initUI(map, features) {
 
   state.loading = false;
   applyState();
+  applyResponsiveLayout(elements, state, map);
 
   return {
     getVisibleCounts() {
@@ -388,11 +400,28 @@ function renderSearchDropdown(elements, state, map) {
   });
 }
 
-function setupOverlayManager(elements, state) {
+function setupOverlayManager(elements, state, map) {
   const closeAll = () => {
     ['search', 'filters', 'layers', 'bookmarks'].forEach((key) => closePrimaryPanel(elements, state, key));
   };
   state.overlay.closeAll = closeAll;
+
+  document.addEventListener('artemis:overlay-open', (event) => {
+    const source = event?.detail?.source || '';
+    if (!state.viewport.isMobile) return;
+    if (source === 'detail') {
+      closeAll();
+      return;
+    }
+    if (source === 'primary') {
+      hideDetailPanel(elements);
+      return;
+    }
+    if (source === 'ugc' || source === 'moderation') {
+      closeAll();
+      clearSelection(state, elements, map);
+    }
+  });
 }
 
 function togglePrimaryPanel(elements, state, key) {
@@ -409,6 +438,9 @@ function openPrimaryPanel(elements, state, key) {
     if (button) button.setAttribute('aria-expanded', String(isActive));
   });
   state.overlay.activePrimary = key;
+  if (state.viewport.isMobile) {
+    document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'primary', key } }));
+  }
 }
 
 function closePrimaryPanel(elements, state, key) {
@@ -620,6 +652,14 @@ function showDetailPanel(state, elements, map, feature) {
   elements.detailPanelBody.replaceChildren(createDetailSkeleton());
   setPanelOpenState(elements.detailPanel, true);
   elements.detailPanel.classList.add('is-selected');
+  if (state.viewport.isMobile) {
+    elements.detailPanel.classList.add('is-mobile-sheet');
+    state.detailSheetExpanded = false;
+    syncDetailSheetState(state, elements);
+  } else {
+    elements.detailPanel.classList.remove('is-mobile-sheet', 'is-expanded');
+  }
+  document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'detail' } }));
   window.requestAnimationFrame(() => elements.detailPanelBody.replaceChildren(detail));
 }
 
@@ -997,4 +1037,52 @@ function createDetailSkeleton() {
     skeleton.appendChild(line);
   }
   return skeleton;
+}
+
+
+function setupResponsiveUi(elements, state, map) {
+  const apply = debounce(() => applyResponsiveLayout(elements, state, map), 80);
+  window.addEventListener('resize', apply, { passive: true });
+  window.addEventListener('orientationchange', apply, { passive: true });
+}
+
+function applyResponsiveLayout(elements, state, map) {
+  const width = window.innerWidth || document.documentElement.clientWidth || 1280;
+  const mode = width <= 720 ? 'mobile' : (width <= 1080 ? 'tablet' : 'desktop');
+  state.viewport = { mode, isMobile: mode === 'mobile', isTablet: mode === 'tablet' };
+  document.body.dataset.viewport = mode;
+  if (elements.topActions) {
+    elements.topActions.classList.toggle('is-collapsed', mode !== 'desktop');
+    if (mode === 'desktop') elements.topActions.classList.remove('is-expanded');
+  }
+  if (elements.overflowBtn) {
+    elements.overflowBtn.hidden = mode === 'desktop';
+    elements.overflowBtn.setAttribute('aria-expanded', elements.topActions?.classList.contains('is-expanded') ? 'true' : 'false');
+  }
+  if (!state.viewport.isMobile) {
+    state.detailSheetExpanded = false;
+    elements.detailPanel?.classList.remove('is-mobile-sheet', 'is-expanded');
+  } else if (elements.detailPanel && !elements.detailPanel.hidden) {
+    elements.detailPanel.classList.add('is-mobile-sheet');
+    syncDetailSheetState(state, elements);
+  }
+  map?.resize?.();
+}
+
+function toggleDetailSheetState(state, elements) {
+  if (!state.viewport.isMobile || elements.detailPanel?.hidden) return;
+  state.detailSheetExpanded = !state.detailSheetExpanded;
+  syncDetailSheetState(state, elements);
+}
+
+function syncDetailSheetState(state, elements) {
+  const panel = elements.detailPanel;
+  const expandBtn = document.getElementById('detail-panel-expand');
+  if (!panel) return;
+  panel.classList.toggle('is-expanded', Boolean(state.detailSheetExpanded));
+  if (expandBtn) {
+    expandBtn.setAttribute('aria-expanded', String(Boolean(state.detailSheetExpanded)));
+    expandBtn.textContent = state.detailSheetExpanded ? '⇩' : '⇧';
+    expandBtn.setAttribute('aria-label', state.detailSheetExpanded ? 'Collapse detail panel' : 'Expand detail panel');
+  }
 }

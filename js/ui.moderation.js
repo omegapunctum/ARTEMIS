@@ -18,7 +18,8 @@ const moderationState = {
   search: '',
   sort: 'newest',
   rejectReason: '',
-  activeModal: null
+  activeModal: null,
+  mobileView: 'list'
 };
 
 const STATUS = {
@@ -193,6 +194,8 @@ function onModerationClick(event) {
     if (!moderationState.isAllowed) return;
     moderationState.isOpen = !moderationState.isOpen;
     moderationState.activeModal = null;
+    moderationState.mobileView = 'list';
+    if (moderationState.isOpen) document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'moderation' } }));
     renderModerationWorkspace();
     return;
   }
@@ -200,6 +203,7 @@ function onModerationClick(event) {
   if (action === 'close-workspace') {
     moderationState.isOpen = false;
     moderationState.activeModal = null;
+    moderationState.mobileView = 'list';
     renderModerationWorkspace();
     return;
   }
@@ -210,10 +214,17 @@ function onModerationClick(event) {
     return;
   }
 
+  if (action === 'mobile-back') {
+    moderationState.mobileView = 'list';
+    renderModerationWorkspace();
+    return;
+  }
+
   if (action === 'select-draft') {
     const draftId = String(actionEl.dataset.draftId || '');
     moderationState.selectedDraftId = draftId;
     moderationState.queueState = STATUS.REVIEW_SELECTED;
+    moderationState.mobileView = 'review';
     moderationState.actionError = '';
     moderationState.actionMessage = '';
     centerMapForDraft(findDraftById(draftId));
@@ -264,6 +275,7 @@ function onModerationKeydown(event) {
 
   if (moderationState.isOpen) {
     moderationState.isOpen = false;
+    moderationState.mobileView = 'list';
     renderModerationWorkspace();
   }
 }
@@ -275,6 +287,7 @@ function updateModeratorAccess() {
   if (!moderationState.isAllowed) {
     moderationState.isOpen = false;
     moderationState.activeModal = null;
+    moderationState.mobileView = 'list';
     moderationState.queue = [];
     moderationState.filteredQueue = [];
     moderationState.selectedDraftId = null;
@@ -312,6 +325,7 @@ function removeDraftFromQueue(draftId) {
   const stillSelected = findDraftById(moderationState.selectedDraftId);
   if (stillSelected) {
     moderationState.queueState = STATUS.REVIEW_SELECTED;
+    moderationState.mobileView = 'review';
     return;
   }
 
@@ -343,6 +357,9 @@ function renderModerationWorkspace() {
   workspace.hidden = !moderationState.isAllowed;
   workspace.classList.toggle('is-open', moderationState.isAllowed && moderationState.isOpen);
   workspace.setAttribute('aria-hidden', moderationState.isAllowed && moderationState.isOpen ? 'false' : 'true');
+
+  const isMobile = window.matchMedia('(max-width: 720px)').matches;
+  workspace.classList.toggle('is-mobile-review', isMobile && moderationState.mobileView === 'review');
 
   renderQueueState(queueStateNode);
   renderPendingList(listNode);
