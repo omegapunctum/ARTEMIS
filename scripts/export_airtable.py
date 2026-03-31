@@ -739,8 +739,16 @@ def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List
         critical("layer_type", "invalid_layer_type")
     if mapped.get("_invalid_coordinates"):
         critical("geometry", "invalid_coordinates")
-    latitude = mapped.get("latitude")
-    longitude = mapped.get("longitude")
+    raw_latitude = mapped.get("latitude")
+    raw_longitude = mapped.get("longitude")
+    latitude = parse_float(raw_latitude)
+    longitude = parse_float(raw_longitude)
+    if raw_latitude not in (None, "") and latitude is None:
+        mapped["_invalid_coordinates"] = True
+    if raw_longitude not in (None, "") and longitude is None:
+        mapped["_invalid_coordinates"] = True
+    mapped["latitude"] = latitude
+    mapped["longitude"] = longitude
     if (latitude is None) ^ (longitude is None):
         critical("geometry", "missing_geometry_coordinate")
     elif latitude is not None and longitude is not None and not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
