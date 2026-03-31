@@ -49,7 +49,14 @@ def create_draft_endpoint(
 ):
     request.state.user_id = current_user.id
     try:
-        draft = create_draft(db, current_user, payload.name_ru, payload.description, payload.geometry)
+        draft = create_draft(
+            db,
+            current_user,
+            payload.name_ru,
+            payload.description or "",
+            payload.geometry,
+            payload.image_url.unicode_string() if payload.image_url else None,
+        )
         log_event(logging.INFO, 'draft.create', route=request.url.path, request_id=request.state.request_id, user_id=current_user.id, draft_id=draft.id)
         return draft
     except HTTPException:
@@ -79,6 +86,8 @@ def update_draft_endpoint(
             storage_changes["description"] = changes["description"]
         if "geometry" in changes:
             storage_changes["geometry"] = changes["geometry"]
+        if "image_url" in changes:
+            storage_changes["image_url"] = str(changes["image_url"]) if changes["image_url"] is not None else None
         updated = update_draft(db, draft, changes=storage_changes)
         log_event(logging.INFO, 'draft.update', route=request.url.path, request_id=request.state.request_id, user_id=current_user.id, draft_id=updated.id)
         return updated
