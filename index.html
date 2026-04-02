@@ -61,7 +61,10 @@
           <button type="button" class="search-suggestion-chip" data-query="объект">объект</button>
           <button type="button" class="search-suggestion-chip" data-query="период">период</button>
         </div>
-        <p id="search-no-results-state" class="search-no-results-state" hidden aria-live="polite">Ничего не найдено. Попробуйте изменить запрос.</p>
+        <div id="search-no-results-state" class="search-no-results-state" hidden aria-live="polite">
+          <span id="search-no-results-text">Ничего не найдено. Попробуйте изменить запрос.</span>
+          <button id="search-no-results-reset" type="button" class="ui-button ui-button-secondary">Сбросить поиск</button>
+        </div>
         <div id="search-dropdown" class="top-panel search-dropdown" hidden></div>
       </div>
       <div class="top-actions">

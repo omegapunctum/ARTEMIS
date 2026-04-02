@@ -290,6 +290,13 @@ body { overflow: hidden; }
   background: var(--state-warning-bg);
   color: var(--state-warning-text);
   font: var(--font-meta);
+  display: grid;
+  gap: 8px;
+}
+#search-no-results-reset {
+  justify-self: start;
+  min-height: 30px;
+  padding: 0 12px;
 }
 .search-clear-btn {
   position: absolute;
@@ -331,6 +338,10 @@ body { overflow: hidden; }
 .top-actions > #layers-btn.is-layer-engaged {
   border-color: rgba(125, 211, 252, 0.72);
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.14);
+}
+.top-actions > button.has-active-filters {
+  border-color: rgba(125, 211, 252, 0.72);
+  background: rgba(14, 116, 144, 0.24);
 }
 .top-actions > button,
 .icon-btn,
@@ -604,6 +615,7 @@ button:focus-visible {
   min-height: 28px;
   display: flex;
   align-items: center;
+  padding: 4px 0;
 }
 #cards-state.has-inline-error {
   border: 1px solid var(--state-error-border);

@@ -1,6 +1,6 @@
 import { loadLayers } from './data.js';
 import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, getMapBuildDiagnostics, setMapFeatureClickHandler, setMapFeatureHoverHandler, setMapLayerFilter, setSelectedFeatureId, setHoveredFeatureId } from './map.js';
-import { debounce, createInlineStateBlock } from './ux.js';
+import { debounce, createInlineStateBlock, showSystemMessage } from './ux.js';
 import { normalizeSafeUrl, setSafeLink } from './safe-dom.js';
 
 let globalDataErrorRetryHandler = null;
@@ -75,6 +75,8 @@ export async function initUI(map, features) {
     searchHelperState: document.getElementById('search-helper-state'),
     searchSuggestions: document.getElementById('search-suggestions'),
     searchNoResultsState: document.getElementById('search-no-results-state'),
+    searchNoResultsText: document.getElementById('search-no-results-text'),
+    searchNoResultsReset: document.getElementById('search-no-results-reset'),
     searchDropdown: document.getElementById('search-dropdown'),
     filtersBtn: document.getElementById('filters-btn'),
     layersBtn: document.getElementById('layers-btn'),
@@ -126,6 +128,7 @@ export async function initUI(map, features) {
     selectedFeatureId: null,
     hoveredFeatureId: null,
     enabledLayerIds: new Set(layers.filter((layer) => layer?.is_enabled !== false).map((layer) => String(layer.layer_id || layer.id || '').trim()).filter(Boolean)),
+    defaultEnabledLayerIds: new Set(layers.filter((layer) => layer?.is_enabled !== false).map((layer) => String(layer.layer_id || layer.id || '').trim()).filter(Boolean)),
     confidenceFilter: 'all',
     overlay: { activePrimary: null, activeModal: null },
     viewport: { mode: 'desktop', isMobile: false, isTablet: false },
@@ -191,10 +194,11 @@ export async function initUI(map, features) {
     }
   });
   elements.searchClearBtn?.addEventListener('click', () => {
-    if (elements.searchInput) elements.searchInput.value = '';
-    state.search = '';
-    toggleSearchClear(elements, state);
-    closePrimaryPanel(elements, state, 'search');
+    clearSearchState(elements, state, { closePanel: true, notify: true });
+    applyState();
+  });
+  elements.searchNoResultsReset?.addEventListener('click', () => {
+    clearSearchState(elements, state, { closePanel: false, notify: true });
     applyState();
   });
   setupSearchSuggestions(elements);
@@ -355,18 +359,9 @@ function renderFiltersPanel(elements, state, layers, confidenceValues) {
   resetBtn.textContent = 'Reset';
   resetBtn.disabled = activeFiltersTotal === 0;
   resetBtn.addEventListener('click', () => {
-    state.search = '';
-    if (elements.searchInput) elements.searchInput.value = '';
-    state.confidenceFilter = 'all';
-    state.enabledLayerIds = new Set(state.layerLookup.keys());
-    state.currentStartYear = Number(elements.timelineStart?.min ?? state.currentStartYear);
-    state.currentEndYear = Number(elements.timelineEnd?.max ?? state.currentEndYear);
-    if (elements.timelineStart) elements.timelineStart.value = String(state.currentStartYear);
-    if (elements.timelineEnd) elements.timelineEnd.value = String(state.currentEndYear);
-    toggleSearchClear(elements, state);
-    updateTimelineLabel(elements, state);
-    updateTimelineViz(elements, state);
+    resetExploreConstraints(elements, state);
     state.applyState?.();
+    showSystemMessage('Фильтры сброшены', { variant: 'success', timeout: 2200 });
   });
   filterSummary.append(activeFiltersBadge, resetBtn);
 
@@ -412,7 +407,23 @@ function renderLayersPanel(elements, state, layers) {
   const title = document.createElement('h3');
   title.className = 'panel-title';
   title.textContent = 'Layers';
-  elements.layersPanel.appendChild(title);
+  const layersChanged = hasLayerCustomization(state);
+  const info = document.createElement('p');
+  info.className = 'status-summary';
+  info.textContent = layersChanged
+    ? 'Layer visibility customized'
+    : 'Default layer visibility';
+  const restoreBtn = document.createElement('button');
+  restoreBtn.type = 'button';
+  restoreBtn.className = 'ui-button ui-button-secondary';
+  restoreBtn.textContent = 'Restore defaults';
+  restoreBtn.disabled = !layersChanged;
+  restoreBtn.addEventListener('click', () => {
+    restoreDefaultLayers(state);
+    state.applyState?.();
+    showSystemMessage('Слои восстановлены по умолчанию', { variant: 'success', timeout: 2200 });
+  });
+  elements.layersPanel.append(title, info, restoreBtn);
 
   (layers || []).forEach((layer) => {
     const id = String(layer?.layer_id || layer?.id || '').trim();
@@ -516,10 +527,7 @@ function renderSearchDropdown(elements, state, map) {
     clearBtn.className = 'ui-button ui-button-secondary';
     clearBtn.textContent = 'Clear search';
     clearBtn.addEventListener('click', () => {
-      if (elements.searchInput) elements.searchInput.value = '';
-      state.search = '';
-      toggleSearchClear(elements, state);
-      closePrimaryPanel(elements, state, 'search');
+      clearSearchState(elements, state, { closePanel: true, notify: true });
       state.applyState?.();
     });
     elements.searchDropdown.appendChild(noResults);
@@ -642,10 +650,35 @@ function toggleSearchClear(elements, state) {
   updateSearchEntryState(elements, hasSearch);
 }
 
+function clearSearchState(elements, state, { closePanel = false, notify = false } = {}) {
+  if (elements.searchInput) elements.searchInput.value = '';
+  state.search = '';
+  toggleSearchClear(elements, state);
+  if (closePanel) closePrimaryPanel(elements, state, 'search');
+  if (notify) showSystemMessage('Поиск очищен', { variant: 'success', timeout: 2000 });
+}
+
+function restoreDefaultLayers(state) {
+  state.enabledLayerIds = new Set(state.defaultEnabledLayerIds);
+}
+
+function resetExploreConstraints(elements, state, { keepSearch = false } = {}) {
+  if (!keepSearch) clearSearchState(elements, state, { closePanel: true, notify: false });
+  state.confidenceFilter = 'all';
+  restoreDefaultLayers(state);
+  state.currentStartYear = Number(elements.timelineStart?.min ?? state.currentStartYear);
+  state.currentEndYear = Number(elements.timelineEnd?.max ?? state.currentEndYear);
+  if (elements.timelineStart) elements.timelineStart.value = String(state.currentStartYear);
+  if (elements.timelineEnd) elements.timelineEnd.value = String(state.currentEndYear);
+  updateTimelineLabel(elements, state);
+  updateTimelineViz(elements, state);
+}
+
 function updateSearchEntryState(elements, hasSearch) {
   const shell = elements?.searchShell;
   const helper = elements?.searchHelperState;
   const suggestions = elements?.searchSuggestions;
+  const query = String(elements?.searchInput?.value || '').trim();
   if (shell?.classList) {
     shell.classList.toggle('is-search-active', hasSearch);
   }
@@ -654,7 +687,7 @@ function updateSearchEntryState(elements, hasSearch) {
   }
   if (!helper) return;
   helper.textContent = hasSearch
-    ? 'Применён текстовый фильтр. Результаты обновлены.'
+    ? `Поиск активен: «${query || 'запрос'}».`
     : 'Ищите места, события и объекты.';
 }
 
@@ -675,6 +708,8 @@ function setupSearchSuggestions(elements) {
 function updateSearchNoResultsState(elements, state) {
   const noResults = elements?.searchNoResultsState;
   if (!noResults) return;
+  const noResultsText = elements?.searchNoResultsText;
+  const noResultsReset = elements?.searchNoResultsReset;
 
   const hasSearch = Boolean(state?.search);
   const canMeasureResults = Array.isArray(state?.searchResults);
@@ -682,7 +717,10 @@ function updateSearchNoResultsState(elements, state) {
   const shouldShow = hasSearch && canMeasureResults && isEmpty;
   noResults.hidden = !shouldShow;
   if (shouldShow) {
-    noResults.textContent = `Ничего не найдено для «${state.search}». Измените запрос или очистите поиск.`;
+    if (noResultsText) noResultsText.textContent = `Ничего не найдено для «${state.search}».`;
+    if (noResultsReset) noResultsReset.hidden = false;
+  } else if (noResultsReset) {
+    noResultsReset.hidden = true;
   }
 }
 
@@ -942,10 +980,13 @@ function renderCardsState(elements, state) {
   }
 
   if (state.empty) {
+    const emptyContext = buildEmptyStateContext(state, elements);
     elements.cardsState.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'No results',
-      message: 'No objects in this time range.'
+      title: emptyContext.title,
+      message: emptyContext.message,
+      actionLabel: emptyContext.actionLabel,
+      onAction: emptyContext.onAction
     }));
     if (elements.cardsRibbon) elements.cardsRibbon.replaceChildren();
     return;
@@ -960,7 +1001,7 @@ function renderCardsState(elements, state) {
     return;
   }
 
-  elements.cardsState.textContent = `${state.filteredFeatures.length} objects`;
+  elements.cardsState.textContent = buildResultFeedbackLabel(state);
 }
 
 function hydrateTimeline(elements, years, state) {
@@ -1565,6 +1606,18 @@ function updateFilterFeedback(elements, state) {
     button.dataset.activeCount = total > 0 ? String(total) : '';
     button.classList.toggle('has-active-filters', total > 0);
   });
+  if (elements.layersBtn) {
+    elements.layersBtn.classList.toggle('is-layer-engaged', hasLayerCustomization(state));
+  }
+  if (elements.layersEntryHelper) {
+    if (hasLayerCustomization(state)) {
+      elements.layersEntryHelper.textContent = 'Слои изменены';
+      elements.layersEntryHelper.classList.add('is-visited');
+    } else {
+      elements.layersEntryHelper.textContent = total > 0 ? 'Есть активные ограничения' : 'Выберите, что показывать на карте.';
+      elements.layersEntryHelper.classList.remove('is-visited');
+    }
+  }
 }
 
 function getActiveFiltersCount(state) {
@@ -1573,6 +1626,69 @@ function getActiveFiltersCount(state) {
   const hasTimelineFilter = state.currentStartYear !== yearMin || state.currentEndYear !== yearMax;
   return Number(Boolean(state.search))
     + Number(state.confidenceFilter !== 'all')
-    + Number(state.enabledLayerIds.size !== state.layerLookup.size)
+    + Number(hasLayerCustomization(state))
     + Number(hasTimelineFilter);
+}
+
+function hasLayerCustomization(state) {
+  if (!(state?.defaultEnabledLayerIds instanceof Set) || !(state?.enabledLayerIds instanceof Set)) return false;
+  if (state.defaultEnabledLayerIds.size !== state.enabledLayerIds.size) return true;
+  for (const id of state.defaultEnabledLayerIds) {
+    if (!state.enabledLayerIds.has(id)) return true;
+  }
+  return false;
+}
+
+function buildResultFeedbackLabel(state) {
+  const constraints = [];
+  if (state.search) constraints.push(`поиск: «${state.search}»`);
+  if (hasLayerCustomization(state)) constraints.push('слои');
+  if (state.confidenceFilter !== 'all') constraints.push(`confidence: ${state.confidenceFilter}`);
+  const yearMin = Number(state.yearBounds?.min ?? state.currentStartYear);
+  const yearMax = Number(state.yearBounds?.max ?? state.currentEndYear);
+  if (state.currentStartYear !== yearMin || state.currentEndYear !== yearMax) {
+    constraints.push(`период ${state.currentStartYear}—${state.currentEndYear}`);
+  }
+  const suffix = constraints.length ? ` · Ограничения: ${constraints.join(', ')}` : '';
+  return `${state.filteredFeatures.length} objects в ленте и на карте${suffix}`;
+}
+
+function buildEmptyStateContext(state, elements) {
+  if (!state?.applyState) {
+    return { title: 'No results', message: 'Подходящие объекты не найдены.', actionLabel: '', onAction: null };
+  }
+  if (!state.enabledLayerIds.size) {
+    return {
+      title: 'Все слои выключены',
+      message: 'Включите хотя бы один слой, чтобы увидеть объекты.',
+      actionLabel: 'Восстановить слои',
+      onAction: () => {
+        restoreDefaultLayers(state);
+        state.applyState?.();
+        showSystemMessage('Слои восстановлены по умолчанию', { variant: 'success', timeout: 2200 });
+      }
+    };
+  }
+  if (state.search) {
+    return {
+      title: 'Ничего не найдено',
+      message: `Запрос «${state.search}» не дал результатов в текущих ограничениях.`,
+      actionLabel: 'Очистить поиск',
+      onAction: () => {
+        clearSearchState(elements, state, { closePanel: false, notify: false });
+        state.applyState?.();
+        showSystemMessage('Поиск очищен', { variant: 'success', timeout: 2000 });
+      }
+    };
+  }
+  return {
+    title: 'Нет объектов в выборке',
+    message: 'Сужение фильтрами/таймлайном исключило все объекты.',
+    actionLabel: 'Сбросить ограничения',
+    onAction: () => {
+      resetExploreConstraints(elements, state);
+      state.applyState?.();
+      showSystemMessage('Ограничения сброшены', { variant: 'success', timeout: 2200 });
+    }
+  };
 }
