@@ -58,6 +58,19 @@ class RateLimitUnitTests(unittest.TestCase):
             with self.assertRaises(HTTPException):
                 create_dependency(create_request)
 
+    def test_include_path_uses_route_template_when_available(self):
+        request_a = self.make_request(path='/moderation/1/approve')
+        request_b = self.make_request(path='/moderation/2/approve')
+        request_a.scope = {'route': SimpleNamespace(path='/moderation/{draft_id}/approve')}
+        request_b.scope = {'route': SimpleNamespace(path='/moderation/{draft_id}/approve')}
+        dependency = rate_limit(1, 60, prefix='moderation-approve', include_path=True)
+
+        with patch('app.security.rate_limit.time', side_effect=[100, 101]):
+            dependency(request_a)
+            with self.assertRaises(HTTPException) as exc:
+                dependency(request_b)
+        self.assertEqual(exc.exception.status_code, 429)
+
     def test_old_timestamps_are_pruned(self):
         request = self.make_request(path='/uploads/image')
         dependency = rate_limit(2, 60, prefix='upload')
