@@ -8,6 +8,11 @@ app/  (не api/)
 - Artifact: `docs/UI_UX_TARGETED_SMOKE_2026-04-02.md`
 - Scope: post-patch manual verification only for unified UI/UX touched scenarios (overlay/search/filter/UGC/moderation interaction layer).
 
+## Final UI mainscreen smoke (closeout)
+
+- Artifact: `docs/UI_MAINSCREEN_FINAL_SMOKE_2026-04-02.md`
+- Scope: final manual smoke for mainscreen explore-flow only (top bar/search, onboarding, loading/status, timeline sync, detail card, filters/layers, zero-recovery flows).
+
 ---
 
 ## UI / UX Manual Smoke Checks

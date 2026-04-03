@@ -40,6 +40,7 @@
 
 ## Targeted smoke additions (unified UI/UX pass)
 - Artifact: `docs/UI_UX_TARGETED_SMOKE_2026-04-02.md`
+- Final mainscreen smoke artifact: `docs/UI_MAINSCREEN_FINAL_SMOKE_2026-04-02.md`
 - [ ] Open Filters/Layers/Bookmarks sequentially and verify only one primary panel is open at a time.
 - [ ] Open overflow menu, then open any primary panel; overflow menu should auto-close.
 - [ ] Enter search with zero matches and verify inline + dropdown empty states both provide clear action.
