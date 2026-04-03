@@ -11,6 +11,7 @@ from typing import Any
 from uuid import uuid4
 
 from fastapi import HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse, Response
 
@@ -209,6 +210,22 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
     return JSONResponse(
         status_code=status_code,
         content={'error': error_value, 'request_id': getattr(request.state, 'request_id', None)},
+        headers={'X-Request-ID': getattr(request.state, 'request_id', '')},
+    )
+
+
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    status_code = 422
+    log_event(
+        logging.WARNING,
+        'validation_exception',
+        path=request.url.path,
+        request_id=getattr(request.state, 'request_id', None),
+        status_code=status_code,
+    )
+    return JSONResponse(
+        status_code=status_code,
+        content={'detail': exc.errors(), 'request_id': getattr(request.state, 'request_id', None)},
         headers={'X-Request-ID': getattr(request.state, 'request_id', '')},
     )
 

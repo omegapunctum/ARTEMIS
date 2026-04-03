@@ -3,6 +3,7 @@ import logging
 import os
 
 from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -20,6 +21,7 @@ from app.observability import (
     log_event,
     internal_error_response,
     unhandled_exception_handler,
+    validation_exception_handler,
 )
 from app.uploads.routes import router as uploads_router
 
@@ -47,6 +49,7 @@ app.add_middleware(
 )
 
 app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, unhandled_exception_handler)
 
 for router in (auth_router, drafts_router, uploads_router, moderation_router):
