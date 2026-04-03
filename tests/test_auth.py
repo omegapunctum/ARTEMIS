@@ -68,6 +68,7 @@ class AuthApiTests(unittest.TestCase):
         self.db.commit()
         active_refresh_tokens.clear()
         self.session = requests.Session()
+        self.session.headers.update({"x-forwarded-for": f"10.0.1.{int(uuid4().hex[:2], 16)}"})
 
     def tearDown(self):
         self.db.close()
@@ -136,6 +137,50 @@ class AuthApiTests(unittest.TestCase):
         set_cookie = logout.headers.get("set-cookie", "").lower()
         self.assertIn("refresh_token=", set_cookie)
         self.assertIn("max-age=0", set_cookie)
+
+    def test_login_spam_is_rate_limited_without_breaking_valid_login(self):
+        email = f"rl-{uuid4().hex}@example.com"
+        password = "password123"
+        self._create_user(email, password)
+
+        for _ in range(5):
+            invalid = self.session.post(
+                f"{self.BASE_URL}/api/auth/login",
+                json={"email": email, "password": "wrong-password"},
+                timeout=5,
+            )
+            self.assertEqual(invalid.status_code, 401)
+
+        blocked = self.session.post(
+            f"{self.BASE_URL}/api/auth/login",
+            json={"email": email, "password": password},
+            timeout=5,
+        )
+        self.assertEqual(blocked.status_code, 429)
+
+        clean_session = requests.Session()
+        clean_session.headers.update({"x-forwarded-for": f"10.0.2.{int(uuid4().hex[:2], 16)}"})
+        valid = clean_session.post(
+            f"{self.BASE_URL}/api/auth/login",
+            json={"email": email, "password": password},
+            timeout=5,
+        )
+        self.assertEqual(valid.status_code, 200)
+        clean_session.close()
+
+    def test_moderation_submit_spam_is_rate_limited(self):
+        email = f"mod-rl-{uuid4().hex}@example.com"
+        password = "password123"
+        self._create_user(email, password)
+        token = self._login(email, password)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        for _ in range(10):
+            response = self.session.post(f"{self.BASE_URL}/api/drafts/99999/submit", headers=headers, timeout=5)
+            self.assertEqual(response.status_code, 404)
+
+        blocked = self.session.post(f"{self.BASE_URL}/api/drafts/99998/submit", headers=headers, timeout=5)
+        self.assertEqual(blocked.status_code, 429)
 
     def test_drafts_extended_payload_create_and_partial_update(self):
         email = f"drafts-{uuid4().hex}@example.com"

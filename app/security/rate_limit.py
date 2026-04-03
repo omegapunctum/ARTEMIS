@@ -33,7 +33,9 @@ def _prune_timestamps(timestamps: list[float], window_seconds: int, now: float) 
 def _rate_limit_key(prefix: str, request: Request, include_path: bool) -> str:
     ip = get_client_ip(request)
     if include_path:
-        return f"{prefix}:{ip}:{request.url.path}"
+        route = request.scope.get("route") if hasattr(request, "scope") else None
+        route_path = getattr(route, "path", None) or request.url.path
+        return f"{prefix}:{ip}:{route_path}"
     return f"{prefix}:{ip}"
 
 
