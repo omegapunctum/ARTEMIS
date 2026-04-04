@@ -13,7 +13,7 @@
       "name_ru": "Бурдж-Халифа",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Official Site"
+        "Official Site"
       ],
       "influence_radius_km": 5,
       "title_short": "Самое высокое здание в истории человечества",
@@ -42,7 +42,7 @@
       "name_ru": "Вилла Савой",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Britannica"
+        "Britannica"
       ],
       "influence_radius_km": 1,
       "title_short": "Манифест современной архитектуры Ле Корбюзье",
@@ -71,7 +71,7 @@
       "name_ru": "Собор Святого Петра",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Vatican / Wikipedia"
+        "Vatican"
       ],
       "influence_radius_km": 1,
       "title_short": "Величайший собор христианского мира",
@@ -100,7 +100,7 @@
       "name_ru": "Шартрский собор",
       "layer_type": "architecture",
       "coordinates_source": [
-        "UNESCO / Wikipedia"
+        "UNESCO"
       ],
       "influence_radius_km": 2,
       "title_short": "Совершенный образец высокой готики",
@@ -129,7 +129,7 @@
       "name_ru": "Центр Жоржа Помпиду",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Pompidou Site"
+        "Pompidou Site"
       ],
       "influence_radius_km": 1,
       "title_short": "Манифест архитектуры хай-тек в центре Парижа",
@@ -158,7 +158,7 @@
       "name_ru": "Пантеон (Париж)",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Britannica"
+        "Britannica"
       ],
       "influence_radius_km": 1,
       "title_short": "Храм Просвещения и национальный мавзолей Франции",
@@ -187,7 +187,7 @@
       "name_ru": "Пантеон (Рим)",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Britannica"
+        "Britannica"
       ],
       "influence_radius_km": 1,
       "title_short": "«Храм всех богов» с величайшим куполом древности",
@@ -216,7 +216,7 @@
       "name_ru": "Собор в Сантьяго-де-Компостела",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Official Site / Wikipedia"
+        "Official Site"
       ],
       "influence_radius_km": 1,
       "title_short": "Главный паломнический собор средневековой Европы",
@@ -245,7 +245,7 @@
       "name_ru": "Крайслер-билдинг",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / PBS"
+        "PBS"
       ],
       "influence_radius_km": 1,
       "title_short": "Самый узнаваемый небоскрёб в стиле ар-деко",
@@ -274,7 +274,7 @@
       "name_ru": "Версальский дворец",
       "layer_type": "architecture",
       "coordinates_source": [
-        "UNESCO / Wikipedia"
+        "UNESCO"
       ],
       "influence_radius_km": 15,
       "title_short": "Резиденция «Короля-Солнца» и символ абсолютизма",
@@ -303,7 +303,7 @@
       "name_ru": "Альгамбра",
       "layer_type": "architecture",
       "coordinates_source": [
-        "UNESCO / Wikipedia"
+        "UNESCO"
       ],
       "influence_radius_km": 3,
       "title_short": "Дворцовый комплекс мусульманской Испании",
@@ -332,7 +332,7 @@
       "name_ru": "Еврейский музей в Берлине",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Official Site / Wikipedia"
+        "Official Site"
       ],
       "influence_radius_km": 1,
       "title_short": "Архитектурное воплощение немецко-еврейской истории",
@@ -361,7 +361,7 @@
       "name_ru": "Парфенон",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Saylor"
+        "Saylor"
       ],
       "influence_radius_km": 1,
       "title_short": "Кульминация классического дорического ордера",
@@ -390,7 +390,7 @@
       "name_ru": "Стоунхендж",
       "layer_type": "architecture",
       "coordinates_source": [
-        "UNESCO / Wikipedia"
+        "UNESCO"
       ],
       "influence_radius_km": 5,
       "title_short": "Крупнейший мегалитический комплекс Европы",
@@ -419,7 +419,7 @@
       "name_ru": "Великая пирамида Гизы (Пирамида Хеопса)",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Britannica"
+        "Britannica"
       ],
       "influence_radius_km": 10,
       "title_short": "Последнее из сохранившихся чудес света",
@@ -448,7 +448,7 @@
       "name_ru": "Каса-Батльо",
       "layer_type": "architecture",
       "coordinates_source": [
-        "UNESCO / Wikipedia"
+        "UNESCO"
       ],
       "influence_radius_km": 1,
       "title_short": "Шедевр органического модернизма Антонио Гауди",
@@ -477,7 +477,7 @@
       "name_ru": "Королевский национальный театр",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Dezeen"
+        "Dezeen"
       ],
       "influence_radius_km": 1,
       "title_short": "Икона британского брутализма на берегу Темзы",
@@ -506,7 +506,7 @@
       "name_ru": "Великий зиккурат в Уре",
       "layer_type": "architecture",
       "coordinates_source": [
-        "Wikipedia / Britannica"
+        "Britannica"
       ],
       "influence_radius_km": 2,
       "title_short": "Главный храм-гора древнего Шумера",
@@ -535,7 +535,7 @@
       "name_ru": "Собор Святой Софии",
       "layer_type": "architecture",
       "coordinates_source": [
-        "UNESCO / Wikipedia"
+        "UNESCO"
       ],
       "influence_radius_km": 1,
       "title_short": "Шедевр «Золотого века» Византии",
