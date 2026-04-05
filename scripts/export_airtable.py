@@ -220,6 +220,12 @@ def is_valid_url(value: Optional[str]) -> bool:
 
 
 def is_uuid_v4(value: Any) -> bool:
+    """Target-contract helper: Airtable governance expects UUID v4 for Features.id.
+
+    Runtime ETL currently keeps compatibility with legacy non-empty ids
+    (see get_etl_error / validate_feature), so this helper is intentionally
+    not a hard gate in active export path yet.
+    """
     candidate = safe_str(value)
     if not candidate:
         return False
@@ -769,6 +775,8 @@ def get_etl_error(mapped: Dict[str, Any]) -> Optional[str]:
     record_id = safe_str(mapped.get("id"))
     if not record_id:
         return "missing_id"
+    # Compatibility mode: legacy non-empty ids are still tolerated at runtime.
+    # Target UUID v4 contract is tracked via is_uuid_v4() helper/self-checks.
     if "name_ru" in mapped and not safe_str(mapped.get("name_ru")):
         return "missing_name_ru"
     if "layer_type" in mapped and mapped.get("layer_type") not in ALLOWED_LAYER_TYPES:
@@ -1071,6 +1079,18 @@ def run_self_test() -> int:
             "layer_id": "history",
         }
     ) is None
+    assert get_etl_error(
+        {
+            "id": "recLEGACY",
+            "source_url": "https://example.com",
+            "source_license": "CC BY",
+            "latitude": 55.0,
+            "longitude": 37.0,
+            "layer_id": "history",
+        }
+    ) is None
+    assert is_uuid_v4("550e8400-e29b-41d4-a716-446655440000")
+    assert not is_uuid_v4("recLEGACY")
     assert (
         get_etl_error(
             {
