@@ -1,16 +1,16 @@
 {
-  "timestamp": "2026-04-05T08:04:52Z",
+  "timestamp": "2026-04-05T10:01:24Z",
   "source": "airtable",
   "records_total_source": 19,
-  "records_exported": 0,
-  "records_geojson": 0,
-  "errors": 19,
+  "records_exported": 16,
+  "records_geojson": 16,
+  "errors": 3,
   "warnings": 76,
   "error_stats": {
-    "invalid_coordinates_source": 19
+    "invalid_coordinates_source": 3
   },
   "warning_stats": {
     "using legacy fallback field": 76
   },
-  "duration_seconds": 2.073
+  "duration_seconds": 11.584
 }
