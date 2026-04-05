@@ -57,6 +57,9 @@ TRUE_SET = {True, 1, "1", "true", "yes", "y", "да"}
 FALSE_SET = {False, 0, "0", "false", "no", "n", "нет"}
 ALLOWED_LICENSES = {"CC0", "CC BY", "CC BY-SA", "PD"}
 ALLOWED_COORDINATES_CONFIDENCE = {"exact", "approximate", "conditional"}
+# IMPORTANT:
+# This allowlist MUST be kept in sync with Airtable 'coordinates_source' enum.
+# Adding new source values in Airtable requires updating this list.
 ALLOWED_COORDINATES_SOURCES = {
     "Wikipedia",
     "Pleiades",
@@ -68,6 +71,9 @@ ALLOWED_COORDINATES_SOURCES = {
     "Vatican",
     "UNESCO",
     "Pompidou Site",
+    "PBS",
+    "Dezeen",
+    "Saylor",
 }
 ALLOWED_LAYER_TYPES = {"architecture", "route_point", "biogeography", "biography"}
 LAYERS_TABLE_NAME = "Layers"
@@ -256,6 +262,7 @@ def normalize_coordinates_source(value: Any) -> Optional[str]:
         return None
 
     normalized = " ".join(raw.split())
+    # Keep ETL allowlist/aliases in sync with curated Airtable Features.coordinates_source enum.
     aliases = {
         "unesco / wikipedia": "Wikipedia",
         "unesco/wikipedia": "Wikipedia",
@@ -264,6 +271,9 @@ def normalize_coordinates_source(value: Any) -> Optional[str]:
         "vatican": "Vatican",
         "unesco": "UNESCO",
         "pompidou site": "Pompidou Site",
+        "pbs": "PBS",
+        "dezeen": "Dezeen",
+        "saylor": "Saylor",
     }
     return aliases.get(normalized.lower(), normalized)
 
