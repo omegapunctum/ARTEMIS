@@ -18,6 +18,8 @@
   --map-controls-safe-top: calc(var(--top-header-offset-top) + var(--top-header-height) + var(--map-controls-gap));
   --detail-panel-width: clamp(360px, 30vw, 420px);
   --detail-panel-gap: 12px;
+  --bottom-panel-height: 88px;
+  --status-panel-bottom-offset: calc(var(--bottom-panel-height) + 24px + var(--safe-bottom));
   /* Color tokens */
   --color-bg: #0b0f14;
   --color-surface: #101826;
@@ -584,7 +586,7 @@ button:focus-visible {
   right: calc(12px + var(--safe-right));
   bottom: calc(12px + var(--safe-bottom));
   z-index: var(--z-bottom-panel);
-  min-height: 88px;
+  min-height: var(--bottom-panel-height);
   padding: 12px 14px;
   display: grid;
   grid-template-rows: auto;
@@ -1079,17 +1081,20 @@ button:focus-visible {
 
 .status-panel {
   position: fixed;
-  right: 12px;
-  bottom: 198px;
-  width: min(380px, calc(100vw - 24px));
+  right: calc(12px + var(--safe-right));
+  bottom: var(--status-panel-bottom-offset);
+  width: min(380px, calc(100vw - 24px - var(--safe-right) - var(--safe-left)));
   background: rgba(16, 24, 38, 0.68);
   border: 1px solid rgba(148, 163, 184, 0.2);
   color: #fff;
   padding: 10px 14px;
   border-radius: 12px;
   font: var(--font-body);
-  z-index: var(--z-map-controls);
+  z-index: calc(var(--z-bottom-panel) + 1);
   backdrop-filter: blur(10px);
+}
+#app-shell.has-right-detail #status {
+  right: calc(var(--detail-panel-width) + (var(--detail-panel-gap) * 2) + var(--safe-right));
 }
 .status-loading { font-size: 12px; color: #bfdbfe; margin-bottom: 6px; }
 .status-error { margin-top: 6px; color: #fecaca; }
@@ -1355,6 +1360,7 @@ button:focus-visible {
 }
 
 @media (max-width: 720px) {
+  :root { --bottom-panel-height: 84px; }
   #top-header { gap: 6px; left: 8px; right: 8px; top: 8px; min-height: 50px; }
   #global-search { height: 38px; padding: 8px 38px 8px 12px; }
   .top-actions { gap: 6px; }
