@@ -16,6 +16,8 @@
   --top-header-height: 52px;
   --map-controls-gap: 8px;
   --map-controls-safe-top: calc(var(--top-header-offset-top) + var(--top-header-height) + var(--map-controls-gap));
+  --detail-panel-width: clamp(360px, 30vw, 420px);
+  --detail-panel-gap: 12px;
   /* Color tokens */
   --color-bg: #0b0f14;
   --color-surface: #101826;
@@ -145,6 +147,13 @@ body { overflow: hidden; }
 
 #app-shell { position: relative; width: 100%; height: 100%; }
 #map-container, #map { position: absolute; inset: 0; }
+#app-shell.has-right-detail #map-container {
+  right: calc(var(--detail-panel-width) + (var(--detail-panel-gap) * 2) + var(--safe-right));
+}
+#app-shell.has-right-detail #top-header,
+#app-shell.has-right-detail #bottom-panel {
+  right: calc(var(--detail-panel-width) + (var(--detail-panel-gap) * 2) + var(--safe-right));
+}
 .global-data-loading {
   position: absolute;
   inset: 0;
@@ -823,11 +832,11 @@ button:focus-visible {
 
 .detail-panel {
   position: fixed;
-  right: 12px;
+  right: calc(var(--detail-panel-gap) + var(--safe-right));
   top: 84px;
-  bottom: 210px;
+  bottom: calc(108px + var(--safe-bottom));
   z-index: var(--z-detail-panel);
-  width: min(392px, calc(100vw - 24px));
+  width: var(--detail-panel-width);
   padding: var(--space-lg);
   opacity: 0;
   visibility: hidden;
@@ -1340,7 +1349,7 @@ button:focus-visible {
   .top-actions > button { padding: 0 9px; font-size: 12px; }
   #bottom-panel { left: 10px; right: 10px; bottom: 10px; padding: 10px; }
   .ribbon-card { min-width: 184px; max-width: 200px; }
-  .detail-panel { right: 10px; top: 80px; bottom: 202px; width: min(360px, calc(100vw - 20px)); }
+  .detail-panel { right: calc(10px + var(--safe-right)); top: 80px; bottom: calc(102px + var(--safe-bottom)); width: clamp(340px, 34vw, 400px); }
   .ugc-panel { right: 10px; top: 80px; bottom: 202px; width: min(430px, calc(100vw - 20px)); }
   .moderation-workspace { right: 10px; top: 80px; bottom: 202px; width: min(980px, calc(100vw - 20px)); }
 }

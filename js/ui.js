@@ -97,6 +97,7 @@ export async function initUI(map, features) {
     bookmarksPanel: document.getElementById('bookmarks-panel'),
     coursesPanel: document.getElementById('courses-panel'),
     livePanel: document.getElementById('live-panel'),
+    appShell: document.getElementById('app-shell'),
     topHeader: document.getElementById('top-header'),
     topActions: document.querySelector('#top-header .top-actions'),
     displayModeToggle: document.getElementById('display-mode-toggle'),
@@ -1253,6 +1254,7 @@ function showDetailPanel(state, elements, map, feature) {
   } else {
     elements.detailPanel.classList.remove('is-mobile-sheet', 'is-expanded');
   }
+  syncDetailDockLayout(elements, state);
   document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'detail' } }));
   if (Number.isInteger(state.detailRenderFrameId)) {
     window.cancelAnimationFrame(state.detailRenderFrameId);
@@ -1273,6 +1275,7 @@ function hideDetailPanel(elements, state = null) {
   if (state) state.detailOpenFeatureId = null;
   elements.detailPanel.classList.remove('is-selected');
   setPanelOpenState(elements.detailPanel, false);
+  syncDetailDockLayout(elements, state);
 }
 
 function renderCardsState(elements, state) {
@@ -1900,7 +1903,16 @@ function applyResponsiveLayout(elements, state, map) {
     elements.detailPanel.classList.add('is-mobile-sheet');
     syncDetailSheetState(state, elements);
   }
+  syncDetailDockLayout(elements, state);
   map?.resize?.();
+}
+
+function syncDetailDockLayout(elements, state) {
+  const shell = elements?.appShell;
+  const panel = elements?.detailPanel;
+  if (!shell || !panel) return;
+  const isDesktopDock = !state?.viewport?.isMobile && !panel.hidden && panel.classList.contains('is-open');
+  shell.classList.toggle('has-right-detail', isDesktopDock);
 }
 
 function toggleDetailSheetState(state, elements) {
