@@ -97,6 +97,7 @@ export async function initUI(map, features) {
     bookmarksPanel: document.getElementById('bookmarks-panel'),
     coursesPanel: document.getElementById('courses-panel'),
     livePanel: document.getElementById('live-panel'),
+    appShell: document.getElementById('app-shell'),
     topHeader: document.getElementById('top-header'),
     topActions: document.querySelector('#top-header .top-actions'),
     displayModeToggle: document.getElementById('display-mode-toggle'),
@@ -522,32 +523,69 @@ function renderLayersPanel(elements, state, layers) {
   });
   elements.layersPanel.append(title, info, restoreBtn);
 
+  const architectureLayers = [];
+  const otherLayers = [];
   (layers || []).forEach((layer) => {
-    const id = String(layer?.layer_id || layer?.id || '').trim();
-    if (!id) return;
-    const row = document.createElement('label');
-    row.className = 'layer-item';
-
-    const left = document.createElement('span');
-    const dot = document.createElement('span');
-    dot.className = 'layer-dot';
-    dot.style.backgroundColor = String(layer?.color_hex || '#94a3b8');
-    const label = document.createElement('span');
-    label.textContent = String(layer?.name_ru || id);
-    left.append(dot, document.createTextNode(' '), label);
-
-    const toggle = document.createElement('input');
-    toggle.type = 'checkbox';
-    toggle.checked = state.enabledLayerIds.has(id);
-    toggle.addEventListener('change', () => {
-      if (toggle.checked) state.enabledLayerIds.add(id);
-      else state.enabledLayerIds.delete(id);
-      state.applyState?.();
-    });
-
-    row.append(left, toggle);
-    elements.layersPanel.appendChild(row);
+    if (isArchitectureStyleLayer(layer)) architectureLayers.push(layer);
+    else otherLayers.push(layer);
   });
+
+  if (architectureLayers.length) {
+    elements.layersPanel.appendChild(createLayerGroup('Архитектура', architectureLayers, state));
+  }
+  if (otherLayers.length) {
+    const fallbackTitle = architectureLayers.length ? 'Другие слои' : 'Слои';
+    elements.layersPanel.appendChild(createLayerGroup(fallbackTitle, otherLayers, state));
+  }
+}
+
+function createLayerGroup(title, layers, state) {
+  const group = document.createElement('section');
+  group.className = 'layer-group';
+  const heading = document.createElement('h4');
+  heading.className = 'layer-group-title';
+  heading.textContent = String(title || 'Слои');
+  group.appendChild(heading);
+  (layers || []).forEach((layer) => {
+    const row = createLayerToggleRow(layer, state);
+    if (row) group.appendChild(row);
+  });
+  return group;
+}
+
+function createLayerToggleRow(layer, state) {
+  const id = String(layer?.layer_id || layer?.id || '').trim();
+  if (!id) return null;
+  const row = document.createElement('label');
+  row.className = 'layer-item';
+
+  const left = document.createElement('span');
+  const dot = document.createElement('span');
+  dot.className = 'layer-dot';
+  dot.style.backgroundColor = String(layer?.color_hex || '#94a3b8');
+  const label = document.createElement('span');
+  label.textContent = String(layer?.name_ru || id);
+  left.append(dot, document.createTextNode(' '), label);
+
+  const toggle = document.createElement('input');
+  toggle.type = 'checkbox';
+  toggle.checked = state.enabledLayerIds.has(id);
+  toggle.addEventListener('change', () => {
+    if (toggle.checked) state.enabledLayerIds.add(id);
+    else state.enabledLayerIds.delete(id);
+    state.applyState?.();
+  });
+
+  row.append(left, toggle);
+  return row;
+}
+
+function isArchitectureStyleLayer(layer) {
+  const id = String(layer?.layer_id || layer?.id || '').trim().toLowerCase();
+  const labelRu = String(layer?.name_ru || '').trim().toLowerCase();
+  const labelEn = String(layer?.name_en || layer?.label || '').trim().toLowerCase();
+  const source = `${id} ${labelRu} ${labelEn}`;
+  return /(архит|architecture|baroque|gothic|rococo|renaissance|brutalism|modernism|neoclassicism|deconstructivism|romanesque|victorian|byzantine|islamic|etruscan|minoan|neolithic|mesopotam|egypt|greece|art[_\s-]?deco|art[_\s-]?nouveau|high[_\s-]?tech)/i.test(source);
 }
 
 function renderBookmarksPanel(elements, state, map) {
@@ -1253,6 +1291,7 @@ function showDetailPanel(state, elements, map, feature) {
   } else {
     elements.detailPanel.classList.remove('is-mobile-sheet', 'is-expanded');
   }
+  syncDetailDockLayout(elements, state);
   document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'detail' } }));
   if (Number.isInteger(state.detailRenderFrameId)) {
     window.cancelAnimationFrame(state.detailRenderFrameId);
@@ -1273,6 +1312,7 @@ function hideDetailPanel(elements, state = null) {
   if (state) state.detailOpenFeatureId = null;
   elements.detailPanel.classList.remove('is-selected');
   setPanelOpenState(elements.detailPanel, false);
+  syncDetailDockLayout(elements, state);
 }
 
 function renderCardsState(elements, state) {
@@ -1552,7 +1592,7 @@ function updateStatus(elements, state, map) {
   if (!elements.statusMessage) return;
   const diagnostics = getMapBuildDiagnostics(map);
   const bucketCount = Object.keys(state.timeAggregation || {}).length;
-  elements.statusMessage.textContent = `Карта готова. Загружено ${diagnostics.inputTotal}, отображается ${getMapFeatureCount(map)}, в ленте ${state.filteredFeatures.length}, временных бакетов: ${bucketCount}.`;
+  elements.statusMessage.textContent = `Карта готова. Загружено ${diagnostics.inputTotal}, отображается ${getMapFeatureCount(map)}, в выборке ${state.filteredFeatures.length}, временных бакетов: ${bucketCount}.`;
 }
 
 function selectFeature(state, elements, map, feature, options = {}) {
@@ -1900,7 +1940,16 @@ function applyResponsiveLayout(elements, state, map) {
     elements.detailPanel.classList.add('is-mobile-sheet');
     syncDetailSheetState(state, elements);
   }
+  syncDetailDockLayout(elements, state);
   map?.resize?.();
+}
+
+function syncDetailDockLayout(elements, state) {
+  const shell = elements?.appShell;
+  const panel = elements?.detailPanel;
+  if (!shell || !panel) return;
+  const isDesktopDock = !state?.viewport?.isMobile && !panel.hidden && panel.classList.contains('is-open');
+  shell.classList.toggle('has-right-detail', isDesktopDock);
 }
 
 function toggleDetailSheetState(state, elements) {
