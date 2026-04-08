@@ -104,8 +104,11 @@ export async function initUI(map, features) {
     overflowBtn: document.getElementById('overflow-btn'),
     timelineStart: document.getElementById('timeline-start'),
     timelineEnd: document.getElementById('timeline-end'),
+    timelineRoot: document.getElementById('timeline'),
     timelineLabel: document.getElementById('timeline-range-label'),
     timelineCapsule: document.getElementById('timeline-range-capsule'),
+    timelineModePointBtn: document.getElementById('timeline-mode-point'),
+    timelineModeRangeBtn: document.getElementById('timeline-mode-range'),
     timelineActiveRange: document.getElementById('timeline-active-range'),
     timelineKnobStart: document.getElementById('timeline-knob-start'),
     timelineKnobEnd: document.getElementById('timeline-knob-end'),
@@ -137,6 +140,10 @@ export async function initUI(map, features) {
     search: '',
     currentStartYear: years.min,
     currentEndYear: years.max,
+    timelineMode: 'point',
+    timelinePointYear: years.max,
+    timelineRangeStart: years.min,
+    timelineRangeEnd: years.max,
     loading: true,
     error: '',
     selectedFeatureId: null,
@@ -261,12 +268,13 @@ export async function initUI(map, features) {
   elements.timelineStart?.addEventListener('input', () => {
     applyTimelineRange(elements, state, {
       start: Number(elements.timelineStart.value),
-      end: state.currentEndYear,
+      end: state.timelineMode === 'point' ? Number(elements.timelineStart.value) : state.currentEndYear,
       snap: false,
       commit: true
     });
   });
   elements.timelineEnd?.addEventListener('input', () => {
+    if (state.timelineMode === 'point') return;
     applyTimelineRange(elements, state, {
       start: state.currentStartYear,
       end: Number(elements.timelineEnd.value),
@@ -274,6 +282,8 @@ export async function initUI(map, features) {
       commit: true
     });
   });
+  elements.timelineModePointBtn?.addEventListener('click', () => setTimelineMode(elements, state, 'point', { commit: true }));
+  elements.timelineModeRangeBtn?.addEventListener('click', () => setTimelineMode(elements, state, 'range', { commit: true }));
   setupTimelinePointerInteractions(elements, state);
 
   elements.filtersBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'filters', elements.filtersBtn));
@@ -1297,18 +1307,28 @@ function hydrateTimeline(elements, years, state) {
   elements.timelineStart.max = String(years.max);
   elements.timelineEnd.min = String(years.min);
   elements.timelineEnd.max = String(years.max);
+  state.timelineRangeStart = years.min;
+  state.timelineRangeEnd = years.max;
+  state.timelinePointYear = years.max;
+  state.currentStartYear = state.timelinePointYear;
+  state.currentEndYear = state.timelinePointYear;
   elements.timelineStart.value = String(state.currentStartYear);
   elements.timelineEnd.value = String(state.currentEndYear);
   renderTimelineAxis(elements, years);
   syncLegacyDateInputs(elements, state);
+  applyTimelineModeUi(elements, state);
   updateTimelineLabel(elements, state);
   updateTimelineViz(elements, state);
 }
 
 function updateTimelineLabel(elements, state) {
-  if (elements.timelineLabel) elements.timelineLabel.textContent = 'Selected range';
+  if (elements.timelineLabel) {
+    elements.timelineLabel.textContent = state.timelineMode === 'point' ? 'Выбранная точка' : 'Выбранный диапазон';
+  }
   if (elements.timelineCapsule) {
-    elements.timelineCapsule.textContent = `${state.currentStartYear} — ${state.currentEndYear}`;
+    elements.timelineCapsule.textContent = state.timelineMode === 'point'
+      ? String(state.currentStartYear)
+      : `${state.currentStartYear} — ${state.currentEndYear}`;
     elements.timelineCapsule.dataset.range = `${state.currentStartYear}:${state.currentEndYear}`;
   }
 }
@@ -1348,8 +1368,16 @@ function applyTimelineRange(elements, state, {
 
   const normalizedStart = normalize(start);
   const normalizedEnd = normalize(end);
-  state.currentStartYear = Math.min(normalizedStart, normalizedEnd);
-  state.currentEndYear = Math.max(normalizedStart, normalizedEnd);
+  if (state.timelineMode === 'point') {
+    state.timelinePointYear = normalizedStart;
+    state.currentStartYear = normalizedStart;
+    state.currentEndYear = normalizedStart;
+  } else {
+    state.currentStartYear = Math.min(normalizedStart, normalizedEnd);
+    state.currentEndYear = Math.max(normalizedStart, normalizedEnd);
+    state.timelineRangeStart = state.currentStartYear;
+    state.timelineRangeEnd = state.currentEndYear;
+  }
 
   if (elements.timelineStart) elements.timelineStart.value = String(state.currentStartYear);
   if (elements.timelineEnd) elements.timelineEnd.value = String(state.currentEndYear);
@@ -1357,6 +1385,42 @@ function applyTimelineRange(elements, state, {
   updateTimelineLabel(elements, state);
   updateTimelineViz(elements, state);
   if (commit) state.applyState?.();
+}
+
+function setTimelineMode(elements, state, mode, { commit = false } = {}) {
+  if (!mode || state.timelineMode === mode) return;
+  state.timelineMode = mode === 'range' ? 'range' : 'point';
+  if (state.timelineMode === 'point') {
+    state.timelineRangeStart = state.currentStartYear;
+    state.timelineRangeEnd = state.currentEndYear;
+    const pointYear = Number.isFinite(state.timelinePointYear) ? state.timelinePointYear : state.currentEndYear;
+    applyTimelineRange(elements, state, {
+      start: pointYear,
+      end: pointYear,
+      snap: false,
+      commit
+    });
+    return;
+  }
+
+  const rangeStart = Number.isFinite(state.timelineRangeStart) ? state.timelineRangeStart : state.currentStartYear;
+  const rangeEnd = Number.isFinite(state.timelineRangeEnd) ? state.timelineRangeEnd : state.currentEndYear;
+  applyTimelineRange(elements, state, {
+    start: rangeStart,
+    end: rangeEnd,
+    snap: false,
+    commit
+  });
+}
+
+function applyTimelineModeUi(elements, state) {
+  const isPointMode = state.timelineMode === 'point';
+  elements.timelineRoot?.classList.toggle('is-point-mode', isPointMode);
+  elements.timelineRoot?.classList.toggle('is-range-mode', !isPointMode);
+  elements.timelineModePointBtn?.classList.toggle('is-active', isPointMode);
+  elements.timelineModeRangeBtn?.classList.toggle('is-active', !isPointMode);
+  elements.timelineModePointBtn?.setAttribute('aria-pressed', String(isPointMode));
+  elements.timelineModeRangeBtn?.setAttribute('aria-pressed', String(!isPointMode));
 }
 
 function setupTimelinePointerInteractions(elements, state) {
@@ -1395,7 +1459,10 @@ function setupTimelinePointerInteractions(elements, state) {
 
   const queueByPointer = (clientX) => {
     const year = getYearByPointer(clientX);
-    if (activeHandle === 'start') {
+    if (state.timelineMode === 'point') {
+      queuedStart = year;
+      queuedEnd = year;
+    } else if (activeHandle === 'start') {
       queuedStart = year;
       queuedEnd = state.currentEndYear;
     } else {
@@ -1408,7 +1475,7 @@ function setupTimelinePointerInteractions(elements, state) {
   const setDraggingState = (isDragging) => {
     track.classList.toggle('is-dragging', isDragging);
     elements.timelineKnobStart?.classList.toggle('is-active', isDragging && activeHandle === 'start');
-    elements.timelineKnobEnd?.classList.toggle('is-active', isDragging && activeHandle === 'end');
+    elements.timelineKnobEnd?.classList.toggle('is-active', state.timelineMode !== 'point' && isDragging && activeHandle === 'end');
   };
 
   const startDrag = (handle, event) => {
@@ -1453,6 +1520,7 @@ function setupTimelinePointerInteractions(elements, state) {
     startDrag('start', event);
   });
   elements.timelineKnobEnd?.addEventListener('pointerdown', (event) => {
+    if (state.timelineMode === 'point') return;
     event.preventDefault();
     startDrag('end', event);
   });
@@ -1460,7 +1528,8 @@ function setupTimelinePointerInteractions(elements, state) {
   track.addEventListener('pointerdown', (event) => {
     if (event.target === elements.timelineKnobStart || event.target === elements.timelineKnobEnd) return;
     event.preventDefault();
-    startDrag(pickClosestHandle(event.clientX), event);
+    const nextHandle = state.timelineMode === 'point' ? 'start' : pickClosestHandle(event.clientX);
+    startDrag(nextHandle, event);
   });
   track.addEventListener('pointermove', (event) => {
     if (activePointerId !== event.pointerId || !activeHandle) return;
@@ -1482,6 +1551,7 @@ function getTimelineSnapStep(minYear, maxYear) {
 function syncLegacyDateInputs(elements, state) {
   if (elements.dateFrom) elements.dateFrom.value = String(state.currentStartYear);
   if (elements.dateTo) elements.dateTo.value = String(state.currentEndYear);
+  applyTimelineModeUi(elements, state);
 }
 
 function collectYearBounds(features) {
@@ -2136,7 +2206,11 @@ function buildResultFeedbackLabel(state) {
   const yearMin = Number(state.yearBounds?.min ?? state.currentStartYear);
   const yearMax = Number(state.yearBounds?.max ?? state.currentEndYear);
   if (state.currentStartYear !== yearMin || state.currentEndYear !== yearMax) {
-    constraints.push(`период ${state.currentStartYear}—${state.currentEndYear}`);
+    if (state.timelineMode === 'point' || state.currentStartYear === state.currentEndYear) {
+      constraints.push(`точка ${state.currentStartYear}`);
+    } else {
+      constraints.push(`период ${state.currentStartYear}—${state.currentEndYear}`);
+    }
   }
   const suffix = constraints.length ? ` · Ограничения: ${constraints.join(', ')}` : '';
   return `${state.filteredFeatures.length} objects в ленте и на карте${suffix}`;

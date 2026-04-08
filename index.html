@@ -116,7 +116,11 @@
     <section id="bottom-panel" class="glass-panel" aria-label="Timeline">
       <div id="timeline" class="timeline-row">
         <div class="timeline-head">
-          <div id="timeline-range-label">Selected range</div>
+          <div id="timeline-range-label">Выбранная точка</div>
+          <div class="timeline-mode-toggle" role="group" aria-label="Режим времени">
+            <button id="timeline-mode-point" class="timeline-mode-btn is-active" type="button" aria-pressed="true">Точка</button>
+            <button id="timeline-mode-range" class="timeline-mode-btn" type="button" aria-pressed="false">Диапазон</button>
+          </div>
           <div id="timeline-range-capsule" class="timeline-capsule">1600–1650</div>
         </div>
         <div class="timeline-track-wrap">
