@@ -1,5 +1,5 @@
 import { loadLayers, loadCourses, getRecentFeatures } from './data.js';
-import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, getMapBuildDiagnostics, setMapFeatureClickHandler, setMapFeatureHoverHandler, setMapLayerFilter, setSelectedFeatureId, setHoveredFeatureId, setMapDisplayMode } from './map.js';
+import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, getMapBuildDiagnostics, setMapFeatureClickHandler, setMapFeatureHoverHandler, setMapLayerFilter, setSelectedFeatureId, setHoveredFeatureId, setMapDisplayMode, getMapThemeOptions, getMapTheme, setMapTheme } from './map.js';
 import { debounce, createInlineStateBlock } from './ux.js';
 import { normalizeSafeUrl, setSafeImageSource, setSafeLink, toSafeText } from './safe-dom.js';
 import { DEFAULT_DISPLAY_MODE, aggregateFeaturesByDecade, createCoursesState, createLiveState, getSelectedCourse, moveCourseStep, selectCourse } from './state.js';
@@ -134,6 +134,7 @@ export async function initUI(map, features) {
     topUtilityGroup: document.querySelector('#top-header .top-utility-group'),
     displayModeToggle: document.getElementById('display-mode-toggle'),
     overflowBtn: document.getElementById('overflow-btn'),
+    mapThemeToggle: document.getElementById('map-theme-toggle'),
     profileMenuTrigger: document.getElementById('profile-menu-trigger'),
     profileMenu: document.getElementById('profile-menu'),
     timelineStart: document.getElementById('timeline-start'),
@@ -224,6 +225,7 @@ export async function initUI(map, features) {
   setupLayerEntryHint(elements);
   setupResponsiveUi(elements, state, map);
   ensureDisplayModeToggle(elements);
+  setupMapThemeToggle(elements, map);
   setupDisplayModeToggle(elements, state, map);
   setMapDisplayMode(map, state.displayMode);
   renderTopPanels(elements, state, layers, confidenceValues, map);
@@ -488,6 +490,31 @@ function setupDisplayModeToggle(elements, state, map) {
       variant: 'success',
       timeout: 1600
     });
+  });
+}
+
+function setupMapThemeToggle(elements, map) {
+  const button = elements.mapThemeToggle;
+  if (!button) return;
+  const themes = getMapThemeOptions();
+  if (!themes.length) return;
+  const syncLabel = () => {
+    const activeTheme = getMapTheme(map);
+    const activeMeta = themes.find((theme) => theme.id === activeTheme) || themes[0];
+    button.textContent = activeMeta.label;
+    button.setAttribute('aria-label', `Тема карты: ${activeMeta.label}. Нажмите для смены.`);
+    button.dataset.theme = activeMeta.id;
+  };
+  syncLabel();
+
+  button.addEventListener('click', () => {
+    const activeTheme = getMapTheme(map);
+    const currentIndex = themes.findIndex((theme) => theme.id === activeTheme);
+    const nextTheme = themes[(currentIndex + 1 + themes.length) % themes.length];
+    const appliedTheme = setMapTheme(map, nextTheme.id);
+    syncLabel();
+    const appliedMeta = themes.find((theme) => theme.id === appliedTheme) || nextTheme;
+    showUiSystemMessage(`Тема карты: ${appliedMeta.label}`, { variant: 'success', timeout: 1700 });
   });
 }
 

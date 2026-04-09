@@ -7,6 +7,13 @@ const CLUSTER_COUNT_LAYER_ID = 'artemis-cluster-count';
 const HEATMAP_LAYER_ID = 'artemis-heatmap';
 const TOP_HEADER_SELECTOR = '#top-header';
 const REQUIRED_BASE_LAYERS = [LAYER_ID, SELECTED_LAYER_ID, HOVER_LAYER_ID, HEATMAP_LAYER_ID];
+const MAP_THEME_STORAGE_KEY = 'artemis:map-theme';
+const MAP_THEME_PRESETS = {
+  graphite: { id: 'graphite', label: 'Серая', className: 'map-theme-graphite' },
+  dark: { id: 'dark', label: 'Тёмная', className: 'map-theme-dark' },
+  soft: { id: 'soft', label: 'Мягкая', className: 'map-theme-soft' }
+};
+const DEFAULT_MAP_THEME = 'graphite';
 const MARKER_THEME = {
   point: {
     color: '#22d3ee',
@@ -133,8 +140,10 @@ export function initMap(containerId, features) {
       ready: false,
       failed: false,
       error: null
-    }
+    },
+    mapTheme: resolveInitialMapTheme()
   };
+  setMapTheme(map, map.__artemis.mapTheme, { persist: false });
 
   map.on('load', () => {
     try {
@@ -160,6 +169,25 @@ export function initMap(containerId, features) {
   window.addEventListener('resize', syncTopHeaderLayoutMetrics, { passive: true });
 
   return map;
+}
+
+export function getMapThemeOptions() {
+  return Object.values(MAP_THEME_PRESETS).map(({ id, label }) => ({ id, label }));
+}
+
+export function getMapTheme(map) {
+  const rawTheme = String(map?.__artemis?.mapTheme || '');
+  return MAP_THEME_PRESETS[rawTheme] ? rawTheme : DEFAULT_MAP_THEME;
+}
+
+export function setMapTheme(map, themeId, { persist = true } = {}) {
+  if (!map) return DEFAULT_MAP_THEME;
+  const nextTheme = MAP_THEME_PRESETS[String(themeId || '').toLowerCase()]?.id || DEFAULT_MAP_THEME;
+  map.__artemis = map.__artemis || {};
+  map.__artemis.mapTheme = nextTheme;
+  applyMapThemeClass(map, nextTheme);
+  if (persist) persistMapTheme(nextTheme);
+  return nextTheme;
 }
 
 export function waitForMapBootstrap(map, { timeoutMs = 12000 } = {}) {
@@ -227,6 +255,32 @@ function ensureMapBindingsReady(map) {
     if (!map.getLayer(layerId)) {
       throw new Error(`Map layer initialization failed: ${layerId}.`);
     }
+  }
+}
+
+function applyMapThemeClass(map, themeId) {
+  const container = map?.getContainer?.();
+  if (!container) return;
+  Object.values(MAP_THEME_PRESETS).forEach((preset) => {
+    container.classList.remove(preset.className);
+  });
+  container.classList.add(MAP_THEME_PRESETS[themeId]?.className || MAP_THEME_PRESETS[DEFAULT_MAP_THEME].className);
+}
+
+function resolveInitialMapTheme() {
+  try {
+    const rawTheme = String(window.localStorage.getItem(MAP_THEME_STORAGE_KEY) || '').toLowerCase();
+    return MAP_THEME_PRESETS[rawTheme]?.id || DEFAULT_MAP_THEME;
+  } catch (_error) {
+    return DEFAULT_MAP_THEME;
+  }
+}
+
+function persistMapTheme(themeId) {
+  try {
+    window.localStorage.setItem(MAP_THEME_STORAGE_KEY, themeId);
+  } catch (_error) {
+    // ignore localStorage failures
   }
 }
 
