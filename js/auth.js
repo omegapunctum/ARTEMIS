@@ -2,6 +2,8 @@ let accessToken = null;
 let refreshPromise = null;
 let initPromise = null;
 let resolvedApiBase = null;
+const routeFallbackLogCache = new Set();
+const sessionRestoreLogCache = new Set();
 
 const API_BASE_CANDIDATES = [
   (window.ARTEMIS_API_BASE || '').trim(),
@@ -36,9 +38,41 @@ function buildApiUrl(base, path) {
   return `${normalizedBase}${normalizedPath}`;
 }
 
-async function requestApi(path, options = {}, fallbackMessage = 'API request failed') {
+function logRouteFallback({ method, path, tried, status, level = 'info' }) {
+  const key = `${method}:${path}:${status}`;
+  if (routeFallbackLogCache.has(key)) return;
+  routeFallbackLogCache.add(key);
+  const payload = { method, path, tried, status };
+  if (level === 'warn') console.warn('ARTEMIS API route fallback', payload);
+  else if (level === 'debug' && typeof console.debug === 'function') console.debug('ARTEMIS API route fallback', payload);
+  else console.info('ARTEMIS API route fallback', payload);
+}
+
+function isExpectedSessionRestoreFailure(error) {
+  const status = Number(error?.status || error?.responseStatus || 0);
+  return status === 401 || status === 404 || status === 405;
+}
+
+function logSessionRestoreFailureOnce(error) {
+  const status = Number(error?.status || error?.responseStatus || 0) || 'unknown';
+  const key = `session-restore:${status}`;
+  if (sessionRestoreLogCache.has(key)) return;
+  sessionRestoreLogCache.add(key);
+  const message = status === 401
+    ? 'ARTEMIS session restore skipped: no valid session.'
+    : 'ARTEMIS session restore unavailable on current API route.';
+  console.info(message, { status });
+}
+
+async function requestApi(path, options = {}, fallbackMessage = 'API request failed', requestBehavior = {}) {
   const method = String(options?.method || 'GET').toUpperCase();
   const candidates = resolvedApiBase !== null ? [resolvedApiBase] : API_BASE_CANDIDATES;
+  const fallbackLogLevel = requestBehavior?.fallbackLogLevel || 'info';
+  const expectedErrorStatuses = Array.isArray(requestBehavior?.expectedErrorStatuses)
+    ? requestBehavior.expectedErrorStatuses
+    : [];
+  const expectedErrorLogLevel = requestBehavior?.expectedErrorLogLevel || 'info';
+  const defaultErrorLogLevel = requestBehavior?.defaultErrorLogLevel || 'error';
   let lastResponse = null;
 
   for (const base of candidates) {
@@ -53,13 +87,20 @@ async function requestApi(path, options = {}, fallbackMessage = 'API request fai
 
     const canTryFallback = (response.status === 404 || response.status === 405) && resolvedApiBase === null;
     if (!canTryFallback) {
-      throw await buildApiError(response, fallbackMessage);
+      const isExpected = expectedErrorStatuses.includes(response.status);
+      throw await buildApiError(response, fallbackMessage, {
+        logLevel: isExpected ? expectedErrorLogLevel : defaultErrorLogLevel
+      });
     }
 
-    console.warn('ARTEMIS API route fallback', { method, path, tried: url, status: response.status });
+    logRouteFallback({ method, path, tried: url, status: response.status, level: fallbackLogLevel });
   }
 
-  throw await buildApiError(lastResponse, fallbackMessage);
+  const status = Number(lastResponse?.status || 0);
+  const isExpected = expectedErrorStatuses.includes(status);
+  throw await buildApiError(lastResponse, fallbackMessage, {
+    logLevel: isExpected ? expectedErrorLogLevel : defaultErrorLogLevel
+  });
 }
 
 function parseTokenClaims(token) {
@@ -102,7 +143,7 @@ export function formatRequestIdMessage(message, requestId) {
   return requestId ? `${message} (Request ID: ${requestId})` : message;
 }
 
-export async function buildApiError(response, fallbackMessage) {
+export async function buildApiError(response, fallbackMessage, options = {}) {
   let data = null;
   try {
     data = await response.json();
@@ -118,12 +159,17 @@ export async function buildApiError(response, fallbackMessage) {
   error.responseStatus = response.status;
   error.requestId = requestId;
   error.payload = data;
-  console.error('ARTEMIS API error', {
+  const logLevel = options?.logLevel || 'error';
+  const payload = {
     message: error.message,
     status: response.status,
     requestId,
     url: response.url
-  });
+  };
+  if (logLevel === 'error') console.error('ARTEMIS API error', payload);
+  else if (logLevel === 'warn') console.warn('ARTEMIS API issue', payload);
+  else if (logLevel === 'info') console.info('ARTEMIS API issue', payload);
+  else if (logLevel === 'debug' && typeof console.debug === 'function') console.debug('ARTEMIS API issue', payload);
   return error;
 }
 
@@ -208,14 +254,20 @@ export async function logout() {
   }
 }
 
-export async function refreshToken() {
+export async function refreshToken(options = {}) {
   if (refreshPromise) return refreshPromise;
+  const isSessionRestore = options?.reason === 'session-restore';
 
   refreshPromise = (async () => {
     const response = await requestApi('/auth/refresh', {
       method: 'POST',
       credentials: 'include'
-    }, 'Refresh failed');
+    }, 'Refresh failed', {
+      fallbackLogLevel: isSessionRestore ? 'debug' : 'info',
+      expectedErrorStatuses: [401, 404, 405],
+      expectedErrorLogLevel: isSessionRestore ? 'debug' : 'info',
+      defaultErrorLogLevel: 'warn'
+    });
 
     return parseAccessToken(response);
   })();
@@ -224,6 +276,9 @@ export async function refreshToken() {
     return await refreshPromise;
   } catch (error) {
     clearAuth();
+    if (isSessionRestore && isExpectedSessionRestoreFailure(error)) {
+      logSessionRestoreFailureOnce(error);
+    }
     throw error;
   } finally {
     refreshPromise = null;
@@ -248,7 +303,7 @@ export async function initAuth() {
 
   initPromise = (async () => {
     try {
-      await refreshToken();
+      await refreshToken({ reason: 'session-restore' });
       return getCurrentUser();
     } catch (_error) {
       return null;
