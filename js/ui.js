@@ -2255,13 +2255,7 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
     }));
     showDetailPanel(state, elements, map, feature, { mode: 'full', force: true });
   });
-  const closeBtn = document.createElement('button');
-  closeBtn.type = 'button';
-  closeBtn.className = 'ui-button';
-  closeBtn.textContent = 'Закрыть';
-  closeBtn.dataset.action = 'close-preview';
-  closeBtn.addEventListener('click', () => closeDetailView(state, elements));
-  actionsWrap.append(moreBtn, closeBtn);
+  actionsWrap.append(moreBtn);
   actionsSection.appendChild(actionsWrap);
   detail.appendChild(actionsSection);
 
