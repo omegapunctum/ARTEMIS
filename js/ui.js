@@ -100,8 +100,11 @@ export async function initUI(map, features) {
     appShell: document.getElementById('app-shell'),
     topHeader: document.getElementById('top-header'),
     topActions: document.querySelector('#top-header .top-actions'),
+    topUtilityGroup: document.querySelector('#top-header .top-utility-group'),
     displayModeToggle: document.getElementById('display-mode-toggle'),
     overflowBtn: document.getElementById('overflow-btn'),
+    profileMenuTrigger: document.getElementById('profile-menu-trigger'),
+    profileMenu: document.getElementById('profile-menu'),
     timelineStart: document.getElementById('timeline-start'),
     timelineEnd: document.getElementById('timeline-end'),
     timelineRoot: document.getElementById('timeline'),
@@ -298,8 +301,14 @@ export async function initUI(map, features) {
   elements.overflowBtn?.addEventListener('click', () => {
     if (!elements.topActions) return;
     if (state.overlay.activePrimary) closePrimaryPanel(elements, state, state.overlay.activePrimary);
+    setProfileMenuOpen(elements, false);
     const expanded = elements.topActions.classList.toggle('is-expanded');
     elements.overflowBtn.setAttribute('aria-expanded', String(expanded));
+  });
+  elements.profileMenuTrigger?.addEventListener('click', () => {
+    const nextOpen = elements.profileMenu?.hidden !== false;
+    if (state.overlay.activePrimary) closePrimaryPanel(elements, state, state.overlay.activePrimary);
+    setProfileMenuOpen(elements, nextOpen);
   });
 
   setMapFeatureClickHandler(map, (feature, coordinates) => {
@@ -335,6 +344,10 @@ export async function initUI(map, features) {
       const inPanel = panel?.contains(target) || button?.contains(target) || (state.overlay.activePrimary === 'search' && inSearchShell);
       if (!inPanel) closePrimaryPanel(elements, state, state.overlay.activePrimary);
     }
+    if (elements.profileMenu && !elements.profileMenu.hidden) {
+      const inProfileMenu = elements.profileMenu.contains(target) || elements.profileMenuTrigger?.contains(target);
+      if (!inProfileMenu) setProfileMenuOpen(elements, false);
+    }
     if (elements.detailPanel?.hidden) return;
     const withinFloating = elements.detailPanel.contains(target);
     const withinCard = target.closest?.('.ribbon-card');
@@ -344,6 +357,12 @@ export async function initUI(map, features) {
   document.addEventListener('keydown', (event) => {
     if (event.defaultPrevented) return;
     if (event.key !== 'Escape') return;
+    if (!elements.profileMenu?.hidden) {
+      setProfileMenuOpen(elements, false);
+      elements.profileMenuTrigger?.focus();
+      event.preventDefault();
+      return;
+    }
     const closed = closeTopOverlay(elements, state, map);
     if (closed) {
       event.preventDefault();
@@ -378,6 +397,13 @@ function setupOnboardingOverlay(elements) {
   overlay.hidden = false;
   overlay.setAttribute('aria-hidden', 'false');
   dismissBtn.addEventListener('click', closeOverlay);
+}
+
+function setProfileMenuOpen(elements, nextOpen = false) {
+  if (!elements?.profileMenu || !elements?.profileMenuTrigger) return;
+  elements.profileMenu.hidden = !nextOpen;
+  elements.profileMenu.classList.toggle('is-open', nextOpen);
+  elements.profileMenuTrigger.setAttribute('aria-expanded', String(Boolean(nextOpen)));
 }
 
 function ensureDisplayModeToggle(elements) {
@@ -532,7 +558,10 @@ function renderLayersPanel(elements, state, layers) {
     state.applyState?.();
     showSystemMessage('Слои восстановлены по умолчанию', { variant: 'success', timeout: 2200 });
   });
-  elements.layersPanel.append(title, info, restoreBtn);
+  const actionRow = document.createElement('div');
+  actionRow.className = 'layers-panel-toolbar';
+  actionRow.append(info, restoreBtn);
+  elements.layersPanel.append(title, actionRow);
 
   const architectureLayers = [];
   const otherLayers = [];
@@ -542,7 +571,11 @@ function renderLayersPanel(elements, state, layers) {
   });
 
   if (architectureLayers.length) {
-    elements.layersPanel.appendChild(createLayerGroup('Архитектура', architectureLayers, state));
+    elements.layersPanel.appendChild(createLayerGroup('Архитектура', architectureLayers, state, {
+      collapsible: true,
+      open: true,
+      description: 'Стилевые и исторические архитектурные слои'
+    }));
   }
   if (otherLayers.length) {
     const fallbackTitle = architectureLayers.length ? 'Другие слои' : 'Слои';
@@ -550,16 +583,58 @@ function renderLayersPanel(elements, state, layers) {
   }
 }
 
-function createLayerGroup(title, layers, state) {
+function createLayerGroup(title, layers, state, options = {}) {
+  const {
+    collapsible = false,
+    open = true,
+    description = ''
+  } = options;
   const group = document.createElement('section');
   group.className = 'layer-group';
-  const heading = document.createElement('h4');
-  heading.className = 'layer-group-title';
-  heading.textContent = String(title || 'Слои');
-  group.appendChild(heading);
+  const list = document.createElement('div');
+  list.className = 'layer-group-list';
+
+  const titleText = String(title || 'Слои');
+  if (collapsible) {
+    group.classList.add('layer-group-collapsible');
+    const details = document.createElement('details');
+    details.className = 'layer-group-disclosure';
+    details.open = open;
+    const summary = document.createElement('summary');
+    summary.className = 'layer-group-summary';
+
+    const heading = document.createElement('span');
+    heading.className = 'layer-group-title';
+    heading.textContent = titleText;
+    const count = document.createElement('span');
+    count.className = 'layer-group-count';
+    count.textContent = String(layers?.length || 0);
+    summary.append(heading, count);
+    details.append(summary, list);
+    if (description) {
+      const subtitle = document.createElement('p');
+      subtitle.className = 'layer-group-description';
+      subtitle.textContent = description;
+      details.insertBefore(subtitle, list);
+    }
+    group.appendChild(details);
+  } else {
+    const heading = document.createElement('h4');
+    heading.className = 'layer-group-title';
+    heading.textContent = titleText;
+    group.appendChild(heading);
+    if (description) {
+      const subtitle = document.createElement('p');
+      subtitle.className = 'layer-group-description';
+      subtitle.textContent = description;
+      group.appendChild(subtitle);
+    }
+    group.appendChild(list);
+  }
+
   (layers || []).forEach((layer) => {
     const row = createLayerToggleRow(layer, state);
-    if (row) group.appendChild(row);
+    if (row) list.appendChild(row);
   });
   return group;
 }
@@ -1806,16 +1881,39 @@ function buildImageNode(props, fallbackAlt, large = false) {
     image.loading = 'lazy';
     image.referrerPolicy = 'no-referrer';
     image.addEventListener('error', () => {
-      image.replaceWith(createPlaceholderImage(large));
+      image.replaceWith(createPlaceholderImage({
+        large,
+        title: 'Изображение пока недоступно',
+        note: large ? 'Мы добавим визуальные материалы, когда они появятся в источниках.' : ''
+      }));
     }, { once: true });
     return image;
   }
-  return createPlaceholderImage(large);
+  return createPlaceholderImage({
+    large,
+    title: 'Изображение пока недоступно',
+    note: large ? 'Мы добавим визуальные материалы, когда они появятся в источниках.' : ''
+  });
 }
-function createPlaceholderImage(large = false) {
+function createPlaceholderImage({ large = false, title = 'Изображение пока недоступно', note = '' } = {}) {
   const placeholder = document.createElement('div');
   placeholder.className = `img-placeholder${large ? ' is-large' : ''}`;
-  placeholder.textContent = 'Изображение отсутствует';
+  const content = document.createElement('div');
+  content.className = 'img-placeholder-content';
+  const icon = document.createElement('span');
+  icon.className = 'img-placeholder-icon';
+  icon.textContent = '🖼';
+  const titleNode = document.createElement('p');
+  titleNode.className = 'img-placeholder-title';
+  titleNode.textContent = title;
+  content.append(icon, titleNode);
+  if (note) {
+    const noteNode = document.createElement('p');
+    noteNode.className = 'img-placeholder-note';
+    noteNode.textContent = note;
+    content.appendChild(noteNode);
+  }
+  placeholder.appendChild(content);
   return placeholder;
 }
 function getPrimaryTitle(props) {
@@ -2059,6 +2157,7 @@ function buildFullDetailContent(state, props, feature) {
   const title = getPrimaryTitle(props);
   const secondaryTitle = String(props.name_en || '').trim();
   const description = String(props.description || props.title_short || '').trim();
+  const hasBriefDescription = description && description.length < 96;
   const sourceUrl = normalizeSafeUrl(String(props.source_url || '').trim());
   const sourceDomain = extractDomain(sourceUrl);
   const confidenceLabel = getConfidenceLabel(props.coordinates_confidence);
@@ -2077,7 +2176,7 @@ function buildFullDetailContent(state, props, feature) {
   const mediaCaption = document.createElement('p');
   mediaCaption.className = 'detail-media-caption';
   mediaCaption.textContent = mediaNode.classList.contains('img-placeholder')
-    ? 'Изображение отсутствует'
+    ? 'Изображение пока недоступно'
     : 'Изображение объекта';
   mediaSection.appendChild(mediaCaption);
   detail.appendChild(mediaSection);
@@ -2115,9 +2214,15 @@ function buildFullDetailContent(state, props, feature) {
   descriptionSection.appendChild(createSectionTitle('Описание'));
   const descriptionNode = document.createElement('p');
   descriptionNode.className = 'detail-description';
-  descriptionNode.textContent = description || 'Описание пока отсутствует.';
+  descriptionNode.textContent = description || 'Подробное описание для этого объекта пока не добавлено.';
   if (!description) descriptionNode.classList.add('is-empty');
   descriptionSection.appendChild(descriptionNode);
+  if (hasBriefDescription) {
+    const descriptionHint = document.createElement('p');
+    descriptionHint.className = 'detail-description-note';
+    descriptionHint.textContent = 'Сейчас доступно краткое описание. Карточка будет дополняться по мере обновления данных.';
+    descriptionSection.appendChild(descriptionHint);
+  }
   detail.appendChild(descriptionSection);
 
   if (sourceUrl || sourceDomain || licenseLabel) {

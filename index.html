@@ -53,7 +53,16 @@
 
   <div id="app-shell">
     <header id="top-header" class="glass-panel" aria-label="Top controls">
-      <div class="brand" aria-label="ARTEMIS logo">ARTEMIS</div>
+      <div class="top-shell-left">
+        <div class="brand" aria-label="ARTEMIS logo">ARTEMIS</div>
+        <nav class="project-nav" aria-label="Основная навигация проекта">
+          <a href="#" class="project-nav-link">Главная</a>
+          <a href="#" class="project-nav-link">О проекте</a>
+          <a href="#" class="project-nav-link">Курсы</a>
+          <a href="#" class="project-nav-link">Коллекции</a>
+          <a href="#" class="project-nav-link">Помощь</a>
+        </nav>
+      </div>
       <div class="search-shell">
         <input id="global-search" type="search" placeholder="Search events, people, places, dates..." autocomplete="off" />
         <button id="search-clear-btn" class="icon-btn search-clear-btn" type="button" aria-label="Clear search" hidden>×</button>
@@ -71,15 +80,32 @@
         <div id="search-dropdown" class="top-panel search-dropdown" hidden></div>
       </div>
       <div class="top-actions">
-        <button id="ugc-create-btn" class="ui-button ui-button-secondary" type="button" aria-label="Create draft">Create draft</button>
-        <button id="moderation-toggle-btn" type="button" aria-label="Toggle moderation workspace" aria-expanded="false" data-moderation-action="toggle-workspace" hidden>Moderation</button>
-        <div class="top-actions-cluster" role="group" aria-label="Map controls">
-          <button id="filters-btn" type="button" aria-label="Toggle filters" aria-expanded="false">Filters</button>
-          <button id="layers-btn" type="button" aria-label="Toggle layers" aria-expanded="false">Layers</button>
-          <button id="bookmarks-btn" type="button" aria-label="Toggle bookmarks" aria-expanded="false">Bookmarks</button>
-          <button id="courses-btn" type="button" aria-label="Toggle courses" aria-expanded="false">Courses</button>
-          <button id="live-btn" type="button" aria-label="Toggle live feed" aria-expanded="false">LIVE</button>
-          <p id="layers-entry-helper" class="layers-entry-helper">Выберите, что показывать на карте.</p>
+        <div class="top-utility-group" role="group" aria-label="Utility actions">
+          <button id="ugc-create-btn" class="ui-button ui-button-secondary" type="button" aria-label="Create draft">Create draft</button>
+          <button id="moderation-toggle-btn" type="button" aria-label="Toggle moderation workspace" aria-expanded="false" data-moderation-action="toggle-workspace" hidden>Moderation</button>
+          <div class="profile-shell">
+            <button id="profile-menu-trigger" class="profile-trigger" type="button" aria-label="Открыть меню профиля" aria-expanded="false" aria-controls="profile-menu">
+              <span class="profile-trigger-icon" aria-hidden="true">👤</span>
+              <span class="profile-trigger-label">Профиль</span>
+            </button>
+            <div id="profile-menu" class="top-panel profile-menu" hidden>
+              <button type="button" class="profile-menu-item">Профиль</button>
+              <button type="button" class="profile-menu-item">Мои черновики</button>
+              <button type="button" class="profile-menu-item">Закладки</button>
+              <button type="button" class="profile-menu-item">Настройки</button>
+              <button type="button" class="profile-menu-item profile-menu-item-danger">Выйти</button>
+            </div>
+          </div>
+        </div>
+        <div class="map-tools-shell" role="group" aria-label="Map tools">
+          <div class="top-actions-cluster" role="group" aria-label="Map controls">
+            <button id="filters-btn" type="button" aria-label="Toggle filters" aria-expanded="false">Filters</button>
+            <button id="layers-btn" type="button" aria-label="Toggle layers" aria-expanded="false">Layers</button>
+            <button id="bookmarks-btn" type="button" aria-label="Toggle bookmarks" aria-expanded="false">Bookmarks</button>
+            <button id="courses-btn" type="button" aria-label="Toggle courses" aria-expanded="false">Courses</button>
+            <button id="live-btn" type="button" aria-label="Toggle live feed" aria-expanded="false">LIVE</button>
+            <p id="layers-entry-helper" class="layers-entry-helper">Выберите, что показывать на карте.</p>
+          </div>
         </div>
         <button id="overflow-btn" class="icon-btn" type="button" aria-label="More actions">⋯</button>
       </div>
