@@ -314,7 +314,7 @@
     import { initUGCUI } from './js/ui.ugc.js';
     import { initModerationUI } from './js/ui.moderation.js';
     import { initPWA } from './js/pwa.js';
-    import { showError, clearError, showLoading, hideLoading, createInlineStateBlock, normalizeAppError } from './js/ux.js';
+    import { showError, clearError, showLoading, hideLoading, normalizeAppError } from './js/ux.js';
 
     initPWA();
 
@@ -331,8 +331,6 @@
       statusError.textContent = error ? message : '';
     }
 
-    const cardsStateHost = document.getElementById('cards-state');
-
     async function bootstrapApp() {
       try {
         hideGlobalDataError();
@@ -341,14 +339,13 @@
         showLoading();
         try {
           await initAuth();
-        } catch (error) {
-          console.info('Сессия не восстановлена:', error.message);
+        } catch (_error) {
+          // Невосстановленная сессия не блокирует запуск карты.
         } finally {
           hideLoading();
         }
 
         clearError();
-        if (cardsStateHost) cardsStateHost.replaceChildren(createInlineStateBlock({ variant: 'info', title: 'Loading', message: 'Loading data…' }));
         setStatus('Загрузка данных…', { loading: true });
         const features = USE_MAP_FEED
           ? await loadMapFeed()
@@ -381,15 +378,6 @@
           onRetry: () => bootstrapApp()
         });
         setStatus(normalized.message, { error: true, loading: false });
-        if (cardsStateHost) {
-          cardsStateHost.replaceChildren(createInlineStateBlock({
-            variant: 'error',
-            title: 'Data loading failed',
-            message: normalized.message,
-            actionLabel: 'Retry',
-            onAction: () => bootstrapApp()
-          }));
-        }
       }
     }
 

@@ -1150,7 +1150,10 @@ function updateSearchNoResultsState(elements, state) {
 
 function renderCards(elements, state, map) {
   const list = elements.cardsRibbon;
-  if (!list) return;
+  if (!list) {
+    renderCardsState(elements, { ...state, loading: false, empty: !state.filteredFeatures.length });
+    return;
+  }
   const cardsKey = state.filteredFeatureIds.slice(0, 80).join('|');
   if (!state.error && state.filteredFeatures.length && cardsKey === state.lastRenderedCardsKey) {
     syncSelectedCardState(elements, state.selectedFeatureId);
@@ -1675,15 +1678,17 @@ function selectFeature(state, elements, map, feature, options = {}) {
   if (!selectedFeature) return;
   state.selectedFeatureId = getFeatureUiId(selectedFeature);
   setSelectedFeatureId(map, state.selectedFeatureId);
-  renderCards(elements, state, map);
-  syncSelectedCardState(elements, state.selectedFeatureId);
   renderBookmarksPanel(elements, state, map);
   if (options.centerOnMap) focusFeatureOnMap(map, selectedFeature);
   if (options.openDetail !== false) {
     showDetailPanel(state, elements, map, selectedFeature);
   }
+  if (!elements.cardsRibbon && !elements.cardsState) return;
+  renderCards(elements, state, map);
+  syncSelectedCardState(elements, state.selectedFeatureId);
   if (options.scrollCard) {
-    const selectedNode = elements.cardsRibbon?.querySelector(`.ribbon-card[data-feature-id="${CSS.escape(state.selectedFeatureId)}"]`);
+    const escapedId = typeof CSS?.escape === 'function' ? CSS.escape(state.selectedFeatureId) : state.selectedFeatureId;
+    const selectedNode = elements.cardsRibbon?.querySelector(`.ribbon-card[data-feature-id="${escapedId}"]`);
     selectedNode?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
   }
 }
