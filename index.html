@@ -158,6 +158,7 @@
       <header class="detail-panel-head panel-header">
         <h2 id="detail-panel-heading" class="detail-panel-heading">Быстрый просмотр</h2>
         <div class="detail-panel-actions">
+          <button id="detail-panel-expand" class="icon-btn" type="button" aria-label="Expand detail panel" aria-expanded="false" hidden>⇧</button>
           <button id="detail-panel-close" class="floating-card-close" type="button" aria-label="Закрыть карточку предпросмотра">×</button>
         </div>
       </header>
@@ -315,6 +316,7 @@
     const statusError = document.getElementById('status-error');
     const statusLoading = document.getElementById('status-loading');
     const USE_MAP_FEED = false;
+    const DATA_LOAD_TIMEOUT_MS = 8000;
     const DEBUG_TELEMETRY_STATUS = (() => {
       const debugParam = new URLSearchParams(window.location.search).get('debug');
       if (typeof debugParam === 'string' && ['1', 'true', 'on'].includes(debugParam.trim().toLowerCase())) {
@@ -336,6 +338,31 @@
       statusError.textContent = error ? message : '';
     }
 
+    function createDataLoadTimeoutError(timeoutMs) {
+      const error = new Error(`Data load timed out after ${timeoutMs}ms.`);
+      error.name = 'DataLoadTimeoutError';
+      error.code = 'DATA_LOAD_TIMEOUT';
+      error.userMessage = 'Ошибка загрузки данных. Попробуйте обновить страницу.';
+      return error;
+    }
+
+    async function loadFeaturesWithTimeout(timeoutMs = DATA_LOAD_TIMEOUT_MS) {
+      let timeoutId = null;
+      const loader = USE_MAP_FEED ? loadMapFeed : loadFeatures;
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = window.setTimeout(() => {
+          reject(createDataLoadTimeoutError(timeoutMs));
+        }, timeoutMs);
+      });
+      try {
+        return await Promise.race([loader(), timeoutPromise]);
+      } finally {
+        if (timeoutId !== null) {
+          window.clearTimeout(timeoutId);
+        }
+      }
+    }
+
     async function bootstrapApp() {
       try {
         hideGlobalDataError();
@@ -352,9 +379,7 @@
 
         clearError();
         setStatus('Загрузка данных…', { loading: true });
-        const features = USE_MAP_FEED
-          ? await loadMapFeed()
-          : await loadFeatures();
+        const features = await loadFeaturesWithTimeout();
         const sourceCount = Array.isArray(features?.features) ? features.features.length : 0;
         const sourceLabel = USE_MAP_FEED ? '/api/map/feed' : 'data/features.geojson';
         setStatus(
@@ -388,12 +413,15 @@
         console.error('Ошибка инициализации:', error);
         hideGlobalDataLoading();
         const normalized = normalizeAppError(error, 'Unable to load application data.');
-        showError(normalized.message);
+        const uiErrorMessage = error?.code === 'DATA_LOAD_TIMEOUT'
+          ? 'Ошибка загрузки данных. Попробуйте обновить страницу.'
+          : normalized.message;
+        showError(uiErrorMessage);
         showGlobalDataError({
-          message: 'Не удалось загрузить данные карты.',
+          message: uiErrorMessage,
           onRetry: () => bootstrapApp()
         });
-        setStatus(normalized.message, { error: true, loading: false });
+        setStatus(uiErrorMessage, { error: true, loading: false });
       }
     }
 
