@@ -1,4 +1,0 @@
-{"id": "rec0x9MvhXQFWErOy", "record_id": "rec0x9MvhXQFWErOy", "field": "longitude", "warning": "using legacy fallback field", "value": 55.2741, "reason": "legacy_fallback_longitude", "severity": "warning"}
-{"id": "rec0x9MvhXQFWErOy", "record_id": "rec0x9MvhXQFWErOy", "field": "latitude", "warning": "using legacy fallback field", "value": 25.1972, "reason": "legacy_fallback_latitude", "severity": "warning"}
-{"id": "rec0x9MvhXQFWErOy", "record_id": "rec0x9MvhXQFWErOy", "field": "source_license", "warning": "using legacy fallback field", "value": "CC BY-SA", "reason": "legacy_fallback_source_license", "severity": "warning"}
-{"id": "rec0x9MvhXQFWErOy", "record_id": "rec0x9MvhXQFWErOy", "field": "coordinates_confidence", "warning": "using legacy fallback field", "value": "exact", "reason": "legacy_fallback_coordinates_confidence", "severity": "warning"}
