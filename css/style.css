@@ -1841,7 +1841,6 @@ button:focus-visible {
     --bottom-panel-right-reserve: 0px;
     --bottom-panel-center-shift: 0px;
   }
-  #top-header { gap: 6px; left: 8px; right: 8px; top: 8px; min-height: 50px; }
   #global-search { height: 38px; padding: 8px 38px 8px 12px; }
   .top-shell-left { gap: 8px; }
   .project-nav-link { padding: 0 7px; min-height: 32px; }
@@ -1850,18 +1849,7 @@ button:focus-visible {
   .map-tools-shell { padding-left: 6px; margin-left: 0; }
   .top-actions { gap: 6px; }
   .top-actions > button, .top-actions-cluster > button, .icon-btn { height: 34px; }
-  #bottom-panel {
-    min-height: 84px;
-    left: calc(8px + var(--safe-left));
-    right: calc(8px + var(--safe-right));
-    width: auto;
-    max-width: none;
-    transform: none;
-    bottom: calc(8px + var(--safe-bottom));
-    padding: 8px 10px;
-  }
   .ribbon-card { min-width: 168px; max-width: 182px; }
-  .detail-panel { left: 8px; right: 8px; width: auto; top: 72px; bottom: 194px; }
   .ugc-panel { left: 8px; right: 8px; width: auto; top: 72px; bottom: 194px; }
   .moderation-workspace { left: 8px; right: 8px; width: auto; top: 72px; bottom: 194px; grid-template-columns: 1fr; }
   .moderation-meta-row { grid-template-columns: 1fr; }
