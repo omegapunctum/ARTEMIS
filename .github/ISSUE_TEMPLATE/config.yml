@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ARTEMIS documentation
+    url: https://github.com/omegapunctum/Artemis/tree/main/docs
+    about: Check canonical project documentation before opening an issue.

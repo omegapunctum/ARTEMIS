@@ -1,0 +1,50 @@
+name: Data issue
+description: Report a problem in historical/geospatial/content data
+labels: [data]
+body:
+  - type: textarea
+    id: object_ref
+    attributes:
+      label: Object / dataset reference
+      description: ID, title, layer, file, Airtable row or other identifier.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue type
+      options:
+        - Missing field
+        - Invalid coordinates
+        - Invalid date
+        - Wrong layer binding
+        - Duplicate object
+        - Source/verification issue
+        - Export mismatch
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Что не так в данных?
+    validations:
+      required: true
+
+  - type: textarea
+    id: source_evidence
+    attributes:
+      label: Source / evidence
+      description: Ссылки на источники, docs, screenshots, exports.
+
+  - type: checkboxes
+    id: contract_checks
+    attributes:
+      label: Related checks
+      options:
+        - label: data contract affected
+        - label: export_meta affected
+        - label: release gate may fail

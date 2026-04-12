@@ -1,0 +1,60 @@
+name: Bug report
+description: Report a reproducible bug in ARTEMIS
+labels: [bug]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Что сломано?
+      placeholder: Краткое описание проблемы
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Как воспроизвести?
+      placeholder: |
+        1. Открыть ...
+        2. Нажать ...
+        3. Получить ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - UI
+        - Map
+        - Backend
+        - ETL
+        - Data
+        - PWA
+        - Docs
+        - Release
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs / screenshots / links
+      description: Добавьте ошибки, ссылки на PR, скриншоты, консоль, CI.
