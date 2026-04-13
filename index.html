@@ -318,6 +318,15 @@
     const statusLoading = document.getElementById('status-loading');
     const USE_MAP_FEED = false;
     const DATA_LOAD_TIMEOUT_MS = 8000;
+    const runtimeReadiness = {
+      dataReady: false,
+      mapReady: false,
+      uiReady: false,
+      failed: false,
+      phaseMessage: 'Инициализация приложения…',
+      readyMessage: 'Карта готова.',
+      errorMessage: ''
+    };
     const DEBUG_TELEMETRY_STATUS = (() => {
       const debugParam = new URLSearchParams(window.location.search).get('debug');
       if (typeof debugParam === 'string' && ['1', 'true', 'on'].includes(debugParam.trim().toLowerCase())) {
@@ -337,6 +346,24 @@
       statusLoading.hidden = !loading;
       statusError.hidden = !error;
       statusError.textContent = error ? message : '';
+    }
+
+    function syncRuntimeStatus() {
+      if (runtimeReadiness.failed) {
+        hideGlobalDataLoading();
+        setStatus(runtimeReadiness.errorMessage || 'Ошибка загрузки данных. Попробуйте обновить страницу.', { error: true, loading: false });
+        return;
+      }
+
+      const appReady = runtimeReadiness.dataReady && runtimeReadiness.mapReady && runtimeReadiness.uiReady;
+      if (appReady) {
+        hideGlobalDataLoading();
+        setStatus(runtimeReadiness.readyMessage, { loading: false });
+        return;
+      }
+
+      showGlobalDataLoading(runtimeReadiness.phaseMessage || 'Загрузка карты…');
+      setStatus(runtimeReadiness.phaseMessage || 'Инициализация приложения…', { loading: true });
     }
 
     function createDataLoadTimeoutError(timeoutMs) {
@@ -366,9 +393,16 @@
 
     async function bootstrapApp() {
       try {
+        runtimeReadiness.dataReady = false;
+        runtimeReadiness.mapReady = false;
+        runtimeReadiness.uiReady = false;
+        runtimeReadiness.failed = false;
+        runtimeReadiness.errorMessage = '';
+        runtimeReadiness.phaseMessage = 'Загрузка токена…';
+        runtimeReadiness.readyMessage = 'Карта готова.';
+
         hideGlobalDataError();
-        showGlobalDataLoading();
-        setStatus('Загрузка токена…', { loading: true });
+        syncRuntimeStatus();
         showLoading();
         try {
           await initAuth();
@@ -379,50 +413,57 @@
         }
 
         clearError();
-        setStatus('Загрузка данных…', { loading: true });
+        runtimeReadiness.phaseMessage = 'Загрузка данных…';
+        syncRuntimeStatus();
         const features = await loadFeaturesWithTimeout();
+        runtimeReadiness.dataReady = true;
         const sourceCount = Array.isArray(features?.features) ? features.features.length : 0;
         const sourceLabel = USE_MAP_FEED ? '/api/map/feed' : 'data/features.geojson';
-        setStatus(
+        runtimeReadiness.phaseMessage = (
           DEBUG_TELEMETRY_STATUS
             ? `Данные загружены: ${sourceCount} из источника ${sourceLabel}.`
-            : 'Данные загружены.',
-          { loading: true }
+            : 'Данные загружены.'
         );
+        syncRuntimeStatus();
 
-        setStatus('Инициализация карты…', { loading: true });
+        runtimeReadiness.phaseMessage = 'Инициализация карты…';
+        syncRuntimeStatus();
         const map = initMap('map', features);
         await waitForMapBootstrap(map);
-        hideGlobalDataLoading();
+        runtimeReadiness.mapReady = true;
+        syncRuntimeStatus();
 
-        setStatus('Инициализация интерфейса…', { loading: true });
+        runtimeReadiness.phaseMessage = 'Инициализация интерфейса…';
+        syncRuntimeStatus();
         const uiState = await initUI(map, features);
         await initUGCUI();
         await initModerationUI();
+        runtimeReadiness.uiReady = true;
 
         const foundCount = uiState?.getVisibleCounts?.().listCount ?? features.features?.length ?? 0;
         const mapCount = uiState?.getVisibleCounts?.().mapCount ?? 0;
         clearError();
         hideGlobalDataError();
-        setStatus(
+        runtimeReadiness.readyMessage = (
           DEBUG_TELEMETRY_STATUS
             ? `Карта готова. Найдено: ${foundCount}, на карте: ${mapCount}.`
-            : 'Карта готова.',
-          { loading: false }
+            : 'Карта готова.'
         );
+        syncRuntimeStatus();
       } catch (error) {
         console.error('Ошибка инициализации:', error);
-        hideGlobalDataLoading();
         const normalized = normalizeAppError(error, 'Unable to load application data.');
         const uiErrorMessage = error?.code === 'DATA_LOAD_TIMEOUT'
           ? 'Ошибка загрузки данных. Попробуйте обновить страницу.'
           : normalized.message;
+        runtimeReadiness.failed = true;
+        runtimeReadiness.errorMessage = uiErrorMessage;
         showError(uiErrorMessage);
         showGlobalDataError({
           message: uiErrorMessage,
           onRetry: () => bootstrapApp()
         });
-        setStatus(uiErrorMessage, { error: true, loading: false });
+        syncRuntimeStatus();
       }
     }
 

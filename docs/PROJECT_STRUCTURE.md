@@ -134,6 +134,8 @@ app/
 - `app/` — единственный backend runtime;
 - новый runtime-код в `api/` запрещён;
 - env/runtime configuration закрепляется только за `app.main:app`;
+- upload/media contract фиксируется через `POST /api/uploads` (required: `file`, `license`; optional: `title`, `description`; response: `id`, `url`, `filename`, `license`);
+- frontend upload flow обязан использовать backend-returned `url` как единственный runtime source для доступа к загруженному файлу;
 - moderation path не является direct publish path для public dataset.
 
 ---

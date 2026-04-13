@@ -56,6 +56,7 @@
 - `data/features.geojson` закреплён как canonical public map source;
 - базовые слои, фильтры, список объектов и detail-поведение существуют;
 - production-default fallback карты на `/api/map/feed` запрещён;
+- `/api/map/feed` зафиксирован как runtime support read-model (non-canonical);
 - map-first логика проекта зафиксирована как ядро продукта.
 
 Остаточные замечания:
@@ -75,7 +76,8 @@
 Зафиксировано:
 - auth baseline существует;
 - drafts CRUD существует;
-- upload API существует;
+- upload API contract sync завершён (`POST /api/uploads`: required `file` + `license`, optional `title` + `description`, response `id/url/filename/license`);
+- upload contract tests и anti-drift guard зафиксированы;
 - moderation UI и lifecycle существуют;
 - базовый XSS hardening есть;
 - governance boundary против direct runtime publish уже зафиксирован кодом и тестами.
@@ -161,6 +163,7 @@
 - performance hardening для larger datasets;
 - cleanup временных/mock runtime-слоёв;
 - дополнительные regression-checks по canonical data path.
+- синхронизация canonical docs и release-contract формулировок без competing source-of-truth.
 
 Условие старта:
 - Фаза 3 закрыта;
@@ -210,8 +213,8 @@
 
 На текущем цикле проект работает так:
 1. ФАЗА 5 — SCALING / HARDENING
-2. ФАЗА 6 — PRODUCT EXPANSION
-3. ФАЗА 7 — BUSINESS / PLATFORM
+2. CANONICAL DOCS / RELEASE CONTRACT SYNCHRONIZATION (операционный трек активного цикла)
+3. RUNTIME UX/PWA STABILIZATION + contract/test hardening критических surface-слоёв
 
 Это и есть фактическая последовательность следующего цикла.
 
