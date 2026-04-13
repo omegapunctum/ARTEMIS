@@ -33,21 +33,23 @@
 - map exploration stabilization.
 
 Следующий load-bearing фокус:
-- scaling/hardening трек (auth/session масштабирование, storage/runtime устойчивость);
-- release-quality мониторинг без возврата к уже закрытым exploration/UI mini-cycles.
+- canonical docs synchronization с фактическим runtime/release состоянием;
+- release-contract alignment без competing source-of-truth слоёв;
+- runtime UX/PWA stabilization и contract/test hardening критических surface-слоёв;
+- scaling/hardening трек (auth/session масштабирование, storage/runtime устойчивость).
 
 ---
 
 ## КРИТИЧЕСКИЕ ПРИОРИТЕТЫ
 
-### 1. Закрыть data-contract drift между `data/export_meta.json` и `scripts/release_check.py`
+### 1. Закрыть canonical docs drift относительно фактического runtime/release состояния
 Что нужно:
-- привести checked-in export metadata к формату, который реально ожидает release gate;
-- зафиксировать один актуальный формат warning categories;
-- убрать ситуацию, при которой snapshot и gate живут по разным контрактам.
+- синхронизировать `README.md` + canonical docs с фактическими контрактами runtime;
+- убрать противоречивые формулировки о source-of-truth слоях;
+- закрепить, что `data/*` — canonical map data layer, а runtime feed — support/non-canonical.
 
 Почему это важно:
-- это текущий главный внутренний конфликт release-системы.
+- без этого docs перестают быть исполнимым управленческим слоем и снова накапливают drift.
 
 ### 2. Собрать единый release contract
 Что нужно:
@@ -55,7 +57,7 @@
 - зафиксировать, что release unit — пакетная публикация набора данных.
 
 Почему это важно:
-- проект уже имеет controlled release baseline, но он ещё не доведён до единой исполнимой системы.
+- release baseline должен оставаться единым и проверяемым после каждого цикла синхронизации.
 
 ### 3. Перевести документацию на новую иерархию
 Что нужно:
@@ -86,7 +88,7 @@
 
 ## ВЫСОКИЙ ПРИОРИТЕТ
 
-### 6. Зафиксировать canonical documentation framework в репозитории
+### 6. Удерживать canonical documentation framework как операционную норму
 Что нужно:
 - создать устойчивую структуру `docs/`;
 - выделить minimal canonical set;
@@ -95,7 +97,7 @@
 ### 7. Удержать canonical public map source без повторного drift
 Что нужно:
 - продолжать удерживать `/data/features.geojson` как единственный public map source;
-- не допускать implicit fallback или competing runtime architecture через `/api/map/feed`.
+- не допускать трактовки `/api/map/feed` как primary/canonical data source.
 
 ### 8. Изолировать или удалить mock runtime entities из `/api/map/feed`
 Что нужно:
