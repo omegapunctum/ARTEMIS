@@ -80,7 +80,7 @@ function getCourseProgressStatusText(state, course) {
   if (!courseId) return '';
   const entry = state?.coursesProgress?.[courseId];
   if (!entry || typeof entry !== 'object') return '';
-  if (entry.completed === true) return 'Completed';
+  if (entry.completed === true) return 'Завершён';
   const stepIndex = Number(entry.currentStepIndex);
   if (!Number.isInteger(stepIndex) || stepIndex <= 0) return '';
   return `In progress · Step ${stepIndex + 1}`;
@@ -107,6 +107,14 @@ export function showGlobalDataLoading(message = 'Загрузка карты...'
   text.textContent = message;
   host.hidden = false;
   host.setAttribute('aria-hidden', 'false');
+  hideGlobalDataError();
+  const onboarding = document.getElementById('onboarding-overlay');
+  if (onboarding) {
+    onboarding.hidden = true;
+    onboarding.setAttribute('aria-hidden', 'true');
+  }
+  const noResults = document.getElementById('search-no-results-state');
+  if (noResults) noResults.hidden = true;
 }
 
 export function hideGlobalDataLoading() {
@@ -125,6 +133,14 @@ export function showGlobalDataError({ message, onRetry } = {}) {
   text.textContent = message || 'Не удалось загрузить данные карты.';
   host.hidden = false;
   host.setAttribute('aria-hidden', 'false');
+  hideGlobalDataLoading();
+  const onboarding = document.getElementById('onboarding-overlay');
+  if (onboarding) {
+    onboarding.hidden = true;
+    onboarding.setAttribute('aria-hidden', 'true');
+  }
+  const noResults = document.getElementById('search-no-results-state');
+  if (noResults) noResults.hidden = true;
 
   if (globalDataErrorRetryHandler) {
     retryBtn.removeEventListener('click', globalDataErrorRetryHandler);
@@ -195,7 +211,7 @@ export async function initUI(map, features) {
   try {
     coursesPayload = await loadCourses();
   } catch (error) {
-    coursesError = 'Courses временно недоступны. Попробуйте позже.';
+    coursesError = 'Курсы временно недоступны. Попробуйте позже.';
   }
   const normalizedCoursesResult = normalizeCoursesForRuntime(coursesPayload?.courses || []);
   coursesContractWarnings = normalizedCoursesResult.warnings;
@@ -252,6 +268,7 @@ export async function initUI(map, features) {
     detailPanelClose: document.getElementById('detail-panel-close'),
     dateFrom: document.getElementById('date-from'),
     dateTo: document.getElementById('date-to'),
+    resultsSummary: document.getElementById('results-summary'),
     resultsCount: document.getElementById('results-count'),
     mapCount: document.getElementById('map-count'),
     sourceCount: document.getElementById('source-count'),
@@ -264,6 +281,8 @@ export async function initUI(map, features) {
 
   const years = collectYearBounds(allFeatures);
   const confidenceValues = collectConfidenceValues(allFeatures);
+  const telemetryMode = isDebugTelemetryMode();
+  if (elements.resultsSummary) elements.resultsSummary.hidden = !telemetryMode;
   const state = {
     allFeatures,
     filteredFeatures: [],
@@ -372,7 +391,14 @@ export async function initUI(map, features) {
       state.searchResults = buildSearchResults(state.filteredFeatures, state.search);
       state.lastRenderedSearchKey = searchResultsKey;
     }
-    updateSearchNoResultsState(elements, state);
+    const emptyVisible = updateSearchNoResultsState(elements, state);
+    onboardingHint?.syncVisibility?.({
+      ready: !state.loading,
+      loading: state.loading,
+      hasError: Boolean(state.error),
+      hasActiveSelection: Boolean(state.selectedFeatureId),
+      emptyVisible
+    });
     renderSearchDropdown(elements, state, map);
     renderTopPanels(elements, state, layers, confidenceValues, map, visibilityKey);
     updateFilterFeedback(elements, state);
@@ -570,15 +596,24 @@ function setupOnboardingOverlay(elements) {
     }
   })();
 
-  if (isDismissedInSession) {
-    closeOverlay();
-  } else {
-    overlay.hidden = false;
-    overlay.setAttribute('aria-hidden', 'false');
-  }
+  if (isDismissedInSession) closeOverlay();
+  overlay.hidden = true;
+  overlay.setAttribute('aria-hidden', 'true');
   dismissBtn.addEventListener('click', () => closeOverlay({ persist: true }));
   return {
-    markInteracted: () => closeOverlay({ persist: true })
+    markInteracted: () => closeOverlay({ persist: true }),
+    syncVisibility: ({
+      ready = false,
+      loading = false,
+      hasError = false,
+      hasActiveSelection = false,
+      emptyVisible = false
+    } = {}) => {
+      if (dismissed || isDismissedInSession) return;
+      const shouldShow = ready && !loading && !hasError && !hasActiveSelection && !emptyVisible;
+      overlay.hidden = !shouldShow;
+      overlay.setAttribute('aria-hidden', String(!shouldShow));
+    }
   };
 }
 
@@ -615,16 +650,16 @@ function setupDisplayModeToggle(elements, state, map) {
   if (!button) return;
   const syncLabel = () => {
     const isHeatmap = state.displayMode === 'heatmap';
-    button.textContent = isHeatmap ? 'Heatmap' : 'Points';
+    button.textContent = isHeatmap ? 'Тепловая' : 'Точки';
     button.setAttribute('aria-pressed', String(isHeatmap));
-    button.setAttribute('aria-label', isHeatmap ? 'Switch to points mode' : 'Switch to heatmap mode');
+    button.setAttribute('aria-label', isHeatmap ? 'Переключить на точки' : 'Переключить на тепловую карту');
   };
   syncLabel();
   button.addEventListener('click', () => {
     state.displayMode = state.displayMode === 'points' ? 'heatmap' : 'points';
     setMapDisplayMode(map, state.displayMode);
     syncLabel();
-    showUiSystemMessage(state.displayMode === 'heatmap' ? 'Heatmap mode enabled' : 'Points mode enabled', {
+    showUiSystemMessage(state.displayMode === 'heatmap' ? 'Включён режим тепловой карты' : 'Включён режим точек', {
       variant: 'success',
       timeout: 1600
     });
@@ -1480,14 +1515,18 @@ function setupSearchSuggestions(elements) {
 
 function updateSearchNoResultsState(elements, state) {
   const noResults = elements?.searchNoResultsState;
-  if (!noResults) return;
+  if (!noResults) return false;
   const noResultsText = elements?.searchNoResultsText;
   const noResultsReset = elements?.searchNoResultsReset;
 
   const hasSearch = Boolean(state?.search);
   const canMeasureResults = Array.isArray(state?.searchResults);
-  const isEmpty = canMeasureResults && state.searchResults.length === 0;
-  const shouldShow = hasSearch && canMeasureResults && isEmpty;
+  const isSearchEmpty = canMeasureResults && state.searchResults.length === 0;
+  const isPrimaryEmpty = !state?.loading
+    && !state?.error
+    && Array.isArray(state?.filteredFeatures)
+    && state.filteredFeatures.length === 0;
+  const shouldShow = isPrimaryEmpty && hasSearch && canMeasureResults && isSearchEmpty;
   noResults.hidden = !shouldShow;
   if (shouldShow) {
     if (noResultsText) noResultsText.textContent = `Ничего не найдено для «${state.search}».`;
@@ -1495,6 +1534,7 @@ function updateSearchNoResultsState(elements, state) {
   } else if (noResultsReset) {
     noResultsReset.hidden = true;
   }
+  return shouldShow;
 }
 
 function renderCards(elements, state, map) {
@@ -1531,7 +1571,7 @@ function renderCards(elements, state, map) {
     item.setAttribute('aria-selected', String(state.selectedFeatureId === featureId));
     item.tabIndex = 0;
 
-    const image = buildImageNode(props, 'Object image');
+    const image = buildImageNode(props, 'Изображение объекта');
 
     const meta = document.createElement('div');
     meta.className = 'meta';
@@ -1695,8 +1735,8 @@ function renderCardsState(elements, state) {
   if (state.loading) {
     elements.cardsState.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Loading',
-      message: 'Loading events…'
+      title: 'Загрузка',
+      message: 'Загрузка событий…'
     }));
     renderCardsSkeleton(elements, 4);
     return;
@@ -1705,7 +1745,7 @@ function renderCardsState(elements, state) {
   if (state.error) {
     elements.cardsState.appendChild(createInlineStateBlock({
       variant: 'error',
-      title: 'Data unavailable',
+      title: 'Данные недоступны',
       message: state.error
     }));
     if (elements.cardsRibbon) elements.cardsRibbon.replaceChildren();
@@ -2093,6 +2133,7 @@ function renderQuickLayerFilter(elements, state) {
 }
 
 function updateCounters(elements, state, map) {
+  if (!isDebugTelemetryMode()) return;
   const diagnostics = getMapBuildDiagnostics(map);
   if (elements.resultsCount) elements.resultsCount.textContent = String(state.filteredFeatures.length);
   if (elements.mapCount) elements.mapCount.textContent = String(getMapFeatureCount(map));
@@ -2563,7 +2604,7 @@ function syncDetailSheetState(state, elements) {
   if (expandBtn) {
     expandBtn.setAttribute('aria-expanded', String(Boolean(state.detailSheetExpanded)));
     expandBtn.textContent = state.detailSheetExpanded ? '⇩' : '⇧';
-    expandBtn.setAttribute('aria-label', state.detailSheetExpanded ? 'Collapse detail panel' : 'Expand detail panel');
+    expandBtn.setAttribute('aria-label', state.detailSheetExpanded ? 'Свернуть панель деталей' : 'Развернуть панель деталей');
   }
 }
 
