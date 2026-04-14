@@ -1,6 +1,6 @@
 # ТЕКУЩИЕ ПРИОРИТЕТЫ ARTEMIS v4.0
 
-Статус: checkpoint-обновление после завершения map exploration stabilization cycle (2026-04-13).
+Статус: checkpoint-обновление после завершения stabilization baseline cycle (2026-04-14).
 Назначение документа: фиксировать только актуальные load-bearing приоритеты проекта.
 
 Правило:
@@ -33,56 +33,59 @@
 - map exploration stabilization.
 
 Следующий load-bearing фокус:
-- canonical docs synchronization с фактическим runtime/release состоянием;
-- release-contract alignment без competing source-of-truth слоёв;
-- runtime UX/PWA stabilization и contract/test hardening критических surface-слоёв;
-- scaling/hardening трек (auth/session масштабирование, storage/runtime устойчивость).
+- canonical planning docs re-sync по фактически закрытым stabilization-блокам;
+- creator / draft UX hardening и clear auth-required UX для contributor flows;
+- mobile/narrow-screen UX verification + manual smoke/runtime validation;
+- затем scaling/hardening трек и только после него product expansion направления.
 
 ---
 
 ## КРИТИЧЕСКИЕ ПРИОРИТЕТЫ
 
-### 1. Закрыть canonical docs drift относительно фактического runtime/release состояния
+### 1. Закрыть canonical planning drift и зафиксировать новый активный цикл
 Что нужно:
-- синхронизировать `README.md` + canonical docs с фактическими контрактами runtime;
-- убрать противоречивые формулировки о source-of-truth слоях;
-- закрепить, что `data/*` — canonical map data layer, а runtime feed — support/non-canonical.
+- досинхронизировать `docs/PROJECT_PHASES.md` и `docs/PRIORITIES.md` с фактически закрытыми stabilization-работами;
+- зафиксировать переход активного цикла от baseline cleanup к creator/mobile hardening;
+- удержать формулировку, что product expansion не является текущим этапом.
 
 Почему это важно:
 - без этого docs перестают быть исполнимым управленческим слоем и снова накапливают drift.
 
-### 2. Собрать единый release contract
+### 2. Hardening creator / draft UX и auth-required contributor flows
 Что нужно:
-- синхронизировать `export_meta.json`, `features.json`, `features.geojson`, `rejected.json`, release-check, workflow и readiness docs;
-- зафиксировать, что release unit — пакетная публикация набора данных.
+- убрать двусмысленности в первичных состояниях экрана создания/черновика;
+- явно показывать auth-required ограничения до действий, ведущих к блокировкам;
+- удержать mutually exclusive state surfaces в creator/runtime-потоках.
 
 Почему это важно:
-- release baseline должен оставаться единым и проверяемым после каждого цикла синхронизации.
+- текущий риск уже не в contract drift, а в UX-ошибках на критическом contributor пути.
 
-### 3. Перевести документацию на новую иерархию
+### 3. Подтвердить mobile/narrow-screen UX поведением, а не только desktop baseline
 Что нужно:
-- отделить canonical docs от working docs, audits и archive;
-- убрать ситуацию, когда reference и старые snapshots воспринимаются как актуальные;
-- зафиксировать docs sync как обязательную часть release discipline.
+- завершить cleanup верхней зоны и primary actions на узких экранах;
+- пройти ручной smoke по first-screen и creator/draft сценариям на mobile;
+- проверить, что loading/readiness состояния не конфликтуют в narrow-layout.
 
 Почему это важно:
-- сейчас документация информативна, но неустойчива как система управления.
+- mobile regressions остаются самым вероятным источником тихой деградации UX.
 
-### 4. Досинхронизировать README с реальным runtime/API surface
+### 4. Провести manual smoke и runtime validation как обязательный post-stabilization барьер
 Что нужно:
-- привести root-level описание проекта к фактическому backend/runtime surface;
-- убрать укороченный и частично устаревший API summary.
+- закрепить короткий обязательный smoke-набор после UX/hardening правок;
+- проверять runtime readiness/loading state consistency в реальном ручном прогоне;
+- не считать цикл закрытым без подтверждения на реальном UI.
 
 Почему это важно:
-- README должен быть первой точкой входа в проект, а не источником drift.
+- иначе стабилизация остаётся "по документам", но не подтверждается эксплуатационно.
 
-### 5. Устранить PWA semantic drift
+### 5. Подготовить следующий переход: scaling/hardening, затем product expansion
 Что нужно:
-- проверять фактический bypass/no-cache private/auth requests;
-- перестать опираться на грубую логику "строка встречается / не встречается" в `sw.js`.
+- держать отдельно backlog архитектурного hardening (auth/session/storage/runtime);
+- не смешивать этот backlog с product growth инициативами;
+- открыть expansion-направления только после закрытия hardening-гейтов.
 
 Почему это важно:
-- иначе release/readiness слой может давать ложные выводы о корректности private caching behavior.
+- это удерживает реалистичный порядок работ и защищает проект от преждевременного расширения.
 
 ---
 

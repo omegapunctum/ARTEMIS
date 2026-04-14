@@ -1,6 +1,6 @@
 # ФАЗЫ ПРОЕКТА ARTEMIS v4.0
 
-Статус: checkpoint-обновление после завершения map exploration stabilization cycle (2026-04-13).
+Статус: checkpoint-обновление после завершения stabilization baseline cycle (2026-04-14).
 Назначение документа: фиксировать только текущую фазовую модель проекта и ближайшие переходы между фазами.
 
 Правило:
@@ -151,7 +151,7 @@
 
 ---
 
-## ФАЗА 5 — SCALING / HARDENING [АКТИВНАЯ ФАЗА №1]
+## ФАЗА 5 — SCALING / HARDENING [ПЛАНИРУЕМАЯ СЛЕДУЮЩАЯ ТЕХНИЧЕСКАЯ ФАЗА]
 
 Цель:
 Убрать архитектурные ограничения MVP и подготовить проект к росту.
@@ -163,18 +163,17 @@
 - performance hardening для larger datasets;
 - cleanup временных/mock runtime-слоёв;
 - дополнительные regression-checks по canonical data path.
-- синхронизация canonical docs и release-contract формулировок без competing source-of-truth.
 
 Условие старта:
-- Фаза 3 закрыта;
-- release system не находится в состоянии contract drift.
+- закрыт текущий цикл canonical planning re-sync и UX hardening;
+- release/runtime baseline удерживается без нового contract drift.
 
 Выход фазы:
 - архитектура перестаёт зависеть от текущих MVP-допущений.
 
 ---
 
-## ФАЗА 6 — PRODUCT EXPANSION [ЗАПЛАНИРОВАНА]
+## ФАЗА 6 — PRODUCT EXPANSION [СЛЕДУЮЩАЯ ПОСЛЕ HARDENING]
 
 Цель:
 Расширять продукт только после стабилизации baseline.
@@ -212,9 +211,11 @@
 ## АКТИВНЫЙ ПОРЯДОК РАБОТ
 
 На текущем цикле проект работает так:
-1. ФАЗА 5 — SCALING / HARDENING
-2. CANONICAL DOCS / RELEASE CONTRACT SYNCHRONIZATION (операционный трек активного цикла)
-3. RUNTIME UX/PWA STABILIZATION + contract/test hardening критических surface-слоёв
+1. CANONICAL PLANNING RE-SYNC (операционный трек активного цикла)
+2. CREATOR / DRAFT UX HARDENING + AUTH-REQUIRED FLOW CLARITY
+3. MOBILE / NARROW-SCREEN MANUAL SMOKE + runtime readiness validation
+4. ФАЗА 5 — SCALING / HARDENING
+5. ФАЗА 6 — PRODUCT EXPANSION
 
 Это и есть фактическая последовательность следующего цикла.
 
