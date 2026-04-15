@@ -1,7 +1,7 @@
 # Controlled Release Decision
 
 ## 1. Current verified baseline
-- Automated verification chain is stable: `python scripts/release_check.py` and `python -m pytest` pass.
+- Automated verification chain is currently passing in baseline runs: `python scripts/release_check.py` and `python -m pytest` pass, with intermittent backend/integration pytest instability tracked as a post-baseline hardening signal.
 - Release gate is enforced in CI and before export in ETL workflow.
 - Governance boundary is explicit and aligned across docs/code/tests/workflows (canonical `data/*`, auxiliary `/api/map/feed`, no direct runtime publish path).
 - Manual smoke discipline exists as documented baseline artifacts.
@@ -14,7 +14,7 @@ Release unit (current baseline contract):
 - release gate blocks if required artifacts are missing, if record counts diverge, or if warning thresholds exceed policy.
 
 ## 2. Remaining gaps and classification
-- Gap: No remaining release-blocking gaps are open after current-cycle manual evidence closure (`docs/MANUAL_SMOKE_EVIDENCE_2026-04-11.md`).
+- Gap: No remaining release-blocking gaps are open for entry into the controlled baseline scope after current-cycle manual evidence closure (`docs/MANUAL_SMOKE_EVIDENCE_2026-04-11.md`); architectural/scaling hardening limitations remain open outside this gate.
 - Classification: Remaining items are **POST-BASELINE GAP** only (continuous quality hardening, not release blockers).
 
 ## 3. Decision
