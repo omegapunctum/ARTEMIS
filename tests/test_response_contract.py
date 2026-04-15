@@ -11,7 +11,7 @@ os.environ.setdefault("COOKIE_HTTPONLY", "true")
 os.environ.setdefault("COOKIE_SAMESITE", "lax")
 os.environ.setdefault("APP_ENV", "development")
 
-from app.auth.service import SessionLocal, User, active_refresh_tokens, init_db as init_auth_db  # noqa: E402
+from app.auth.service import SessionLocal, User, reset_refresh_sessions_for_tests, init_db as init_auth_db  # noqa: E402
 from app.drafts.service import Draft, init_db as init_drafts_db  # noqa: E402
 
 
@@ -84,7 +84,7 @@ class ResponseContractTests(unittest.TestCase):
         db.query(User).delete()
         db.commit()
         db.close()
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
         self.user_session = requests.Session()
         self.mod_session = requests.Session()
         seed_a = uuid4().hex
@@ -97,7 +97,7 @@ class ResponseContractTests(unittest.TestCase):
         )
 
     def tearDown(self):
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
         self.user_session.close()
         self.mod_session.close()
 

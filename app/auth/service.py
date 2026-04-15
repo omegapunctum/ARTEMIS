@@ -23,8 +23,6 @@ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
-# Backward-compatible testing alias; service flow uses default_refresh_session_store methods.
-active_refresh_tokens = default_refresh_session_store.raw_sessions
 
 
 class User(Base):
@@ -53,6 +51,12 @@ def get_db():
         db.close()
 
 
+def reset_refresh_sessions_for_tests() -> None:
+    clear_method = getattr(default_refresh_session_store, "clear", None)
+    if callable(clear_method):
+        clear_method()
+
+
 def register_user(db: Session, email: str, password: str) -> str:
     if db.query(User).filter(User.email == email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -77,15 +81,14 @@ def login_user(db: Session, email: str, password: str) -> tuple[str, str]:
 
 def rotate_refresh_token(refresh_token: str, db: Session) -> tuple[str, str]:
     payload = decode_token(refresh_token, "refresh")
-    if default_refresh_session_store.get_refresh_session_user(payload["jti"]) != payload["user_id"]:
+    session_user_id = default_refresh_session_store.consume_refresh_session(payload["jti"])
+    if session_user_id != payload["user_id"]:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
 
     user = db.query(User).filter(User.id == payload["user_id"]).first()
     if not user:
-        default_refresh_session_store.delete_refresh_session(payload["jti"])
         raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-    default_refresh_session_store.delete_refresh_session(payload["jti"])
     new_refresh_token = create_refresh_token(user.id)
     default_refresh_session_store.store_refresh_session(decode_token(new_refresh_token, "refresh")["jti"], user.id)
     return create_access_token(user.id), new_refresh_token

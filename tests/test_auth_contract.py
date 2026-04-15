@@ -9,7 +9,7 @@ os.environ.setdefault('COOKIE_SECURE', 'false')
 from app.auth.service import (  # noqa: E402
     SessionLocal,
     User,
-    active_refresh_tokens,
+    reset_refresh_sessions_for_tests,
     get_refresh_token,
     init_db,
     login_user,
@@ -30,7 +30,7 @@ class AuthContractTests(unittest.TestCase):
         self.db.query(User).delete()
         self.db.commit()
         self.db.close()
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
 
     def test_register_login_refresh_logout_health(self):
         access_token = register_user(self.db, 'auth-user@example.com', 'password123')
@@ -56,7 +56,7 @@ class AuthContractTests(unittest.TestCase):
         _, refresh_token = login_user(self.db, 'restart-like@example.com', 'password123')
 
         _, rotated_refresh_token = rotate_refresh_token(refresh_token, self.db)
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
 
         with self.assertRaises(HTTPException) as exc:
             rotate_refresh_token(rotated_refresh_token, self.db)
@@ -71,6 +71,13 @@ class AuthContractTests(unittest.TestCase):
 
         self.assertEqual(store_a.get_refresh_session_user('jti-a'), 'user-a')
         self.assertIsNone(store_b.get_refresh_session_user('jti-a'))
+
+    def test_inmemory_store_consume_refresh_session_is_single_use(self):
+        store = InMemoryRefreshSessionStore()
+        store.store_refresh_session('jti-consume', 'user-consume')
+
+        self.assertEqual(store.consume_refresh_session('jti-consume'), 'user-consume')
+        self.assertIsNone(store.consume_refresh_session('jti-consume'))
 
 
 if __name__ == '__main__':
