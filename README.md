@@ -15,7 +15,7 @@ ARTEMIS combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The system is designed to be **simple, modular, and scalable**.
+The system is designed to be **simple and modular within the current controlled-release baseline scope** (single-node backend mode; multi-instance support is not part of the current baseline).
 
 ---
 
@@ -191,7 +191,7 @@ Repository documentation is organized into four pragmatic layers:
 - **audits** — verification, audit, and validation outputs.
 - **archive/reference** — historical snapshots and diagnostic materials kept for traceability.
 
-Canonical docs are maintained in root `README.md` and in `docs/` (including `docs/ARTEMIS_CONCEPT_v1_0.md`, `docs/ARTEMIS_PRODUCT_SCOPE_v1_0.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md`, `docs/PRIORITIES.md`, `docs/DATA_CONTRACT.md`, `docs/ARTEMIS_UI_UX_SYSTEM_v1_0.md`).
+Canonical docs are maintained in root `README.md` and in `docs/` (including `docs/ARTEMIS_CONCEPT.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/DATA_CONTRACT.md`, `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`, `docs/PROJECT_STRUCTURE.md`).
 `docs/ARTEMIS_UI_UX_SYSTEM_v1_0.md` is the primary UI/UX system/spec document; `docs/ARTEMIS_UI_UX_COMPONENT_MAP_v1_0.md` is a system-level working implementation map derived from that spec (not a top-level canonical concept document).
 Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`).
 Historical and diagnostic documents live in `docs/archive/` and `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.
