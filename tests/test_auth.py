@@ -11,7 +11,7 @@ os.environ.setdefault("COOKIE_HTTPONLY", "true")
 os.environ.setdefault("COOKIE_SAMESITE", "lax")
 os.environ.setdefault("APP_ENV", "development")
 
-from app.auth.service import SessionLocal, User, active_refresh_tokens, init_db  # noqa: E402
+from app.auth.service import SessionLocal, User, reset_refresh_sessions_for_tests, init_db  # noqa: E402
 from app.auth.utils import hash_password  # noqa: E402
 from app.drafts.service import Draft, init_db as init_drafts_db  # noqa: E402
 from app.security.rate_limit import login_block_store, login_failure_store, rate_limit_store  # noqa: E402
@@ -65,7 +65,7 @@ class AuthApiTests(unittest.TestCase):
         rate_limit_store.clear()
         login_failure_store.clear()
         login_block_store.clear()
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
         self.session = requests.Session()
         ip_seed = uuid4().hex
         self.session.headers.update(
@@ -77,7 +77,7 @@ class AuthApiTests(unittest.TestCase):
         rate_limit_store.clear()
         login_failure_store.clear()
         login_block_store.clear()
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
         self.session.close()
 
     def _create_user(self, email: str, password: str) -> None:

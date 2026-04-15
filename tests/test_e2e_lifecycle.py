@@ -11,7 +11,7 @@ os.environ.setdefault("COOKIE_HTTPONLY", "true")
 os.environ.setdefault("COOKIE_SAMESITE", "lax")
 os.environ.setdefault("APP_ENV", "development")
 
-from app.auth.service import SessionLocal, User, active_refresh_tokens, init_db as init_auth_db  # noqa: E402
+from app.auth.service import SessionLocal, User, reset_refresh_sessions_for_tests, init_db as init_auth_db  # noqa: E402
 from app.drafts.service import Draft, init_db as init_drafts_db  # noqa: E402
 
 
@@ -62,13 +62,13 @@ class E2ELifecycleTests(unittest.TestCase):
         self.db.query(Draft).delete()
         self.db.query(User).delete()
         self.db.commit()
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
         self.session = requests.Session()
         self.mod_session = requests.Session()
 
     def tearDown(self):
         self.db.close()
-        active_refresh_tokens.clear()
+        reset_refresh_sessions_for_tests()
         self.session.close()
         self.mod_session.close()
 
