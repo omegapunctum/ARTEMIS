@@ -93,7 +93,8 @@ def test_auth_refresh_lifecycle_with_real_redis_backend(tmp_path) -> None:
             timeout=5,
         )
         assert replay_old_refresh.status_code == 401
-        assert replay_old_refresh.json().get("detail") == "Invalid refresh token"
+        replay_error = replay_old_refresh.json().get("error") or replay_old_refresh.json().get("detail")
+        assert replay_error == "Invalid refresh token"
     finally:
         session.close()
         server.terminate()

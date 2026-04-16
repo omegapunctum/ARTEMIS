@@ -101,7 +101,8 @@ def test_refresh_token_shared_between_instances_with_real_redis(tmp_path) -> Non
             timeout=5,
         )
         assert replay_old_on_a.status_code == 401
-        assert replay_old_on_a.json().get("detail") == "Invalid refresh token"
+        replay_error = replay_old_on_a.json().get("error") or replay_old_on_a.json().get("detail")
+        assert replay_error == "Invalid refresh token"
     finally:
         session.close()
         server_a.terminate()
