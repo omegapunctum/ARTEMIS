@@ -97,7 +97,7 @@
 
 ---
 
-## ФАЗА 3 — CONTROLLED RELEASE STABILIZATION [АКТИВНАЯ ФАЗА №1]
+## ФАЗА 3 — CONTROLLED RELEASE STABILIZATION [ЗАВЕРШЕНА / CLOSED]
 
 Цель:
 Сделать release-систему внутренне согласованной и действительно исполнимой.
@@ -172,7 +172,8 @@ Remaining gaps before production scaling:
 - baseline MVP для research slices уже реализован в backend+frontend контуре;
 - в текущем baseline поддерживаются: save slice, list my slices, open/restore context, delete;
 - access model текущего слоя: private-only, owner-only;
-- stories / share mode / AI-assistance поверх slices остаются в следующих фазах.
+- stories / courses / explain-context contract уже реализованы как thin orchestration/runtime layers поверх slices (private/owner-only);
+- share mode и AI-generation/explanation слой поверх ECC остаются в следующих фазах.
 
 Фаза включает:
 - завершение PWA bypass/no-cache semantics;
@@ -227,9 +228,9 @@ Remaining gaps before production scaling:
 
 Планируемые направления:
 - развитие research-slice слоя поверх уже реализованного MVP (сейчас: private/owner-only save/list/open/delete), включая shareable-state следующий слой;
-- stories / guided scenarios;
-- courses;
-- explainable AI assistance (explanation / comparison / summary / hypothesis suggestions с маркировкой статуса);
+- stories / guided scenarios (следующий слой глубины поверх уже реализованного thin runtime слоя);
+- courses (следующий слой глубины поверх уже реализованного thin runtime слоя);
+- explainable AI assistance (explanation / comparison / summary / hypothesis suggestions с маркировкой статуса) как следующий слой поверх уже реализованного ECC;
 - аналитика и compare flows;
 - "Мои проекты";
 - локализация;

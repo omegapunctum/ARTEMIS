@@ -92,11 +92,15 @@ css/
 
 js/
 ├── auth.js
+├── courses_runtime.js
 ├── data.js
+├── explain_context.js
 ├── map.js
 ├── pwa.js
+├── research_slices.js
 ├── safe-dom.js
 ├── state.js
+├── stories.js
 ├── ugc.js
 ├── ui.js
 ├── ui.moderation.js
@@ -121,9 +125,13 @@ app/
 ├── main.py
 ├── routes/
 ├── auth/
+├── courses/
 ├── drafts/
+├── explain_context/
 ├── moderation/
+├── research_slices/
 ├── security/
+├── stories/
 ├── uploads/
 ├── observability.py
 ├── map_feed_schemas.py
