@@ -8,6 +8,12 @@
 - отделить обязательный продуктовый слой от перспективных направлений;
 - определить, что именно должно быть реализовано в v1.0, а что запрещено обещать и включать в базовый scope.
 
+Статус-синхронизация текущего baseline:
+- реализован map/time workspace + research slices (save/list/open/restore/delete, private/owner-only);
+- реализованы stories и courses как thin orchestration runtime layers (private/owner-only);
+- реализован Explainable Context Contract (ECC) как context-handoff слой (`slice|story|course`);
+- AI generation/explanation layer (content generation / model-driven explain mode) пока не реализован и относится к следующему слою развития.
+
 ---
 
 ## 1. Назначение ARTEMIS v1.0
@@ -136,6 +142,9 @@ Story — более высокий слой.
 - загрузка сохранённого среза;
 - sharable state / устойчивое состояние исследования;
 - базовые collections из срезов.
+Текущий статус:
+- baseline core (create/save/restore/list/delete) реализован;
+- shareable-state и collections остаются следующим продуктовым слоем.
 
 ### 5.4 Story layer
 Обязательно:
@@ -143,6 +152,9 @@ Story — более высокий слой.
 - пошаговый переход между срезами;
 - narrative context;
 - интеграция с картой и временем.
+Текущий статус:
+- реализован thin orchestration runtime layer (owner-only stories CRUD поверх slices);
+- полноценный guided-narrative depth layer остаётся следующим шагом.
 
 ### 5.5 Course layer
 Обязательно:
@@ -150,6 +162,9 @@ Story — более высокий слой.
 - структура на базе slices/stories;
 - режим последовательного прохождения;
 - связь курса с пространственно-временной конфигурацией.
+Текущий статус:
+- реализован thin orchestration runtime layer (owner-only courses CRUD поверх stories);
+- full guided-learning depth/progression layer остаётся следующим шагом.
 
 ### 5.6 Explainable AI assistance
 Обязательно:
@@ -158,6 +173,9 @@ Story — более высокий слой.
 - AI summary с маркировкой статуса;
 - AI hypothesis suggestions как отдельный тип вывода;
 - явное отделение фактов от интерпретаций.
+Текущий статус:
+- реализован ECC как explainability context contract (контекст для `slice|story|course`);
+- полноценный AI generation/explanation слой (model outputs: explain/compare/summary/hypothesis) остаётся future scope.
 
 ### 5.7 Provenance and epistemic clarity
 Обязательно:

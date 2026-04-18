@@ -3,7 +3,7 @@
 ## 1. Current baseline fit
 - Courses entrypoints and runtime primitives already exist in current UI: `Courses` top action button, dedicated `courses-panel`, in-memory courses state, step navigation, and map context binding by `feature_id` or `lat/lng`.
 - Courses content is already loadable from static `data/courses.json` via `loadCourses()` with cache + graceful fallback.
-- This allows a **content-driven, frontend-first MVP** without new backend APIs.
+- Исторически MVP стартовал как **content-driven, frontend-first** без обязательного backend API, но текущая реализация уже эволюционировала в API-backed runtime слой (`/api/courses`).
 - Baseline constraints remain: preserve controlled-release discipline and avoid multi-instance/session assumptions.
 
 ## 2. MVP scope
@@ -42,8 +42,9 @@
     - `lat`, `lng` (+ optional `zoom`) for coordinate-driven focus.
 
 ### 2.4 Backend/API needs (MVP)
-- **Required:** none (no new backend endpoints needed).
-- **Optional (later):** authoring/validation/admin APIs for courses lifecycle, but not required to ship MVP learner flow.
+- **Current implemented baseline:** courses runtime уже API-backed (`/api/courses`) с owner-only моделью доступа.
+- **Historical assumption (initial MVP draft):** frontend-only path without backend APIs.
+- **Optional (later):** authoring/validation/admin APIs beyond текущего thin runtime слоя.
 
 ## 3. Out of scope for MVP
 - Persistent per-user course progress/history across sessions/devices.

@@ -54,6 +54,9 @@ Vanilla JavaScript (no frameworks):
 - Auth API (JWT + refresh cookie)
 - Drafts API (CRUD)
 - Research Slices API (private/owner-only MVP: save, list, open/restore, delete)
+- Stories API (thin orchestration layer over research slices: private/owner-only CRUD)
+- Courses API (thin orchestration layer over stories: private/owner-only CRUD)
+- Explain Context Contract API (`/api/explain-context` context payload for `slice|story|course`; AI generation/explanation mode is not part of current baseline)
 - Upload API (images)
 - Moderation API (review/approve/reject + Airtable staging sync; not direct public dataset publish)
 - Airtable integration (staging sync for review outcomes; canonical public publish remains ETL/export workflow only)
@@ -138,6 +141,23 @@ Vanilla JavaScript (no frameworks):
   - `PATCH /api/research-slices/{slice_id}`
   - `DELETE /api/research-slices/{slice_id}`
   - current baseline visibility/access model: private-only, owner-only
+- Stories (`/api/stories/*`):
+  - `POST /api/stories`
+  - `GET /api/stories`
+  - `GET /api/stories/{story_id}`
+  - `PATCH /api/stories/{story_id}`
+  - `DELETE /api/stories/{story_id}`
+  - current baseline model: thin orchestration layer, private-only, owner-only
+- Courses (`/api/courses/*`):
+  - `POST /api/courses`
+  - `GET /api/courses`
+  - `GET /api/courses/{course_id}`
+  - `DELETE /api/courses/{course_id}`
+  - current baseline model: thin orchestration layer, private-only, owner-only
+- Explain Context Contract (`/api/explain-context`):
+  - `POST /api/explain-context` with `scope ∈ {slice, story, course}`
+  - returns normalized context payload for explainability/runtime handoff
+  - current baseline is context contract only; AI generation/explanation runtime is not implemented
 - Auxiliary runtime feed:
   - `GET /api/map/feed` (auxiliary, non-canonical runtime support/read-model endpoint for UI; canonical public map source remains `data/features.geojson`)
 - Canonical public map data path:
