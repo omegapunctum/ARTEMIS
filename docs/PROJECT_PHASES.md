@@ -1,25 +1,18 @@
 # ФАЗЫ ПРОЕКТА ARTEMIS v4.1
 
-Статус: обновлённая версия после синхронизации с Foundational Pack и концептуальной лестницей развития (2026-04-14).
-Назначение документа: фиксировать только текущую фазовую модель проекта и ближайшие переходы между фазами, не смешивая её с архивом, дальними идеями и отдельной концептуальной лестницей ARTEMIS.
+Статус: active canonical phases document.
+Назначение документа: фиксировать только текущую фазовую модель проекта, активный порядок работ и ближайшие переходы между фазами, не смешивая это с архивом, длинной историей закрытых baseline-работ и дальними инициативами.
 
 Правило:
-- этот документ является roadmap-уровнем;
-- он не заменяет архитектурные, data-contract и release-документы;
-- исторические snapshot-версии фаз хранятся отдельно в архиве и не считаются source of truth.
+- этот документ фиксирует operational phase model;
+- он не заменяет архитектурные, data-contract, release и product-scope документы;
+- исторические snapshot-версии фаз хранятся отдельно в archive/audit layer и не считаются source of truth.
 
 ---
 
-## ПРИНЦИП ФАЗОВОЙ МОДЕЛИ v4.0
+## ПРИНЦИП ФАЗОВОЙ МОДЕЛИ
 
-В старой схеме фазы смешивали:
-- уже выполненные базовые этапы;
-- реальные технические gap'ы;
-- продуктовые гипотезы;
-- далёкие инициативы;
-- маркетинг и монетизацию.
-
-В версии v4.1 фазы используются только как инструмент управления разработкой.
+Фазы ARTEMIS используются только как инструмент управления исполнением.
 Поэтому каждая фаза должна отвечать на три вопроса:
 1. Что уже зафиксировано как baseline.
 2. Что остаётся обязательным для перехода дальше.
@@ -72,7 +65,7 @@
 
 ---
 
-## ФАЗА 2 — UGC / AUTH BASELINE [ЗАВЕРШЕНА С ЭКСПЛУАТАЦИОННЫМИ ОГРАНИЧЕНИЯМИ]
+## ФАЗА 2 — UGC / AUTH BASELINE [ЗАВЕРШЕНА С ОГРАНИЧЕНИЯМИ]
 
 Цель:
 Закрыть базовую пользовательскую авторизацию и контур черновиков / модерации.
@@ -86,10 +79,9 @@
 - governance boundary против direct runtime publish уже зафиксирован кодом и тестами.
 
 Ограничения фазы:
-- auth/session слой всё ещё single-instance oriented;
-- SQLite и process-local refresh registry не считаются production-grade масштабируемой моделью;
-- baseline auth/session upgraded: memory default + redis-capable путь существует, но это ещё не эквивалент production-hardened multi-instance архитектуры;
-- эти ограничения не отменяют закрытие baseline-фазы, но запрещают считать контур готовым к multi-node production.
+- auth/session слой не должен описываться как полностью production-hardened multi-instance модель;
+- baseline auth/session ушёл дальше исходного memory-only MVP, но scaling/hardening контур остаётся отдельной фазой;
+- эти ограничения не отменяют закрытие baseline-фазы, но запрещают считать контур финально масштабированным.
 
 Выход фазы:
 - пользовательский контур реализован по коду;
@@ -102,11 +94,12 @@
 Цель:
 Сделать release-систему внутренне согласованной и действительно исполнимой.
 
-Статус-обновление (2026-04-15): **baseline stabilized; release gate hardened; фаза переведена в режим завершения**.
-Статус-обновление (2026-04-16): **COMPLETED / CLOSED** в рамках controlled-release scope после green release-gate.
-Статус-обновление (2026-04-18): **COMPLETED / CLOSED** в текущем baseline; deploy в GitHub Pages также проходит через `python scripts/release_check.py`, а release-gate явно зафиксирован как structural release discipline gate.
+Итоговый статус:
+- baseline stabilized;
+- release gate hardened;
+- controlled-release baseline закрыт в текущем scope.
 
-Фаза включает:
+Фаза включала:
 - синхронизацию `export_meta.json` и `scripts/release_check.py`;
 - унификацию release terminology;
 - синхронизацию checked-in data artifacts;
@@ -130,34 +123,25 @@
 - визуальные эксперименты UI.
 
 Выход фазы:
-- проект получает предсказуемый release baseline.
-- Текущий статус (2026-04-15): baseline stabilized; release gate hardened (data + runtime); auth/session baseline upgraded (memory default + redis-capable).
-- Текущий статус (2026-04-16): release gate включает behavioral PWA verification (дополнительно к static/pattern guards), baseline считается стабилизированным в текущем scope.
+- проект получил предсказуемый release baseline.
 
-Явные ограничения после стабилизации:
-- multi-instance всё ещё NOT production-ready;
-- Redis path exists but not fully production-hardened.
+Явные ограничения после закрытия:
+- multi-instance не должен описываться как fully production-ready;
+- scaling/persistence/ops contour остаётся отдельным следующим классом задач.
 
-Remaining gaps before production scaling:
-- доказать Redis/session путь на реальной инфраструктуре в расширенной environment/multi-node конфигурации;
-- перейти от текущего baseline (single-node operational model) к устойчивой multi-node session модели;
-- определить production-grade storage/migration/session persistence контур;
-- добавить production runbook для moderation/runtime операций;
-- закрепить регулярный scaling-focused regression цикл.
-
-Классификация этих хвостов:
-- это **не blockers** для закрытия ФАЗЫ 3;
+Классификация remaining gaps:
+- это не blockers для закрытия ФАЗЫ 3;
 - это следующий класс задач для ФАЗЫ 5 — SCALING / HARDENING;
 - PWA/UX runtime polish и installability/smoke относятся к ФАЗЕ 4.
 
 ---
 
-## ФАЗА 4 — PWA / UX STABILIZATION [АКТИВНАЯ ФАЗА №2]
+## ФАЗА 4 — PWA / UX STABILIZATION [АКТИВНАЯ ФАЗА №1]
 
 Цель:
 Довести пользовательский runtime до устойчивого и предсказуемого состояния.
 
-Статус-синхронизация (2026-04-17):
+Статус-синхронизация:
 - baseline MVP для research slices уже реализован в backend+frontend контуре;
 - в текущем baseline поддерживаются: save slice, list my slices, open/restore context, delete;
 - access model текущего слоя: private-only, owner-only;
@@ -173,7 +157,7 @@ Remaining gaps before production scaling:
 - фиксацию базового onboarding и понятной точки входа в интерфейс.
 
 Обязательные условия закрытия:
-- private/auth requests не кэшируются фактически, а не только "по тексту проверки";
+- private/auth requests не кэшируются фактически, а не только по тексту проверки;
 - runtime не показывает противоречивые loading-состояния;
 - UI main flow стабилен на desktop/mobile baseline;
 - UX-документы переведены в рабочий слой, а не размазаны по разным audit-файлам.
@@ -216,12 +200,12 @@ Remaining gaps before production scaling:
 Расширять продукт только после стабилизации baseline и в границах зафиксированного ARTEMIS v1.0 scope.
 
 Планируемые направления:
-- развитие research-slice слоя поверх уже реализованного MVP (сейчас: private/owner-only save/list/open/delete), включая shareable-state следующий слой;
-- stories / guided scenarios (следующий слой глубины поверх уже реализованного thin runtime слоя);
-- courses (следующий слой глубины поверх уже реализованного thin runtime слоя);
-- explainable AI assistance (explanation / comparison / summary / hypothesis suggestions с маркировкой статуса) как следующий слой поверх уже реализованного ECC;
+- развитие research-slice слоя поверх уже реализованного MVP, включая shareable-state как следующий слой;
+- stories / guided scenarios как следующий слой глубины поверх уже реализованного thin runtime слоя;
+- courses как следующий слой глубины поверх уже реализованного thin runtime слоя;
+- explainable AI assistance как следующий слой поверх уже реализованного ECC;
 - аналитика и compare flows;
-- "Мои проекты";
+- «Мои проекты»;
 - локализация;
 - ограниченное расширение типов сущностей и сценариев использования.
 
@@ -258,9 +242,9 @@ Remaining gaps before production scaling:
 3. ФАЗА 6 — PRODUCT EXPANSION
 4. ФАЗА 3 — CONTROLLED RELEASE STABILIZATION (закрытая baseline-фаза; без reopen при отсутствии нового drift)
 
-Статус-уточнение (после закрытия ФАЗЫ 3):
+Статус-уточнение:
 - следующий активный рабочий контур: ФАЗА 4;
-- параллельный следующий технический контур: ФАЗА 5;
+- следующий технический контур: ФАЗА 5;
 - ФАЗА 3 остаётся закрытой baseline-фазой и не требует reopen без нового contract drift.
 
 Внутренний порядок работ внутри ФАЗЫ 6 заранее ограничен:
@@ -287,14 +271,14 @@ Remaining gaps before production scaling:
 
 ## ПРАВИЛО ОБНОВЛЕНИЯ ДОКУМЕНТА
 
-Файл обновляется только в трёх случаях:
+Файл обновляется только в четырёх случаях:
 1. закрыта или открыта фаза;
 2. изменилась зависимость между фазами;
 3. изменилась сама модель управления проектом;
 4. изменилось соотношение между operational phases и зафиксированной концептуальной лестницей проекта.
 
 Все остальные детали должны жить не здесь, а в:
-- priorities;
+- `PRIORITIES.md`;
 - architecture/data/release docs;
 - work docs;
 - audits;
