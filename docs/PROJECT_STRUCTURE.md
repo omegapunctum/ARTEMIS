@@ -1,18 +1,18 @@
 # ARTEMIS — СТРУКТУРА ПРОЕКТА v4.1
 
-Статус: обновлённая версия после синхронизации с Foundational Pack и концептуальной базой проекта (2026-04-14).
-Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, новую систему документации и место концептуального основания проекта в doc-system.
+Статус: updated canonical project structure document.
+Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
 
 ---
 
-## 1. ПРИНЦИП СТРУКТУРЫ v4.0
+## 1. ПРИНЦИП СТРУКТУРЫ
 
 Структура проекта должна отвечать на три вопроса:
 1. Где находится production/runtime код.
 2. Где находятся canonical публичные данные.
 3. Где находится документация и какой у неё статус.
 
-В версии v4.0 к технической структуре добавляется жёсткая документационная иерархия:
+К технической структуре добавляется жёсткая документационная иерархия:
 - canonical source-of-truth layer;
 - working layer (`docs/work/*`);
 - audit layer (`docs/audits/*`);
@@ -65,7 +65,8 @@
 
 Дополнение по release/workflow layer:
 - structural release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`) и в `scripts/release_check.py`;
-- Pages deploy и release-gate используют один и тот же release-check entrypoint;
+- `scripts/release_check.py` остаётся canonical executable release/readiness entrypoint;
+- точные enforcement points должны определяться по текущим workflow files, а не по упрощённой формулировке в одном summary-документе;
 - workflow-слой не заменяет полный regression suite и не должен описываться как его эквивалент.
 
 ---
