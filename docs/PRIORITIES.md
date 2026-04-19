@@ -1,17 +1,17 @@
 # ТЕКУЩИЕ ПРИОРИТЕТЫ ARTEMIS v4.1
 
-Статус: обновлённая версия после синхронизации с Foundational Pack и продуктовым контуром ARTEMIS v1.0 (2026-04-14).
-Назначение документа: фиксировать только актуальные load-bearing приоритеты проекта без потери действующих технических задач и без расползания в дальние продуктовые идеи.
+Статус: active canonical priorities document.
+Назначение документа: фиксировать только актуальные load-bearing приоритеты проекта, не смешивая их с архивом, длинной историей закрытых baseline-работ и дальними продуктовыми идеями.
 
 Правило:
-- здесь нет архивных задач;
 - здесь нет полного roadmap;
+- здесь нет archive-layer истории;
 - здесь нет дальних продуктовых идей;
 - если задача не влияет на устойчивость текущего цикла, она не должна попадать в этот файл.
 
 ---
 
-## ПРИНЦИП ПРИОРИТИЗАЦИИ v4.0
+## ПРИНЦИП ПРИОРИТИЗАЦИИ
 
 Приоритетом считается только то, что:
 - влияет на корректность public data / release / runtime;
@@ -24,122 +24,36 @@
 
 ---
 
-## КРИТИЧЕСКИЕ ПРИОРИТЕТЫ (ЗАКРЫТЫЙ BASELINE-БЛОК)
+## ЗАКРЫТЫЙ BASELINE-БЛОК
 
-Статус блока: **COMPLETED / CLOSED в рамках controlled-release baseline**.  
-Этот блок сохраняется как load-bearing reference закрытых работ, но **не является текущим главным активным приоритетом цикла**.
+Статус блока: **COMPLETED / CLOSED** в рамках controlled-release baseline.  
+Этот блок сохраняется только как короткий reference уже закрытых load-bearing работ и **не является текущим главным активным приоритетом цикла**.
 
-### 1. Закрыть data-contract drift между `data/export_meta.json` и `scripts/release_check.py`
-Статус: **COMPLETED / CLOSED (2026-04-15)**.
-Что нужно:
-- привести checked-in export metadata к формату, который реально ожидает release gate;
-- зафиксировать один актуальный формат warning categories;
-- убрать ситуацию, при которой snapshot и gate живут по разным контрактам.
+Закрытые baseline-задачи:
+1. data-contract drift между `data/export_meta.json` и `scripts/release_check.py` устранён;
+2. единый release contract собран и синхронизирован с checked-in artifacts;
+3. root-level README приведён к актуальному runtime/API baseline на момент controlled-release stabilization;
+4. PWA semantic drift для release/readiness слоя устранён;
+5. canonical docs переведены на новую иерархию и включают foundational product layer.
 
-Почему это важно:
-- это текущий главный внутренний конфликт release-системы.
-- Итог: data/export/release-check contract синхронизирован и закреплён в текущем baseline.
+Уточнение:
+- этот блок не должен использоваться как список текущих задач;
+- остаточные улучшения после baseline closure относятся к active priorities ниже.
 
-### 2. Собрать единый release contract
-Статус: **COMPLETED / CLOSED (2026-04-15)**.
-Что нужно:
-- синхронизировать `export_meta.json`, `features.json`, `features.geojson`, `rejected.json`, release-check, workflow и readiness docs;
-- зафиксировать, что release unit — пакетная публикация набора данных.
+---
 
-Почему это важно:
-- проект уже имеет controlled release baseline, но он ещё не доведён до единой исполнимой системы.
-- Итог: release gate и checked-in artifacts работают как единый исполнимый release unit.
-- Дополнение: release gate runtime guards (implemented) зафиксированы как часть baseline release reliability.
+## АКТИВНЫЙ ПОРЯДОК ПРИОРИТЕТОВ
 
-### 3. Перевести документацию на новую иерархию и закрепить Foundational Pack
-Статус: **MOSTLY COMPLETED / CLOSED FOR PHASE 3 BASELINE (2026-04-16)**.
-Что нужно:
-- отделить canonical docs от working docs, audits и archive;
-- убрать ситуацию, когда reference и старые snapshots воспринимаются как актуальные;
-- встроить `ARTEMIS_CONCEPT.md` и `ARTEMIS_PRODUCT_SCOPE.md` в canonical layer;
-- встроить `docs/work/ARTEMIS_AI_STRATEGY.md` в working layer;
-- зафиксировать docs sync как обязательную часть release discipline.
-
-Почему это важно:
-- сейчас документация информативна, но неустойчива как система управления;
-- без зафиксированного Foundational Pack проект остаётся технически описанным, но концептуально размытым.
-- Уточнение статуса: source-of-truth/readiness drift для controlled-release baseline закрыт; остаточные улучшения относятся к регулярной docs hygiene, а не к baseline blockers.
-
-### 4. Досинхронизировать README с реальным runtime/API surface
-Статус: **COMPLETED / CLOSED (2026-04-15)**.
-Что нужно:
-- привести root-level описание проекта к фактическому backend/runtime surface;
-- убрать укороченный и частично устаревший API summary;
-- отдельно исправить описание upload contract: текущий backend принимает `POST /api/uploads` с обязательным `license`, а публичная раздача файлов идёт через `/uploads/*`, поэтому старые или упрощённые описания upload API недопустимы.
-
-Почему это важно:
-- README должен быть первой точкой входа в проект, а не источником drift;
-- сейчас именно в этой зоне наиболее вероятны ложные интеграционные ожидания.
-- Итог: upload API summary и формулировки по `/api/map/feed` синхронизированы с фактическим backend/runtime surface.
-
-### 5. Устранить PWA semantic drift
-Статус: **COMPLETED / CLOSED (2026-04-16)**.
-Что нужно:
-- проверять фактический bypass/no-cache private/auth requests;
-- перестать опираться на грубую логику "строка встречается / не встречается" в `sw.js`.
-
-Почему это важно:
-- иначе release/readiness слой может давать ложные выводы о корректности private caching behavior.
-- Итог: behavioral PWA proof подключён в release-gating path (через release_check), static/pattern guards сохранены как дополнительный уровень контроля.
+Текущий практический порядок активных приоритетов:
+1. **PWA / UX stabilization** — основной активный приоритет цикла;
+2. **Scaling / hardening** — следующий приоритет после PWA/UX stabilization;
+3. **Product/documentation coherence** — только в рамках уже открытого scope, без выхода в новые крупные инициативы.
 
 ---
 
 ## ВЫСОКИЙ ПРИОРИТЕТ
 
-Текущий практический порядок активных приоритетов:
-1. **PWA / UX stabilization** (основной активный приоритет цикла);
-2. **Scaling / hardening** (следующий приоритет после PWA/UX stabilization);
-3. **Product/documentation coherence** в рамках уже открытого scope, без выхода в новые крупные инициативы.
-
-### 6. Досинхронизировать canonical documentation framework в репозитории
-Статус: **MOSTLY COMPLETED / BASELINE-ALIGNED (2026-04-16); PHASE-5 EVIDENCE SYNC REQUIRED**.
-Что нужно:
-- привести `README.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md`, `docs/PRIORITIES.md`, `docs/DATA_CONTRACT.md` и `docs/CONTROLLED_RELEASE_DECISION.md` к одному и тому же набору правил;
-- убрать из canonical-описаний старые целевые имена документов (`ARCHITECTURE.md`, `RELEASE_SYSTEM.md`, `ROADMAP.md`), если они не являются действующими source-of-truth файлами;
-- перевести старые документы в archive/reference-слой только как historical reference.
-- дополнительная синхронизация текущего цикла: явно развести `proven strongly`, `proven baseline` и `still remaining` для scaling/hardening контуров, чтобы не допускать policy/evidence drift после новых integration proofs.
-
-### 7. Удержать canonical public map source без повторного drift
-Что нужно:
-- продолжать удерживать `/data/features.geojson` как единственный public map source;
-- не допускать implicit fallback или competing runtime architecture через `/api/map/feed`.
-
-### 8. Изолировать или удалить mock runtime entities из `/api/map/feed`
-Что нужно:
-- перестать держать временные `place`-сущности в production-like контурах;
-- явно отделить internal/tooling runtime read-model от публичного data layer.
-
-### 9. Закрыть single-instance auth/scaling risk как документированный технический долг
-Статус: **BASELINE CLOSED / SCALING OPEN (2026-04-15); HARDENING EVIDENCE PARTIALLY CLOSED (2026-04-16)**.
-Что нужно:
-- зафиксировать архитектурное ограничение явно;
-- подготовить отдельный scaling-cycle: session store, refresh registry, storage model.
-- Уточнение статуса (2026-04-16): это не unresolved baseline blocker; риск официально перенесён в контур ФАЗЫ 5 / Scaling-Hardening.
-- Уточнение после текущего hardening-цикла (2026-04-16): Redis continuity (single-instance / multi-instance / restart) и consume-once invalidation уже подтверждены интеграционно; незакрытая часть риска смещается в production-grade persistence/ops envelope, а не в отсутствие базового Redis proof.
-
-### 10. Подтвердить release/readiness/manual smoke одной терминологией
-Статус: **COMPLETED / CLOSED (2026-04-15)**.
-Что нужно:
-- унифицировать язык release docs;
-- исключить документы, которые создают ложное ощущение полного production green при существующих ограничениях;
-- добавить coverage для upload/runtime contract, чтобы критичный drift не проходил между frontend и backend без тестового сигнала.
-
-Короткие baseline-additions:
-- Redis-backed session store (baseline ready): путь внедрён и доступен как baseline-capable режим.
-- Release gate runtime guards (implemented): env/runtime invariants добавлены в release discipline.
-- Test suite stabilization (completed): критичные release/static checks стабилизированы для текущего цикла.
-- Hardening evidence additions (2026-04-16): Redis real infra proofs (single-instance/multi-instance/restart), moderation integration proof и moderation runbook считаются зафиксированными на текущем baseline/hardening уровне.
-
----
-
-## СРЕДНИЙ ПРИОРИТЕТ
-
-### 11. Завершить UX/PWA stabilization pass
+### 1. Завершить UX/PWA stabilization pass
 Статус: **PRIMARY ACTIVE PRIORITY (PHASE 4)**.
 Что нужно:
 - offline edge cases;
@@ -147,19 +61,66 @@
 - стабильные loading/error/offline состояния;
 - финальный main-screen UX baseline.
 
-### 12. Провести cleanup `docs/reference/` и старых snapshot-документов
+### 2. Закрыть documentation/runtime claim drift в canonical docs
+Статус: **ACTIVE**.
+Что нужно:
+- досинхронизировать `README.md` с текущей operational truth по auth/scaling, workflows/release semantics и product framing;
+- удержать единый canonical set между `README.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md`, `docs/PRIORITIES.md`, `docs/DATA_CONTRACT.md`, `docs/CONTROLLED_RELEASE_DECISION.md` и `docs/DOCUMENTATION_SYSTEM.md`;
+- убрать из canonical-описаний старые целевые имена документов (`ARCHITECTURE.md`, `RELEASE_SYSTEM.md`, `ROADMAP.md`), если они не являются действующими source-of-truth файлами;
+- перевести старые документы в archive/reference-слой только как historical reference.
+
+### 3. Удержать canonical public map source без повторного drift
+Статус: **ACTIVE**.
+Что нужно:
+- продолжать удерживать `/data/features.geojson` как единственный public map source;
+- не допускать implicit fallback или competing runtime architecture через `/api/map/feed`.
+
+### 4. Изолировать или удалить mock runtime entities из `/api/map/feed`
+Статус: **ACTIVE**.
+Что нужно:
+- перестать держать временные `place`-сущности в production-like контурах;
+- явно отделить internal/tooling runtime read-model от публичного data layer.
+
+### 5. Закрыть single-instance auth/scaling risk как документированный technical debt
+Статус: **ACTIVE / PHASE 5 PREP**.
+Что нужно:
+- зафиксировать текущий proven baseline отдельно от production-hardened envelope;
+- подготовить отдельный scaling-cycle: session store, refresh registry, storage model, persistence/ops contour;
+- не выдавать имеющийся Redis/session proof за полностью production-ready multi-node модель.
+
+### 6. Подтвердить release/readiness/manual smoke одной терминологией
+Статус: **ACTIVE DOCS-COHERENCE TASK**.
+Что нужно:
+- унифицировать язык release docs;
+- исключить документы, которые создают ложное ощущение полного production green при существующих ограничениях;
+- удержать coverage для upload/runtime contract, чтобы критичный drift не проходил между frontend и backend без тестового сигнала.
+
+---
+
+## СРЕДНИЙ ПРИОРИТЕТ
+
+### 7. Очистить `docs/PROJECT_PHASES.md` от historical/status overload
+Статус: **NEXT DOCS CLEANUP TARGET**.
+Что нужно:
+- оставить только текущую фазовую модель и ближайшие переходы;
+- сократить длинные dated status updates;
+- убрать из phase document лишний closure/history noise.
+
+### 8. Провести cleanup `docs/reference/` и старых snapshot-документов
+Статус: **ACTIVE HYGIENE TASK**.
 Что нужно:
 - сохранить архивную ценность старых версий;
 - перестать использовать их как активные ориентиры.
 
-### 13. Подготовить scaling/hardening backlog отдельно от product expansion backlog
-Статус: **NEXT ACTIVE PRIORITY AFTER PHASE 4 STABILIZATION (PHASE 5 PREP)**.
+### 9. Подготовить scaling/hardening backlog отдельно от product expansion backlog
+Статус: **PHASE 5 PREP**.
 Что нужно:
 - перестать смешивать архитектурный долг и продуктовые идеи в одном operational списке;
-- использовать `ARTEMIS_PRODUCT_SCOPE.md` как фильтр для product expansion задач.
+- использовать `ARTEMIS_PRODUCT_SCOPE.md` как фильтр для product expansion задач;
+- удерживать актуальный путь working-документов, включая `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`.
 
-### 14. Зафиксировать порядок продуктового ядра внутри будущей Product Expansion phase
-Статус: **ALLOWED ONLY AFTER EXECUTION COHERENCE STABILIZATION (POST PHASE 4/5 GATES)**.
+### 10. Зафиксировать порядок продуктового ядра внутри будущей Product Expansion phase
+Статус: **POST PHASE 4/5 GATE**.
 Что нужно:
 - закрепить `research slice` как главную единицу ценности ARTEMIS v1.0;
 - учесть, что baseline MVP `saved slices` уже реализован (save/list/open/delete, private/owner-only);
@@ -167,7 +128,7 @@
 - затем `stories`;
 - затем `courses`;
 - затем `explainable AI assistance`;
-- не допускать, чтобы вторичные функции вытесняли это ядро ещё до завершения stabilization cycle.
+- не допускать, чтобы вторичные функции вытесняли это ядро до завершения stabilization cycle.
 
 ---
 
@@ -197,4 +158,4 @@
 3. меняется активная последовательность фаз проекта;
 4. меняется зафиксированное продуктовое ядро v1.0 и это влияет на operational order ближайшего цикла.
 
-Если задача просто "интересная" или "полезная в будущем", её здесь быть не должно.
+Если задача просто интересная или полезная в будущем, её здесь быть не должно.
