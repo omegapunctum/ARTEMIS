@@ -131,7 +131,8 @@ ARTEMIS — AI-native explainable spatial-temporal research platform.
 ### 5.4 Auth
 - access token — только в памяти клиента;
 - refresh token — только в httpOnly cookie;
-- текущая модель auth single-instance oriented и не должна выдаваться за multi-node ready.
+- текущие auth/session guarantees следует трактовать как baseline-capable, но не fully production-hardened для multi-instance deployments;
+- hardening beyond original memory-only MVP уже существует, но не должен описываться как finished production-ready multi-node architecture.
 
 ### 5.5 PWA
 - private/auth requests не должны кэшироваться;
