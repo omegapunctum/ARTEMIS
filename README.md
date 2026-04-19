@@ -221,14 +221,18 @@ python scripts/import_features.py export --geojson-in data/features.geojson --ra
 
 ## Documentation System
 
-Repository documentation is organized into four pragmatic layers:
+Repository documentation is organized into five pragmatic layers:
 
 - **canonical** — source of truth documents that define current project rules and structure.
 - **work** — active working documents for current implementation tracks.
 - **audits** — verification, audit, and validation outputs.
-- **archive/reference** — historical snapshots and diagnostic materials kept for traceability.
+- **archive** — historical snapshots kept for traceability.
+- **reference** — diagnostic and supporting materials that are useful for analysis but are not normative.
 
-Canonical docs are maintained in root `README.md` and in `docs/` (including `docs/ARTEMIS_CONCEPT.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/DATA_CONTRACT.md`, `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`, `docs/PROJECT_STRUCTURE.md`).
-`docs/ARTEMIS_UI_UX_SYSTEM_v1_0.md` is the primary UI/UX system/spec document; `docs/ARTEMIS_UI_UX_COMPONENT_MAP_v1_0.md` is a system-level working implementation map derived from that spec (not a top-level canonical concept document).
-Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`).
-Historical and diagnostic documents live in `docs/archive/` and `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.
+Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`.
+
+Canonical docs are maintained in root `README.md` and in `docs/` (including `docs/ARTEMIS_CONCEPT.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/DATA_CONTRACT.md`, `docs/DOCUMENTATION_SYSTEM.md`, `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`, `docs/PROJECT_STRUCTURE.md`).
+
+Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` is the primary UI/UX working spec, and `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` is the system-level working implementation map derived from that spec.
+
+Historical documents live in `docs/archive/`, and diagnostic/reference documents live in `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.
