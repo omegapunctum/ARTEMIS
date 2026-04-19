@@ -240,7 +240,16 @@ def check_pwa_behavioral() -> None:
         check=False,
     )
     if result.returncode != 0:
-        fail("PWA behavioral verification failed (tests/test_sw_fetch_behavior.py). Release is blocked.")
+        details: list[str] = [
+            "PWA behavioral verification failed (tests/test_sw_fetch_behavior.py). Release is blocked."
+        ]
+        stdout = result.stdout.strip()
+        stderr = result.stderr.strip()
+        if stdout:
+            details.append(f"--- subprocess stdout ---\n{stdout}")
+        if stderr:
+            details.append(f"--- subprocess stderr ---\n{stderr}")
+        fail("\n".join(details))
 
 
 def check_governance() -> None:
