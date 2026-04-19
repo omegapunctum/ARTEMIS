@@ -1,7 +1,9 @@
 # ARTEMIS
 
-**ARTEMIS** is a map-first geo-historical knowledge platform built with **MapLibre + GeoJSON**.  
+**ARTEMIS** is a map-first geo-historical research platform built with **MapLibre + GeoJSON**.  
 It visualizes historical events, movements, and entities in space and time, and provides backend knowledge workflows around that map surface.
+
+In the current canonical product framing, ARTEMIS should be understood not only as a map UI, but as an **explainable spatial-temporal research workspace** centered on research slices, guided stories/courses, and transparent context handoff for future AI-assisted layers.
 
 ---
 
@@ -19,7 +21,7 @@ ARTEMIS combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The system is designed to be **simple and modular within the current controlled-release baseline scope** (single-node backend mode; multi-instance support is not part of the current baseline).
+The system is designed to stay **simple, modular, and documentation-governed within the current controlled baseline**, without over-claiming capabilities that are not yet production-hardened.
 
 ---
 
@@ -68,11 +70,10 @@ Vanilla JavaScript (no frameworks):
 
 ### CI/CD
 - GitHub Actions
-- ETL validation workflow runs the main pytest suite with targeted integration/env-specific exclusions
-- Deploy/Pages workflow performs deploy sanity checks only (no full pytest run)
-- Export/ETL workflow is gated by release checks and does not serve as the canonical env-specific integration test lane
+- The workflow layer covers ETL/export, deploy/pages, release/readiness, and targeted integration checks
+- `scripts/release_check.py` remains a canonical executable release/readiness entrypoint, but exact enforcement points must be read from the current workflow files rather than inferred from simplified README prose
 - Dedicated integration workflows cover moderation and Redis-backed auth/session scenarios
-- Data export
+- Data export and checked-in release artifacts must stay aligned with canonical docs and workflow semantics
 
 ---
 
@@ -103,11 +104,10 @@ Vanilla JavaScript (no frameworks):
 
 ## Auth / Deployment Constraints (Current Baseline)
 
-- Controlled-release baseline auth/session mode is **single-node backend only**.
 - `AUTH_SECRET_KEY` **must** be explicitly configured for real runtime; ephemeral per-process fallback is dev-only and not an acceptable deployment mode.
-- Refresh/session continuity depends on process-local in-memory state; restart/redeploy may invalidate refresh continuity and require re-login.
-- Multi-instance auth/session behavior is **not currently supported**.
-- Auth/scaling hardening for multi-instance support is planned as a dedicated future cycle.
+- Current auth/session guarantees should be treated as **baseline-capable but not fully production-hardened for multi-instance deployments**.
+- The project already includes hardening work beyond the original memory-only MVP, including Redis-backed/session continuity proof paths and related integration coverage, but this should **not** be described as a finished production-ready multi-node auth/session architecture.
+- Multi-instance scaling, persistence, and ops hardening remain part of the next dedicated scaling/hardening cycle.
 
 ---
 
