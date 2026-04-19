@@ -1,18 +1,23 @@
 # ARTEMIS_PRODUCT_SCOPE_v1.0
 
 ## Статус документа
-Рабочий производный документ от `ARTEMIS_CONCEPT_v1.0`.
+- Тип: canonical product scope document
+- Роль: фиксирует границы ARTEMIS v1.0, главную единицу ценности, product loop и допустимый/запрещённый scope
+- Назначение: служит source of truth для продуктовых границ проекта и защиты от product drift
+- Приоритет: высокий
+- Статус: active
+- Связь с другими canonical docs:
+  - `ARTEMIS_CONCEPT.md` задаёт миссию, принципы, epistemic model и лестницу развития
+  - `ARTEMIS_PRODUCT_SCOPE.md` задаёт продуктовые границы и формулу ARTEMIS v1.0 внутри этой концептуальной рамки
 
-Цель: зафиксировать строгий продуктовый scope ARTEMIS v1.0, чтобы:
+Цель документа:
 - не допустить расползания проекта;
 - отделить обязательный продуктовый слой от перспективных направлений;
 - определить, что именно должно быть реализовано в v1.0, а что запрещено обещать и включать в базовый scope.
 
-Статус-синхронизация текущего baseline:
-- реализован map/time workspace + research slices (save/list/open/restore/delete, private/owner-only);
-- реализованы stories и courses как thin orchestration runtime layers (private/owner-only);
-- реализован Explainable Context Contract (ECC) как context-handoff слой (`slice|story|course`);
-- AI generation/explanation layer (content generation / model-driven explain mode) пока не реализован и относится к следующему слою развития.
+Baseline note:
+- текущий runtime уже включает map/time workspace, research slices, stories, courses и Explainable Context Contract;
+- полноценный AI generation/explanation layer поверх ECC остаётся следующим слоем развития и не считается реализованной частью текущего baseline.
 
 ---
 
