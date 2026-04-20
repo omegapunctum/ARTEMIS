@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-20T01:50:29Z",
+  "timestamp": "2026-04-20T07:52:56Z",
   "source": "airtable",
   "records_total_source": 19,
   "records_exported": 19,
@@ -13,5 +13,5 @@
     "expected_fallback": 0,
     "data_quality": 0
   },
-  "duration_seconds": 2.467
+  "duration_seconds": 9.64
 }
