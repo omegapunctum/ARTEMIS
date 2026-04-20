@@ -37,3 +37,17 @@ Interpretation rule:
 ## 4. Required next action
 Start controlled release baseline execution under current governance/release gate model; track only post-baseline quality improvements in regular release cycles.
 Auth/scaling hardening beyond already-proven session continuity (persistence governance + operational scaling envelope) is a dedicated next cycle, not part of current baseline execution.
+
+## 5. Interpretation matrix: controlled baseline vs production-grade
+
+Acceptable inside the current controlled baseline:
+- static/public map delivery from published `/data/*`, with `data/features.geojson` as the canonical public dataset;
+- auxiliary authenticated/runtime usage of `/api/map/feed` as a non-canonical support route for UX flows;
+- single-instance-oriented auth/session baseline with explicit operational constraints and no production-ready multi-node claim;
+- split CI/workflow model where release gate, ETL/export, and dedicated integration lanes prove different parts of the system rather than one monolithic pipeline.
+
+Not yet to be described as production-grade:
+- `/api/map/feed` as a mature public read model over the published dataset;
+- multi-instance/high-availability auth/session guarantees as an already-finished operational truth;
+- broader persistence governance, scaling envelope, and observability/ops hardening as completed scope;
+- blanket claims that the whole runtime/deployment model is production-ready outside the controlled baseline envelope.
