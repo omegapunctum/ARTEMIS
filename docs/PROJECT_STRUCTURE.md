@@ -50,7 +50,7 @@
 | Путь | Назначение | Статус |
 |---|---|---|
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
-| `api/` | legacy compatibility shim без самостоятельного runtime | legacy |
+| `api/` | legacy compatibility shim без самостоятельного runtime; допускается как переходный package marker до cleanup legacy references | legacy |
 | `app/` | canonical backend runtime | основной |
 | `css/` | основной UI style layer | основной |
 | `data/` | canonical public data layer + export diagnostics | основной |
@@ -147,6 +147,7 @@ app/
 Правила:
 - `app/` — единственный backend runtime;
 - новый runtime-код в `api/` запрещён;
+- сохранение пустого legacy package в `api/` само по себе не считается отдельным runtime entrypoint;
 - env/runtime configuration закрепляется только за `app.main:app`;
 - moderation path не является direct publish path для public dataset;
 - текущий upload surface должен описываться как runtime split: API-приём файлов идёт через `/api/uploads` и `/api/uploads/image`, а публичная выдача загруженных файлов идёт через статический `/uploads/*` mount;
