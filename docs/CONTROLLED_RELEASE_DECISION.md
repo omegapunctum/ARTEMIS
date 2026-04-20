@@ -5,6 +5,7 @@
 - Release gate is enforced in CI and before export in ETL workflow.
 - Release gate now includes behavioral PWA verification (in addition to static/pattern checks), so private/auth bypass/no-cache semantics are verified by executable behavior in gating path.
 - Governance boundary is explicit and aligned across docs/code/tests/workflows (canonical `data/*`, auxiliary `/api/map/feed`, no direct runtime publish path).
+- Auxiliary map runtime boundary is accepted for the current controlled baseline: `/api/map/feed` remains explicitly non-canonical and may operate as an MVP adapter/read-model route for authenticated/runtime UX flows; it is not part of the public map release contract and must not be described as production-grade public dataset access.
 - Manual smoke discipline exists as documented baseline artifacts.
 - Auth/session baseline is accepted for the current controlled baseline with explicit constraints: `AUTH_SECRET_KEY` must be explicitly configured for real runtime, current guarantees are baseline-capable but not fully production-hardened for multi-instance deployments, and scaling/persistence/ops hardening remains a dedicated next cycle.
 
@@ -16,6 +17,7 @@ Release unit (current baseline contract):
 
 ## 2. Remaining gaps and classification
 - Gap: No remaining release-blocking gaps are open for entry into the controlled baseline scope after current-cycle manual evidence closure (`docs/MANUAL_SMOKE_EVIDENCE_2026-04-11.md`); architectural/scaling hardening limitations remain open outside this gate.
+- Gap: `/api/map/feed` remains an auxiliary MVP adapter rather than a production-grade read model over the published dataset; this is acceptable inside the current controlled baseline envelope but remains part of later runtime/data hardening scope.
 - Classification: Remaining items are **POST-BASELINE GAP** only (continuous quality hardening, not release blockers).
 - Clarification: baseline decision is intentionally controlled-release and should not be read as a broad production-ready claim; production-grade multi-node envelope remains next-phase hardening scope.
 
