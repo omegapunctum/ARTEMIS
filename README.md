@@ -5,6 +5,8 @@ It visualizes historical events, movements, and entities in space and time, and 
 
 In the current canonical product framing, ARTEMIS should be understood not only as a map UI, but as an **explainable spatial-temporal research workspace** centered on research slices, guided stories/courses, and transparent context handoff for future AI-assisted layers.
 
+This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
+
 ---
 
 ## Overview
@@ -111,7 +113,14 @@ Vanilla JavaScript (no frameworks):
 
 ---
 
-## API Contract (MVP)
+## Current Baseline API Surface (summary)
+
+This section is a **summary of the current runtime surface**, not the sole owner of API/runtime rules.
+For detailed boundaries and interpretation, read together with:
+- `docs/PROJECT_STRUCTURE.md`
+- `docs/DATA_CONTRACT.md`
+- `docs/CONTROLLED_RELEASE_DECISION.md`
+- `docs/ARTEMIS_MASTER_PROMPT.md`
 
 - Auth (`/api/auth/*`):
   - `POST /api/auth/register`
@@ -229,6 +238,7 @@ python scripts/import_features.py export --geojson-in data/features.geojson --ra
 
 ## Documentation System
 
+README is the **root documentation entrypoint**, not the sole owner of detailed project rules.
 Repository documentation is organized into five pragmatic layers:
 
 - **canonical** — source of truth documents that define current project rules and structure.
@@ -240,6 +250,17 @@ Repository documentation is organized into five pragmatic layers:
 Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`.
 
 Canonical docs are maintained in root `README.md` and in `docs/` (including `docs/ARTEMIS_CONCEPT.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/DATA_CONTRACT.md`, `docs/DOCUMENTATION_SYSTEM.md`, `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`, `docs/PROJECT_STRUCTURE.md`).
+
+Recommended reading order:
+1. `README.md`
+2. `docs/DOCUMENTATION_SYSTEM.md`
+3. `docs/ARTEMIS_CONCEPT.md`
+4. `docs/ARTEMIS_PRODUCT_SCOPE.md`
+5. `docs/PROJECT_STRUCTURE.md`
+6. `docs/PROJECT_PHASES.md`
+7. `docs/PRIORITIES.md`
+8. then profile-specific canonical docs (`docs/DATA_CONTRACT.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/ARTEMIS_MASTER_PROMPT.md`)
+9. only after that `docs/work/*`, `docs/audits/*`, `docs/reference/*`, `docs/archive/*`
 
 Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` is the primary UI/UX working spec, and `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` is the system-level working implementation map derived from that spec.
 
