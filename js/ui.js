@@ -160,6 +160,15 @@ export async function initUI(map, features) {
     livePanel: document.getElementById('live-panel'),
     appShell: document.getElementById('app-shell'),
     topHeader: document.getElementById('top-header'),
+    researchContextBar: document.getElementById('research-context-bar'),
+    researchSliceTrigger: document.getElementById('research-slice-trigger'),
+    researchSliceState: document.getElementById('research-slice-state'),
+    researchPeriodMeta: document.getElementById('research-period-meta'),
+    researchLayersMeta: document.getElementById('research-layers-meta'),
+    researchObjectsMeta: document.getElementById('research-objects-meta'),
+    exploreToolbarShell: document.getElementById('explore-toolbar-shell'),
+    exploreWorkspaceTrigger: document.getElementById('explore-workspace-trigger'),
+    exploreWorkspacePanel: document.getElementById('explore-workspace-panel'),
     topActions: document.querySelector('#top-header .top-actions'),
     topUtilityGroup: document.querySelector('#top-header .top-utility-group'),
     displayModeToggle: document.getElementById('display-mode-toggle'),
@@ -263,7 +272,11 @@ export async function initUI(map, features) {
     storiesError: '',
     storyDraftSliceIds: [],
     currentStory: null,
-    currentStoryStepIndex: 0
+    currentStoryStepIndex: 0,
+    activeExploreSection: 'layers',
+    researchContextBaselineKey: '',
+    researchContextDirty: false,
+    researchContextLastRenderedKey: ''
   };
   state.yearBounds = years;
   initializeAnimatedPanels(elements);
@@ -339,6 +352,7 @@ export async function initUI(map, features) {
     updateFilterFeedback(elements, state);
     renderCards(elements, state, map);
     updateCounters(elements, state, map);
+    updateResearchContextBar(elements, state);
     updateStatus(elements, state, map);
   };
 
@@ -397,14 +411,22 @@ export async function initUI(map, features) {
   });
   setupTimelinePointerInteractions(elements, state);
 
-  elements.filtersBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'filters', elements.filtersBtn));
-  elements.layersBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'layers', elements.layersBtn));
-  elements.bookmarksBtn?.addEventListener('click', () => togglePrimaryPanel(elements, state, 'bookmarks', elements.bookmarksBtn));
+  elements.exploreWorkspaceTrigger?.addEventListener('click', () => {
+    if (state.overlay.activePrimary === 'explore') {
+      closePrimaryPanel(elements, state, 'explore');
+      return;
+    }
+    openPrimaryPanel(elements, state, 'explore', elements.exploreWorkspaceTrigger);
+    openExploreWorkspaceSection(elements, state, state.activeExploreSection || 'layers');
+  });
+  elements.layersBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'layers'));
+  elements.filtersBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'filters'));
+  elements.bookmarksBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'bookmarks'));
   elements.slicesBtn?.addEventListener('click', async () => {
     await ensureResearchSlicesLoaded(state, { force: !state.researchSlicesLoaded });
     await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
     renderSlicesPanel(elements, state, map);
-    togglePrimaryPanel(elements, state, 'slices', elements.slicesBtn);
+    openExploreWorkspaceSection(elements, state, 'slices');
   });
   elements.coursesBtn?.addEventListener('click', async () => {
     await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
@@ -502,6 +524,7 @@ export async function initUI(map, features) {
   });
 
   state.loading = false;
+  openExploreWorkspaceSection(elements, state, 'layers');
   applyState();
   applyResponsiveLayout(elements, state, map);
 
@@ -2000,7 +2023,7 @@ function renderSearchDropdown(elements, state, map) {
 
 function setupOverlayManager(elements, state, map) {
   const closeAll = () => {
-    ['search', 'filters', 'layers', 'bookmarks', 'slices', 'courses', 'live'].forEach((key) => closePrimaryPanel(elements, state, key));
+    ['search', 'explore', 'filters', 'layers', 'bookmarks', 'slices', 'courses', 'live'].forEach((key) => closePrimaryPanel(elements, state, key));
   };
   const collapseTopActions = () => {
     if (!elements.topActions?.classList.contains('is-expanded')) return;
@@ -2043,6 +2066,38 @@ function setupLayerEntryHint(elements) {
   elements.layersPanel?.addEventListener('change', markVisited, { once: true });
 }
 
+function openExploreWorkspaceSection(elements, state, sectionKey = 'layers') {
+  const allowed = new Set(['layers', 'filters', 'slices', 'bookmarks']);
+  const nextSection = allowed.has(sectionKey) ? sectionKey : 'layers';
+  const sections = {
+    layers: elements.layersPanel,
+    filters: elements.filtersPanel,
+    slices: elements.slicesPanel,
+    bookmarks: elements.bookmarksPanel
+  };
+  const tabs = {
+    layers: elements.layersBtn,
+    filters: elements.filtersBtn,
+    slices: elements.slicesBtn,
+    bookmarks: elements.bookmarksBtn
+  };
+  if (state.overlay.activePrimary !== 'explore') {
+    openPrimaryPanel(elements, state, 'explore', elements.exploreWorkspaceTrigger);
+  }
+  state.activeExploreSection = nextSection;
+  Object.entries(sections).forEach(([key, panel]) => {
+    setPanelOpenState(panel, key === nextSection);
+  });
+  Object.entries(tabs).forEach(([key, tab]) => {
+    if (!tab) return;
+    tab.setAttribute('aria-selected', String(key === nextSection));
+    tab.setAttribute('aria-expanded', String(key === nextSection));
+  });
+  if (elements.exploreWorkspacePanel) {
+    elements.exploreWorkspacePanel.dataset.activeSection = nextSection;
+  }
+}
+
 function togglePrimaryPanel(elements, state, key, trigger = null) {
   if (state.overlay.activePrimary === key) closePrimaryPanel(elements, state, key);
   else openPrimaryPanel(elements, state, key, trigger);
@@ -2053,7 +2108,7 @@ function openPrimaryPanel(elements, state, key, trigger = null) {
     elements.topActions.classList.remove('is-expanded');
     elements.overflowBtn?.setAttribute('aria-expanded', 'false');
   }
-  ['search', 'filters', 'layers', 'bookmarks', 'slices', 'courses', 'live'].forEach((name) => {
+  ['search', 'explore', 'filters', 'layers', 'bookmarks', 'slices', 'courses', 'live'].forEach((name) => {
     const panel = getPanelByKey(elements, name);
     const button = getButtonByKey(elements, name);
     const isActive = name === key;
@@ -2072,6 +2127,15 @@ function closePrimaryPanel(elements, state, key) {
   const button = getButtonByKey(elements, key);
   if (panel) setPanelOpenState(panel, false);
   if (button) button.setAttribute('aria-expanded', 'false');
+  if (key === 'explore') {
+    ['layers', 'filters', 'slices', 'bookmarks'].forEach((sectionKey) => {
+      const sectionPanel = getPanelByKey(elements, sectionKey);
+      if (sectionPanel) setPanelOpenState(sectionPanel, false);
+      const sectionButton = getButtonByKey(elements, sectionKey);
+      sectionButton?.setAttribute('aria-selected', 'false');
+      sectionButton?.setAttribute('aria-expanded', 'false');
+    });
+  }
   if (state.overlay.activePrimary === key) state.overlay.activePrimary = null;
   if (key === 'live' && state?.liveState) state.liveState.isLiveMode = false;
 }
@@ -2079,6 +2143,7 @@ function closePrimaryPanel(elements, state, key) {
 function getPanelByKey(elements, key) {
   return {
     search: elements.searchDropdown,
+    explore: elements.exploreWorkspacePanel,
     filters: elements.filtersPanel,
     layers: elements.layersPanel,
     bookmarks: elements.bookmarksPanel,
@@ -2094,6 +2159,7 @@ function getButtonByKey(elements, key) {
     layers: elements.layersBtn,
     bookmarks: elements.bookmarksBtn,
     slices: elements.slicesBtn,
+    explore: elements.exploreWorkspaceTrigger,
     courses: elements.coursesBtn,
     live: elements.liveBtn
   }[key] || null;
@@ -2822,6 +2888,59 @@ function updateCounters(elements, state, map) {
   if (elements.activeFiltersCount) elements.activeFiltersCount.textContent = String(activeFilters);
 }
 
+function getResearchContextPeriodLabel(state) {
+  if (!state) return 'Период: —';
+  if (state.timelineMode === 'point') return `Период: ${state.currentStartYear}`;
+  return `Период: ${state.currentStartYear}–${state.currentEndYear}`;
+}
+
+function buildResearchContextSnapshotKey(state) {
+  const enabledLayerIds = [...(state?.enabledLayerIds || [])].sort().join(',');
+  const quickLayerIds = [...(state?.activeQuickLayerIds || [])].sort().join(',');
+  return [
+    state?.timelineMode,
+    state?.currentStartYear,
+    state?.currentEndYear,
+    state?.search || '',
+    state?.confidenceFilter || '',
+    enabledLayerIds,
+    quickLayerIds,
+    state?.selectedFeatureId || ''
+  ].join('|');
+}
+
+function updateResearchContextBar(elements, state) {
+  if (!elements?.researchContextBar) return;
+  const snapshotKey = buildResearchContextSnapshotKey(state);
+  if (!state.researchContextBaselineKey && !state.loading) {
+    state.researchContextBaselineKey = snapshotKey;
+    state.researchContextDirty = false;
+  } else if (state.researchContextBaselineKey && snapshotKey !== state.researchContextBaselineKey) {
+    state.researchContextDirty = true;
+  }
+
+  const periodLabel = getResearchContextPeriodLabel(state);
+  const layersLabel = `Слои: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
+  const objectsLabel = `Объекты: ${Math.max(0, state?.filteredFeatures?.length || 0)}`;
+  const sliceStateLabel = state.researchContextDirty ? 'Изменён' : 'Не сохранён';
+  const triggerLabel = state?.sliceOpenedTitle ? String(state.sliceOpenedTitle) : 'Новый срез';
+  const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel].join('||');
+  if (renderKey === state.researchContextLastRenderedKey) return;
+  state.researchContextLastRenderedKey = renderKey;
+
+  if (elements.researchPeriodMeta) elements.researchPeriodMeta.textContent = periodLabel;
+  if (elements.researchLayersMeta) elements.researchLayersMeta.textContent = layersLabel;
+  if (elements.researchObjectsMeta) elements.researchObjectsMeta.textContent = objectsLabel;
+  if (elements.researchSliceState) {
+    elements.researchSliceState.textContent = sliceStateLabel;
+    elements.researchSliceState.classList.toggle('is-dirty', state.researchContextDirty);
+  }
+  if (elements.researchSliceTrigger) {
+    elements.researchSliceTrigger.textContent = triggerLabel;
+    elements.researchSliceTrigger.title = triggerLabel;
+  }
+}
+
 function updateStatus(elements, state, map) {
   if (!elements.statusMessage) return;
   if (!isDebugTelemetryMode()) {
@@ -2925,7 +3044,7 @@ function renderCardsSkeleton(elements, count = 4) {
 }
 
 function initializeAnimatedPanels(elements) {
-  [elements.searchDropdown, elements.filtersPanel, elements.layersPanel, elements.bookmarksPanel, elements.detailPanel]
+  [elements.searchDropdown, elements.exploreWorkspacePanel, elements.filtersPanel, elements.layersPanel, elements.bookmarksPanel, elements.slicesPanel, elements.detailPanel]
     .filter(Boolean)
     .forEach((panel) => {
       panel.classList.remove('is-open', 'is-closing');
@@ -3231,6 +3350,14 @@ function applyResponsiveLayout(elements, state, map) {
   if (rootStyle && elements.topHeader) {
     const headerHeight = Math.max(44, Math.round(elements.topHeader.getBoundingClientRect().height));
     rootStyle.setProperty('--top-header-height', `${headerHeight}px`);
+    if (elements.researchContextBar) {
+      const contextHeight = Math.max(40, Math.round(elements.researchContextBar.getBoundingClientRect().height));
+      rootStyle.setProperty('--research-context-height', `${contextHeight}px`);
+    }
+    if (elements.exploreToolbarShell) {
+      const toolbarHeight = Math.max(42, Math.round(elements.exploreToolbarShell.getBoundingClientRect().height));
+      rootStyle.setProperty('--explore-toolbar-height', `${toolbarHeight}px`);
+    }
   }
   if (rootStyle) {
     const bottomPanel = document.getElementById('bottom-panel');
