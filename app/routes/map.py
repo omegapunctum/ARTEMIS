@@ -11,6 +11,10 @@ from app.observability import internal_error_response, log_event
 
 router = APIRouter(prefix="/map", tags=["map"])
 
+# IMPORTANT BOUNDARY:
+# `/api/map/feed` is an INTERNAL runtime read-model adapter.
+# It is intentionally non-canonical and must not be treated as a public map data source.
+# Canonical public map dataset remains `data/features.geojson` (served via `/data/*`).
 
 def _to_float(value: Any) -> float | None:
     if isinstance(value, bool):
@@ -63,6 +67,15 @@ def build_map_feed_items_from_drafts(drafts: list[Any]) -> list[MapFeedItem]:
 
 
 def get_places_mock() -> list[dict[str, Any]]:
+    """
+    Temporary INTERNAL mock runtime source for `/api/map/feed`.
+
+    Boundary and lifecycle:
+    - transitional/dev-only adapter input for runtime UX/tests;
+    - NOT a canonical data path and NOT a public export source;
+    - must be replaced or removed in a dedicated cleanup track when a real
+      runtime place source is ready.
+    """
     return [
         {
             "id": "p1",
@@ -151,13 +164,15 @@ def get_map_feed(
     current_user: User = Depends(get_current_user),
 ):
     """
-    Runtime map feed (NON-CANONICAL).
+    Internal runtime map feed (NON-CANONICAL).
 
-    This endpoint provides a runtime-optimized read model for UI usage.
-    It is NOT the source of truth for map data.
+    This endpoint provides an internal runtime-optimized read model for
+    authenticated UI/runtime flows only. It is NOT the source of truth for map data
+    and MUST NOT be interpreted as a public map export surface.
 
     Canonical data is defined by exported datasets (e.g. GeoJSON via ETL pipeline).
-    Do not rely on this endpoint as a stable public API contract.
+    Do not rely on this endpoint as a stable public API contract or as an
+    alternative public source to `/data/features.geojson`.
     """
     request.state.user_id = current_user.id
     try:
@@ -165,6 +180,8 @@ def get_map_feed(
         filtered_items: list[MapFeedItem] = []
 
         draft_items = map_entities("draft", list_drafts(db, current_user))
+        # Transitional INTERNAL mock branch.
+        # Keep behavior stable for current runtime/test contract until dedicated cleanup.
         place_items = map_entities("place", get_places_mock())
         items = draft_items + place_items
 

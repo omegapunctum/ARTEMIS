@@ -8,6 +8,8 @@ let featuresInFlight = null;
 let layersInFlight = null;
 let coursesInFlight = null;
 const DATA_BASE_PATH = 'data/';
+// INTERNAL/NON-CANONICAL runtime endpoint.
+// Public/canonical map source remains data/features.geojson.
 const MAP_FEED_PATH = '/api/map/feed';
 let hasShownCachedMessage = false;
 let hasShownNoCacheMessage = false;
@@ -91,6 +93,8 @@ export async function loadFeatures() {
 }
 
 export async function loadMapFeed(params = {}) {
+  // IMPORTANT: runtime-only adapter path for internal UI scenarios.
+  // Do not treat as a public data-source contract.
   showLoading();
   try {
     const requestUrl = buildMapFeedUrl(params);
