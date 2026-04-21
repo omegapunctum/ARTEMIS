@@ -45,21 +45,19 @@
 ## АКТИВНЫЙ ПОРЯДОК ПРИОРИТЕТОВ
 
 Текущий практический порядок активных приоритетов:
-1. **PWA / UX stabilization** — основной активный приоритет цикла;
-2. **Scaling / hardening** — следующий приоритет после PWA/UX stabilization;
-3. **Product/documentation coherence** — только в рамках уже открытого scope, без выхода в новые крупные инициативы.
+1. **Scaling / hardening** — основной активный приоритет цикла;
+2. **Product/documentation coherence** — активный сопутствующий контур без расширения implementation scope;
+3. **Canonical data/source discipline** — удерживать `/data/*` как публичный source-of-truth без runtime drift.
 
 ---
 
 ## ВЫСОКИЙ ПРИОРИТЕТ
 
-### 1. Завершить UX/PWA stabilization pass
-Статус: **PRIMARY ACTIVE PRIORITY (PHASE 4)**.
-Что нужно:
-- offline edge cases;
-- installability smoke;
-- стабильные loading/error/offline состояния;
-- финальный main-screen UX baseline.
+### 1. UX/PWA stabilization pass (Phase 4) — закрыто
+Статус: **COMPLETED / CLOSED BASELINE (PHASE 4)**.
+Зафиксировано:
+- offline/installability/loading-error-offline baseline закрыт;
+- остаточные UX/PWA темы не считаются blocker'ами закрытия и относятся к hardening/polish next track.
 
 ### 2. Закрыть остаточный canonical docs cleanup tail
 Статус: **ACTIVE**.
@@ -81,8 +79,8 @@
 - перестать держать временные `place`-сущности в production-like контурах;
 - явно отделить internal/tooling runtime read-model от публичного data layer.
 
-### 5. Подготовить scaling/hardening cycle без ложных production-ready claims
-Статус: **ACTIVE / PHASE 5 PREP**.
+### 5. Scaling/hardening cycle без ложных production-ready claims
+Статус: **PRIMARY ACTIVE PRIORITY (PHASE 5)**.
 Что нужно:
 - удерживать уже зафиксированное различие между proven controlled baseline и production-hardened envelope;
 - подготовить отдельный scaling-cycle: session store, refresh registry, storage model, persistence/ops contour;

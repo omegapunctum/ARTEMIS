@@ -46,4 +46,5 @@ Boundary rules:
 - `GET /api/map/feed` is an auxiliary, non-canonical runtime support/read-model endpoint for authenticated UI/runtime scenarios;
 - current baseline implementation of `/api/map/feed` must be treated as a temporary MVP adapter, not as a production-grade public read model over the published dataset;
 - `/api/map/feed` may aggregate runtime-only entities and transitional/mock-backed inputs required by runtime UX flows;
+- frontend main map bootstrap path must keep `data/features.geojson` as default source; `/api/map/feed` may be used only as an explicit internal runtime toggle/path;
 - runtime consumers must not treat `/api/map/feed` as a replacement for published `/data/*` artifacts or as a stable public export contract.
