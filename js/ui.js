@@ -163,6 +163,9 @@ export async function initUI(map, features) {
     researchContextBar: document.getElementById('research-context-bar'),
     researchSliceTrigger: document.getElementById('research-slice-trigger'),
     researchSliceState: document.getElementById('research-slice-state'),
+    researchSliceSaveBtn: document.getElementById('research-slice-save-btn'),
+    researchSliceOpenBtn: document.getElementById('research-slice-open-btn'),
+    researchSliceCompareBtn: document.getElementById('research-slice-compare-btn'),
     researchPeriodMeta: document.getElementById('research-period-meta'),
     researchLayersMeta: document.getElementById('research-layers-meta'),
     researchObjectsMeta: document.getElementById('research-objects-meta'),
@@ -424,10 +427,20 @@ export async function initUI(map, features) {
   elements.filtersBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'filters'));
   elements.bookmarksBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'bookmarks'));
   elements.slicesBtn?.addEventListener('click', async () => {
-    await ensureResearchSlicesLoaded(state, { force: !state.researchSlicesLoaded });
-    await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
-    renderSlicesPanel(elements, state, map);
-    openExploreWorkspaceSection(elements, state, 'slices');
+    await openResearchSlicesWorkspace(elements, state, map);
+  });
+  elements.researchSliceOpenBtn?.addEventListener('click', async () => {
+    await openResearchSlicesWorkspace(elements, state, map);
+  });
+  elements.researchSliceSaveBtn?.addEventListener('click', async () => {
+    await openResearchSlicesWorkspace(elements, state, map);
+    showUiSystemMessage('Откройте секцию «Срезы», чтобы сохранить текущее исследование.', { variant: 'success', timeout: 3200 });
+  });
+  elements.researchSliceTrigger?.addEventListener('click', async () => {
+    await openResearchSlicesWorkspace(elements, state, map);
+  });
+  elements.researchSliceCompareBtn?.addEventListener('click', () => {
+    showUiSystemMessage('Сравнение срезов будет вынесено в отдельный workflow.', { variant: 'success', timeout: 3200 });
   });
   elements.coursesBtn?.addEventListener('click', async () => {
     await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
@@ -700,20 +713,20 @@ function renderFiltersPanel(elements, state, layers, confidenceValues) {
 
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'Filters';
+  title.textContent = 'Фильтры';
   const summary = document.createElement('p');
   summary.className = 'status-summary';
-  summary.textContent = `${activeCount} of ${totalCount} objects visible`;
+  summary.textContent = `Активно: ${activeCount} из ${totalCount} объектов видно`;
   const filterSummary = document.createElement('div');
   filterSummary.className = 'panel-action-row';
   const activeFiltersBadge = document.createElement('span');
   activeFiltersBadge.className = 'ui-badge';
   const activeFiltersTotal = getActiveFiltersCount(state);
-  activeFiltersBadge.textContent = activeFiltersTotal ? `${activeFiltersTotal} active` : 'No active filters';
+  activeFiltersBadge.textContent = activeFiltersTotal ? `Активно: ${activeFiltersTotal}` : 'Нет активных ограничений';
   const resetBtn = document.createElement('button');
   resetBtn.type = 'button';
   resetBtn.className = 'ui-button ui-button-secondary';
-  resetBtn.textContent = 'Reset';
+  resetBtn.textContent = 'Сбросить';
   resetBtn.disabled = activeFiltersTotal === 0;
   resetBtn.addEventListener('click', () => {
     resetExploreConstraints(elements, state);
@@ -763,17 +776,17 @@ function renderLayersPanel(elements, state, layers) {
   elements.layersPanel.replaceChildren();
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'Layers';
+  title.textContent = 'Слои';
   const layersChanged = hasLayerCustomization(state);
   const info = document.createElement('p');
   info.className = 'status-summary';
   info.textContent = layersChanged
-    ? 'Layer visibility customized'
-    : 'Default layer visibility';
+    ? 'Видимость слоёв изменена'
+    : 'Видимость слоёв по умолчанию';
   const restoreBtn = document.createElement('button');
   restoreBtn.type = 'button';
   restoreBtn.className = 'ui-button ui-button-secondary';
-  restoreBtn.textContent = 'Restore defaults';
+  restoreBtn.textContent = 'По умолчанию';
   restoreBtn.disabled = !layersChanged;
   restoreBtn.addEventListener('click', () => {
     restoreDefaultLayers(state);
@@ -902,14 +915,14 @@ function renderBookmarksPanel(elements, state, map) {
 
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'Bookmarks';
+  title.textContent = 'Закладки';
   elements.bookmarksPanel.appendChild(title);
 
   const selected = getSelectedFeature(state);
   if (selected) {
     const saveBtn = document.createElement('button');
     saveBtn.type = 'button';
-    saveBtn.textContent = 'Save bookmark';
+    saveBtn.textContent = 'Сохранить закладку';
     saveBtn.addEventListener('click', () => {
       const id = getFeatureUiId(selected);
       if (state.bookmarks.some((bookmark) => bookmark.id === id)) return;
@@ -922,7 +935,7 @@ function renderBookmarksPanel(elements, state, map) {
   if (!state.bookmarks.length) {
     const empty = document.createElement('p');
     empty.className = 'bookmark-empty';
-    empty.textContent = 'Bookmarks will be available later';
+    empty.textContent = 'Закладки появятся здесь';
     elements.bookmarksPanel.appendChild(empty);
     return;
   }
@@ -933,7 +946,7 @@ function renderBookmarksPanel(elements, state, map) {
     item.type = 'button';
     item.className = 'bookmark-item';
     const title = document.createElement('span');
-    title.textContent = String(props.name_ru || props.title_short || 'Untitled');
+    title.textContent = String(props.name_ru || props.title_short || 'Без названия');
     const meta = document.createElement('span');
     meta.className = 'bookmark-meta';
     meta.textContent = formatRange(props.date_start, props.date_end);
@@ -962,6 +975,13 @@ async function ensureResearchSlicesLoaded(state, { force = false } = {}) {
   }
 }
 
+async function openResearchSlicesWorkspace(elements, state, map, options = {}) {
+  await ensureResearchSlicesLoaded(state, options);
+  await ensureStoriesLoaded(state, options);
+  renderSlicesPanel(elements, state, map);
+  openExploreWorkspaceSection(elements, state, 'slices');
+}
+
 async function ensureStoriesLoaded(state, { force = false } = {}) {
   if (state.storiesLoading) return;
   if (state.storiesLoaded && !force) return;
@@ -985,7 +1005,7 @@ function renderSlicesPanel(elements, state, map) {
 
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'My Slices';
+  title.textContent = 'Срезы';
   panel.appendChild(title);
 
   const getCurrentSelectedContext = () => {
@@ -1037,32 +1057,32 @@ function renderSlicesPanel(elements, state, map) {
   annotationsSection.className = 'panel-stack';
   const annotationsTitle = document.createElement('p');
   annotationsTitle.className = 'status-summary';
-  annotationsTitle.textContent = 'Annotations (optional)';
+  annotationsTitle.textContent = 'Аннотации (опционально)';
 
   const factInput = document.createElement('textarea');
   factInput.name = 'slice_annotation_fact';
   factInput.maxLength = 4000;
   factInput.rows = 2;
-  factInput.placeholder = 'Fact';
+  factInput.placeholder = 'Факт';
 
   const interpretationInput = document.createElement('textarea');
   interpretationInput.name = 'slice_annotation_interpretation';
   interpretationInput.maxLength = 4000;
   interpretationInput.rows = 2;
-  interpretationInput.placeholder = 'Interpretation';
+  interpretationInput.placeholder = 'Интерпретация';
 
   const hypothesisInput = document.createElement('textarea');
   hypothesisInput.name = 'slice_annotation_hypothesis';
   hypothesisInput.maxLength = 4000;
   hypothesisInput.rows = 2;
-  hypothesisInput.placeholder = 'Hypothesis';
+  hypothesisInput.placeholder = 'Гипотеза';
 
   annotationsSection.append(annotationsTitle, factInput, interpretationInput, hypothesisInput);
 
   const saveBtn = document.createElement('button');
   saveBtn.type = 'submit';
   saveBtn.className = 'ui-button ui-button-primary';
-  saveBtn.textContent = 'Save Slice';
+  saveBtn.textContent = 'Сохранить срез';
   saveBtn.disabled = !getSaveFeatureIds().length || state.researchSlicesLoading;
 
   const selectionActions = document.createElement('div');
@@ -1071,7 +1091,7 @@ function renderSlicesPanel(elements, state, map) {
   const addBtn = document.createElement('button');
   addBtn.type = 'button';
   addBtn.className = 'ui-button ui-button-secondary';
-  addBtn.textContent = 'Add to Slice';
+  addBtn.textContent = 'Добавить в срез';
   const currentSelectedForAdd = getCurrentSelectedContext().selectedId;
   addBtn.disabled = !currentSelectedForAdd || getSelectionSetIds().includes(currentSelectedForAdd);
   addBtn.addEventListener('click', () => {
@@ -1083,7 +1103,7 @@ function renderSlicesPanel(elements, state, map) {
   const removeBtn = document.createElement('button');
   removeBtn.type = 'button';
   removeBtn.className = 'ui-button ui-button-secondary';
-  removeBtn.textContent = 'Remove from Slice';
+  removeBtn.textContent = 'Убрать из среза';
   const currentSelectedForRemove = getCurrentSelectedContext().selectedId;
   removeBtn.disabled = !currentSelectedForRemove || !getSelectionSetIds().includes(currentSelectedForRemove);
   removeBtn.addEventListener('click', () => {
@@ -1095,7 +1115,7 @@ function renderSlicesPanel(elements, state, map) {
   const clearSelectionBtn = document.createElement('button');
   clearSelectionBtn.type = 'button';
   clearSelectionBtn.className = 'ui-button ui-button-secondary';
-  clearSelectionBtn.textContent = 'Clear Slice Selection';
+  clearSelectionBtn.textContent = 'Очистить выборку среза';
   clearSelectionBtn.disabled = !getSelectionSetIds().length;
   clearSelectionBtn.addEventListener('click', () => {
     if (!(state.sliceSelectionSet instanceof Set) || !state.sliceSelectionSet.size) return;
@@ -1168,7 +1188,7 @@ function renderSlicesPanel(elements, state, map) {
     if (state.sliceOpenedTitle) {
       const openedTitle = document.createElement('p');
       openedTitle.className = 'status-summary';
-      openedTitle.textContent = `Opened slice: ${state.sliceOpenedTitle}`;
+      openedTitle.textContent = `Открытый срез: ${state.sliceOpenedTitle}`;
       openedBlock.appendChild(openedTitle);
     }
 
@@ -1177,7 +1197,7 @@ function renderSlicesPanel(elements, state, map) {
     details.open = false;
 
     const summary = document.createElement('summary');
-    summary.textContent = `Annotations (${state.sliceOpenedAnnotationPlan.count})`;
+    summary.textContent = `Аннотации (${state.sliceOpenedAnnotationPlan.count})`;
     details.appendChild(summary);
 
     state.sliceOpenedAnnotationPlan.groups.forEach((group) => {
@@ -1254,7 +1274,7 @@ function renderSlicesPanel(elements, state, map) {
       renderSlicesPanel(elements, state, map);
     });
     const titleText = document.createElement('span');
-    titleText.textContent = ` ${String(slice?.title || 'Untitled slice')}`;
+    titleText.textContent = ` ${String(slice?.title || 'Без названия')}`;
     row.append(checkbox, titleText);
     pickerList.appendChild(row);
   });
@@ -1305,7 +1325,7 @@ function renderSlicesPanel(elements, state, map) {
   const createStoryBtn = document.createElement('button');
   createStoryBtn.type = 'submit';
   createStoryBtn.className = 'ui-button ui-button-primary';
-  createStoryBtn.textContent = 'Create Story';
+  createStoryBtn.textContent = 'Создать Story';
   createStoryBtn.disabled = state.storyDraftSliceIds.length < 2 || state.storiesLoading;
   storyForm.appendChild(createStoryBtn);
 
@@ -1334,12 +1354,12 @@ function renderSlicesPanel(elements, state, map) {
     const storySteps = state.currentStory.slice_ids.length;
     const storyStep = clampStoryStepIndex(state.currentStory, state.currentStoryStepIndex) + 1;
     const stepLabel = document.createElement('span');
-    stepLabel.textContent = `${String(state.currentStory.title || 'Story')} · Step ${storyStep}/${storySteps}`;
+    stepLabel.textContent = `${String(state.currentStory.title || 'Story')} · Шаг ${storyStep}/${storySteps}`;
 
     const prevBtn = document.createElement('button');
     prevBtn.type = 'button';
     prevBtn.className = 'ui-button ui-button-secondary';
-    prevBtn.textContent = 'Prev';
+    prevBtn.textContent = 'Назад';
     prevBtn.disabled = storyStep <= 1;
     prevBtn.addEventListener('click', async () => {
       state.currentStoryStepIndex = clampStoryStepIndex(state.currentStory, state.currentStoryStepIndex - 1);
@@ -1350,7 +1370,7 @@ function renderSlicesPanel(elements, state, map) {
     const nextBtn = document.createElement('button');
     nextBtn.type = 'button';
     nextBtn.className = 'ui-button ui-button-secondary';
-    nextBtn.textContent = 'Next';
+    nextBtn.textContent = 'Далее';
     nextBtn.disabled = storyStep >= storySteps;
     nextBtn.addEventListener('click', async () => {
       state.currentStoryStepIndex = clampStoryStepIndex(state.currentStory, state.currentStoryStepIndex + 1);
@@ -1361,7 +1381,7 @@ function renderSlicesPanel(elements, state, map) {
     const exitBtn = document.createElement('button');
     exitBtn.type = 'button';
     exitBtn.className = 'ui-button ui-button-secondary';
-    exitBtn.textContent = 'Exit Story';
+    exitBtn.textContent = 'Выйти из Story';
     exitBtn.addEventListener('click', () => {
       state.currentStory = null;
       state.currentStoryStepIndex = 0;
@@ -1375,13 +1395,13 @@ function renderSlicesPanel(elements, state, map) {
   if (state.storiesLoading) {
     storiesSection.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Loading stories',
+      title: 'Загрузка stories',
       message: 'Загрузка stories…'
     }));
   } else if (state.storiesError) {
     storiesSection.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Stories unavailable',
+      title: 'Stories недоступны',
       message: state.storiesError
     }));
   } else if (Array.isArray(state.stories) && state.stories.length) {
@@ -1392,7 +1412,7 @@ function renderSlicesPanel(elements, state, map) {
       item.className = 'course-item';
       const itemTitle = document.createElement('strong');
       itemTitle.className = 'course-item-title';
-      itemTitle.textContent = String(story?.title || 'Untitled story');
+      itemTitle.textContent = String(story?.title || 'Без названия');
       const meta = document.createElement('p');
       meta.className = 'status-summary';
       const stamp = String(story?.updated_at || '').trim();
@@ -1403,7 +1423,7 @@ function renderSlicesPanel(elements, state, map) {
       const openBtn = document.createElement('button');
       openBtn.type = 'button';
       openBtn.className = 'ui-button ui-button-secondary';
-      openBtn.textContent = 'Open Story';
+      openBtn.textContent = 'Открыть Story';
       openBtn.addEventListener('click', async () => {
         try {
           const detail = await getStory(String(story?.id || ''));
@@ -1420,7 +1440,7 @@ function renderSlicesPanel(elements, state, map) {
       const deleteBtn = document.createElement('button');
       deleteBtn.type = 'button';
       deleteBtn.className = 'ui-button ui-button-danger';
-      deleteBtn.textContent = 'Delete';
+      deleteBtn.textContent = 'Удалить';
       deleteBtn.addEventListener('click', async () => {
         const ok = window.confirm('Удалить story?');
         if (!ok) return;
@@ -1450,7 +1470,7 @@ function renderSlicesPanel(elements, state, map) {
   if (state.researchSlicesLoading) {
     panel.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Loading slices',
+      title: 'Загрузка срезов',
       message: 'Загрузка списка срезов…'
     }));
     return;
@@ -1459,7 +1479,7 @@ function renderSlicesPanel(elements, state, map) {
   if (state.researchSlicesError) {
     panel.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Slices unavailable',
+      title: 'Срезы недоступны',
       message: state.researchSlicesError
     }));
     return;
@@ -1468,7 +1488,7 @@ function renderSlicesPanel(elements, state, map) {
   if (!Array.isArray(state.researchSlices) || !state.researchSlices.length) {
     panel.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'No slices yet',
+      title: 'Срезов пока нет',
       message: 'Сохранённые исследовательские срезы появятся здесь.'
     }));
     return;
@@ -1482,7 +1502,7 @@ function renderSlicesPanel(elements, state, map) {
 
     const rowTitle = document.createElement('strong');
     rowTitle.className = 'course-item-title';
-    rowTitle.textContent = String(slice?.title || 'Untitled slice');
+    rowTitle.textContent = String(slice?.title || 'Без названия');
 
     const rowMeta = document.createElement('p');
     rowMeta.className = 'status-summary';
@@ -1494,7 +1514,7 @@ function renderSlicesPanel(elements, state, map) {
     const openBtn = document.createElement('button');
     openBtn.type = 'button';
     openBtn.className = 'ui-button ui-button-secondary';
-    openBtn.textContent = 'Open';
+    openBtn.textContent = 'Открыть';
     openBtn.addEventListener('click', async () => {
       try {
         const rawSlice = await getResearchSlice(String(slice?.id || ''));
@@ -1511,7 +1531,7 @@ function renderSlicesPanel(elements, state, map) {
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'ui-button ui-button-danger';
-    deleteBtn.textContent = 'Delete';
+    deleteBtn.textContent = 'Удалить';
     deleteBtn.addEventListener('click', async () => {
       const ok = window.confirm('Удалить исследовательский срез?');
       if (!ok) return;
@@ -1656,19 +1676,19 @@ function renderCoursesPanel(elements, state, map) {
   if (state.storiesLoading) {
     createForm.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Loading stories',
+      title: 'Загрузка stories',
       message: 'Загрузка stories…'
     }));
   } else if (state.storiesError) {
     createForm.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Stories unavailable',
+      title: 'Stories недоступны',
       message: state.storiesError
     }));
   } else if (!storiesMap.size) {
     createForm.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'No stories yet',
+      title: 'Stories пока нет',
       message: 'Сначала создайте хотя бы одну story во вкладке Slices.'
     }));
   } else {
@@ -1688,7 +1708,7 @@ function renderCoursesPanel(elements, state, map) {
         renderCoursesPanel(elements, state, map);
       });
       const titleText = document.createElement('span');
-      titleText.textContent = ` ${String(story?.title || 'Untitled story')}`;
+      titleText.textContent = ` ${String(story?.title || 'Без названия')}`;
       row.append(checkbox, titleText);
       pickerList.appendChild(row);
     });
@@ -1744,7 +1764,7 @@ function renderCoursesPanel(elements, state, map) {
   const createCourseBtn = document.createElement('button');
   createCourseBtn.type = 'submit';
   createCourseBtn.className = 'ui-button ui-button-primary';
-  createCourseBtn.textContent = 'Create Course';
+  createCourseBtn.textContent = 'Создать Course';
   createCourseBtn.disabled = state.courseDraftStoryIds.length < 1 || state.coursesLoading || !storiesMap.size;
   createForm.appendChild(createCourseBtn);
 
@@ -1770,7 +1790,7 @@ function renderCoursesPanel(elements, state, map) {
   if (state.coursesLoading) {
     panel.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Loading courses',
+      title: 'Загрузка courses',
       message: 'Загрузка courses…'
     }));
     return;
@@ -1779,7 +1799,7 @@ function renderCoursesPanel(elements, state, map) {
   if (state.coursesError) {
     panel.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Courses unavailable',
+      title: 'Courses недоступны',
       message: state.coursesError
     }));
     return;
@@ -1788,7 +1808,7 @@ function renderCoursesPanel(elements, state, map) {
   if (!Array.isArray(state.courses) || !state.courses.length) {
     panel.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'No courses yet',
+      title: 'Courses пока нет',
       message: 'Создайте свой первый маршрут из stories.'
     }));
     return;
@@ -1804,7 +1824,7 @@ function renderCoursesPanel(elements, state, map) {
     item.className = 'course-item';
     const itemTitle = document.createElement('strong');
     itemTitle.className = 'course-item-title';
-    itemTitle.textContent = String(course?.title || 'Untitled course');
+    itemTitle.textContent = String(course?.title || 'Без названия');
 
     const meta = document.createElement('p');
     meta.className = 'status-summary';
@@ -1817,7 +1837,7 @@ function renderCoursesPanel(elements, state, map) {
     const openBtn = document.createElement('button');
     openBtn.type = 'button';
     openBtn.className = 'ui-button ui-button-secondary';
-    openBtn.textContent = 'Open Course';
+    openBtn.textContent = 'Открыть Course';
     openBtn.addEventListener('click', async () => {
       try {
         const detail = await getCourse(courseId);
@@ -1834,7 +1854,7 @@ function renderCoursesPanel(elements, state, map) {
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'ui-button ui-button-danger';
-    deleteBtn.textContent = 'Delete';
+    deleteBtn.textContent = 'Удалить';
     deleteBtn.addEventListener('click', async () => {
       const ok = window.confirm('Удалить course?');
       if (!ok) return;
@@ -1872,7 +1892,7 @@ function renderCoursesPanel(elements, state, map) {
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
   prevBtn.className = 'ui-button ui-button-secondary';
-  prevBtn.textContent = 'Prev Story';
+  prevBtn.textContent = 'Предыдущая Story';
   prevBtn.disabled = currentIndex <= 0;
   prevBtn.addEventListener('click', async () => {
     state.currentCourseStepIndex = clampCourseStepIndex(state.currentCourse, state.currentCourseStepIndex - 1);
@@ -1883,7 +1903,7 @@ function renderCoursesPanel(elements, state, map) {
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
   nextBtn.className = 'ui-button ui-button-secondary';
-  nextBtn.textContent = 'Next Story';
+  nextBtn.textContent = 'Следующая Story';
   nextBtn.disabled = currentIndex >= totalStories - 1;
   nextBtn.addEventListener('click', async () => {
     state.currentCourseStepIndex = clampCourseStepIndex(state.currentCourse, state.currentCourseStepIndex + 1);
@@ -1894,7 +1914,7 @@ function renderCoursesPanel(elements, state, map) {
   const exitBtn = document.createElement('button');
   exitBtn.type = 'button';
   exitBtn.className = 'ui-button ui-button-secondary';
-  exitBtn.textContent = 'Exit Course';
+  exitBtn.textContent = 'Выйти из Course';
   exitBtn.addEventListener('click', () => {
     state.currentCourse = null;
     state.currentCourseStepIndex = 0;
@@ -1911,13 +1931,13 @@ function renderLivePanel(elements, state, map) {
   panel.replaceChildren();
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'LIVE / Recent';
+  title.textContent = 'Лента / Недавнее';
   panel.appendChild(title);
 
   if (state.liveError) {
     panel.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Live feed unavailable',
+      title: 'Лента недоступна',
       message: state.liveError
     }));
     return;
@@ -1997,7 +2017,7 @@ function renderSearchDropdown(elements, state, map) {
     const item = document.createElement('button');
     item.type = 'button';
     item.className = `search-result-item${state.selectedFeatureId === featureId ? ' is-selected' : ''}`;
-    const title = String(props.name_ru || props.name_en || props.title_short || 'Untitled');
+    const title = String(props.name_ru || props.name_en || props.title_short || 'Без названия');
     const meta = `${formatRange(props.date_start, props.date_end)} • ${state.layerLookup.get(String(props.layer_id || '').trim()) || props.layer_id || 'Layer'}`;
     item.textContent = title;
     const metaNode = document.createElement('span');
@@ -2921,12 +2941,16 @@ function updateResearchContextBar(elements, state) {
 
   const periodLabel = getResearchContextPeriodLabel(state);
   const layersLabel = `Слои: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
-  const objectsLabel = `Объекты: ${Math.max(0, state?.filteredFeatures?.length || 0)}`;
-  const sliceStateLabel = state.researchContextDirty ? 'Изменён' : 'Не сохранён';
+  const draftSliceCount = state?.sliceSelectionSet instanceof Set ? Math.max(0, state.sliceSelectionSet.size) : 0;
+  const visibleObjectsCount = Math.max(0, state?.filteredFeatures?.length || 0);
+  const objectsLabel = draftSliceCount > 0 ? `В срезе: ${draftSliceCount}` : `Объекты: ${visibleObjectsCount}`;
+  const hasAnchor = Boolean(state?.sliceAnchorFeatureId);
+  const sliceStateBaseLabel = state.researchContextDirty ? 'Изменён' : 'Не сохранён';
+  const sliceStateLabel = hasAnchor ? `${sliceStateBaseLabel} · anchor` : sliceStateBaseLabel;
   const triggerLabel = state?.sliceOpenedTitle ? String(state.sliceOpenedTitle) : 'Новый срез';
-  const anchorTitleSuffix = state?.sliceAnchorFeatureId ? ' · anchor выбран' : '';
+  const anchorTitleSuffix = hasAnchor ? ' · anchor выбран' : '';
   const triggerTitle = `${triggerLabel}${anchorTitleSuffix}`;
-  const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle].join('||');
+  const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle, draftSliceCount, hasAnchor].join('||');
   if (renderKey === state.researchContextLastRenderedKey) return;
   state.researchContextLastRenderedKey = renderKey;
 
@@ -3178,7 +3202,7 @@ function formatRangeLabel(start, end) {
 }
 function formatYearLabel(year) {
   const value = Number(year);
-  if (!Number.isFinite(value)) return 'Unknown';
+  if (!Number.isFinite(value)) return 'Неизвестно';
   if (value < 0) return `${Math.abs(value)} BCE`;
   if (value === 0) return '1 BCE/1 CE';
   return `${value} CE`;
@@ -3244,15 +3268,15 @@ function getPrimaryTitle(props) {
 function getConfidenceLabel(value) {
   const normalized = String(value || '').trim().toLowerCase();
   if (!normalized) return '';
-  if (normalized === 'exact') return 'Exact coordinates';
-  if (normalized === 'approximate') return 'Approximate coordinates';
-  if (normalized === 'conditional') return 'Conditional coordinates';
+  if (normalized === 'exact') return 'Точные координаты';
+  if (normalized === 'approximate') return 'Примерные координаты';
+  if (normalized === 'conditional') return 'Условные координаты';
   return normalized;
 }
 function buildBadge(label, tone = '') {
   const badge = document.createElement('span');
   badge.className = `detail-badge${tone ? ` is-${tone}` : ''}`;
-  badge.textContent = String(label || 'Unknown');
+  badge.textContent = String(label || 'Неизвестно');
   return badge;
 }
 function createSectionTitle(value) {
@@ -3446,6 +3470,20 @@ function updateDetailPanelHeading(elements, mode = 'preview') {
   heading.textContent = mode === 'full' ? 'Детали объекта' : 'Объект · Быстрый просмотр';
 }
 
+function addFeatureToDraftSliceFromDetail(state, elements, map, featureId) {
+  if (!(state.sliceSelectionSet instanceof Set)) state.sliceSelectionSet = new Set();
+  if (!featureId || state.sliceSelectionSet.has(featureId)) return;
+  state.sliceSelectionSet.add(featureId);
+  updateResearchContextBar(elements, state);
+  if (elements.slicesPanel && !elements.slicesPanel.hidden) {
+    renderSlicesPanel(elements, state, map);
+  }
+  showUiSystemMessage('Объект добавлен в срез', {
+    variant: 'success',
+    timeout: 1600
+  });
+}
+
 function buildPreviewDetailContent(state, elements, map, feature, props) {
   const featureId = getFeatureUiId(feature);
   const layerLabel = state.layerLookup.get(String(props.layer_id || '').trim()) || String(props.layer_id || '').trim();
@@ -3514,17 +3552,7 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
   addToSliceBtn.textContent = 'Добавить в срез';
   addToSliceBtn.dataset.action = 'add-to-slice';
   addToSliceBtn.addEventListener('click', () => {
-    if (!(state.sliceSelectionSet instanceof Set)) state.sliceSelectionSet = new Set();
-    if (!featureId || state.sliceSelectionSet.has(featureId)) return;
-    state.sliceSelectionSet.add(featureId);
-    updateResearchContextBar(elements, state);
-    if (elements.slicesPanel && !elements.slicesPanel.hidden) {
-      renderSlicesPanel(elements, state, map);
-    }
-    showUiSystemMessage('Объект добавлен в срез', {
-      variant: 'success',
-      timeout: 1600
-    });
+    addFeatureToDraftSliceFromDetail(state, elements, map, featureId);
   });
   const anchorBtn = document.createElement('button');
   anchorBtn.type = 'button';
@@ -3548,6 +3576,8 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
 }
 
 function buildFullDetailContent(state, elements, map, props, feature) {
+  const featureId = getFeatureUiId(feature);
+  const relatedFeatures = getRelatedFeatures(state, feature, 3);
   const layerLabel = state.layerLookup.get(String(props.layer_id || '').trim()) || String(props.layer_id || '').trim();
   const dateLabel = formatRangeLabel(props.date_start, props.date_end);
   const title = getPrimaryTitle(props);
@@ -3632,7 +3662,7 @@ function buildFullDetailContent(state, elements, map, props, feature) {
       sourceRow.className = 'detail-meta-row detail-source-link-row';
       const sourceLabel = document.createElement('span');
       sourceLabel.className = 'detail-meta-label';
-      sourceLabel.textContent = 'External link';
+      sourceLabel.textContent = 'Внешняя ссылка';
       const sourceValue = document.createElement('span');
       sourceValue.className = 'detail-meta-value';
       const link = document.createElement('a');
@@ -3652,14 +3682,60 @@ function buildFullDetailContent(state, elements, map, props, feature) {
   if (props.name_ru && props.name_en && props.name_ru !== props.name_en) {
     appendMetaRow(technicalSection, 'Название (EN)', props.name_en);
   }
-  if (props.layer_id) appendMetaRow(technicalSection, 'Layer ID', props.layer_id);
-  if (props.coordinates_confidence) appendMetaRow(technicalSection, 'Coordinates confidence', props.coordinates_confidence);
+  if (props.layer_id) appendMetaRow(technicalSection, 'ID слоя', props.layer_id);
+  if (props.coordinates_confidence) appendMetaRow(technicalSection, 'Точность координат', props.coordinates_confidence);
   if (technicalSection.querySelector('.detail-meta-row')) detail.appendChild(technicalSection);
+
+  if (Array.isArray(relatedFeatures) && relatedFeatures.length > 0) {
+    const relatedSection = document.createElement('section');
+    relatedSection.className = 'detail-section detail-related-block';
+    relatedSection.appendChild(createSectionTitle('Связанные объекты'));
+    const relatedList = document.createElement('div');
+    relatedList.className = 'detail-related-list';
+
+    relatedFeatures.forEach((relatedFeature) => {
+      const relatedProps = normalizeProps(relatedFeature);
+      const relatedTitle = getPrimaryTitle(relatedProps);
+      const relatedLayerLabel = state.layerLookup.get(String(relatedProps.layer_id || '').trim()) || String(relatedProps.layer_id || '').trim();
+      const relatedDateLabel = formatRangeLabel(relatedProps.date_start, relatedProps.date_end);
+      const relatedMeta = [relatedDateLabel, relatedLayerLabel].filter(Boolean).join(' · ');
+
+      const relatedItem = document.createElement('button');
+      relatedItem.type = 'button';
+      relatedItem.className = 'related-item';
+      const relatedTitleNode = document.createElement('span');
+      relatedTitleNode.className = 'related-title';
+      relatedTitleNode.textContent = relatedTitle;
+      const relatedMetaNode = document.createElement('span');
+      relatedMetaNode.className = 'related-meta';
+      relatedMetaNode.textContent = relatedMeta;
+      relatedItem.append(relatedTitleNode, relatedMetaNode);
+      relatedItem.addEventListener('click', () => {
+        selectFeature(state, elements, map, relatedFeature, {
+          centerOnMap: true,
+          openDetail: true,
+          scrollCard: true
+        });
+      });
+      relatedList.appendChild(relatedItem);
+    });
+
+    relatedSection.appendChild(relatedList);
+    detail.appendChild(relatedSection);
+  }
 
   const actionsSection = document.createElement('section');
   actionsSection.className = 'detail-section';
   const actionsWrap = document.createElement('div');
   actionsWrap.className = 'detail-actions';
+  const addToSliceBtn = document.createElement('button');
+  addToSliceBtn.type = 'button';
+  addToSliceBtn.className = 'ui-button ui-button-secondary';
+  addToSliceBtn.textContent = 'Добавить в срез';
+  addToSliceBtn.dataset.action = 'add-to-slice';
+  addToSliceBtn.addEventListener('click', () => {
+    addFeatureToDraftSliceFromDetail(state, elements, map, featureId);
+  });
   const focusBtn = document.createElement('button');
   focusBtn.type = 'button';
   focusBtn.className = 'ui-button ui-button-secondary';
@@ -3683,7 +3759,7 @@ function buildFullDetailContent(state, elements, map, props, feature) {
       timeout: 1600
     });
   });
-  actionsWrap.appendChild(focusBtn);
+  actionsWrap.append(addToSliceBtn, focusBtn);
   actionsSection.appendChild(actionsWrap);
   detail.appendChild(actionsSection);
 
