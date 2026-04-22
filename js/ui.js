@@ -267,6 +267,8 @@ export async function initUI(map, features) {
     liveState: createLiveState(getRecentFeatures(18, { type: 'FeatureCollection', features: allFeatures })),
     liveError: '',
     sliceSelectionSet: new Set(),
+    sliceCompareSelectionIds: [],
+    sliceComparePanelOpen: false,
     sliceAnchorFeatureId: null,
     sliceOpenedTitle: '',
     sliceOpenedAnnotationPlan: null,
@@ -434,14 +436,21 @@ export async function initUI(map, features) {
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
-    showUiSystemMessage('Откройте секцию «Срезы», чтобы сохранить текущее исследование.', { variant: 'success', timeout: 3200 });
+    showUiSystemMessage('Сохраните текущий срез в панели «Срезы».', { variant: 'success', timeout: 3200 });
   });
   elements.researchSliceTrigger?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
   });
-  elements.researchSliceCompareBtn?.addEventListener('click', () => {
-    showUiSystemMessage('Сравнение срезов будет вынесено в отдельный workflow.', { variant: 'success', timeout: 3200 });
+  elements.researchSliceCompareBtn?.addEventListener('click', async () => {
+    const selectedCount = Array.isArray(state.sliceCompareSelectionIds) ? state.sliceCompareSelectionIds.length : 0;
+    if (selectedCount < 2) {
+      showUiSystemMessage('Выберите два среза в панели «Срезы», чтобы подготовить сравнение.', { variant: 'warning', timeout: 3200 });
+      return;
+    }
+    state.sliceComparePanelOpen = true;
+    await openResearchSlicesWorkspace(elements, state, map);
   });
+  syncResearchSliceCompareCta(elements, state);
   elements.coursesBtn?.addEventListener('click', async () => {
     await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
     await ensureCoursesLoaded(state, { force: !state.coursesLoaded });
@@ -524,6 +533,12 @@ export async function initUI(map, features) {
   document.addEventListener('keydown', (event) => {
     if (event.defaultPrevented) return;
     if (event.key !== 'Escape') return;
+    if (state.sliceComparePanelOpen) {
+      state.sliceComparePanelOpen = false;
+      if (state.activeExploreSection === 'slices') renderSlicesPanel(elements, state, map);
+      event.preventDefault();
+      return;
+    }
     if (!elements.profileMenu?.hidden) {
       setProfileMenuOpen(elements, false, { returnFocus: true });
       event.preventDefault();
@@ -998,15 +1013,37 @@ async function ensureStoriesLoaded(state, { force = false } = {}) {
   }
 }
 
+function syncResearchSliceCompareCta(elements, state) {
+  if (!elements?.researchSliceCompareBtn) return;
+  const selectedCount = Array.isArray(state?.sliceCompareSelectionIds) ? state.sliceCompareSelectionIds.length : 0;
+  const isReady = selectedCount === 2;
+  elements.researchSliceCompareBtn.disabled = !isReady;
+  elements.researchSliceCompareBtn.setAttribute('aria-disabled', String(!isReady));
+  elements.researchSliceCompareBtn.title = isReady
+    ? 'Сравнить выбранные 2 среза'
+    : 'Выберите 2 среза в панели «Срезы»';
+}
+
 function renderSlicesPanel(elements, state, map) {
   const panel = elements.slicesPanel;
   if (!panel) return;
+  syncResearchSliceCompareCta(elements, state);
   panel.replaceChildren();
 
   const title = document.createElement('h3');
   title.className = 'panel-title';
   title.textContent = 'Срезы';
   panel.appendChild(title);
+
+  const saveSection = document.createElement('section');
+  saveSection.className = 'panel-stack slice-workzone';
+  const saveSectionTitle = document.createElement('h4');
+  saveSectionTitle.className = 'panel-title';
+  saveSectionTitle.textContent = 'Сохранить текущий срез';
+  const saveSectionHelper = document.createElement('p');
+  saveSectionHelper.className = 'status-summary slice-zone-helper';
+  saveSectionHelper.textContent = 'Будут сохранены период, активные слои, выбранные объекты и текущее состояние карты.';
+  saveSection.append(saveSectionTitle, saveSectionHelper);
 
   const getCurrentSelectedContext = () => {
     const selected = getSelectedFeature(state);
@@ -1133,7 +1170,7 @@ function renderSlicesPanel(elements, state, map) {
     ? `Выбрано для среза: ${selectionCount}. Текущий объект: ${String(normalizeProps(selected).name_ru || normalizeProps(selected).title_short || selectedId)}`
     : (selectionCount
       ? `Выбрано для среза: ${selectionCount}.`
-      : 'Чтобы сохранить срез, выберите объект на карте.');
+      : 'Чтобы сохранить первый срез, выберите объект на карте или добавьте его в выборку.');
 
   form.append(titleInput, descInput, annotationsSection, selectionActions, saveBtn, hint);
   form.addEventListener('submit', async (event) => {
@@ -1172,6 +1209,9 @@ function renderSlicesPanel(elements, state, map) {
       interpretationInput.value = '';
       hypothesisInput.value = '';
       if (state.sliceSelectionSet instanceof Set) state.sliceSelectionSet.clear();
+      state.sliceOpenedTitle = String(payload?.title || '').trim();
+      markResearchContextAsSaved(state);
+      updateResearchContextBar(elements, state);
       showUiSystemMessage('Срез сохранён', { variant: 'success', timeout: 2200 });
       await ensureResearchSlicesLoaded(state, { force: true });
       renderSlicesPanel(elements, state, map);
@@ -1179,11 +1219,12 @@ function renderSlicesPanel(elements, state, map) {
       showUiSystemMessage(normalizeAppError(error, 'Не удалось сохранить срез.').message, { variant: 'warning', timeout: 3200 });
     }
   });
-  panel.appendChild(form);
+  saveSection.appendChild(form);
+  panel.appendChild(saveSection);
 
   if (state.sliceOpenedAnnotationPlan && Number(state.sliceOpenedAnnotationPlan.count) > 0) {
     const openedBlock = document.createElement('section');
-    openedBlock.className = 'panel-stack';
+    openedBlock.className = 'panel-stack slice-workzone';
 
     if (state.sliceOpenedTitle) {
       const openedTitle = document.createElement('p');
@@ -1216,11 +1257,341 @@ function renderSlicesPanel(elements, state, map) {
     });
 
     openedBlock.appendChild(details);
-    panel.appendChild(openedBlock);
+    saveSection.appendChild(openedBlock);
   }
 
+  const savedSection = document.createElement('section');
+  savedSection.className = 'panel-stack slice-workzone';
+  const savedSectionTitle = document.createElement('h4');
+  savedSectionTitle.className = 'panel-title';
+  savedSectionTitle.textContent = 'Сохранённые срезы';
+  savedSection.appendChild(savedSectionTitle);
+
+  if (state.researchSlicesLoading) {
+    state.sliceComparePanelOpen = false;
+    savedSection.appendChild(createInlineStateBlock({
+      variant: 'info',
+      title: 'Загрузка срезов',
+      message: 'Загрузка списка срезов…'
+    }));
+  } else if (state.researchSlicesError) {
+    state.sliceComparePanelOpen = false;
+    savedSection.appendChild(createInlineStateBlock({
+      variant: 'warning',
+      title: 'Срезы недоступны',
+      message: state.researchSlicesError
+    }));
+  } else if (!Array.isArray(state.researchSlices) || !state.researchSlices.length) {
+    state.sliceCompareSelectionIds = [];
+    state.sliceComparePanelOpen = false;
+    syncResearchSliceCompareCta(elements, state);
+    savedSection.appendChild(createInlineStateBlock({
+      variant: 'info',
+      title: 'Срезов пока нет',
+      message: 'Настройте карту, выберите объекты и сохраните первый срез — он появится в этом списке.'
+    }));
+  } else {
+    const openedTitleKey = String(state.sliceOpenedTitle || '').trim().toLowerCase();
+    const availableSliceById = new Map(
+      state.researchSlices
+        .map((slice) => [String(slice?.id || '').trim(), slice])
+        .filter(([id]) => id)
+    );
+    state.sliceCompareSelectionIds = (Array.isArray(state.sliceCompareSelectionIds) ? state.sliceCompareSelectionIds : [])
+      .filter((id) => availableSliceById.has(String(id || '').trim()))
+      .slice(0, 2);
+    syncResearchSliceCompareCta(elements, state);
+
+    if (state.sliceComparePanelOpen) {
+      const comparePanel = document.createElement('section');
+      comparePanel.className = 'slice-compare-panel';
+      const comparePanelTitle = document.createElement('h5');
+      comparePanelTitle.className = 'panel-title';
+      comparePanelTitle.textContent = 'Сравнение срезов';
+      comparePanel.appendChild(comparePanelTitle);
+
+      const compareFallback = state.sliceCompareSelectionIds.length < 2;
+      if (compareFallback) {
+        const fallback = document.createElement('p');
+        fallback.className = 'status-summary';
+        fallback.textContent = 'Для сравнения нужно выбрать два среза';
+        comparePanel.appendChild(fallback);
+      } else {
+        const selectedSlices = state.sliceCompareSelectionIds
+          .map((sliceId) => availableSliceById.get(String(sliceId || '').trim()))
+          .filter(Boolean);
+        const selectedTitles = selectedSlices.map((slice) => String(slice?.title || '').trim()).filter(Boolean);
+        const pairSummary = document.createElement('p');
+        pairSummary.className = 'status-summary';
+        pairSummary.textContent = `${selectedTitles[0] || 'Срез A'} ↔ ${selectedTitles[1] || 'Срез B'}`;
+        comparePanel.appendChild(pairSummary);
+
+        const columns = document.createElement('div');
+        columns.className = 'slice-compare-columns';
+        const columnLabels = ['Срез A', 'Срез B'];
+        selectedSlices.slice(0, 2).forEach((slice, index) => {
+          const card = document.createElement('article');
+          card.className = 'slice-compare-card';
+          const cardTitle = document.createElement('h6');
+          cardTitle.className = 'panel-title';
+          cardTitle.textContent = columnLabels[index] || `Срез ${index + 1}`;
+          card.appendChild(cardTitle);
+
+          const sliceTitle = document.createElement('p');
+          sliceTitle.className = 'status-summary';
+          sliceTitle.textContent = String(slice?.title || 'Без названия');
+          card.appendChild(sliceTitle);
+
+          const sliceMeta = buildSliceListMetaSummary(slice);
+          if (sliceMeta) {
+            const metaLine = document.createElement('p');
+            metaLine.className = 'status-summary slice-compare-card-meta';
+            metaLine.textContent = sliceMeta;
+            card.appendChild(metaLine);
+          }
+
+          const descriptionPreview = String(slice?.description || '').trim();
+          if (descriptionPreview) {
+            const descriptionLine = document.createElement('p');
+            descriptionLine.className = 'status-summary slice-compare-card-preview';
+            descriptionLine.textContent = truncateText(descriptionPreview.replace(/\s+/g, ' '), 180);
+            card.appendChild(descriptionLine);
+          }
+
+          const timeRange = slice?.time_range && typeof slice.time_range === 'object' ? slice.time_range : null;
+          if (timeRange && Number.isFinite(Number(timeRange.start)) && Number.isFinite(Number(timeRange.end))) {
+            const periodLine = document.createElement('p');
+            periodLine.className = 'status-summary slice-compare-card-detail';
+            const start = Math.trunc(Number(timeRange.start));
+            const end = Math.trunc(Number(timeRange.end));
+            periodLine.textContent = `Период: ${timeRange.mode === 'point' || start === end ? start : `${start}–${end}`}`;
+            card.appendChild(periodLine);
+          }
+
+          const featureCount = Number(slice?.feature_count);
+          if (Number.isFinite(featureCount) && featureCount >= 0) {
+            const objectsLine = document.createElement('p');
+            objectsLine.className = 'status-summary slice-compare-card-detail';
+            objectsLine.textContent = `Выбранные объекты: ${Math.trunc(featureCount)}`;
+            card.appendChild(objectsLine);
+          }
+
+          const viewState = slice?.view_state && typeof slice.view_state === 'object' ? slice.view_state : null;
+          if (viewState) {
+            const enabledLayerIds = Array.isArray(viewState.enabled_layer_ids) ? viewState.enabled_layer_ids.filter(Boolean) : [];
+            const quickLayerIds = Array.isArray(viewState.active_quick_layer_ids) ? viewState.active_quick_layer_ids.filter(Boolean) : [];
+            if (enabledLayerIds.length || quickLayerIds.length) {
+              const layersLine = document.createElement('p');
+              layersLine.className = 'status-summary slice-compare-card-detail';
+              layersLine.textContent = `Слои: ${enabledLayerIds.length}${quickLayerIds.length ? ` · быстрые: ${quickLayerIds.length}` : ''}`;
+              card.appendChild(layersLine);
+            }
+          }
+
+          columns.appendChild(card);
+        });
+        comparePanel.appendChild(columns);
+
+        const compareDimensions = document.createElement('section');
+        compareDimensions.className = 'slice-compare-dimensions';
+        const dimensionsTitle = document.createElement('p');
+        dimensionsTitle.className = 'status-summary';
+        dimensionsTitle.textContent = 'Что будет сравниваться';
+        const dimensionsList = document.createElement('ul');
+        dimensionsList.className = 'slice-compare-selected-list';
+        ['Период', 'Слои', 'Выбранные объекты', 'Исследовательский контекст'].forEach((label) => {
+          const li = document.createElement('li');
+          li.textContent = label;
+          dimensionsList.appendChild(li);
+        });
+        compareDimensions.append(dimensionsTitle, dimensionsList);
+        comparePanel.appendChild(compareDimensions);
+
+        const readiness = document.createElement('p');
+        readiness.className = 'status-summary';
+        readiness.textContent = 'Сравнение пока не рассчитано';
+        const currentStep = document.createElement('p');
+        currentStep.className = 'status-summary';
+        currentStep.textContent = 'Сейчас доступна только подготовка пары срезов';
+        const nextStep = document.createElement('p');
+        nextStep.className = 'status-summary';
+        nextStep.textContent = 'Детализированный экран различий будет следующим шагом';
+        comparePanel.append(readiness, currentStep, nextStep);
+      }
+
+      const comparePanelActions = document.createElement('div');
+      comparePanelActions.className = 'panel-action-row slice-compare-panel-actions';
+      const closeComparePanelBtn = document.createElement('button');
+      closeComparePanelBtn.type = 'button';
+      closeComparePanelBtn.className = 'ui-button ui-button-secondary';
+      closeComparePanelBtn.textContent = 'Закрыть';
+      closeComparePanelBtn.addEventListener('click', () => {
+        state.sliceComparePanelOpen = false;
+        renderSlicesPanel(elements, state, map);
+      });
+      const resetComparePanelBtn = document.createElement('button');
+      resetComparePanelBtn.type = 'button';
+      resetComparePanelBtn.className = 'ui-button ui-button-secondary';
+      resetComparePanelBtn.textContent = 'Сбросить выбор';
+      resetComparePanelBtn.addEventListener('click', () => {
+        state.sliceCompareSelectionIds = [];
+        state.sliceComparePanelOpen = false;
+        syncResearchSliceCompareCta(elements, state);
+        renderSlicesPanel(elements, state, map);
+      });
+      comparePanelActions.append(closeComparePanelBtn, resetComparePanelBtn);
+      comparePanel.appendChild(comparePanelActions);
+      savedSection.appendChild(comparePanel);
+    }
+
+    const compareSummary = document.createElement('div');
+    compareSummary.className = 'slice-compare-summary';
+    const compareSummaryTitle = document.createElement('p');
+    compareSummaryTitle.className = 'status-summary slice-compare-summary-title';
+    compareSummaryTitle.textContent = `Выбрано для сравнения: ${state.sliceCompareSelectionIds.length}/2`;
+    compareSummary.appendChild(compareSummaryTitle);
+
+    if (state.sliceCompareSelectionIds.length) {
+      const compareList = document.createElement('ul');
+      compareList.className = 'slice-compare-selected-list';
+      state.sliceCompareSelectionIds.forEach((sliceId) => {
+        const compareItem = document.createElement('li');
+        compareItem.textContent = String(availableSliceById.get(String(sliceId || '').trim())?.title || sliceId);
+        compareList.appendChild(compareItem);
+      });
+      compareSummary.appendChild(compareList);
+    }
+
+    const compareSummaryActions = document.createElement('div');
+    compareSummaryActions.className = 'panel-action-row slice-compare-summary-actions';
+    const compareHint = document.createElement('span');
+    compareHint.className = 'status-summary slice-compare-hint';
+    compareHint.textContent = state.sliceCompareSelectionIds.length >= 2
+      ? 'Пара срезов готова к сравнению.'
+      : 'Выберите до двух срезов в списке.';
+    const clearCompareBtn = document.createElement('button');
+    clearCompareBtn.type = 'button';
+    clearCompareBtn.className = 'ui-button ui-button-secondary';
+    clearCompareBtn.textContent = 'Сбросить выбор';
+    clearCompareBtn.disabled = !state.sliceCompareSelectionIds.length;
+    clearCompareBtn.addEventListener('click', () => {
+      state.sliceCompareSelectionIds = [];
+      state.sliceComparePanelOpen = false;
+      syncResearchSliceCompareCta(elements, state);
+      renderSlicesPanel(elements, state, map);
+    });
+    compareSummaryActions.append(compareHint, clearCompareBtn);
+    compareSummary.appendChild(compareSummaryActions);
+    savedSection.appendChild(compareSummary);
+
+    const list = document.createElement('div');
+    list.className = 'courses-list';
+    state.researchSlices.forEach((slice) => {
+      const row = document.createElement('article');
+      row.className = 'course-item';
+      const sliceId = String(slice?.id || '').trim();
+      const isCompareSelected = state.sliceCompareSelectionIds.includes(sliceId);
+
+      const titleRow = document.createElement('div');
+      titleRow.className = 'course-item-head';
+      const rowTitle = document.createElement('strong');
+      rowTitle.className = 'course-item-title';
+      const rawTitle = String(slice?.title || 'Без названия');
+      rowTitle.textContent = rawTitle;
+      const isOpened = Boolean(openedTitleKey) && rawTitle.trim().toLowerCase() === openedTitleKey;
+      titleRow.appendChild(rowTitle);
+      if (isOpened) {
+        const openedBadge = document.createElement('span');
+        openedBadge.className = 'ui-badge';
+        openedBadge.textContent = 'Открыт';
+        titleRow.appendChild(openedBadge);
+        row.classList.add('is-opened');
+        row.classList.add('is-current-slice');
+      }
+      row.appendChild(titleRow);
+
+      const rowMeta = document.createElement('p');
+      rowMeta.className = 'status-summary slice-item-meta';
+      rowMeta.textContent = buildSliceListMetaSummary(slice);
+      if (rowMeta.textContent) row.appendChild(rowMeta);
+
+      const rowPreviewText = String(slice?.description || '').trim();
+      if (rowPreviewText) {
+        const preview = document.createElement('p');
+        preview.className = 'status-summary slice-item-preview';
+        preview.textContent = truncateText(rowPreviewText.replace(/\s+/g, ' '), 140);
+        row.appendChild(preview);
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'panel-action-row slice-item-actions';
+
+      const compareToggleBtn = document.createElement('button');
+      compareToggleBtn.type = 'button';
+      compareToggleBtn.className = 'ui-button ui-button-secondary slice-compare-toggle';
+      compareToggleBtn.textContent = isCompareSelected ? 'В сравнении' : 'В сравнение';
+      compareToggleBtn.setAttribute('aria-pressed', String(isCompareSelected));
+      const compareLimitReached = !isCompareSelected && state.sliceCompareSelectionIds.length >= 2;
+      compareToggleBtn.disabled = compareLimitReached;
+      compareToggleBtn.title = compareLimitReached ? 'Можно выбрать только 2 среза' : '';
+      compareToggleBtn.addEventListener('click', () => {
+        if (!sliceId) return;
+        const next = new Set(state.sliceCompareSelectionIds || []);
+        if (next.has(sliceId)) next.delete(sliceId);
+        else if (next.size < 2) next.add(sliceId);
+        state.sliceCompareSelectionIds = [...next].slice(0, 2);
+        syncResearchSliceCompareCta(elements, state);
+        renderSlicesPanel(elements, state, map);
+      });
+
+      const openBtn = document.createElement('button');
+      openBtn.type = 'button';
+      openBtn.className = 'ui-button ui-button-primary slice-open-btn';
+      openBtn.textContent = isOpened ? 'Открыт' : 'Открыть срез';
+      openBtn.disabled = isOpened;
+      openBtn.addEventListener('click', async () => {
+        try {
+          const rawSlice = await getResearchSlice(String(slice?.id || ''));
+          applyResearchSliceContext(rawSlice, state, elements, map);
+          state.sliceOpenedTitle = String(rawSlice?.title || slice?.title || '').trim();
+          state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
+          markResearchContextAsSaved(state);
+          updateResearchContextBar(elements, state);
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage('Срез восстановлен', { variant: 'success', timeout: 2200 });
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось открыть срез.').message, { variant: 'warning', timeout: 3200 });
+        }
+      });
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'ui-button ui-button-danger slice-delete-btn';
+      deleteBtn.textContent = 'Удалить';
+      deleteBtn.addEventListener('click', async () => {
+        const sliceTitleForDelete = String(slice?.title || '').trim();
+        const ok = window.confirm(sliceTitleForDelete ? `Удалить срез «${sliceTitleForDelete}»?` : 'Удалить исследовательский срез?');
+        if (!ok) return;
+        try {
+          await deleteResearchSlice(String(slice?.id || ''));
+          await ensureResearchSlicesLoaded(state, { force: true });
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage('Срез удалён', { variant: 'success', timeout: 2200 });
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось удалить срез.').message, { variant: 'warning', timeout: 3200 });
+        }
+      });
+
+      actions.append(compareToggleBtn, openBtn, deleteBtn);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+    savedSection.appendChild(list);
+  }
+  panel.appendChild(savedSection);
+
   const storiesSection = document.createElement('section');
-  storiesSection.className = 'panel-stack';
+  storiesSection.className = 'panel-stack slice-workzone';
   const storiesTitle = document.createElement('h4');
   storiesTitle.className = 'panel-title';
   storiesTitle.textContent = 'Stories';
@@ -1466,94 +1837,6 @@ function renderSlicesPanel(elements, state, map) {
   }
 
   panel.appendChild(storiesSection);
-
-  if (state.researchSlicesLoading) {
-    panel.appendChild(createInlineStateBlock({
-      variant: 'info',
-      title: 'Загрузка срезов',
-      message: 'Загрузка списка срезов…'
-    }));
-    return;
-  }
-
-  if (state.researchSlicesError) {
-    panel.appendChild(createInlineStateBlock({
-      variant: 'warning',
-      title: 'Срезы недоступны',
-      message: state.researchSlicesError
-    }));
-    return;
-  }
-
-  if (!Array.isArray(state.researchSlices) || !state.researchSlices.length) {
-    panel.appendChild(createInlineStateBlock({
-      variant: 'info',
-      title: 'Срезов пока нет',
-      message: 'Сохранённые исследовательские срезы появятся здесь.'
-    }));
-    return;
-  }
-
-  const list = document.createElement('div');
-  list.className = 'courses-list';
-  state.researchSlices.forEach((slice) => {
-    const row = document.createElement('article');
-    row.className = 'course-item';
-
-    const rowTitle = document.createElement('strong');
-    rowTitle.className = 'course-item-title';
-    rowTitle.textContent = String(slice?.title || 'Без названия');
-
-    const rowMeta = document.createElement('p');
-    rowMeta.className = 'status-summary';
-    rowMeta.textContent = buildSliceListMetaSummary(slice);
-
-    const actions = document.createElement('div');
-    actions.className = 'panel-action-row';
-
-    const openBtn = document.createElement('button');
-    openBtn.type = 'button';
-    openBtn.className = 'ui-button ui-button-secondary';
-    openBtn.textContent = 'Открыть';
-    openBtn.addEventListener('click', async () => {
-      try {
-        const rawSlice = await getResearchSlice(String(slice?.id || ''));
-        applyResearchSliceContext(rawSlice, state, elements, map);
-        state.sliceOpenedTitle = String(rawSlice?.title || slice?.title || '').trim();
-        state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
-        renderSlicesPanel(elements, state, map);
-        showUiSystemMessage('Срез восстановлен', { variant: 'success', timeout: 2200 });
-      } catch (error) {
-        showUiSystemMessage(normalizeAppError(error, 'Не удалось открыть срез.').message, { variant: 'warning', timeout: 3200 });
-      }
-    });
-
-    const deleteBtn = document.createElement('button');
-    deleteBtn.type = 'button';
-    deleteBtn.className = 'ui-button ui-button-danger';
-    deleteBtn.textContent = 'Удалить';
-    deleteBtn.addEventListener('click', async () => {
-      const ok = window.confirm('Удалить исследовательский срез?');
-      if (!ok) return;
-      try {
-        await deleteResearchSlice(String(slice?.id || ''));
-        await ensureResearchSlicesLoaded(state, { force: true });
-        renderSlicesPanel(elements, state, map);
-        showUiSystemMessage('Срез удалён', { variant: 'success', timeout: 2200 });
-      } catch (error) {
-        showUiSystemMessage(normalizeAppError(error, 'Не удалось удалить срез.').message, { variant: 'warning', timeout: 3200 });
-      }
-    });
-
-    actions.append(openBtn, deleteBtn);
-    if (rowMeta.textContent) {
-      row.append(rowTitle, rowMeta, actions);
-    } else {
-      row.append(rowTitle, actions);
-    }
-    list.appendChild(row);
-  });
-  panel.appendChild(list);
 }
 
 function applyResearchSliceContext(rawSlice, state, elements, map) {
@@ -2936,12 +3219,17 @@ function buildResearchContextSnapshotKey(state) {
   ].join('|');
 }
 
+function markResearchContextAsSaved(state) {
+  state.researchContextBaselineKey = buildResearchContextSnapshotKey(state);
+  state.researchContextDirty = false;
+  state.researchContextLastRenderedKey = '';
+}
+
 function updateResearchContextBar(elements, state) {
   if (!elements?.researchContextBar) return;
   const snapshotKey = buildResearchContextSnapshotKey(state);
   if (!state.researchContextBaselineKey && !state.loading) {
-    state.researchContextBaselineKey = snapshotKey;
-    state.researchContextDirty = false;
+    markResearchContextAsSaved(state);
   } else if (state.researchContextBaselineKey && snapshotKey !== state.researchContextBaselineKey) {
     state.researchContextDirty = true;
   }
@@ -2950,13 +3238,20 @@ function updateResearchContextBar(elements, state) {
   const layersLabel = `Слои: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
   const draftSliceCount = state?.sliceSelectionSet instanceof Set ? Math.max(0, state.sliceSelectionSet.size) : 0;
   const visibleObjectsCount = Math.max(0, state?.filteredFeatures?.length || 0);
-  const objectsLabel = draftSliceCount > 0 ? `В срезе: ${draftSliceCount}` : `Объекты: ${visibleObjectsCount}`;
   const hasAnchor = Boolean(state?.sliceAnchorFeatureId);
-  const sliceStateBaseLabel = state.researchContextDirty ? 'Изменён' : 'Не сохранён';
+  const objectsLabel = draftSliceCount > 0
+    ? `В срезе: ${draftSliceCount}`
+    : `Объекты: ${visibleObjectsCount}${hasAnchor ? ' · anchor' : ''}`;
+  const hasOpenedSliceTitle = Boolean(String(state?.sliceOpenedTitle || '').trim());
+  const sliceStateBaseLabel = hasOpenedSliceTitle
+    ? (state.researchContextDirty ? 'Сохранён · изменён' : 'Сохранён')
+    : (state.researchContextDirty ? 'Новый срез · изменён' : 'Новый срез');
   const sliceStateLabel = hasAnchor ? `${sliceStateBaseLabel} · anchor` : sliceStateBaseLabel;
-  const triggerLabel = state?.sliceOpenedTitle ? String(state.sliceOpenedTitle) : 'Новый срез';
-  const anchorTitleSuffix = hasAnchor ? ' · anchor выбран' : '';
-  const triggerTitle = `${triggerLabel}${anchorTitleSuffix}`;
+  const rawTriggerLabel = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'Новый срез';
+  const triggerLabel = hasOpenedSliceTitle ? truncateText(rawTriggerLabel, 32) : rawTriggerLabel;
+  const triggerTitle = hasOpenedSliceTitle
+    ? `Открыт срез: ${rawTriggerLabel}`
+    : 'Новый срез';
   const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle, draftSliceCount, hasAnchor].join('||');
   if (renderKey === state.researchContextLastRenderedKey) return;
   state.researchContextLastRenderedKey = renderKey;
