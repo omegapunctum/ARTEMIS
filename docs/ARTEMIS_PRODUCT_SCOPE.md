@@ -74,6 +74,39 @@ Story — более высокий слой.
 Она строится на базе нескольких срезов и объяснений.
 Следовательно, story — важная сущность, но не базовое ядро.
 
+### Research Slice v1.0 baseline semantics
+
+В ARTEMIS v1.0 research slice должен пониматься не как просто saved view, а как минимально достаточная сохраняемая единица исследовательского контекста.
+
+Минимальный baseline slice v1.0 включает:
+- spatial focus / viewport;
+- time state;
+- active layers;
+- selected entities;
+- filter state;
+- saved state metadata;
+- optional title;
+- optional user note/context;
+- optional AI-generated summary.
+
+Обязательные действия для slice v1.0:
+- create;
+- save;
+- reopen;
+- update;
+- rename;
+- share;
+- compare.
+
+Research slice v1.0 не должен смешиваться с:
+- отдельным объектом;
+- длинной статьёй;
+- полноценной story;
+- course module;
+- standalone AI conversation.
+
+Stories и courses являются downstream-слоями, которые строятся поверх slice, а не заменяют его.
+
 ---
 
 ## 3. Основной пользователь
