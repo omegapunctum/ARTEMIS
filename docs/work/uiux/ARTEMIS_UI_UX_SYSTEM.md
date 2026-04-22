@@ -12,6 +12,11 @@
 Этот документ не отменяет `Artemis_UI_UX_Report`, а использует его как аналитическую основу.
 `Artemis_UI_UX_Report` следует рассматривать как source report / diagnostic layer.
 `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` — основной UI/UX working spec для реализации v1.0.
+`docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — отдельный owner-doc для visual design layer: official style, palette, typography, text tone, state semantics and design-token baseline.
+
+Следовательно:
+- `ARTEMIS_UI_UX_SYSTEM.md` фиксирует UX-архитектуру, режимы, информационную структуру и поведение интерфейса как системы;
+- `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` фиксирует, как эта система должна выглядеть.
 
 ---
 
@@ -511,6 +516,23 @@ ARTEMIS должен выглядеть:
 - короткими на первом уровне;
 - разворачиваемыми на втором;
 - пригодными для исследования.
+
+## 14.5 Граница ответственности visual layer
+Данный раздел фиксирует только верхнеуровневые визуальные требования как часть UX-системы.
+
+Owner-doc для visual design layer ARTEMIS:
+- `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md`
+
+Именно там должны жить:
+- official visual formula;
+- palette;
+- typography system;
+- text tone;
+- state semantics;
+- epistemic color semantics;
+- design token baseline.
+
+Следовательно, `ARTEMIS_UI_UX_SYSTEM.md` не должен дублировать visual-system doc, а только задаёт UX-рамку, внутри которой visual layer должен работать.
 
 ---
 
