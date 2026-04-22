@@ -3,6 +3,8 @@
 ## Статус документа
 Рабочий implementation-plan документ для инженерного исполнения UI/UX-слоя ARTEMIS v1.0.
 
+> Status update (2026-04-22): для главного экрана принят working visual baseline; отдельный hardening-цикл по shell / top controls / detail panel / timeline завершён. В рамках текущего плана нет обязательного инерционного repatch этих зон без нового audit.
+
 Основан строго на:
 - `ARTEMIS_CONCEPT_v1.0`
 - `ARTEMIS_PRODUCT_SCOPE_v1.0`
