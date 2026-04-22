@@ -14,6 +14,8 @@
 `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` — основной UI/UX working spec для реализации v1.0.
 `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — отдельный owner-doc для visual design layer: official style, palette, typography, text tone, state semantics and design-token baseline.
 
+> Status sync (2026-04-22): main-screen visual baseline зафиксирован в owner-doc visual layer; для shell/top controls/detail panel/timeline действует правило audit-first (без инерционного repatch в рамках текущего цикла).
+
 Следовательно:
 - `ARTEMIS_UI_UX_SYSTEM.md` фиксирует UX-архитектуру, режимы, информационную структуру и поведение интерфейса как системы;
 - `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` фиксирует, как эта система должна выглядеть.

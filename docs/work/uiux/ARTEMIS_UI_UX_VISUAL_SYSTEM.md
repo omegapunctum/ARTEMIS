@@ -3,6 +3,8 @@
 ## Статус документа
 Рабочий системный документ visual layer для UI/UX уровня v1.0.
 
+> Status update (2026-04-22): текущий visual state главного экрана принят как **working visual baseline** (calm dense shell, calmer top controls, editorial detail panel, corrected timeline, preserved map primacy). Текущий цикл малого visual hardening/correction для этих зон завершён; дальнейшие изменения по ним допускаются только через отдельный audit.
+
 Назначение:
 - зафиксировать официальный визуальный стиль ARTEMIS;
 - определить палитру, типографику, surface system, text tone и design tokens;
