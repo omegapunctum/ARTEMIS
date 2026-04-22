@@ -1466,16 +1466,113 @@ function renderSlicesPanel(elements, state, map) {
         compareDimensions.append(dimensionsTitle, dimensionsList);
         comparePanel.appendChild(compareDimensions);
 
-        const readiness = document.createElement('p');
-        readiness.className = 'status-summary';
-        readiness.textContent = 'Сравнение пока не рассчитано';
-        const currentStep = document.createElement('p');
-        currentStep.className = 'status-summary';
-        currentStep.textContent = 'Сейчас доступна только подготовка пары срезов';
-        const nextStep = document.createElement('p');
-        nextStep.className = 'status-summary';
-        nextStep.textContent = 'Детализированный экран различий будет следующим шагом';
-        comparePanel.append(readiness, currentStep, nextStep);
+        const [sliceA, sliceB] = selectedSlices;
+        const compareDiffs = document.createElement('section');
+        compareDiffs.className = 'slice-compare-dimensions';
+        const diffsTitle = document.createElement('p');
+        diffsTitle.className = 'status-summary';
+        diffsTitle.textContent = 'Различия';
+        compareDiffs.appendChild(diffsTitle);
+
+        const buildPeriodLabel = (slice) => {
+          const timeRange = slice?.time_range && typeof slice.time_range === 'object' ? slice.time_range : null;
+          if (!timeRange) return '—';
+          const startValue = Number(timeRange.start);
+          const endValue = Number(timeRange.end);
+          if (!Number.isFinite(startValue) || !Number.isFinite(endValue)) return '—';
+          const start = Math.trunc(startValue);
+          const end = Math.trunc(endValue);
+          return timeRange.mode === 'point' || start === end ? `${start}` : `${start}–${end}`;
+        };
+
+        const buildDiffLine = (text) => {
+          const line = document.createElement('p');
+          line.className = 'status-summary';
+          line.textContent = text;
+          compareDiffs.appendChild(line);
+        };
+
+        const periodA = buildPeriodLabel(sliceA);
+        const periodB = buildPeriodLabel(sliceB);
+        if (periodA === periodB) {
+          buildDiffLine('Период совпадает');
+        } else {
+          buildDiffLine(`Период: ${periodA} ↔ ${periodB}`);
+        }
+
+        const featureA = Number.isFinite(Number(sliceA?.feature_count)) ? Math.trunc(Number(sliceA.feature_count)) : 0;
+        const featureB = Number.isFinite(Number(sliceB?.feature_count)) ? Math.trunc(Number(sliceB.feature_count)) : 0;
+        if (featureA === featureB) {
+          buildDiffLine(`Объекты совпадают: ${featureA}`);
+        } else {
+          buildDiffLine(`Объекты: ${featureA} ↔ ${featureB}`);
+        }
+
+        const enabledLayersA = Array.isArray(sliceA?.view_state?.enabled_layer_ids) ? sliceA.view_state.enabled_layer_ids.filter(Boolean).length : 0;
+        const enabledLayersB = Array.isArray(sliceB?.view_state?.enabled_layer_ids) ? sliceB.view_state.enabled_layer_ids.filter(Boolean).length : 0;
+        if (enabledLayersA === enabledLayersB) {
+          buildDiffLine(`Слои совпадают: ${enabledLayersA}`);
+        } else {
+          buildDiffLine(`Слои: ${enabledLayersA} ↔ ${enabledLayersB}`);
+        }
+
+        const quickLayersA = Array.isArray(sliceA?.view_state?.active_quick_layer_ids) ? sliceA.view_state.active_quick_layer_ids.filter(Boolean).length : 0;
+        const quickLayersB = Array.isArray(sliceB?.view_state?.active_quick_layer_ids) ? sliceB.view_state.active_quick_layer_ids.filter(Boolean).length : 0;
+        if (quickLayersA > 0 || quickLayersB > 0) {
+          if (quickLayersA === quickLayersB) {
+            buildDiffLine(`Быстрые категории совпадают: ${quickLayersA}`);
+          } else {
+            buildDiffLine(`Быстрые категории: ${quickLayersA} ↔ ${quickLayersB}`);
+          }
+        }
+
+        comparePanel.appendChild(compareDiffs);
+
+        const extractSliceFeatureIds = (slice) => {
+          if (!slice || typeof slice !== 'object') return [];
+          const featureRefs = Array.isArray(slice.feature_refs) ? slice.feature_refs : [];
+          const fromRefs = featureRefs
+            .map((entry) => String(entry?.feature_id || '').trim())
+            .filter(Boolean);
+          if (fromRefs.length) return [...new Set(fromRefs)];
+          const legacyFeatureIds = Array.isArray(slice.feature_ids) ? slice.feature_ids : [];
+          const legacyFrontendFeatureIds = Array.isArray(slice.featureIds) ? slice.featureIds : [];
+          return [...new Set([...legacyFeatureIds, ...legacyFrontendFeatureIds]
+            .map((id) => String(id || '').trim())
+            .filter(Boolean))];
+        };
+
+        const featureSetA = new Set(extractSliceFeatureIds(sliceA));
+        const featureSetB = new Set(extractSliceFeatureIds(sliceB));
+        let sharedCount = 0;
+        featureSetA.forEach((id) => {
+          if (featureSetB.has(id)) sharedCount += 1;
+        });
+        const onlyACount = featureSetA.size - sharedCount;
+        const onlyBCount = featureSetB.size - sharedCount;
+
+        const compositionSection = document.createElement('section');
+        compositionSection.className = 'slice-compare-dimensions';
+        const compositionTitle = document.createElement('p');
+        compositionTitle.className = 'status-summary';
+        compositionTitle.textContent = 'Состав объектов';
+        compositionSection.appendChild(compositionTitle);
+
+        ['Общие', 'Только в A', 'Только в B'].forEach((label, index) => {
+          const line = document.createElement('p');
+          line.className = 'status-summary';
+          const count = index === 0 ? sharedCount : index === 1 ? onlyACount : onlyBCount;
+          line.textContent = `${label}: ${count}`;
+          compositionSection.appendChild(line);
+        });
+
+        const compositionSummary = document.createElement('p');
+        compositionSummary.className = 'status-summary';
+        compositionSummary.textContent = sharedCount > 0
+          ? 'Часть объектов повторяется в обоих срезах.'
+          : 'Срезы не пересекаются по составу объектов.';
+        compositionSection.appendChild(compositionSummary);
+        comparePanel.appendChild(compositionSection);
       }
 
       const comparePanelActions = document.createElement('div');
