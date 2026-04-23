@@ -28,7 +28,7 @@ jobs:
 
       - name: Run migration preflight discipline check
         env:
-          AUTH_DATABASE_URL: sqlite:///:memory:
+          AUTH_DATABASE_URL: "sqlite:///:memory:"
         run: python scripts/preflight_migration_check.py
 
       - name: Run release gate
