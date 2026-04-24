@@ -9,6 +9,10 @@
 
 Цель: перевести UI/UX-систему ARTEMIS в конкретную карту компонентов, состояний, зависимостей и приоритетов реализации.
 
+> Main-screen refinement bridge sync (2026-04-23): после добавления отдельного working pack для `main screen / primary workspace` этот документ сохраняет роль system-level component map и не заменяется новыми main-screen docs. Новый pack (`2026-04-23_UIUX_MAIN_SCREEN_TECHNICAL_SPEC_ACTIVE_v1_0.md`, `2026-04-23_UIUX_MAIN_SCREEN_ART_DIRECTION_SPEC_ACTIVE_v1_0.md` и связанные prompt-docs) используется как track-specific target layer для refinement, а `ARTEMIS_UI_UX_COMPONENT_MAP.md` остаётся owner-doc карты компонентных зон, состояний и implementation decomposition.
+>
+> Main-screen runtime bridge scope (2026-04-23): для текущего refinement cycle bridge-мэппинг между новым working pack и runtime surface должен в первую очередь покрывать: top shell, slice/context strip, map workspace, detail panel, timeline band и mobile staged adaptation. Это bridge-note для patch planning, а не новый competing source-of-truth.
+
 ---
 
 ## 1. Назначение документа
@@ -63,6 +67,18 @@ ARTEMIS v1.0 должен состоять из 8 основных UI-зон:
 6. **Story / Course System**
 7. **AI Assistance System**
 8. **Support / Utility Layer**
+
+### 3.1 Main-screen refinement bridge (2026-04-23)
+Для текущего `main screen / primary workspace` refinement новый working pack должен маппиться на существующую component map так:
+
+- **Top shell** → `Top Navigation Bar` + `Route / Mode Switcher`
+- **Slice / context sub-bar** → `Slice System` + `Temporal Context Indicator` + compact context surface внутри Workspace Core
+- **Map workspace** → `Main Map Canvas` + `Object Marker / Spatial Entity Node` + `Layer Control Panel`
+- **Right detail panel as meaning container** → `Object Preview Card` + `Detail Panel` + `Related Entities Block` + `Provenance / Source Block` + AI entry/explain surfaces
+- **Timeline band** → `Timeline Bar` + `Time Range Control` + `Temporal Context Indicator`
+- **Mobile staged adaptation** → `Mobile Navigation Sheet / Drawer` + compact timeline + bottom-sheet preview/detail flow
+
+Этот bridge нужен для decomposition текущего refinement cycle в runtime-задачи и не меняет базовую зонировку component map.
 
 ---
 
