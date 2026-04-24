@@ -286,4 +286,13 @@ Recommended reading order:
 
 Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` remains the primary UI/UX working spec, `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` remains the system-level implementation map, and `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` owns the visual design layer: official style, palette, typography, state semantics and design-token baseline.
 
+For the current main-screen refinement cycle, a dedicated working pack also lives in `docs/work/uiux/`:
+- `docs/work/uiux/2026-04-23_UIUX_MAIN_SCREEN_TECHNICAL_SPEC_ACTIVE_v1_0.md`
+- `docs/work/uiux/2026-04-23_UIUX_MAIN_SCREEN_ART_DIRECTION_SPEC_ACTIVE_v1_0.md`
+- `docs/work/uiux/2026-04-23_UIUX_MAIN_SCREEN_MASTER_CONCEPT_PROMPT_ACTIVE_v1_0.md`
+- `docs/work/uiux/2026-04-23_UIUX_DARK_MASTER_CONCEPT_PROMPT_ACTIVE_v1_0.md`
+- `docs/work/uiux/2026-04-23_UIUX_LIGHT_EDITORIAL_ALTERNATIVE_PROMPT_ACTIVE_v1_0.md`
+
+These main-screen files are **track-specific working materials** for `main screen / primary workspace` refinement. They do not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
+
 Historical documents live in `docs/archive/`, and diagnostic/reference documents live in `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.
