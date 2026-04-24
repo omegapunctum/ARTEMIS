@@ -92,21 +92,21 @@
         <button id="overflow-btn" class="icon-btn" type="button" aria-label="Ещё действия">⋯</button>
       </div>
     </header>
-    <section id="research-context-bar" class="glass-panel workspace-unified-strip" aria-label="Контекст и инструменты исследования">
+    <section id="research-context-bar" class="glass-panel workspace-unified-strip" aria-label="Slice sub-bar and research tools">
       <div class="workspace-strip-context">
         <div class="research-context-main">
-          <button id="research-slice-trigger" type="button">Новый срез</button>
-          <span id="research-slice-state">Новый срез</span>
+          <button id="research-slice-trigger" type="button" title="Slice: New Slice">Slice: New Slice</button>
+          <span id="research-slice-state" class="research-slice-status">Saved</span>
         </div>
-        <div class="research-context-meta" aria-label="Сводка контекста">
-          <span id="research-period-meta">Период: —</span>
-          <span id="research-layers-meta">Слои: —</span>
-          <span id="research-objects-meta">Объекты: —</span>
+        <div class="research-context-meta" aria-label="Slice context summary">
+          <span id="research-period-meta" class="research-context-chip">Period: —</span>
+          <span id="research-layers-meta" class="research-context-chip">Layers: —</span>
+          <span id="research-objects-meta" class="research-context-chip">Objects: —</span>
         </div>
-        <div class="research-context-actions" role="group" aria-label="Действия со срезом">
-          <button id="research-slice-save-btn" type="button">Сохранить</button>
-          <button id="research-slice-open-btn" type="button">Открыть</button>
-          <button id="research-slice-compare-btn" type="button">Сравнить</button>
+        <div class="research-context-actions" role="group" aria-label="Slice actions">
+          <button id="research-slice-save-btn" type="button">Save</button>
+          <button id="research-slice-compare-btn" type="button">Compare</button>
+          <button id="research-slice-open-btn" type="button">Share</button>
         </div>
       </div>
       <div id="explore-toolbar-shell" class="workspace-strip-tools" aria-label="Инструменты исследования">
@@ -163,13 +163,13 @@
     <section id="bottom-panel" class="glass-panel" aria-label="Таймлайн">
       <div id="timeline" class="timeline-row">
         <div class="timeline-head">
-          <div class="timeline-helper-label">Период отображения объектов</div>
-          <div id="timeline-range-label">Выбранная точка</div>
+          <div class="timeline-helper-label">Temporal axis</div>
+          <div id="timeline-range-label">Selected range</div>
           <div class="timeline-mode-toggle" role="group" aria-label="Режим времени">
             <button id="timeline-mode-point" class="timeline-mode-btn is-active" type="button" aria-pressed="true">Точка</button>
             <button id="timeline-mode-range" class="timeline-mode-btn" type="button" aria-pressed="false">Диапазон</button>
           </div>
-          <div id="timeline-range-capsule" class="timeline-capsule">1600–1650</div>
+          <div id="timeline-range-capsule" class="timeline-capsule">Selected: 1600–1650</div>
         </div>
         <div class="timeline-track-wrap">
           <div class="timeline-track-base"></div>

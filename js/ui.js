@@ -12,6 +12,14 @@ let activeUiToastTimerId = null;
 let activeUiToastEl = null;
 const ONBOARDING_HINT_SESSION_KEY = 'artemis_onboarding_hint_dismissed';
 const COURSE_PROGRESS_STORAGE_KEY = 'artemis_course_progress_v1';
+const TIMELINE_SEMANTIC_ANCHORS = [
+  { key: 'byzantium-founded', year: 330, label: '330', description: 'Byzantium founded' },
+  { key: 'hagia-sophia', year: 532, label: '532', description: 'Hagia Sophia completed' },
+  { key: 'iconoclasm', year: 784.5, label: '726–843', description: 'Iconoclasm' },
+  { key: 'schism', year: 1054, label: '1054', description: 'East–West Schism' },
+  { key: 'fourth-crusade', year: 1204, label: '1204', description: 'Fourth Crusade' },
+  { key: 'fall-of-constantinople', year: 1453, label: '1453', description: 'Fall of Constantinople' }
+];
 
 function isDebugTelemetryMode() {
   if (typeof window === 'undefined') return false;
@@ -437,10 +445,11 @@ export async function initUI(map, features) {
   });
   elements.researchSliceOpenBtn?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
+    showUiSystemMessage('Use the open slice context as a share baseline from the “Slices” panel.', { variant: 'info', timeout: 3000 });
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
-    showUiSystemMessage('Сохраните текущий срез в панели «Срезы».', { variant: 'success', timeout: 3200 });
+    showUiSystemMessage('Save the current slice from the “Slices” panel.', { variant: 'success', timeout: 3200 });
   });
   elements.researchSliceTrigger?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
@@ -3449,13 +3458,15 @@ function hydrateTimeline(elements, years, state) {
 
 function updateTimelineLabel(elements, state) {
   if (elements.timelineLabel) {
-    elements.timelineLabel.textContent = state.timelineMode === 'point' ? 'Выбранная точка' : 'Выбранный диапазон';
+    elements.timelineLabel.textContent = state.timelineMode === 'point' ? 'Selected point' : 'Selected range';
   }
   if (elements.timelineCapsule) {
-    elements.timelineCapsule.textContent = state.timelineMode === 'point'
-      ? String(state.currentStartYear)
-      : `${state.currentStartYear} — ${state.currentEndYear}`;
+    const selectedRangeText = state.timelineMode === 'point'
+      ? `${state.currentStartYear} CE`
+      : `${state.currentStartYear} — ${state.currentEndYear} CE`;
+    elements.timelineCapsule.textContent = `Selected: ${selectedRangeText}`;
     elements.timelineCapsule.dataset.range = `${state.currentStartYear}:${state.currentEndYear}`;
+    elements.timelineCapsule.dataset.mode = state.timelineMode;
   }
 }
 
@@ -3782,9 +3793,9 @@ function updateCounters(elements, state, map) {
 }
 
 function getResearchContextPeriodLabel(state) {
-  if (!state) return 'Период: —';
-  if (state.timelineMode === 'point') return `Период: ${state.currentStartYear}`;
-  return `Период: ${state.currentStartYear}–${state.currentEndYear}`;
+  if (!state) return 'Period: —';
+  if (state.timelineMode === 'point') return `Period: ${state.currentStartYear} CE`;
+  return `Period: ${state.currentStartYear}–${state.currentEndYear} CE`;
 }
 
 function buildResearchContextSnapshotKey(state) {
@@ -3818,23 +3829,21 @@ function updateResearchContextBar(elements, state) {
   }
 
   const periodLabel = getResearchContextPeriodLabel(state);
-  const layersLabel = `Слои: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
+  const layersLabel = `Layers: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
   const draftSliceCount = state?.sliceSelectionSet instanceof Set ? Math.max(0, state.sliceSelectionSet.size) : 0;
   const visibleObjectsCount = Math.max(0, state?.filteredFeatures?.length || 0);
   const hasAnchor = Boolean(state?.sliceAnchorFeatureId);
   const objectsLabel = draftSliceCount > 0
-    ? `В срезе: ${draftSliceCount}`
-    : `Объекты: ${visibleObjectsCount}${hasAnchor ? ' · anchor' : ''}`;
+    ? `In slice: ${draftSliceCount}`
+    : `Objects: ${visibleObjectsCount}${hasAnchor ? ' · anchor' : ''}`;
   const hasOpenedSliceTitle = Boolean(String(state?.sliceOpenedTitle || '').trim());
-  const sliceStateBaseLabel = hasOpenedSliceTitle
-    ? (state.researchContextDirty ? 'Сохранён · изменён' : 'Сохранён')
-    : (state.researchContextDirty ? 'Новый срез · изменён' : 'Новый срез');
-  const sliceStateLabel = hasAnchor ? `${sliceStateBaseLabel} · anchor` : sliceStateBaseLabel;
-  const rawTriggerLabel = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'Новый срез';
-  const triggerLabel = hasOpenedSliceTitle ? truncateText(rawTriggerLabel, 32) : rawTriggerLabel;
+  const sliceStateLabel = state.researchContextDirty ? 'Modified' : 'Saved';
+  const rawSliceTitle = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'New Slice';
+  const rawTriggerLabel = `Slice: ${rawSliceTitle}`;
+  const triggerLabel = truncateText(rawTriggerLabel, 40);
   const triggerTitle = hasOpenedSliceTitle
-    ? `Открыт срез: ${rawTriggerLabel}`
-    : 'Новый срез';
+    ? `Slice: ${rawSliceTitle}`
+    : 'Slice: New Slice';
   const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle, draftSliceCount, hasAnchor].join('||');
   if (renderKey === state.researchContextLastRenderedKey) return;
   state.researchContextLastRenderedKey = renderKey;
@@ -3845,6 +3854,7 @@ function updateResearchContextBar(elements, state) {
   if (elements.researchSliceState) {
     elements.researchSliceState.textContent = sliceStateLabel;
     elements.researchSliceState.classList.toggle('is-dirty', state.researchContextDirty);
+    elements.researchSliceState.classList.toggle('is-saved', !state.researchContextDirty);
   }
   if (elements.researchSliceTrigger) {
     elements.researchSliceTrigger.textContent = triggerLabel;
@@ -4024,10 +4034,25 @@ function restoreOverlayFocus(lastTrigger, elements) {
 
 function renderTimelineAxis(elements, years) {
   if (!elements.timelineAxis) return;
-  const points = [years.min, Math.round((years.min + years.max) / 2), years.max];
-  elements.timelineAxis.replaceChildren(...points.map((year) => {
+  const min = Number(years?.min);
+  const max = Number(years?.max);
+  const span = Math.max(1, max - min);
+  const anchors = TIMELINE_SEMANTIC_ANCHORS.map((anchor) => {
+    const position = ((anchor.year - min) / span) * 100;
+    return { ...anchor, position: Math.max(0, Math.min(100, position)) };
+  });
+  elements.timelineAxis.replaceChildren(...anchors.map((anchor) => {
     const node = document.createElement('span');
-    node.textContent = String(year);
+    node.className = 'timeline-anchor';
+    node.style.left = `${anchor.position}%`;
+    node.title = `${anchor.label} — ${anchor.description}`;
+    const tick = document.createElement('span');
+    tick.className = 'timeline-anchor-year';
+    tick.textContent = anchor.label;
+    const label = document.createElement('span');
+    label.className = 'timeline-anchor-label';
+    label.textContent = anchor.description;
+    node.append(tick, label);
     return node;
   }));
 }
