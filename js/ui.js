@@ -13,12 +13,12 @@ let activeUiToastEl = null;
 const ONBOARDING_HINT_SESSION_KEY = 'artemis_onboarding_hint_dismissed';
 const COURSE_PROGRESS_STORAGE_KEY = 'artemis_course_progress_v1';
 const TIMELINE_SEMANTIC_ANCHORS = [
-  { key: 'byzantium-founded', year: 330, label: '330', description: 'Byzantium founded' },
-  { key: 'hagia-sophia', year: 532, label: '532', description: 'Hagia Sophia completed' },
-  { key: 'iconoclasm', year: 784.5, label: '726–843', description: 'Iconoclasm' },
-  { key: 'schism', year: 1054, label: '1054', description: 'East–West Schism' },
-  { key: 'fourth-crusade', year: 1204, label: '1204', description: 'Fourth Crusade' },
-  { key: 'fall-of-constantinople', year: 1453, label: '1453', description: 'Fall of Constantinople' }
+  { key: 'byzantium-founded', year: 330, label: '330', description: 'Основание Константинополя' },
+  { key: 'hagia-sophia', year: 532, label: '532', description: 'Построена Святая София' },
+  { key: 'iconoclasm', year: 784.5, label: '726–843', description: 'Иконоборчество' },
+  { key: 'schism', year: 1054, label: '1054', description: 'Великая схизма' },
+  { key: 'fourth-crusade', year: 1204, label: '1204', description: 'Четвёртый крестовый поход' },
+  { key: 'fall-of-constantinople', year: 1453, label: '1453', description: 'Падение Константинополя' }
 ];
 
 function isDebugTelemetryMode() {
@@ -445,11 +445,11 @@ export async function initUI(map, features) {
   });
   elements.researchSliceOpenBtn?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
-    showUiSystemMessage('Use the open slice context as a share baseline from the “Slices” panel.', { variant: 'info', timeout: 3000 });
+    showUiSystemMessage('Используйте открытый контекст как базу для публикации из панели «Срезы».', { variant: 'info', timeout: 3000 });
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
-    showUiSystemMessage('Save the current slice from the “Slices” panel.', { variant: 'success', timeout: 3200 });
+    showUiSystemMessage('Сохраните текущий срез через панель «Срезы».', { variant: 'success', timeout: 3200 });
   });
   elements.researchSliceTrigger?.addEventListener('click', async () => {
     await openResearchSlicesWorkspace(elements, state, map);
@@ -1733,14 +1733,14 @@ function renderSlicesPanel(elements, state, map) {
     const compareSummaryTitle = document.createElement('p');
     compareSummaryTitle.className = 'status-summary slice-compare-summary-title';
     compareSummaryTitle.textContent = state.sliceCompareSelectionIds.length >= 2
-      ? `Compare ready: ${state.sliceCompareSelectionIds.length}/2`
-      : `Compare readiness: ${state.sliceCompareSelectionIds.length}/2`;
+      ? `Сравнение готово: ${state.sliceCompareSelectionIds.length}/2`
+      : `Готовность сравнения: ${state.sliceCompareSelectionIds.length}/2`;
     const compareSummaryActions = document.createElement('div');
     compareSummaryActions.className = 'panel-action-row slice-compare-summary-actions';
     const openCompareToolsBtn = document.createElement('button');
     openCompareToolsBtn.type = 'button';
     openCompareToolsBtn.className = 'ui-button ui-button-secondary';
-    openCompareToolsBtn.textContent = 'Compare tools';
+    openCompareToolsBtn.textContent = 'Инструменты сравнения';
     openCompareToolsBtn.addEventListener('click', () => {
       state.sliceComparePanelOpen = true;
       renderSlicesPanel(elements, state, map);
@@ -1889,7 +1889,7 @@ function renderSlicesPanel(elements, state, map) {
   storiesSummary.className = 'status-summary';
   const storiesCount = Array.isArray(state.stories) ? state.stories.length : 0;
   const coursesCount = Array.isArray(state.courses) ? state.courses.length : 0;
-  storiesSummary.textContent = `Secondary narrative tools · Stories: ${storiesCount} · Courses: ${coursesCount}`;
+  storiesSummary.textContent = `Нарративные инструменты · Истории: ${storiesCount} · Курсы: ${coursesCount}`;
   storiesToggle.appendChild(storiesSummary);
   const storiesInner = document.createElement('div');
   storiesInner.className = 'panel-stack';
@@ -2108,13 +2108,13 @@ function renderSlicesPanel(elements, state, map) {
   if (state.storiesLoading) {
     storiesInner.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Загрузка stories',
-      message: 'Загрузка stories…'
+      title: 'Загрузка историй',
+      message: 'Загрузка историй…'
     }));
   } else if (state.storiesError) {
     storiesInner.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Stories недоступны',
+      title: 'Истории недоступны',
       message: state.storiesError
     }));
   } else if (Array.isArray(state.stories) && state.stories.length) {
@@ -2452,7 +2452,7 @@ function renderCoursesPanel(elements, state, map) {
 
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'Courses';
+  title.textContent = 'Курсы';
   panel.appendChild(title);
 
   const storiesMap = new Map(
@@ -2470,7 +2470,7 @@ function renderCoursesPanel(elements, state, map) {
   courseTitleInput.type = 'text';
   courseTitleInput.name = 'course_title';
   courseTitleInput.maxLength = 180;
-  courseTitleInput.placeholder = 'Название Course';
+  courseTitleInput.placeholder = 'Название курса';
   courseTitleInput.required = true;
 
   const courseDescInput = document.createElement('textarea');
@@ -2481,26 +2481,26 @@ function renderCoursesPanel(elements, state, map) {
 
   const pickerTitle = document.createElement('p');
   pickerTitle.className = 'status-summary';
-  pickerTitle.textContent = 'Выберите минимум 1 story:';
+  pickerTitle.textContent = 'Выберите минимум 1 историю:';
   createForm.append(courseTitleInput, courseDescInput, pickerTitle);
 
   if (state.storiesLoading) {
     createForm.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Загрузка stories',
-      message: 'Загрузка stories…'
+      title: 'Загрузка историй',
+      message: 'Загрузка историй…'
     }));
   } else if (state.storiesError) {
     createForm.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Stories недоступны',
+      title: 'Истории недоступны',
       message: state.storiesError
     }));
   } else if (!storiesMap.size) {
     createForm.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Stories пока нет',
-      message: 'Сначала создайте хотя бы одну story во вкладке Slices.'
+      title: 'Историй пока нет',
+      message: 'Сначала создайте хотя бы одну историю во вкладке «Срезы».',
     }));
   } else {
     const pickerList = document.createElement('div');
@@ -2601,8 +2601,8 @@ function renderCoursesPanel(elements, state, map) {
   if (state.coursesLoading) {
     panel.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Загрузка courses',
-      message: 'Загрузка courses…'
+      title: 'Загрузка курсов',
+      message: 'Загрузка курсов…'
     }));
     return;
   }
@@ -2610,7 +2610,7 @@ function renderCoursesPanel(elements, state, map) {
   if (state.coursesError) {
     panel.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Courses недоступны',
+      title: 'Курсы недоступны',
       message: state.coursesError
     }));
     return;
@@ -2619,8 +2619,8 @@ function renderCoursesPanel(elements, state, map) {
   if (!Array.isArray(state.courses) || !state.courses.length) {
     panel.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Courses пока нет',
-      message: 'Создайте свой первый маршрут из stories.'
+      title: 'Курсов пока нет',
+      message: 'Создайте свой первый маршрут из историй.'
     }));
     return;
   }
@@ -3460,13 +3460,13 @@ function hydrateTimeline(elements, years, state) {
 
 function updateTimelineLabel(elements, state) {
   if (elements.timelineLabel) {
-    elements.timelineLabel.textContent = state.timelineMode === 'point' ? 'Selected point' : 'Selected range';
+    elements.timelineLabel.textContent = state.timelineMode === 'point' ? 'Выбранная точка' : 'Выбранный диапазон';
   }
   if (elements.timelineCapsule) {
     const selectedRangeText = state.timelineMode === 'point'
-      ? `${state.currentStartYear} CE`
-      : `${state.currentStartYear} — ${state.currentEndYear} CE`;
-    elements.timelineCapsule.textContent = `Selected: ${selectedRangeText}`;
+      ? `${state.currentStartYear} н. э.`
+      : `${state.currentStartYear} — ${state.currentEndYear} н. э.`;
+    elements.timelineCapsule.textContent = `Выбрано: ${selectedRangeText}`;
     elements.timelineCapsule.dataset.range = `${state.currentStartYear}:${state.currentEndYear}`;
     elements.timelineCapsule.dataset.mode = state.timelineMode;
   }
@@ -3795,9 +3795,9 @@ function updateCounters(elements, state, map) {
 }
 
 function getResearchContextPeriodLabel(state) {
-  if (!state) return 'Period: —';
-  if (state.timelineMode === 'point') return `Period: ${state.currentStartYear} CE`;
-  return `Period: ${state.currentStartYear}–${state.currentEndYear} CE`;
+  if (!state) return 'Период: —';
+  if (state.timelineMode === 'point') return `Период: ${state.currentStartYear} н. э.`;
+  return `Период: ${state.currentStartYear}–${state.currentEndYear} н. э.`;
 }
 
 function buildResearchContextSnapshotKey(state) {
@@ -3831,21 +3831,21 @@ function updateResearchContextBar(elements, state) {
   }
 
   const periodLabel = getResearchContextPeriodLabel(state);
-  const layersLabel = `Layers: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
+  const layersLabel = `Слои: ${Math.max(0, state?.enabledLayerIds?.size || 0)}`;
   const draftSliceCount = state?.sliceSelectionSet instanceof Set ? Math.max(0, state.sliceSelectionSet.size) : 0;
   const visibleObjectsCount = Math.max(0, state?.filteredFeatures?.length || 0);
   const hasAnchor = Boolean(state?.sliceAnchorFeatureId);
   const objectsLabel = draftSliceCount > 0
-    ? `In slice: ${draftSliceCount}`
-    : `Objects: ${visibleObjectsCount}${hasAnchor ? ' · anchor' : ''}`;
+    ? `В срезе: ${draftSliceCount}`
+    : `Объекты: ${visibleObjectsCount}${hasAnchor ? ' · якорь' : ''}`;
   const hasOpenedSliceTitle = Boolean(String(state?.sliceOpenedTitle || '').trim());
-  const sliceStateLabel = state.researchContextDirty ? 'Modified' : 'Saved';
-  const rawSliceTitle = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'New Slice';
-  const rawTriggerLabel = `Slice: ${rawSliceTitle}`;
+  const sliceStateLabel = state.researchContextDirty ? 'Изменено' : 'Сохранено';
+  const rawSliceTitle = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'Новый срез';
+  const rawTriggerLabel = `Срез: ${rawSliceTitle}`;
   const triggerLabel = truncateText(rawTriggerLabel, 40);
   const triggerTitle = hasOpenedSliceTitle
-    ? `Slice: ${rawSliceTitle}`
-    : 'Slice: New Slice';
+    ? `Срез: ${rawSliceTitle}`
+    : 'Срез: Новый срез';
   const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle, draftSliceCount, hasAnchor].join('||');
   if (renderKey === state.researchContextLastRenderedKey) return;
   state.researchContextLastRenderedKey = renderKey;
@@ -4395,27 +4395,27 @@ function addFeatureToDraftSliceFromDetail(state, elements, map, featureId) {
 
 function getCurrentSliceTitle(state) {
   const raw = String(state?.sliceOpenedTitle || '').trim();
-  return raw || 'New Slice';
+  return raw || 'Новый срез';
 }
 
 function getCurrentSliceStatus(state) {
-  return state?.researchContextDirty ? 'Modified' : 'Saved';
+  return state?.researchContextDirty ? 'Изменено' : 'Сохранено';
 }
 
 function getVisibleLayersCue(state) {
   const total = state?.defaultEnabledLayerIds instanceof Set ? state.defaultEnabledLayerIds.size : 0;
   const visible = state?.enabledLayerIds instanceof Set ? state.enabledLayerIds.size : 0;
-  if (!visible) return '0 visible';
-  if (!total || visible >= total) return `${visible} visible`;
-  return `${visible}/${total} visible`;
+  if (!visible) return '0 видимых';
+  if (!total || visible >= total) return `${visible} видимых`;
+  return `${visible}/${total} видимых`;
 }
 
 function getSelectionSummary(state) {
   const selectedInSlice = state?.sliceSelectionSet instanceof Set ? state.sliceSelectionSet.size : 0;
-  if (selectedInSlice > 0) return `${selectedInSlice} selected`;
+  if (selectedInSlice > 0) return `${selectedInSlice} выбрано`;
   const searchCount = Array.isArray(state?.searchResults) ? state.searchResults.length : 0;
-  if (searchCount > 0) return `${searchCount} from search`;
-  return 'Focused object';
+  if (searchCount > 0) return `${searchCount} из поиска`;
+  return 'Фокусный объект';
 }
 
 function buildPreviewHeaderSection(props, title, layerLabel, dateLabel) {
@@ -4436,10 +4436,10 @@ function buildPreviewHeaderSection(props, title, layerLabel, dateLabel) {
   metaRow.className = 'detail-preview-meta-row';
   const typeNode = document.createElement('span');
   typeNode.className = 'detail-preview-meta-chip';
-  typeNode.textContent = layerLabel || 'Uncategorized';
+  typeNode.textContent = layerLabel || 'Без категории';
   const periodNode = document.createElement('span');
   periodNode.className = 'detail-preview-meta-chip is-period';
-  periodNode.textContent = dateLabel || 'Period unknown';
+  periodNode.textContent = dateLabel || 'Период не указан';
   metaRow.append(typeNode, periodNode);
   headerSection.appendChild(metaRow);
 
@@ -4450,7 +4450,7 @@ function buildSliceContextSection(state) {
   const contextSection = document.createElement('section');
   contextSection.className = 'detail-section detail-slice-context-block';
   contextSection.dataset.level = '2';
-  contextSection.appendChild(createSectionTitle('Slice context'));
+  contextSection.appendChild(createSectionTitle('Контекст среза'));
 
   const summary = document.createElement('p');
   summary.className = 'detail-slice-context-title';
@@ -4460,9 +4460,9 @@ function buildSliceContextSection(state) {
   const chips = document.createElement('div');
   chips.className = 'detail-slice-context-chips';
   [
-    `Status: ${getCurrentSliceStatus(state)}`,
-    `Layers: ${getVisibleLayersCue(state)}`,
-    `Entities: ${getSelectionSummary(state)}`
+    `Статус: ${getCurrentSliceStatus(state)}`,
+    `Слои: ${getVisibleLayersCue(state)}`,
+    `Сущности: ${getSelectionSummary(state)}`
   ].forEach((text) => {
     const chip = document.createElement('span');
     chip.className = 'detail-slice-context-chip';
@@ -4495,12 +4495,12 @@ function buildEpistemicBlock(type, bodyBuilder) {
   block.dataset.level = '3';
   block.dataset.epistemicType = type;
   const labels = {
-    fact: 'Fact',
-    relation: 'Relation',
-    interpretation: 'Interpretation',
-    ai: 'AI Suggestion'
+    fact: 'Факт',
+    relation: 'Связь',
+    interpretation: 'Интерпретация',
+    ai: 'AI-подсказка'
   };
-  block.appendChild(createSectionTitle(labels[type] || 'Knowledge'));
+  block.appendChild(createSectionTitle(labels[type] || 'Знание'));
   if (typeof bodyBuilder === 'function') bodyBuilder(block);
   return block;
 }
@@ -4509,7 +4509,7 @@ function buildActionZonesSection({ onSaveSlice, onAddToResearch, onCompare, onEx
   const section = document.createElement('section');
   section.className = 'detail-section detail-action-zones';
   section.dataset.level = '4';
-  section.appendChild(createSectionTitle('Actions'));
+  section.appendChild(createSectionTitle('Действия'));
 
   const upperGroup = document.createElement('div');
   upperGroup.className = 'detail-action-zone-group detail-action-zone-group-upper';
@@ -4517,13 +4517,13 @@ function buildActionZonesSection({ onSaveSlice, onAddToResearch, onCompare, onEx
   const saveBtn = document.createElement('button');
   saveBtn.type = 'button';
   saveBtn.className = 'ui-button ui-button-primary';
-  saveBtn.textContent = 'Save Slice';
+  saveBtn.textContent = 'Сохранить срез';
   saveBtn.addEventListener('click', onSaveSlice);
 
   const addBtn = document.createElement('button');
   addBtn.type = 'button';
   addBtn.className = 'ui-button ui-button-secondary';
-  addBtn.textContent = 'Add to Research';
+  addBtn.textContent = 'Добавить в срез';
   addBtn.addEventListener('click', onAddToResearch);
   upperGroup.append(saveBtn, addBtn);
 
@@ -4533,13 +4533,13 @@ function buildActionZonesSection({ onSaveSlice, onAddToResearch, onCompare, onEx
   const compareBtn = document.createElement('button');
   compareBtn.type = 'button';
   compareBtn.className = 'ui-button ui-button-tertiary';
-  compareBtn.textContent = 'Compare';
+  compareBtn.textContent = 'Сравнить';
   compareBtn.addEventListener('click', onCompare);
 
   const explainBtn = document.createElement('button');
   explainBtn.type = 'button';
   explainBtn.className = 'ui-button ui-button-tertiary';
-  explainBtn.textContent = 'Explain';
+  explainBtn.textContent = 'Пояснить';
   explainBtn.addEventListener('click', onExplain);
   lowerGroup.append(compareBtn, explainBtn);
 
@@ -4565,20 +4565,20 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
   detail.appendChild(buildSliceContextSection(state));
 
   const factBlock = buildEpistemicBlock('fact', (block) => {
-    appendMetaRow(block, 'Type', layerLabel || 'Not specified');
-    appendMetaRow(block, 'Period', dateLabel || 'Not specified');
+    appendMetaRow(block, 'Тип', layerLabel || 'Не указано');
+    appendMetaRow(block, 'Период', dateLabel || 'Не указано');
     if (sourceDomain || sourceUrl) {
       const provenanceRow = document.createElement('div');
       provenanceRow.className = 'detail-meta-row detail-source-link-row';
       const labelNode = document.createElement('span');
       labelNode.className = 'detail-meta-label';
-      labelNode.textContent = 'Provenance';
+      labelNode.textContent = 'Источник';
       const valueNode = document.createElement('span');
       valueNode.className = 'detail-meta-value';
       if (sourceUrl) {
         const link = document.createElement('a');
         link.className = 'detail-action-link';
-        link.textContent = sourceDomain || 'Source';
+        link.textContent = sourceDomain || 'Источник';
         setSafeLink(link, sourceUrl);
         valueNode.appendChild(link);
       } else {
@@ -4592,7 +4592,7 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
 
   const relationBlock = buildEpistemicBlock('relation', (block) => {
     if (!relatedFeatures.length) {
-      appendMetaRow(block, 'Network', 'No related entities in this view');
+      appendMetaRow(block, 'Сеть', 'В текущем виде нет связанных сущностей');
       return;
     }
     relatedFeatures.forEach((relatedFeature) => {
@@ -4618,7 +4618,7 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
   const interpretationBlock = buildEpistemicBlock('interpretation', (block) => {
     const text = document.createElement('p');
     text.className = 'detail-description detail-description-preview';
-    text.textContent = description || 'No interpretation yet.';
+    text.textContent = description || 'Интерпретация пока отсутствует.';
     if (!description) text.classList.add('is-empty');
     block.appendChild(text);
   });
@@ -4627,7 +4627,7 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
   const aiBlock = buildEpistemicBlock('ai', (block) => {
     const hint = document.createElement('p');
     hint.className = 'detail-empty';
-    hint.textContent = 'Review full detail before comparing this object with the active slice.';
+    hint.textContent = 'Перед сравнением откройте полную карточку и проверьте контекст.';
     block.appendChild(hint);
   });
   detail.appendChild(aiBlock);
@@ -4674,23 +4674,23 @@ function buildFullDetailContent(state, elements, map, props, feature) {
   detail.appendChild(buildSliceContextSection(state));
 
   const factBlock = buildEpistemicBlock('fact', (block) => {
-    appendMetaRow(block, 'Period', dateLabel || 'Not specified');
-    if (layerLabel) appendMetaRow(block, 'Category', layerLabel);
-    if (coordinatesLabel) appendMetaRow(block, 'Location', coordinatesLabel);
-    if (confidenceLabel) appendMetaRow(block, 'Confidence', confidenceLabel);
-    if (sourceDomain) appendMetaRow(block, 'Source', sourceDomain);
-    if (licenseLabel) appendMetaRow(block, 'License', licenseLabel);
+    appendMetaRow(block, 'Период', dateLabel || 'Не указано');
+    if (layerLabel) appendMetaRow(block, 'Категория', layerLabel);
+    if (coordinatesLabel) appendMetaRow(block, 'Местоположение', coordinatesLabel);
+    if (confidenceLabel) appendMetaRow(block, 'Точность', confidenceLabel);
+    if (sourceDomain) appendMetaRow(block, 'Источник', sourceDomain);
+    if (licenseLabel) appendMetaRow(block, 'Лицензия', licenseLabel);
     if (sourceUrl) {
       const sourceRow = document.createElement('div');
       sourceRow.className = 'detail-meta-row detail-source-link-row';
       const sourceLabel = document.createElement('span');
       sourceLabel.className = 'detail-meta-label';
-      sourceLabel.textContent = 'Provenance';
+      sourceLabel.textContent = 'Источник';
       const sourceValue = document.createElement('span');
       sourceValue.className = 'detail-meta-value';
       const link = document.createElement('a');
       link.className = 'detail-action-link';
-      link.textContent = 'Open source';
+      link.textContent = 'Открыть источник';
       setSafeLink(link, sourceUrl);
       sourceValue.appendChild(link);
       sourceRow.append(sourceLabel, sourceValue);
@@ -4701,7 +4701,7 @@ function buildFullDetailContent(state, elements, map, props, feature) {
 
   const relationBlock = buildEpistemicBlock('relation', (block) => {
     if (!Array.isArray(relatedFeatures) || !relatedFeatures.length) {
-      appendMetaRow(block, 'Related', 'No related entities found');
+      appendMetaRow(block, 'Связанные', 'Связанные сущности не найдены');
       return;
     }
     relatedFeatures.forEach((relatedFeature) => {
@@ -4731,13 +4731,13 @@ function buildFullDetailContent(state, elements, map, props, feature) {
   const interpretationBlock = buildEpistemicBlock('interpretation', (block) => {
     const descriptionNode = document.createElement('p');
     descriptionNode.className = 'detail-description';
-    descriptionNode.textContent = description || 'No interpretation is available yet.';
+    descriptionNode.textContent = description || 'Интерпретация пока отсутствует.';
     if (!description) descriptionNode.classList.add('is-empty');
     block.appendChild(descriptionNode);
     if (hasBriefDescription) {
       const descriptionHint = document.createElement('p');
       descriptionHint.className = 'detail-description-note';
-      descriptionHint.textContent = 'This short note should be read as editorial context.';
+      descriptionHint.textContent = 'Короткая заметка: используйте как редакторский контекст.';
       block.appendChild(descriptionHint);
     }
   });
@@ -4746,7 +4746,7 @@ function buildFullDetailContent(state, elements, map, props, feature) {
   const aiBlock = buildEpistemicBlock('ai', (block) => {
     const aiHint = document.createElement('p');
     aiHint.className = 'detail-empty';
-    aiHint.textContent = 'Compare with the current slice anchor and confirm timeframe overlap first.';
+    aiHint.textContent = 'Сначала сверяйте с якорем среза и проверяйте пересечение периода.';
     block.appendChild(aiHint);
   });
   detail.appendChild(aiBlock);
