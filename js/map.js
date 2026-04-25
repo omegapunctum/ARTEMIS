@@ -19,32 +19,38 @@ const DEFAULT_MAP_THEME = 'graphite';
 const MAP_DATA_ERROR_MESSAGE = 'Ошибка загрузки данных карты';
 const MARKER_THEME = {
   point: {
-    color: '#22d3ee',
-    strokeColor: '#0f172a',
-    radius: 7,
-    strokeWidth: 2.1,
-    opacity: 0.94
+    factColor: '#5dd4ff',
+    relationColor: '#73a8ff',
+    interpretationColor: '#d9a86a',
+    aiColor: '#aab4d6',
+    factStroke: '#d9f4ff',
+    relationStroke: '#c9dcff',
+    interpretationStroke: '#f5d7af',
+    aiStroke: '#d9e2f6',
+    radius: 5.8,
+    strokeWidth: 1.35,
+    opacity: 0.84
   },
   hover: {
-    color: 'rgba(56, 189, 248, 0.34)',
-    strokeColor: '#7dd3fc',
-    radius: 10.5,
-    strokeWidth: 2.4,
-    opacity: 1
+    color: 'rgba(148, 219, 255, 0.26)',
+    strokeColor: '#d6efff',
+    radius: 9.6,
+    strokeWidth: 1.9,
+    opacity: 0.96
   },
   selected: {
-    color: 'rgba(125, 211, 252, 0.30)',
+    color: 'rgba(124, 202, 255, 0.2)',
     strokeColor: '#bae6fd',
-    radius: 12.8,
-    strokeWidth: 3.2,
-    opacity: 1
+    radius: 11.8,
+    strokeWidth: 2.6,
+    opacity: 0.98
   },
   cluster: {
-    color: '#0369a1',
-    strokeColor: '#67e8f9',
-    opacity: 0.92,
-    strokeWidth: 1.6,
-    textColor: '#e0f2fe'
+    color: '#12486c',
+    strokeColor: '#7dc6ee',
+    opacity: 0.84,
+    strokeWidth: 1.25,
+    textColor: '#d7edff'
   }
 };
 
@@ -160,7 +166,7 @@ export function initMap(containerId, features) {
   if (container) container._map = map;
   window.__ARTEMIS_MAP = map;
 
-  map.addControl(new maplibregl.NavigationControl(), 'top-right');
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: false, showCompass: true }), 'top-left');
   const initialBuild = buildMapFeatureCollection(validatedFeatures);
   map.__artemis = {
     layerLookup: new Map(),
@@ -449,6 +455,39 @@ export function focusFeatureOnMap(map, feature) {
   return true;
 }
 
+function buildEpistemicPointColorExpression() {
+  return [
+    'match',
+    ['downcase', ['coalesce', ['to-string', ['get', 'coordinates_confidence']], '']],
+    'exact', MARKER_THEME.point.factColor,
+    'approximate', MARKER_THEME.point.relationColor,
+    'conditional', MARKER_THEME.point.interpretationColor,
+    MARKER_THEME.point.aiColor
+  ];
+}
+
+function buildEpistemicPointStrokeExpression() {
+  return [
+    'match',
+    ['downcase', ['coalesce', ['to-string', ['get', 'coordinates_confidence']], '']],
+    'exact', MARKER_THEME.point.factStroke,
+    'approximate', MARKER_THEME.point.relationStroke,
+    'conditional', MARKER_THEME.point.interpretationStroke,
+    MARKER_THEME.point.aiStroke
+  ];
+}
+
+function buildEpistemicPointOpacityExpression() {
+  return [
+    'match',
+    ['downcase', ['coalesce', ['to-string', ['get', 'coordinates_confidence']], '']],
+    'exact', MARKER_THEME.point.opacity,
+    'approximate', 0.72,
+    'conditional', 0.7,
+    0.58
+  ];
+}
+
 function loadGeoJSON(map, featureCollection) {
   const shouldCluster = featureCollection.features.length > 500;
 
@@ -482,10 +521,13 @@ function loadGeoJSON(map, featureCollection) {
       filter: ['has', 'point_count'],
       layout: {
         'text-field': ['get', 'point_count_abbreviated'],
-        'text-size': 12
+        'text-size': 11.5,
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold']
       },
       paint: {
-        'text-color': MARKER_THEME.cluster.textColor
+        'text-color': MARKER_THEME.cluster.textColor,
+        'text-halo-color': 'rgba(8, 19, 32, 0.9)',
+        'text-halo-width': 0.8
       }
     });
   }
@@ -499,9 +541,9 @@ function loadGeoJSON(map, featureCollection) {
     },
     paint: {
       'heatmap-weight': ['interpolate', ['linear'], ['coalesce', ['get', 'influence_radius_km'], 1], 1, 0.2, 60, 1],
-      'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 2, 0.6, 8, 1.2],
-      'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 2, 12, 8, 32],
-      'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0.85, 10, 0.45],
+      'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 2, 0.52, 8, 1.06],
+      'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 2, 10, 8, 28],
+      'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0.66, 10, 0.34],
       'heatmap-color': [
         'interpolate',
         ['linear'],
@@ -528,11 +570,11 @@ function loadGeoJSON(map, featureCollection) {
     type: 'circle',
     source: SOURCE_ID,
     paint: {
-      'circle-radius': MARKER_THEME.point.radius,
-      'circle-color': MARKER_THEME.point.color,
-      'circle-stroke-color': MARKER_THEME.point.strokeColor,
-      'circle-stroke-width': MARKER_THEME.point.strokeWidth,
-      'circle-opacity': MARKER_THEME.point.opacity
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, MARKER_THEME.point.radius * 0.84, 8, MARKER_THEME.point.radius, 12, MARKER_THEME.point.radius + 1.2],
+      'circle-color': buildEpistemicPointColorExpression(),
+      'circle-stroke-color': buildEpistemicPointStrokeExpression(),
+      'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 2, MARKER_THEME.point.strokeWidth * 0.86, 8, MARKER_THEME.point.strokeWidth, 12, MARKER_THEME.point.strokeWidth + 0.45],
+      'circle-opacity': buildEpistemicPointOpacityExpression()
     }
   };
 
