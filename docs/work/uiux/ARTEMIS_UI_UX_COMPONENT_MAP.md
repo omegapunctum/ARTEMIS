@@ -14,6 +14,8 @@
 > Main-screen runtime bridge scope (2026-04-23): для текущего refinement cycle bridge-мэппинг между новым working pack и runtime surface должен в первую очередь покрывать: top shell, slice/context strip, map workspace, detail panel, timeline band и mobile staged adaptation. Это bridge-note для patch planning, а не новый competing source-of-truth.
 >
 > Main-screen structural bridge sync (2026-04-26): runtime bridge теперь опирается на принятый structural baseline `workspace-frame / docked-grid` (top dock + main grid rail/map/optional inspector + bottom dock; mobile detail sheet preserved) и остаётся audit-first.
+>
+> App-structure bridge sync (2026-04-26): future tabs/sections должны планироваться через `docs/work/uiux/2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md`. Этот spec задаёт working section contract для App Shell / Workspace Core / Product Sections / Shared Components / Shared Overlays / Feature Modules и не заменяет текущую component map; он используется как expansion-planning layer перед добавлением новых sections.
 
 ---
 
@@ -81,6 +83,20 @@ ARTEMIS v1.0 должен состоять из 8 основных UI-зон:
 - **Mobile staged adaptation** → `Mobile Navigation Sheet / Drawer` + compact timeline + bottom-sheet preview/detail flow
 
 Этот bridge нужен для decomposition текущего refinement cycle в runtime-задачи и не меняет базовую зонировку component map.
+
+### 3.2 App structure / section bridge (2026-04-26)
+Для future product expansion новые вкладки и sections должны проходить через `Section Contract` из `2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md`.
+
+Bridge-мэппинг:
+
+- **App Shell** → `Global Shell` + `Route / Mode Switcher` + shared overlay/status layer
+- **Workspace Core** → `Map Workspace` + `Time System` + `Knowledge Detail System` + `Slice System`
+- **Product Sections** → `Story / Course System` + `Saved / Library` + profile/about support sections
+- **Shared Components** → buttons/chips/badges/forms/tabs/cards/panels as cross-section component layer
+- **Shared Overlays** → `Support / Utility Layer` + modal/popover/toast/loading/error surfaces
+- **Feature Modules** → research slices, stories, courses, saved/profile/UGC/moderation feature owners
+
+Этот bridge не добавляет новый canonical source-of-truth. Он фиксирует, как использовать component map при проектировании будущих sections.
 
 ---
 
