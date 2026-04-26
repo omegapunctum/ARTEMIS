@@ -60,11 +60,27 @@
 Причина:
 - прежняя версия фиксировала release artifact semantics, но не задавала полноценный schema-level data contract.
 
+### 2.5 Reference storage policy status hygiene
+
+Файл: `docs/reference/2026-04-19_DOCUMENTATION_STORAGE_POLICY_SYSTEM_ACTIVE_v1_0.md`
+
+Исправление:
+- внутренний статус понижен с `active` до `reference / historical governance-support material`;
+- добавлено указание, что текущий canonical source of truth для documentation governance — `docs/DOCUMENTATION_SYSTEM.md`.
+
+### 2.6 Archive documentation structure status hygiene
+
+Файл: `docs/archive/2026-04-19_DOCUMENTATION_SYSTEM_STRUCTURE_SPEC_ACTIVE_v1_0.md`
+
+Исправление:
+- внутренний статус понижен с `active` до `archived / historical reference`;
+- добавлено указание, что текущий canonical documentation governance определяется в `docs/DOCUMENTATION_SYSTEM.md`.
+
 ---
 
 ## 3. Остаётся открытым
 
-1. Archive/reference status hygiene.
+1. Проверить, остались ли другие archive/reference файлы с misleading active-status.
 2. Canonical style unification.
 3. Дополнительная проверка cross-links после следующих docs changes.
 
@@ -77,9 +93,10 @@
 - проверка GitHub Pages artifact на наличие `css/main-screen.css`
 - проверка отсутствия прямой ссылки на несуществующий manual smoke evidence path
 - проверка, что `DATA_CONTRACT.md` не конфликтует с текущими `data/*` artifacts
+- проверка, что archive/reference docs не используются как canonical source of truth
 
 ---
 
 ## 5. Итог
 
-Текущий patch-пакет закрывает четыре audit findings: deploy artifact drift, phase-order drift, stale release evidence reference и недостаточную schema-level детализацию data contract.
+Текущий patch-пакет закрывает шесть audit findings: deploy artifact drift, phase-order drift, stale release evidence reference, недостаточную schema-level детализацию data contract, reference status drift и archive status drift.
