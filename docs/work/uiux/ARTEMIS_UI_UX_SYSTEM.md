@@ -29,6 +29,8 @@
 > Main-screen de-island visual alignment sync (2026-04-26): цикл de-island alignment принят как **working baseline accepted** для текущего runtime. Базовая contour-модель: docked top shell + slice bar, docked right inspector panel, docked bottom timeline band, integrated left rail + MapLibre controls, map-first hierarchy preserved. Это **не** заявление о полной финализации visual design; любые следующие правки main-screen остаются только audit-first.
 >
 > Main-screen structural de-island sync (2026-04-26): structural migration главного экрана в `workspace-frame / docked-grid` принята как **current working baseline** после final structural audit. Принятый contour: top dock, main grid (rail / map / optional inspector), bottom dock; mobile detail остаётся intentional bottom-sheet, transient overlays могут использовать glass/fixed. Это **не** competing source-of-truth и **не** final visual completion; дальнейшие main-screen изменения — только audit-first.
+>
+> App-structure foundation sync (2026-04-26): created working app-structure spec `2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md` as expansion-planning layer for future UI/UX growth. It defines App Shell / Workspace Core / Product Sections / Shared Components / Shared Overlays / Feature Modules and Section Contract. It does not replace `ARTEMIS_UI_UX_SYSTEM.md` or `ARTEMIS_UI_UX_COMPONENT_MAP.md`; future tabs/sections must use this contract before runtime patches.
 
 Следовательно:
 - `ARTEMIS_UI_UX_SYSTEM.md` фиксирует UX-архитектуру, режимы, информационную структуру и поведение интерфейса как системы;
@@ -214,6 +216,12 @@ Route/section model v1.0:
 - Stories;
 - Courses;
 - О проекте.
+
+Future section structure rule:
+- new tabs/pages must be planned as sections through the app-structure spec;
+- do not add future sections directly into index.html/style.css/ui.js without Section Contract;
+- Workspace Core remains the primary runtime;
+- Stories/Courses/Saved/Profile/About extend the product but do not become competing app centers.
 
 Архитектурные фиксации v1.0:
 - Compare = analytical mode, не отдельный top-level route;
