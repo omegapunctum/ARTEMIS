@@ -243,21 +243,35 @@ README.md
 
 ```text
 docs/
+├── AI_POLICY.md
 ├── ARTEMIS_CONCEPT.md
 ├── ARTEMIS_MASTER_PROMPT.md
 ├── ARTEMIS_PRODUCT_SCOPE.md
+├── CONTENT_GOVERNANCE.md
 ├── CONTROLLED_RELEASE_DECISION.md
 ├── DATA_CONTRACT.md
 ├── DOCUMENTATION_SYSTEM.md
+├── ENTITY_MODEL.md
+├── EPISTEMIC_CONTRACT.md
+├── FOUNDATION_INDEX.md
 ├── PRIORITIES.md
 ├── PROJECT_PHASES.md
-└── PROJECT_STRUCTURE.md
+├── PROJECT_STRUCTURE.md
+├── RESEARCH_SLICE_CONTRACT.md
+└── RESEARCH_SLICE_SPEC.md
 ```
 
 Назначение:
+- `FOUNDATION_INDEX.md` — главный навигатор foundation-layer, порядок чтения и правила выбора source of truth по типам решений;
 - `ARTEMIS_CONCEPT.md` — миссия, видение, жёсткие принципы, эпистемическая модель и строгая лестница развития проекта;
-- `ARTEMIS_MASTER_PROMPT.md` — общие правила работы агентов, docs-first discipline, архитектурные инварианты и порядок принятия решений;
 - `ARTEMIS_PRODUCT_SCOPE.md` — границы ARTEMIS v1.0, главная единица ценности, primary loop и запреты против product drift;
+- `RESEARCH_SLICE_CONTRACT.md` — foundation product/data/UI/AI contract для Research Slice как главной единицы ценности;
+- `RESEARCH_SLICE_SPEC.md` — runtime/API spec Research Slice baseline;
+- `EPISTEMIC_CONTRACT.md` — операционный контракт знания: fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;
+- `ENTITY_MODEL.md` — единая модель knowledge/product/runtime/context entities и relation model;
+- `CONTENT_GOVERNANCE.md` — правила источников, UGC, moderation, validation, trust, correction и publish governance;
+- `AI_POLICY.md` — canonical границы AI behavior, AI-output, source discipline и запреты против AI drift;
+- `ARTEMIS_MASTER_PROMPT.md` — общие правила работы агентов, docs-first discipline, архитектурные инварианты и порядок принятия решений;
 - `DATA_CONTRACT.md` — ETL/data/publish contract;
 - `CONTROLLED_RELEASE_DECISION.md` — правила controlled release, baseline-ограничения и критерии допуска;
 - `PROJECT_STRUCTURE.md` — boundaries, entrypoints, runtime rules и структура документационной системы;
@@ -266,8 +280,9 @@ docs/
 - `DOCUMENTATION_SYSTEM.md` — правила documentation governance, роли слоёв и порядок разрешения doc-conflicts.
 
 Правило:
-- только этот набор плюс `README.md` считается source of truth;
-- conceptual foundation (`ARTEMIS_CONCEPT.md` + `ARTEMIS_PRODUCT_SCOPE.md`) входит в canonical layer и не может существовать только как внешний черновик;
+- этот набор плюс `README.md` считается source of truth;
+- foundation-layer (`FOUNDATION_INDEX.md`, `ARTEMIS_CONCEPT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`) является обязательным контуром для product/data/UI/AI решений;
+- conceptual foundation не может существовать только как внешний черновик;
 - упоминание старого canonical-набора (`ARCHITECTURE.md`, `RELEASE_SYSTEM.md`, `ROADMAP.md`) считается documentation drift, если эти файлы не являются реальными действующими canonical entrypoints.
 
 ### 8.3 Working docs
@@ -290,7 +305,7 @@ docs/work/
 - рабочие документы текущего цикла;
 - допускают быстрые изменения;
 - не считаются canonical по умолчанию;
-- `ARTEMIS_AI_STRATEGY_v1_0.md` является стратегическим рабочим документом высокого уровня: он обязателен к учёту, но может обновляться быстрее, чем миссия и product scope, поэтому не входит в immutable conceptual core;
+- `ARTEMIS_AI_STRATEGY_v1_0.md` является стратегическим рабочим документом высокого уровня: он обязателен к учёту, но не может противоречить `AI_POLICY.md`, `EPISTEMIC_CONTRACT.md`, `CONTENT_GOVERNANCE.md` и `ARTEMIS_PRODUCT_SCOPE.md`;
 - UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer;
 - `2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md` является expansion-planning working spec для App Shell / Workspace Core / Product Sections / Shared Components / Shared Overlays / Feature Modules и section contract; он не заменяет UI/UX owner-docs и не является canonical source-of-truth.
 
@@ -346,7 +361,9 @@ docs/reference/
 - использование audit-файла вместо обновления canonical doc;
 - обновление кода без обязательного docs sync для архитектурных, data и release изменений;
 - сохранение в canonical docs старых имён документов или старых API summary после смены фактической структуры проекта;
-- отсутствие в canonical layer зафиксированной концептуальной базы проекта при фактическом использовании Foundational Pack в решениях куратора и ИИ.
+- добавление product/data/UI/AI решений без проверки against foundation-layer;
+- развитие stories/courses/AI вне Research Slice model;
+- использование AI output как source-backed/canonical knowledge без governance.
 
 ---
 
@@ -358,7 +375,7 @@ docs/reference/
 - release gate / workflow / readiness semantics;
 - canonical public map source;
 - auth/runtime deployment constraints;
-- миссия, product scope и статус Foundational Pack как части canonical documentation layer;
+- mission, product scope, research slice semantics, epistemic model, entity model, content governance and AI policy;
 - documentation governance и правила размещения документов.
 
 Без этого change считается незавершённым.
