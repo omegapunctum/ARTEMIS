@@ -11,7 +11,7 @@
 
 ## 1. Назначение
 
-Документ фиксирует первый точечный пакет исправлений после total documentation audit 2026-04-26.
+Документ фиксирует точечные исправления после total documentation audit 2026-04-26.
 
 ---
 
@@ -45,14 +45,28 @@
 - удалена прямая ссылка на отсутствующий `docs/MANUAL_SMOKE_EVIDENCE_2026-04-11.md`;
 - добавлено правило, что smoke evidence artifact можно цитировать только после проверки фактического пути в репозитории.
 
+### 2.4 DATA_CONTRACT schema expansion
+
+Файл: `docs/DATA_CONTRACT.md`
+
+Исправление:
+- добавлен canonical status block;
+- добавлена owner chain Airtable → ETL/export → checked-in `data/*` → public map runtime;
+- расширен release artifact contract;
+- добавлен public GeoJSON schema baseline;
+- добавлена таблица public feature properties schema;
+- добавлены date contract, validation/rejection semantics и change-control rule.
+
+Причина:
+- прежняя версия фиксировала release artifact semantics, но не задавала полноценный schema-level data contract.
+
 ---
 
 ## 3. Остаётся открытым
 
 1. Archive/reference status hygiene.
-2. DATA_CONTRACT schema expansion.
-3. Canonical style unification.
-4. Дополнительная проверка cross-links после следующих docs changes.
+2. Canonical style unification.
+3. Дополнительная проверка cross-links после следующих docs changes.
 
 ---
 
@@ -62,9 +76,10 @@
 - `pytest`
 - проверка GitHub Pages artifact на наличие `css/main-screen.css`
 - проверка отсутствия прямой ссылки на несуществующий manual smoke evidence path
+- проверка, что `DATA_CONTRACT.md` не конфликтует с текущими `data/*` artifacts
 
 ---
 
 ## 5. Итог
 
-Первый patch-пакет закрывает три audit findings: deploy artifact drift, phase-order drift и stale release evidence reference.
+Текущий patch-пакет закрывает четыре audit findings: deploy artifact drift, phase-order drift, stale release evidence reference и недостаточную schema-level детализацию data contract.
