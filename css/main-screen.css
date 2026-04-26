@@ -1,123 +1,94 @@
-/* Main screen foundation layer.
-   Loaded after style.css to keep runtime intact while isolating workspace layout rules. */
+/* Main screen foundation override layer.
+   Loaded after style.css to refine main-screen structure without changing runtime behavior. */
 
-#workspace-frame {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  min-height: 100vh;
-  width: 100%;
-  background:
-    radial-gradient(1200px 520px at 20% -10%, rgba(56, 189, 248, 0.08), transparent 70%),
-    radial-gradient(900px 480px at 85% 0%, rgba(129, 140, 248, 0.08), transparent 74%),
-    linear-gradient(180deg, #070b13 0%, #050a12 56%, #04070d 100%);
-  color: var(--text-primary);
-}
-
-#workspace-top-dock,
-#workspace-main,
-#workspace-bottom-dock {
-  width: 100%;
-  min-width: 0;
-}
-
+/* Top dock: single unified surface with internal row divider only. */
 #workspace-top-dock {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-top-header);
-  display: grid;
-  gap: 8px;
-  padding: 10px 12px 0;
-  background: linear-gradient(180deg, rgba(4, 8, 16, 0.92) 0%, rgba(4, 8, 16, 0.42) 78%, transparent 100%);
-  backdrop-filter: blur(6px);
+  background: rgba(16, 24, 36, 0.88);
+  border: 1px solid rgba(74, 91, 112, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.16);
+  overflow: clip;
 }
 
 #top-header,
-#research-context-bar,
-#explore-toolbar-shell,
-#bottom-panel {
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(9, 15, 28, 0.82);
-  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.25);
-}
-
-#top-header {
-  border-radius: 14px;
+#research-context-bar {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 #research-context-bar {
-  border-radius: 12px;
+  border-top: 1px solid rgba(74, 91, 112, 0.42);
 }
 
+/* Workspace grid: default rail/map; optional inspector with has-right-detail. */
 #workspace-main {
-  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, var(--detail-panel-width));
+  grid-template-columns: var(--map-rail-width) minmax(0, 1fr);
   align-items: stretch;
-  gap: 12px;
+  column-gap: 10px;
   min-height: 0;
-  padding: 10px 12px 12px;
 }
 
+#app-shell.has-right-detail #workspace-main {
+  grid-template-columns: var(--map-rail-width) minmax(0, 1fr) auto;
+}
+
+/* Rail shell: docked grid child, not floating/absolute card. */
 #explore-toolbar-shell {
-  position: absolute;
-  top: 22px;
-  left: 24px;
-  z-index: calc(var(--z-top-header) + 1);
-  display: inline-flex;
+  grid-column: 1;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: var(--z-map-controls);
+  display: flex;
   align-items: center;
   gap: 8px;
-  max-width: min(760px, calc(100% - 48px));
-  border-radius: 12px;
-  padding: 8px;
+  max-width: none;
+  padding: 8px 0 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .map-tools-shell,
 .top-actions-cluster {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.top-actions-cluster {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.top-actions-cluster::-webkit-scrollbar {
-  display: none;
-}
-
+/* Map remains hero surface in map column. */
 #map-container {
-  grid-column: 1 / 2;
-  position: relative;
-  min-height: clamp(420px, 62vh, 980px);
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: linear-gradient(180deg, rgba(10, 18, 32, 0.95), rgba(6, 12, 24, 0.95));
+  grid-column: 2;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
+/* Optional inspector: matte region with divider, no card treatment. */
+#app-shell.has-right-detail #detail-panel,
 #detail-panel {
-  grid-column: 2 / 3;
-  position: relative;
+  grid-column: 3;
   align-self: stretch;
   height: auto;
   max-height: none;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(8, 13, 24, 0.92);
-  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.35);
+  border: 0;
+  border-left: 1px solid rgba(74, 91, 112, 0.52);
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(14, 21, 33, 0.78);
 }
 
+/* Bottom dock: system zone; timeline content is not a capsule/card. */
 #workspace-bottom-dock {
-  position: sticky;
-  bottom: 0;
-  z-index: var(--z-bottom-panel);
-  padding: 0 12px calc(10px + var(--safe-bottom));
-  background: linear-gradient(0deg, rgba(4, 8, 16, 0.95) 0%, rgba(4, 8, 16, 0.42) 70%, transparent 100%);
+  background: rgba(14, 21, 33, 0.86);
+  border-top: 1px solid rgba(74, 91, 112, 0.52);
 }
 
 #bottom-panel {
@@ -125,39 +96,14 @@
   max-width: none;
   min-height: var(--bottom-panel-height);
   margin: 0;
-  border-radius: 14px;
   padding: 12px 14px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-#bottom-panel .timeline-row {
-  display: grid;
-  gap: 10px;
-}
-
-#bottom-panel .timeline-head {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 10px;
-}
-
-#bottom-panel .timeline-mode-toggle {
-  margin-left: auto;
-}
-
-#bottom-panel .timeline-capsule {
-  justify-self: start;
-}
-
-#bottom-panel .timeline-track-wrap {
-  position: relative;
-  min-height: 36px;
-}
-
-#bottom-panel .timeline-axis {
-  pointer-events: none;
-}
-
+/* Keep mobile sheet behavior untouched by not overriding mobile detail mechanics. */
 @media (max-width: 1180px) {
   #workspace-main {
     grid-template-columns: minmax(0, 1fr);
@@ -169,32 +115,11 @@
 }
 
 @media (max-width: 860px) {
-  #workspace-top-dock {
-    padding: 8px 8px 0;
-  }
-
-  #workspace-main {
-    padding: 8px;
-    gap: 8px;
-  }
-
   #explore-toolbar-shell {
-    left: 14px;
-    right: 14px;
-    top: 14px;
-    max-width: none;
-  }
-
-  #workspace-bottom-dock {
-    padding: 0 8px calc(8px + var(--safe-bottom));
+    padding-top: 6px;
   }
 
   #bottom-panel {
     padding: 10px;
-  }
-
-  #bottom-panel .timeline-head {
-    grid-template-columns: 1fr;
-    gap: 8px;
   }
 }
