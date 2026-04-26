@@ -76,13 +76,24 @@
 - внутренний статус понижен с `active` до `archived / historical reference`;
 - добавлено указание, что текущий canonical documentation governance определяется в `docs/DOCUMENTATION_SYSTEM.md`.
 
+### 2.7 Controlled release canonical status block
+
+Файл: `docs/CONTROLLED_RELEASE_DECISION.md`
+
+Исправление:
+- добавлен единый статусный блок документа;
+- явно зафиксированы тип, статус, роль и scope controlled-release документа.
+
+Причина:
+- документ был canonical по функции, но не имел унифицированного верхнего status block.
+
 ---
 
 ## 3. Остаётся открытым
 
-1. Проверить, остались ли другие archive/reference файлы с misleading active-status.
-2. Canonical style unification.
-3. Дополнительная проверка cross-links после следующих docs changes.
+1. Проверить cross-links после status hygiene.
+2. Продолжить canonical style unification точечно, без широкого rewrite.
+3. Создать финальный audit note после полного docs-cleanup.
 
 ---
 
@@ -99,4 +110,4 @@
 
 ## 5. Итог
 
-Текущий patch-пакет закрывает шесть audit findings: deploy artifact drift, phase-order drift, stale release evidence reference, недостаточную schema-level детализацию data contract, reference status drift и archive status drift.
+Текущий patch-пакет закрывает семь audit findings: deploy artifact drift, phase-order drift, stale release evidence reference, недостаточную schema-level детализацию data contract, reference status drift, archive status drift и отсутствие status block в controlled-release canonical doc.
