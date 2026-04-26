@@ -3,7 +3,7 @@
 ## Статус документа
 
 - Тип: archive index / historical documentation registry
-- Статус: active index for archived materials
+- Статус: archive index / not canonical guidance
 - Layer: `docs/archive/*`
 - Назначение: объяснить, какие архивные документы существуют, зачем они сохранены и какие из них можно рассматривать как кандидаты на удаление после link-audit
 
@@ -96,6 +96,7 @@
 | `RELEASE_VERIFICATION.md` | historical release verification; проверить, перенесены ли важные условия в canonical release docs |
 | `SMOKE_VERIFICATION_REPORT_v1.md` | historical smoke report; возможно useful evidence trail |
 | `UI_MAINSCREEN_FINAL_SMOKE_2026-04-02.md` | historical UI smoke; проверить перед удалением |
+| `UI_UX_TARGETED_SMOKE_2026-04-02.md` | historical targeted UI/UX smoke; добавить в semantic review перед возможным удалением |
 | `UI_UX_STABILIZATION_FINAL_AUDIT.md` | historical UI/UX stabilization audit; может объяснять закрытие Phase 4 |
 | `UI_UX_STABILITY_AUDIT.md` | UI/UX historical audit, нужен quick semantic review |
 | `UI_UX_READINESS_CHECKLIST.md` | UI/UX readiness checklist; может содержать useful UX criteria |
