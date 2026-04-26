@@ -58,6 +58,7 @@ jobs:
           required_files=(
             "index.html"
             "css/style.css"
+            "css/main-screen.css"
             "manifest.json"
             "sw.js"
             "icons/icon-192.svg"
