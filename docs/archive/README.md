@@ -113,16 +113,9 @@
 
 | Файл | Заменён чем |
 |---|---|
-| `artemis_master_prompt_v3_3.md` | `docs/ARTEMIS_MASTER_PROMPT.md` |
-| `artemis_master_prompt_v3_4.md` | `docs/ARTEMIS_MASTER_PROMPT.md` |
 | `artemis_master_prompt_v4_1_foundational_sync.md` | `docs/ARTEMIS_MASTER_PROMPT.md` |
-| `Priorities_04_04_26_v3_5.md` | `docs/PRIORITIES.md` |
-| `Priorities_05_04_26_v3_6.md` | `docs/PRIORITIES.md` |
 | `Priorities_14_04_26_v4_1_foundational_sync.md` | `docs/PRIORITIES.md` |
-| `Project_Phases_04_04_26_v3_5.md` | `docs/PROJECT_PHASES.md` |
-| `Project_Phases_05_04_26_v3_6.md` | `docs/PROJECT_PHASES.md` |
 | `Project_Phases_14_04_26_v4_1_foundational_sync.md` | `docs/PROJECT_PHASES.md` |
-| `Project_Structure_04_04_26_v3_5.md` | `docs/PROJECT_STRUCTURE.md` |
 | `Project_Structure_14_04_26_v4_1_foundational_sync.md` | `docs/PROJECT_STRUCTURE.md` |
 | `Artemis_Analysis_Conclusion_04_04_2026.md` | `docs/FOUNDATION_INDEX.md`, `docs/ARTEMIS_CONCEPT.md`, current canonical docs |
 
@@ -135,15 +128,36 @@
 | Файл | Условие удаления |
 |---|---|
 | `RELEASE_VERIFICATION_MVP_2026-03-30.md` | если не используется как required evidence trail и важные выводы перенесены |
-| old duplicated master prompt snapshots | если подтверждено отсутствие ссылок и useful traceability |
-| old duplicated priority/phase/structure snapshots | если подтверждено отсутствие ссылок и сохранена хотя бы одна representative history line |
+| foundation-sync snapshots | если подтверждено, что current foundation docs fully replace useful content |
 | duplicated UI smoke reports | если итоговые UI/UX findings уже перенесены в current UI/UX docs или audits |
 
-На текущем шаге конкретные файлы физически не удаляются.
+На текущем шаге дополнительные файлы физически не удаляются.
 
 ---
 
-## 7. Link-audit rule before deletion
+## 7. Deleted archive files
+
+### Batch A — removed after link-audit confirmation
+
+Удалены как superseded snapshots без active references:
+
+- `artemis_master_prompt_v3_3.md`
+- `artemis_master_prompt_v3_4.md`
+- `Priorities_04_04_26_v3_5.md`
+- `Priorities_05_04_26_v3_6.md`
+- `Project_Phases_04_04_26_v3_5.md`
+- `Project_Phases_05_04_26_v3_6.md`
+- `Project_Structure_04_04_26_v3_5.md`
+
+Удаление Batch A не затрагивало:
+- release/evidence/audit files;
+- foundation-sync v4.1 snapshots;
+- UI/UX audit/smoke files;
+- courses audit files.
+
+---
+
+## 8. Link-audit rule before deletion
 
 Перед удалением archive-файла нужно выполнить:
 
@@ -158,7 +172,7 @@ grep -R "<filename>" -n README.md docs .github scripts tests app js css || true
 
 ---
 
-## 8. Current archive cleanup policy
+## 9. Current archive cleanup policy
 
 Текущая политика:
 
@@ -171,7 +185,7 @@ grep -R "<filename>" -n README.md docs .github scripts tests app js css || true
 
 ---
 
-## 9. Итог
+## 10. Итог
 
 Цель archive cleanup — не уменьшить число файлов ради чистоты, а снизить semantic noise.
 
