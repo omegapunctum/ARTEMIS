@@ -87,6 +87,18 @@
 Причина:
 - документ был canonical по функции, но не имел унифицированного верхнего status block.
 
+### 2.8 Archived release audit disclaimer
+
+Файл: `docs/archive/RELEASE_DISCIPLINE_AUDIT.md`
+
+Исправление:
+- добавлен archive-status block;
+- явно указано, что файл является historical release audit snapshot;
+- указаны текущие canonical документы для release/data/readiness interpretation.
+
+Причина:
+- архивный audit ссылался на старые пути и документы без явного предупреждения, что это historical context.
+
 ---
 
 ## 3. Остаётся открытым
@@ -110,4 +122,4 @@
 
 ## 5. Итог
 
-Текущий patch-пакет закрывает семь audit findings: deploy artifact drift, phase-order drift, stale release evidence reference, недостаточную schema-level детализацию data contract, reference status drift, archive status drift и отсутствие status block в controlled-release canonical doc.
+Текущий patch-пакет закрывает восемь audit findings: deploy artifact drift, phase-order drift, stale release evidence reference, недостаточную schema-level детализацию data contract, reference status drift, archive status drift, отсутствие status block в controlled-release canonical doc и отсутствие archive disclaimer в release audit snapshot.
