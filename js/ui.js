@@ -684,8 +684,7 @@ function setupMapThemeToggle(elements, map) {
   const syncLabel = () => {
     const activeTheme = getMapTheme(map);
     const activeMeta = themes.find((theme) => theme.id === activeTheme) || themes[0];
-    const shortLabelMap = { graphite: 'G', dark: 'D', soft: 'S' };
-    button.textContent = shortLabelMap[activeMeta.id] || activeMeta.label.slice(0, 1);
+    button.textContent = 'Тема';
     button.setAttribute('aria-label', `Тема карты: ${activeMeta.label}. Нажмите для смены.`);
     button.title = `Тема карты: ${activeMeta.label}`;
     button.dataset.theme = activeMeta.id;
