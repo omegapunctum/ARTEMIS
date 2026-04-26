@@ -12,6 +12,8 @@
 > Main-screen refinement bridge sync (2026-04-23): после добавления отдельного working pack для `main screen / primary workspace` этот документ сохраняет роль system-level component map и не заменяется новыми main-screen docs. Новый pack (`2026-04-23_UIUX_MAIN_SCREEN_TECHNICAL_SPEC_ACTIVE_v1_0.md`, `2026-04-23_UIUX_MAIN_SCREEN_ART_DIRECTION_SPEC_ACTIVE_v1_0.md` и связанные prompt-docs) используется как track-specific target layer для refinement, а `ARTEMIS_UI_UX_COMPONENT_MAP.md` остаётся owner-doc карты компонентных зон, состояний и implementation decomposition.
 >
 > Main-screen runtime bridge scope (2026-04-23): для текущего refinement cycle bridge-мэппинг между новым working pack и runtime surface должен в первую очередь покрывать: top shell, slice/context strip, map workspace, detail panel, timeline band и mobile staged adaptation. Это bridge-note для patch planning, а не новый competing source-of-truth.
+>
+> Main-screen structural bridge sync (2026-04-26): runtime bridge теперь опирается на принятый structural baseline `workspace-frame / docked-grid` (top dock + main grid rail/map/optional inspector + bottom dock; mobile detail sheet preserved) и остаётся audit-first.
 
 ---
 
