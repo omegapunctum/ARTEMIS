@@ -1,4 +1,4 @@
-# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.1
+# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.2
 
 Статус: updated canonical project structure document.
 Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
@@ -52,7 +52,7 @@
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
 | `api/` | legacy compatibility shim без самостоятельного runtime; допускается как переходный package marker до cleanup legacy references | legacy |
 | `app/` | canonical backend runtime | основной |
-| `css/` | основной UI style layer | основной |
+| `css/` | UI style layer: current base/legacy styles + controlled main-screen foundation override | основной |
 | `data/` | canonical public data layer + export diagnostics | основной |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
 | `icons/` | PWA assets | основной |
@@ -94,7 +94,8 @@
 ```text
 index.html
 css/
-└── style.css
+├── style.css
+└── main-screen.css
 
 js/
 ├── auth.js
@@ -120,7 +121,11 @@ js/
 - карта читает canonical public data только из `data/*`;
 - `/api/map/feed` не становится альтернативным public data source;
 - безопасный DOM-rendering обязателен для пользовательского контента;
-- PWA и UX-hardenings не должны подменять архитектурные boundaries.
+- PWA и UX-hardenings не должны подменять архитектурные boundaries;
+- `css/style.css` остаётся current base/legacy UI style layer на переходном этапе;
+- `css/main-screen.css` является isolated main-screen foundation override layer, подключённым после `css/style.css` из `index.html`;
+- `css/main-screen.css` не является competing visual system и не заменяет весь style layer; он фиксирует controlled split для main-screen workspace;
+- будущий CSS split должен выполняться только через owner-scoped files (`workspace`, `components`, `overlays`, `sections`, `forms`, `legacy`) и не должен создавать параллельные визуальные системы без clear owner-role.
 
 ---
 
@@ -275,6 +280,7 @@ docs/work/
 ├── ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md
 ├── moderation-runbook.md
 └── uiux/
+    ├── 2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md
     ├── ARTEMIS_UI_UX_SYSTEM.md
     ├── ARTEMIS_UI_UX_COMPONENT_MAP.md
     └── ARTEMIS_UI_UX_VISUAL_SYSTEM.md
@@ -285,7 +291,8 @@ docs/work/
 - допускают быстрые изменения;
 - не считаются canonical по умолчанию;
 - `ARTEMIS_AI_STRATEGY_v1_0.md` является стратегическим рабочим документом высокого уровня: он обязателен к учёту, но может обновляться быстрее, чем миссия и product scope, поэтому не входит в immutable conceptual core;
-- UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer.
+- UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer;
+- `2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md` является expansion-planning working spec для App Shell / Workspace Core / Product Sections / Shared Components / Shared Overlays / Feature Modules и section contract; он не заменяет UI/UX owner-docs и не является canonical source-of-truth.
 
 ### 8.4 Audits
 
