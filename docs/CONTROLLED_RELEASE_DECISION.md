@@ -1,5 +1,14 @@
 # Controlled Release Decision
 
+## Статус документа
+
+- Тип: canonical release decision document
+- Статус: active
+- Роль: source of truth для controlled release baseline, release/readiness interpretation и границы между controlled baseline и production-grade claims
+- Scope: release gate, checked-in data artifacts, CI/workflow interpretation, post-baseline hardening classification
+
+---
+
 ## 1. Current verified baseline
 - Automated verification chain is currently passing in baseline runs: `python scripts/release_check.py` passes, and pytest responsibility is split across CI workflows (ETL lane + dedicated integration lanes) rather than a single all-in-one deploy/export path.
 - Release gate is enforced in CI and before export in ETL workflow.
