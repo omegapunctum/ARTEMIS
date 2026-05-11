@@ -8,6 +8,7 @@
       "source_license": "CC BY-SA",
       "description": "828-метровый небоскрёб. Форма основана на геометрии цветка и минимизирует ветровые нагрузки.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Burj_Khalifa_Dubai_Skyline.jpg",
+      "id_status": "invalid",
       "source_url": "https://www.burjkhalifa.ae/en/",
       "longitude": 55.2741,
       "name_ru": "Бурдж-Халифа",
@@ -25,8 +26,7 @@
       "title_short": "Самое высокое здание в истории человечества",
       "latitude": 25.1972,
       "date_start": "2004",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -38,6 +38,7 @@
       "source_license": "CC BY-SA",
       "description": "Воплощение 5 принципов: опоры, крыша-сад, свободный план, ленточные окна, свободный фасад.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Villa_Savoye_Front_View.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/Villa_Savoye",
       "longitude": 2.0283,
       "name_ru": "Вилла Савой",
@@ -55,8 +56,7 @@
       "title_short": "Манифест современной архитектуры Ле Корбюзье",
       "latitude": 48.9244,
       "date_start": "1929",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -68,6 +68,7 @@
       "source_license": "CC BY-SA",
       "description": "Плод работы Браманте, Рафаэля и Микеланджело. Купол стал образцом для западной архитектуры.",
       "image_url": "https://commons.wikimedia.org/wiki/File:St_Peter%27s_Basilica_at_Night.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica",
       "longitude": 12.4533,
       "name_ru": "Собор Святого Петра",
@@ -85,8 +86,7 @@
       "title_short": "Величайший собор христианского мира",
       "latitude": 41.9022,
       "date_start": "1506",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -98,6 +98,7 @@
       "source_license": "CC BY-SA",
       "description": "Храм с ансамблем витражей (2500 кв. м) и системным использованием аркбутанов.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Chartres_Cathedral_View_2023.jpg",
+      "id_status": "invalid",
       "source_url": "https://whc.unesco.org/en/list/81/",
       "longitude": 1.4878,
       "name_ru": "Шартрский собор",
@@ -115,8 +116,7 @@
       "title_short": "Совершенный образец высокой готики",
       "latitude": 48.4478,
       "date_start": "1194",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -128,6 +128,7 @@
       "source_license": "CC BY-SA",
       "description": "Здание «вывернутое наизнанку»: все коммуникации вынесены на фасад и выделены цветом.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Centre_Pompidou_Paris_2021.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/Centre_Pompidou",
       "longitude": 2.3522,
       "name_ru": "Центр Жоржа Помпиду",
@@ -145,8 +146,7 @@
       "title_short": "Манифест архитектуры хай-тек в центре Парижа",
       "latitude": 48.8606,
       "date_start": "1971",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -158,6 +158,7 @@
       "source_license": "CC BY-SA",
       "description": "Монументальное здание Суффло, вдохновлённое античностью. Место погребения Гюго, Золя, Кюри.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Pantheon_de_Paris_2019.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/Panth%C3%A9on",
       "longitude": 2.3458,
       "name_ru": "Пантеон (Париж)",
@@ -175,8 +176,7 @@
       "title_short": "Храм Просвещения и национальный мавзолей Франции",
       "latitude": 48.8461,
       "date_start": "1758",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -188,6 +188,7 @@
       "source_license": "CC BY-SA",
       "description": "Храм с неармированным бетонным куполом (43,3 м) и окулусом. Шедевр римской инженерии.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Pantheon_Rome_2017.jpg",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Pantheon,_Rome",
       "longitude": 12.4769,
       "name_ru": "Пантеон (Рим)",
@@ -205,8 +206,7 @@
       "title_short": "«Храм всех богов» с величайшим куполом древности",
       "latitude": 41.8986,
       "date_start": "0118",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -218,6 +218,7 @@
       "source_license": "CC BY-SA",
       "description": "Классическая романская базилика над гробницей апостола. Портик Славы мастера Матео.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Cathedral_of_Santiago_de_Compostela_Obradoiro.jpg",
+      "id_status": "ok",
       "source_url": "https://catedraldesantiago.es/en/cathedral/",
       "longitude": -8.5442,
       "name_ru": "Собор в Сантьяго-де-Компостела",
@@ -235,8 +236,7 @@
       "title_short": "Главный паломнический собор средневековой Европы",
       "latitude": 42.8806,
       "date_start": "1075",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -248,6 +248,7 @@
       "source_license": "CC BY-SA",
       "description": "Стальная корона с треугольными окнами и орнаментами. Символ индустриальной роскоши.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Chrysler_Building_Midtown_Manhattan.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/Chrysler_Building",
       "longitude": -73.9755,
       "name_ru": "Крайслер-билдинг",
@@ -265,8 +266,7 @@
       "title_short": "Самый узнаваемый небоскрёб в стиле ар-деко",
       "latitude": 40.7516,
       "date_start": "1928",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -278,6 +278,7 @@
       "source_license": "CC BY-SA",
       "description": "Грандиозный ансамбль с Зеркальной галереей и регулярными садами Ленотра. Модель барокко.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Versailles_Palace_Garden_View.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/Palace_of_Versailles",
       "longitude": 2.1203,
       "name_ru": "Версальский дворец",
@@ -295,8 +296,7 @@
       "title_short": "Резиденция «Короля-Солнца» и символ абсолютизма",
       "latitude": 48.8048,
       "date_start": "1661",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -308,6 +308,7 @@
       "source_license": "CC BY-SA",
       "description": "Резиденция династии Насридов. Известна резьбой по стукко, мукарнами и Львиным двориком.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Alhambra_Granada_Spain.jpg",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Alhambra",
       "longitude": -3.59,
       "name_ru": "Альгамбра",
@@ -325,8 +326,7 @@
       "title_short": "Дворцовый комплекс мусульманской Испании",
       "latitude": 37.1775,
       "date_start": "1238",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -338,6 +338,7 @@
       "source_license": "CC BY-SA",
       "description": "Зигзагообразное здание Либескинда с «пустотами», передающее ощущение исторического разрыва.",
       "image_url": "https://commons.wikimedia.org/wiki/File:J%C3%BCdisches_Museum_Berlin_Libeskind_Bau.jpg",
+      "id_status": "invalid",
       "source_url": "https://www.jmberlin.de/en/libeskind-building",
       "longitude": 13.395,
       "name_ru": "Еврейский музей в Берлине",
@@ -355,8 +356,7 @@
       "title_short": "Архитектурное воплощение немецко-еврейской истории",
       "latitude": 52.502,
       "date_start": "1992",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -368,6 +368,7 @@
       "source_license": "CC BY-SA",
       "description": "Мраморный храм Афины на Акрополе. Использует сложные оптические корректировки линий.",
       "image_url": "https://commons.wikimedia.org/wiki/File:The_Parthenon_Athens.jpg",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Parthenon",
       "longitude": 23.7266,
       "name_ru": "Парфенон",
@@ -385,8 +386,7 @@
       "title_short": "Кульминация классического дорического ордера",
       "latitude": 37.9715,
       "date_start": "-0447",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -398,6 +398,7 @@
       "source_license": "PD",
       "description": "Доисторический памятник из кольца камней весом до 50 тонн. Включает рвы и курганы, ориентированные на солнцестояние.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Stonehenge_2017_01.jpg",
+      "id_status": "ok",
       "source_url": "https://whc.unesco.org/en/list/373/",
       "longitude": -1.8262,
       "name_ru": "Стоунхендж",
@@ -415,8 +416,7 @@
       "title_short": "Крупнейший мегалитический комплекс Европы",
       "latitude": 51.1789,
       "date_start": "-3100",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -428,6 +428,7 @@
       "source_license": "CC BY-SA",
       "description": "Крупнейшая египетская пирамида, гробница фараона Хуфу. Состоит из 2,3 млн блоков. Высота 146,6 м.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Great_Pyramid_of_Giza_2023.jpg",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Great_Pyramid_of_Giza",
       "longitude": 31.1342,
       "name_ru": "Великая пирамида Гизы (Пирамида Хеопса)",
@@ -445,8 +446,7 @@
       "title_short": "Последнее из сохранившихся чудес света",
       "latitude": 29.9792,
       "date_start": "-2589",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -458,6 +458,7 @@
       "source_license": "CC BY-SA",
       "description": "Реконструкция жилого дома с фасадом из мозаики и балконами-масками. Отсутствие прямых линий.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Casa_Batll%C3%B3_Barcelona_Main.jpg",
+      "id_status": "invalid",
       "source_url": "https://www.casabatllo.es/en/",
       "longitude": 2.1649,
       "name_ru": "Каса-Батльо",
@@ -475,8 +476,7 @@
       "title_short": "Шедевр органического модернизма Антонио Гауди",
       "latitude": 41.3917,
       "date_start": "1904",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -488,6 +488,7 @@
       "source_license": "CC BY-SA",
       "description": "Многоуровневые бетонные террасы. Использование «грубого бетона» как эстетической основы.",
       "image_url": "https://commons.wikimedia.org/wiki/File:National_Theatre_South_Bank_2015.jpg",
+      "id_status": "invalid",
       "source_url": "https://en.wikipedia.org/wiki/Royal_National_Theatre",
       "longitude": -0.1142,
       "name_ru": "Королевский национальный театр",
@@ -505,8 +506,7 @@
       "title_short": "Икона британского брутализма на берегу Темзы",
       "latitude": 51.5072,
       "date_start": "1963",
-      "layer_type": "architecture",
-      "id_status": "invalid"
+      "layer_type": "architecture"
     }
   },
   {
@@ -518,6 +518,7 @@
       "source_license": "CC BY-SA",
       "description": "Трехъярусная пирамидальная платформа из сырцового кирпича. Посвящена богу луны Нанне.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Great_Ziggurat_of_Ur_2021.jpg",
+      "id_status": "ok",
       "source_url": "https://www.britannica.com/topic/ziggurat-at-Ur",
       "longitude": 46.1031,
       "name_ru": "Великий зиккурат в Уре",
@@ -535,8 +536,7 @@
       "title_short": "Главный храм-гора древнего Шумера",
       "latitude": 30.9628,
       "date_start": "-2100",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   },
   {
@@ -548,6 +548,7 @@
       "source_license": "CC BY-SA",
       "description": "Первая реализация купола на пандантивах. Символ слияния античной инженерии и восточного мистицизма.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Hagia_Sophia_Mars_2013.jpg",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Hagia_Sophia",
       "longitude": 28.9801,
       "name_ru": "Собор Святой Софии",
@@ -565,8 +566,7 @@
       "title_short": "Шедевр «Золотого века» Византии",
       "latitude": 41.0086,
       "date_start": "0532",
-      "layer_type": "architecture",
-      "id_status": "ok"
+      "layer_type": "architecture"
     }
   }
 ]
