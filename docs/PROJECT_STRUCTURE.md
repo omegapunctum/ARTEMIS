@@ -52,7 +52,7 @@
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
 | `api/` | legacy compatibility shim без самостоятельного runtime; допускается как переходный package marker до cleanup legacy references | legacy |
 | `app/` | canonical backend runtime | основной |
-| `css/` | UI style layer: current base/legacy styles + controlled main-screen foundation override | основной |
+| `css/` | UI style system: shared foundation/components + isolated main-screen workspace layer | основной |
 | `data/` | canonical public data layer + export diagnostics | основной |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
 | `icons/` | PWA assets | основной |
@@ -122,9 +122,9 @@ js/
 - `/api/map/feed` не становится альтернативным public data source;
 - безопасный DOM-rendering обязателен для пользовательского контента;
 - PWA и UX-hardenings не должны подменять архитектурные boundaries;
-- `css/style.css` остаётся current base/legacy UI style layer на переходном этапе;
-- `css/main-screen.css` является isolated main-screen foundation override layer, подключённым после `css/style.css` из `index.html`;
-- `css/main-screen.css` не является competing visual system и не заменяет весь style layer; он фиксирует controlled split для main-screen workspace;
+- `css/style.css` является новым shared UI system layer: tokens, reset, shared components, feature surfaces, accessibility and state semantics;
+- `css/main-screen.css` является isolated main-screen workspace layer, подключённым после `css/style.css` из `index.html` и владеющим только dock/grid composition;
+- `css/main-screen.css` не является competing visual system: palette, typography, controls and shared component semantics принадлежат `css/style.css`;
 - будущий CSS split должен выполняться только через owner-scoped files (`workspace`, `components`, `overlays`, `sections`, `forms`, `legacy`) и не должен создавать параллельные визуальные системы без clear owner-role.
 
 ---

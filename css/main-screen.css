@@ -1,5 +1,5 @@
-/* Main screen foundation override layer.
-   Loaded after style.css to refine main-screen structure without changing runtime behavior. */
+/* Main screen workspace layer.
+   Loaded after the rebuilt style.css and limited to dock/grid ownership. */
 
 /* Top dock: single unified surface with internal row divider only. */
 #workspace-top-dock {
@@ -103,20 +103,78 @@
   box-shadow: none;
 }
 
-/* Keep mobile sheet behavior untouched by not overriding mobile detail mechanics. */
-@media (max-width: 1180px) {
+/* JS viewport contract: tablet at 721-1080. Keep the map full-width and let
+   the detail inspector overlay it instead of collapsing the workspace grid. */
+@media (max-width: 1080px) {
   #workspace-main {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  #detail-panel {
-    grid-column: 1 / -1;
+  #app-shell.has-right-detail #workspace-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #explore-toolbar-shell {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: var(--z-map-controls);
+    padding: 0;
+  }
+
+  #map-container {
+    grid-column: 1;
+  }
+
+  #detail-panel,
+  #app-shell.has-right-detail #detail-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-detail);
+    width: min(390px, 46vw);
+    min-width: 300px;
+    grid-column: auto;
+    border-left: 1px solid rgba(74, 91, 112, 0.62);
+    background: rgba(14, 21, 33, 0.96);
+    box-shadow: -12px 0 28px rgba(2, 6, 12, 0.24);
   }
 }
 
-@media (max-width: 860px) {
+/* Mobile is a staged workspace. The detail surface becomes a bottom sheet. */
+@media (max-width: 720px) {
+  #workspace-main {
+    isolation: auto;
+    overflow: visible;
+  }
+
   #explore-toolbar-shell {
-    padding-top: 6px;
+    top: 8px;
+    left: 8px;
+  }
+
+  #detail-panel,
+  #app-shell.has-right-detail #detail-panel {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-modal);
+    width: 100%;
+    min-width: 0;
+    height: min(52dvh, 520px);
+    max-height: calc(100dvh - var(--safe-top) - 52px);
+    border: 1px solid var(--border-strong);
+    border-width: 1px 0 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    background: var(--bg-surface-1);
+    box-shadow: 0 -12px 28px rgba(2, 6, 12, 0.36);
+  }
+
+  #detail-panel.is-expanded {
+    height: calc(100dvh - var(--safe-top) - 52px);
   }
 
   #bottom-panel {
