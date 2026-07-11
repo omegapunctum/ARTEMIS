@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-04-03-v7';
+const CACHE_VERSION = '2026-07-11-v8-style-system';
 const STATIC_CACHE = `artemis-static-${CACHE_VERSION}`;
 const DATA_CACHE = `artemis-data-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `artemis-runtime-${CACHE_VERSION}`;
@@ -23,6 +23,7 @@ const BASE_PATH = getBasePath();
 const PRECACHE_PATHS = [
   'manifest.json',
   'css/style.css',
+  'css/main-screen.css',
   'js/auth.js',
   'js/data.js',
   'js/map.js',

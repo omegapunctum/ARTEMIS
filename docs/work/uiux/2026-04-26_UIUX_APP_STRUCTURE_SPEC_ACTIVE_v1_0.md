@@ -143,9 +143,9 @@ workspace-frame
 
 ## 5.3 CSS owner
 
-`css/main-screen.css` — current isolated foundation override layer для main screen workspace.
+`css/main-screen.css` — current isolated workspace composition layer для main screen.
 
-Он не заменяет весь `css/style.css`, а временно работает как controlled split layer, подключённый после `style.css`.
+Он не заменяет `css/style.css`: shared tokens, components and state semantics принадлежат новому system layer, а `main-screen.css` владеет dock/grid composition и подключён после `style.css`.
 
 ---
 
@@ -309,8 +309,8 @@ css/
 └─ main-screen.css
 ```
 
-- `style.css` — current base/legacy UI style layer;
-- `main-screen.css` — isolated main-screen foundation override layer.
+- `style.css` — shared UI system layer (tokens, reset, components, feature states, accessibility);
+- `main-screen.css` — isolated main-screen workspace composition layer.
 
 ## 8.2 Migration rule
 
@@ -462,7 +462,7 @@ Main layout should not depend on `.glass-panel`; transient overlays may continue
 Current state:
 - `css/main-screen.css` exists;
 - loaded after `css/style.css`;
-- owns current main-screen foundation overrides.
+- owns current main-screen dock/grid composition.
 
 Next CSS steps:
 1. document and protect `main-screen.css` role;
