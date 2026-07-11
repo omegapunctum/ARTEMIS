@@ -58,11 +58,11 @@
       <div class="top-shell-left">
         <div class="brand" aria-label="Логотип ARTEMIS">ARTEMIS</div>
         <nav class="project-nav" aria-label="Основная навигация проекта">
-          <a href="#" class="project-nav-link" aria-current="page">Главная</a>
-          <a href="#" class="project-nav-link">О проекте</a>
-          <a href="#" class="project-nav-link">Курсы</a>
-          <a href="#" class="project-nav-link">Коллекции</a>
-          <a href="#" class="project-nav-link">Помощь</a>
+          <button type="button" class="project-nav-link" data-workspace-nav="workspace" aria-current="page">Рабочая область</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="research">Исследования</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="stories">Истории</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="courses">Курсы</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="saved">Сохранённое</button>
         </nav>
       </div>
       <div class="search-shell">
@@ -91,6 +91,13 @@
               <button type="button" class="profile-menu-item profile-menu-item-danger" role="menuitem">Выйти</button>
             </div>
           </div>
+          <nav class="compact-project-nav" aria-label="Навигация по разделам">
+            <button type="button" class="project-nav-link" data-workspace-nav="workspace" aria-current="page">Рабочая область</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="research">Исследования</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="stories">Истории</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="courses">Курсы</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="saved">Сохранённое</button>
+          </nav>
         </div>
         <button id="overflow-btn" class="icon-btn" type="button" aria-label="Ещё действия">⋯</button>
       </div>
@@ -119,11 +126,20 @@
         <div id="explore-toolbar-shell" class="workspace-strip-tools" aria-label="Инструменты исследования">
           <div class="map-tools-shell" role="group" aria-label="Инструменты карты">
             <div class="top-actions-cluster" role="group" aria-label="Элементы управления картой">
-              <button id="explore-workspace-trigger" type="button" aria-label="Открыть панель исследования" title="Исследование" aria-expanded="false" aria-controls="explore-workspace-panel">Исс</button>
-              <button id="map-theme-toggle" type="button" aria-label="Сменить тему карты" title="Тема карты">Тема</button>
-              <button id="live-btn" type="button" aria-label="Лента событий" title="Лента событий" aria-expanded="false">Лента</button>
+              <button id="explore-workspace-trigger" type="button" aria-label="Открыть инструменты исследования" title="Инструменты исследования" aria-expanded="false" aria-controls="explore-workspace-panel">
+                <span class="workspace-tool-icon" aria-hidden="true">▤</span>
+                <span class="sr-only">Инструменты исследования</span>
+              </button>
+              <button id="map-theme-toggle" type="button" aria-label="Сменить тему карты" title="Тема карты">
+                <span class="workspace-tool-icon" aria-hidden="true">◐</span>
+                <span class="sr-only">Тема карты</span>
+              </button>
+              <button id="live-btn" type="button" aria-label="Показать недавние объекты" title="Недавние объекты" aria-expanded="false">
+                <span class="workspace-tool-icon" aria-hidden="true">◷</span>
+                <span class="sr-only">Недавние объекты</span>
+              </button>
             </div>
-            <button id="courses-btn" class="workspace-secondary-entry" type="button" aria-label="Открыть курсы" title="Курсы" aria-expanded="false">Курс</button>
+            <button id="courses-btn" class="workspace-secondary-entry" type="button" aria-label="Открыть курсы" title="Курсы" aria-expanded="false" hidden>Курсы</button>
           </div>
           <section id="courses-panel" class="glass-panel top-panel" hidden></section>
           <section id="live-panel" class="glass-panel top-panel" hidden></section>
@@ -180,7 +196,7 @@
               <div id="timeline-active-range" class="timeline-active-range"></div>
               <div id="timeline-knob-start" class="timeline-knob"></div>
               <div id="timeline-knob-end" class="timeline-knob"></div>
-              <div id="timeline-axis" class="timeline-axis" aria-hidden="true"></div>
+              <div id="timeline-axis" class="timeline-axis" role="list" aria-label="Исторические ориентиры"></div>
               <input id="timeline-start" type="range" min="-3000" max="2026" value="1600" step="1" aria-label="Начало временного диапазона" />
               <input id="timeline-end" type="range" min="-3000" max="2026" value="1650" step="1" aria-label="Конец временного диапазона" />
             </div>
@@ -191,7 +207,13 @@
 
     <section id="onboarding-overlay" class="onboarding-overlay" aria-live="polite">
       <div class="onboarding-card glass-panel" role="note" aria-label="Подсказка первого шага">
-        <p class="onboarding-title">Выберите объект на карте или измените период на таймлайне внизу.</p>
+        <p class="onboarding-eyebrow">Первый шаг</p>
+        <h2 class="onboarding-title">Начните с исследовательского среза</h2>
+        <p class="onboarding-copy">Настройте период и слои, выберите объект на карте, затем сохраните получившийся пространственно-временной контекст.</p>
+        <div class="onboarding-actions">
+          <button id="onboarding-explore-btn" class="ui-button ui-button-primary" type="button">Настроить исследование</button>
+          <button id="onboarding-slices-btn" class="ui-button ui-button-secondary" type="button">Открыть мои срезы</button>
+        </div>
         <button id="onboarding-dismiss-btn" class="icon-btn onboarding-dismiss-btn" type="button" aria-label="Закрыть подсказку">×</button>
       </div>
     </section>

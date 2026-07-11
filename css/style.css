@@ -77,7 +77,7 @@
 
   --top-header-height: 58px;
   --workspace-strip-height: 48px;
-  --bottom-panel-height: 112px;
+  --bottom-panel-height: 152px;
   --map-rail-width: 58px;
   --detail-panel-width: clamp(320px, 28vw, 420px);
   --detail-panel-gap: 0px;
@@ -140,6 +140,16 @@ body.modal-open {
 
 [hidden] {
   display: none !important;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
 }
 
 [inert] {
@@ -618,8 +628,14 @@ button.is-loading {
   gap: var(--space-1);
 }
 
+.compact-project-nav {
+  display: none;
+}
+
 .project-nav-link {
+  border: 0;
   border-radius: var(--radius-sm);
+  background: transparent;
   padding: 0.45rem 0.58rem;
   color: var(--text-muted);
   font-size: var(--font-size-meta);
@@ -895,6 +911,14 @@ button.is-loading {
   padding-inline: 0.35rem;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.workspace-tool-icon {
+  display: inline-grid;
+  min-width: 1.2rem;
+  place-items: center;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 #explore-workspace-trigger.is-active,
@@ -1222,7 +1246,7 @@ button.is-loading {
   --timeline-left: 0%;
   --timeline-right: 100%;
   position: relative;
-  height: 48px;
+  height: 78px;
   margin-inline: 10px;
 }
 
@@ -1330,19 +1354,24 @@ button.is-loading {
   top: 25px;
   right: 0;
   left: 0;
-  height: 20px;
+  height: 50px;
 }
 
 .timeline-anchor {
   position: absolute;
   top: 0;
   display: grid;
+  width: 110px;
   transform: translateX(-50%);
   color: var(--text-muted);
   font-size: 0.625rem;
   line-height: 1.15;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
+}
+
+.timeline-anchor:nth-child(even) {
+  display: none;
 }
 
 .timeline-anchor-year {
@@ -1351,6 +1380,14 @@ button.is-loading {
 }
 
 .timeline-anchor-label {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  line-height: 1.2;
+}
+
+.timeline-anchor:nth-child(even) .timeline-anchor-label {
   display: none;
 }
 
@@ -1834,14 +1871,39 @@ button.is-loading {
 
 .onboarding-card {
   position: relative;
+  display: grid;
   width: min(520px, calc(100vw - 32px));
-  padding: var(--space-3) 3rem var(--space-3) var(--space-4);
+  gap: var(--space-2);
+  padding: var(--space-4) 3.25rem var(--space-4) var(--space-4);
   pointer-events: auto;
+}
+
+.onboarding-eyebrow {
+  margin: 0;
+  color: var(--accent-archive);
+  font-size: var(--font-size-caption);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .onboarding-title {
   margin: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.onboarding-copy {
+  margin: 0;
   color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-1);
 }
 
 .onboarding-dismiss-btn {
@@ -2315,6 +2377,7 @@ button.is-loading {
 
 @media (max-width: 1080px) {
   :root {
+    --bottom-panel-height: 120px;
     --map-rail-width: 52px;
     --detail-panel-width: min(380px, 42vw);
   }
@@ -2327,6 +2390,24 @@ button.is-loading {
 
   .project-nav {
     display: none;
+  }
+
+  .top-actions.is-collapsed.is-expanded .top-utility-group {
+    width: min(280px, calc(100vw - 24px));
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .top-actions.is-collapsed.is-expanded .compact-project-nav {
+    display: grid;
+    width: 100%;
+    gap: 2px;
+    order: -1;
+  }
+
+  .compact-project-nav .project-nav-link {
+    min-height: 38px;
+    text-align: left;
   }
 
   .workspace-strip-context {
@@ -2342,6 +2423,21 @@ button.is-loading {
   #courses-panel,
   #live-panel {
     top: 0;
+  }
+
+  .timeline-track-wrap {
+    height: 48px;
+  }
+
+  .timeline-anchor,
+  .timeline-anchor:nth-child(even) {
+    top: 0;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .timeline-anchor-label {
+    display: none;
   }
 
   .timeline-anchor:nth-child(even) .timeline-anchor-year {
@@ -2433,6 +2529,10 @@ button.is-loading {
     padding: 0;
   }
 
+  .maplibregl-ctrl-top-left {
+    top: 48px;
+  }
+
   .map-tools-shell,
   .top-actions-cluster {
     flex-direction: row;
@@ -2517,8 +2617,18 @@ button.is-loading {
     text-overflow: ellipsis;
   }
 
-  .timeline-anchor:nth-child(n + 6) {
+  .timeline-anchor {
     display: none;
+  }
+
+  .timeline-anchor:first-child,
+  .timeline-anchor:last-child {
+    display: grid;
+    width: 64px;
+  }
+
+  .timeline-anchor:last-child .timeline-anchor-year {
+    display: inline;
   }
 
   .status-panel {
@@ -2530,6 +2640,15 @@ button.is-loading {
 
   .onboarding-overlay {
     padding: calc(var(--top-header-height) + var(--workspace-strip-height) + var(--space-2)) var(--space-2) 0;
+  }
+
+  .onboarding-card {
+    padding: var(--space-3) 3rem var(--space-3) var(--space-3);
+  }
+
+  .onboarding-actions {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .ugc-panel {
