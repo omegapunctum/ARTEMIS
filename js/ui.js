@@ -144,6 +144,7 @@ export async function initUI(map, features) {
   setLayerLookup(map, layers);
 
   const elements = {
+    projectNavLinks: Array.from(document.querySelectorAll('[data-workspace-nav]')),
     searchInput: document.getElementById('global-search') || document.getElementById('search-input'),
     searchClearBtn: document.getElementById('search-clear-btn'),
     searchShell: document.querySelector('.search-shell'),
@@ -215,7 +216,9 @@ export async function initUI(map, features) {
     activeFiltersCount: document.getElementById('active-filters-count'),
     statusMessage: document.getElementById('status-message'),
     onboardingOverlay: document.getElementById('onboarding-overlay'),
-    onboardingDismissBtn: document.getElementById('onboarding-dismiss-btn')
+    onboardingDismissBtn: document.getElementById('onboarding-dismiss-btn'),
+    onboardingExploreBtn: document.getElementById('onboarding-explore-btn'),
+    onboardingSlicesBtn: document.getElementById('onboarding-slices-btn')
   };
 
   const years = collectYearBounds(allFeatures);
@@ -429,7 +432,53 @@ export async function initUI(map, features) {
   });
   setupTimelinePointerInteractions(elements, state);
 
+  elements.projectNavLinks.forEach((link) => {
+    link.addEventListener('click', async (event) => {
+      event.stopPropagation();
+      const target = link.dataset.workspaceNav || 'workspace';
+      elements.topActions?.classList.remove('is-expanded');
+      elements.overflowBtn?.setAttribute('aria-expanded', 'false');
+      setActiveProjectNavigation(elements, target);
+      if (target === 'workspace') {
+        closeActiveWorkspaceOverlay(elements, state);
+        map?.getContainer?.().focus?.({ preventScroll: true });
+        return;
+      }
+      if (target === 'research') {
+        openPrimaryPanel(elements, state, 'explore', link);
+        openExploreWorkspaceSection(elements, state, state.activeExploreSection || 'layers');
+        return;
+      }
+      if (target === 'stories') {
+        await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'stories' });
+        return;
+      }
+      if (target === 'courses') {
+        await openCoursesWorkspace(elements, state, map);
+        return;
+      }
+      if (target === 'saved') {
+        await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
+      }
+    });
+  });
+
+  elements.onboardingExploreBtn?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    onboardingHint?.markInteracted?.();
+    setActiveProjectNavigation(elements, 'research');
+    openPrimaryPanel(elements, state, 'explore', elements.onboardingExploreBtn);
+    openExploreWorkspaceSection(elements, state, 'layers');
+  });
+  elements.onboardingSlicesBtn?.addEventListener('click', async (event) => {
+    event.stopPropagation();
+    onboardingHint?.markInteracted?.();
+    setActiveProjectNavigation(elements, 'saved');
+    await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
+  });
+
   elements.exploreWorkspaceTrigger?.addEventListener('click', () => {
+    setActiveProjectNavigation(elements, 'research');
     if (state.overlay.activePrimary === 'explore') {
       closePrimaryPanel(elements, state, 'explore');
       return;
@@ -441,18 +490,22 @@ export async function initUI(map, features) {
   elements.filtersBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'filters'));
   elements.bookmarksBtn?.addEventListener('click', () => openExploreWorkspaceSection(elements, state, 'bookmarks'));
   elements.slicesBtn?.addEventListener('click', async () => {
+    setActiveProjectNavigation(elements, 'research');
     await openResearchSlicesWorkspace(elements, state, map);
   });
   elements.researchSliceOpenBtn?.addEventListener('click', async () => {
-    await openResearchSlicesWorkspace(elements, state, map);
+    setActiveProjectNavigation(elements, 'saved');
+    await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
     showUiSystemMessage('Используйте открытый контекст как базу для публикации из панели «Срезы».', { variant: 'info', timeout: 3000 });
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
-    await openResearchSlicesWorkspace(elements, state, map);
+    setActiveProjectNavigation(elements, 'research');
+    await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'create' });
     showUiSystemMessage('Сохраните текущий срез через панель «Срезы».', { variant: 'success', timeout: 3200 });
   });
   elements.researchSliceTrigger?.addEventListener('click', async () => {
-    await openResearchSlicesWorkspace(elements, state, map);
+    setActiveProjectNavigation(elements, state.sliceOpenedId ? 'saved' : 'research');
+    await openResearchSlicesWorkspace(elements, state, map, { focusZone: state.sliceOpenedId ? 'saved' : 'create' });
   });
   elements.researchSliceCompareBtn?.addEventListener('click', async () => {
     const selectedCount = Array.isArray(state.sliceCompareSelectionIds) ? state.sliceCompareSelectionIds.length : 0;
@@ -465,10 +518,12 @@ export async function initUI(map, features) {
   });
   syncResearchSliceCompareCta(elements, state);
   elements.coursesBtn?.addEventListener('click', async () => {
-    await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
-    await ensureCoursesLoaded(state, { force: !state.coursesLoaded });
-    renderCoursesPanel(elements, state, map);
-    togglePrimaryPanel(elements, state, 'courses', elements.coursesBtn);
+    setActiveProjectNavigation(elements, 'courses');
+    if (state.overlay.activePrimary === 'courses') {
+      closePrimaryPanel(elements, state, 'courses');
+      return;
+    }
+    await openCoursesWorkspace(elements, state, map);
   });
   elements.liveBtn?.addEventListener('click', () => {
     const nextOpen = state.overlay.activePrimary !== 'live';
@@ -627,6 +682,30 @@ function setupOnboardingOverlay(elements) {
   };
 }
 
+function setActiveProjectNavigation(elements, nextKey = 'workspace') {
+  const links = Array.isArray(elements?.projectNavLinks) ? elements.projectNavLinks : [];
+  links.forEach((link) => {
+    const isActive = link.dataset.workspaceNav === nextKey;
+    if (isActive) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+}
+
+function closeActiveWorkspaceOverlay(elements, state) {
+  if (state?.overlay?.activePrimary) {
+    closePrimaryPanel(elements, state, state.overlay.activePrimary);
+  }
+  setProfileMenuOpen(elements, false);
+}
+
+function focusResearchWorkspaceZone(elements, zoneKey = 'saved') {
+  const zone = elements?.slicesPanel?.querySelector(`[data-research-zone="${zoneKey}"]`);
+  if (!zone) return;
+  const disclosure = zone.matches('details') ? zone : zone.querySelector('details');
+  if (disclosure) disclosure.open = true;
+  window.requestAnimationFrame(() => zone.scrollIntoView({ block: 'start', behavior: 'smooth' }));
+}
+
 function setProfileMenuOpen(elements, nextOpen = false, { returnFocus = false, focusFirstItem = false } = {}) {
   if (!elements?.profileMenu || !elements?.profileMenuTrigger) return;
   elements.profileMenu.hidden = !nextOpen;
@@ -684,7 +763,8 @@ function setupMapThemeToggle(elements, map) {
   const syncLabel = () => {
     const activeTheme = getMapTheme(map);
     const activeMeta = themes.find((theme) => theme.id === activeTheme) || themes[0];
-    button.textContent = 'Тема';
+    const accessibleLabel = button.querySelector('.sr-only');
+    if (accessibleLabel) accessibleLabel.textContent = `Тема карты: ${activeMeta.label}`;
     button.setAttribute('aria-label', `Тема карты: ${activeMeta.label}. Нажмите для смены.`);
     button.title = `Тема карты: ${activeMeta.label}`;
     button.dataset.theme = activeMeta.id;
@@ -1010,6 +1090,14 @@ async function openResearchSlicesWorkspace(elements, state, map, options = {}) {
   await ensureCoursesLoaded(state, options);
   renderSlicesPanel(elements, state, map);
   openExploreWorkspaceSection(elements, state, 'slices');
+  if (options.focusZone) focusResearchWorkspaceZone(elements, options.focusZone);
+}
+
+async function openCoursesWorkspace(elements, state, map) {
+  await ensureStoriesLoaded(state, { force: !state.storiesLoaded });
+  await ensureCoursesLoaded(state, { force: !state.coursesLoaded });
+  renderCoursesPanel(elements, state, map);
+  openPrimaryPanel(elements, state, 'courses', elements.coursesBtn);
 }
 
 async function ensureStoriesLoaded(state, { force = false } = {}) {
@@ -1164,6 +1252,7 @@ function renderSlicesPanel(elements, state, map) {
 
   const saveSection = document.createElement('section');
   saveSection.className = 'panel-stack slice-workzone';
+  saveSection.dataset.researchZone = 'create';
   const saveSectionTitle = document.createElement('h4');
   saveSectionTitle.className = 'panel-title';
   saveSectionTitle.textContent = 'Сохранить текущий срез';
@@ -1391,6 +1480,7 @@ function renderSlicesPanel(elements, state, map) {
 
   const savedSection = document.createElement('section');
   savedSection.className = 'panel-stack slice-workzone';
+  savedSection.dataset.researchZone = 'saved';
   const savedSectionTitle = document.createElement('h4');
   savedSectionTitle.className = 'panel-title';
   savedSectionTitle.textContent = 'Сохранённые срезы';
@@ -1882,6 +1972,7 @@ function renderSlicesPanel(elements, state, map) {
 
   const storiesSection = document.createElement('section');
   storiesSection.className = 'panel-stack slice-workzone slice-secondary-workzone';
+  storiesSection.dataset.researchZone = 'stories';
   const storiesToggle = document.createElement('details');
   storiesToggle.className = 'slice-secondary-disclosure';
   const storiesSummary = document.createElement('summary');
@@ -4045,6 +4136,7 @@ function renderTimelineAxis(elements, years) {
   elements.timelineAxis.replaceChildren(...anchors.map((anchor) => {
     const node = document.createElement('span');
     node.className = 'timeline-anchor';
+    node.setAttribute('role', 'listitem');
     node.style.left = `${anchor.position}%`;
     node.title = `${anchor.label} — ${anchor.description}`;
     const tick = document.createElement('span');
