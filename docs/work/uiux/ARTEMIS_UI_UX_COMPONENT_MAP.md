@@ -72,17 +72,18 @@ ARTEMIS v1.0 должен состоять из 8 основных UI-зон:
 7. **AI Assistance System**
 8. **Support / Utility Layer**
 
-### 3.1 Main-screen refinement bridge (2026-04-23)
-Для текущего `main screen / primary workspace` refinement новый working pack должен маппиться на существующую component map так:
+### 3.1 Main-screen refinement bridge (updated 2026-07-16)
+Для активного `main screen / primary workspace` refinement component mapping фиксируется так:
 
-- **Top shell** → `Top Navigation Bar` + `Route / Mode Switcher`
-- **Slice / context sub-bar** → `Slice System` + `Temporal Context Indicator` + compact context surface внутри Workspace Core
-- **Map workspace** → `Main Map Canvas` + `Object Marker / Spatial Entity Node` + `Layer Control Panel`
-- **Right detail panel as meaning container** → `Object Preview Card` + `Detail Panel` + `Related Entities Block` + `Provenance / Source Block` + AI entry/explain surfaces
-- **Timeline band** → `Timeline Bar` + `Time Range Control` + `Temporal Context Indicator`
-- **Mobile staged adaptation** → `Mobile Navigation Sheet / Drawer` + compact timeline + bottom-sheet preview/detail flow
+- **Compact top shell** → `Top Navigation Bar` + `Route / Mode Switcher` + compact Slice/Temporal Context Indicator; без multiple parallel top bars.
+- **Full-width map workspace** → `Main Map Canvas`; отдельный structural desktop rail не является компонентной зоной.
+- **Map tool overlay** → `Layer Control Panel` + `Spatial Filter Tools`; overlay не резервирует grid-column и не перекрывает MapLibre controls.
+- **Right detail on demand** → `Object Preview Card` + `Detail Panel` + provenance/related/AI entry surfaces; закрытое состояние не резервирует ширину.
+- **Compact timeline dock** → `Timeline Bar` + `Time Range Control` + active `Temporal Context Indicator`; hardcoded semantic anchors не входят в default component.
+- **Mobile staged adaptation** → compact overlay tools + compact timeline + bottom-sheet preview/detail flow.
+- **Icon system** → shared SVG icon primitive с едиными size, hit-area, focus и accessible-name contracts.
 
-Этот bridge нужен для decomposition текущего refinement cycle в runtime-задачи и не меняет базовую зонировку component map.
+Runtime target, CSS ownership и acceptance criteria определены в `2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`. Bridge не меняет базовую зонировку component map; он удаляет пустые structural containers из её реализации.
 
 ### 3.2 App structure / section bridge (2026-04-26)
 Для future product expansion новые вкладки и sections должны проходить через `Section Contract` из `2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md`.
