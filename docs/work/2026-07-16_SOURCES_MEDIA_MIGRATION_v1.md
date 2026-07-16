@@ -3,7 +3,7 @@
 ## Статус
 
 - Issue: `#283`.
-- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; Media migration in reviewed batches (`7/19`).
+- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; Media migration in reviewed batches (`11/19`).
 - Snapshot date: 2026-07-16.
 - Scope: normalize factual Sources, display Media, per-link evidence/presentation semantics and compatibility projections for the 19-Feature Architecture Atlas pilot.
 
@@ -214,4 +214,12 @@ All ten pre-existing Sources had `url=null`, no Media links and legacy `license=
 - Pantheon and Alhambra use verified direct 1280 px Wikimedia derivatives instead of 34.58 MB and 11.33 MB originals; Hagia Sophia and Ziggurat of Ur use their compact original assets.
 - IDs: `media_pantheon_rome_nikonz7ii_2022`, `media_alhambra_jebulon_2014`, `media_hagia_sophia_adli_wahid_2014`, `media_ziggurat_ur_tla2006_2006`.
 - Control read after both batches: `7 Media / 7 reviewed`, `7 FeatureMedia / 7 reviewed`; each association has exactly one Feature, one Media and one `primary` role, with no duplicated Feature or Media references.
-- Remaining Media scope: 12 Features require separate source and rights review before the migration checklist can be closed.
+
+### Media pilot batch 3 — 2026-07-16
+
+- Created 4 reviewed Media records and 4 reviewed primary FeatureMedia links for St. Peter's Basilica, Chartres Cathedral, Panthéon (Paris) and Santiago de Compostela Cathedral.
+- Rights evidence was verified from each Wikimedia Commons File page: St. Peter's `CC BY-SA 4.0` by Alvesgaspar; Chartres `CC BY-SA 3.0` by Jörg Bittner Unna; Panthéon `CC BY-SA 3.0` by Moonik; Santiago `CC BY-SA 4.0` by Fernando.
+- St. Peter's and Santiago use verified direct display derivatives instead of 48.12 MB and 8.94 MB originals; Chartres and Panthéon use direct compact originals.
+- IDs: `media_st_peters_alvesgaspar_2015`, `media_chartres_bittner_unna_2007`, `media_pantheon_paris_moonik_2011`, `media_santiago_fernando_2021`.
+- Control read after all three batches: `11 Media / 11 reviewed`, `11 FeatureMedia / 11 reviewed`; every association is one-to-one and primary, with no duplicated Feature or Media references.
+- Remaining Media scope: 8 Features require separate source and rights review before the migration checklist can be closed.
