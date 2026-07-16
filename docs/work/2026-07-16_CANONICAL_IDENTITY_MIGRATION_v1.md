@@ -59,4 +59,4 @@
 - Немедленный ответ Airtable после каждого шага вернул `id_status=ok`.
 - Контрольное чтение всей таблицы Features: `19 total / 19 id_status=ok / 0 invalid`.
 - Checked-in `data/features.json`, `data/features.geojson` и `data/id_aliases.json` содержат те же 19 canonical UUID.
-- Реализация и CI evidence: draft PR `#290`; четыре PR workflow завершились `success`.
+- Реализация и CI evidence: PR `#290`; четыре PR workflow завершились `success`.
