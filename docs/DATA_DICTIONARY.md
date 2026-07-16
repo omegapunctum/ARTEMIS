@@ -139,6 +139,12 @@ Public Feature содержит `source_ids`, `media_ids`, а также link me
 
 Relation — доказательное утверждение между двумя Features.
 
+В v1 публичный predicate всегда читается буквально как:
+
+`source_feature_id relation_type target_feature_id`.
+
+Направление нельзя выводить из порядка записей Airtable или положения объекта в UI. Для симметричных типов endpoints сохраняются в лексикографическом порядке UUID, чтобы одна связь не могла существовать в двух направлениях.
+
 Обязательные поля:
 
 | Поле | Семантика |
@@ -149,28 +155,40 @@ Relation — доказательное утверждение между дву
 | `relation_type` | тип связи из allowlist |
 | `description` | краткое sourced explanation |
 | `epistemic_status` | `fact`, `interpretation`, `hypothesis` |
-| `confidence` | controlled confidence label |
-| `source_ids` | evidence Sources |
+| `confidence` | `high`, `medium`, `low` |
+| `source_ids` | reviewed evidence Sources, derived from `RelationSources` |
 | `valid_from`, `valid_to` | optional temporal applicability |
 | `review_status` | обязательный editorial status |
 
-Начальный relation type allowlist:
+Начальный Feature↔Feature relation type allowlist:
 
 - `influenced`;
 - `inspired_by`;
 - `same_movement`;
-- `designed_by`;
 - `reconstructed_from`;
-- `located_in`;
 - `part_of`.
 
-Новый тип добавляется только после semantic review.
+Directionality:
+
+| `relation_type` | Чтение | Directionality |
+|---|---|---|
+| `influenced` | source Feature повлиял на target Feature | directed |
+| `inspired_by` | source Feature был вдохновлён target Feature | directed |
+| `same_movement` | оба Feature относятся к одному документированному движению | symmetric; UUIDs sorted |
+| `reconstructed_from` | source Feature реконструирован на основании target Feature | directed |
+| `part_of` | source Feature является частью target Feature | directed |
+
+`designed_by` и `located_in` требуют Person/Place targets и не входят в Feature↔Feature MVP. Они могут быть добавлены только вместе с canonical entity identity, а не как строки или фиктивные Features. Новый тип добавляется только после semantic review.
+
+Evidence хранится в association table `RelationSources`: `id`, `relation`, `source`, `roles`, `claim_note`, `review_status`. Каждая строка обязана ссылаться ровно на одну Relation и один Source. Reviewed Relation обязана иметь минимум одну reviewed связь с reviewed Source и ролью `relation_evidence`.
+
+Public `relations.json` содержит только reviewed Relations с валидными canonical Feature UUIDs и reviewed evidence. Feature projections могут содержать только `relation_ids`; полный description/status/evidence contract принадлежит `relations.json`.
 
 ## 7. Similarity
 
-Similarity — вычисляемая близость по слою, времени, географии или признакам. Она не является Relation.
+Similarity — вычисляемая близость по слою, времени, географии или признакам. Она не является Relation и не получает canonical ID.
 
-UI обязан маркировать similarity как «Похожие объекты» и при необходимости объяснять критерий. Similarity не сохраняется в canonical Relation table без редакционного review и sources.
+UI обязан маркировать similarity как «Похожие объекты» и показывать применённые критерии (`same_layer`, `date_overlap`, `date_distance`, а позже — `geographic_distance` или feature similarity). Similarity не сохраняется в canonical Relation table без редакционного review и sources.
 
 ## 8. Semantic validation gate
 
