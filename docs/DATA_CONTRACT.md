@@ -147,9 +147,9 @@ Current baseline properties observed in the public artifact:
 | `influence_radius_km` | number/null | no | map/context radius |
 | `title_short` | string/null | no | compact title/subtitle |
 | `description` | string/null | no | public description |
-| `image_url` | string/null | no | public image/source URL |
-| `source_url` | string/null | no | public source/provenance URL |
-| `source_license` | string/null | no | source/media license label |
+| `image_url` | string/null | no | legacy compatibility projection from primary reviewed Media `asset_url` |
+| `source_url` | string/null | no | legacy compatibility projection from primary reviewed Source URL |
+| `source_license` | string/null | no | deprecated conflated field; MUST NOT be treated as Media license |
 | `coordinates_confidence` | string/null | no | confidence class for coordinates |
 | `coordinates_source` | string | yes | source label from controlled allowlist |
 | `sequence_order` | number/null | no | optional sequence ordering |
@@ -166,6 +166,33 @@ Required-for-public baseline:
 - provenance/quality: `coordinates_source`, `validated`, `date_valid`, `has_geometry`.
 
 Optional fields may be `null` or absent only if frontend/runtime consumers handle that absence explicitly.
+
+### 5.1 Normalized Source/Media contract targeted by #283
+
+This subsection is a migration target, not a claim about the current checked-in export.
+
+After #283 implementation, the export owns two normalized artifacts:
+
+- `data/sources.json` — reviewed canonical Sources;
+- `data/media.json` — reviewed displayable Media with rights and attribution.
+
+Feature properties add:
+
+- `source_ids: string[]` and `media_ids: string[]` as normalized reference indexes;
+- `source_refs: {source_id, roles[], is_primary}[]` for per-link evidence semantics;
+- `media_refs: {media_id, display_role, sort_order}[]` for per-link presentation semantics.
+
+Only reviewed links to reviewed records are exported. A referenced ID must exist in its normalized artifact. `source_url` may temporarily mirror the primary Source URL and `image_url` may temporarily mirror the primary Media direct asset URL for old frontend consumers. No compatibility field may invent a license or attribution.
+
+Blocking conditions owned by #283 implementation:
+
+- published Feature without at least one reviewed Source;
+- Source without URL or bibliographic locator;
+- Source/Media reference to a missing record;
+- Media whose `asset_url` is an HTML page rather than a direct displayable resource;
+- Media without creator, license, attribution or source page;
+- duplicate Source/Media ID;
+- unreviewed Source/Media or unreviewed association entering public artifacts.
 
 ---
 

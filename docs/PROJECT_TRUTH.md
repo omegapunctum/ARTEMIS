@@ -53,8 +53,9 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 
 Известные ограничения:
 
-- canonical identity migration v1 подготовлена в change set `#281`: ETL и public artifacts используют `Features.id` UUID v4, а Airtable record ID отделён как `source_record_id`;
+- canonical identity migration v1 завершена в PR `#290`: ETL и public artifacts используют `Features.id` UUID v4, а Airtable record ID отделён как `source_record_id`;
 - source migration выполнена: контрольное чтение Airtable подтверждает `19/19 id_status=ok`; точная таблица, execution evidence и recovery-план зафиксированы в `docs/work/2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`;
+- Source/Media audit для #283 подтверждает: `10 Sources / 0 Source URLs / 0 Media`; все `19/19 Features.image_url` являются HTML-страницами Wikimedia Commons, а не direct assets; в текущей Airtable schema нет Feature→Source/Media links; evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
 - часть включённых слоёв пуста;
 - source и media semantics не доведены до canonical модели;
 - эвристические «похожие объекты» не являются доказанными historical relations;

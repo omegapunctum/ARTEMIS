@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical semantic data dictionary.
-- Версия: 1.0.
+- Версия: 1.1.
 - Дата: 2026-07-16.
 - Область: Architecture Atlas MVP.
 - `DATA_CONTRACT.md` остаётся владельцем export/public artifact mechanics; этот документ владеет business semantics.
@@ -76,6 +76,8 @@ Enabled Layer без опубликованных Features запрещён в p
 
 Source подтверждает факт, датировку, координату или relation.
 
+Source не является изображением и не наследует лицензию Media. Его `id` — стабильная уникальная строка, которая не меняется при исправлении title или locator. Существующие `src_*` IDs сохраняются, если они уникальны; новые IDs создаются один раз в том же namespace.
+
 Обязательные поля:
 
 - `id`;
@@ -86,7 +88,18 @@ Source подтверждает факт, датировку, координат
 - `accessed_at`, где применимо;
 - `review_status`.
 
-`license` у Source не заменяет media license. Лицензия страницы также не должна автоматически приписываться фактам.
+`source_type` MVP allowlist:
+
+- `primary`;
+- `official`;
+- `academic`;
+- `institutional`;
+- `reference`;
+- `other`.
+
+`review_status` allowlist для Source и Media: `draft`, `reviewed`, `rejected`.
+
+Legacy `Sources.license` не является media license и не участвует в publish eligibility. Если необходимо хранить лицензию или terms самой публикации, это отдельное optional поле `content_license`; оно не переносится в Media автоматически.
 
 Рекомендуемые роли link:
 
@@ -96,7 +109,11 @@ Source подтверждает факт, датировку, координат
 - `description_evidence`;
 - `relation_evidence`.
 
+Роль принадлежит связи Source с Feature/Relation, а не самой Source. В Airtable Feature evidence хранится в association table `FeatureSources` с полями `feature`, `source`, `roles`, `is_primary`, `claim_note`, `review_status`. Когда #282 создаст Relations, relation evidence использует эквивалентную связь `RelationSources`.
+
 ## 5. Media
+
+Media — отображаемый ресурс и его rights/attribution record. Media не считается factual Source только потому, что изображает объект.
 
 Обязательные поля:
 
@@ -105,11 +122,18 @@ Source подтверждает факт, датировку, координат
 - `source_page_url`;
 - `creator`;
 - `license`;
+- `license_url`, если лицензия требует ссылку;
 - `attribution_text`;
 - `media_type`;
 - `review_status`.
 
 HTML page URL, например Commons `wiki/File:...`, не считается `asset_url`.
+
+`media_type` MVP allowlist: `image`, `map`, `drawing`, `diagram`, `document`.
+
+Связь Media с Feature хранится в association table `FeatureMedia` с полями `feature`, `media`, `display_role`, `sort_order`, `caption`, `review_status`. `display_role` MVP allowlist: `primary`, `gallery`, `context`, `detail`.
+
+Public Feature содержит `source_ids`, `media_ids`, а также link metadata `source_refs` и `media_refs`. Legacy `source_url` и `image_url` допускаются только как временные compatibility projections из primary reviewed Source/Media; `source_license` deprecated и не может использоваться как Media license.
 
 ## 6. Relation
 
