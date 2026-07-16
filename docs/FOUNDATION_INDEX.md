@@ -52,7 +52,12 @@ ARTEMIS нельзя развивать через отдельные функц
 | `README.md` | root entrypoint проекта |
 | `docs/FOUNDATION_INDEX.md` | навигатор foundation-layer, порядок чтения и source-of-truth routing |
 | `docs/ARTEMIS_CONCEPT.md` | миссия, видение, принципы, epistemic model, стратегическая лестница развития |
-| `docs/ARTEMIS_PRODUCT_SCOPE.md` | продуктовые границы v1.0, главная единица ценности, product loop, запреты против product drift |
+| `docs/PROJECT_TRUTH.md` | фактическая граница public/backend/pilot/future capabilities |
+| `docs/PRODUCT_THESIS.md` | active Architecture Atlas audience, problem, hypotheses и value proposition |
+| `docs/ARTEMIS_PRODUCT_SCOPE.md` | продуктовые границы v1.1 и запреты против product drift |
+| `docs/MVP_ARCHITECTURE_ATLAS.md` | vertical MVP boundary, content threshold и exit criteria |
+| `docs/DATA_DICTIONARY.md` | semantic identity/source/media/relation data model |
+| `docs/PRODUCT_VALIDATION_PLAN.md` | user evidence protocol и decision gate |
 | `docs/RESEARCH_SLICE_CONTRACT.md` | canonical product/data/UI/AI contract для Research Slice как главной единицы ценности |
 | `docs/RESEARCH_SLICE_SPEC.md` | runtime/API spec Research Slice baseline |
 | `docs/EPISTEMIC_CONTRACT.md` | operational contract для fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual |
@@ -80,19 +85,18 @@ ARTEMIS нельзя развивать через отдельные функц
 
 1. `README.md` — быстрый вход в проект.
 2. `docs/FOUNDATION_INDEX.md` — карта фундаментального слоя.
-3. `docs/ARTEMIS_CONCEPT.md` — зачем существует ARTEMIS и какие принципы нельзя нарушать.
-4. `docs/ARTEMIS_PRODUCT_SCOPE.md` — что входит и не входит в ARTEMIS v1.0.
-5. `docs/RESEARCH_SLICE_CONTRACT.md` — что является главной единицей ценности и как она работает.
-6. `docs/EPISTEMIC_CONTRACT.md` — что считается знанием и как маркируется достоверность.
-7. `docs/ENTITY_MODEL.md` — какие сущности и связи существуют в системе.
-8. `docs/CONTENT_GOVERNANCE.md` — как данные становятся trusted content.
-9. `docs/AI_POLICY.md` — что AI может и не может делать.
-10. `docs/DATA_CONTRACT.md` — как данные проходят через ETL/export/public artifacts.
-11. `docs/PROJECT_STRUCTURE.md` — где это живёт в repo/runtime/docs system.
-12. `docs/PROJECT_PHASES.md` и `docs/PRIORITIES.md` — что делать сейчас.
-13. `docs/CONTROLLED_RELEASE_DECISION.md` — как трактовать release baseline.
-14. `docs/DOCUMENTATION_SYSTEM.md` — как разрешать doc-conflicts и где хранить документы.
-15. `docs/ARTEMIS_MASTER_PROMPT.md` — как AI-агенты должны работать с проектом.
+3. `docs/PROJECT_TRUTH.md` — что действительно работает сейчас.
+4. `docs/PRODUCT_THESIS.md` — для кого и зачем строится активный vertical.
+5. `docs/ARTEMIS_PRODUCT_SCOPE.md` — что входит и не входит в текущий scope.
+6. `docs/MVP_ARCHITECTURE_ATLAS.md` — что должно быть доказано в MVP.
+7. `docs/DATA_DICTIONARY.md` — какие semantic data rules обязательны.
+8. `docs/PRODUCT_VALIDATION_PLAN.md` — какое evidence открывает следующий этап.
+9. `docs/ARTEMIS_CONCEPT.md` — долгосрочная миссия и принципы.
+10. `docs/RESEARCH_SLICE_CONTRACT.md` — как работает сохраняемая единица исследования.
+11. `docs/EPISTEMIC_CONTRACT.md`, `docs/ENTITY_MODEL.md`, `docs/CONTENT_GOVERNANCE.md` и `docs/AI_POLICY.md` — knowledge governance.
+12. `docs/DATA_CONTRACT.md` — export/public artifact mechanics.
+13. `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md` и `docs/PRIORITIES.md` — структура и active order.
+14. `docs/DOCUMENTATION_SYSTEM.md`, `docs/CONTROLLED_RELEASE_DECISION.md` и `docs/ARTEMIS_MASTER_PROMPT.md` — governance/release/agent rules.
 
 ---
 
@@ -104,6 +108,7 @@ Primary authority:
 - `docs/ARTEMIS_CONCEPT.md`
 
 Secondary authority:
+- `docs/PRODUCT_THESIS.md`
 - `docs/ARTEMIS_PRODUCT_SCOPE.md`
 - `docs/FOUNDATION_INDEX.md`
 
@@ -119,12 +124,16 @@ Primary authority:
 - `docs/ARTEMIS_PRODUCT_SCOPE.md`
 
 Secondary authority:
+- `docs/PROJECT_TRUTH.md`
+- `docs/PRODUCT_THESIS.md`
+- `docs/MVP_ARCHITECTURE_ATLAS.md`
+- `docs/PRODUCT_VALIDATION_PLAN.md`
 - `docs/PROJECT_PHASES.md`
 - `docs/PRIORITIES.md`
 - `docs/RESEARCH_SLICE_CONTRACT.md`
 
 Примеры вопросов:
-- входит ли feature в v1.0;
+- входит ли feature в active vertical MVP;
 - что является primary user value;
 - что делать сначала: slice, story, course или AI;
 - какие направления являются forbidden product drift.
@@ -246,22 +255,23 @@ Executable authority:
 Если документы расходятся, действует порядок:
 
 1. executable checks / tests / workflows for runtime facts;
-2. `DATA_CONTRACT.md` for data/export/public map contract;
-3. `CONTROLLED_RELEASE_DECISION.md` for release/readiness interpretation;
-4. `ARTEMIS_CONCEPT.md` for mission/principles/epistemic constraints;
-5. `ARTEMIS_PRODUCT_SCOPE.md` for v1.0 scope/product boundaries;
-6. foundation contracts:
+2. `PROJECT_TRUTH.md` for current capability/maturity statements;
+3. `DATA_CONTRACT.md` and `DATA_DICTIONARY.md` for export and semantic data contracts;
+4. `CONTROLLED_RELEASE_DECISION.md` for release/readiness interpretation;
+5. `ARTEMIS_CONCEPT.md` for mission/principles/epistemic constraints;
+6. `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `MVP_ARCHITECTURE_ATLAS.md` and `PRODUCT_VALIDATION_PLAN.md` for active product decisions;
+7. foundation contracts:
    - `RESEARCH_SLICE_CONTRACT.md`;
    - `EPISTEMIC_CONTRACT.md`;
    - `ENTITY_MODEL.md`;
    - `CONTENT_GOVERNANCE.md`;
    - `AI_POLICY.md`;
-7. `PROJECT_STRUCTURE.md` for repo/runtime/docs boundaries;
-8. `PROJECT_PHASES.md` and `PRIORITIES.md` for current work order;
-9. `DOCUMENTATION_SYSTEM.md` for doc placement/governance conflicts;
-10. working docs;
-11. audits;
-12. archive/reference.
+8. `PROJECT_STRUCTURE.md` for repo/runtime/docs boundaries;
+9. `PROJECT_PHASES.md` and `PRIORITIES.md` for current work order;
+10. `DOCUMENTATION_SYSTEM.md` for doc placement/governance conflicts;
+11. working docs;
+12. audits;
+13. archive/reference.
 
 Audit documents may reveal a conflict, but they do not become source of truth by themselves. The relevant canonical or working document must be updated.
 
@@ -320,7 +330,8 @@ Closed foundation setup items:
 
 Remaining non-blocking follow-up:
 - semantic review оставшихся `DO_NOT_DELETE_YET` archive files;
-- Phase 5 scaling/hardening tasks, включая production/HA ограничения memory session backend.
+- Architecture Atlas data/content/runtime/validation tasks из active Phase 4.5;
+- critical production constraints, только если они блокируют public MVP loop.
 
 ---
 
@@ -336,6 +347,7 @@ ARTEMIS должен развиваться от фундаментальной 
 4. entity model;
 5. content governance;
 6. AI policy;
-7. stories/courses/AI/runtime expansion.
+7. focused vertical validation;
+8. только после decision gate — selected product/runtime expansion.
 
 Если новый функциональный слой не может быть объяснён через foundation-layer, он не должен становиться частью ядра проекта.

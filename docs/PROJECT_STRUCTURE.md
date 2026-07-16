@@ -52,7 +52,7 @@
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
 | `api/` | legacy compatibility shim без самостоятельного runtime; допускается как переходный package marker до cleanup legacy references | legacy |
 | `app/` | canonical backend runtime | основной |
-| `css/` | UI style system: shared foundation/components + isolated main-screen workspace layer | основной |
+| `css/` | UI style system; current shared + override baseline pending owner-scoped migration | основной |
 | `data/` | canonical public data layer + export diagnostics | основной |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
 | `icons/` | PWA assets | основной |
@@ -123,9 +123,9 @@ js/
 - безопасный DOM-rendering обязателен для пользовательского контента;
 - PWA и UX-hardenings не должны подменять архитектурные boundaries;
 - `css/style.css` является новым shared UI system layer: tokens, reset, shared components, feature surfaces, accessibility and state semantics;
-- `css/main-screen.css` является isolated main-screen workspace layer, подключённым после `css/style.css` из `index.html` и владеющим только dock/grid composition;
-- `css/main-screen.css` не является competing visual system: palette, typography, controls and shared component semantics принадлежат `css/style.css`;
-- будущий CSS split должен выполняться только через owner-scoped files (`workspace`, `components`, `overlays`, `sections`, `forms`, `legacy`) и не должен создавать параллельные визуальные системы без clear owner-role.
+- `css/main-screen.css` является текущим transitional override layer, а не целевой архитектурой;
+- в Architecture Atlas UX cycle актуальные правила должны быть перенесены к owner-scoped modules, после чего competing override удаляется;
+- owner-scoped split должен разделять tokens/base/layout/features и не создавать параллельные visual systems.
 
 ---
 
@@ -250,12 +250,17 @@ docs/
 ├── CONTENT_GOVERNANCE.md
 ├── CONTROLLED_RELEASE_DECISION.md
 ├── DATA_CONTRACT.md
+├── DATA_DICTIONARY.md
 ├── DOCUMENTATION_SYSTEM.md
 ├── ENTITY_MODEL.md
 ├── EPISTEMIC_CONTRACT.md
 ├── FOUNDATION_INDEX.md
+├── MVP_ARCHITECTURE_ATLAS.md
 ├── PRIORITIES.md
+├── PRODUCT_THESIS.md
+├── PRODUCT_VALIDATION_PLAN.md
 ├── PROJECT_PHASES.md
+├── PROJECT_TRUTH.md
 ├── PROJECT_STRUCTURE.md
 ├── RESEARCH_SLICE_CONTRACT.md
 └── RESEARCH_SLICE_SPEC.md
@@ -264,7 +269,12 @@ docs/
 Назначение:
 - `FOUNDATION_INDEX.md` — главный навигатор foundation-layer, порядок чтения и правила выбора source of truth по типам решений;
 - `ARTEMIS_CONCEPT.md` — миссия, видение, жёсткие принципы, эпистемическая модель и строгая лестница развития проекта;
-- `ARTEMIS_PRODUCT_SCOPE.md` — границы ARTEMIS v1.0, главная единица ценности, primary loop и запреты против product drift;
+- `PROJECT_TRUTH.md` — current capability and maturity truth;
+- `PRODUCT_THESIS.md` — active audience/problem/value hypotheses;
+- `ARTEMIS_PRODUCT_SCOPE.md` — границы Architecture Atlas vertical и запреты против product drift;
+- `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary, content threshold и exit criteria;
+- `DATA_DICTIONARY.md` — semantic data vocabulary и constraints;
+- `PRODUCT_VALIDATION_PLAN.md` — user evidence и decision gate;
 - `RESEARCH_SLICE_CONTRACT.md` — foundation product/data/UI/AI contract для Research Slice как главной единицы ценности;
 - `RESEARCH_SLICE_SPEC.md` — runtime/API spec Research Slice baseline;
 - `EPISTEMIC_CONTRACT.md` — операционный контракт знания: fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;

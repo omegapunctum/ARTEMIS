@@ -1,161 +1,175 @@
-# ТЕКУЩИЕ ПРИОРИТЕТЫ ARTEMIS v4.1
+# ARTEMIS — PRIORITIES v4.2
 
-Статус: active canonical priorities document.
-Назначение документа: фиксировать только актуальные load-bearing приоритеты проекта, не смешивая их с архивом, длинной историей закрытых baseline-работ и дальними продуктовыми идеями.
+## Статус
 
-Правило:
-- здесь нет полного roadmap;
-- здесь нет archive-layer истории;
-- здесь нет дальних продуктовых идей;
-- если задача не влияет на устойчивость текущего цикла, она не должна попадать в этот файл.
+- Тип: canonical active priorities document.
+- Дата: 2026-07-16.
+- Активный цикл: Architecture Atlas Product/Data Validation.
 
----
+Приоритет получает только работа, которая подтверждает продуктовую ценность, исправляет semantic data truth, делает core loop публично доступным или предотвращает критическую деградацию.
 
-## ПРИНЦИП ПРИОРИТИЗАЦИИ
+## P0 — обязательные блокеры
 
-Приоритетом считается только то, что:
-- влияет на корректность public data / release / runtime;
-- удерживает архитектурные boundaries;
-- устраняет системный drift;
-- снижает риск тихой деградации;
-- защищает зафиксированный ARTEMIS v1.0 scope от product drift.
+### P0.1 Strategy and documentation truth
 
-Если задача не влияет хотя бы на один из этих пунктов, она не должна быть в top-priority списке.
+- зафиксировать Option A во всём canonical set;
+- различать public/backend/pilot/future capabilities;
+- обновить issues, противоречащие active scope;
+- не расширять implementation до завершения documentation reset.
 
----
+Owner docs:
 
-## ЗАКРЫТЫЙ BASELINE-БЛОК
+- `PROJECT_TRUTH.md`;
+- `PRODUCT_THESIS.md`;
+- `ARTEMIS_PRODUCT_SCOPE.md`;
+- `MVP_ARCHITECTURE_ATLAS.md`.
 
-Статус блока: **COMPLETED / CLOSED** в рамках controlled-release baseline.  
-Этот блок сохраняется только как короткий reference уже закрытых load-bearing работ и **не является текущим главным активным приоритетом цикла**.
+### P0.2 Canonical identity
 
-Закрытые baseline-задачи:
-1. data-contract drift между `data/export_meta.json` и `scripts/release_check.py` устранён;
-2. единый release contract собран и синхронизирован с checked-in artifacts;
-3. root-level README приведён к актуальному runtime/API baseline на момент controlled-release stabilization;
-4. PWA semantic drift для release/readiness слоя устранён;
-5. canonical docs переведены на новую иерархию и включают foundational product layer.
+- canonical public UUID;
+- Airtable record ID только как `source_record_id`;
+- migration aliases;
+- invalid ID блокирует публикацию;
+- Research Slice/Relation references используют canonical ID.
 
-Уточнение:
-- этот блок не должен использоваться как список текущих задач;
-- остаточные улучшения после baseline closure относятся к active priorities ниже.
+### P0.3 Sources, Media and Relations
 
----
+- Source URL/role/review semantics;
+- direct Media assets, license и attribution;
+- canonical reviewed Relations table;
+- Relation не выводится из same-layer/time heuristic;
+- Similarity получает отдельную маркировку.
 
-## АКТИВНЫЙ ПОРЯДОК ПРИОРИТЕТОВ
+### P0.4 Semantic data gate
 
-Текущий практический порядок активных приоритетов:
-1. **Scaling / hardening** — основной активный приоритет цикла;
-2. **Product/documentation coherence** — активный сопутствующий контур без расширения implementation scope;
-3. **Canonical data/source discipline** — удерживать `/data/*` как публичный source-of-truth без runtime drift.
+- проверка identity/source/media/relation/review semantics;
+- пустые enabled Layers не публикуются;
+- validation report отражает semantic warnings;
+- source schema не обещает ETL write-back, если write-back отсутствует.
 
----
+### P0.5 Public capability alignment
 
-## ВЫСОКИЙ ПРИОРИТЕТ
+- выбрать public backend deployment contour;
+- настроить API base;
+- реализовать public Slice save/open/share E2E;
+- скрыть или label Stories/Courses/auth surfaces, если backend недоступен;
+- public UI не обещает internal-only capability.
 
-### 1. UX/PWA stabilization pass (Phase 4) — закрыто
-Статус: **COMPLETED / CLOSED BASELINE (PHASE 4)**.
-Зафиксировано:
-- offline/installability/loading-error-offline baseline закрыт;
-- остаточные UX/PWA темы не считаются blocker'ами закрытия и относятся к hardening/polish next track.
+## P1 — product proof
 
-### 2. Поддерживать canonical docs coherence и точечно устранять drift
-Статус: **ACTIVE MAINTENANCE / GUARDRAIL**.
-Что нужно:
-- удержать единый canonical set между `README.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md`, `docs/PRIORITIES.md`, `docs/DATA_CONTRACT.md`, `docs/CONTROLLED_RELEASE_DECISION.md` и `docs/DOCUMENTATION_SYSTEM.md`;
-- завершить cleanup active `docs/` root против canonical allowlist;
-- перевести non-canonical working/spec/snapshot документы в `docs/work/`, `docs/archive/` или `docs/reference/` по их реальной роли;
-- после cleanup проверить cross-links и не допускать повторного competing documentation layer.
+### P1.1 Architecture content pilot
 
-### 3. Удержать canonical public map source без повторного drift
-Статус: **ACTIVE**.
-Что нужно:
-- продолжать удерживать `/data/features.geojson` как единственный public map source;
-- не допускать implicit fallback или competing runtime architecture через `/api/map/feed`.
+- 100–150 Features;
+- 15–20 populated Layers/styles/periods;
+- 50+ reviewed Relations;
+- source/media coverage;
+- 3 Stories и reference Slices.
 
-### 4. `/api/map/feed` mock runtime entities cleanup — закрыто
-Статус: **COMPLETED / CLOSED**.
-Зафиксировано:
-- mock/place ветка удалена из текущего baseline runtime-поведения;
-- `/api/map/feed` зафиксирован как internal/non-canonical draft-only adapter;
-- задача не является активным blocker'ом и не должна держаться в active cleanup списке.
+### P1.2 Compare and sourced detail
 
-### 5. Scaling/hardening cycle без ложных production-ready claims
-Статус: **PRIMARY ACTIVE PRIORITY (PHASE 5)**.
-Что нужно:
-- удерживать уже зафиксированное различие между proven controlled baseline и production-hardened envelope;
-- подготовить отдельный scaling-cycle: session store, refresh registry, storage model, persistence/ops contour;
-- зафиксировать, что sticky fail-state из historical 5xx для `health.ok` уже устранён через process-local decay semantics; следующий hardening topic — улучшение observability/readiness интерпретации (thresholds/window tuning, signal policy, ops-гайд) без ложных claims о fully production-grade readiness platform;
-- удерживать operator policy-интерпретацию текущего health-сигнала: `ok` трактуется как recent-error indicator в process-local окне, `total_errors` — как исторический counter процесса, а не как самостоятельный глобальный readiness verdict;
-- зафиксировать SQLite operational guardrails как baseline-only storage mode и использовать явные trigger-conditions (lock contention, sustained write-latency, multi-instance write pressure) для перехода в следующий storage-hardening stage без преждевременных implementation claims;
-- не выдавать имеющийся Redis/session proof за полностью production-ready multi-node модель.
+- compare 2–3 objects;
+- provenance рядом с factual claims;
+- relation/similarity separation;
+- coordinate confidence отдельно от knowledge type.
 
-### 6. Удерживать терминологическую consistency release/readiness как guardrail
-Статус: **ONGOING MAINTENANCE GUARDRAIL**.
-Что нужно:
-- удерживать единый язык release/readiness/manual smoke после уже выполненной baseline-синхронизации;
-- не допускать формулировки, создающие ложное ощущение полного production green при существующих ограничениях;
-- сохранять coverage для upload/runtime contract, чтобы критичный drift не проходил между frontend и backend без тестового сигнала.
+### P1.3 Workspace refinement
 
----
+- map without reserved empty rail;
+- compact top dock и timeline;
+- detail only when active;
+- real-data temporal context вместо hardcoded anchors;
+- consistent SVG icons;
+- responsive staged behavior.
 
-## СРЕДНИЙ ПРИОРИТЕТ
+### P1.4 Research Slice loop
 
-### 7. Периодически подрезать `docs/PROJECT_PHASES.md` (maintenance guardrail)
-Статус: **MAINTENANCE / PERIODIC TRIMMING**.
-Что нужно:
-- оставить только текущую фазовую модель и ближайшие переходы;
-- сократить длинные dated status updates;
-- убрать из phase document лишний closure/history noise.
+- create/save/list/open/update/delete;
+- restore complete context;
+- read-only share;
+- public E2E and error states.
 
-### 8. Довести hygiene cleanup `docs/reference/` и snapshot-слоя до конца
-Статус: **ACTIVE HYGIENE TAIL**.
-Что нужно:
-- сохранить архивную и reference-ценность старых версий;
-- перестать использовать их как активные ориентиры;
-- завершить разложение remaining non-canonical документов по правильным слоям.
+### P1.5 Product validation
 
-### 9. Удерживать разделение scaling/hardening backlog и product expansion backlog
-Статус: **ESTABLISHED GUARDRAIL (KEEP ENFORCED)**.
-Что нужно:
-- не смешивать архитектурный долг и продуктовые идеи в одном operational списке;
-- использовать `ARTEMIS_PRODUCT_SCOPE.md` как фильтр для product expansion задач;
-- удерживать актуальный путь working-документов, включая `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`.
+- Round 0 truth check;
+- Round 1 with 5–8 users;
+- corrective pass;
+- Round 2;
+- explicit decision gate.
 
-### 10. Удерживать порядок продуктового ядра как уже зафиксированный guardrail
-Статус: **MOSTLY ESTABLISHED / KEEP AS GUARDRAIL**.
-Что нужно:
-- сохранять `research slice` как главную единицу ценности ARTEMIS v1.0;
-- учитывать, что baseline MVP `saved slices` уже реализован (save/list/open/delete, private/owner-only);
-- удерживать продуктовый порядок `shareable state` -> `stories` -> `courses` -> `explainable AI assistance`;
-- не допускать, чтобы вторичные функции вытесняли это ядро до завершения stabilization cycle.
+## P2 — maintainability in service of MVP
 
----
+### P2.1 CSS ownership
 
-## ВНЕ ТЕКУЩЕГО ПРИОРИТЕТНОГО ЦИКЛА
+- remove `css/main-screen.css` as competing override;
+- separate tokens/base/layout/features;
+- keep critical selector under one owner;
+- preserve visual regression evidence.
 
-На текущем этапе не должны считаться top priority:
-- monetization;
-- enterprise/institutional integrations;
+### P2.2 JavaScript ownership
+
+Extract from `js/ui.js` in controlled steps:
+
+- timeline;
+- detail;
+- comparison;
+- navigation;
+- viewport/layout;
+- research toolbar.
+
+Framework rewrite is not a priority.
+
+### P2.3 Browser regression coverage
+
+- desktop 1440×900;
+- tablet 1024×768;
+- mobile 390×844;
+- explore/compare/detail/slice/share states;
+- tests synchronized with active UI spec.
+
+## Maintenance guardrails
+
+Разрешены независимо от phase:
+
+- critical security fixes;
+- data-loss fixes;
+- broken deployment/release restoration;
+- migration integrity fixes;
+- dependency vulnerabilities;
+- factual correction/removal.
+
+Они не используются для скрытого расширения scope.
+
+## Frozen backlog
+
+Не является active priority:
+
+- Courses depth/progression;
+- AI generation;
+- UGC/social expansion;
+- general-domain entities;
+- causal/counterfactual/predictive systems;
 - gamification;
-- native mobile apps;
-- AR/VR;
-- predictive AI layers;
-- structured inference как обещанный продуктовый слой;
-- counterfactual simulation;
-- маркетинговые кампании;
-- тяжёлое расширение social-функций.
+- native apps;
+- enterprise/platform integrations;
+- heavy multi-node scaling без evidence;
+- marketing campaigns до validation.
 
-Эти темы допустимы только после закрытия текущих load-bearing конфликтов.
+## Порядок исполнения
 
----
+1. P0.1 documentation truth.
+2. P0.2–P0.4 data foundation.
+3. P1.1 content pilot.
+4. P0.5 public capability.
+5. P1.2–P1.4 product loop and UX.
+6. P2 maintainability required by the changed product surface.
+7. P1.5 validation and decision.
 
-## ПРАВИЛО ОБНОВЛЕНИЯ ДОКУМЕНТА
+## Правило завершения
 
-Файл обновляется только если:
-1. появляется новый load-bearing риск;
-2. существующий риск закрыт и может быть снят;
-3. меняется активная последовательность фаз проекта;
-4. меняется зафиксированное продуктовое ядро v1.0 и это влияет на operational order ближайшего цикла.
+Задача снимается с приоритета только при наличии:
 
-Если задача просто интересная или полезная в будущем, её здесь быть не должно.
+- implemented artifact;
+- relevant automated/manual evidence;
+- synchronized owner docs;
+- no known contradictory public claim;
+- recorded follow-up or explicit no-follow-up decision.

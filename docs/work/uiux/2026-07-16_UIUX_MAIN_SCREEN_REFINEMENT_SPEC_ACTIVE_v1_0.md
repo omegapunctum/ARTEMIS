@@ -10,8 +10,16 @@
 - UX owner: `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md`.
 - Component owner: `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md`.
 - Visual owner: `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md`.
+- Product owner: `docs/MVP_ARCHITECTURE_ATLAS.md`.
 
-Этот документ не создаёт новую продуктовую архитектуру и не заменяет owner-docs. Он фиксирует согласованный target для следующего UI patch cycle.
+Этот документ не создаёт новую продуктовую архитектуру и не заменяет owner-docs. Он фиксирует согласованный target для следующего UI patch cycle внутри Architecture Atlas vertical.
+
+Product constraint:
+
+- primary navigation target: Исследование, Сравнение, Срезы, Истории;
+- Courses, AI и UGC не получают новый public UX в этом cycle;
+- relation/similarity semantics определяются canonical product/data docs;
+- UI implementation начинается после documentation и data-contract reset.
 
 ## 1. Причина refinement
 

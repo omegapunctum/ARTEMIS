@@ -401,7 +401,7 @@ If working AI strategy conflicts with this policy:
 ## 17. Relationship to other foundation docs
 
 - `ARTEMIS_CONCEPT.md` defines why AI must not replace human judgment or source discipline.
-- `ARTEMIS_PRODUCT_SCOPE.md` defines AI assistance as part of v1.0 scope, with full generation/explanation layer still future relative to ECC baseline where applicable.
+- `ARTEMIS_PRODUCT_SCOPE.md` keeps AI generation outside the active Architecture Atlas MVP; ECC may remain as a backend context contract, but no generated explanation is a current public product promise.
 - `RESEARCH_SLICE_CONTRACT.md` defines slice as primary AI context unit.
 - `EPISTEMIC_CONTRACT.md` defines epistemic marking rules AI must obey.
 - `ENTITY_MODEL.md` defines AIInsight and ExplainabilityContext.

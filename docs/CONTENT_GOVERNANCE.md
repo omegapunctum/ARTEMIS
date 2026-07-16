@@ -487,7 +487,7 @@ Reject or defer content that is:
 ## 16. Relationship to other foundation docs
 
 - `ARTEMIS_CONCEPT.md` defines why ARTEMIS requires verifiable and explainable knowledge.
-- `ARTEMIS_PRODUCT_SCOPE.md` defines product boundaries and v1.0 scope.
+- `ARTEMIS_PRODUCT_SCOPE.md` defines the active Architecture Atlas product boundaries and frozen scope.
 - `EPISTEMIC_CONTRACT.md` defines knowledge statuses and uncertainty rules.
 - `ENTITY_MODEL.md` defines entities, relations, sources and product/runtime/context entities.
 - `DATA_CONTRACT.md` defines current ETL/public artifact shape.

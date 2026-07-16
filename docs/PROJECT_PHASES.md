@@ -1,265 +1,181 @@
-# ФАЗЫ ПРОЕКТА ARTEMIS v4.1
+# ARTEMIS — PROJECT PHASES v4.2
 
-Статус: active canonical phases document.
-Назначение документа: фиксировать только текущую фазовую модель проекта, активный порядок работ и ближайшие переходы между фазами, не смешивая это с архивом, длинной историей закрытых baseline-работ и дальними инициативами.
+## Статус
 
-Правило:
-- этот документ фиксирует operational phase model;
-- он не заменяет архитектурные, data-contract, release и product-scope документы;
-- исторические snapshot-версии фаз хранятся отдельно в archive/audit layer и не считаются source of truth.
+- Тип: canonical operational phases document.
+- Статус: active.
+- Дата изменения модели: 2026-07-16.
+- Активная фаза: **4.5 Product/Data Validation**.
 
----
+Фазы управляют порядком исполнения. Они не заменяют долгосрочную лестницу `ARTEMIS_CONCEPT.md` и не используются как список всех идей.
 
-## ПРИНЦИП ФАЗОВОЙ МОДЕЛИ
+## Принцип перехода
 
-Фазы ARTEMIS используются только как инструмент управления исполнением.
-Поэтому каждая фаза должна отвечать на три вопроса:
-1. Что уже зафиксировано как baseline.
-2. Что остаётся обязательным для перехода дальше.
-3. Что нельзя считать частью текущей фазы.
+Фаза закрывается только при наличии проверяемого exit evidence. Наличие кода, документа или structural check само по себе не подтверждает пользовательскую ценность, semantic data quality или production readiness.
 
-Дополнительное правило:
-- operational phases не заменяют концептуальную лестницу из `ARTEMIS_CONCEPT.md`;
-- фазы описывают текущий цикл исполнения, а не всю долгосрочную эволюцию ARTEMIS;
-- уровни `Structured Inference`, `Counterfactual / Probabilistic Layer` и `AI Research Infrastructure` допускаются только как перспектива следующих этапов и не должны неявно протаскиваться в текущий execution scope.
-
----
-
-## ФАЗА 0 — FOUNDATION [ЗАВЕРШЕНА]
-
-Цель:
-Собрать базовый технический контур проекта.
+## Фаза 0 — Foundation [закрыта]
 
 Зафиксировано:
-- frontend baseline на `index.html` + `js/*` + `css/*`;
-- карта на MapLibre;
-- backend baseline на FastAPI;
-- ETL baseline из Airtable в `data/*`;
-- GitHub Pages / GitHub Actions как базовый deployment / automation контур;
-- базовая структура репозитория закреплена.
 
-Выход фазы:
-- проект имеет рабочий каркас и воспроизводимую структуру.
+- frontend MapLibre/GeoJSON baseline;
+- FastAPI backend baseline;
+- Airtable → ETL → `data/*`;
+- GitHub Actions/Pages;
+- базовая структура репозитория.
 
-Фаза считается закрытой окончательно.
-
----
-
-## ФАЗА 1 — PUBLIC MAP BASELINE [ЗАВЕРШЕНА]
-
-Цель:
-Сделать публичную карту рабочим основным продуктовым ядром.
+## Фаза 1 — Public Map Baseline [закрыта]
 
 Зафиксировано:
-- `data/features.geojson` закреплён как canonical public map source;
-- базовые слои, фильтры, список объектов и detail-поведение существуют;
-- production-default fallback карты на `/api/map/feed` запрещён;
-- map-first логика проекта зафиксирована как ядро продукта.
 
-Остаточные замечания:
-- timeline и UX-polish не считаются причиной держать фазу открытой;
-- эти задачи перенесены в отдельные активные фазы hardening / UX.
+- `data/features.geojson` как public map source;
+- map, layers, filters, list/detail baseline;
+- отсутствие production-default fallback на `/api/map/feed`.
 
-Выход фазы:
-- публичная карта существует как отдельный устойчивый baseline.
+Закрытие означает техническое наличие public map, но не зрелость content corpus.
 
----
-
-## ФАЗА 2 — UGC / AUTH BASELINE [ЗАВЕРШЕНА С ОГРАНИЧЕНИЯМИ]
-
-Цель:
-Закрыть базовую пользовательскую авторизацию и контур черновиков / модерации.
+## Фаза 2 — UGC/Auth Baseline [закрыта с ограничениями]
 
 Зафиксировано:
-- auth baseline существует;
-- drafts CRUD существует;
-- upload API существует;
-- moderation UI и lifecycle существуют;
-- базовый XSS hardening есть;
-- governance boundary против direct runtime publish уже зафиксирован кодом и тестами.
 
-Ограничения фазы:
-- auth/session слой не должен описываться как полностью production-hardened multi-instance модель;
-- baseline auth/session ушёл дальше исходного memory-only MVP, но scaling/hardening контур остаётся отдельной фазой;
-- эти ограничения не отменяют закрытие baseline-фазы, но запрещают считать контур финально масштабированным.
+- auth, drafts, uploads и moderation code paths;
+- governance boundary против direct runtime publish;
+- Redis session proof paths.
 
-Выход фазы:
-- пользовательский контур реализован по коду;
-- дальнейшие работы относятся к scaling/hardening, а не к отсутствию самой фазы.
+Ограничения:
 
----
+- GitHub Pages не исполняет backend;
+- public end-to-end доступность не подтверждена;
+- production multi-node readiness не заявляется.
 
-## ФАЗА 3 — CONTROLLED RELEASE STABILIZATION [ЗАВЕРШЕНА / CLOSED]
+## Фаза 3 — Controlled Release Stabilization [закрыта]
 
-Цель:
-Сделать release-систему внутренне согласованной и действительно исполнимой.
+Зафиксировано:
 
-Итоговый статус:
-- baseline stabilized;
-- release gate hardened;
-- controlled-release baseline закрыт в текущем scope.
+- release/data artifact consistency baseline;
+- executable structural release gate;
+- workflow и documentation discipline.
 
-Фаза зафиксировала:
-- единый release/data contract для checked-in artifacts и release gate;
-- согласованную release terminology между canonical docs и workflow/readiness-слоем;
-- устранение критичного runtime/API drift между frontend, backend, README и tests в baseline-контуре;
-- закрытие controlled-release baseline без reopen при отсутствии нового contract drift.
+Structural release success не равен semantic content validation.
 
-Нельзя относить к этой фазе:
-- новые продуктовые функции;
-- новые роли пользователей;
-- расширение курсов;
-- визуальные эксперименты UI.
+## Фаза 4 — PWA/UX Baseline Stabilization [закрыта как baseline]
 
-Выход фазы:
-- проект получил предсказуемый release baseline.
+Зафиксировано:
 
-Явные ограничения после закрытия:
-- multi-instance не должен описываться как fully production-ready;
-- scaling/persistence/ops contour остаётся отдельным следующим классом задач.
+- service worker/private API boundaries;
+- loading/error/offline baseline;
+- responsive main-flow baseline;
+- map-first UI foundation.
 
----
+Закрытие baseline не означает завершённый product UX. Новый refinement выполняется после data/product decisions и не требует переоткрывать старый stabilization scope.
 
-## ФАЗА 4 — PWA / UX STABILIZATION [ЗАВЕРШЕНА / ЗАКРЫТА]
+## Фаза 4.5 — Product/Data Validation [активная]
 
-Цель:
-Довести пользовательский runtime до устойчивого и предсказуемого состояния.
+### Цель
 
-Итоговая граница фазы (зафиксировано при закрытии):
-- эксплуатационная устойчивость интерфейса и PWA/runtime-поведения доведена до baseline-уровня;
-- продуктовые thin runtime layers не расширяли scope фазы;
-- оставшиеся polish/hardening темы перенесены в следующий технический контур.
+Доказать focused Architecture Atlas vertical до scaling и product expansion.
 
-Фаза включает:
-- завершение PWA bypass/no-cache semantics;
-- production smoke для service worker и installability;
-- устранение ложных FAIL/ложных PASS в readiness по PWA;
-- стабилизацию loading/error/offline сценариев;
-- финальную доработку главного map-first UX;
-- фиксацию базового onboarding и понятной точки входа в интерфейс.
+### Track A — Strategy truth
 
-Обязательные условия закрытия:
-- private/auth requests не кэшируются фактически, а не только по тексту проверки;
-- runtime не показывает противоречивые loading-состояния;
-- UI main flow стабилен на desktop/mobile baseline;
-- UX-документы переведены в рабочий слой, а не размазаны по разным audit-файлам.
+- синхронизировать canonical documentation с Option A;
+- разделить `PUBLIC NOW`, `BACKEND-AVAILABLE`, `PILOT` и `FUTURE`;
+- привести GitHub backlog к новой фазе;
+- убрать противоречивые navigation/product claims.
 
-Нельзя относить к этой фазе:
-- redesign всего продукта;
-- ввод тяжёлого нового frontend stack;
-- новый runtime source вместо canonical `/data/*`.
+### Track B — Data foundation
 
-Выход фазы:
-- пользовательский интерфейс становится эксплуатационно устойчивым.
-- остаточные темы UX/PWA после baseline closure не считаются blocker'ами закрытия и относятся к hardening/polish next track.
+- выбрать UUID как canonical public ID;
+- отделить `source_record_id`;
+- нормализовать Sources и Media;
+- создать reviewed Relations model;
+- отделить Relation от Similarity;
+- добавить semantic ETL/release gate;
+- устранить enabled empty Layers.
 
----
+### Track C — Content pilot
 
-## ФАЗА 5 — SCALING / HARDENING [АКТИВНАЯ ФАЗА №1]
+- 100–150 architecture Features;
+- 15–20 непустых Layers/periods/styles;
+- 50+ reviewed Relations;
+- source/media coverage;
+- 3 curated Stories;
+- reference Slices.
 
-Цель:
-Убрать архитектурные ограничения MVP и подготовить проект к росту.
+### Track D — Public product loop
 
-Планируемый scope:
-- session store вне памяти процесса;
-- переход от single-instance auth assumptions к масштабируемой модели;
-- подготовка перехода на production-grade storage / DB;
-- performance hardening для larger datasets;
-- cleanup временных/mock runtime-слоёв;
-- дополнительные regression-checks по canonical data path.
+- deploy/configure backend;
+- обеспечить public save/open/share Slice;
+- скрыть или clearly label недоступные surfaces;
+- проверить public E2E.
 
-Условие старта:
-- Фаза 3 закрыта;
-- release system не находится в состоянии contract drift.
+### Track E — Product UX
 
-Выход фазы:
-- архитектура перестаёт зависеть от текущих MVP-допущений.
+- map-first shell refinement;
+- compare workflow;
+- sourced detail;
+- compact timeline;
+- CSS/JS ownership cleanup;
+- browser-level regression coverage.
 
----
+### Track F — User validation
 
-## ФАЗА 6 — PRODUCT EXPANSION [ЗАПЛАНИРОВАНА]
+- 5–8 участников первой волны;
+- Round 1 comprehension/core loop;
+- исправления;
+- Round 2 decision gate.
 
-Цель:
-Расширять продукт только после стабилизации baseline и в границах зафиксированного ARTEMIS v1.0 scope.
+### Exit criteria
 
-Планируемое ядро фазы:
-- развитие research-slice слоя, включая shareable-state как следующий слой;
-- stories как следующий слой глубины;
-- courses как следующий слой глубины;
-- explainable AI assistance как следующий слой поверх ECC;
-- только затем вторичные product extensions.
+- MVP data threshold достигнут;
+- semantic validation проходит;
+- public Slice loop проходит E2E;
+- relation/similarity semantics корректны;
+- primary flows подтверждены на desktop/tablet/mobile;
+- validation thresholds из `PRODUCT_VALIDATION_PLAN.md` проверены;
+- принято `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK`.
 
-Правило:
-- эта фаза не должна открываться раньше закрытия release и runtime stabilization;
-- product expansion обязан следовать `ARTEMIS_PRODUCT_SCOPE.md`, а не набору несвязанных feature-идей;
-- social / crowdsourcing extensions допустимы только в управляемом и неядерном виде;
-- causal claims, counterfactual simulation и predictive layers не входят в scope этой фазы и остаются перспективой более поздних уровней развития.
+## Фаза 5 — Scaling/Hardening [приостановлена]
 
----
+Статус: **PAUSED / NOT PRIMARY**.
 
-## ФАЗА 7 — BUSINESS / PLATFORM [ОТЛОЖЕНА]
+Допустимы только:
 
-Цель:
-Монетизация, institutional tooling и platform-level expansion.
+- security/reliability fixes;
+- deployment work, необходимое для public MVP loop;
+- migration/data-integrity blockers;
+- observability, нужная для validation.
 
-Вне текущего рабочего baseline:
-- подписка;
-- enterprise API;
-- CRM/GIS integrations;
-- marketplace / SDK / platform distribution;
-- масштабная партнёрская и маркетинговая программа.
+Запрещено опережающее scaling ради предполагаемого роста. Полный Phase 5 reopen требует evidence из Phase 4.5 и конкретную нагрузочную/операционную причину.
 
-Правило:
-- документы этого уровня не должны влиять на приоритеты активной технической разработки.
+## Фаза 6 — Product Expansion [заблокирована]
 
----
+Stories depth, Courses, AI assistance, new domains и secondary extensions не открываются до Phase 4.5 decision gate.
 
-## АКТИВНЫЙ ПОРЯДОК РАБОТ
+Возможный порядок после `EXPAND` определяется отдельным phase update, а не наследуется автоматически из старого roadmap.
 
-На текущем цикле проект работает так:
-1. ФАЗА 5 — SCALING / HARDENING
-2. ФАЗА 6 — PRODUCT EXPANSION
-3. ФАЗА 4 — PWA / UX STABILIZATION (закрытая baseline-фаза; без reopen при отсутствии нового runtime/PWA drift)
-4. ФАЗА 3 — CONTROLLED RELEASE STABILIZATION (закрытая baseline-фаза; без reopen при отсутствии нового drift)
+## Фаза 7 — Business/Platform [отложена]
 
-Статус-уточнение:
-- текущий активный рабочий контур: ФАЗА 5;
-- ФАЗА 4 остаётся закрытой baseline-фазой и не требует reopen без нового подтверждённого runtime/PWA drift;
-- ФАЗА 3 остаётся закрытой baseline-фазой и не требует reopen без нового contract drift.
+Монетизация, enterprise API, integrations, marketplace и platform distribution находятся вне текущего рабочего контура.
 
-Внутренний порядок работ внутри ФАЗЫ 6 заранее ограничен:
-1. research slices / saved state
-2. stories
-3. courses
-4. explainable AI assistance
-5. только затем вторичные product extensions
+## Активный порядок работ
 
-Это и есть фактическая последовательность следующего цикла.
+1. Documentation/strategy reset.
+2. Identity, Sources, Media и Relations contract.
+3. Semantic validation gate.
+4. Architecture content pilot.
+5. Public backend/Slice loop.
+6. Product UX refinement и maintainability.
+7. User validation.
+8. Decision gate.
 
----
+Scaling и expansion рассматриваются только после пункта 8.
 
-## ЧТО БОЛЬШЕ НЕ НУЖНО ДЕЛАТЬ В ФАЙЛЕ ФАЗ
+## Правило обновления
 
-В этом документе больше не нужно:
-- хранить длинный change-log по версиям;
-- смешивать roadmap и archive;
-- добавлять аудит-заметки как элементы фаз;
-- включать сюда весь список дальних идей;
-- дублировать priorities, release docs, UI/UX audits и structure docs.
+Документ обновляется, если:
 
----
+1. изменена active phase;
+2. достигнут или изменён exit gate;
+3. выявлена новая обязательная зависимость;
+4. validation decision меняет дальнейший порядок.
 
-## ПРАВИЛО ОБНОВЛЕНИЯ ДОКУМЕНТА
-
-Файл обновляется только в четырёх случаях:
-1. закрыта или открыта фаза;
-2. изменилась зависимость между фазами;
-3. изменилась сама модель управления проектом;
-4. изменилось соотношение между operational phases и зафиксированной концептуальной лестницей проекта.
-
-Все остальные детали должны жить не здесь, а в:
-- `PRIORITIES.md`;
-- architecture/data/release docs;
-- work docs;
-- audits;
-- archive.
+Execution details живут в issues/working specs; historical snapshots — в archive/audits.
