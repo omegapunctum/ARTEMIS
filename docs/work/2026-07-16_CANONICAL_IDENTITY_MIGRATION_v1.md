@@ -3,8 +3,9 @@
 ## Статус
 
 - Issue: `#281`.
-- Статус: in progress.
+- Статус: completed.
 - Дата фиксации snapshot: 2026-07-16.
+- Дата применения и проверки: 2026-07-16.
 - Source: Airtable `Artemis_Base / Features` + checked-in `data/features.json`.
 - Scope: заменить 11 невалидных business ID, отделить Airtable `rec...` от public identity и сохранить обратную совместимость Research Slices.
 
@@ -50,3 +51,12 @@
 - Старые business ID не удаляются из истории: они остаются ключами `data/id_aliases.json`.
 - При ошибке до merge branch не публикуется; Airtable values можно точечно вернуть по колонке «Старый business ID».
 - После merge откат public artifacts допускается только вместе с сохранением alias map, чтобы не ломать уже созданные canonical ссылки.
+
+## Execution evidence
+
+- 11 Airtable `Features.id` обновлены по таблице выше без изменения record IDs или других полей.
+- Batch выполнен безопасно в два шага: 1 record для write/формулы smoke check, затем оставшиеся 10 records.
+- Немедленный ответ Airtable после каждого шага вернул `id_status=ok`.
+- Контрольное чтение всей таблицы Features: `19 total / 19 id_status=ok / 0 invalid`.
+- Checked-in `data/features.json`, `data/features.geojson` и `data/id_aliases.json` содержат те же 19 canonical UUID.
+- Реализация и CI evidence: draft PR `#290`; четыре PR workflow завершились `success`.
