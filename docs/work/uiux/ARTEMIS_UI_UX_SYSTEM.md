@@ -228,6 +228,22 @@ Future section structure rule:
 - AI = contextual layer inside workspace/story/course flows, не detached section;
 - baseline обязателен для снижения overload и исключения competing panels without hierarchy.
 
+## 5.1.2 Compact map-first refinement lock (2026-07-16)
+
+Для текущего refinement cycle зафиксирован следующий desktop contract:
+
+- map canvas использует основную ширину workspace без отдельного structural rail;
+- map/research tools размещаются как compact overlay и не резервируют пустую колонку;
+- outer workspace frame и nested top-dock framing не должны визуально конкурировать с картой;
+- top shell и slice context собираются компактно, без растянутой пустой центральной зоны;
+- timeline сохраняет роль второй главной оси, но default dock становится компактным;
+- вручную заданные semantic timeline anchors не входят в основной runtime UI;
+- detail резервирует правую ширину только в открытом desktop state;
+- Unicode/emoji primary icons заменяются единым accessible SVG set;
+- layout refinement не меняет canonical data/API contracts.
+
+Track-specific acceptance criteria и rollout order определены в `2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`. Этот lock уточняет геометрию Workspace Core и не меняет базовую зонировку v1.0.
+
 ## 5.2 Top header / project shell
 Функции:
 - навигация по основным разделам;
