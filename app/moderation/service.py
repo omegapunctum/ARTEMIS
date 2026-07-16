@@ -6,10 +6,10 @@ Moderation runtime service boundary:
 """
 
 import json
-import hashlib
 import logging
 import os
 import threading
+import uuid
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -40,7 +40,7 @@ DEFAULT_COORDINATES_SOURCE = "expert estimate"
 DEFAULT_SOURCE_URL = "https://ugc.local/source"
 DEFAULT_SOURCE_LICENSE = "CC BY"
 AIRTABLE_EXTERNAL_ID_FIELD = os.getenv("AIRTABLE_EXTERNAL_ID_FIELD", "external_id")
-AIRTABLE_NORMALIZED_ID_FIELD = "normalized_id"
+AIRTABLE_CANONICAL_ID_FIELD = "id"
 AIRTABLE_SOURCE_DRAFT_ID_FIELD = "source_draft_id"
 PUBLISH_STATUS_PENDING = "pending"
 PUBLISH_STATUS_PUBLISHED = "published"
@@ -264,17 +264,17 @@ def find_existing_airtable_feature(draft: Draft, fields: dict[str, Any] | None =
     token, base_id, table_name = _get_airtable_config()
     resolved_fields = fields or build_airtable_fields(draft)
     external_id = get_draft_external_id(draft)
-    normalized_id = resolved_fields.get(AIRTABLE_NORMALIZED_ID_FIELD)
+    canonical_id = resolved_fields.get(AIRTABLE_CANONICAL_ID_FIELD)
     url = _build_airtable_table_url(base_id, table_name)
 
     # Canonical publish identity contract:
-    # 1) normalized_id is the primary identity for publish idempotency.
+    # 1) id (UUID v4) is the canonical identity for publish idempotency.
     # 2) external/source ids are source references and backward-compatible fallbacks.
-    if normalized_id:
-        normalized_formula = f"{{{AIRTABLE_NORMALIZED_ID_FIELD}}}='{_escape_airtable_formula_value(str(normalized_id))}'"
-        by_normalized_id = _find_airtable_record_by_formula(url, token, normalized_formula)
-        if by_normalized_id:
-            return by_normalized_id
+    if canonical_id:
+        canonical_formula = f"{{{AIRTABLE_CANONICAL_ID_FIELD}}}='{_escape_airtable_formula_value(str(canonical_id))}'"
+        by_canonical_id = _find_airtable_record_by_formula(url, token, canonical_formula)
+        if by_canonical_id:
+            return by_canonical_id
 
     external_formula = f"{{{AIRTABLE_EXTERNAL_ID_FIELD}}}='{_escape_airtable_formula_value(external_id)}'"
     by_external_id = _find_airtable_record_by_formula(url, token, external_formula)
@@ -336,12 +336,14 @@ def build_airtable_fields(draft: Draft) -> dict[str, Any]:
     image_url = raw_image_url if is_safe_url(raw_image_url) else None
     raw_source_url = draft_payload.get("source_url")
     source_url = raw_source_url if is_safe_url(raw_source_url) else DEFAULT_SOURCE_URL
-    normalized_id = build_normalized_id(source_url, draft_payload.get("name_ru") or draft.title, latitude, longitude)
+    # Canonical identity is system-generated for the publish attempt. Client
+    # payload values are intentionally ignored to prevent identity hijacking.
+    canonical_id = str(uuid.uuid4())
 
     fields: dict[str, Any] = {
+        AIRTABLE_CANONICAL_ID_FIELD: canonical_id,
         AIRTABLE_EXTERNAL_ID_FIELD: get_draft_external_id(draft),
         AIRTABLE_SOURCE_DRAFT_ID_FIELD: get_draft_external_id(draft),
-        AIRTABLE_NORMALIZED_ID_FIELD: normalized_id,
         "name_ru": draft_payload.get("name_ru") or draft.title,
         "description": draft_payload.get("description") if "description" in draft_payload else draft.description,
         "image_url": image_url,
@@ -363,11 +365,6 @@ def build_airtable_fields(draft: Draft) -> dict[str, Any]:
         "longitude": longitude,
     }
     return fields
-
-
-def build_normalized_id(source_url: str | None, title: str | None, latitude: float | None, longitude: float | None) -> str:
-    raw = f"{source_url or ''}|{title or ''}|{latitude if latitude is not None else ''}|{longitude if longitude is not None else ''}"
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def get_draft_external_id(draft: Draft) -> str:

@@ -18,7 +18,8 @@ class ImportExportTests(unittest.TestCase):
             csv_path = tmp_path / "input.csv"
             rows = [
                 {
-                    "id": "recValid",
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "source_record_id": "import-valid",
                     "layer_id": "roman_empire",
                     "layer_type": "biography",
                     "name_ru": "Valid",
@@ -33,7 +34,8 @@ class ImportExportTests(unittest.TestCase):
                     "validated": "true",
                 },
                 {
-                    "id": "recInvalid",
+                    "id": "550e8400-e29b-41d4-a716-446655440001",
+                    "source_record_id": "import-invalid",
                     "layer_id": "roman_empire",
                     "layer_type": "biography",
                     "name_ru": "Invalid",
@@ -55,9 +57,9 @@ class ImportExportTests(unittest.TestCase):
             parsed = read_csv_records(csv_path)
             validated, rejected, warnings, errors = import_records(parsed, _layer_ids())
             self.assertEqual(len(validated), 1)
-            self.assertEqual(validated[0]["id"], "recValid")
+            self.assertEqual(validated[0]["id"], "550e8400-e29b-41d4-a716-446655440000")
             self.assertEqual(len(rejected), 1)
-            self.assertEqual(rejected[0]["id"], "recInvalid")
+            self.assertEqual(rejected[0]["id"], "550e8400-e29b-41d4-a716-446655440001")
             self.assertTrue(any(reason in {"invalid_coordinates", "validation_failed"} for reason in rejected[0]["reasons"]))
             self.assertIsInstance(warnings, list)
             self.assertIsInstance(errors, list)
@@ -71,10 +73,11 @@ class ImportExportTests(unittest.TestCase):
                 "features": [
                     {
                         "type": "Feature",
-                        "id": "recGeo",
+                        "id": "550e8400-e29b-41d4-a716-446655440002",
                         "geometry": {"type": "Point", "coordinates": [30.5, 50.4]},
                         "properties": {
-                            "id": "recGeo",
+                            "id": "550e8400-e29b-41d4-a716-446655440002",
+                            "source_record_id": "import-geo",
                             "layer_id": "roman_empire",
                             "layer_type": "biography",
                             "name_ru": "Geo",
@@ -109,7 +112,7 @@ class ImportExportTests(unittest.TestCase):
 
             csv_content = export_paths["csv"].read_text(encoding="utf-8")
             self.assertIn("id", csv_content)
-            self.assertIn("recGeo", csv_content)
+            self.assertIn("550e8400-e29b-41d4-a716-446655440002", csv_content)
 
             exported_geojson = json.loads(export_paths["geojson"].read_text(encoding="utf-8"))
             self.assertEqual(exported_geojson.get("type"), "FeatureCollection")

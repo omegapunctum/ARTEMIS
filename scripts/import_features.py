@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Tuple
 
 from scripts.export_airtable import (
+    build_id_aliases,
     build_geojson_features,
     is_valid_iso_date,
     normalize_coordinates_confidence,
@@ -29,7 +30,7 @@ from scripts.export_airtable import (
 
 CSV_FIELDS = [
     "id",
-    "normalized_id",
+    "source_record_id",
     "external_id",
     "source_draft_id",
     "layer_id",
@@ -99,10 +100,15 @@ def _normalize_date(value: Any) -> str | None:
 
 
 def _normalize_row(record: Dict[str, Any], fallback_id: str) -> Dict[str, Any]:
+    source_record_id = (
+        _safe_text(record.get("source_record_id"))
+        or _safe_text(record.get("airtable_record_id"))
+        or fallback_id
+    )
     mapped: Dict[str, Any] = {
-        "id": _safe_text(record.get("id")) or fallback_id,
-        "airtable_record_id": _safe_text(record.get("airtable_record_id")) or _safe_text(record.get("id")) or fallback_id,
-        "normalized_id": _safe_text(record.get("normalized_id")),
+        "id": _safe_text(record.get("id")),
+        "source_record_id": source_record_id,
+        "airtable_record_id": source_record_id,
         "external_id": _safe_text(record.get("external_id")),
         "source_draft_id": _safe_text(record.get("source_draft_id")),
         "layer_id": _safe_text(record.get("layer_id")),
@@ -200,16 +206,20 @@ def import_records(records: Iterable[Dict[str, Any]], layer_ids: set[str]) -> Tu
 
 
 def write_validated_outputs(out_dir: Path, validated: List[Dict[str, Any]], rejected: List[Dict[str, Any]], warnings: List[Dict[str, Any]], errors: List[Dict[str, Any]]) -> Dict[str, Path]:
-    geojson = build_geojson_features(validated, warnings, errors)
+    id_aliases = build_id_aliases(validated)
+    geojson = build_geojson_features(validated, warnings, errors, id_aliases["aliases"])
     features_json_path = out_dir / "features.json"
     features_geojson_path = out_dir / "features.geojson"
+    id_aliases_path = out_dir / "id_aliases.json"
     rejected_path = out_dir / "rejected.json"
     write_json(features_json_path, validated)
     write_json(features_geojson_path, geojson)
+    write_json(id_aliases_path, id_aliases)
     write_json(rejected_path, rejected)
     return {
         "features_json": features_json_path,
         "features_geojson": features_geojson_path,
+        "id_aliases": id_aliases_path,
         "rejected": rejected_path,
     }
 

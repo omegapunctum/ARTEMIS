@@ -38,6 +38,7 @@ jobs:
       - name: Validate outputs exist
         run: |
           test -f data/_test_features.geojson
+          test -f data/_test_id_aliases.json
           test -f data/_test_layers.json
           test -f data/_test_export_meta.json
 

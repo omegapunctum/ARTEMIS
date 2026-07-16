@@ -25,11 +25,14 @@
 
 ### Migration alias
 
-- Поле/артефакт: `legacy_ids` или versioned alias map.
+- Поле: `properties.legacy_ids` в public GeoJSON.
+- Артефакт: `data/id_aliases.json`, schema version `1`.
 - Используется только для перехода старых `rec...` ссылок.
+- Карта также сохраняет 11 исторических псевдо-UUID, заменённых в migration v1.
+- Каждый alias обязан указывать на существующий опубликованный UUID v4; alias не может быть canonical ID.
 - Не создаёт второй canonical identity.
 
-Record с отсутствующим или невалидным canonical `id` не публикуется после завершения migration window.
+Record с отсутствующим или невалидным canonical `id` не публикуется. Migration window закрыт: compatibility поддерживается только чтением aliases, но не публикацией legacy ID.
 
 ## 2. Feature
 

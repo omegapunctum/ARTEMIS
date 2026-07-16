@@ -1751,12 +1751,15 @@ function renderSlicesPanel(elements, state, map) {
           const fromRefs = featureRefs
             .map((entry) => String(entry?.feature_id || '').trim())
             .filter(Boolean);
-          if (fromRefs.length) return [...new Set(fromRefs)];
+          if (fromRefs.length) {
+            return [...new Set(fromRefs.map((id) => resolveFeatureCanonicalId(state, id)))];
+          }
           const legacyFeatureIds = Array.isArray(slice.feature_ids) ? slice.feature_ids : [];
           const legacyFrontendFeatureIds = Array.isArray(slice.featureIds) ? slice.featureIds : [];
           return [...new Set([...legacyFeatureIds, ...legacyFrontendFeatureIds]
             .map((id) => String(id || '').trim())
-            .filter(Boolean))];
+            .filter(Boolean)
+            .map((id) => resolveFeatureCanonicalId(state, id)))];
         };
 
         const featureSetA = new Set(extractSliceFeatureIds(sliceA));
@@ -2280,7 +2283,10 @@ function renderSlicesPanel(elements, state, map) {
 
 function applyResearchSliceContext(rawSlice, state, elements, map) {
   const restored = normalizeSliceForRestore(rawSlice);
-  state.sliceSelectionSet = new Set(Array.isArray(restored.featureIds) ? restored.featureIds : []);
+  const restoredFeatureIds = Array.isArray(restored.featureIds)
+    ? restored.featureIds.map((id) => resolveFeatureCanonicalId(state, id)).filter(Boolean)
+    : [];
+  state.sliceSelectionSet = new Set(restoredFeatureIds);
   if (restored.mode === 'point') {
     setTimelineMode(elements, state, 'point', { commit: false });
     applyTimelineRange(elements, state, {
@@ -4043,7 +4049,17 @@ function getSelectedFeature(state) {
 function getFeatureById(state, featureId) {
   const normalizedId = featureId ? String(featureId) : '';
   if (!normalizedId) return null;
-  return state.allFeatures.find((feature) => getFeatureUiId(feature) === normalizedId) || null;
+  return state.allFeatures.find((feature) => (
+    getFeatureUiId(feature) === normalizedId
+    || getFeatureLegacyIds(feature).includes(normalizedId)
+  )) || null;
+}
+
+function resolveFeatureCanonicalId(state, featureId) {
+  const normalizedId = String(featureId || '').trim();
+  if (!normalizedId) return '';
+  const feature = getFeatureById(state, normalizedId);
+  return feature ? getFeatureUiId(feature) : normalizedId;
 }
 
 function renderCardsSkeleton(elements, count = 4) {
@@ -4168,6 +4184,12 @@ function enrichFeatureForUiKey(feature, index) {
 }
 function getFeatureUiId(feature) {
   return String(normalizeProps(feature)._ui_id || '');
+}
+function getFeatureLegacyIds(feature) {
+  const values = normalizeProps(feature).legacy_ids;
+  return Array.isArray(values)
+    ? values.map((value) => String(value || '').trim()).filter(Boolean)
+    : [];
 }
 function normalizeProps(feature) {
   return feature?.properties && typeof feature.properties === 'object' ? feature.properties : {};

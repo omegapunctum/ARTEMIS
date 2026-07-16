@@ -6,6 +6,7 @@ __pycache__/
 # Test/runtime local artifacts
 .pytest_cache/
 .pytest_dbs/
+.venv/
 
 # Local SQLite databases
 *.db

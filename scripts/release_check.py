@@ -8,6 +8,7 @@ import re
 import ast
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 
 
@@ -41,6 +42,14 @@ def read_json(path: Path):
         fail(f"{path.as_posix()} is invalid JSON: {exc}")
 
 
+def _is_uuid_v4(value: object) -> bool:
+    try:
+        parsed = uuid.UUID(str(value).strip())
+    except (ValueError, TypeError, AttributeError):
+        return False
+    return parsed.version == 4 and parsed.variant == uuid.RFC_4122
+
+
 def check_data_layer() -> None:
     features_json_path = ROOT / "data/features.json"
     if not features_json_path.exists():
@@ -64,6 +73,68 @@ def check_data_layer() -> None:
             "records mismatch: "
             f"records_features_json={len(features_json_payload)}, records_geojson={len(features)}"
         )
+
+    canonical_ids: set[str] = set()
+    source_record_aliases: dict[str, str] = {}
+    feature_legacy_ids: dict[str, set[str]] = {}
+    for index, feature in enumerate(features):
+        if not isinstance(feature, dict):
+            fail(f"features.geojson feature[{index}] must be an object")
+        canonical_id = str(feature.get("id") or "").strip()
+        if not _is_uuid_v4(canonical_id):
+            fail(f"features.geojson feature[{index}].id must be UUID v4")
+        if canonical_id in canonical_ids:
+            fail(f"features.geojson contains duplicate canonical id: {canonical_id}")
+        canonical_ids.add(canonical_id)
+
+        properties = feature.get("properties")
+        if not isinstance(properties, dict):
+            fail(f"features.geojson feature[{index}].properties must be an object")
+        if properties.get("id") != canonical_id or properties.get("canonical_publish_id") != canonical_id:
+            fail(f"features.geojson feature[{index}] identity fields must match Feature.id")
+        source_record_id = str(properties.get("source_record_id") or "").strip()
+        if not source_record_id:
+            fail(f"features.geojson feature[{index}].properties.source_record_id is required")
+        source_record_aliases[source_record_id] = canonical_id
+        legacy_ids = properties.get("legacy_ids")
+        if not isinstance(legacy_ids, list) or not all(isinstance(value, str) and value.strip() for value in legacy_ids):
+            fail(f"features.geojson feature[{index}].properties.legacy_ids must be a string array")
+        feature_legacy_ids[canonical_id] = set(legacy_ids)
+
+    raw_canonical_ids: set[str] = set()
+    for index, record in enumerate(features_json_payload):
+        if not isinstance(record, dict):
+            fail(f"data/features.json record[{index}] must be an object")
+        fields = record.get("fields")
+        raw_id = fields.get("id") if isinstance(fields, dict) else record.get("id")
+        canonical_id = str(raw_id or "").strip()
+        if not _is_uuid_v4(canonical_id):
+            fail(f"data/features.json record[{index}] canonical id must be UUID v4")
+        raw_canonical_ids.add(canonical_id)
+    if raw_canonical_ids != canonical_ids:
+        fail("data/features.json canonical ids must match features.geojson Feature.id values")
+
+    id_aliases_path = ROOT / "data/id_aliases.json"
+    if not id_aliases_path.exists():
+        fail("data/id_aliases.json is missing")
+    id_aliases_payload = read_json(id_aliases_path)
+    if not isinstance(id_aliases_payload, dict) or id_aliases_payload.get("schema_version") != 1:
+        fail("data/id_aliases.json must use schema_version 1")
+    if id_aliases_payload.get("canonical_format") != "uuid_v4":
+        fail("data/id_aliases.json canonical_format must be uuid_v4")
+    aliases = id_aliases_payload.get("aliases")
+    if not isinstance(aliases, dict):
+        fail("data/id_aliases.json aliases must be an object")
+    for legacy_id, canonical_id in aliases.items():
+        if not isinstance(legacy_id, str) or not legacy_id.strip() or legacy_id == canonical_id:
+            fail("data/id_aliases.json contains an invalid legacy id")
+        if not _is_uuid_v4(canonical_id) or canonical_id not in canonical_ids:
+            fail(f"data/id_aliases.json alias target is not a published UUID v4: {canonical_id}")
+        if legacy_id not in feature_legacy_ids.get(canonical_id, set()):
+            fail(f"features.geojson legacy_ids missing alias {legacy_id}")
+    for source_record_id, canonical_id in source_record_aliases.items():
+        if aliases.get(source_record_id) != canonical_id:
+            fail(f"data/id_aliases.json missing source record alias {source_record_id}")
 
     export_meta_path = ROOT / "data/export_meta.json"
     if not export_meta_path.exists():

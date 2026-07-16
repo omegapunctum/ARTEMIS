@@ -1,5 +1,6 @@
 import os
 import unittest
+import uuid
 
 from fastapi import HTTPException
 from pydantic import ValidationError
@@ -185,6 +186,7 @@ class ModerationFlowTests(unittest.TestCase):
         self.assertEqual(payload['layer_id'], 'ugc')
         self.assertEqual(payload['external_id'], 'draft:None')
         self.assertEqual(payload['coordinates_source'], 'expert estimate')
+        self.assertEqual(uuid.UUID(payload['id']).version, 4)
 
     def test_build_airtable_fields_normalizes_legacy_coordinates_source(self):
         user = self.make_user('legacy-source@example.com')
@@ -233,7 +235,7 @@ class ModerationFlowTests(unittest.TestCase):
         mapped["_raw_date_start_present"] = True
         mapped["_invalid_coordinates"] = False
         mapped["validated"] = True
-        mapped["id"] = mapped["external_id"]
+        mapped["source_record_id"] = mapped["external_id"]
         mapped["airtable_record_id"] = mapped["external_id"]
 
         warnings = []
@@ -245,7 +247,7 @@ class ModerationFlowTests(unittest.TestCase):
         self.assertEqual(len(geojson["features"]), 1)
         self.assertEqual(geojson["features"][0]["properties"]["id"], mapped["id"])
 
-    def test_normalized_id_same_payload_same_hash_slight_change_new_hash(self):
+    def test_canonical_id_is_system_generated_uuid_v4(self):
         user = self.make_user('hash@example.com')
         payload = {
             'name_ru': 'Same title',
@@ -254,17 +256,17 @@ class ModerationFlowTests(unittest.TestCase):
             'latitude': 55.7558,
         }
         draft_a = Draft(user_id=user.id, title='Same title', description='A', payload=payload)
-        draft_b = Draft(user_id=user.id, title='Same title', description='B', payload=payload)
-        draft_c = Draft(user_id=user.id, title='Same title changed', description='C', payload={**payload, 'name_ru': 'Same title changed'})
+        requested_id = '550e8400-e29b-41d4-a716-446655440000'
+        draft_b = Draft(user_id=user.id, title='Same title', description='B', payload={**payload, 'id': requested_id})
 
-        id_a = build_airtable_fields(draft_a)['normalized_id']
-        id_b = build_airtable_fields(draft_b)['normalized_id']
-        id_c = build_airtable_fields(draft_c)['normalized_id']
+        generated_id = build_airtable_fields(draft_a)['id']
+        preserved_id = build_airtable_fields(draft_b)['id']
 
-        self.assertEqual(id_a, id_b)
-        self.assertNotEqual(id_a, id_c)
+        self.assertEqual(uuid.UUID(generated_id).version, 4)
+        self.assertEqual(uuid.UUID(preserved_id).version, 4)
+        self.assertNotEqual(preserved_id, requested_id)
 
-    def test_find_existing_uses_normalized_id_before_external_id(self):
+    def test_find_existing_uses_canonical_id_before_external_id(self):
         user = self.make_user('dedupe@example.com')
         draft = create_draft(
             self.db,
@@ -283,14 +285,14 @@ class ModerationFlowTests(unittest.TestCase):
 
         with patch('app.moderation.service._get_airtable_config', return_value=('token', 'base', 'Features')), patch(
             'app.moderation.service._find_airtable_record_by_formula',
-            return_value={'id': 'rec-normalized', 'fields': {}},
+            return_value={'id': 'rec-canonical', 'fields': {}},
         ) as find_formula:
             record = find_existing_airtable_feature(draft, fields=fields)
 
         self.assertIsNotNone(record)
-        self.assertEqual(record['id'], 'rec-normalized')
+        self.assertEqual(record['id'], 'rec-canonical')
         self.assertEqual(find_formula.call_count, 1)
-        self.assertIn('{normalized_id}', find_formula.call_args_list[0].args[2])
+        self.assertIn('{id}', find_formula.call_args_list[0].args[2])
 
     def test_draft_response_schema_includes_status(self):
         payload = DraftResponse.model_validate(

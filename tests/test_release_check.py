@@ -31,7 +31,20 @@ def _build_fixture(
     records_rejected: int | None = None,
     rejected_items: list[dict] | None = None,
 ) -> None:
-    features = [] if empty_features else [{"type": "Feature", "geometry": None, "properties": {}}]
+    canonical_id = "550e8400-e29b-41d4-a716-446655440000"
+    features = [] if empty_features else [
+        {
+            "type": "Feature",
+            "id": canonical_id,
+            "geometry": None,
+            "properties": {
+                "id": canonical_id,
+                "canonical_publish_id": canonical_id,
+                "source_record_id": "recFixture",
+                "legacy_ids": ["recFixture"],
+            },
+        }
+    ]
     rejected_payload = rejected_items or []
     resolved_records_rejected = len(rejected_payload) if records_rejected is None else records_rejected
     resolved_records_total_source = (
@@ -45,7 +58,17 @@ def _build_fixture(
     )
     _write(
         root / "data" / "features.json",
-        json.dumps([{"id": "f1"} for _ in features]),
+        json.dumps([{"id": "recFixture", "fields": {"id": canonical_id}} for _ in features]),
+    )
+    _write(
+        root / "data" / "id_aliases.json",
+        json.dumps(
+            {
+                "schema_version": 1,
+                "canonical_format": "uuid_v4",
+                "aliases": {} if empty_features else {"recFixture": canonical_id},
+            }
+        ),
     )
     _write(
         root / "data" / "export_meta.json",
@@ -240,6 +263,44 @@ def test_release_check_fails_when_features_json_missing(tmp_path: Path) -> None:
 
     assert result.returncode == 1
     assert "[FAIL] Data layer: data/features.json is missing" in result.stdout
+
+
+def test_release_check_fails_when_id_aliases_missing(tmp_path: Path) -> None:
+    _build_fixture(tmp_path)
+    (tmp_path / "data" / "id_aliases.json").unlink()
+    result = _run_release_check(tmp_path)
+
+    assert result.returncode == 1
+    assert "[FAIL] Data layer: data/id_aliases.json is missing" in result.stdout
+
+
+def test_release_check_fails_when_canonical_id_is_not_uuid_v4(tmp_path: Path) -> None:
+    _build_fixture(tmp_path)
+    _write(
+        tmp_path / "data" / "features.geojson",
+        json.dumps(
+            {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "id": "recFixture",
+                        "geometry": None,
+                        "properties": {
+                            "id": "recFixture",
+                            "canonical_publish_id": "recFixture",
+                            "source_record_id": "recFixture",
+                            "legacy_ids": [],
+                        },
+                    }
+                ],
+            }
+        ),
+    )
+    result = _run_release_check(tmp_path)
+
+    assert result.returncode == 1
+    assert "feature[0].id must be UUID v4" in result.stdout
 
 
 def test_release_check_fails_on_frontend_fallback_pattern(tmp_path: Path) -> None:
