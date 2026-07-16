@@ -43,6 +43,7 @@ The current operational state is **controlled engineering prototype / product-da
 - Output:
   - `/data/features.json`
   - `/data/features.geojson`
+  - `/data/id_aliases.json`
   - `/data/layers.json`
   - `/data/export_meta.json`
   - `/data/rejected.json`
@@ -103,6 +104,7 @@ Vanilla JavaScript (no frameworks):
 ## Data Validation Rules
 
 - `data/features.geojson` MUST be a valid GeoJSON `FeatureCollection` and MUST be non-empty for release.
+- Every public Feature ID MUST be UUID v4; Airtable `rec...` IDs are provenance-only and resolve through `data/id_aliases.json`.
 - `coordinates_source` uses a strict ETL allowlist; unknown values are rejected with `invalid_coordinates_source`.
 - Rejected records are tracked in `data/rejected.json`, and aggregate reasons are exposed via `data/export_meta.json`.
 

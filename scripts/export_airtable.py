@@ -14,6 +14,7 @@
 Выходные файлы:
   - data/features.json        : сырые записи Airtable (records)
   - data/features.geojson     : GeoJSON FeatureCollection
+  - data/id_aliases.json      : versioned legacy id -> canonical UUID map
   - data/rejected.json        : отклонённые записи с причинами валидации
   - data/layers.json          : агрегированные метаданные слоёв
   - data/export_errors.log    : ошибки в формате JSON Lines
@@ -261,12 +262,7 @@ def is_valid_url(value: Optional[str]) -> bool:
 
 
 def is_uuid_v4(value: Any) -> bool:
-    """Target-contract helper: Airtable governance expects UUID v4 for Features.id.
-
-    Runtime ETL currently keeps compatibility with legacy non-empty ids
-    (see get_etl_error / validate_feature), so this helper is intentionally
-    not a hard gate in active export path yet.
-    """
+    """Return True only for RFC 4122 UUID v4 values."""
     candidate = safe_str(value)
     if not candidate:
         return False
@@ -434,8 +430,9 @@ def map_record(
     linked_layer_to_public_id: Dict[str, str],
 ) -> Dict[str, Any]:
     """Преобразование записи Airtable в нормализованную структуру properties."""
-    record_id = record.get("id", "")
+    record_id = safe_str(record.get("id")) or ""
     fields = record.get("fields", {}) or {}
+    canonical_id = safe_str(fields.get("id"))
 
     longitude_parse_error = False
     latitude_parse_error = False
@@ -583,9 +580,10 @@ def map_record(
     parsed_date_end = to_date_or_none(raw_date_end, record_id, "date_end", errors)
 
     mapped = {
-        "id": record_id,
+        "id": canonical_id,
+        "source_record_id": record_id,
+        # Deprecated compatibility alias. New consumers use source_record_id.
         "airtable_record_id": record_id,
-        "normalized_id": safe_str(fields.get("normalized_id")),
         "external_id": external_id,
         "source_draft_id": source_draft_id,
         "layer_id": mapped_layer_id,
@@ -631,7 +629,7 @@ def map_record(
 
 def get_origin_key(mapped: Dict[str, Any]) -> Optional[str]:
     # Source reference identity (non-canonical for publish dedupe).
-    for field in ("external_id", "source_draft_id", "airtable_record_id"):
+    for field in ("external_id", "source_draft_id", "source_record_id", "airtable_record_id"):
         value = mapped.get(field)
         if value:
             return str(value)
@@ -639,15 +637,77 @@ def get_origin_key(mapped: Dict[str, Any]) -> Optional[str]:
 
 
 def get_canonical_publish_id(mapped: Dict[str, Any]) -> Optional[str]:
-    # Canonical publish identity contract:
-    # 1) normalized_id (primary)
-    # 2) airtable_record_id (backward-compat fallback for old rows)
-    # 3) source references (external/source draft ids)
-    for field in ("normalized_id", "airtable_record_id", "external_id", "source_draft_id"):
-        value = mapped.get(field)
-        if value:
-            return str(value)
-    return None
+    canonical_id = safe_str(mapped.get("id"))
+    return canonical_id if is_uuid_v4(canonical_id) else None
+
+
+def get_diagnostic_record_id(mapped: Dict[str, Any]) -> str:
+    """Use source identity in diagnostics so invalid canonical ids stay traceable."""
+    return str(
+        mapped.get("source_record_id")
+        or mapped.get("airtable_record_id")
+        or mapped.get("id")
+        or "<missing>"
+    )
+
+
+def load_id_aliases(path: Path) -> Dict[str, Any]:
+    """Load and validate a versioned alias artifact, or return an empty v1 map."""
+    if not path.exists():
+        return {"schema_version": 1, "canonical_format": "uuid_v4", "aliases": {}}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or payload.get("schema_version") != 1:
+        raise ValueError(f"Unsupported id alias schema in {path}")
+    aliases = payload.get("aliases")
+    if not isinstance(aliases, dict):
+        raise ValueError(f"id alias artifact must contain an aliases object: {path}")
+    for legacy_id, canonical_id in aliases.items():
+        if not safe_str(legacy_id) or not is_uuid_v4(canonical_id):
+            raise ValueError(f"Invalid id alias {legacy_id!r} -> {canonical_id!r} in {path}")
+    return {
+        "schema_version": 1,
+        "canonical_format": "uuid_v4",
+        "aliases": dict(aliases),
+    }
+
+
+def build_id_aliases(
+    mapped_records: Iterable[Dict[str, Any]],
+    existing_payload: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Merge durable historical aliases with current source-record aliases."""
+    existing = existing_payload or {}
+    existing_aliases = existing.get("aliases", existing)
+    if not isinstance(existing_aliases, dict):
+        raise ValueError("existing id aliases must be an object")
+
+    aliases: Dict[str, str] = {}
+    for legacy_id, canonical_id in existing_aliases.items():
+        normalized_legacy = safe_str(legacy_id)
+        normalized_canonical = safe_str(canonical_id)
+        if not normalized_legacy or not is_uuid_v4(normalized_canonical):
+            raise ValueError(f"Invalid id alias {legacy_id!r} -> {canonical_id!r}")
+        if normalized_legacy != normalized_canonical:
+            aliases[normalized_legacy] = normalized_canonical
+
+    for mapped in mapped_records:
+        canonical_id = get_canonical_publish_id(mapped)
+        source_record_id = safe_str(mapped.get("source_record_id") or mapped.get("airtable_record_id"))
+        if canonical_id and source_record_id and source_record_id != canonical_id:
+            aliases[source_record_id] = canonical_id
+
+    return {
+        "schema_version": 1,
+        "canonical_format": "uuid_v4",
+        "aliases": dict(sorted(aliases.items())),
+    }
+
+
+def get_legacy_ids(canonical_id: Any, id_aliases: Dict[str, str]) -> List[str]:
+    normalized_canonical = safe_str(canonical_id)
+    if not normalized_canonical:
+        return []
+    return sorted(legacy_id for legacy_id, target in id_aliases.items() if target == normalized_canonical)
 
 
 def get_dedupe_key(mapped: Dict[str, Any]) -> Tuple[Any, ...]:
@@ -737,6 +797,7 @@ def generate_mock_records() -> List[Dict[str, Any]]:
         {
             "id": "recTEST",
             "fields": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
                 "layer_id": "test_layer",
                 "layer_type_enum": "biography",
                 "name_ru": "Тестовая запись",
@@ -773,10 +834,16 @@ def generate_mock_layers_records() -> List[Dict[str, Any]]:
     ]
     
     
-def build_geojson_features(mapped_records: Iterable[Dict[str, Any]], warnings: List[Dict[str, Any]], errors: List[Dict[str, Any]]) -> Dict[str, Any]:
+def build_geojson_features(
+    mapped_records: Iterable[Dict[str, Any]],
+    warnings: List[Dict[str, Any]],
+    errors: List[Dict[str, Any]],
+    id_aliases: Optional[Dict[str, str]] = None,
+) -> Dict[str, Any]:
     features = []
+    resolved_aliases = id_aliases or {}
     for m in mapped_records:
-        record_id = m.get("id") or "<missing>"
+        record_id = get_diagnostic_record_id(m)
         if parse_bool(m.get("validated")) is not True:
             add_issue(errors, "critical", record_id, "not_validated", "validated")
             continue
@@ -801,8 +868,10 @@ def build_geojson_features(mapped_records: Iterable[Dict[str, Any]], warnings: L
                 "geometry": geometry,
                 "properties": {
                     "id": m.get("id"),
-                    "normalized_id": m.get("normalized_id"),
                     "canonical_publish_id": get_canonical_publish_id(m),
+                    "source_record_id": m.get("source_record_id") or m.get("airtable_record_id"),
+                    "legacy_ids": get_legacy_ids(m.get("id"), resolved_aliases),
+                    # Deprecated compatibility alias. New consumers use source_record_id.
                     "airtable_record_id": m.get("airtable_record_id"),
                     "external_id": m.get("external_id"),
                     "source_draft_id": m.get("source_draft_id"),
@@ -842,8 +911,8 @@ def get_etl_error(mapped: Dict[str, Any]) -> Optional[str]:
     record_id = safe_str(mapped.get("id"))
     if not record_id:
         return "missing_id"
-    # Compatibility mode: legacy non-empty ids are still tolerated at runtime.
-    # Target UUID v4 contract is tracked via is_uuid_v4() helper/self-checks.
+    if not is_uuid_v4(record_id):
+        return "invalid_id_uuid_v4"
     if "name_ru" in mapped and not safe_str(mapped.get("name_ru")):
         return "missing_name_ru"
     if "layer_type" in mapped and mapped.get("layer_type") not in ALLOWED_LAYER_TYPES:
@@ -925,7 +994,7 @@ def map_layers(layer_records: Iterable[Dict[str, Any]]) -> Tuple[Dict[str, str],
 
 
 def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List[Dict[str, Any]], errors: List[Dict[str, Any]]) -> bool:
-    record_id = mapped.get("id") or "<missing>"
+    record_id = get_diagnostic_record_id(mapped)
     valid = True
 
     def critical(field: str, reason: str) -> None:
@@ -938,6 +1007,8 @@ def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List
 
     if not mapped.get("id"):
         critical("id", "missing_id")
+    elif not is_uuid_v4(mapped.get("id")):
+        critical("id", "invalid_id_uuid_v4")
     if not mapped.get("name_ru"):
         critical("name_ru", "missing_name_ru")
     has_start = bool(mapped.get("_raw_date_start_present"))
@@ -1102,8 +1173,9 @@ def maybe_commit(paths: List[Path], records_count: int) -> None:
 def run_self_test() -> int:
     errors: List[Dict[str, Any]] = []
     sample = {
-        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "id": "recSELFTEST",
         "fields": {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
             "layer_id": "history",
             "layer_type_enum": "architecture",
             "name_ru": "Тест",
@@ -1168,7 +1240,7 @@ def run_self_test() -> int:
             "longitude": 37.0,
             "layer_id": "history",
         }
-    ) is None
+    ) == "invalid_id_uuid_v4"
     assert is_uuid_v4("550e8400-e29b-41d4-a716-446655440000")
     assert not is_uuid_v4("recLEGACY")
     assert (
@@ -1310,6 +1382,8 @@ def main() -> int:
     prefix = "_test_" if dry_run else ""
     raw_path = out_dir / f"{prefix}features.json"
     geojson_path = out_dir / f"{prefix}features.geojson"
+    id_aliases_path = out_dir / f"{prefix}id_aliases.json"
+    id_aliases_seed_path = out_dir / "id_aliases.json"
     rejected_path = out_dir / f"{prefix}rejected.json"
     layers_path = out_dir / f"{prefix}layers.json"
     validation_report_path = out_dir / f"{prefix}validation_report.json"
@@ -1367,6 +1441,7 @@ def main() -> int:
             rejected_features.append(
                 {
                     "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
                     "name_ru": mapped.get("name_ru"),
                     "reasons": ["not_validated"],
                 }
@@ -1379,6 +1454,7 @@ def main() -> int:
             rejected_features.append(
                 {
                     "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
                     "name_ru": mapped.get("name_ru"),
                     "reasons": ["inactive"],
                 }
@@ -1388,10 +1464,11 @@ def main() -> int:
         record_errors_start = len(errors)
         feature_valid = validate_feature(mapped, valid_layer_ids, warnings, errors)
         if not feature_valid:
+            diagnostic_record_id = get_diagnostic_record_id(mapped)
             critical_reasons = [
                 issue.get("reason")
                 for issue in errors[record_errors_start:]
-                if issue.get("severity") == "critical" and issue.get("id") == (mapped.get("id") or "<missing>")
+                if issue.get("severity") == "critical" and issue.get("id") == diagnostic_record_id
             ]
             if not critical_reasons:
                 critical_reasons = ["validation_failed"]
@@ -1400,6 +1477,7 @@ def main() -> int:
             rejected_features.append(
                 {
                     "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
                     "name_ru": mapped.get("name_ru"),
                     "reasons": critical_reasons,
                 }
@@ -1413,6 +1491,7 @@ def main() -> int:
             rejected_features.append(
                 {
                     "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
                     "name_ru": mapped.get("name_ru"),
                     "reasons": [etl_error],
                 }
@@ -1427,6 +1506,7 @@ def main() -> int:
             rejected_features.append(
                 {
                     "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
                     "name_ru": mapped.get("name_ru"),
                     "reasons": ["missing_geometry"],
                 }
@@ -1440,6 +1520,7 @@ def main() -> int:
             rejected_features.append(
                 {
                     "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
                     "name_ru": mapped.get("name_ru"),
                     "reasons": ["duplicate"],
                 }
@@ -1452,7 +1533,14 @@ def main() -> int:
 
     valid_features = sort_mapped_records(valid_features)
 
-    geojson = build_geojson_features(valid_features, warnings, errors)
+    try:
+        existing_id_aliases = load_id_aliases(id_aliases_seed_path)
+        id_aliases = build_id_aliases(valid_features, existing_id_aliases)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"Критическая ошибка id alias map: {exc}", file=sys.stderr)
+        return 1
+
+    geojson = build_geojson_features(valid_features, warnings, errors, id_aliases["aliases"])
     total_records = len(records)
     exported_records = len(valid_features)
     geojson_records = len(geojson["features"])
@@ -1487,6 +1575,7 @@ def main() -> int:
     try:
         write_json(raw_path, records)
         write_json(geojson_path, geojson)
+        write_json(id_aliases_path, id_aliases)
         write_json(rejected_path, rejected_features)
         write_json(layers_path, valid_layers)
         write_json(validation_report_path, validation_report)
@@ -1514,7 +1603,16 @@ def main() -> int:
 
     if args.commit:
         maybe_commit(
-            [raw_path, geojson_path, rejected_path, layers_path, validation_report_path, export_meta_path, error_log_path],
+            [
+                raw_path,
+                geojson_path,
+                id_aliases_path,
+                rejected_path,
+                layers_path,
+                validation_report_path,
+                export_meta_path,
+                error_log_path,
+            ],
             len(valid_features),
         )
 

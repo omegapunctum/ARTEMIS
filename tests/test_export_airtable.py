@@ -1,12 +1,15 @@
 import unittest
+import uuid
 
 from scripts.export_airtable import (
     aggregate_issues,
+    build_id_aliases,
     build_geojson_features,
     build_validation_report,
     get_canonical_publish_id,
     get_dedupe_key,
     get_origin_key,
+    is_uuid_v4,
     map_layers,
     map_record,
     normalize_coordinates_confidence,
@@ -18,7 +21,9 @@ from scripts.export_airtable import (
 class ExportAirtableIdempotencyTests(unittest.TestCase):
     def _build_mapped(self, **overrides):
         base = {
-            "id": "recFeature2",
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "source_record_id": "recFeature2",
+            "airtable_record_id": "recFeature2",
             "validated": True,
             "source_url": "https://example.com/source",
             "longitude": 10.0,
@@ -58,14 +63,28 @@ class ExportAirtableIdempotencyTests(unittest.TestCase):
         mapped = {"name_ru": "Test", "latitude": 1.0, "longitude": 2.0}
         self.assertEqual(get_dedupe_key(mapped), ("Test", 1.0, 2.0))
 
-    def test_canonical_publish_id_prefers_normalized_id(self):
+    def test_canonical_publish_id_uses_only_uuid_v4_business_id(self):
         mapped = {
-            "normalized_id": "norm-1",
+            "id": "550e8400-e29b-41d4-a716-446655440000",
             "airtable_record_id": "recAAA",
             "external_id": "draft:100",
             "source_draft_id": "draft:100",
         }
-        self.assertEqual(get_canonical_publish_id(mapped), "norm-1")
+        self.assertEqual(get_canonical_publish_id(mapped), "550e8400-e29b-41d4-a716-446655440000")
+        self.assertIsNone(get_canonical_publish_id({**mapped, "id": "recAAA"}))
+
+    def test_id_aliases_merge_historical_and_source_record_ids(self):
+        mapped = self._build_mapped()
+        aliases = build_id_aliases(
+            [mapped],
+            {
+                "schema_version": 1,
+                "aliases": {"legacy-business-id": mapped["id"]},
+            },
+        )
+        self.assertEqual(aliases["schema_version"], 1)
+        self.assertEqual(aliases["aliases"]["recFeature2"], mapped["id"])
+        self.assertEqual(aliases["aliases"]["legacy-business-id"], mapped["id"])
 
     def test_map_layer_linked_record_to_public_layer_id(self):
         linked_map, _ = map_layers(
@@ -120,6 +139,12 @@ class ExportAirtableIdempotencyTests(unittest.TestCase):
         errors = []
         self.assertFalse(validate_feature(self._build_mapped(id=""), {"roman_empire"}, warnings, errors))
         self.assertTrue(any(e.get("reason") == "missing_id" for e in errors))
+
+    def test_non_uuid_v4_id_rejected(self):
+        warnings = []
+        errors = []
+        self.assertFalse(validate_feature(self._build_mapped(id="recLegacy"), {"roman_empire"}, warnings, errors))
+        self.assertTrue(any(e.get("reason") == "invalid_id_uuid_v4" for e in errors))
 
     def test_missing_layer_id_rejected(self):
         warnings = []
@@ -185,6 +210,7 @@ class ExportAirtablePipelineTests(unittest.TestCase):
         return {
             "id": record_id,
             "fields": {
+                "id": str(uuid.uuid4()),
                 "layer_id": ["recLayer1"],
                 "layer_type_enum": "biography",
                 "name_ru": f"Запись {record_id}",
@@ -212,16 +238,16 @@ class ExportAirtablePipelineTests(unittest.TestCase):
         rejected = []
         for item in mapped:
             if item.get("validated") is not True:
-                rejected.append({"id": item.get("id"), "reasons": ["not_validated"]})
+                rejected.append({"id": item.get("id"), "source_record_id": item.get("source_record_id"), "reasons": ["not_validated"]})
                 continue
             record_errors_start = len(errors)
             if not validate_feature(item, valid_layer_ids, warnings, errors):
                 reasons = [
                     issue.get("reason")
                     for issue in errors[record_errors_start:]
-                    if issue.get("severity") == "critical" and issue.get("id") == (item.get("id") or "<missing>")
+                    if issue.get("severity") == "critical" and issue.get("id") == item.get("source_record_id")
                 ]
-                rejected.append({"id": item.get("id"), "reasons": reasons or ["validation_failed"]})
+                rejected.append({"id": item.get("id"), "source_record_id": item.get("source_record_id"), "reasons": reasons or ["validation_failed"]})
                 continue
             valid_features.append(item)
 
@@ -245,10 +271,13 @@ class ExportAirtablePipelineTests(unittest.TestCase):
         return geojson, rejected, validation_report, export_meta
 
     def test_happy_path_validated_record_is_in_geojson(self):
-        geojson, rejected, report, meta = self._run_pipeline([self._feature_record(record_id="recA")])
+        record = self._feature_record(record_id="recA")
+        geojson, rejected, report, meta = self._run_pipeline([record])
         self.assertEqual(geojson["type"], "FeatureCollection")
         self.assertEqual(len(geojson["features"]), 1)
-        self.assertEqual(geojson["features"][0]["id"], "recA")
+        self.assertEqual(geojson["features"][0]["id"], record["fields"]["id"])
+        self.assertTrue(is_uuid_v4(geojson["features"][0]["id"]))
+        self.assertEqual(geojson["features"][0]["properties"]["source_record_id"], "recA")
         self.assertEqual(rejected, [])
         self.assertEqual(report["valid_records"], 1)
         self.assertEqual(meta["records_geojson"], 1)
@@ -262,7 +291,7 @@ class ExportAirtablePipelineTests(unittest.TestCase):
         )
         self.assertEqual(len(geojson["features"]), 1)
         self.assertEqual(len(rejected), 1)
-        self.assertEqual(rejected[0]["id"], "recB")
+        self.assertEqual(rejected[0]["source_record_id"], "recB")
         self.assertIn("invalid_coordinates_source", rejected[0]["reasons"])
         self.assertEqual(report["valid_records"], 1)
         self.assertEqual(report["skipped_records"], 1)

@@ -71,7 +71,8 @@ class MvpContractStaticTests(unittest.TestCase):
 
     def test_etl_sanity_for_origin_and_validation(self):
         mapped = {
-            'id': 'recAAA',
+            'id': '550e8400-e29b-41d4-a716-446655440000',
+            'source_record_id': 'recAAA',
             'external_id': 'draft:10',
             'source_draft_id': 'draft:10',
             'airtable_record_id': 'recAAA',
@@ -91,7 +92,7 @@ class MvpContractStaticTests(unittest.TestCase):
         }
         warnings, errors = [], []
         self.assertEqual(get_origin_key(mapped), 'draft:10')
-        self.assertEqual(get_canonical_publish_id(mapped), 'recAAA')
+        self.assertEqual(get_canonical_publish_id(mapped), '550e8400-e29b-41d4-a716-446655440000')
         self.assertEqual(get_dedupe_key(mapped), ('Feature', 50.4, 30.5))
         self.assertTrue(validate_feature(mapped, {'roman_empire'}, warnings, errors))
 
@@ -108,11 +109,11 @@ class MvpContractStaticTests(unittest.TestCase):
 
     def test_validated_layer_not_empty_when_valid_input_exists(self):
         mapped_valid = {
-            'id': 'recValid',
+            'id': '550e8400-e29b-41d4-a716-446655440001',
+            'source_record_id': 'recValid',
             'airtable_record_id': 'recValid',
             'external_id': 'draft:42',
             'source_draft_id': 'draft:42',
-            'normalized_id': 'norm42',
             'name_ru': 'Feature',
             'validated': True,
             'source_url': 'https://example.com/source',
@@ -157,6 +158,13 @@ class MvpContractStaticTests(unittest.TestCase):
         self.assertIn("setMapDisplayMode(map, state.displayMode);", ui_source)
         self.assertIn("aggregateFeaturesByDecade(nextFilteredFeatures)", ui_source)
         self.assertIn("export function aggregateFeaturesByDecade(features = [])", state_source)
+
+    def test_frontend_resolves_legacy_slice_ids_to_canonical_feature_ids(self):
+        ui_source = Path("js/ui.js").read_text(encoding="utf-8")
+        self.assertIn("function getFeatureLegacyIds(feature)", ui_source)
+        self.assertIn("function resolveFeatureCanonicalId(state, featureId)", ui_source)
+        self.assertIn("getFeatureLegacyIds(feature).includes(normalizedId)", ui_source)
+        self.assertIn("restored.featureIds.map((id) => resolveFeatureCanonicalId(state, id))", ui_source)
 
     def test_courses_live_behavioral_tests_exist(self):
         behavior_test = Path("tests/test_courses_live_behavior.py")

@@ -79,6 +79,7 @@ jobs:
             "js/courses_runtime.js"
             "js/uploads.js"
             "data/features.geojson"
+            "data/id_aliases.json"
             "data/layers.json"
             "data/courses.json"
           )

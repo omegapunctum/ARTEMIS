@@ -184,6 +184,7 @@ data/
 ├── export_meta.json
 ├── features.geojson
 ├── features.json
+├── id_aliases.json
 ├── layers.json
 ├── rejected.json
 └── validation_report.json
@@ -192,6 +193,7 @@ data/
 Правила:
 - `data/features.geojson` — canonical public map source;
 - `features.json` не является public source of truth;
+- `data/id_aliases.json` — versioned compatibility map from legacy/source IDs to canonical UUID v4;
 - raw / validated / rejected слои не смешиваются;
 - checked-in data artifacts должны использовать тот же contract, что и release gate;
 - `validation_report.json` и `export_errors.log` следует трактовать как диагностические артефакты, а не как отдельные source-of-truth слои, если release gate не опирается на них напрямую.

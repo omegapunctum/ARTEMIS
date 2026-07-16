@@ -33,6 +33,7 @@ Canonical public map dataset:
 
 Supporting release artifacts:
 - `data/features.json`
+- `data/id_aliases.json`
 - `data/export_meta.json`
 - `data/rejected.json`
 
@@ -53,6 +54,7 @@ Rules:
 Required release artifacts:
 - `data/features.geojson`
 - `data/features.json`
+- `data/id_aliases.json`
 - `data/export_meta.json`
 - `data/rejected.json`
 
@@ -62,6 +64,7 @@ Release gate rules:
 - `data/features.geojson.type` must be `FeatureCollection`;
 - `data/features.geojson.features` must be a non-empty array;
 - `data/features.json` must be an array;
+- `data/id_aliases.json` must use schema version `1`, declare `canonical_format=uuid_v4`, and map every source record ID to a published canonical ID;
 - `records_exported` in `data/export_meta.json` must match:
   - number of records in `data/features.json`;
   - number of features in `data/features.geojson.features`;
@@ -107,11 +110,14 @@ Geometry rules:
 - features without valid geometry must not enter `data/features.geojson` as public map features.
 
 Feature identity rules:
-- `Feature.id` must be stable for the exported record;
-- `properties.id` must match the exported feature identity;
-- `properties.canonical_publish_id` is the canonical publish identity when present;
-- `properties.airtable_record_id` tracks Airtable origin when present;
+- `Feature.id` must be a stable RFC 4122 UUID v4 sourced from Airtable `Features.id`;
+- `properties.id` and `properties.canonical_publish_id` must exactly match `Feature.id`;
+- `properties.source_record_id` stores the Airtable record ID (`rec...`) for provenance only;
+- `properties.legacy_ids` contains transition aliases that resolve to `Feature.id`;
+- `properties.airtable_record_id` is a deprecated compatibility alias for `source_record_id` and must not be used as public identity;
 - `properties.origin_key` is the source-origin key used to preserve traceability.
+- missing, non-v4, or duplicate canonical IDs block publication;
+- a canonical ID is created once and must not be edited after publication.
 
 ---
 
@@ -121,10 +127,11 @@ Current baseline properties observed in the public artifact:
 
 | Field | Type | Required | Role |
 |---|---:|---:|---|
-| `id` | string | yes | public feature/source identity |
-| `normalized_id` | string/null | no | normalized stable id if available |
-| `canonical_publish_id` | string/null | yes | canonical publish identity |
-| `airtable_record_id` | string/null | no | Airtable record traceability |
+| `id` | UUID v4 string | yes | canonical public Feature identity |
+| `canonical_publish_id` | UUID v4 string | yes | exact compatibility mirror of `id` |
+| `source_record_id` | string | yes | Airtable/source-system provenance ID |
+| `legacy_ids` | string[] | yes | aliases accepted only for migration/restore |
+| `airtable_record_id` | string/null | no | deprecated mirror of `source_record_id` |
 | `external_id` | string/null | no | external/source-system id |
 | `source_draft_id` | string/null | no | draft-origin traceability for moderated records |
 | `origin_key` | string/null | yes | source-origin key |
@@ -152,7 +159,7 @@ Current baseline properties observed in the public artifact:
 | `has_geometry` | boolean | yes | geometry validation status |
 
 Required-for-public baseline:
-- identity: `id`, `canonical_publish_id`, `origin_key`;
+- identity: `id`, `canonical_publish_id`, `source_record_id`, `legacy_ids`, `origin_key`;
 - display: `name_ru`;
 - map: `longitude`, `latitude`, valid Point geometry;
 - filtering: `layer_id`, `date_start`;
@@ -207,7 +214,7 @@ Synchronization rule:
 A source record may be exported only if it satisfies the current ETL validation contract.
 
 Exported public records must satisfy:
-- valid identity;
+- valid unique UUID v4 canonical identity;
 - valid `layer_id`;
 - valid coordinates;
 - valid geometry;
@@ -231,7 +238,7 @@ Release-quality warnings:
 
 Clarification:
 - `data/features.json` is a raw/supporting source artifact and may include source-side diagnostic metadata from Airtable.
-- raw diagnostic metadata, including `fields.id_status` when present, is not release-gating by itself.
+- raw `fields.id` is release-gating and must be UUID v4; derived `fields.id_status` remains diagnostic because the ETL validates the source value directly.
 - release warnings/rejections are derived from ETL validation/export pipeline signals, especially `export_meta.json` and `rejected.json`.
 - documentation, release gate, and audits must not treat raw source metadata as final release truth unless the ETL pipeline has promoted it into release-quality signals.
 
