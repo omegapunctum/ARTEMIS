@@ -46,8 +46,8 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 
 - 19 Features;
 - 26 Layers;
-- 10 Sources;
-- 0 Media records;
+- 20 Sources (`19 reviewed / 1 draft`);
+- 3 reviewed Media records linked as primary to 3 pilot Features;
 - 0 canonical Relation records;
 - только архитектурные объекты.
 
@@ -55,7 +55,8 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 
 - canonical identity migration v1 завершена в PR `#290`: ETL и public artifacts используют `Features.id` UUID v4, а Airtable record ID отделён как `source_record_id`;
 - source migration выполнена: контрольное чтение Airtable подтверждает `19/19 id_status=ok`; точная таблица, execution evidence и recovery-план зафиксированы в `docs/work/2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`;
-- Source/Media audit для #283 подтверждает: `10 Sources / 0 Source URLs / 0 Media`; все `19/19 Features.image_url` являются HTML-страницами Wikimedia Commons, а не direct assets; в текущей Airtable schema нет Feature→Source/Media links; evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
+- Source batch #283 выполнен: для `19/19` Features существует ровно один reviewed primary Source; Airtable содержит `20 Sources / 19 reviewed / 1 unverifiable legacy candidate in draft` и `20 FeatureSources / 19 reviewed / 1 draft`;
+- первый Media batch #283 содержит 3 reviewed direct assets и 3 reviewed primary FeatureMedia links для Stonehenge, Parthenon и Great Pyramid; остальные 16 legacy `Features.image_url` не считаются нормализованными Media; evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
 - часть включённых слоёв пуста;
 - source и media semantics не доведены до canonical модели;
 - эвристические «похожие объекты» не являются доказанными historical relations;

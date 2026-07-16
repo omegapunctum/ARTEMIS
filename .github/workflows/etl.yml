@@ -40,6 +40,8 @@ jobs:
           test -f data/_test_features.geojson
           test -f data/_test_id_aliases.json
           test -f data/_test_layers.json
+          test -f data/_test_sources.json
+          test -f data/_test_media.json
           test -f data/_test_export_meta.json
 
       - name: Validate GeoJSON structure
@@ -50,7 +52,22 @@ jobs:
               data = json.load(f)
           assert data["type"] == "FeatureCollection"
           assert isinstance(data["features"], list)
+          assert data["features"][0]["properties"]["source_ids"] == ["src_test_reference"]
+          assert data["features"][0]["properties"]["media_ids"] == ["media_test_image"]
           print("GeoJSON OK")
+          EOF
+
+      - name: Validate normalized evidence artifacts
+        run: |
+          python - <<EOF
+          import json
+          with open("data/_test_sources.json") as f:
+              sources = json.load(f)
+          with open("data/_test_media.json") as f:
+              media = json.load(f)
+          assert [item["id"] for item in sources] == ["src_test_reference"]
+          assert [item["id"] for item in media] == ["media_test_image"]
+          print("Normalized evidence artifacts OK")
           EOF
 
       - name: Validate export_meta
@@ -61,6 +78,8 @@ jobs:
               data = json.load(f)
           assert "records_total_source" in data
           assert "records_exported" in data
+          assert data["sources_reviewed"] == 1
+          assert data["media_reviewed"] == 1
           assert "errors" in data
           print("Meta OK")
           EOF

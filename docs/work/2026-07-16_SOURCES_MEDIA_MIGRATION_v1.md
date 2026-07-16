@@ -3,15 +3,15 @@
 ## Статус
 
 - Issue: `#283`.
-- Статус: contract and audit complete; Airtable/code migration not started.
+- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; Media migration in reviewed batches (`3/19`).
 - Snapshot date: 2026-07-16.
 - Scope: normalize factual Sources, display Media, per-link evidence/presentation semantics and compatibility projections for the 19-Feature Architecture Atlas pilot.
 
-Этот документ фиксирует план до любых schema/data writes. Он не утверждает, что target fields или artifacts уже существуют.
+Документ был создан как pre-write plan и теперь также содержит execution evidence для выполненных schema/data/code batches.
 
-## 1. Verified current state
+## 1. Verified pre-write baseline
 
-Read-only audit of Airtable base `Artemis_Base` and checked-in `data/features.geojson` found:
+Read-only audit of Airtable base `Artemis_Base` and checked-in `data/features.geojson` before migration found:
 
 | Check | Result |
 |---|---:|
@@ -27,7 +27,7 @@ Read-only audit of Airtable base `Artemis_Base` and checked-in `data/features.ge
 
 All ten Sources contain an ID, title and legacy `license=CC BY-SA`, but no URL. This license value is not trustworthy as Media rights metadata and MUST NOT be copied automatically. Current `Features.source_license` is likewise conflated and cannot prove either factual-source terms or image rights.
 
-The current exporter reads only `Features` and `Layers`; it does not fetch, validate or publish `Sources` or `Media`.
+At the pre-write baseline, the exporter read only `Features` and `Layers`; the implementation evidence below records the normalized exporter added during this migration.
 
 ## 2. Contract decisions
 
@@ -141,11 +141,69 @@ Fetch all normalized tables, validate cross-references and publish `sources.json
 - [x] 19-Feature Source migration matrix defined;
 - [x] Media verification procedure defined;
 - [x] compatibility and recovery rules defined;
-- [ ] Airtable schema created;
-- [ ] Source/Media data migrated and reviewed;
-- [ ] ETL/public artifacts implemented;
-- [ ] semantic validation and frontend contract tests green.
+- [x] Airtable schema created;
+- [x] Source data migrated and reviewed for all 19 pilot Features;
+- [ ] Media data migrated and reviewed;
+- [x] ETL/public artifacts implemented;
+- [x] semantic ETL validation and contract tests green.
 
 ## 8. Execution evidence
 
-Not started. This section is populated only by applied Airtable and code migrations.
+### Schema batch — 2026-07-16
+
+Additive schema changes were applied without deleting or renaming legacy fields.
+
+- Sources added fields: `bibliographic_locator` (`fldF9ZoG5wqZBhIVC`), `author_or_organization` (`fldGcNldPj3OqarMB`), `source_type` (`fldNYY2VhgSPwgAE5`), `accessed_at` (`fldQWMsgX1uRsh3IU`), `review_status` (`fldO7aJ5wbGOwXNqY`), `content_license` (`fldjfofmSBs05N6Is`), `notes` (`fldpkCTzDWyA5rEBE`).
+- Media added fields: `asset_url` (`fldIMbUlIhZfyfFi3`), `source_page_url` (`fldtfoTmUMHUBqkTt`), `creator` (`fldulEr7xy0SN40t5`), `license_url` (`fld6Huddl5Owtgwo8`), `attribution_text` (`fldN9B9jzuoq2BM8N`), `media_type` (`fldYcdNhetS7aj56l`), `review_status` (`fldfKz5wOi58FfIBU`), `notes` (`fldfl9QK2O1ghjxZ9`).
+- Created `FeatureSources` (`tblxTjN3tcCo5nxBV`) with Feature link `fldvnWawcWLIDmQ1n` and Source link `fldHu6kWqe0NUjOZD`.
+- Created `FeatureMedia` (`tblEqczlCmiIRGGo2`) with Feature link `fldx0fj5FHIQJRFvI` and Media link `fldYXdgPiXx4eR797`.
+- Airtable exposed all four relationship fields as `multipleRecordLinks`; ETL must enforce exactly one linked record on each side of an association row.
+- Post-write schema read confirmed six tables and reciprocal link fields on Features, Sources and Media.
+
+### Pre-write Sources snapshot
+
+All ten pre-existing Sources had `url=null`, no Media links and legacy `license=CC BY-SA` before the data batch.
+
+| Airtable record ID | Source ID | Existing title |
+|---|---|---|
+| `recI0DEi5kV2CiEr4` | `src_burj_khalifa_official` | Burj Khalifa — Official Site |
+| `recN3jrFPLXO2RDVu` | `src_chartres_unesco` | Chartres Cathedral — UNESCO World Heritage Centre |
+| `recUWXGH1KVdDU6oj` | `src_chrysler_building_wikipedia` | Chrysler Building — Wikipedia |
+| `recdFbUmncwt9Rih0` | `src_st_peters_basilica_wikipedia` | St. Peter's Basilica — Wikipedia |
+| `recdXf8lu5F7qkYqZ` | `src_villa_savoye_wikipedia` | Villa Savoye — Wikipedia |
+| `receZjrpka5zGZQn9` | `src_pantheon_paris_wikipedia` | Panthéon — Wikipedia |
+| `recf7GLYZro9PxkVH` | `src_versailles_wikipedia` | Palace of Versailles — Wikipedia |
+| `rechvy4Rzxfrslujt` | `src_santiago_cathedral_official` | Santiago de Compostela Cathedral — Official Site |
+| `recsWHqg2b9gALhS4` | `src_centre_pompidou_wikipedia` | Centre Pompidou — Wikipedia |
+| `recstir8wePZAKVIJ` | `src_pantheon_rome_wikipedia` | Pantheon, Rome — Wikipedia |
+
+### Source data batch — 2026-07-16
+
+- Completed the ten existing Sources and created the nine missing records from the deterministic matrix as `draft`.
+- Created 19 deterministic FeatureSources rows as `general_reference`, initially `draft`.
+- Verified 17 locators by opening the source page directly; the Burj Khalifa official locator was corroborated through the indexed building record and official website reference.
+- The legacy Britannica locator for Ziggurat at Ur could not be verified by direct open or search and remains `draft`, non-primary.
+- Added reviewed fallback `src_ziggurat_ur_wikipedia` (`recUxWZovAKEt4Dzq`) and reviewed primary link `reckBGcyknAxVlXBI`; no unverifiable claim was promoted.
+- Final control read: `20 Sources / 19 reviewed / 1 draft`, `20 FeatureSources / 19 reviewed / 1 draft`.
+- Every one of the 19 Features has exactly one reviewed primary Source; missing and duplicate-primary sets are empty.
+- No legacy image/license value was promoted automatically into normalized Media.
+
+### ETL and CI batch — 2026-07-16
+
+- Export now reads `Sources`, `Media`, `FeatureSources` and `FeatureMedia` alongside Features/Layers.
+- Only reviewed, valid Source/Media records and reviewed association rows enter public artifacts.
+- Feature validation blocks missing reviewed Sources, ambiguous primary Sources, duplicate refs and association rows with invalid cardinality.
+- `data/sources.json`, `data/media.json`, `source_refs`, `media_refs` and legacy primary projections are generated by the ETL.
+- Dry-run completed with `1 Feature / 1 Source / 1 Media / 0 errors`; normalized output assertions were added to CI.
+- Focused evidence tests: `31 passed, 10 subtests passed`.
+- Repository test suite: `259 passed, 10 subtests passed`; release check passed all gates with the known single-node memory-session warning.
+
+### Media pilot batch 1 — 2026-07-16
+
+- Created 3 reviewed Media records and 3 reviewed primary FeatureMedia links for Stonehenge, Parthenon and Great Pyramid of Giza.
+- Every `asset_url` is a direct `upload.wikimedia.org` image, while `source_page_url` preserves the corresponding Commons File page.
+- Creator, exact license family/version, license URL and display attribution were verified on each source page.
+- IDs: `media_stonehenge_wiscombe_2007`, `media_parthenon_swayne_1978`, `media_great_pyramid_vanderzee_2023`.
+- Control read: `3 Media / 3 reviewed`, `3 FeatureMedia / 3 reviewed`; each association has exactly one Feature, one Media and one `primary` role.
+- A Burj Khalifa candidate was rejected from this batch because its Commons page carries a UAE freedom-of-panorama warning; this confirms the migration does not treat a photo license alone as sufficient rights evidence.
+- Remaining Media scope: 16 Features require separate source and rights review before the migration checklist can be closed.
