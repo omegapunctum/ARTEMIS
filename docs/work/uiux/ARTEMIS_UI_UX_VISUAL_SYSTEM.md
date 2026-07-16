@@ -480,13 +480,19 @@ Loading state не должен выглядеть как ошибка.
 ## 12.1 Top header / project shell
 - легче по визуальному весу, чем detail panel и timeline;
 - не должен выглядеть как главный герой интерфейса;
-- project navigation должна быть тихой и вторичной к map workspace.
+- project navigation должна быть тихой и вторичной к map workspace;
+- nested frame + dock borders не должны создавать декоративную рамку вокруг всей сцены;
+- compact slice context не должен растягивать пустую центральную колонку;
+- desktop primary header target для активного refinement: 56–64 px.
 
 ## 12.2 Timeline
 - один из главных load-bearing visual objects;
 - должен быть чистым, тактильно читаемым и собранным;
 - active range должен быть ясен без избыточной декоративности;
-- таймлайн не должен выглядеть как secondary filter widget.
+- таймлайн не должен выглядеть как secondary filter widget;
+- compact desktop default target: 72–88 px;
+- hardcoded historical anchors и длинные подписи не входят в default runtime presentation;
+- дополнительный historical context должен происходить из данных или явного expanded mode.
 
 ## 12.3 Detail panel
 - главный смысловой контейнер после карты;
@@ -538,6 +544,12 @@ Loading state не должен выглядеть как ошибка.
 ## 13.3 Overlay discipline
 Любой overlay должен проверяться по критерию:
 не теряется ли spatial reading.
+
+Для Workspace Core дополнительно:
+- map tools должны быть compact overlay, а не отдельной пустой structural column;
+- custom controls не перекрывают MapLibre navigation;
+- закрытые panels не резервируют map width;
+- overlay-group использует одну icon language и минимальное число surface levels.
 
 ## 13.4 Marker contrast
 Markers, selected objects и active layers должны сохранять читаемость на:
