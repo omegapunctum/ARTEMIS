@@ -3,15 +3,22 @@ import uuid
 
 from scripts.export_airtable import (
     aggregate_issues,
+    attach_source_media_refs,
     build_id_aliases,
     build_geojson_features,
     build_validation_report,
+    get_etl_error,
     get_canonical_publish_id,
     get_dedupe_key,
     get_origin_key,
     is_uuid_v4,
+    is_direct_media_asset_url,
+    map_feature_media_refs,
+    map_feature_source_refs,
     map_layers,
+    map_media,
     map_record,
+    map_sources,
     normalize_coordinates_confidence,
     normalize_coordinates_source,
     validate_feature,
@@ -337,6 +344,158 @@ class ExportAirtablePipelineTests(unittest.TestCase):
                 self.assertIn("invalid_coordinates_source", rejected[0]["reasons"])
                 self.assertEqual(report["valid_records"], 0)
                 self.assertEqual(meta["error_stats"].get("invalid_coordinates_source"), 1)
+
+
+class ExportAirtableEvidenceTests(unittest.TestCase):
+    feature_id = "550e8400-e29b-41d4-a716-446655440000"
+
+    def _source_record(self, *, record_id="recSource", review_status="reviewed"):
+        return {
+            "id": record_id,
+            "fields": {
+                "id": "src_reference",
+                "url": "https://example.com/source",
+                "title": "Reference",
+                "author_or_organization": "Example Organization",
+                "source_type": "institutional",
+                "review_status": review_status,
+            },
+        }
+
+    def _media_record(self, *, asset_url="https://example.com/image.jpg", review_status="reviewed"):
+        return {
+            "id": "recMedia",
+            "fields": {
+                "id": "media_image",
+                "asset_url": asset_url,
+                "source_page_url": "https://example.com/media",
+                "creator": "Example Creator",
+                "license": "CC BY",
+                "attribution_text": "Example Creator, CC BY",
+                "media_type": "image",
+                "review_status": review_status,
+            },
+        }
+
+    def test_only_reviewed_sources_and_media_enter_public_artifacts(self):
+        errors = []
+        _, sources = map_sources(
+            [self._source_record(), self._source_record(record_id="recDraft", review_status="draft")],
+            [],
+            errors,
+        )
+        _, media = map_media([self._media_record()], [], errors)
+        self.assertEqual([item["id"] for item in sources], ["src_reference"])
+        self.assertEqual([item["id"] for item in media], ["media_image"])
+        self.assertEqual(errors, [])
+
+    def test_commons_file_page_is_not_a_direct_media_asset(self):
+        self.assertFalse(is_direct_media_asset_url("https://commons.wikimedia.org/wiki/File:Example.jpg"))
+        self.assertTrue(is_direct_media_asset_url("https://upload.wikimedia.org/wikipedia/commons/a/a9/Example.jpg"))
+
+    def test_invalid_reviewed_media_is_excluded(self):
+        errors = []
+        _, media = map_media(
+            [self._media_record(asset_url="https://commons.wikimedia.org/wiki/File:Example.jpg")],
+            [],
+            errors,
+        )
+        self.assertEqual(media, [])
+        self.assertTrue(any(item.get("reason") == "invalid_media_asset_url" for item in errors))
+
+    def test_association_cardinality_is_enforced(self):
+        errors = []
+        refs = map_feature_source_refs(
+            [
+                {
+                    "id": "recLink",
+                    "fields": {
+                        "feature": ["recFeature", "recFeature2"],
+                        "source": ["recSource"],
+                        "roles": ["general_reference"],
+                        "is_primary": True,
+                        "review_status": "reviewed",
+                    },
+                }
+            ],
+            {"recFeature": self.feature_id},
+            {"recSource": {"id": "src_reference", "review_status": "reviewed"}},
+            errors,
+        )
+        self.assertEqual(refs, {})
+        self.assertTrue(any(item.get("reason") == "invalid_feature_source_cardinality" for item in errors))
+
+    def test_refs_project_primary_source_and_media_to_feature(self):
+        errors = []
+        _, sources = map_sources([self._source_record()], [], errors)
+        _, media = map_media([self._media_record()], [], errors)
+        source_refs = map_feature_source_refs(
+            [
+                {
+                    "id": "recSourceLink",
+                    "fields": {
+                        "feature": ["recFeature"],
+                        "source": ["recSource"],
+                        "roles": ["general_reference", "date_evidence"],
+                        "is_primary": True,
+                        "review_status": "reviewed",
+                    },
+                }
+            ],
+            {"recFeature": self.feature_id},
+            {item["source_record_id"]: item for item in sources},
+            errors,
+        )
+        media_refs = map_feature_media_refs(
+            [
+                {
+                    "id": "recMediaLink",
+                    "fields": {
+                        "feature": ["recFeature"],
+                        "media": ["recMedia"],
+                        "display_role": "primary",
+                        "sort_order": 1,
+                        "review_status": "reviewed",
+                    },
+                }
+            ],
+            {"recFeature": self.feature_id},
+            {item["source_record_id"]: item for item in media},
+            errors,
+        )
+        feature = {"id": self.feature_id, "source_url": "https://legacy.example", "image_url": None}
+        attach_source_media_refs(
+            [feature],
+            source_refs,
+            {item["id"]: item for item in sources},
+            media_refs,
+            {item["id"]: item for item in media},
+            [],
+        )
+        self.assertEqual(feature["source_ids"], ["src_reference"])
+        self.assertEqual(feature["media_ids"], ["media_image"])
+        self.assertEqual(feature["source_url"], "https://example.com/source")
+        self.assertEqual(feature["image_url"], "https://example.com/image.jpg")
+        self.assertIsNone(get_etl_error({
+            **feature,
+            "name_ru": "Test",
+            "layer_type": "architecture",
+            "source_license": "CC BY",
+            "latitude": 1,
+            "longitude": 1,
+            "layer_id": "test",
+            "date_start": "2020",
+        }))
+        self.assertEqual(errors, [])
+
+    def test_missing_reviewed_source_blocks_normalized_feature(self):
+        feature = {
+            "id": self.feature_id,
+            "source_refs": [],
+            "media_refs": [],
+            "_normalized_source_refs_checked": True,
+        }
+        self.assertEqual(get_etl_error(feature), "missing_reviewed_source")
 
 
 if __name__ == "__main__":

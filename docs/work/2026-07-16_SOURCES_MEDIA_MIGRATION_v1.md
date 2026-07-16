@@ -3,15 +3,15 @@
 ## Статус
 
 - Issue: `#283`.
-- Статус: contract and audit complete; Airtable/code migration not started.
+- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; safe Media migration completed for `16/19`, with 3 rights blockers recorded explicitly.
 - Snapshot date: 2026-07-16.
 - Scope: normalize factual Sources, display Media, per-link evidence/presentation semantics and compatibility projections for the 19-Feature Architecture Atlas pilot.
 
-Этот документ фиксирует план до любых schema/data writes. Он не утверждает, что target fields или artifacts уже существуют.
+Документ был создан как pre-write plan и теперь также содержит execution evidence для выполненных schema/data/code batches.
 
-## 1. Verified current state
+## 1. Verified pre-write baseline
 
-Read-only audit of Airtable base `Artemis_Base` and checked-in `data/features.geojson` found:
+Read-only audit of Airtable base `Artemis_Base` and checked-in `data/features.geojson` before migration found:
 
 | Check | Result |
 |---|---:|
@@ -27,7 +27,7 @@ Read-only audit of Airtable base `Artemis_Base` and checked-in `data/features.ge
 
 All ten Sources contain an ID, title and legacy `license=CC BY-SA`, but no URL. This license value is not trustworthy as Media rights metadata and MUST NOT be copied automatically. Current `Features.source_license` is likewise conflated and cannot prove either factual-source terms or image rights.
 
-The current exporter reads only `Features` and `Layers`; it does not fetch, validate or publish `Sources` or `Media`.
+At the pre-write baseline, the exporter read only `Features` and `Layers`; the implementation evidence below records the normalized exporter added during this migration.
 
 ## 2. Contract decisions
 
@@ -141,11 +141,112 @@ Fetch all normalized tables, validate cross-references and publish `sources.json
 - [x] 19-Feature Source migration matrix defined;
 - [x] Media verification procedure defined;
 - [x] compatibility and recovery rules defined;
-- [ ] Airtable schema created;
-- [ ] Source/Media data migrated and reviewed;
-- [ ] ETL/public artifacts implemented;
-- [ ] semantic validation and frontend contract tests green.
+- [x] Airtable schema created;
+- [x] Source data migrated and reviewed for all 19 pilot Features;
+- [ ] Media data migrated and reviewed for all 19 Features (`16/19` reviewed; 3 rights-blocked);
+- [x] ETL/public artifacts implemented;
+- [x] semantic ETL validation and contract tests green.
 
 ## 8. Execution evidence
 
-Not started. This section is populated only by applied Airtable and code migrations.
+### Schema batch — 2026-07-16
+
+Additive schema changes were applied without deleting or renaming legacy fields.
+
+- Sources added fields: `bibliographic_locator` (`fldF9ZoG5wqZBhIVC`), `author_or_organization` (`fldGcNldPj3OqarMB`), `source_type` (`fldNYY2VhgSPwgAE5`), `accessed_at` (`fldQWMsgX1uRsh3IU`), `review_status` (`fldO7aJ5wbGOwXNqY`), `content_license` (`fldjfofmSBs05N6Is`), `notes` (`fldpkCTzDWyA5rEBE`).
+- Media added fields: `asset_url` (`fldIMbUlIhZfyfFi3`), `source_page_url` (`fldtfoTmUMHUBqkTt`), `creator` (`fldulEr7xy0SN40t5`), `license_url` (`fld6Huddl5Owtgwo8`), `attribution_text` (`fldN9B9jzuoq2BM8N`), `media_type` (`fldYcdNhetS7aj56l`), `review_status` (`fldfKz5wOi58FfIBU`), `notes` (`fldfl9QK2O1ghjxZ9`).
+- Created `FeatureSources` (`tblxTjN3tcCo5nxBV`) with Feature link `fldvnWawcWLIDmQ1n` and Source link `fldHu6kWqe0NUjOZD`.
+- Created `FeatureMedia` (`tblEqczlCmiIRGGo2`) with Feature link `fldx0fj5FHIQJRFvI` and Media link `fldYXdgPiXx4eR797`.
+- Airtable exposed all four relationship fields as `multipleRecordLinks`; ETL must enforce exactly one linked record on each side of an association row.
+- Post-write schema read confirmed six tables and reciprocal link fields on Features, Sources and Media.
+
+### Pre-write Sources snapshot
+
+All ten pre-existing Sources had `url=null`, no Media links and legacy `license=CC BY-SA` before the data batch.
+
+| Airtable record ID | Source ID | Existing title |
+|---|---|---|
+| `recI0DEi5kV2CiEr4` | `src_burj_khalifa_official` | Burj Khalifa — Official Site |
+| `recN3jrFPLXO2RDVu` | `src_chartres_unesco` | Chartres Cathedral — UNESCO World Heritage Centre |
+| `recUWXGH1KVdDU6oj` | `src_chrysler_building_wikipedia` | Chrysler Building — Wikipedia |
+| `recdFbUmncwt9Rih0` | `src_st_peters_basilica_wikipedia` | St. Peter's Basilica — Wikipedia |
+| `recdXf8lu5F7qkYqZ` | `src_villa_savoye_wikipedia` | Villa Savoye — Wikipedia |
+| `receZjrpka5zGZQn9` | `src_pantheon_paris_wikipedia` | Panthéon — Wikipedia |
+| `recf7GLYZro9PxkVH` | `src_versailles_wikipedia` | Palace of Versailles — Wikipedia |
+| `rechvy4Rzxfrslujt` | `src_santiago_cathedral_official` | Santiago de Compostela Cathedral — Official Site |
+| `recsWHqg2b9gALhS4` | `src_centre_pompidou_wikipedia` | Centre Pompidou — Wikipedia |
+| `recstir8wePZAKVIJ` | `src_pantheon_rome_wikipedia` | Pantheon, Rome — Wikipedia |
+
+### Source data batch — 2026-07-16
+
+- Completed the ten existing Sources and created the nine missing records from the deterministic matrix as `draft`.
+- Created 19 deterministic FeatureSources rows as `general_reference`, initially `draft`.
+- Verified 17 locators by opening the source page directly; the Burj Khalifa official locator was corroborated through the indexed building record and official website reference.
+- The legacy Britannica locator for Ziggurat at Ur could not be verified by direct open or search and remains `draft`, non-primary.
+- Added reviewed fallback `src_ziggurat_ur_wikipedia` (`recUxWZovAKEt4Dzq`) and reviewed primary link `reckBGcyknAxVlXBI`; no unverifiable claim was promoted.
+- Final control read: `20 Sources / 19 reviewed / 1 draft`, `20 FeatureSources / 19 reviewed / 1 draft`.
+- Every one of the 19 Features has exactly one reviewed primary Source; missing and duplicate-primary sets are empty.
+- No legacy image/license value was promoted automatically into normalized Media.
+
+### ETL and CI batch — 2026-07-16
+
+- Export now reads `Sources`, `Media`, `FeatureSources` and `FeatureMedia` alongside Features/Layers.
+- Only reviewed, valid Source/Media records and reviewed association rows enter public artifacts.
+- Feature validation blocks missing reviewed Sources, ambiguous primary Sources, duplicate refs and association rows with invalid cardinality.
+- `data/sources.json`, `data/media.json`, `source_refs`, `media_refs` and legacy primary projections are generated by the ETL.
+- Dry-run completed with `1 Feature / 1 Source / 1 Media / 0 errors`; normalized output assertions were added to CI.
+- Focused evidence tests: `31 passed, 10 subtests passed`.
+- Repository test suite: `259 passed, 10 subtests passed`; release check passed all gates with the known single-node memory-session warning.
+
+### Media pilot batch 1 — 2026-07-16
+
+- Created 3 reviewed Media records and 3 reviewed primary FeatureMedia links for Stonehenge, Parthenon and Great Pyramid of Giza.
+- Every `asset_url` is a direct `upload.wikimedia.org` image, while `source_page_url` preserves the corresponding Commons File page.
+- Creator, exact license family/version, license URL and display attribution were verified on each source page.
+- IDs: `media_stonehenge_wiscombe_2007`, `media_parthenon_swayne_1978`, `media_great_pyramid_vanderzee_2023`.
+- Control read: `3 Media / 3 reviewed`, `3 FeatureMedia / 3 reviewed`; each association has exactly one Feature, one Media and one `primary` role.
+- A Burj Khalifa candidate was rejected from this batch because its Commons page carries a UAE freedom-of-panorama warning; this confirms the migration does not treat a photo license alone as sufficient rights evidence.
+
+### Media pilot batch 2 — 2026-07-16
+
+- Created 4 reviewed Media records and 4 reviewed primary FeatureMedia links for Pantheon (Rome), Alhambra, Hagia Sophia and Ziggurat of Ur.
+- Rights evidence was verified from each Wikimedia Commons File page: Pantheon `CC BY-SA 4.0` by NikonZ7II; Alhambra `CC0 1.0` by Jebulon; Hagia Sophia `CC BY-SA 3.0` by Adli Wahid; Ziggurat of Ur released to the public domain by Tla2006.
+- Pantheon and Alhambra use verified direct 1280 px Wikimedia derivatives instead of 34.58 MB and 11.33 MB originals; Hagia Sophia and Ziggurat of Ur use their compact original assets.
+- IDs: `media_pantheon_rome_nikonz7ii_2022`, `media_alhambra_jebulon_2014`, `media_hagia_sophia_adli_wahid_2014`, `media_ziggurat_ur_tla2006_2006`.
+- Control read after both batches: `7 Media / 7 reviewed`, `7 FeatureMedia / 7 reviewed`; each association has exactly one Feature, one Media and one `primary` role, with no duplicated Feature or Media references.
+
+### Media pilot batch 3 — 2026-07-16
+
+- Created 4 reviewed Media records and 4 reviewed primary FeatureMedia links for St. Peter's Basilica, Chartres Cathedral, Panthéon (Paris) and Santiago de Compostela Cathedral.
+- Rights evidence was verified from each Wikimedia Commons File page: St. Peter's `CC BY-SA 4.0` by Alvesgaspar; Chartres `CC BY-SA 3.0` by Jörg Bittner Unna; Panthéon `CC BY-SA 3.0` by Moonik; Santiago `CC BY-SA 4.0` by Fernando.
+- St. Peter's and Santiago use verified direct display derivatives instead of 48.12 MB and 8.94 MB originals; Chartres and Panthéon use direct compact originals.
+- IDs: `media_st_peters_alvesgaspar_2015`, `media_chartres_bittner_unna_2007`, `media_pantheon_paris_moonik_2011`, `media_santiago_fernando_2021`.
+- Control read after the first three batches: `11 Media / 11 reviewed`, `11 FeatureMedia / 11 reviewed`; every association is one-to-one and primary, with no duplicated Feature or Media references.
+
+### Media pilot batch 4 — 2026-07-16
+
+- Created 3 reviewed Media records and 3 reviewed primary FeatureMedia links for Chrysler Building, Jewish Museum Berlin and Royal National Theatre.
+- Rights evidence was verified from each Wikimedia Commons File page: Chrysler Building `CC BY-SA 3.0` by David Shankbone with the derivative credited to Overand; Jewish Museum Berlin `CC BY-SA 4.0` by Marek Śliwecki; Royal National Theatre `CC BY-SA 2.0` by Anthony O'Neil.
+- The Chrysler record preserves the derivative credit and Commons' US architectural-work notice; the National Theatre record preserves the supplied Geograph attribution.
+- IDs: `media_chrysler_shankbone_overand_2009`, `media_jewish_museum_berlin_sliwecki_2017`, `media_national_theatre_oneil_2010`.
+- Control read after batch 4: `14 Media / 14 reviewed`, `14 FeatureMedia / 14 reviewed`; every association remains one-to-one and primary, with no duplicated Feature or Media references.
+
+### Media pilot batch 5 — 2026-07-16
+
+- Created 2 reviewed Media records and 2 reviewed primary FeatureMedia links for Palace of Versailles and Casa Batlló.
+- Rights evidence was verified from each Wikimedia Commons File page: Versailles `CC BY-SA 3.0` by Samuli Suomi; Casa Batlló `CC BY-SA 3.0` by ChristianSchd.
+- Verified direct derivatives are used instead of the 9.29 MB and 7.98 MB originals: 1280 px for Versailles and 960 px for Casa Batlló.
+- IDs: `media_versailles_suomi_2008`, `media_casa_batllo_christianschd_2013`.
+- Final control read: `16 Media / 16 reviewed`, `16 FeatureMedia / 16 reviewed`; all 16 associations have exactly one Feature, one Media and one `primary` role, with no duplicate IDs or references.
+
+### Unresolved Media rights blockers
+
+The remaining three Features intentionally have no reviewed primary Media. Their legacy `Features.image_url` values remain compatibility input only and MUST NOT enter normalized public Media artifacts.
+
+| Feature | Blocker | Required resolution |
+|---|---|---|
+| Burj Khalifa | The reviewed Commons candidate carries a UAE freedom-of-panorama warning; the photo license alone does not establish reuse rights for the depicted modern building. | Obtain an institution-owned or otherwise explicitly rights-cleared image whose terms cover both photograph and depicted architecture. |
+| Villa Savoye | No reviewed candidate currently establishes commercial reuse rights for the depicted modern architectural work in France. | Obtain explicit permission or an institution-owned asset with terms covering the building depiction. |
+| Centre Pompidou | No reviewed candidate currently establishes commercial reuse rights for the depicted modern architectural work in France. | Obtain explicit permission or an institution-owned asset with terms covering the building depiction. |
+
+The Media acceptance checkbox remains open until these three blockers are resolved or the product contract explicitly permits published Features without primary Media. They are not silently replaced, inferred from a photo license, or promoted from legacy fields.

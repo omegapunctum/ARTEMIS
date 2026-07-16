@@ -15,6 +15,8 @@
   - data/features.json        : сырые записи Airtable (records)
   - data/features.geojson     : GeoJSON FeatureCollection
   - data/id_aliases.json      : versioned legacy id -> canonical UUID map
+  - data/sources.json         : reviewed canonical Sources
+  - data/media.json           : reviewed display Media with attribution
   - data/rejected.json        : отклонённые записи с причинами валидации
   - data/layers.json          : агрегированные метаданные слоёв
   - data/export_errors.log    : ошибки в формате JSON Lines
@@ -78,6 +80,21 @@ ALLOWED_COORDINATES_SOURCES = {
 }
 ALLOWED_LAYER_TYPES = {"architecture", "route_point", "biogeography", "biography"}
 LAYERS_TABLE_NAME = "Layers"
+SOURCES_TABLE_NAME = "Sources"
+MEDIA_TABLE_NAME = "Media"
+FEATURE_SOURCES_TABLE_NAME = "FeatureSources"
+FEATURE_MEDIA_TABLE_NAME = "FeatureMedia"
+ALLOWED_REVIEW_STATUSES = {"draft", "reviewed", "rejected"}
+ALLOWED_SOURCE_TYPES = {"primary", "official", "academic", "institutional", "reference", "other"}
+ALLOWED_SOURCE_ROLES = {
+    "general_reference",
+    "date_evidence",
+    "coordinate_evidence",
+    "description_evidence",
+    "relation_evidence",
+}
+ALLOWED_MEDIA_TYPES = {"image", "map", "drawing", "diagram", "document"}
+ALLOWED_MEDIA_DISPLAY_ROLES = {"primary", "gallery", "context", "detail"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -405,6 +422,20 @@ def normalize_linked_record_id(value: Any) -> Optional[str]:
             return None
         return safe_str(value[0])
     return safe_str(value)
+
+
+def normalize_linked_record_ids(value: Any) -> List[str]:
+    """Normalize Airtable linked-record payloads to record IDs."""
+    if value in (None, ""):
+        return []
+    items = value if isinstance(value, list) else [value]
+    normalized: List[str] = []
+    for item in items:
+        candidate = item.get("id") if isinstance(item, dict) else item
+        record_id = safe_str(candidate)
+        if record_id:
+            normalized.append(record_id)
+    return normalized
 
 
 def add_issue(issues: List[Dict[str, Any]], severity: str, record_id: str, reason: str, field: Optional[str] = None) -> None:
@@ -832,8 +863,75 @@ def generate_mock_layers_records() -> List[Dict[str, Any]]:
             },
         }
     ]
-    
-    
+
+
+def generate_mock_sources_records() -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": "recSourceTEST",
+            "fields": {
+                "id": "src_test_reference",
+                "url": "https://example.com/source",
+                "title": "Test reference",
+                "author_or_organization": "Example Organization",
+                "source_type": "institutional",
+                "accessed_at": "2026-07-16",
+                "review_status": "reviewed",
+                "content_license": "CC BY",
+            },
+        }
+    ]
+
+
+def generate_mock_media_records() -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": "recMediaTEST",
+            "fields": {
+                "id": "media_test_image",
+                "asset_url": "https://example.com/image.jpg",
+                "source_page_url": "https://example.com/media",
+                "creator": "Example Creator",
+                "license": "CC BY",
+                "license_url": "https://creativecommons.org/licenses/by/4.0/",
+                "attribution_text": "Example Creator, CC BY 4.0",
+                "media_type": "image",
+                "review_status": "reviewed",
+            },
+        }
+    ]
+
+
+def generate_mock_feature_sources_records() -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": "recFeatureSourceTEST",
+            "fields": {
+                "feature": ["recTEST"],
+                "source": ["recSourceTEST"],
+                "roles": ["general_reference"],
+                "is_primary": True,
+                "review_status": "reviewed",
+            },
+        }
+    ]
+
+
+def generate_mock_feature_media_records() -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": "recFeatureMediaTEST",
+            "fields": {
+                "feature": ["recTEST"],
+                "media": ["recMediaTEST"],
+                "display_role": "primary",
+                "sort_order": 1,
+                "review_status": "reviewed",
+            },
+        }
+    ]
+
+
 def build_geojson_features(
     mapped_records: Iterable[Dict[str, Any]],
     warnings: List[Dict[str, Any]],
@@ -890,6 +988,10 @@ def build_geojson_features(
                     "description": m.get("description"),
                     "image_url": m.get("image_url"),
                     "source_url": m.get("source_url"),
+                    "source_ids": m.get("source_ids", []),
+                    "source_refs": m.get("source_refs", []),
+                    "media_ids": m.get("media_ids", []),
+                    "media_refs": m.get("media_refs", []),
                     "source_license": m.get("source_license"),
                     "coordinates_confidence": m.get("coordinates_confidence"),
                     "coordinates_source": m.get("coordinates_source"),
@@ -917,6 +1019,19 @@ def get_etl_error(mapped: Dict[str, Any]) -> Optional[str]:
         return "missing_name_ru"
     if "layer_type" in mapped and mapped.get("layer_type") not in ALLOWED_LAYER_TYPES:
         return "invalid_layer_type"
+    if mapped.get("_normalized_source_refs_checked"):
+        source_refs = mapped.get("source_refs") or []
+        if not source_refs:
+            return "missing_reviewed_source"
+        if len([ref for ref in source_refs if ref.get("is_primary")]) != 1:
+            return "invalid_primary_source_count"
+        if len({ref.get("source_id") for ref in source_refs}) != len(source_refs):
+            return "duplicate_feature_source_reference"
+        media_refs = mapped.get("media_refs") or []
+        if len([ref for ref in media_refs if ref.get("display_role") == "primary"]) > 1:
+            return "invalid_primary_media_count"
+        if len({ref.get("media_id") for ref in media_refs}) != len(media_refs):
+            return "duplicate_feature_media_reference"
     source_url = safe_str(mapped.get("source_url"))
     if not source_url:
         return "missing_source_url"
@@ -993,6 +1108,238 @@ def map_layers(layer_records: Iterable[Dict[str, Any]]) -> Tuple[Dict[str, str],
     return linked_layer_to_public_id, layers
 
 
+def map_sources(
+    source_records: Iterable[Dict[str, Any]],
+    warnings: List[Dict[str, Any]],
+    errors: List[Dict[str, Any]],
+) -> Tuple[Dict[str, Dict[str, Any]], List[Dict[str, Any]]]:
+    """Map all Source records and return the reviewed public subset."""
+    by_record_id: Dict[str, Dict[str, Any]] = {}
+    reviewed: List[Dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    for record in source_records:
+        record_id = safe_str(record.get("id")) or "<missing>"
+        fields = record.get("fields", {}) or {}
+        mapped = {
+            "id": safe_str(fields.get("id")),
+            "source_record_id": record_id,
+            "url": safe_str(fields.get("url")),
+            "bibliographic_locator": safe_str(fields.get("bibliographic_locator")),
+            "title": safe_str(fields.get("title")),
+            "author_or_organization": safe_str(fields.get("author_or_organization")),
+            "source_type": normalize_single_select(fields.get("source_type")),
+            "accessed_at": safe_str(fields.get("accessed_at")),
+            "review_status": normalize_single_select(fields.get("review_status")),
+            "content_license": safe_str(fields.get("content_license")),
+        }
+        by_record_id[record_id] = mapped
+        if mapped["review_status"] != "reviewed":
+            continue
+        source_id = mapped["id"]
+        if not source_id:
+            add_issue(errors, "critical", record_id, "missing_source_id", "id")
+            continue
+        if source_id in seen_ids:
+            add_issue(errors, "critical", record_id, "duplicate_source_id", "id")
+            continue
+        seen_ids.add(source_id)
+        valid = True
+        if not mapped["url"] and not mapped["bibliographic_locator"]:
+            add_issue(errors, "critical", record_id, "missing_source_locator", "url")
+            valid = False
+        if mapped["url"] and not is_valid_url(mapped["url"]):
+            add_issue(errors, "critical", record_id, "invalid_source_locator", "url")
+            valid = False
+        if not mapped["title"]:
+            add_issue(errors, "critical", record_id, "missing_source_title", "title")
+            valid = False
+        if not mapped["author_or_organization"]:
+            add_issue(errors, "critical", record_id, "missing_source_author", "author_or_organization")
+            valid = False
+        if mapped["source_type"] not in ALLOWED_SOURCE_TYPES:
+            add_issue(errors, "critical", record_id, "invalid_source_type", "source_type")
+            valid = False
+        if valid:
+            reviewed.append(mapped)
+    return by_record_id, sorted(reviewed, key=lambda item: item.get("id") or "")
+
+
+def is_direct_media_asset_url(value: Any) -> bool:
+    url = safe_str(value)
+    if not is_valid_url(url):
+        return False
+    parsed = urlparse(url or "")
+    path = parsed.path.lower()
+    return not ("commons.wikimedia.org" in parsed.netloc.lower() and "/wiki/file:" in path)
+
+
+def map_media(
+    media_records: Iterable[Dict[str, Any]],
+    warnings: List[Dict[str, Any]],
+    errors: List[Dict[str, Any]],
+) -> Tuple[Dict[str, Dict[str, Any]], List[Dict[str, Any]]]:
+    """Map all Media records and return the reviewed public subset."""
+    by_record_id: Dict[str, Dict[str, Any]] = {}
+    reviewed: List[Dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    for record in media_records:
+        record_id = safe_str(record.get("id")) or "<missing>"
+        fields = record.get("fields", {}) or {}
+        mapped = {
+            "id": safe_str(fields.get("id")),
+            "source_record_id": record_id,
+            "asset_url": safe_str(fields.get("asset_url")),
+            "source_page_url": safe_str(fields.get("source_page_url")),
+            "creator": safe_str(fields.get("creator")),
+            "license": normalize_source_license(fields.get("license")),
+            "license_url": safe_str(fields.get("license_url")),
+            "attribution_text": safe_str(fields.get("attribution_text")),
+            "media_type": normalize_single_select(fields.get("media_type")),
+            "review_status": normalize_single_select(fields.get("review_status")),
+        }
+        by_record_id[record_id] = mapped
+        if mapped["review_status"] != "reviewed":
+            continue
+        media_id = mapped["id"]
+        if not media_id:
+            add_issue(errors, "critical", record_id, "missing_media_id", "id")
+            continue
+        if media_id in seen_ids:
+            add_issue(errors, "critical", record_id, "duplicate_media_id", "id")
+            continue
+        seen_ids.add(media_id)
+        valid = True
+        if not is_direct_media_asset_url(mapped["asset_url"]):
+            add_issue(errors, "critical", record_id, "invalid_media_asset_url", "asset_url")
+            valid = False
+        if not is_valid_url(mapped["source_page_url"]):
+            add_issue(errors, "critical", record_id, "invalid_media_source_page", "source_page_url")
+            valid = False
+        if not mapped["creator"]:
+            add_issue(errors, "critical", record_id, "missing_media_creator", "creator")
+            valid = False
+        if not is_valid_license(mapped["license"]):
+            add_issue(errors, "critical", record_id, "invalid_media_license", "license")
+            valid = False
+        if not mapped["attribution_text"]:
+            add_issue(errors, "critical", record_id, "missing_media_attribution", "attribution_text")
+            valid = False
+        if mapped["media_type"] not in ALLOWED_MEDIA_TYPES:
+            add_issue(errors, "critical", record_id, "invalid_media_type", "media_type")
+            valid = False
+        if valid:
+            reviewed.append(mapped)
+    return by_record_id, sorted(reviewed, key=lambda item: item.get("id") or "")
+
+
+def map_feature_source_refs(
+    records: Iterable[Dict[str, Any]],
+    feature_id_by_record_id: Dict[str, str],
+    source_by_record_id: Dict[str, Dict[str, Any]],
+    errors: List[Dict[str, Any]],
+) -> Dict[str, List[Dict[str, Any]]]:
+    refs: Dict[str, List[Dict[str, Any]]] = {}
+    for record in records:
+        record_id = safe_str(record.get("id")) or "<missing>"
+        fields = record.get("fields", {}) or {}
+        if normalize_single_select(fields.get("review_status")) != "reviewed":
+            continue
+        feature_links = normalize_linked_record_ids(fields.get("feature"))
+        source_links = normalize_linked_record_ids(fields.get("source"))
+        if len(feature_links) != 1 or len(source_links) != 1:
+            add_issue(errors, "critical", record_id, "invalid_feature_source_cardinality", "feature/source")
+            continue
+        feature_id = feature_id_by_record_id.get(feature_links[0])
+        source = source_by_record_id.get(source_links[0])
+        if not feature_id or not source or source.get("review_status") != "reviewed":
+            add_issue(errors, "critical", record_id, "invalid_feature_source_reference", "feature/source")
+            continue
+        roles = sorted(set(to_tags(fields.get("roles"))))
+        if not roles or any(role not in ALLOWED_SOURCE_ROLES for role in roles):
+            add_issue(errors, "critical", record_id, "invalid_source_roles", "roles")
+            continue
+        refs.setdefault(feature_id, []).append(
+            {
+                "source_id": source.get("id"),
+                "roles": roles,
+                "is_primary": parse_bool(fields.get("is_primary")) is True,
+            }
+        )
+    return refs
+
+
+def map_feature_media_refs(
+    records: Iterable[Dict[str, Any]],
+    feature_id_by_record_id: Dict[str, str],
+    media_by_record_id: Dict[str, Dict[str, Any]],
+    errors: List[Dict[str, Any]],
+) -> Dict[str, List[Dict[str, Any]]]:
+    refs: Dict[str, List[Dict[str, Any]]] = {}
+    for record in records:
+        record_id = safe_str(record.get("id")) or "<missing>"
+        fields = record.get("fields", {}) or {}
+        if normalize_single_select(fields.get("review_status")) != "reviewed":
+            continue
+        feature_links = normalize_linked_record_ids(fields.get("feature"))
+        media_links = normalize_linked_record_ids(fields.get("media"))
+        if len(feature_links) != 1 or len(media_links) != 1:
+            add_issue(errors, "critical", record_id, "invalid_feature_media_cardinality", "feature/media")
+            continue
+        feature_id = feature_id_by_record_id.get(feature_links[0])
+        media = media_by_record_id.get(media_links[0])
+        role = normalize_single_select(fields.get("display_role"))
+        if not feature_id or not media or media.get("review_status") != "reviewed":
+            add_issue(errors, "critical", record_id, "invalid_feature_media_reference", "feature/media")
+            continue
+        if role not in ALLOWED_MEDIA_DISPLAY_ROLES:
+            add_issue(errors, "critical", record_id, "invalid_media_display_role", "display_role")
+            continue
+        refs.setdefault(feature_id, []).append(
+            {
+                "media_id": media.get("id"),
+                "display_role": role,
+                "sort_order": to_int_or_none(fields.get("sort_order"), record_id, "sort_order", errors) or 0,
+            }
+        )
+    return refs
+
+
+def attach_source_media_refs(
+    features: Iterable[Dict[str, Any]],
+    source_refs_by_feature: Dict[str, List[Dict[str, Any]]],
+    sources_by_id: Dict[str, Dict[str, Any]],
+    media_refs_by_feature: Dict[str, List[Dict[str, Any]]],
+    media_by_id: Dict[str, Dict[str, Any]],
+    warnings: List[Dict[str, Any]],
+) -> None:
+    for feature in features:
+        feature_id = safe_str(feature.get("id")) or "<missing>"
+        source_refs = sorted(source_refs_by_feature.get(feature_id, []), key=lambda item: item.get("source_id") or "")
+        media_refs = sorted(
+            media_refs_by_feature.get(feature_id, []),
+            key=lambda item: (item.get("sort_order") or 0, item.get("media_id") or ""),
+        )
+        feature["source_refs"] = source_refs
+        feature["source_ids"] = [ref["source_id"] for ref in source_refs]
+        feature["media_refs"] = media_refs
+        feature["media_ids"] = [ref["media_id"] for ref in media_refs]
+        feature["_normalized_source_refs_checked"] = True
+
+        primary_sources = [ref for ref in source_refs if ref.get("is_primary")]
+        if len(primary_sources) == 1:
+            primary_source = sources_by_id.get(primary_sources[0]["source_id"])
+            if primary_source and primary_source.get("url"):
+                feature["source_url"] = primary_source["url"]
+
+        primary_media = [ref for ref in media_refs if ref.get("display_role") == "primary"]
+        if len(primary_media) == 1:
+            media = media_by_id.get(primary_media[0]["media_id"])
+            if media and media.get("asset_url"):
+                feature["image_url"] = media["asset_url"]
+        elif feature.get("image_url"):
+            add_issue(warnings, "warning", get_diagnostic_record_id(feature), "legacy_image_without_reviewed_media", "image_url")
+
+
 def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List[Dict[str, Any]], errors: List[Dict[str, Any]]) -> bool:
     record_id = get_diagnostic_record_id(mapped)
     valid = True
@@ -1011,6 +1358,19 @@ def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List
         critical("id", "invalid_id_uuid_v4")
     if not mapped.get("name_ru"):
         critical("name_ru", "missing_name_ru")
+    if mapped.get("_normalized_source_refs_checked"):
+        source_refs = mapped.get("source_refs") or []
+        if not source_refs:
+            critical("source_refs", "missing_reviewed_source")
+        elif len([ref for ref in source_refs if ref.get("is_primary")]) != 1:
+            critical("source_refs", "invalid_primary_source_count")
+        elif len({ref.get("source_id") for ref in source_refs}) != len(source_refs):
+            critical("source_refs", "duplicate_feature_source_reference")
+        media_refs = mapped.get("media_refs") or []
+        if len([ref for ref in media_refs if ref.get("display_role") == "primary"]) > 1:
+            critical("media_refs", "invalid_primary_media_count")
+        elif len({ref.get("media_id") for ref in media_refs}) != len(media_refs):
+            critical("media_refs", "duplicate_feature_media_reference")
     has_start = bool(mapped.get("_raw_date_start_present"))
     if not has_start:
         critical("date_start", "missing_date_start")
@@ -1386,16 +1746,26 @@ def main() -> int:
     id_aliases_seed_path = out_dir / "id_aliases.json"
     rejected_path = out_dir / f"{prefix}rejected.json"
     layers_path = out_dir / f"{prefix}layers.json"
+    sources_path = out_dir / f"{prefix}sources.json"
+    media_path = out_dir / f"{prefix}media.json"
     validation_report_path = out_dir / f"{prefix}validation_report.json"
     export_meta_path = out_dir / f"{prefix}export_meta.json"
     error_log_path = out_dir / f"{prefix}export_errors.log"
 
     records: List[Dict[str, Any]]
     layer_records: List[Dict[str, Any]]
+    source_records: List[Dict[str, Any]]
+    media_records: List[Dict[str, Any]]
+    feature_source_records: List[Dict[str, Any]]
+    feature_media_records: List[Dict[str, Any]]
     try:
         if dry_run:
             records = generate_mock_records()
             layer_records = generate_mock_layers_records()
+            source_records = generate_mock_sources_records()
+            media_records = generate_mock_media_records()
+            feature_source_records = generate_mock_feature_sources_records()
+            feature_media_records = generate_mock_feature_media_records()
             if args.max_records is not None:
                 records = records[: args.max_records]
             print("Dry-run: mock data generated")
@@ -1403,6 +1773,10 @@ def main() -> int:
             assert token is not None and base is not None and table is not None
             records = fetch_airtable_records(token, base, table, args.max_records)
             layer_records = fetch_airtable_records(token, base, LAYERS_TABLE_NAME, None)
+            source_records = fetch_airtable_records(token, base, SOURCES_TABLE_NAME, None)
+            media_records = fetch_airtable_records(token, base, MEDIA_TABLE_NAME, None)
+            feature_source_records = fetch_airtable_records(token, base, FEATURE_SOURCES_TABLE_NAME, None)
+            feature_media_records = fetch_airtable_records(token, base, FEATURE_MEDIA_TABLE_NAME, None)
     except PermissionError as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -1415,6 +1789,10 @@ def main() -> int:
 
     print(f"Загружено Features: {len(records)}")
     print(f"Загружено Layers: {len(layer_records)}")
+    print(f"Загружено Sources: {len(source_records)}")
+    print(f"Загружено Media: {len(media_records)}")
+    print(f"Загружено FeatureSources: {len(feature_source_records)}")
+    print(f"Загружено FeatureMedia: {len(feature_media_records)}")
 
     warnings: List[Dict[str, Any]] = []
     errors: List[Dict[str, Any]] = []
@@ -1424,6 +1802,36 @@ def main() -> int:
     for record in records:
         mapped = map_record(record, warnings, linked_layer_to_public_id)
         candidate_records.append(mapped)
+
+    _, reviewed_sources = map_sources(source_records, warnings, errors)
+    _, reviewed_media = map_media(media_records, warnings, errors)
+    feature_id_by_record_id = {
+        safe_str(mapped.get("source_record_id")): safe_str(mapped.get("id"))
+        for mapped in candidate_records
+        if safe_str(mapped.get("source_record_id")) and safe_str(mapped.get("id"))
+    }
+    source_by_record_id = {item["source_record_id"]: item for item in reviewed_sources}
+    media_by_record_id = {item["source_record_id"]: item for item in reviewed_media}
+    source_refs_by_feature = map_feature_source_refs(
+        feature_source_records,
+        feature_id_by_record_id,
+        source_by_record_id,
+        errors,
+    )
+    media_refs_by_feature = map_feature_media_refs(
+        feature_media_records,
+        feature_id_by_record_id,
+        media_by_record_id,
+        errors,
+    )
+    attach_source_media_refs(
+        candidate_records,
+        source_refs_by_feature,
+        {item["id"]: item for item in reviewed_sources},
+        media_refs_by_feature,
+        {item["id"]: item for item in reviewed_media},
+        warnings,
+    )
 
     valid_layers = [layer for layer in layers if validate_layer(layer, warnings, errors)]
     valid_layer_ids = {layer["layer_id"] for layer in valid_layers}
@@ -1564,6 +1972,12 @@ def main() -> int:
         "records_exported": exported_records,
         "records_geojson": geojson_records,
         "records_rejected": rejected_records,
+        "sources_total_source": len(source_records),
+        "sources_reviewed": len(reviewed_sources),
+        "media_total_source": len(media_records),
+        "media_reviewed": len(reviewed_media),
+        "feature_source_links_total": len(feature_source_records),
+        "feature_media_links_total": len(feature_media_records),
         "errors": len(errors),
         "warnings": len(warnings),
         "error_stats": error_stats,
@@ -1578,6 +1992,8 @@ def main() -> int:
         write_json(id_aliases_path, id_aliases)
         write_json(rejected_path, rejected_features)
         write_json(layers_path, valid_layers)
+        write_json(sources_path, reviewed_sources)
+        write_json(media_path, reviewed_media)
         write_json(validation_report_path, validation_report)
         write_json(export_meta_path, export_meta)
 
@@ -1609,6 +2025,8 @@ def main() -> int:
                 id_aliases_path,
                 rejected_path,
                 layers_path,
+                sources_path,
+                media_path,
                 validation_report_path,
                 export_meta_path,
                 error_log_path,
