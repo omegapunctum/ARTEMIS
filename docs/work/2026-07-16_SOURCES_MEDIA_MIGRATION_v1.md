@@ -3,7 +3,7 @@
 ## Статус
 
 - Issue: `#283`.
-- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; Media migration in reviewed batches (`11/19`).
+- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; safe Media migration completed for `16/19`, with 3 rights blockers recorded explicitly.
 - Snapshot date: 2026-07-16.
 - Scope: normalize factual Sources, display Media, per-link evidence/presentation semantics and compatibility projections for the 19-Feature Architecture Atlas pilot.
 
@@ -143,7 +143,7 @@ Fetch all normalized tables, validate cross-references and publish `sources.json
 - [x] compatibility and recovery rules defined;
 - [x] Airtable schema created;
 - [x] Source data migrated and reviewed for all 19 pilot Features;
-- [ ] Media data migrated and reviewed;
+- [ ] Media data migrated and reviewed for all 19 Features (`16/19` reviewed; 3 rights-blocked);
 - [x] ETL/public artifacts implemented;
 - [x] semantic ETL validation and contract tests green.
 
@@ -221,5 +221,32 @@ All ten pre-existing Sources had `url=null`, no Media links and legacy `license=
 - Rights evidence was verified from each Wikimedia Commons File page: St. Peter's `CC BY-SA 4.0` by Alvesgaspar; Chartres `CC BY-SA 3.0` by Jörg Bittner Unna; Panthéon `CC BY-SA 3.0` by Moonik; Santiago `CC BY-SA 4.0` by Fernando.
 - St. Peter's and Santiago use verified direct display derivatives instead of 48.12 MB and 8.94 MB originals; Chartres and Panthéon use direct compact originals.
 - IDs: `media_st_peters_alvesgaspar_2015`, `media_chartres_bittner_unna_2007`, `media_pantheon_paris_moonik_2011`, `media_santiago_fernando_2021`.
-- Control read after all three batches: `11 Media / 11 reviewed`, `11 FeatureMedia / 11 reviewed`; every association is one-to-one and primary, with no duplicated Feature or Media references.
-- Remaining Media scope: 8 Features require separate source and rights review before the migration checklist can be closed.
+- Control read after the first three batches: `11 Media / 11 reviewed`, `11 FeatureMedia / 11 reviewed`; every association is one-to-one and primary, with no duplicated Feature or Media references.
+
+### Media pilot batch 4 — 2026-07-16
+
+- Created 3 reviewed Media records and 3 reviewed primary FeatureMedia links for Chrysler Building, Jewish Museum Berlin and Royal National Theatre.
+- Rights evidence was verified from each Wikimedia Commons File page: Chrysler Building `CC BY-SA 3.0` by David Shankbone with the derivative credited to Overand; Jewish Museum Berlin `CC BY-SA 4.0` by Marek Śliwecki; Royal National Theatre `CC BY-SA 2.0` by Anthony O'Neil.
+- The Chrysler record preserves the derivative credit and Commons' US architectural-work notice; the National Theatre record preserves the supplied Geograph attribution.
+- IDs: `media_chrysler_shankbone_overand_2009`, `media_jewish_museum_berlin_sliwecki_2017`, `media_national_theatre_oneil_2010`.
+- Control read after batch 4: `14 Media / 14 reviewed`, `14 FeatureMedia / 14 reviewed`; every association remains one-to-one and primary, with no duplicated Feature or Media references.
+
+### Media pilot batch 5 — 2026-07-16
+
+- Created 2 reviewed Media records and 2 reviewed primary FeatureMedia links for Palace of Versailles and Casa Batlló.
+- Rights evidence was verified from each Wikimedia Commons File page: Versailles `CC BY-SA 3.0` by Samuli Suomi; Casa Batlló `CC BY-SA 3.0` by ChristianSchd.
+- Verified direct derivatives are used instead of the 9.29 MB and 7.98 MB originals: 1280 px for Versailles and 960 px for Casa Batlló.
+- IDs: `media_versailles_suomi_2008`, `media_casa_batllo_christianschd_2013`.
+- Final control read: `16 Media / 16 reviewed`, `16 FeatureMedia / 16 reviewed`; all 16 associations have exactly one Feature, one Media and one `primary` role, with no duplicate IDs or references.
+
+### Unresolved Media rights blockers
+
+The remaining three Features intentionally have no reviewed primary Media. Their legacy `Features.image_url` values remain compatibility input only and MUST NOT enter normalized public Media artifacts.
+
+| Feature | Blocker | Required resolution |
+|---|---|---|
+| Burj Khalifa | The reviewed Commons candidate carries a UAE freedom-of-panorama warning; the photo license alone does not establish reuse rights for the depicted modern building. | Obtain an institution-owned or otherwise explicitly rights-cleared image whose terms cover both photograph and depicted architecture. |
+| Villa Savoye | No reviewed candidate currently establishes commercial reuse rights for the depicted modern architectural work in France. | Obtain explicit permission or an institution-owned asset with terms covering the building depiction. |
+| Centre Pompidou | No reviewed candidate currently establishes commercial reuse rights for the depicted modern architectural work in France. | Obtain explicit permission or an institution-owned asset with terms covering the building depiction. |
+
+The Media acceptance checkbox remains open until these three blockers are resolved or the product contract explicitly permits published Features without primary Media. They are not silently replaced, inferred from a photo license, or promoted from legacy fields.

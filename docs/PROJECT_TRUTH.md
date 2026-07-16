@@ -47,7 +47,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - 19 Features;
 - 26 Layers;
 - 20 Sources (`19 reviewed / 1 draft`);
-- 11 reviewed Media records linked as primary to 11 pilot Features;
+- 16 reviewed Media records linked as primary to 16 pilot Features;
 - 0 canonical Relation records;
 - только архитектурные объекты.
 
@@ -56,9 +56,9 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - canonical identity migration v1 завершена в PR `#290`: ETL и public artifacts используют `Features.id` UUID v4, а Airtable record ID отделён как `source_record_id`;
 - source migration выполнена: контрольное чтение Airtable подтверждает `19/19 id_status=ok`; точная таблица, execution evidence и recovery-план зафиксированы в `docs/work/2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`;
 - Source batch #283 выполнен: для `19/19` Features существует ровно один reviewed primary Source; Airtable содержит `20 Sources / 19 reviewed / 1 unverifiable legacy candidate in draft` и `20 FeatureSources / 19 reviewed / 1 draft`;
-- три Media batch #283 содержат 11 reviewed direct assets и 11 reviewed primary FeatureMedia links; остальные 8 legacy `Features.image_url` не считаются нормализованными Media; полный перечень, evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
+- пять Media batch #283 содержат 16 reviewed direct assets и 16 reviewed primary FeatureMedia links; оставшиеся 3 legacy `Features.image_url` не считаются нормализованными Media и явно заблокированы проверкой прав (Бурдж-Халифа, Вилла Савой и Центр Помпиду); полный перечень, evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
 - часть включённых слоёв пуста;
-- Media semantics реализованы в ETL, но миграция охватывает только 11 из 19 пилотных Features;
+- Media semantics реализованы в ETL, но reviewed-миграция охватывает 16 из 19 пилотных Features; для трёх современных зданий требуется отдельный источник изображения с достаточными правами;
 - эвристические «похожие объекты» не являются доказанными historical relations;
 - текущий structural release gate не заменяет semantic content validation.
 
