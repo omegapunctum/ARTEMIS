@@ -72,11 +72,19 @@
 - Compare реализуется как analytical mode (не top-level route v1.0).
 - AI реализуется как contextual layer (не detached standalone section).
 
-### Main-screen refinement sub-track (2026-04-23)
-- Запускается только как **audit-first** refinement поверх принятого baseline.
-- Не заменяет фазовую последовательность A → B → C → D → E.
-- Не создаёт новый competing owner-doc; использует implementation-plan как rollout owner и main-screen working pack как track-specific target layer.
-- До patch/tasking должен быть выполнен audit current runtime vs main-screen working pack.
+### Active main-screen refinement sub-track (2026-07-16)
+- Статус: **DOCUMENTED / READY FOR IMPLEMENTATION**.
+- Target: `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`.
+- Запускается как audit-backed refinement поверх принятого Workspace Core baseline.
+- Не заменяет фазовую последовательность A → B → C → D → E и не меняет data/API contracts.
+- Implementation order:
+  1. убрать structural desktop rail и перенести tools в map overlay;
+  2. упростить outer frame/top dock и compact slice context;
+  3. сжать timeline и удалить hardcoded semantic anchors;
+  4. унифицировать icons;
+  5. разнести CSS по владельцам и убрать competing `main-screen.css` override layer;
+  6. выполнить desktop/tablet/mobile visual and interaction validation.
+- Patch cycle не считается завершённым, пока карта не использует освобождённую ширину, timeline не соответствует compact target и critical layout selectors не получили одного владельца.
 
 ---
 
@@ -108,6 +116,9 @@
 - `js/ux.js`
 - `js/data.js`
 - `css/style.css`
+- `css/main-screen.css` (remove as competing override layer or retire after migration)
+- new owner-oriented CSS modules under `css/`
+- `index.html`
 - `app/routes/map.py`
 
 ### Dependencies
@@ -125,6 +136,8 @@
 - Manual flow: open map → set time range → select entity → open detail → change layer.
 - Smoke checks for no-data and error payloads.
 - Basic mobile interaction check for staged map + sheet behavior.
+- Visual checks at 2048×1152, 1440×900, 1024×768 and 390×844.
+- Confirm no structural left rail, no hardcoded timeline labels and no control overlap.
 
 ---
 
