@@ -1,17 +1,25 @@
 {
-  "timestamp": "2026-07-16T13:21:53Z",
+  "timestamp": "2026-07-16T18:57:05Z",
   "source": "airtable",
   "records_total_source": 19,
   "records_exported": 19,
   "records_geojson": 19,
   "records_rejected": 0,
+  "sources_total_source": 20,
+  "sources_reviewed": 19,
+  "media_total_source": 16,
+  "media_reviewed": 16,
+  "feature_source_links_total": 20,
+  "feature_media_links_total": 16,
   "errors": 0,
-  "warnings": 0,
+  "warnings": 3,
   "error_stats": {},
-  "warning_stats": {},
+  "warning_stats": {
+    "legacy_image_without_reviewed_media": 3
+  },
   "warning_categories": {
-    "expected_fallback": 0,
+    "expected_fallback": 3,
     "data_quality": 0
   },
-  "duration_seconds": 2.84
+  "duration_seconds": 5.165
 }

@@ -8,11 +8,14 @@
       "source_license": "CC BY-SA",
       "description": "828-метровый небоскрёб. Форма основана на геометрии цветка и минимизирует ветровые нагрузки.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Burj_Khalifa_Dubai_Skyline.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://www.burjkhalifa.ae/en/",
       "longitude": 55.2741,
       "name_ru": "Бурдж-Халифа",
       "name_en": "Burj Khalifa",
+      "FeatureSources": [
+        "recbGiph66c595K97"
+      ],
       "is_active": true,
       "date_end": "2010",
       "coordinates_confidence": "exact",
@@ -38,11 +41,14 @@
       "source_license": "CC BY-SA",
       "description": "Воплощение 5 принципов: опоры, крыша-сад, свободный план, ленточные окна, свободный фасад.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Villa_Savoye_Front_View.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Villa_Savoye",
       "longitude": 2.0283,
       "name_ru": "Вилла Савой",
       "name_en": "Villa Savoye",
+      "FeatureSources": [
+        "recGK2sQpnSoD4gCv"
+      ],
       "is_active": true,
       "date_end": "1931",
       "coordinates_confidence": "exact",
@@ -63,20 +69,29 @@
     "id": "rec7xto7TNSberKPg",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
+      "Relations": [
+        "rec7V6gJtyGFGE8a1"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Плод работы Браманте, Рафаэля и Микеланджело. Купол стал образцом для западной архитектуры.",
       "image_url": "https://commons.wikimedia.org/wiki/File:St_Peter%27s_Basilica_at_Night.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica",
       "longitude": 12.4533,
       "name_ru": "Собор Святого Петра",
       "name_en": "St. Peter's Basilica",
+      "FeatureSources": [
+        "rec5Dp9SjSSq2gSAJ"
+      ],
       "is_active": true,
       "date_end": "1626",
       "coordinates_confidence": "exact",
       "id": "393c7d17-d266-4e8b-8412-b96eb427f941",
+      "FeatureMedia": [
+        "rec26LxQsIs8v7hZp"
+      ],
       "coordinates_source": [
         "Vatican"
       ],
@@ -98,15 +113,21 @@
       "source_license": "CC BY-SA",
       "description": "Храм с ансамблем витражей (2500 кв. м) и системным использованием аркбутанов.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Chartres_Cathedral_View_2023.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://whc.unesco.org/en/list/81/",
       "longitude": 1.4878,
       "name_ru": "Шартрский собор",
       "name_en": "Chartres Cathedral",
+      "FeatureSources": [
+        "rec5CdKj6CI0X18Ys"
+      ],
       "is_active": true,
       "date_end": "1252",
       "coordinates_confidence": "exact",
       "id": "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+      "FeatureMedia": [
+        "recWbISdg56ueV1Jf"
+      ],
       "coordinates_source": [
         "UNESCO"
       ],
@@ -128,11 +149,14 @@
       "source_license": "CC BY-SA",
       "description": "Здание «вывернутое наизнанку»: все коммуникации вынесены на фасад и выделены цветом.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Centre_Pompidou_Paris_2021.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Centre_Pompidou",
       "longitude": 2.3522,
       "name_ru": "Центр Жоржа Помпиду",
       "name_en": "Centre Pompidou",
+      "FeatureSources": [
+        "recKqb7AlhEX0DWkq"
+      ],
       "is_active": true,
       "date_end": "1977",
       "coordinates_confidence": "exact",
@@ -157,16 +181,25 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Монументальное здание Суффло, вдохновлённое античностью. Место погребения Гюго, Золя, Кюри.",
+      "Relations": [
+        "recik9bcfkQ4g2Fd5"
+      ],
       "image_url": "https://commons.wikimedia.org/wiki/File:Pantheon_de_Paris_2019.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Panth%C3%A9on",
       "longitude": 2.3458,
       "name_ru": "Пантеон (Париж)",
       "name_en": "Panthéon (Paris)",
+      "FeatureSources": [
+        "recY7q1r3KkQrx12w"
+      ],
       "is_active": true,
       "date_end": "1790",
       "coordinates_confidence": "exact",
       "id": "acfb7492-c49d-4e71-9bbc-bd446b52d32d",
+      "FeatureMedia": [
+        "rec3Jf1txgBJEahhE"
+      ],
       "coordinates_source": [
         "Britannica"
       ],
@@ -183,6 +216,9 @@
     "id": "recC9HLvvR9Xi1rKR",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
+      "Relations": [
+        "rec7V6gJtyGFGE8a1"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -193,10 +229,16 @@
       "longitude": 12.4769,
       "name_ru": "Пантеон (Рим)",
       "name_en": "Pantheon (Rome)",
+      "FeatureSources": [
+        "recfrEdnGWXSEczhv"
+      ],
       "is_active": true,
       "date_end": "0128",
       "coordinates_confidence": "exact",
       "id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
+      "FeatureMedia": [
+        "rec4WOHCdeHdd6D9e"
+      ],
       "coordinates_source": [
         "Britannica"
       ],
@@ -223,10 +265,16 @@
       "longitude": -8.5442,
       "name_ru": "Собор в Сантьяго-де-Компостела",
       "name_en": "Santiago de Compostela Cathedral",
+      "FeatureSources": [
+        "rec9PDgO39wCCRKIj"
+      ],
       "is_active": true,
       "date_end": "1211",
       "coordinates_confidence": "exact",
       "id": "b1c2d3e4-1506-4b9a-8c7d-6e5f4a3b2c1d",
+      "FeatureMedia": [
+        "recy2Ab9KFlPzQVmP"
+      ],
       "coordinates_source": [
         "Official Site"
       ],
@@ -248,15 +296,21 @@
       "source_license": "CC BY-SA",
       "description": "Стальная корона с треугольными окнами и орнаментами. Символ индустриальной роскоши.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Chrysler_Building_Midtown_Manhattan.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Chrysler_Building",
       "longitude": -73.9755,
       "name_ru": "Крайслер-билдинг",
       "name_en": "Chrysler Building",
+      "FeatureSources": [
+        "rechAJTlfx9dA5DDW"
+      ],
       "is_active": true,
       "date_end": "1930",
       "coordinates_confidence": "exact",
       "id": "c4acd963-5446-409f-82af-a495ed4a39d4",
+      "FeatureMedia": [
+        "recz4vtxp3Mjjxz6r"
+      ],
       "coordinates_source": [
         "PBS"
       ],
@@ -278,15 +332,21 @@
       "source_license": "CC BY-SA",
       "description": "Грандиозный ансамбль с Зеркальной галереей и регулярными садами Ленотра. Модель барокко.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Versailles_Palace_Garden_View.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Palace_of_Versailles",
       "longitude": 2.1203,
       "name_ru": "Версальский дворец",
       "name_en": "Palace of Versailles",
+      "FeatureSources": [
+        "recdQiabAqPJvFanF"
+      ],
       "is_active": true,
       "date_end": "1715",
       "coordinates_confidence": "exact",
       "id": "bcd1bc1c-1093-430c-ae75-a0da6c06524d",
+      "FeatureMedia": [
+        "recanhYe2t1wJglC1"
+      ],
       "coordinates_source": [
         "UNESCO"
       ],
@@ -313,10 +373,16 @@
       "longitude": -3.59,
       "name_ru": "Альгамбра",
       "name_en": "Alhambra",
+      "FeatureSources": [
+        "rec1pwSRtknSrDQVo"
+      ],
       "is_active": true,
       "date_end": "1358",
       "coordinates_confidence": "exact",
       "id": "f9e8d7c6-1194-4b1a-9d2c-1b3a4f5e6d7c",
+      "FeatureMedia": [
+        "recEnpef1vxl4QC0h"
+      ],
       "coordinates_source": [
         "UNESCO"
       ],
@@ -338,15 +404,21 @@
       "source_license": "CC BY-SA",
       "description": "Зигзагообразное здание Либескинда с «пустотами», передающее ощущение исторического разрыва.",
       "image_url": "https://commons.wikimedia.org/wiki/File:J%C3%BCdisches_Museum_Berlin_Libeskind_Bau.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://www.jmberlin.de/en/libeskind-building",
       "longitude": 13.395,
       "name_ru": "Еврейский музей в Берлине",
       "name_en": "Jewish Museum Berlin",
+      "FeatureSources": [
+        "rec522R9DigFXG4Y1"
+      ],
       "is_active": true,
       "date_end": "1999",
       "coordinates_confidence": "exact",
       "id": "f3c73867-e20a-457b-a974-7e8478ac0431",
+      "FeatureMedia": [
+        "recDZEtMnBLcVtapo"
+      ],
       "coordinates_source": [
         "Official Site"
       ],
@@ -373,10 +445,16 @@
       "longitude": 23.7266,
       "name_ru": "Парфенон",
       "name_en": "Parthenon",
+      "FeatureSources": [
+        "recXS6v2Oz6uXIn2z"
+      ],
       "is_active": true,
       "date_end": "-0432",
       "coordinates_confidence": "exact",
       "id": "c7b6a5d4-0532-4f9e-8d2c-1b3a4f5e6d7c",
+      "FeatureMedia": [
+        "rec1dKDCthVOzDDCj"
+      ],
       "coordinates_source": [
         "Saylor"
       ],
@@ -403,10 +481,16 @@
       "longitude": -1.8262,
       "name_ru": "Стоунхендж",
       "name_en": "Stonehenge",
+      "FeatureSources": [
+        "recomMBZhHCXhBrm9"
+      ],
       "is_active": true,
       "date_end": "-1600",
       "coordinates_confidence": "exact",
       "id": "8f5d2e1a-2580-4c11-9a3f-123456789abc",
+      "FeatureMedia": [
+        "recdAobbNgFLKhwYh"
+      ],
       "coordinates_source": [
         "UNESCO"
       ],
@@ -433,10 +517,16 @@
       "longitude": 31.1342,
       "name_ru": "Великая пирамида Гизы (Пирамида Хеопса)",
       "name_en": "Great Pyramid of Giza",
+      "FeatureSources": [
+        "rec3WBvH1eAO8zPlM"
+      ],
       "is_active": true,
       "date_end": "-2566",
       "coordinates_confidence": "exact",
       "id": "d4c3b2a1-0447-49f8-b1c2-3d4e5f6a7b8c",
+      "FeatureMedia": [
+        "recU5iZL901f84M86"
+      ],
       "coordinates_source": [
         "Britannica"
       ],
@@ -458,15 +548,21 @@
       "source_license": "CC BY-SA",
       "description": "Реконструкция жилого дома с фасадом из мозаики и балконами-масками. Отсутствие прямых линий.",
       "image_url": "https://commons.wikimedia.org/wiki/File:Casa_Batll%C3%B3_Barcelona_Main.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://www.casabatllo.es/en/",
       "longitude": 2.1649,
       "name_ru": "Каса-Батльо",
       "name_en": "Casa Batlló",
+      "FeatureSources": [
+        "reclZw6e33lvAZjg0"
+      ],
       "is_active": true,
       "date_end": "1906",
       "coordinates_confidence": "exact",
       "id": "b1f1e062-b520-4894-a364-444346c9ef1c",
+      "FeatureMedia": [
+        "recWA8WPKTqd2VvHR"
+      ],
       "coordinates_source": [
         "UNESCO"
       ],
@@ -488,15 +584,21 @@
       "source_license": "CC BY-SA",
       "description": "Многоуровневые бетонные террасы. Использование «грубого бетона» как эстетической основы.",
       "image_url": "https://commons.wikimedia.org/wiki/File:National_Theatre_South_Bank_2015.jpg",
-      "id_status": "invalid",
+      "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Royal_National_Theatre",
       "longitude": -0.1142,
       "name_ru": "Королевский национальный театр",
       "name_en": "Royal National Theatre",
+      "FeatureSources": [
+        "recyj1enrWkJVQTcw"
+      ],
       "is_active": true,
       "date_end": "1976",
       "coordinates_confidence": "exact",
       "id": "71ab11dd-f159-43d3-bcf9-711380973f0e",
+      "FeatureMedia": [
+        "rec4SWiubjSWIXEUB"
+      ],
       "coordinates_source": [
         "Dezeen"
       ],
@@ -523,10 +625,17 @@
       "longitude": 46.1031,
       "name_ru": "Великий зиккурат в Уре",
       "name_en": "Great Ziggurat of Ur",
+      "FeatureSources": [
+        "recBwKRdG4maDeI7d",
+        "reckBGcyknAxVlXBI"
+      ],
       "is_active": true,
       "date_end": "-2000",
       "coordinates_confidence": "exact",
       "id": "f1e2d3c4-0072-4b3a-9c8d-7e6f5a4b3c2d",
+      "FeatureMedia": [
+        "recfb4bFZi4k4tugt"
+      ],
       "coordinates_source": [
         "Britannica"
       ],
@@ -553,10 +662,16 @@
       "longitude": 28.9801,
       "name_ru": "Собор Святой Софии",
       "name_en": "Hagia Sophia",
+      "FeatureSources": [
+        "recEZpON5XWXxVY1z"
+      ],
       "is_active": true,
       "date_end": "0537",
       "coordinates_confidence": "exact",
       "id": "a1b2c3d4-1075-4f3e-8c2a-1b3a4f5e6d7c",
+      "FeatureMedia": [
+        "recihV1DH2RmSBNTt"
+      ],
       "coordinates_source": [
         "UNESCO"
       ],

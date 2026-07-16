@@ -2,8 +2,33 @@
   "total_records": 19,
   "valid_records": 19,
   "skipped_records": 0,
-  "warnings_count": 0,
+  "warnings_count": 3,
   "errors_count": 0,
-  "warnings": [],
+  "warnings": [
+    {
+      "id": "rec0x9MvhXQFWErOy",
+      "record_id": "rec0x9MvhXQFWErOy",
+      "reason": "legacy_image_without_reviewed_media",
+      "severity": "warning",
+      "field": "image_url",
+      "warning": "legacy_image_without_reviewed_media"
+    },
+    {
+      "id": "rec1GDGqssFGehzEx",
+      "record_id": "rec1GDGqssFGehzEx",
+      "reason": "legacy_image_without_reviewed_media",
+      "severity": "warning",
+      "field": "image_url",
+      "warning": "legacy_image_without_reviewed_media"
+    },
+    {
+      "id": "rec9KIQPB9M377wgE",
+      "record_id": "rec9KIQPB9M377wgE",
+      "reason": "legacy_image_without_reviewed_media",
+      "severity": "warning",
+      "field": "image_url",
+      "warning": "legacy_image_without_reviewed_media"
+    }
+  ],
   "errors": []
 }
