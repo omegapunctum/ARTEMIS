@@ -1,363 +1,207 @@
-# ARTEMIS_PRODUCT_SCOPE_v1.0
+# ARTEMIS — PRODUCT SCOPE v1.1
 
-## Статус документа
-- Тип: canonical product scope document
-- Роль: фиксирует границы ARTEMIS v1.0, главную единицу ценности, product loop и допустимый/запрещённый scope
-- Назначение: служит source of truth для продуктовых границ проекта и защиты от product drift
-- Приоритет: высокий
-- Статус: active
-- Связь с другими canonical docs:
-  - `ARTEMIS_CONCEPT.md` задаёт миссию, принципы, epistemic model и лестницу развития
-  - `ARTEMIS_PRODUCT_SCOPE.md` задаёт продуктовые границы и формулу ARTEMIS v1.0 внутри этой концептуальной рамки
+## Статус
 
-Цель документа:
-- не допустить расползания проекта;
-- отделить обязательный продуктовый слой от перспективных направлений;
-- определить, что именно должно быть реализовано в v1.0, а что запрещено обещать и включать в базовый scope.
+- Тип: canonical product scope document.
+- Статус: active.
+- Дата решения: 2026-07-16.
+- Активный delivery focus: Architecture Atlas vertical MVP.
+- Долгосрочная миссия определяется `ARTEMIS_CONCEPT.md`.
+- Фактическая доступность определяется `PROJECT_TRUTH.md`.
 
-Baseline note:
-- текущий runtime уже включает map/time workspace, research slices, stories, courses и Explainable Context Contract;
-- полноценный AI generation/explanation layer поверх ECC остаётся следующим слоем развития и не считается реализованной частью текущего baseline.
+Этот документ защищает текущий цикл от product drift. Он не отменяет долгосрочную explainable spatial-temporal architecture, но запрещает выдавать её за scope ближайшего продукта.
 
----
+## 1. Формула текущего продукта
 
-## 1. Назначение ARTEMIS v1.0
+ARTEMIS v1.1 — **доказательный пространственно-временной атлас истории архитектуры**.
 
-ARTEMIS v1.0 — это **explainable spatial-temporal research workspace**.
+Его задача:
 
-Его задача — дать пользователю исследовательскую среду, в которой можно:
-- работать с пространственно-временными данными;
-- изучать объекты, события, процессы и связи;
-- собирать и сохранять исследовательские срезы;
-- проходить curated stories и courses;
-- использовать ИИ как объясняющий и сопоставляющий слой.
+- показать архитектурные объекты в пространстве и времени;
+- дать содержательное сравнение;
+- показать документированные relations и отдельно вычисляемую similarity;
+- сделать provenance видимым;
+- сохранить исследовательский контекст как Research Slice;
+- предложить ограниченные curated Stories.
 
-ARTEMIS v1.0 не является:
-- системой предсказания истории;
-- causal engine;
-- научным автоматом, заменяющим исследователя;
-- открытой социальной платформой общего назначения;
-- универсальной knowledge-платформой вне пространственно-временного ядра.
+## 2. Primary user
 
----
+Первичный пользователь:
 
-## 2. Главная единица ценности
+- продвинутый студент истории архитектуры/искусства;
+- преподаватель;
+- исследователь, автор или куратор.
 
-### Research Slice / Исследовательский срез
+Primary job:
 
-Главная единица продуктовой ценности ARTEMIS v1.0 — **исследовательский срез**.
+> Найти, сопоставить и сохранить архитектурные объекты в пространстве и времени, понимая источники и статус показанных связей.
 
-Исследовательский срез — это сохранённая конфигурация:
-- карты;
-- времени;
-- активных слоёв;
-- выбранных объектов;
-- связей;
-- фильтров;
-- контекста исследования.
+Формулировка «любой интеллектуальный пользователь» недостаточна для приоритизации и не используется как primary persona текущего цикла.
 
-Именно срез является базой для:
-- возвращения пользователя в приложение;
-- построения story;
-- построения course;
-- сравнения конфигураций;
-- AI explanation.
+## 3. Главная ценность
 
-### Почему не объект
-Отдельный объект:
-- слишком мал как единица ценности;
-- плохо масштабируется в пользовательский workflow;
-- не создаёт устойчивый product loop.
+Главный момент ценности — доказательное сравнение объектов. Главная сохраняемая единица — Research Slice.
 
-### Почему не story
-Story — более высокий слой.
-Она строится на базе нескольких срезов и объяснений.
-Следовательно, story — важная сущность, но не базовое ядро.
+Research Slice включает:
 
-### Research Slice v1.0 baseline semantics
-
-В ARTEMIS v1.0 research slice должен пониматься не как просто saved view, а как минимально достаточная сохраняемая единица исследовательского контекста.
-
-Минимальный baseline slice v1.0 включает:
-- spatial focus / viewport;
+- spatial focus/viewport;
 - time state;
-- active layers;
-- selected entities;
-- filter state;
-- saved state metadata;
-- optional title;
-- optional user note/context;
-- optional AI-generated summary.
+- выбранные Features;
+- active filters/layers;
+- comparison state;
+- user notes;
+- title и metadata;
+- source-aware references.
 
-Обязательные действия для slice v1.0:
+Обязательные Slice actions для MVP:
+
 - create;
 - save;
-- reopen;
-- update;
-- rename;
-- share;
-- compare.
+- list;
+- reopen/restore;
+- update/rename;
+- delete;
+- share as read-only state.
 
-Research slice v1.0 не должен смешиваться с:
-- отдельным объектом;
-- длинной статьёй;
-- полноценной story;
-- course module;
-- standalone AI conversation.
+## 4. Core product loop
 
-Stories и courses являются downstream-слоями, которые строятся поверх slice, а не заменяют его.
+1. Выбрать эпоху, направление или регион.
+2. Найти объекты через map/time/filter.
+3. Открыть sourced detail.
+4. Сравнить 2–3 объекта.
+5. Изучить reviewed relations либо clearly labelled similarity.
+6. Сохранить Research Slice.
+7. Вернуться к Slice или поделиться им.
 
----
+Stories являются curated входом и downstream-слоем. Courses и AI не входят в active MVP loop.
 
-## 3. Основной пользователь
+## 5. Обязательный scope
 
-### Primary user
-Основной пользователь ARTEMIS v1.0:
-- исследователь;
-- аналитик;
-- интеллектуальный пользователь;
-- продвинутый студент;
-- преподаватель;
-- автор исследовательского или образовательного контента.
+### 5.1 Curated architecture data
 
-Общий признак: пользователю нужен не просто факт, а **структурированный способ исследовать тему через пространство, время и связи**.
+- Architecture Features с canonical UUID;
+- reviewed Layers;
+- Sources с ролью evidence;
+- Media с direct asset URL, license и attribution;
+- reviewed Relations;
+- semantic validation gate;
+- controlled publish flow.
 
-### Secondary user
-Вторичный пользователь:
-- образовательный куратор;
-- автор guided content;
-- куратор course/story модулей.
-
----
-
-## 4. Product loop
-
-### Базовый цикл использования
-1. Пользователь открывает тему.
-2. Переходит к пространственно-временному обзору.
-3. Находит или собирает исследовательский срез.
-4. Сохраняет его.
-5. Возвращается к нему.
-6. Развивает срез в story / collection / course.
-7. Использует ИИ для пояснения, сравнения и поиска паттернов.
-
-### Зачем это важно
-Без повторяемого цикла ARTEMIS остаётся витриной данных.
-С cycle через slices он становится средой исследования.
-
----
-
-## 5. Обязательный scope v1.0
-
-Ниже перечислено то, что должно войти в ARTEMIS v1.0.
-
-### 5.1 Curated data layer
-Обязательно:
-- структурированные сущности;
-- пространственная привязка;
-- временные атрибуты;
-- связи между сущностями;
-- проверяемые источники;
-- data contract;
-- validation pipeline;
-- управляемый publish flow.
+Семантика полей определяется `DATA_DICTIONARY.md`, export mechanics — `DATA_CONTRACT.md`.
 
 ### 5.2 Map-time workspace
-Обязательно:
-- карта;
-- таймлайн;
-- фильтрация;
-- слои;
-- переключение временных диапазонов;
-- выделение объектов;
-- detail panel / карточки;
-- быстрый просмотр контекста объекта.
 
-### 5.3 Research slices
-Обязательно:
-- создание среза;
-- сохранение среза;
-- загрузка сохранённого среза;
-- sharable state / устойчивое состояние исследования;
-- базовые collections из срезов.
-Текущий статус:
-- baseline core (create/save/restore/list/delete) реализован;
-- shareable-state и collections остаются следующим продуктовым слоем.
+- map;
+- compact timeline;
+- search;
+- filters по периоду, направлению и региону;
+- selected state;
+- sourced detail panel;
+- desktop/tablet/mobile adaptation.
 
-### 5.4 Story layer
-Обязательно:
-- curated stories на базе срезов;
-- пошаговый переход между срезами;
-- narrative context;
-- интеграция с картой и временем.
-Текущий статус:
-- реализован thin orchestration runtime layer (owner-only stories CRUD поверх slices);
-- полноценный guided-narrative depth layer остаётся следующим шагом.
+### 5.3 Compare
 
-### 5.5 Course layer
-Обязательно:
-- guided educational sequences;
-- структура на базе slices/stories;
-- режим последовательного прохождения;
-- связь курса с пространственно-временной конфигурацией.
-Текущий статус:
-- реализован thin orchestration runtime layer (owner-only courses CRUD поверх stories);
-- full guided-learning depth/progression layer остаётся следующим шагом.
+- выбор 2–3 объектов;
+- сравнение temporal/spatial/style/source properties;
+- отдельное отображение Relations и Similarity;
+- отсутствие неподтверждённых causal claims.
 
-### 5.6 Explainable AI assistance
-Обязательно:
-- AI explanation для выбранного объекта/среза;
-- AI comparison между срезами/состояниями;
-- AI summary с маркировкой статуса;
-- AI hypothesis suggestions как отдельный тип вывода;
-- явное отделение фактов от интерпретаций.
-Текущий статус:
-- реализован ECC как explainability context contract (контекст для `slice|story|course`);
-- полноценный AI generation/explanation слой (model outputs: explain/compare/summary/hypothesis) остаётся future scope.
+### 5.4 Research Slices
 
-### 5.7 Provenance and epistemic clarity
-Обязательно:
-- маркировка происхождения данных;
-- понятное различие между:
-  - фактами;
-  - связями;
-  - интерпретациями;
-  - гипотезами;
-- отображение уровня уверенности там, где используется AI assistance.
+- полный public end-to-end loop;
+- backend persistence;
+- восстановление контекста;
+- shareable read-only state.
 
----
+### 5.5 Curated Stories
 
-## 6. Допустимый, но не обязательный scope v1.0
+- минимум три редакционных маршрута;
+- шаги на основе sourced Features/Relations;
+- синхронизация с map/time/detail.
 
-Это можно реализовывать, если не мешает ядру:
+### 5.6 Provenance and epistemic clarity
 
-- saved views и bookmarks как облегчённые формы slice management;
-- collections;
-- compare mode между двумя срезами;
-- lightweight profile area;
-- private drafts;
-- authoring conveniences для stories/courses;
-- UI personalization;
-- limited progress tracking for courses.
+UI различает:
 
-Это допустимо только в том случае, если не размывает ядро продукта.
+- fact;
+- source;
+- reviewed relation;
+- computed similarity;
+- interpretation;
+- hypothesis;
+- unavailable/future AI.
 
----
+## 6. Public capability rule
 
-## 7. Что запрещено включать в обещание v1.0
+Функция входит в пользовательскую primary navigation только если она работает на public deployment end-to-end.
 
-Следующее запрещено объявлять как часть v1.0:
+Backend-код без public API deployment обозначается `BACKEND-AVAILABLE`, а не «доступно пользователю».
 
-### 7.1 Causal engine
-Нельзя обещать:
-- достоверное выявление причинно-следственных связей ИИ;
-- автоматическое объяснение исторической необходимости;
-- strong causal reasoning как продуктовую основу.
+Thin CRUD не считается полноценной Stories/Courses product depth.
 
-### 7.2 Counterfactual simulation
-Нельзя обещать:
-- симуляцию альтернативной истории;
-- оценку “как история могла пойти иначе” как зрелую функцию;
-- генерацию вероятных миров как надёжный механизм.
+## 7. Frozen scope до validation gate
 
-### 7.3 Predictive system
-Нельзя обещать:
-- прогнозирование будущего на основе исторических данных;
-- политическое или социокультурное предсказание.
+- Courses expansion;
+- AI generation/explanation;
+- open-ended UGC;
+- new domain/entity expansion;
+- causal engine;
+- counterfactual simulation;
+- predictive layers;
+- gamification;
+- native apps;
+- enterprise API/integrations;
+- non-critical scaling и framework rewrite.
 
-### 7.4 Open-ended UGC platform
-Нельзя обещать:
-- полностью открытую пользовательскую платформу без жёсткой модерации;
-- свободное пользовательское редактирование публичной knowledge base.
+Существующий код замороженных слоёв может сохраняться, тестироваться и получать security fixes, но не задаёт product roadmap.
 
-### 7.5 Universal platform for everything
-Нельзя превращать ARTEMIS v1.0 в:
-- универсальную encyclopedic platform;
-- общую карту любых знаний без пространственно-временного контракта.
+## 8. Content threshold
 
----
+Перед первой внешней validation:
 
-## 8. Product boundaries
+- 100–150 Features;
+- 15–20 непустых Layers/periods/styles;
+- 50+ reviewed Relations;
+- source coverage для всех Features;
+- media attribution для ключевых Features;
+- 3 curated Stories;
+- 5–10 reference Slices.
 
-### Что усиливает ядро
-Любая новая функция должна усиливать хотя бы один из блоков:
-- research slices;
-- stories;
-- courses;
-- explainable AI assistance;
-- spatial-temporal knowledge navigation.
+Полная граница MVP определяется `MVP_ARCHITECTURE_ATLAS.md`.
 
-### Что ослабляет ядро
-Функции, уводящие проект в сторону:
-- generic social features;
-- абстрактные AI toys;
-- непроверяемые “умные инсайты”;
-- тяжёлая вторичная инфраструктура без прямой продуктовой ценности;
-- расширение в темы, не требующие пространства и времени как основы.
+## 9. AI boundary
 
----
+Explain Context Contract может существовать как backend contract, но AI generation не считается реализованной product feature.
 
-## 9. Приоритеты реализации внутри v1.0
+Будущий AI обязан:
 
-### Приоритет A — обязателен
-- curated data integrity;
-- stable map-time workspace;
-- slice creation / save / restore;
-- detail panel;
-- canonical documentation and release discipline.
+- опираться на selected sourced context;
+- отделять fact от interpretation/hypothesis;
+- показывать provenance;
+- не создавать canonical Relations;
+- не скрывать uncertainty.
 
-### Приоритет B — обязателен для продуктовой целостности
-- stories;
-- course flow;
-- shareable state;
-- explainable AI summaries and comparisons.
+## 10. Validation gate
 
-### Приоритет C — вторичен
-- authoring conveniences;
-- profile polish;
-- extended collection tooling;
-- secondary UX refinements.
+Product expansion запрещён до выполнения `PRODUCT_VALIDATION_PLAN.md`.
 
----
+Минимальное решение после validation:
 
-## 10. Критерии готовности продукта v1.0
+- `ITERATE`;
+- `EXPAND`;
+- `NARROW`;
+- `STOP/RETHINK`.
 
-ARTEMIS v1.0 можно считать концептуально состоявшимся, если:
+Только явно зафиксированное решение может изменить этот scope.
 
-1. Пользователь может исследовать тему через карту и время.
-2. Пользователь может собрать и сохранить исследовательский срез.
-3. Пользователь может вернуться к срезу без потери контекста.
-4. Пользователь может пройти хотя бы одну полноценную story.
-5. Пользователь может пройти хотя бы один полноценный course.
-6. ИИ может объяснить выбранный объект или срез без смешения факта и гипотезы.
-7. Источники и происхождение данных остаются прозрачными.
-8. Продукт не обещает того, что не может надёжно обосновать.
+## 11. Связанные owner documents
 
----
-
-## 11. Формула продуктового scope
-
-### Краткая формула
-ARTEMIS v1.0 =  
-**curated spatial-temporal knowledge base + research slices + stories + courses + explainable AI assistance**
-
-### Жёсткое ограничение
-Если функция не усиливает эту формулу, она не входит в базовый scope v1.0.
-
----
-
-## 12. Итог
-
-ARTEMIS v1.0 должен быть не “большой платформой на будущее”, а
-**жёстко ограниченной, полезной исследовательской средой**.
-
-Его сила в v1.0:
-- не в максимуме функций;
-- не в величине обещаний;
-- не в симуляции будущего;
-
-а в том, что он даёт:
-- качественное пространственно-временное исследование;
-- устойчивую единицу ценности в виде research slice;
-- объяснимый AI layer;
-- основу для дальнейшего роста без концептуального распада.
+- `PRODUCT_THESIS.md` — аудитория, проблема, hypotheses и value proposition;
+- `PROJECT_TRUTH.md` — фактическое текущее состояние;
+- `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary и exit criteria;
+- `DATA_DICTIONARY.md` — semantic data model;
+- `PRODUCT_VALIDATION_PLAN.md` — evidence gate;
+- `RESEARCH_SLICE_CONTRACT.md` — Slice semantics;
+- `EPISTEMIC_CONTRACT.md` — knowledge-type rules;
+- `CONTENT_GOVERNANCE.md` — trusted content governance;
+- `PROJECT_PHASES.md` и `PRIORITIES.md` — operational order.

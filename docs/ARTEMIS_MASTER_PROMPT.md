@@ -1,4 +1,4 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v4.1
+# ARTEMIS — МАСТЕР-ПРОМПТ v4.2
 
 Статус: canonical operational governance document for AI agents and assistants in ARTEMIS.
 Назначение: единая инструкция для ИИ-ассистентов и агентов, работающих над проектом ARTEMIS.
@@ -7,12 +7,13 @@
 
 ## 1. РОЛЬ ПРОЕКТА
 
-ARTEMIS — AI-native explainable spatial-temporal research platform.
-В operational контуре проекта это означает:
-- map-first платформа для исследования пространственно-временных данных;
+Долгосрочно ARTEMIS — AI-native explainable spatial-temporal research platform.
+В активном operational контуре ARTEMIS — focused Architecture Atlas vertical:
+- map-first исследование истории архитектуры;
 - интерактивная карта, временная навигация и слои данных как базовый runtime;
-- исследовательские, образовательные и авторские сценарии поверх карты;
-- объяснимый ИИ как слой помощи, а не как источник истины.
+- sourced comparison, reviewed relations и Research Slices;
+- public capability не может быть заявлена только на основании backend-кода;
+- Courses, AI generation, UGC expansion и multi-domain scope заморожены до validation decision.
 
 Ключевой принцип продукта:
 **explore first, learn second, create third**.
@@ -31,8 +32,13 @@ ARTEMIS — AI-native explainable spatial-temporal research platform.
 - `README.md`
 - `docs/FOUNDATION_INDEX.md`
 - `docs/ARTEMIS_CONCEPT.md`
+- `docs/PROJECT_TRUTH.md`
+- `docs/PRODUCT_THESIS.md`
 - `docs/ARTEMIS_MASTER_PROMPT.md`
 - `docs/ARTEMIS_PRODUCT_SCOPE.md`
+- `docs/MVP_ARCHITECTURE_ATLAS.md`
+- `docs/DATA_DICTIONARY.md`
+- `docs/PRODUCT_VALIDATION_PLAN.md`
 - `docs/RESEARCH_SLICE_CONTRACT.md`
 - `docs/RESEARCH_SLICE_SPEC.md`
 - `docs/EPISTEMIC_CONTRACT.md`
@@ -50,7 +56,12 @@ ARTEMIS — AI-native explainable spatial-temporal research platform.
 - если информация не синхронизирована с canonical docs, она не должна считаться окончательной;
 - `FOUNDATION_INDEX.md` определяет foundation-layer, порядок чтения и выбор source of truth по типам решений;
 - `ARTEMIS_CONCEPT.md` определяет миссию, жёсткие принципы, эпистемическую модель и долгосрочную лестницу развития;
-- `ARTEMIS_PRODUCT_SCOPE.md` определяет границы ARTEMIS v1.0, главную единицу ценности и запреты против product drift;
+- `PROJECT_TRUTH.md` определяет factual public/backend/pilot/future boundary;
+- `PRODUCT_THESIS.md` определяет активную аудиторию, проблему и hypotheses;
+- `ARTEMIS_PRODUCT_SCOPE.md` определяет границы текущего vertical и запреты против product drift;
+- `MVP_ARCHITECTURE_ATLAS.md` определяет MVP boundary и exit criteria;
+- `DATA_DICTIONARY.md` определяет semantic data rules;
+- `PRODUCT_VALIDATION_PLAN.md` определяет evidence и decision gate;
 - `RESEARCH_SLICE_CONTRACT.md` определяет Research Slice как главную product/data/UI/AI единицу ценности;
 - `EPISTEMIC_CONTRACT.md` определяет операционное разделение fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;
 - `ENTITY_MODEL.md` определяет knowledge/product/runtime/context entities и relation model;
@@ -163,26 +174,19 @@ ARTEMIS — AI-native explainable spatial-temporal research platform.
 
 ## 6. ТЕКУЩИЙ ПОРЯДОК РАБОТ
 
-Активный рабочий контур:
-1. **Scaling / Hardening** — Фаза 5, текущий основной активный цикл.
-2. **Product / documentation coherence** — сопутствующий guardrail без расширения implementation scope.
-3. **Product Expansion** — Фаза 6, запланирована после стабилизации hardening-контура и только в границах `ARTEMIS_PRODUCT_SCOPE.md` и foundation-layer.
-4. **PWA / UX Stabilization** — Фаза 4 закрыта; не reopen без нового подтверждённого runtime/PWA drift.
-5. **Controlled Release Stabilization** — Фаза 3 закрыта; не reopen без нового contract/release drift.
+Активный рабочий контур — **Phase 4.5 Product/Data Validation**.
 
-Приоритет задач внутри текущего цикла:
-1. устранить scaling/hardening gaps без ложных production-ready claims;
-2. удержать execution coherence между runtime, docs, release semantics и checked-in artifacts;
-3. поддерживать canonical public map source discipline (`data/features.geojson` как production-default public source);
-4. точечно устранять documentation drift, если он влияет на архитектуру, release, data contract, foundation-layer, phase order или product scope;
-5. открывать следующий product expansion слой только после stabilization/coherence и в границах `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `CONTENT_GOVERNANCE.md` и `AI_POLICY.md`.
+Порядок:
 
-Внутренний порядок будущего product expansion:
-1. research slices / saved state / shareable state;
-2. stories;
-3. courses;
-4. explainable AI assistance;
-5. вторичные product extensions.
+1. documentation/strategy truth;
+2. canonical identity, Sources, Media и Relations;
+3. semantic data gate;
+4. Architecture Atlas content pilot;
+5. public backend и Slice end-to-end loop;
+6. product UX refinement и required maintainability;
+7. user validation и explicit decision gate.
+
+Phase 5 Scaling/Hardening приостановлена, кроме critical security/reliability и MVP deployment blockers. Phase 6 Product Expansion заблокирована до решения `EXPAND` либо отдельного canonical decision.
 
 ---
 
@@ -209,14 +213,14 @@ ARTEMIS — AI-native explainable spatial-temporal research platform.
 - границы scope;
 - проверки;
 - какие canonical docs должны быть обновлены;
-- затрагивает ли изменение `FOUNDATION_INDEX.md`, `ARTEMIS_CONCEPT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md` или `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`.
+- затрагивает ли изменение active product decision set (`PROJECT_TRUTH.md`, `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `MVP_ARCHITECTURE_ATLAS.md`, `DATA_DICTIONARY.md`, `PRODUCT_VALIDATION_PLAN.md`) либо foundation contracts.
 
 ### 8.2 Что запрещено
 - рефакторинг без явной причины;
 - расширение scope по ходу patch;
 - скрытое изменение API/контракта;
 - изменение архитектуры под видом багфикса;
-- развитие stories/courses/AI вне Research Slice model;
+- развитие frozen Stories/Courses/AI/UGC scope до validation decision;
 - использование AI-output как source-backed/canonical knowledge без governance;
 - смешение fact/interpretation/hypothesis/AI-output/counterfactual;
 - работа по старому архивному документу как по основному ориентиру.

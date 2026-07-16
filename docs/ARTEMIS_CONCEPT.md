@@ -9,7 +9,14 @@
 - Статус: active
 - Граница ответственности:
   - `ARTEMIS_CONCEPT.md` определяет, чем является ARTEMIS, по каким принципам он развивается и какие epistemic/strategic ограничения нельзя нарушать
-  - `ARTEMIS_PRODUCT_SCOPE.md` определяет продуктовые границы ARTEMIS v1.0 внутри этой концептуальной рамки
+  - `ARTEMIS_PRODUCT_SCOPE.md` определяет текущие продуктовые границы внутри этой концептуальной рамки
+
+Delivery clarification (2026-07-16):
+
+- описанный ниже ARTEMIS v1.0 является долгосрочной целевой product architecture, а не обещанием ближайшего публичного release;
+- активный delivery focus — Architecture Atlas vertical из `PRODUCT_THESIS.md` и `MVP_ARCHITECTURE_ATLAS.md`;
+- `PROJECT_TRUTH.md` имеет приоритет для утверждений о том, что реально доступно сейчас;
+- Courses, multi-domain expansion и AI generation остаются frozen/future до validation decision.
 
 ---
 

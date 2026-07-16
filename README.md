@@ -1,9 +1,10 @@
 # ARTEMIS
 
-**ARTEMIS** is a map-first geo-historical research platform built with **MapLibre + GeoJSON**.  
-It visualizes historical events, movements, and entities in space and time, and provides backend knowledge workflows around that map surface.
+**ARTEMIS** is a source-aware spatial-temporal atlas for exploring the history of architecture with **MapLibre + GeoJSON**.
 
-In the current canonical product framing, ARTEMIS should be understood not only as a map UI, but as an **explainable spatial-temporal research workspace** centered on research slices, guided stories/courses, and transparent context handoff for future AI-assisted layers.
+The active delivery focus is a validated architecture-history vertical: explore objects through map and time, compare them, distinguish documented relations from computed similarity, inspect provenance, and preserve useful context as a Research Slice.
+
+The broader explainable spatial-temporal research workspace remains the long-term architecture. Courses, open UGC, multi-domain expansion and generative AI are not part of the active MVP cycle.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -11,19 +12,26 @@ This README is the **root documentation entrypoint and current baseline summary*
 
 ## Overview
 
-ARTEMIS combines:
-- curated historical data (Airtable → ETL → GeoJSON)
+ARTEMIS currently combines:
+- curated architecture data (Airtable → ETL → GeoJSON)
 - interactive map visualization (MapLibre)
-- user-generated content (UGC)
-- moderation/review runtime flow
-- research slices (private/owner-only knowledge snapshots)
-- stories (thin orchestration over research slices)
-- courses (thin orchestration over stories)
-- explain-context contract payloads for `slice|story|course`
+- backend implementations for auth, UGC/moderation and research workflows
+- research slices (backend-available private/owner-only knowledge snapshots)
+- stories and courses as frozen thin orchestration layers
+- explain-context contract payloads without AI generation
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The system is designed to stay **simple, modular, and documentation-governed within the current controlled baseline**, without over-claiming capabilities that are not yet production-hardened.
+The current operational state is **controlled engineering prototype / product-data validation**. See `docs/PROJECT_TRUTH.md` for the authoritative public/backend/pilot/future boundary.
+
+### Current capability boundary
+
+| Status | Meaning | Current examples |
+|---|---|---|
+| `PUBLIC NOW` | Works on GitHub Pages without backend execution | map, timeline/filter/detail baseline, checked-in `data/*` |
+| `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
+| `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
+| `FUTURE` | Not an active product capability | AI generation, universal domains, causal/predictive layers |
 
 ---
 
@@ -115,7 +123,7 @@ Vanilla JavaScript (no frameworks):
 - `AUTH_SECRET_KEY` **must** be explicitly configured for real runtime; ephemeral per-process fallback is dev-only and not an acceptable deployment mode.
 - Current auth/session guarantees should be treated as **baseline-capable but not fully production-hardened for multi-instance deployments**.
 - The project already includes hardening work beyond the original memory-only MVP, including Redis-backed/session continuity proof paths and related integration coverage, but this should **not** be described as a finished production-ready multi-node auth/session architecture.
-- Multi-instance scaling, persistence, and ops hardening remain part of the next dedicated scaling/hardening cycle.
+- Multi-instance scaling, persistence, and ops hardening are paused unless required by the public Architecture Atlas MVP or a critical reliability/security issue.
 - Current persistence baseline uses a **shared SQLAlchemy engine/Base scope** (auth + drafts + research slices + stories + courses) rather than isolated per-domain database engines.
 - Current DB baseline remains **SQLite as an acceptable baseline storage layer**, but this must be treated as baseline-capable only (not a production-grade multi-node/high-concurrency storage contour).
 - SQLite operational guardrails (current baseline):
@@ -281,18 +289,19 @@ Repository documentation is organized into five pragmatic layers:
 
 Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`.
 
-Canonical docs are maintained in root `README.md` and in `docs/` (including `docs/ARTEMIS_CONCEPT.md`, `docs/ARTEMIS_MASTER_PROMPT.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/DATA_CONTRACT.md`, `docs/DOCUMENTATION_SYSTEM.md`, `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`, `docs/PROJECT_STRUCTURE.md`).
+Canonical docs are maintained in root `README.md` and in `docs/`. The active product decision set is `docs/PROJECT_TRUTH.md`, `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/MVP_ARCHITECTURE_ATLAS.md`, `docs/DATA_DICTIONARY.md` and `docs/PRODUCT_VALIDATION_PLAN.md`.
 
 Recommended reading order:
 1. `README.md`
-2. `docs/DOCUMENTATION_SYSTEM.md`
-3. `docs/ARTEMIS_CONCEPT.md`
-4. `docs/ARTEMIS_PRODUCT_SCOPE.md`
-5. `docs/PROJECT_STRUCTURE.md`
-6. `docs/PROJECT_PHASES.md`
-7. `docs/PRIORITIES.md`
-8. then profile-specific canonical docs (`docs/DATA_CONTRACT.md`, `docs/CONTROLLED_RELEASE_DECISION.md`, `docs/ARTEMIS_MASTER_PROMPT.md`)
-9. only after that `docs/work/*`, `docs/audits/*`, `docs/reference/*`, `docs/archive/*`
+2. `docs/FOUNDATION_INDEX.md`
+3. `docs/PROJECT_TRUTH.md`
+4. `docs/PRODUCT_THESIS.md`
+5. `docs/ARTEMIS_PRODUCT_SCOPE.md`
+6. `docs/MVP_ARCHITECTURE_ATLAS.md`
+7. `docs/DATA_DICTIONARY.md`
+8. `docs/PRODUCT_VALIDATION_PLAN.md`
+9. `docs/PROJECT_PHASES.md` and `docs/PRIORITIES.md`
+10. then the remaining canonical and working layers according to `docs/DOCUMENTATION_SYSTEM.md`
 
 Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` remains the primary UI/UX working spec, `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` remains the system-level implementation map, and `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` owns the visual design layer: official style, palette, typography, state semantics and design-token baseline.
 
