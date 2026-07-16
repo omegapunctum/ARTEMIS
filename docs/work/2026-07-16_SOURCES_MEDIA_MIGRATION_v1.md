@@ -3,7 +3,7 @@
 ## Статус
 
 - Issue: `#283`.
-- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; Media migration in reviewed batches (`3/19`).
+- Статус: Airtable schema, reviewed Source batch and ETL implementation complete; Media migration in reviewed batches (`7/19`).
 - Snapshot date: 2026-07-16.
 - Scope: normalize factual Sources, display Media, per-link evidence/presentation semantics and compatibility projections for the 19-Feature Architecture Atlas pilot.
 
@@ -206,4 +206,12 @@ All ten pre-existing Sources had `url=null`, no Media links and legacy `license=
 - IDs: `media_stonehenge_wiscombe_2007`, `media_parthenon_swayne_1978`, `media_great_pyramid_vanderzee_2023`.
 - Control read: `3 Media / 3 reviewed`, `3 FeatureMedia / 3 reviewed`; each association has exactly one Feature, one Media and one `primary` role.
 - A Burj Khalifa candidate was rejected from this batch because its Commons page carries a UAE freedom-of-panorama warning; this confirms the migration does not treat a photo license alone as sufficient rights evidence.
-- Remaining Media scope: 16 Features require separate source and rights review before the migration checklist can be closed.
+
+### Media pilot batch 2 — 2026-07-16
+
+- Created 4 reviewed Media records and 4 reviewed primary FeatureMedia links for Pantheon (Rome), Alhambra, Hagia Sophia and Ziggurat of Ur.
+- Rights evidence was verified from each Wikimedia Commons File page: Pantheon `CC BY-SA 4.0` by NikonZ7II; Alhambra `CC0 1.0` by Jebulon; Hagia Sophia `CC BY-SA 3.0` by Adli Wahid; Ziggurat of Ur released to the public domain by Tla2006.
+- Pantheon and Alhambra use verified direct 1280 px Wikimedia derivatives instead of 34.58 MB and 11.33 MB originals; Hagia Sophia and Ziggurat of Ur use their compact original assets.
+- IDs: `media_pantheon_rome_nikonz7ii_2022`, `media_alhambra_jebulon_2014`, `media_hagia_sophia_adli_wahid_2014`, `media_ziggurat_ur_tla2006_2006`.
+- Control read after both batches: `7 Media / 7 reviewed`, `7 FeatureMedia / 7 reviewed`; each association has exactly one Feature, one Media and one `primary` role, with no duplicated Feature or Media references.
+- Remaining Media scope: 12 Features require separate source and rights review before the migration checklist can be closed.
