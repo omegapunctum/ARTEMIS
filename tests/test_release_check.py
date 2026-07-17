@@ -146,6 +146,10 @@ self.addEventListener('fetch', (event) => {
 <!doctype html>
 <html>
   <head>
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components/controls.css" />
+    <link rel="stylesheet" href="css/components/surfaces.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="./css/main-screen.css" />
   </head>
@@ -156,7 +160,11 @@ self.addEventListener('fetch', (event) => {
 """.strip()
         + "\n",
     )
-    _write(root / "css" / "style.css", "body { color: #000; }\n")
+    _write(root / "css" / "tokens.css", ":root { --color: #000; }\n")
+    _write(root / "css" / "base.css", "body { color: var(--color); }\n")
+    _write(root / "css" / "components" / "controls.css", "button { color: inherit; }\n")
+    _write(root / "css" / "components" / "surfaces.css", ".panel { display: block; }\n")
+    _write(root / "css" / "style.css", ".feature { display: block; }\n")
     _write(root / "css" / "main-screen.css", ".main-screen { display: block; }\n")
     _write(
         root / ".github" / "workflows" / "pages.yml",
@@ -169,6 +177,10 @@ jobs:
         run: |
           required_files=(
             "index.html"
+            "css/tokens.css"
+            "css/base.css"
+            "css/components/controls.css"
+            "css/components/surfaces.css"
             "css/style.css"
             "css/main-screen.css"
             "js/data.js"
@@ -599,6 +611,10 @@ jobs:
         run: |
           required_files=(
             "index.html"
+            "css/tokens.css"
+            "css/base.css"
+            "css/components/controls.css"
+            "css/components/surfaces.css"
             "css/style.css"
             "js/data.js"
           )

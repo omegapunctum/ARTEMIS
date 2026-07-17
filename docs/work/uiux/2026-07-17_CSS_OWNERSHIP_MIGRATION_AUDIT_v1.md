@@ -3,7 +3,7 @@
 ## Статус
 
 - Issue: `#288`.
-- Статус: **AUDIT COMPLETE / DOCUMENTATION GATE**.
+- Статус: **AUDIT COMPLETE / BATCH B FOUNDATION IMPLEMENTED**.
 - Snapshot: 2026-07-17, `main` at `7971b7d`.
 - Scope: CSS ownership, main Workspace geometry, responsive contract and migration safety.
 - Runtime changes: not started by this document.
@@ -256,3 +256,22 @@ This is a target ownership map, not a requirement to create every file in one co
 - [ ] compact timeline implemented;
 - [ ] `main-screen.css` retired;
 - [ ] desktop/tablet/mobile visual regression accepted.
+
+## 10. Batch B execution evidence
+
+Foundation extraction выполнен без изменения cascade или geometry:
+
+| Owner file | Lines after extraction |
+|---|---:|
+| `css/tokens.css` | 98 |
+| `css/base.css` | 162 |
+| `css/components/controls.css` | 199 |
+| `css/components/surfaces.css` | 92 |
+| transitional `css/style.css` | 2248 |
+| transitional `css/main-screen.css` | 183, unchanged |
+
+Runtime load order закреплён в `index.html`: tokens → base → controls → surfaces → transitional feature/layout rules → transitional main-screen override. Все шесть файлов включены в GitHub Pages artifact и service-worker precache.
+
+До изменения заголовочного комментария конкатенация четырёх owner-файлов и оставшейся части `style.css` побайтно совпала с pre-extraction `style.css`: SHA-256 `511c2608c24f041f4af9a02406f82a4ab8d8303502d519ad44a5caa16041cfd2`.
+
+Batch B намеренно не меняет structural rail, timeline height, semantic anchors или `main-screen.css`. Эти изменения принадлежат следующим independently reviewable batches.

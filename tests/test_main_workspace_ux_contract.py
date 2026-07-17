@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
 UI_JS = (ROOT / "js" / "ui.js").read_text(encoding="utf-8")
 DATA_JS = (ROOT / "js" / "data.js").read_text(encoding="utf-8")
+TOKENS = (ROOT / "css" / "tokens.css").read_text(encoding="utf-8")
 STYLE = (ROOT / "css" / "style.css").read_text(encoding="utf-8")
 
 
@@ -60,7 +61,7 @@ def test_timeline_exposes_semantic_anchor_labels_on_desktop() -> None:
     label_rule = re.search(r"\.timeline-anchor-label\s*\{(?P<body>[^}]*)\}", desktop_css)
     assert label_rule, "Missing desktop timeline anchor label rule"
     assert "display: block" in label_rule.group("body")
-    assert "--bottom-panel-height: 152px" in desktop_css
+    assert "--bottom-panel-height: 152px" in TOKENS
 
 
 def test_documented_relations_are_separate_from_computed_similarity() -> None:

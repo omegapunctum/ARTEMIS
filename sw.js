@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-07-16-v9-relations';
+const CACHE_VERSION = '2026-07-17-v10-css-foundation';
 const STATIC_CACHE = `artemis-static-${CACHE_VERSION}`;
 const DATA_CACHE = `artemis-data-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `artemis-runtime-${CACHE_VERSION}`;
@@ -22,6 +22,10 @@ const OFFLINE_STYLE = {
 const BASE_PATH = getBasePath();
 const PRECACHE_PATHS = [
   'manifest.json',
+  'css/tokens.css',
+  'css/base.css',
+  'css/components/controls.css',
+  'css/components/surfaces.css',
   'css/style.css',
   'css/main-screen.css',
   'js/auth.js',

@@ -57,6 +57,10 @@ jobs:
 
           required_files=(
             "index.html"
+            "css/tokens.css"
+            "css/base.css"
+            "css/components/controls.css"
+            "css/components/surfaces.css"
             "css/style.css"
             "css/main-screen.css"
             "manifest.json"

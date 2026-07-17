@@ -1,0 +1,98 @@
+/*
+ * ARTEMIS UI system
+ * Rebuilt from the current DOM, JavaScript state contract and canonical UI/UX
+ * specifications. This file is intentionally independent from the deleted
+ * historical stylesheet.
+ *
+ * Ownership:
+ * - style.css: tokens, reset, shared components, feature surfaces and states.
+ * - main-screen.css: main workspace grid and dock-specific refinements.
+ */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;
+
+  --bg-root: #0f141b;
+  --bg-surface-1: #151c24;
+  --bg-surface-2: #1b2430;
+  --bg-surface-3: #243140;
+  --bg-elevated: #202b38;
+  --bg-overlay: rgba(8, 12, 18, 0.78);
+
+  --border-soft: #344356;
+  --border-strong: #4a5b70;
+  --border-focus: #6bb5ff;
+
+  --text-primary: #e8edf2;
+  --text-secondary: #b8c2cf;
+  --text-muted: #7f8b99;
+  --text-inverse: #08111c;
+
+  --accent-primary: #4da3ff;
+  --accent-primary-hover: #6bb5ff;
+  --accent-primary-deep: #2f7edb;
+  --accent-secondary: #7c8cf8;
+  --accent-archive: #c49a6c;
+  --accent-archive-soft: #a9855d;
+
+  --state-success: #3fae7a;
+  --state-warning: #d6a449;
+  --state-error: #d36b6b;
+  --state-info: #5aa7d9;
+
+  --font-ui: "IBM Plex Sans", Inter, Arial, sans-serif;
+  --font-editorial: "Source Serif 4", Georgia, serif;
+
+  --font-size-caption: 0.6875rem;
+  --font-size-meta: 0.75rem;
+  --font-size-ui: 0.8125rem;
+  --font-size-content: 0.9375rem;
+  --font-size-title: 1.25rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-panel: 16px;
+  --radius-pill: 999px;
+
+  --shadow-subtle: 0 1px 2px rgba(2, 6, 12, 0.28), 0 5px 16px rgba(2, 6, 12, 0.12);
+  --shadow-medium: 0 10px 28px rgba(2, 6, 12, 0.3);
+
+  --motion-fast: 120ms;
+  --motion-normal: 180ms;
+  --motion-soft: 240ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --top-header-height: 58px;
+  --workspace-strip-height: 48px;
+  --bottom-panel-height: 152px;
+  --map-rail-width: 58px;
+  --detail-panel-width: clamp(320px, 28vw, 420px);
+  --detail-panel-gap: 0px;
+
+  --z-map: 1;
+  --z-map-controls: 20;
+  --z-panel: 40;
+  --z-detail: 50;
+  --z-status: 70;
+  --z-overlay: 100;
+  --z-modal: 120;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+

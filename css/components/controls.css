@@ -1,0 +1,199 @@
+/* --------------------------------------------------------------------------
+   3. Form and control primitives
+   -------------------------------------------------------------------------- */
+
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-1);
+  padding: 0.55rem 0.7rem;
+  color: var(--text-primary);
+  transition:
+    border-color var(--motion-fast) var(--ease-standard),
+    background-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
+}
+
+textarea {
+  min-height: 104px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--border-strong);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent-primary);
+  background: var(--bg-surface-2);
+  box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.13);
+  outline: none;
+}
+
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border-color: var(--state-error);
+  box-shadow: 0 0 0 3px rgba(211, 107, 107, 0.12);
+}
+
+label {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-meta);
+  font-weight: 500;
+}
+
+.ui-button,
+.ghost-btn,
+.icon-btn,
+.profile-trigger,
+.workspace-tab,
+.workspace-secondary-entry,
+.timeline-mode-btn,
+.app-state-action-btn,
+.app-system-banner-btn,
+.moderation-approve-btn,
+.moderation-reject-btn,
+.moderation-head-actions button,
+.moderation-reject-actions button,
+#explore-workspace-trigger,
+#map-theme-toggle,
+#live-btn,
+#research-slice-trigger,
+.research-context-actions button {
+  min-height: 34px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-2);
+  padding: 0.45rem 0.72rem;
+  color: var(--text-secondary);
+  font-size: var(--font-size-meta);
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    background-color var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+
+.ui-button:hover:not(:disabled),
+.ghost-btn:hover:not(:disabled),
+.icon-btn:hover:not(:disabled),
+.profile-trigger:hover:not(:disabled),
+.workspace-tab:hover:not(:disabled),
+.workspace-secondary-entry:hover:not(:disabled),
+.timeline-mode-btn:hover:not(:disabled),
+.app-state-action-btn:hover:not(:disabled),
+.app-system-banner-btn:hover:not(:disabled),
+.moderation-head-actions button:hover:not(:disabled),
+#explore-workspace-trigger:hover:not(:disabled),
+#map-theme-toggle:hover:not(:disabled),
+#live-btn:hover:not(:disabled),
+#research-slice-trigger:hover:not(:disabled),
+.research-context-actions button:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background: var(--bg-surface-3);
+  color: var(--text-primary);
+}
+
+.ui-button:active:not(:disabled),
+.icon-btn:active:not(:disabled),
+.workspace-tab:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.ui-button-primary,
+.ui-button-success,
+.app-state-action-btn,
+.moderation-approve-btn {
+  border-color: transparent;
+  background: var(--accent-primary-deep);
+  color: #fff;
+}
+
+.ui-button-primary:hover:not(:disabled),
+.app-state-action-btn:hover:not(:disabled),
+.moderation-approve-btn:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--accent-primary);
+  color: #fff;
+}
+
+.ui-button-secondary,
+.ui-button-tertiary,
+.ghost-btn {
+  background: transparent;
+}
+
+.ui-button-success {
+  background: color-mix(in srgb, var(--state-success) 78%, var(--bg-surface-2));
+}
+
+.ui-button-danger,
+.moderation-reject-btn {
+  border-color: rgba(211, 107, 107, 0.48);
+  background: rgba(211, 107, 107, 0.1);
+  color: #f2b3b3;
+}
+
+.ui-button-danger:hover:not(:disabled),
+.moderation-reject-btn:hover:not(:disabled) {
+  border-color: var(--state-error);
+  background: rgba(211, 107, 107, 0.18);
+  color: #ffd2d2;
+}
+
+.icon-btn,
+.profile-trigger,
+.floating-card-close,
+.modal-close {
+  display: inline-grid;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  place-items: center;
+  padding: 0;
+}
+
+.floating-card-close,
+.modal-close {
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.floating-card-close:hover,
+.modal-close:hover {
+  border-color: var(--border-soft);
+  background: var(--bg-surface-3);
+  color: var(--text-primary);
+}
+
+.ui-button.is-loading,
+button.is-loading {
+  pointer-events: none;
+  position: relative;
+}
+
