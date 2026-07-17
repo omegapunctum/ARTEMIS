@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-17T01:48:57Z",
+  "timestamp": "2026-07-17T07:53:28Z",
   "source": "airtable",
   "records_total_source": 19,
   "records_exported": 19,
@@ -11,6 +11,9 @@
   "media_reviewed": 16,
   "feature_source_links_total": 20,
   "feature_media_links_total": 16,
+  "relations_total_source": 2,
+  "relations_reviewed": 2,
+  "relation_source_links_total": 2,
   "errors": 0,
   "warnings": 3,
   "error_stats": {},
@@ -21,5 +24,5 @@
     "expected_fallback": 3,
     "data_quality": 0
   },
-  "duration_seconds": 3.415
+  "duration_seconds": 5.457
 }
