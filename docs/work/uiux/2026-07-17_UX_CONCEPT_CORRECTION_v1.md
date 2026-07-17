@@ -7,6 +7,7 @@
 - Область: Architecture Atlas vertical MVP, public workspace и следующий UI refinement cycle.
 - Решение: comparison-first discovery, Research Slice as saved output.
 - Implementation status: documentation contract only; runtime не изменён этим документом.
+- Responsive wireframe owner: `2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md`.
 
 Этот документ устраняет расхождение между product thesis, component map и текущим runtime. Он не меняет Option A и не открывает новый feature scope.
 
@@ -174,7 +175,7 @@ Working direction остаётся **Cartographic Research Editorial**:
 
 1. Синхронизировать canonical product/UX owner documents с этим решением.
 2. Зафиксировать capability-aware navigation и user-facing glossary.
-3. Подготовить wireframes для desktop 1440×900, tablet 1024×768 и mobile 390×844.
+3. Выполнить wireframe contract `2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md` для desktop 1440×900, tablet 1024×768 и mobile 390×844.
 4. Выполнить shell/map/timeline geometry batch.
 5. Реализовать object comparison selection и tray отдельным batch.
 6. Выполнить sourced detail/epistemic presentation batch.
@@ -189,4 +190,3 @@ Working direction остаётся **Cartographic Research Editorial**:
 - user-facing terminology отделена от internal canonical naming;
 - следующий implementation batch не требует изменения data/API contracts;
 - visual refinement не начинается до согласования wireframe states.
-
