@@ -12,15 +12,6 @@ let activeUiToastTimerId = null;
 let activeUiToastEl = null;
 const ONBOARDING_HINT_SESSION_KEY = 'artemis_onboarding_hint_dismissed';
 const COURSE_PROGRESS_STORAGE_KEY = 'artemis_course_progress_v1';
-const TIMELINE_SEMANTIC_ANCHORS = [
-  { key: 'byzantium-founded', year: 330, label: '330', description: 'Основание Константинополя' },
-  { key: 'hagia-sophia', year: 532, label: '532', description: 'Построена Святая София' },
-  { key: 'iconoclasm', year: 784.5, label: '726–843', description: 'Иконоборчество' },
-  { key: 'schism', year: 1054, label: '1054', description: 'Великая схизма' },
-  { key: 'fourth-crusade', year: 1204, label: '1204', description: 'Четвёртый крестовый поход' },
-  { key: 'fall-of-constantinople', year: 1453, label: '1453', description: 'Падение Константинополя' }
-];
-
 function normalizeCapabilityFlag(value, fallback = false) {
   if (typeof value === 'boolean') return value;
   if (typeof value === 'number') return value === 1;
@@ -248,7 +239,6 @@ export async function initUI(map, features) {
     timelineActiveRange: document.getElementById('timeline-active-range'),
     timelineKnobStart: document.getElementById('timeline-knob-start'),
     timelineKnobEnd: document.getElementById('timeline-knob-end'),
-    timelineAxis: document.getElementById('timeline-axis'),
     timelineTrackWrap: document.querySelector('#timeline .timeline-track-wrap'),
     cardsRibbon: document.getElementById('cards-ribbon') || document.getElementById('object-list'),
     cardsState: document.getElementById('cards-state'),
@@ -3582,7 +3572,6 @@ function hydrateTimeline(elements, years, state) {
   state.currentEndYear = state.timelineRangeEnd;
   elements.timelineStart.value = String(state.currentStartYear);
   elements.timelineEnd.value = String(state.currentEndYear);
-  renderTimelineAxis(elements, years);
   syncLegacyDateInputs(elements, state);
   applyTimelineModeUi(elements, state);
   updateTimelineLabel(elements, state);
@@ -4173,32 +4162,6 @@ function restoreOverlayFocus(lastTrigger, elements) {
   const fallback = elements.filtersBtn || elements.layersBtn || elements.bookmarksBtn || elements.searchInput;
   const target = lastTrigger && typeof lastTrigger.focus === 'function' ? lastTrigger : fallback;
   target?.focus?.({ preventScroll: true });
-}
-
-function renderTimelineAxis(elements, years) {
-  if (!elements.timelineAxis) return;
-  const min = Number(years?.min);
-  const max = Number(years?.max);
-  const span = Math.max(1, max - min);
-  const anchors = TIMELINE_SEMANTIC_ANCHORS.map((anchor) => {
-    const position = ((anchor.year - min) / span) * 100;
-    return { ...anchor, position: Math.max(0, Math.min(100, position)) };
-  });
-  elements.timelineAxis.replaceChildren(...anchors.map((anchor) => {
-    const node = document.createElement('span');
-    node.className = 'timeline-anchor';
-    node.setAttribute('role', 'listitem');
-    node.style.left = `${anchor.position}%`;
-    node.title = `${anchor.label} — ${anchor.description}`;
-    const tick = document.createElement('span');
-    tick.className = 'timeline-anchor-year';
-    tick.textContent = anchor.label;
-    const label = document.createElement('span');
-    label.className = 'timeline-anchor-label';
-    label.textContent = anchor.description;
-    node.append(tick, label);
-    return node;
-  }));
 }
 
 function isFeatureLike(feature) {
