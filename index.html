@@ -181,13 +181,13 @@
 
       <div id="workspace-bottom-dock">
         <section id="bottom-panel" aria-label="Таймлайн">
-          <div id="timeline" class="timeline-row">
+          <div id="timeline" class="timeline-row is-range-mode">
             <div class="timeline-head">
               <div class="timeline-helper-label">Временная ось</div>
               <div id="timeline-range-label">Выбранный диапазон</div>
               <div class="timeline-mode-toggle" role="group" aria-label="Режим времени">
-                <button id="timeline-mode-point" class="timeline-mode-btn is-active" type="button" aria-pressed="true">Точка</button>
-                <button id="timeline-mode-range" class="timeline-mode-btn" type="button" aria-pressed="false">Диапазон</button>
+                <button id="timeline-mode-point" class="timeline-mode-btn" type="button" aria-pressed="false">Точка</button>
+                <button id="timeline-mode-range" class="timeline-mode-btn is-active" type="button" aria-pressed="true">Диапазон</button>
               </div>
               <div id="timeline-range-capsule" class="timeline-capsule">Выбрано: 1600–1650</div>
             </div>
@@ -196,7 +196,6 @@
               <div id="timeline-active-range" class="timeline-active-range"></div>
               <div id="timeline-knob-start" class="timeline-knob"></div>
               <div id="timeline-knob-end" class="timeline-knob"></div>
-              <div id="timeline-axis" class="timeline-axis" role="list" aria-label="Исторические ориентиры"></div>
               <input id="timeline-start" type="range" min="-3000" max="2026" value="1600" step="1" aria-label="Начало временного диапазона" />
               <input id="timeline-end" type="range" min="-3000" max="2026" value="1650" step="1" aria-label="Конец временного диапазона" />
             </div>
