@@ -17,6 +17,8 @@
 >
 > Main-screen structural transition sync (2026-07-16): `workspace-frame / docked-grid` остаётся current-runtime reference до patch. Target contour: compact top shell, one-column map workspace with overlay tools, optional inspector and compact timeline; mobile detail остаётся bottom-sheet.
 
+> CSS ownership audit sync (2026-07-17): pre-implementation audit завершён в `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`. Подтверждены competing `style.css` / `main-screen.css` owners, active structural rail, hardcoded timeline anchors и связанные legacy test assertions. Runtime migration выполняется независимыми batches: guardrails → no-visual-change extraction → map-first geometry → compact timeline → override retirement → visual validation.
+
 Основан строго на:
 - `ARTEMIS_CONCEPT_v1.0`
 - `ARTEMIS_PRODUCT_SCOPE_v1.0`
@@ -75,6 +77,7 @@
 ### Active main-screen refinement sub-track (2026-07-16)
 - Статус: **DOCUMENTED / READY FOR IMPLEMENTATION**.
 - Target: `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`.
+- Execution audit: `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
 - Запускается как audit-backed refinement поверх принятого Workspace Core baseline.
 - Не заменяет фазовую последовательность A → B → C → D → E и не меняет data/API contracts.
 - Implementation order:

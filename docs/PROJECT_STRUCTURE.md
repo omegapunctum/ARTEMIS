@@ -126,6 +126,7 @@ js/
 - `css/main-screen.css` является текущим transitional override layer, а не целевой архитектурой;
 - в Architecture Atlas UX cycle актуальные правила должны быть перенесены к owner-scoped modules, после чего competing override удаляется;
 - owner-scoped split должен разделять tokens/base/layout/features и не создавать параллельные visual systems.
+- measured baseline, selector-owner matrix, staged target tree and recovery rules зафиксированы в `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
 
 ---
 
