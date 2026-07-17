@@ -6,7 +6,7 @@
 - Дата: 2026-07-17.
 - Product direction: Architecture Atlas vertical MVP.
 - UX decision owner: `2026-07-17_UX_CONCEPT_CORRECTION_v1.md`.
-- Runtime status: documentation only; implementation not started by this document.
+- Runtime status: Batch C1 implemented in a separate PR candidate; C2/D/E/F remain pending.
 - Reference viewports: desktop `1440×900`, tablet `1024×768`, mobile `390×844`.
 
 Этот документ фиксирует структуру, состояния и responsive behavior. Он не является high-fidelity visual mockup и не вводит новый feature scope.
@@ -353,12 +353,12 @@ Capability state не выводится из наличия DOM-кнопки; �
 
 ### Batch C1 — shell geometry
 
-- capability-aware navigation shell;
-- remove decorative outer gutter/frame;
-- remove structural rail;
-- overlay tool placement;
-- one compact top shell;
-- map resize synchronization.
+- [x] capability-aware navigation shell;
+- [x] remove decorative outer gutter/frame;
+- [x] remove structural rail;
+- [x] overlay tool placement;
+- [x] one compact top shell;
+- [x] map resize synchronization after inspector geometry changes.
 
 ### Batch C2 — timeline
 
@@ -416,4 +416,3 @@ Runtime work может начаться, когда:
 - tests, защищающие hardcoded timeline anchors и obsolete navigation, помечены на корректировку в соответствующем batch;
 - implementation не требует изменения canonical data/API contracts;
 - before-screenshots зафиксированы для трёх reference viewports и обязательных states, доступных в текущем runtime.
-
