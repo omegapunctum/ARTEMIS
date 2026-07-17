@@ -76,7 +76,7 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 
   --top-header-height: 58px;
-  --bottom-panel-height: 152px;
+  --bottom-panel-height: 84px;
   --detail-panel-width: clamp(320px, 28vw, 420px);
   --detail-panel-gap: 0px;
 

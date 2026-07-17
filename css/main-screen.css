@@ -97,7 +97,7 @@
   max-width: none;
   min-height: var(--bottom-panel-height);
   margin: 0;
-  padding: 12px 14px;
+  padding: 8px 14px;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -178,6 +178,6 @@
   }
 
   #bottom-panel {
-    padding: 10px;
+    padding: 8px 10px;
   }
 }

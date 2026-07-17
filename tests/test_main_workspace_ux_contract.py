@@ -87,15 +87,23 @@ def test_shell_is_compact_and_context_is_inline() -> None:
     assert "if (wasDesktopDock !== isDesktopDock) scheduleMapResize(map)" in UI_JS
 
 
-def test_timeline_exposes_semantic_anchor_labels_on_desktop() -> None:
-    assert 'role="list" aria-label="Исторические ориентиры"' in INDEX
-    assert "node.setAttribute('role', 'listitem')" in UI_JS
+def test_timeline_is_compact_without_hardcoded_semantic_anchors() -> None:
+    assert "TIMELINE_SEMANTIC_ANCHORS" not in UI_JS
+    assert "renderTimelineAxis" not in UI_JS
+    assert "timeline-axis" not in INDEX
+    assert "timeline-anchor" not in STYLE
+    assert "--bottom-panel-height: 84px" in TOKENS
+    assert re.search(r"\.timeline-track-wrap\s*\{[^}]*height:\s*24px", STYLE, re.DOTALL)
+    assert re.search(r"@media \(max-width: 1080px\).*?--bottom-panel-height:\s*84px", STYLE, re.DOTALL)
+    assert re.search(r"@media \(max-width: 720px\).*?--bottom-panel-height:\s*80px", STYLE, re.DOTALL)
 
-    desktop_css = STYLE.split("@media (max-width: 1080px)", maxsplit=1)[0]
-    label_rule = re.search(r"\.timeline-anchor-label\s*\{(?P<body>[^}]*)\}", desktop_css)
-    assert label_rule, "Missing desktop timeline anchor label rule"
-    assert "display: block" in label_rule.group("body")
-    assert "--bottom-panel-height: 152px" in TOKENS
+    for element_id in ("timeline-mode-point", "timeline-mode-range", "timeline-start", "timeline-end"):
+        assert f'id="{element_id}"' in INDEX
+    assert 'id="timeline" class="timeline-row is-range-mode"' in INDEX
+    assert 'id="timeline-mode-range" class="timeline-mode-btn is-active"' in INDEX
+    assert "setupTimelinePointerInteractions" in UI_JS
+    assert "applyTimelineModeUi" in UI_JS
+    assert "updateTimelineLabel" in UI_JS
 
 
 def test_documented_relations_are_separate_from_computed_similarity() -> None:
