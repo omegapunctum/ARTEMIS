@@ -12,6 +12,7 @@ UI_JS = (ROOT / "js" / "ui.js").read_text(encoding="utf-8")
 DATA_JS = (ROOT / "js" / "data.js").read_text(encoding="utf-8")
 TOKENS = (ROOT / "css" / "tokens.css").read_text(encoding="utf-8")
 STYLE = (ROOT / "css" / "style.css").read_text(encoding="utf-8")
+WORKSPACE_STYLE = (ROOT / "css" / "main-screen.css").read_text(encoding="utf-8")
 
 
 def _element_markup(element_id: str) -> str:
@@ -27,16 +28,29 @@ def _element_markup(element_id: str) -> str:
 def test_primary_navigation_is_functional_and_has_no_dead_hash_links() -> None:
     assert 'href="#" class="project-nav-link"' not in INDEX
 
-    for target in ("workspace", "research", "stories", "courses", "saved"):
+    assert 'data-workspace-nav="workspace"' not in INDEX
+    assert 'data-workspace-nav="courses"' not in INDEX
+    for target in ("research", "stories", "saved"):
         assert INDEX.count(f'data-workspace-nav="{target}"') == 2
 
+    for target, capability in (("stories", "stories"), ("saved", "slices")):
+        matches = re.findall(
+            rf'<button\b[^>]*data-workspace-nav="{target}"[^>]*>',
+            INDEX,
+        )
+        assert len(matches) == 2
+        assert all(f'data-requires-capability="{capability}"' in markup and " hidden" in markup for markup in matches)
+
+    assert "resolvePublicCapabilities" in UI_JS
+    assert "syncPublicCapabilityVisibility" in UI_JS
+    assert "window.ARTEMIS_CAPABILITIES" in UI_JS
+    assert "stories: normalizeCapabilityFlag(overrides.stories, false)" in UI_JS
     assert "setActiveProjectNavigation" in UI_JS
-    assert "openCoursesWorkspace" in UI_JS
     assert "focusZone: 'stories'" in UI_JS
     assert "focusZone: 'saved'" in UI_JS
 
 
-def test_map_rail_uses_named_icons_and_does_not_mix_in_courses() -> None:
+def test_map_tools_are_overlayed_without_a_structural_rail() -> None:
     for element_id in ("explore-workspace-trigger", "map-theme-toggle", "live-btn"):
         markup = _element_markup(element_id)
         assert 'class="workspace-tool-icon"' in markup
@@ -44,13 +58,33 @@ def test_map_rail_uses_named_icons_and_does_not_mix_in_courses() -> None:
 
     courses_markup = _element_markup("courses-btn")
     assert " hidden" in courses_markup
+    assert "--map-rail-width" not in TOKENS
+    assert "--map-rail-width" not in WORKSPACE_STYLE
+    assert re.search(r"#workspace-main\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)", WORKSPACE_STYLE, re.DOTALL)
+    assert re.search(r"#explore-toolbar-shell\s*\{[^}]*position:\s*absolute", WORKSPACE_STYLE, re.DOTALL)
+    assert re.search(r"#map-container\s*\{[^}]*grid-column:\s*1", WORKSPACE_STYLE, re.DOTALL)
 
 
 def test_first_run_state_exposes_direct_research_actions() -> None:
     assert 'id="onboarding-explore-btn"' in INDEX
     assert 'id="onboarding-slices-btn"' in INDEX
+    assert 'id="onboarding-slices-btn" class="ui-button ui-button-secondary" type="button" data-requires-capability="slices" hidden' in INDEX
+    assert "Начните с объекта на карте" in INDEX
+    assert "Начните с исследовательского среза" not in INDEX
     assert "onboardingExploreBtn" in UI_JS
     assert "onboardingSlicesBtn" in UI_JS
+
+
+def test_shell_is_compact_and_context_is_inline() -> None:
+    header_start = INDEX.index('<header id="top-header"')
+    header_end = INDEX.index("</header>", header_start)
+    context_position = INDEX.index('<section id="research-context-bar"', header_start)
+    assert header_start < context_position < header_end
+    assert "--workspace-strip-height" not in TOKENS
+    assert "--workspace-strip-height" not in STYLE
+    assert re.search(r"#workspace-frame\s*\{[^}]*border:\s*0;[^}]*border-radius:\s*0;[^}]*box-shadow:\s*none", STYLE, re.DOTALL)
+    assert "function scheduleMapResize" in UI_JS
+    assert "if (wasDesktopDock !== isDesktopDock) scheduleMapResize(map)" in UI_JS
 
 
 def test_timeline_exposes_semantic_anchor_labels_on_desktop() -> None:

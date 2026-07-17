@@ -29,6 +29,8 @@ Wireframe status 2026-07-17: desktop/tablet/mobile geometry, mandatory states, c
 
 Audit status 2026-07-17: documentation/data prerequisites are complete. The CSS audit confirmed 2793 lines in `style.css`, a 183-line competing `main-screen.css` override layer, active structural rail ownership and tests that still protect hardcoded timeline anchors. Runtime rollout must follow the batches and selector-owner matrix in the CSS audit.
 
+Runtime status 2026-07-17: Batch B owner-file foundation merged. Batch C1 map-first shell is implemented in a separate PR candidate: capability-aware navigation, one compact top shell, full-width map, overlay tools, neutral outer frame and map resize after inspector geometry changes. Timeline compaction, object comparison, sourced-detail refinement and final responsive/accessibility polish remain in C2/D/E/F.
+
 ## 1. Причина refinement
 
 Текущий desktop runtime сохраняет функциональный Workspace Core, но визуально расходует слишком много пространства на chrome:

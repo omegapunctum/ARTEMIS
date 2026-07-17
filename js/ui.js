@@ -21,6 +21,51 @@ const TIMELINE_SEMANTIC_ANCHORS = [
   { key: 'fall-of-constantinople', year: 1453, label: '1453', description: 'Падение Константинополя' }
 ];
 
+function normalizeCapabilityFlag(value, fallback = false) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value === 1;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (['1', 'true', 'yes', 'on', 'enabled'].includes(normalized)) return true;
+    if (['0', 'false', 'no', 'off', 'disabled'].includes(normalized)) return false;
+  }
+  return fallback;
+}
+
+export function resolvePublicCapabilities() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return { explore: true, backend: false, account: false, slices: false, stories: false };
+  }
+
+  const overrides = window.ARTEMIS_CAPABILITIES && typeof window.ARTEMIS_CAPABILITIES === 'object'
+    ? window.ARTEMIS_CAPABILITIES
+    : {};
+  const explicitApiBase = String(window.ARTEMIS_API_BASE || '').trim();
+  const metaApiBase = String(document.querySelector('meta[name="artemis-api-base"]')?.getAttribute('content') || '').trim();
+  const metaBackendFlag = document.querySelector('meta[name="artemis-backend-enabled"]')?.getAttribute('content');
+  const backendFallback = Boolean(explicitApiBase || metaApiBase || normalizeCapabilityFlag(metaBackendFlag, false));
+  const backend = normalizeCapabilityFlag(overrides.backend, backendFallback);
+
+  return {
+    explore: true,
+    backend,
+    account: normalizeCapabilityFlag(overrides.account, backend),
+    slices: normalizeCapabilityFlag(overrides.slices, backend),
+    stories: normalizeCapabilityFlag(overrides.stories, false)
+  };
+}
+
+function syncPublicCapabilityVisibility(capabilities) {
+  const root = document.documentElement;
+  if (root) {
+    root.dataset.publicBackend = capabilities.backend ? 'available' : 'unavailable';
+  }
+  document.querySelectorAll('[data-requires-capability]').forEach((node) => {
+    const capability = String(node.dataset.requiresCapability || '').trim();
+    node.hidden = !Boolean(capabilities[capability]);
+  });
+}
+
 function isDebugTelemetryMode() {
   if (typeof window === 'undefined') return false;
   const debugParam = new URLSearchParams(window.location.search).get('debug');
@@ -142,6 +187,8 @@ export async function initUI(map, features) {
     throw error;
   }
   relations = await loadRelations();
+  const capabilities = resolvePublicCapabilities();
+  syncPublicCapabilityVisibility(capabilities);
   const layerLookup = buildLayerLookup(layers, allFeatures);
   setLayerLookup(map, layers);
 
@@ -228,6 +275,7 @@ export async function initUI(map, features) {
   const telemetryMode = isDebugTelemetryMode();
   if (elements.resultsSummary) elements.resultsSummary.hidden = !telemetryMode;
   const state = {
+    capabilities,
     allFeatures,
     relations: Array.isArray(relations) ? relations : [],
     filteredFeatures: [],
@@ -438,15 +486,10 @@ export async function initUI(map, features) {
   elements.projectNavLinks.forEach((link) => {
     link.addEventListener('click', async (event) => {
       event.stopPropagation();
-      const target = link.dataset.workspaceNav || 'workspace';
+      const target = link.dataset.workspaceNav || 'research';
       elements.topActions?.classList.remove('is-expanded');
       elements.overflowBtn?.setAttribute('aria-expanded', 'false');
       setActiveProjectNavigation(elements, target);
-      if (target === 'workspace') {
-        closeActiveWorkspaceOverlay(elements, state);
-        map?.getContainer?.().focus?.({ preventScroll: true });
-        return;
-      }
       if (target === 'research') {
         openPrimaryPanel(elements, state, 'explore', link);
         openExploreWorkspaceSection(elements, state, state.activeExploreSection || 'layers');
@@ -454,10 +497,6 @@ export async function initUI(map, features) {
       }
       if (target === 'stories') {
         await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'stories' });
-        return;
-      }
-      if (target === 'courses') {
-        await openCoursesWorkspace(elements, state, map);
         return;
       }
       if (target === 'saved') {
@@ -499,12 +538,12 @@ export async function initUI(map, features) {
   elements.researchSliceOpenBtn?.addEventListener('click', async () => {
     setActiveProjectNavigation(elements, 'saved');
     await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
-    showUiSystemMessage('Используйте открытый контекст как базу для публикации из панели «Срезы».', { variant: 'info', timeout: 3000 });
+    showUiSystemMessage('Используйте открытый контекст как базу для публикации из панели сохранённых исследований.', { variant: 'info', timeout: 3000 });
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
     setActiveProjectNavigation(elements, 'research');
     await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'create' });
-    showUiSystemMessage('Сохраните текущий срез через панель «Срезы».', { variant: 'success', timeout: 3200 });
+    showUiSystemMessage('Сохраните текущий контекст через панель сохранённых исследований.', { variant: 'success', timeout: 3200 });
   });
   elements.researchSliceTrigger?.addEventListener('click', async () => {
     setActiveProjectNavigation(elements, state.sliceOpenedId ? 'saved' : 'research');
@@ -513,7 +552,7 @@ export async function initUI(map, features) {
   elements.researchSliceCompareBtn?.addEventListener('click', async () => {
     const selectedCount = Array.isArray(state.sliceCompareSelectionIds) ? state.sliceCompareSelectionIds.length : 0;
     if (selectedCount < 2) {
-      showUiSystemMessage('Выберите два среза в панели «Срезы», чтобы подготовить сравнение.', { variant: 'warning', timeout: 3200 });
+      showUiSystemMessage('Выберите два сохранённых исследования для сопоставления.', { variant: 'warning', timeout: 3200 });
       return;
     }
     state.sliceComparePanelOpen = true;
@@ -685,20 +724,13 @@ function setupOnboardingOverlay(elements) {
   };
 }
 
-function setActiveProjectNavigation(elements, nextKey = 'workspace') {
+function setActiveProjectNavigation(elements, nextKey = 'research') {
   const links = Array.isArray(elements?.projectNavLinks) ? elements.projectNavLinks : [];
   links.forEach((link) => {
     const isActive = link.dataset.workspaceNav === nextKey;
     if (isActive) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   });
-}
-
-function closeActiveWorkspaceOverlay(elements, state) {
-  if (state?.overlay?.activePrimary) {
-    closePrimaryPanel(elements, state, state.overlay.activePrimary);
-  }
-  setProfileMenuOpen(elements, false);
 }
 
 function focusResearchWorkspaceZone(elements, zoneKey = 'saved') {
@@ -1081,7 +1113,7 @@ async function ensureResearchSlicesLoaded(state, { force = false } = {}) {
     state.researchSlices = Array.isArray(items) ? items : [];
     state.researchSlicesLoaded = true;
   } catch (error) {
-    state.researchSlicesError = normalizeAppError(error, 'Не удалось загрузить исследовательские срезы.').message;
+    state.researchSlicesError = normalizeAppError(error, 'Не удалось загрузить сохранённые исследования.').message;
   } finally {
     state.researchSlicesLoading = false;
   }
@@ -1126,8 +1158,8 @@ function syncResearchSliceCompareCta(elements, state) {
   elements.researchSliceCompareBtn.disabled = !isReady;
   elements.researchSliceCompareBtn.setAttribute('aria-disabled', String(!isReady));
   elements.researchSliceCompareBtn.title = isReady
-    ? 'Сравнить выбранные 2 среза'
-    : 'Выберите 2 среза в панели «Срезы»';
+    ? 'Сопоставить выбранные исследования'
+    : 'Выберите 2 сохранённых исследования';
 }
 
 function collectStorySliceIds(story) {
@@ -1250,7 +1282,7 @@ function renderSlicesPanel(elements, state, map) {
 
   const title = document.createElement('h3');
   title.className = 'panel-title';
-  title.textContent = 'Срезы';
+  title.textContent = 'Сохранённые исследования';
   panel.appendChild(title);
 
   const saveSection = document.createElement('section');
@@ -1258,7 +1290,7 @@ function renderSlicesPanel(elements, state, map) {
   saveSection.dataset.researchZone = 'create';
   const saveSectionTitle = document.createElement('h4');
   saveSectionTitle.className = 'panel-title';
-  saveSectionTitle.textContent = 'Сохранить текущий срез';
+  saveSectionTitle.textContent = 'Сохранить текущее исследование';
   const saveSectionHelper = document.createElement('p');
   saveSectionHelper.className = 'status-summary slice-zone-helper';
   saveSectionHelper.textContent = 'Будут сохранены период, активные слои, выбранные объекты и текущее состояние карты.';
@@ -1300,7 +1332,7 @@ function renderSlicesPanel(elements, state, map) {
   titleInput.type = 'text';
   titleInput.name = 'slice_title';
   titleInput.maxLength = 180;
-  titleInput.placeholder = 'Название среза';
+  titleInput.placeholder = 'Название исследования';
   titleInput.required = true;
 
   const descInput = document.createElement('textarea');
@@ -1338,7 +1370,7 @@ function renderSlicesPanel(elements, state, map) {
   const saveBtn = document.createElement('button');
   saveBtn.type = 'submit';
   saveBtn.className = 'ui-button ui-button-primary';
-  saveBtn.textContent = 'Сохранить срез';
+  saveBtn.textContent = 'Сохранить исследование';
   saveBtn.disabled = !getSaveFeatureIds().length || state.researchSlicesLoading;
 
   const selectionActions = document.createElement('div');
@@ -1347,7 +1379,7 @@ function renderSlicesPanel(elements, state, map) {
   const addBtn = document.createElement('button');
   addBtn.type = 'button';
   addBtn.className = 'ui-button ui-button-secondary';
-  addBtn.textContent = 'Добавить в срез';
+  addBtn.textContent = 'Добавить в исследование';
   const currentSelectedForAdd = getCurrentSelectedContext().selectedId;
   addBtn.disabled = !currentSelectedForAdd || getSelectionSetIds().includes(currentSelectedForAdd);
   addBtn.addEventListener('click', () => {
@@ -1359,7 +1391,7 @@ function renderSlicesPanel(elements, state, map) {
   const removeBtn = document.createElement('button');
   removeBtn.type = 'button';
   removeBtn.className = 'ui-button ui-button-secondary';
-  removeBtn.textContent = 'Убрать из среза';
+  removeBtn.textContent = 'Убрать из исследования';
   const currentSelectedForRemove = getCurrentSelectedContext().selectedId;
   removeBtn.disabled = !currentSelectedForRemove || !getSelectionSetIds().includes(currentSelectedForRemove);
   removeBtn.addEventListener('click', () => {
@@ -1371,7 +1403,7 @@ function renderSlicesPanel(elements, state, map) {
   const clearSelectionBtn = document.createElement('button');
   clearSelectionBtn.type = 'button';
   clearSelectionBtn.className = 'ui-button ui-button-secondary';
-  clearSelectionBtn.textContent = 'Очистить выборку среза';
+  clearSelectionBtn.textContent = 'Очистить выборку исследования';
   clearSelectionBtn.disabled = !getSelectionSetIds().length;
   clearSelectionBtn.addEventListener('click', () => {
     if (!(state.sliceSelectionSet instanceof Set) || !state.sliceSelectionSet.size) return;
@@ -1386,17 +1418,17 @@ function renderSlicesPanel(elements, state, map) {
   const { selected, selectedId } = getCurrentSelectedContext();
   const selectionCount = getSaveFeatureIds().length;
   hint.textContent = selectedId
-    ? `Выбрано для среза: ${selectionCount}. Текущий объект: ${String(normalizeProps(selected).name_ru || normalizeProps(selected).title_short || selectedId)}`
+    ? `Выбрано для исследования: ${selectionCount}. Текущий объект: ${String(normalizeProps(selected).name_ru || normalizeProps(selected).title_short || selectedId)}`
     : (selectionCount
-      ? `Выбрано для среза: ${selectionCount}.`
-      : 'Чтобы сохранить первый срез, выберите объект на карте или добавьте его в выборку.');
+      ? `Выбрано для исследования: ${selectionCount}.`
+      : 'Чтобы сохранить первое исследование, выберите объект на карте или добавьте его в выборку.');
 
   form.append(titleInput, descInput, annotationsSection, selectionActions, saveBtn, hint);
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const saveFeatureIds = getSaveFeatureIds();
     if (!saveFeatureIds.length) {
-      showUiSystemMessage('Выберите объект на карте перед сохранением среза.', { variant: 'warning', timeout: 2500 });
+      showUiSystemMessage('Выберите объект на карте перед сохранением исследования.', { variant: 'warning', timeout: 2500 });
       return;
     }
     const { selectedId: primarySelectedId } = getCurrentSelectedContext();
@@ -1433,11 +1465,11 @@ function renderSlicesPanel(elements, state, map) {
       state.sliceOpenedTitle = String(payload?.title || '').trim();
       markResearchContextAsSaved(state);
       updateResearchContextBar(elements, state);
-      showUiSystemMessage('Срез сохранён', { variant: 'success', timeout: 2200 });
+      showUiSystemMessage('Исследование сохранено', { variant: 'success', timeout: 2200 });
       await ensureResearchSlicesLoaded(state, { force: true });
       renderSlicesPanel(elements, state, map);
     } catch (error) {
-      showUiSystemMessage(normalizeAppError(error, 'Не удалось сохранить срез.').message, { variant: 'warning', timeout: 3200 });
+      showUiSystemMessage(normalizeAppError(error, 'Не удалось сохранить исследование.').message, { variant: 'warning', timeout: 3200 });
     }
   });
   saveSection.appendChild(form);
@@ -1450,7 +1482,7 @@ function renderSlicesPanel(elements, state, map) {
     if (state.sliceOpenedTitle) {
       const openedTitle = document.createElement('p');
       openedTitle.className = 'status-summary';
-      openedTitle.textContent = `Открытый срез: ${state.sliceOpenedTitle}`;
+      openedTitle.textContent = `Открытое исследование: ${state.sliceOpenedTitle}`;
       openedBlock.appendChild(openedTitle);
     }
 
@@ -1486,21 +1518,21 @@ function renderSlicesPanel(elements, state, map) {
   savedSection.dataset.researchZone = 'saved';
   const savedSectionTitle = document.createElement('h4');
   savedSectionTitle.className = 'panel-title';
-  savedSectionTitle.textContent = 'Сохранённые срезы';
+  savedSectionTitle.textContent = 'Сохранённые исследования';
   savedSection.appendChild(savedSectionTitle);
 
   if (state.researchSlicesLoading) {
     state.sliceComparePanelOpen = false;
     savedSection.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Загрузка срезов',
-      message: 'Загрузка списка срезов…'
+      title: 'Загрузка исследований',
+      message: 'Загрузка списка сохранённых исследований…'
     }));
   } else if (state.researchSlicesError) {
     state.sliceComparePanelOpen = false;
     savedSection.appendChild(createInlineStateBlock({
       variant: 'warning',
-      title: 'Срезы недоступны',
+      title: 'Сохранённые исследования недоступны',
       message: state.researchSlicesError
     }));
   } else if (!Array.isArray(state.researchSlices) || !state.researchSlices.length) {
@@ -1509,8 +1541,8 @@ function renderSlicesPanel(elements, state, map) {
     syncResearchSliceCompareCta(elements, state);
     savedSection.appendChild(createInlineStateBlock({
       variant: 'info',
-      title: 'Срезов пока нет',
-      message: 'Настройте карту, выберите объекты и сохраните первый срез — он появится в этом списке.'
+      title: 'Сохранённых исследований пока нет',
+      message: 'Настройте карту, выберите объекты и сохраните первое исследование — оно появится в этом списке.'
     }));
   } else {
     const openedSliceId = String(state.sliceOpenedId || '').trim();
@@ -1530,9 +1562,9 @@ function renderSlicesPanel(elements, state, map) {
         markResearchContextAsSaved(state);
         updateResearchContextBar(elements, state);
         renderSlicesPanel(elements, state, map);
-        showUiSystemMessage('Срез восстановлен', { variant: 'success', timeout: 2200 });
+        showUiSystemMessage('Исследование восстановлено', { variant: 'success', timeout: 2200 });
       } catch (error) {
-        showUiSystemMessage(normalizeAppError(error, 'Не удалось открыть срез.').message, { variant: 'warning', timeout: 3200 });
+        showUiSystemMessage(normalizeAppError(error, 'Не удалось открыть исследование.').message, { variant: 'warning', timeout: 3200 });
       }
     };
     state.sliceCompareSelectionIds = (Array.isArray(state.sliceCompareSelectionIds) ? state.sliceCompareSelectionIds : [])
@@ -1547,7 +1579,7 @@ function renderSlicesPanel(elements, state, map) {
       comparePanelHeader.className = 'panel-stack';
       const comparePanelTitle = document.createElement('h5');
       comparePanelTitle.className = 'panel-title';
-      comparePanelTitle.textContent = 'Сравнение срезов';
+      comparePanelTitle.textContent = 'Сопоставление исследований';
       comparePanelHeader.appendChild(comparePanelTitle);
 
       const compareFallback = state.sliceCompareSelectionIds.length < 2;
@@ -1555,7 +1587,7 @@ function renderSlicesPanel(elements, state, map) {
         comparePanel.appendChild(comparePanelHeader);
         const fallback = document.createElement('p');
         fallback.className = 'status-summary';
-        fallback.textContent = 'Для сравнения нужно выбрать два среза';
+        fallback.textContent = 'Для сопоставления нужно выбрать два сохранённых исследования';
         comparePanel.appendChild(fallback);
       } else {
         const selectedSlices = state.sliceCompareSelectionIds
@@ -3441,7 +3473,7 @@ function showDetailPanel(state, elements, map, feature, options = {}) {
   }
   syncDetailPanelExpandControl(elements, state);
   syncTimelineInteractionLock(elements, state);
-  syncDetailDockLayout(elements, state);
+  syncDetailDockLayout(elements, state, map);
   document.dispatchEvent(new CustomEvent('artemis:overlay-open', { detail: { source: 'detail' } }));
   if (Number.isInteger(state.detailRenderFrameId)) {
     window.cancelAnimationFrame(state.detailRenderFrameId);
@@ -3935,16 +3967,16 @@ function updateResearchContextBar(elements, state) {
   const visibleObjectsCount = Math.max(0, state?.filteredFeatures?.length || 0);
   const hasAnchor = Boolean(state?.sliceAnchorFeatureId);
   const objectsLabel = draftSliceCount > 0
-    ? `В срезе: ${draftSliceCount}`
+    ? `Выбрано: ${draftSliceCount}`
     : `Объекты: ${visibleObjectsCount}${hasAnchor ? ' · якорь' : ''}`;
   const hasOpenedSliceTitle = Boolean(String(state?.sliceOpenedTitle || '').trim());
   const sliceStateLabel = state.researchContextDirty ? 'Изменено' : 'Сохранено';
-  const rawSliceTitle = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'Новый срез';
-  const rawTriggerLabel = `Срез: ${rawSliceTitle}`;
+  const rawSliceTitle = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'Новое исследование';
+  const rawTriggerLabel = hasOpenedSliceTitle ? rawSliceTitle : 'Новое исследование';
   const triggerLabel = truncateText(rawTriggerLabel, 40);
   const triggerTitle = hasOpenedSliceTitle
-    ? `Срез: ${rawSliceTitle}`
-    : 'Срез: Новый срез';
+    ? `Сохранённое исследование: ${rawSliceTitle}`
+    : 'Создать сохранённое исследование';
   const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle, draftSliceCount, hasAnchor].join('||');
   if (renderKey === state.researchContextLastRenderedKey) return;
   state.researchContextLastRenderedKey = renderKey;
@@ -4514,10 +4546,6 @@ function applyResponsiveLayout(elements, state, map) {
   if (rootStyle && elements.topHeader) {
     const headerHeight = Math.max(44, Math.round(elements.topHeader.getBoundingClientRect().height));
     rootStyle.setProperty('--top-header-height', `${headerHeight}px`);
-    if (elements.researchContextBar) {
-      const stripHeight = Math.max(56, Math.round(elements.researchContextBar.getBoundingClientRect().height));
-      rootStyle.setProperty('--workspace-strip-height', `${stripHeight}px`);
-    }
   }
   if (rootStyle) {
     const bottomPanel = document.getElementById('bottom-panel');
@@ -4547,14 +4575,27 @@ function applyResponsiveLayout(elements, state, map) {
   map?.resize?.();
 }
 
-function syncDetailDockLayout(elements, state) {
+function scheduleMapResize(map = null) {
+  const activeMap = map || (typeof window !== 'undefined' ? window.__ARTEMIS_MAP : null);
+  if (typeof activeMap?.resize !== 'function') return;
+  const resize = () => activeMap.resize();
+  if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+    window.requestAnimationFrame(resize);
+    return;
+  }
+  resize();
+}
+
+function syncDetailDockLayout(elements, state, map = null) {
   const shell = elements?.appShell;
   const panel = elements?.detailPanel;
   if (!shell || !panel) return;
   const isDesktopDock = !state?.viewport?.isMobile
     && !panel.hidden
     && panel.classList.contains('is-open');
+  const wasDesktopDock = shell.classList.contains('has-right-detail');
   shell.classList.toggle('has-right-detail', isDesktopDock);
+  if (wasDesktopDock !== isDesktopDock) scheduleMapResize(map);
 }
 
 function toggleDetailSheetState(state, elements) {

@@ -1,12 +1,13 @@
 /* Main screen workspace layer.
    Loaded after the rebuilt style.css and limited to dock/grid ownership. */
 
-/* Top dock: single unified surface with internal row divider only. */
+/* Top dock: one compact functional shell, without nested framing. */
 #workspace-top-dock {
-  background: rgba(16, 24, 36, 0.88);
-  border: 1px solid rgba(74, 91, 112, 0.5);
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.16);
+  background: rgba(16, 24, 36, 0.94);
+  border: 0;
+  border-bottom: 1px solid rgba(74, 91, 112, 0.52);
+  border-radius: 0;
+  box-shadow: none;
   overflow: visible;
 }
 
@@ -18,36 +19,36 @@
   box-shadow: none;
 }
 
-#research-context-bar {
-  border-top: 1px solid rgba(74, 91, 112, 0.42);
+#research-context-bar .research-context-main,
+#research-context-bar .research-context-actions {
+  display: none;
 }
 
-/* Workspace grid: default rail/map; optional inspector with has-right-detail. */
+/* Workspace grid: full-width map; optional inspector only when detail is open. */
 #workspace-main {
   display: grid;
-  grid-template-columns: var(--map-rail-width) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
-  column-gap: 10px;
+  column-gap: 0;
   min-height: 0;
 }
 
 #app-shell.has-right-detail #workspace-main {
-  grid-template-columns: var(--map-rail-width) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) var(--detail-panel-width);
 }
 
-/* Rail shell: docked grid child, not floating/absolute card. */
+/* Map tools are a real overlay; they no longer reserve a structural column. */
 #explore-toolbar-shell {
-  grid-column: 1;
-  position: relative;
-  top: auto;
-  left: auto;
+  position: absolute;
+  top: 126px;
+  left: 10px;
   right: auto;
   z-index: var(--z-map-controls);
   display: flex;
   align-items: center;
   gap: 8px;
   max-width: none;
-  padding: 8px 0 0;
+  padding: 0;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -64,7 +65,7 @@
 
 /* Map remains hero surface in map column. */
 #map-container {
-  grid-column: 2;
+  grid-column: 1;
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -74,7 +75,7 @@
 /* Optional inspector: matte region with divider, no card treatment. */
 #app-shell.has-right-detail #detail-panel,
 #detail-panel {
-  grid-column: 3;
+  grid-column: 2;
   align-self: stretch;
   height: auto;
   max-height: none;
@@ -115,7 +116,6 @@
   }
 
   #explore-toolbar-shell {
-    position: absolute;
     top: 12px;
     left: 12px;
     z-index: var(--z-map-controls);
