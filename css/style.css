@@ -641,15 +641,16 @@
 
 .timeline-row {
   display: grid;
-  gap: var(--space-3);
+  gap: 6px;
   width: 100%;
 }
 
 .timeline-head {
   display: flex;
+  min-height: 28px;
   min-width: 0;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .timeline-helper-label {
@@ -679,7 +680,7 @@
 }
 
 .timeline-mode-btn {
-  min-height: 28px;
+  min-height: 26px;
   border: 0;
   padding-inline: 0.55rem;
 }
@@ -693,7 +694,7 @@
   border: 1px solid rgba(77, 163, 255, 0.38);
   border-radius: var(--radius-pill);
   background: rgba(77, 163, 255, 0.1);
-  padding: 0.35rem 0.65rem;
+  padding: 0.25rem 0.6rem;
   color: var(--accent-primary-hover);
   font-size: var(--font-size-caption);
   white-space: nowrap;
@@ -703,7 +704,7 @@
   --timeline-left: 0%;
   --timeline-right: 100%;
   position: relative;
-  height: 78px;
+  height: 24px;
   margin-inline: 10px;
 }
 
@@ -804,48 +805,6 @@
   border-radius: 50%;
   background: transparent;
   pointer-events: auto;
-}
-
-.timeline-axis {
-  position: absolute;
-  top: 25px;
-  right: 0;
-  left: 0;
-  height: 50px;
-}
-
-.timeline-anchor {
-  position: absolute;
-  top: 0;
-  display: grid;
-  width: 110px;
-  transform: translateX(-50%);
-  color: var(--text-muted);
-  font-size: 0.625rem;
-  line-height: 1.15;
-  text-align: center;
-  white-space: normal;
-}
-
-.timeline-anchor:nth-child(even) {
-  display: none;
-}
-
-.timeline-anchor-year {
-  color: var(--text-secondary);
-  font-weight: 650;
-}
-
-.timeline-anchor-label {
-  display: block;
-  margin-top: 2px;
-  color: var(--text-muted);
-  font-size: 0.625rem;
-  line-height: 1.2;
-}
-
-.timeline-anchor:nth-child(even) .timeline-anchor-label {
-  display: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -1834,7 +1793,7 @@
 
 @media (max-width: 1080px) {
   :root {
-    --bottom-panel-height: 120px;
+    --bottom-panel-height: 84px;
     --detail-panel-width: min(380px, 42vw);
   }
 
@@ -1876,25 +1835,6 @@
     top: 0;
   }
 
-  .timeline-track-wrap {
-    height: 48px;
-  }
-
-  .timeline-anchor,
-  .timeline-anchor:nth-child(even) {
-    top: 0;
-    width: auto;
-    white-space: nowrap;
-  }
-
-  .timeline-anchor-label {
-    display: none;
-  }
-
-  .timeline-anchor:nth-child(even) .timeline-anchor-year {
-    display: none;
-  }
-
   .moderation-workspace {
     grid-template-columns: minmax(250px, 0.4fr) minmax(0, 1fr);
   }
@@ -1903,7 +1843,7 @@
 @media (max-width: 720px) {
   :root {
     --top-header-height: 52px;
-    --bottom-panel-height: 104px;
+    --bottom-panel-height: 80px;
   }
 
   #app-shell {
@@ -2046,20 +1986,6 @@
     max-width: 48vw;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .timeline-anchor {
-    display: none;
-  }
-
-  .timeline-anchor:first-child,
-  .timeline-anchor:last-child {
-    display: grid;
-    width: 64px;
-  }
-
-  .timeline-anchor:last-child .timeline-anchor-year {
-    display: inline;
   }
 
   .status-panel {
