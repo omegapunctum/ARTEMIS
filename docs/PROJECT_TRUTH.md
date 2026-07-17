@@ -48,7 +48,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - 26 Layers;
 - 20 Sources (`19 reviewed / 1 draft`);
 - 16 reviewed Media records linked as primary to 16 pilot Features;
-- 0 canonical Relation records;
+- 2 reviewed canonical Relation records, each with one reviewed evidence link;
 - только архитектурные объекты.
 
 Известные ограничения:
@@ -59,8 +59,8 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - пять Media batch #283 содержат 16 reviewed direct assets и 16 reviewed primary FeatureMedia links; оставшиеся 3 legacy `Features.image_url` не считаются нормализованными Media и явно заблокированы проверкой прав (Бурдж-Халифа, Вилла Савой и Центр Помпиду); полный перечень, evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
 - часть включённых слоёв пуста;
 - Media semantics реализованы в ETL, но reviewed-миграция охватывает 16 из 19 пилотных Features; для трёх современных зданий требуется отдельный источник изображения с достаточными правами;
-- эвристические «похожие объекты» не являются доказанными historical relations;
-- текущая detail panel ошибочно помещает эвристику одинакового слоя/пересечения дат в блок «Связь»; до исправления этот блок не считается canonical Relation UI;
+- Relations/Similarity pilot реализован: detail panel показывает reviewed evidence-backed записи из `data/relations.json` в блоке «Документированные связи», а эвристику одинакового слоя/периода — отдельно как «Похожие объекты» с явными критериями;
+- 2 reviewed Relations достаточны для проверки контракта, но ещё не образуют полноценный исследовательский relation graph;
 - текущий structural release gate не заменяет semantic content validation.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
@@ -72,7 +72,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - публично доступный end-to-end Research Slice workflow;
 - полноценные guided Stories и Courses;
 - AI explanation, comparison или hypothesis generation;
-- доказательная relation graph;
+- полноценная доказательная relation graph за пределами 2-record pilot;
 - causal, predictive или counterfactual engine.
 
 ## 6. Главные риски текущего состояния
@@ -80,7 +80,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 1. Интерфейс обещает больше, чем доступно в public runtime.
 2. Документация и backend breadth создают впечатление зрелости, не подтверждённое содержанием.
 3. Identity/source/media contracts допускают формально успешный, но семантически слабый export.
-4. Эвристическая близость может быть показана пользователю как историческая связь.
+4. Малый объём Relations может создать впечатление более полной графовой модели, чем фактически существует.
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
 
 ## 7. Текущий operational verdict

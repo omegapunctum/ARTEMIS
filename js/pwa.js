@@ -108,7 +108,7 @@ async function softRefreshDataCaches() {
   if (refreshInFlight || !navigator.onLine) return;
   refreshInFlight = true;
   try {
-    const requests = ['data/features.geojson', 'data/layers.json'].map((path) =>
+    const requests = ['data/features.geojson', 'data/layers.json', 'data/relations.json'].map((path) =>
       fetch(new URL(path, document.baseURI).href, { cache: 'no-store' })
     );
     await Promise.allSettled(requests);

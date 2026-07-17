@@ -3,11 +3,11 @@
 ## Статус
 
 - Issue: `#282`.
-- Статус: pre-write audit and implementation contract.
+- Статус: implemented pilot; pending implementation PR review.
 - Snapshot date: 2026-07-16.
 - Scope: reviewed Feature↔Feature Relations, Relation evidence, public export and explicit separation from computed Similarity for the 19-Feature Architecture Atlas pilot.
 
-Документ фиксирует безопасный порядок работ до создания Airtable tables или canonical Relation records.
+Документ фиксирует contract, Airtable execution evidence и реализацию пилота.
 
 ## 1. Verified pre-write baseline
 
@@ -161,7 +161,7 @@ The first batch is intentionally small. A content quota is not a reason to creat
 | Pantheon (Rome), `e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8` | `influenced` | St. Peter's Basilica, `393c7d17-d266-4e8b-8412-b96eb427f941` | `fact` | `medium` | reviewed `src_st_peters_basilica_wikipedia`; architecture section explicitly identifies the Pantheon dome as a design reference |
 | Panthéon (Paris), `acfb7492-c49d-4e71-9bbc-bd446b52d32d` | `inspired_by` | Pantheon (Rome), `e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8` | `fact` | `medium` | reviewed `src_pantheon_paris_wikipedia`; use only the explicitly supported institutional/mausoleum model claim, not an inferred formal influence |
 
-Both candidates remain `draft` until the precise source passage is checked during the data batch. If the passage supports a narrower statement than the candidate description, the Relation description is narrowed; the source is never stretched to fit the type.
+Оба passages проверены 2026-07-16. Записи Relations и RelationSources переведены в `reviewed`; формулировка Paris→Rome намеренно ограничена подтверждённой моделью национального мавзолея и не расширена до неподтверждённого формального влияния.
 
 ## 8. Execution order and recovery
 
@@ -202,7 +202,54 @@ Load/render canonical Relations separately, rename heuristic UI to «Похож�
 - [x] public artifact and validation contract defined;
 - [x] Relation and Similarity UI semantics separated;
 - [x] initial evidence candidates recorded as draft-only;
-- [ ] Airtable schema created and re-read;
-- [ ] pilot Relations and evidence reviewed;
-- [ ] ETL/public artifacts implemented;
-- [ ] runtime and contract tests green.
+- [x] Airtable schema created and re-read;
+- [x] pilot Relations and evidence reviewed;
+- [x] ETL/public artifacts implemented;
+- [x] runtime and contract tests green.
+
+## 10. Execution evidence
+
+### Airtable schema
+
+- Base: `appHmf8ubeUF9nfkO`.
+- Relations: `tblxAFgJgFdjEenCM`.
+  - `id`: `flduEByjsVp1gwJUg`;
+  - `source_feature`: `fld1d1CbzHqNUViFu`;
+  - `target_feature`: `fldWfLwUEdrpbnfFq`;
+  - `relation_type`: `fldgOx9gjL249vDds`;
+  - `description`: `fldZhiCvPlBkChnQz`;
+  - `epistemic_status`: `fldzTf2XJyd6sQy72`;
+  - `confidence`: `fld7aVzBAzK4Ltn3b`;
+  - `valid_from`: `fld14sEvryxvGCQnH`;
+  - `valid_to`: `fldg8dqUUPb3iokZ6`;
+  - `review_status`: `fldkzHkrTEmDKAttD`;
+  - `notes`: `fldv4l1WEpCe0Ws3n`;
+  - reciprocal `RelationSources`: `fldujfPsVGaF6WVwY`.
+- RelationSources: `tblkNABRFTxVPbzr5`.
+  - `id`: `fldzbyHuTeC852NMV`;
+  - `relation`: `fldgBevrXP6uI80XM`;
+  - `source`: `fldmkBLR0e8DojeWn`;
+  - `roles`: `fldXgzCvWzNopnRng`;
+  - `claim_note`: `fldcTsMkBnd06ZvLh`;
+  - `review_status`: `fldQjTqOpZcRDLfF1`.
+- Features reciprocal links: source Relations `fldEXQwP4cAZMOdCF`, target Relations `fld25DEFmtT1GrnQ8`.
+- Sources reciprocal RelationSources: `fld3vkvbWhYJT3hML`.
+
+Schema control read after creation returned eight tables and the expected linked/select field types. Existing tables and legacy fields were not deleted or renamed.
+
+### Reviewed pilot records
+
+| Relation ID | Airtable record | Evidence link | Result |
+|---|---|---|---|
+| `83f297bb-a954-4091-b6a1-36cc4c135010` | `rec7V6gJtyGFGE8a1` | `recdOwIWLkWL1dJ2X` / `src_st_peters_basilica_wikipedia` | `reviewed` |
+| `bd667055-80ef-405d-8c2b-e1b9642972b5` | `recik9bcfkQ4g2Fd5` | `rec3g3v8ERQ2I4lTC` / `src_pantheon_paris_wikipedia` | `reviewed` |
+
+Control read after promotion returned `2 Relations / 2 reviewed` and `2 RelationSources / 2 reviewed`; each Relation has one source Feature, one distinct target Feature and one reviewed evidence link.
+
+### Implementation and verification
+
+- ETL fetches both tables, validates UUIDs, endpoint cardinality/direction, vocabularies, temporal range, duplicates and reviewed evidence, then writes `data/relations.json` and Feature `relation_ids`.
+- Runtime loads Relations non-blockingly and renders canonical evidence separately from computed Similarity and its criteria.
+- `python -m py_compile scripts/export_airtable.py`, JavaScript syntax checks and `git diff --check` passed.
+- Full non-integration suite: `263 passed, 10 subtests passed`.
+- Release check: Data layer, Backend, Runtime/deployment, Frontend, PWA, PWA behavioral, Governance and Release/docs drift passed; the existing memory-session single-node warning remains non-blocking.

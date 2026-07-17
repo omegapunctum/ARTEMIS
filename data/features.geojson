@@ -927,6 +927,9 @@
         "coordinates_source": "Britannica",
         "sequence_order": null,
         "tags": [],
+        "relation_ids": [
+          "bd667055-80ef-405d-8c2b-e1b9642972b5"
+        ],
         "validated": true,
         "date_valid": true,
         "has_geometry": true
@@ -1122,6 +1125,9 @@
         "coordinates_source": "Vatican",
         "sequence_order": null,
         "tags": [],
+        "relation_ids": [
+          "83f297bb-a954-4091-b6a1-36cc4c135010"
+        ],
         "validated": true,
         "date_valid": true,
         "has_geometry": true
@@ -1189,6 +1195,10 @@
         "coordinates_source": "Britannica",
         "sequence_order": null,
         "tags": [],
+        "relation_ids": [
+          "83f297bb-a954-4091-b6a1-36cc4c135010",
+          "bd667055-80ef-405d-8c2b-e1b9642972b5"
+        ],
         "validated": true,
         "date_valid": true,
         "has_geometry": true

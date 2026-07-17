@@ -17,6 +17,7 @@
   - data/id_aliases.json      : versioned legacy id -> canonical UUID map
   - data/sources.json         : reviewed canonical Sources
   - data/media.json           : reviewed display Media with attribution
+  - data/relations.json       : reviewed evidence-backed Feature relations
   - data/rejected.json        : отклонённые записи с причинами валидации
   - data/layers.json          : агрегированные метаданные слоёв
   - data/export_errors.log    : ошибки в формате JSON Lines
@@ -84,6 +85,8 @@ SOURCES_TABLE_NAME = "Sources"
 MEDIA_TABLE_NAME = "Media"
 FEATURE_SOURCES_TABLE_NAME = "FeatureSources"
 FEATURE_MEDIA_TABLE_NAME = "FeatureMedia"
+RELATIONS_TABLE_NAME = "Relations"
+RELATION_SOURCES_TABLE_NAME = "RelationSources"
 ALLOWED_REVIEW_STATUSES = {"draft", "reviewed", "rejected"}
 ALLOWED_SOURCE_TYPES = {"primary", "official", "academic", "institutional", "reference", "other"}
 ALLOWED_SOURCE_ROLES = {
@@ -95,6 +98,12 @@ ALLOWED_SOURCE_ROLES = {
 }
 ALLOWED_MEDIA_TYPES = {"image", "map", "drawing", "diagram", "document"}
 ALLOWED_MEDIA_DISPLAY_ROLES = {"primary", "gallery", "context", "detail"}
+ALLOWED_RELATION_TYPES = {"influenced", "inspired_by", "same_movement", "reconstructed_from", "part_of"}
+SYMMETRIC_RELATION_TYPES = {"same_movement"}
+ALLOWED_EPISTEMIC_STATUSES = {"fact", "interpretation", "hypothesis"}
+ALLOWED_RELATION_CONFIDENCE = {"high", "medium", "low"}
+ALLOWED_RELATION_SOURCE_ROLES = {"relation_evidence"}
+CAUSAL_CLAIM_RE = re.compile(r"\b(caus(?:e|ed|es|al|ality)|resulted\s+in)\b", re.IGNORECASE)
 
 
 def parse_args() -> argparse.Namespace:
@@ -845,7 +854,28 @@ def generate_mock_records() -> List[Dict[str, Any]]:
                 "coordinates_source": "Wikipedia",
                 "sequence_order": 1,
             },
-        }
+        },
+        {
+            "id": "recRelatedTEST",
+            "fields": {
+                "id": "8f14e45f-ea26-4c4b-9b29-7c1d0b6f9a22",
+                "layer_id": "test_layer",
+                "layer_type_enum": "biography",
+                "name_ru": "Связанная тестовая запись",
+                "date_start": "1400",
+                "longitude": 38.0,
+                "latitude": 56.0,
+                "influence_radius_km": 8,
+                "layer_color_hex": "#ABCDEF",
+                "tags": "test",
+                "validated": True,
+                "source_license": "CC BY",
+                "coordinates_confidence_enum": "exact",
+                "source_url": "https://example.com/source",
+                "coordinates_source": "Wikipedia",
+                "sequence_order": 2,
+            },
+        },
     ]
 
 
@@ -913,7 +943,17 @@ def generate_mock_feature_sources_records() -> List[Dict[str, Any]]:
                 "is_primary": True,
                 "review_status": "reviewed",
             },
-        }
+        },
+        {
+            "id": "recRelatedFeatureSourceTEST",
+            "fields": {
+                "feature": ["recRelatedTEST"],
+                "source": ["recSourceTEST"],
+                "roles": ["general_reference"],
+                "is_primary": True,
+                "review_status": "reviewed",
+            },
+        },
     ]
 
 
@@ -926,6 +966,39 @@ def generate_mock_feature_media_records() -> List[Dict[str, Any]]:
                 "media": ["recMediaTEST"],
                 "display_role": "primary",
                 "sort_order": 1,
+                "review_status": "reviewed",
+            },
+        }
+    ]
+
+
+def generate_mock_relations_records() -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": "recRelationTEST",
+            "fields": {
+                "id": "c9f0f895-fb98-4f6f-91f6-7ca4f8d76a33",
+                "source_feature": ["recTEST"],
+                "target_feature": ["recRelatedTEST"],
+                "relation_type": "influenced",
+                "description": "The first test Feature influenced the second test Feature.",
+                "epistemic_status": "fact",
+                "confidence": "medium",
+                "review_status": "reviewed",
+            },
+        }
+    ]
+
+
+def generate_mock_relation_sources_records() -> List[Dict[str, Any]]:
+    return [
+        {
+            "id": "recRelationSourceTEST",
+            "fields": {
+                "relation": ["recRelationTEST"],
+                "source": ["recSourceTEST"],
+                "roles": ["relation_evidence"],
+                "claim_note": "Test evidence supports the explicit influence claim.",
                 "review_status": "reviewed",
             },
         }
@@ -992,6 +1065,7 @@ def build_geojson_features(
                     "source_refs": m.get("source_refs", []),
                     "media_ids": m.get("media_ids", []),
                     "media_refs": m.get("media_refs", []),
+                    "relation_ids": m.get("relation_ids", []),
                     "source_license": m.get("source_license"),
                     "coordinates_confidence": m.get("coordinates_confidence"),
                     "coordinates_source": m.get("coordinates_source"),
@@ -1338,6 +1412,192 @@ def attach_source_media_refs(
                 feature["image_url"] = media["asset_url"]
         elif feature.get("image_url"):
             add_issue(warnings, "warning", get_diagnostic_record_id(feature), "legacy_image_without_reviewed_media", "image_url")
+
+
+def relation_date_sort_key(value: Optional[str]) -> Optional[Tuple[int, str]]:
+    if not value:
+        return None
+    normalized = str(value).strip()
+    year_text = normalized[:5] if normalized.startswith("-") else normalized[:4]
+    try:
+        return int(year_text), normalized
+    except ValueError:
+        return None
+
+
+def map_relations(
+    records: Iterable[Dict[str, Any]],
+    feature_id_by_record_id: Dict[str, str],
+    errors: List[Dict[str, Any]],
+) -> Tuple[Dict[str, Dict[str, Any]], List[Dict[str, Any]]]:
+    """Map reviewed Relation candidates before evidence eligibility is applied."""
+    by_record_id: Dict[str, Dict[str, Any]] = {}
+    reviewed: List[Dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    seen_predicates: set[Tuple[str, str, str]] = set()
+    for record in records:
+        record_id = safe_str(record.get("id")) or "<missing>"
+        fields = record.get("fields", {}) or {}
+        review_status = normalize_single_select(fields.get("review_status"))
+        if review_status != "reviewed":
+            continue
+        source_links = normalize_linked_record_ids(fields.get("source_feature"))
+        target_links = normalize_linked_record_ids(fields.get("target_feature"))
+        if len(source_links) != 1 or len(target_links) != 1:
+            add_issue(errors, "critical", record_id, "invalid_relation_endpoint_cardinality", "source_feature/target_feature")
+            continue
+        source_feature_id = feature_id_by_record_id.get(source_links[0])
+        target_feature_id = feature_id_by_record_id.get(target_links[0])
+        if not source_feature_id or not target_feature_id:
+            add_issue(errors, "critical", record_id, "invalid_relation_feature_reference", "source_feature/target_feature")
+            continue
+        relation_id = safe_str(fields.get("id"))
+        relation_type = normalize_single_select(fields.get("relation_type"))
+        description = safe_str(fields.get("description"))
+        epistemic_status = normalize_single_select(fields.get("epistemic_status"))
+        confidence = normalize_single_select(fields.get("confidence"))
+        valid_from = safe_str(fields.get("valid_from"))
+        valid_to = safe_str(fields.get("valid_to"))
+        valid = True
+
+        def critical(field: str, reason: str) -> None:
+            nonlocal valid
+            valid = False
+            add_issue(errors, "critical", record_id, reason, field)
+
+        if not is_uuid_v4(relation_id):
+            critical("id", "invalid_relation_id_uuid_v4")
+        elif relation_id in seen_ids:
+            critical("id", "duplicate_relation_id")
+        if source_feature_id == target_feature_id:
+            critical("source_feature/target_feature", "self_relation")
+        if relation_type not in ALLOWED_RELATION_TYPES:
+            critical("relation_type", "invalid_relation_type")
+        if not description:
+            critical("description", "missing_relation_description")
+        elif CAUSAL_CLAIM_RE.search(description):
+            critical("description", "unsupported_causal_relation_claim")
+        if epistemic_status not in ALLOWED_EPISTEMIC_STATUSES:
+            critical("epistemic_status", "invalid_relation_epistemic_status")
+        if confidence not in ALLOWED_RELATION_CONFIDENCE:
+            critical("confidence", "invalid_relation_confidence")
+        if valid_from and not is_valid_iso_date(valid_from):
+            critical("valid_from", "invalid_relation_valid_from")
+        if valid_to and not is_valid_iso_date(valid_to):
+            critical("valid_to", "invalid_relation_valid_to")
+        from_key = relation_date_sort_key(valid_from)
+        to_key = relation_date_sort_key(valid_to)
+        if from_key and to_key and from_key > to_key:
+            critical("valid_from/valid_to", "invalid_relation_temporal_range")
+        if relation_type in SYMMETRIC_RELATION_TYPES and source_feature_id > target_feature_id:
+            critical("source_feature/target_feature", "unsorted_symmetric_relation_endpoints")
+
+        predicate = (source_feature_id, relation_type or "", target_feature_id)
+        if predicate in seen_predicates:
+            critical("source_feature/relation_type/target_feature", "duplicate_relation_predicate")
+        if not valid:
+            continue
+        seen_ids.add(relation_id or "")
+        seen_predicates.add(predicate)
+        mapped = {
+            "id": relation_id,
+            "source_record_id": record_id,
+            "source_feature_id": source_feature_id,
+            "target_feature_id": target_feature_id,
+            "relation_type": relation_type,
+            "description": description,
+            "epistemic_status": epistemic_status,
+            "confidence": confidence,
+            "valid_from": valid_from,
+            "valid_to": valid_to,
+            "review_status": review_status,
+        }
+        by_record_id[record_id] = mapped
+        reviewed.append(mapped)
+    return by_record_id, sorted(reviewed, key=lambda item: item.get("id") or "")
+
+
+def map_relation_source_refs(
+    records: Iterable[Dict[str, Any]],
+    relation_by_record_id: Dict[str, Dict[str, Any]],
+    source_by_record_id: Dict[str, Dict[str, Any]],
+    errors: List[Dict[str, Any]],
+) -> Dict[str, List[Dict[str, Any]]]:
+    refs: Dict[str, List[Dict[str, Any]]] = {}
+    for record in records:
+        record_id = safe_str(record.get("id")) or "<missing>"
+        fields = record.get("fields", {}) or {}
+        if normalize_single_select(fields.get("review_status")) != "reviewed":
+            continue
+        relation_links = normalize_linked_record_ids(fields.get("relation"))
+        source_links = normalize_linked_record_ids(fields.get("source"))
+        if len(relation_links) != 1 or len(source_links) != 1:
+            add_issue(errors, "critical", record_id, "invalid_relation_source_cardinality", "relation/source")
+            continue
+        relation = relation_by_record_id.get(relation_links[0])
+        source = source_by_record_id.get(source_links[0])
+        if not relation or not source or source.get("review_status") != "reviewed":
+            add_issue(errors, "critical", record_id, "invalid_relation_source_reference", "relation/source")
+            continue
+        roles = sorted(set(to_tags(fields.get("roles"))))
+        claim_note = safe_str(fields.get("claim_note"))
+        if not roles or any(role not in ALLOWED_RELATION_SOURCE_ROLES for role in roles):
+            add_issue(errors, "critical", record_id, "invalid_relation_source_roles", "roles")
+            continue
+        if "relation_evidence" not in roles:
+            add_issue(errors, "critical", record_id, "missing_relation_evidence_role", "roles")
+            continue
+        if not claim_note:
+            add_issue(errors, "critical", record_id, "missing_relation_claim_note", "claim_note")
+            continue
+        refs.setdefault(relation["id"], []).append(
+            {
+                "source_id": source.get("id"),
+                "roles": roles,
+                "claim_note": claim_note,
+                "title": source.get("title"),
+                "url": source.get("url"),
+            }
+        )
+    return refs
+
+
+def finalize_relations(
+    candidates: Iterable[Dict[str, Any]],
+    source_refs_by_relation: Dict[str, List[Dict[str, Any]]],
+    errors: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    reviewed: List[Dict[str, Any]] = []
+    for candidate in candidates:
+        relation_id = safe_str(candidate.get("id")) or "<missing>"
+        refs = sorted(source_refs_by_relation.get(relation_id, []), key=lambda item: item.get("source_id") or "")
+        source_ids = [ref.get("source_id") for ref in refs]
+        if not refs:
+            add_issue(errors, "critical", relation_id, "missing_reviewed_relation_evidence", "source_refs")
+            continue
+        if len(set(source_ids)) != len(source_ids):
+            add_issue(errors, "critical", relation_id, "duplicate_relation_source_reference", "source_refs")
+            continue
+        public = {key: value for key, value in candidate.items() if key not in {"source_record_id", "review_status"}}
+        public["source_ids"] = source_ids
+        public["source_refs"] = refs
+        reviewed.append(public)
+    return sorted(reviewed, key=lambda item: item.get("id") or "")
+
+
+def attach_relation_ids(features: Iterable[Dict[str, Any]], relations: Iterable[Dict[str, Any]]) -> None:
+    ids_by_feature: Dict[str, List[str]] = {}
+    for relation in relations:
+        relation_id = safe_str(relation.get("id"))
+        if not relation_id:
+            continue
+        for feature_id in (relation.get("source_feature_id"), relation.get("target_feature_id")):
+            normalized = safe_str(feature_id)
+            if normalized:
+                ids_by_feature.setdefault(normalized, []).append(relation_id)
+    for feature in features:
+        feature_id = safe_str(feature.get("id")) or "<missing>"
+        feature["relation_ids"] = sorted(set(ids_by_feature.get(feature_id, [])))
 
 
 def validate_feature(mapped: Dict[str, Any], layer_ids: set[str], warnings: List[Dict[str, Any]], errors: List[Dict[str, Any]]) -> bool:
@@ -1748,6 +2008,7 @@ def main() -> int:
     layers_path = out_dir / f"{prefix}layers.json"
     sources_path = out_dir / f"{prefix}sources.json"
     media_path = out_dir / f"{prefix}media.json"
+    relations_path = out_dir / f"{prefix}relations.json"
     validation_report_path = out_dir / f"{prefix}validation_report.json"
     export_meta_path = out_dir / f"{prefix}export_meta.json"
     error_log_path = out_dir / f"{prefix}export_errors.log"
@@ -1758,6 +2019,8 @@ def main() -> int:
     media_records: List[Dict[str, Any]]
     feature_source_records: List[Dict[str, Any]]
     feature_media_records: List[Dict[str, Any]]
+    relation_records: List[Dict[str, Any]]
+    relation_source_records: List[Dict[str, Any]]
     try:
         if dry_run:
             records = generate_mock_records()
@@ -1766,6 +2029,8 @@ def main() -> int:
             media_records = generate_mock_media_records()
             feature_source_records = generate_mock_feature_sources_records()
             feature_media_records = generate_mock_feature_media_records()
+            relation_records = generate_mock_relations_records()
+            relation_source_records = generate_mock_relation_sources_records()
             if args.max_records is not None:
                 records = records[: args.max_records]
             print("Dry-run: mock data generated")
@@ -1777,6 +2042,8 @@ def main() -> int:
             media_records = fetch_airtable_records(token, base, MEDIA_TABLE_NAME, None)
             feature_source_records = fetch_airtable_records(token, base, FEATURE_SOURCES_TABLE_NAME, None)
             feature_media_records = fetch_airtable_records(token, base, FEATURE_MEDIA_TABLE_NAME, None)
+            relation_records = fetch_airtable_records(token, base, RELATIONS_TABLE_NAME, None)
+            relation_source_records = fetch_airtable_records(token, base, RELATION_SOURCES_TABLE_NAME, None)
     except PermissionError as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -1793,6 +2060,8 @@ def main() -> int:
     print(f"Загружено Media: {len(media_records)}")
     print(f"Загружено FeatureSources: {len(feature_source_records)}")
     print(f"Загружено FeatureMedia: {len(feature_media_records)}")
+    print(f"Загружено Relations: {len(relation_records)}")
+    print(f"Загружено RelationSources: {len(relation_source_records)}")
 
     warnings: List[Dict[str, Any]] = []
     errors: List[Dict[str, Any]] = []
@@ -1941,6 +2210,25 @@ def main() -> int:
 
     valid_features = sort_mapped_records(valid_features)
 
+    valid_feature_id_by_record_id = {
+        safe_str(mapped.get("source_record_id")): safe_str(mapped.get("id"))
+        for mapped in valid_features
+        if safe_str(mapped.get("source_record_id")) and safe_str(mapped.get("id"))
+    }
+    relation_by_record_id, reviewed_relation_candidates = map_relations(
+        relation_records,
+        valid_feature_id_by_record_id,
+        errors,
+    )
+    relation_source_refs = map_relation_source_refs(
+        relation_source_records,
+        relation_by_record_id,
+        source_by_record_id,
+        errors,
+    )
+    reviewed_relations = finalize_relations(reviewed_relation_candidates, relation_source_refs, errors)
+    attach_relation_ids(valid_features, reviewed_relations)
+
     try:
         existing_id_aliases = load_id_aliases(id_aliases_seed_path)
         id_aliases = build_id_aliases(valid_features, existing_id_aliases)
@@ -1978,6 +2266,9 @@ def main() -> int:
         "media_reviewed": len(reviewed_media),
         "feature_source_links_total": len(feature_source_records),
         "feature_media_links_total": len(feature_media_records),
+        "relations_total_source": len(relation_records),
+        "relations_reviewed": len(reviewed_relations),
+        "relation_source_links_total": len(relation_source_records),
         "errors": len(errors),
         "warnings": len(warnings),
         "error_stats": error_stats,
@@ -1994,6 +2285,7 @@ def main() -> int:
         write_json(layers_path, valid_layers)
         write_json(sources_path, reviewed_sources)
         write_json(media_path, reviewed_media)
+        write_json(relations_path, reviewed_relations)
         write_json(validation_report_path, validation_report)
         write_json(export_meta_path, export_meta)
 
@@ -2027,6 +2319,7 @@ def main() -> int:
                 layers_path,
                 sources_path,
                 media_path,
+                relations_path,
                 validation_report_path,
                 export_meta_path,
                 error_log_path,

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import json
 import re
+import uuid
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
 UI_JS = (ROOT / "js" / "ui.js").read_text(encoding="utf-8")
+DATA_JS = (ROOT / "js" / "data.js").read_text(encoding="utf-8")
 STYLE = (ROOT / "css" / "style.css").read_text(encoding="utf-8")
 
 
@@ -58,3 +61,41 @@ def test_timeline_exposes_semantic_anchor_labels_on_desktop() -> None:
     assert label_rule, "Missing desktop timeline anchor label rule"
     assert "display: block" in label_rule.group("body")
     assert "--bottom-panel-height: 152px" in desktop_css
+
+
+def test_documented_relations_are_separate_from_computed_similarity() -> None:
+    assert "function getDocumentedRelations" in UI_JS
+    assert "function getSimilarityResults" in UI_JS
+    assert "getRelatedFeatures" not in UI_JS
+    assert "relation: 'Документированные связи'" in UI_JS
+    assert "similarity: 'Похожие объекты'" in UI_JS
+    assert "same_layer" in UI_JS
+    assert "date_overlap" in UI_JS
+    assert "loadRelations" in DATA_JS
+    assert "relations.json" in DATA_JS
+
+
+def test_checked_in_relations_reference_public_features_and_evidence() -> None:
+    relations = json.loads((ROOT / "data" / "relations.json").read_text(encoding="utf-8"))
+    feature_collection = json.loads((ROOT / "data" / "features.geojson").read_text(encoding="utf-8"))
+    features = {feature["id"]: feature for feature in feature_collection["features"]}
+    relation_ids = {relation["id"] for relation in relations}
+
+    assert len(relations) == 2
+    for relation in relations:
+        assert uuid.UUID(relation["id"]).version == 4
+        assert relation["source_feature_id"] in features
+        assert relation["target_feature_id"] in features
+        assert relation["source_feature_id"] != relation["target_feature_id"]
+        assert relation["source_ids"]
+        assert relation["source_refs"]
+        assert all(ref["url"].startswith("https://") for ref in relation["source_refs"])
+        for feature_id in (relation["source_feature_id"], relation["target_feature_id"]):
+            assert relation["id"] in features[feature_id]["properties"]["relation_ids"]
+
+    projected_ids = {
+        relation_id
+        for feature in features.values()
+        for relation_id in feature["properties"].get("relation_ids", [])
+    }
+    assert projected_ids == relation_ids

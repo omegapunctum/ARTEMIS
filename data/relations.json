@@ -1,0 +1,52 @@
+[
+  {
+    "id": "83f297bb-a954-4091-b6a1-36cc4c135010",
+    "source_feature_id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
+    "target_feature_id": "393c7d17-d266-4e8b-8412-b96eb427f941",
+    "relation_type": "influenced",
+    "description": "The dome of the Pantheon served as an explicit design reference for Bramante's plan and later dome studies for St. Peter's Basilica.",
+    "epistemic_status": "fact",
+    "confidence": "medium",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_st_peters_basilica_wikipedia"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_st_peters_basilica_wikipedia",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "St. Peter's Basilica, Architecture / successive plans and dome sections: Bramante's dome was inspired by and closely followed the Pantheon, which remained an explicit reference for the dome design.",
+        "title": "St. Peter's Basilica — Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica"
+      }
+    ]
+  },
+  {
+    "id": "bd667055-80ef-405d-8c2b-e1b9642972b5",
+    "source_feature_id": "acfb7492-c49d-4e71-9bbc-bd446b52d32d",
+    "target_feature_id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
+    "relation_type": "inspired_by",
+    "description": "The transformation of Paris's former Church of Sainte-Geneviève into a national mausoleum was modelled on the Pantheon in Rome.",
+    "epistemic_status": "fact",
+    "confidence": "medium",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_pantheon_paris_wikipedia"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_pantheon_paris_wikipedia",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Panthéon (Paris), lead/history passage: in 1791 the former church was transformed into a national mausoleum modelled on the Pantheon in Rome. Evidence scope is institutional use, not inferred formal design.",
+        "title": "Panthéon — Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Panth%C3%A9on"
+      }
+    ]
+  }
+]
