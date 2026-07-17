@@ -12,6 +12,7 @@
 - Visual owner: `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md`.
 - Product owner: `docs/MVP_ARCHITECTURE_ATLAS.md`.
 - CSS audit/execution bridge: `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
+- Responsive wireframe contract: `docs/work/uiux/2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md`.
 
 Этот документ не создаёт новую продуктовую архитектуру и не заменяет owner-docs. Он фиксирует согласованный target для следующего UI patch cycle внутри Architecture Atlas vertical.
 
@@ -23,6 +24,8 @@ Product constraint:
 - UI implementation начинается после documentation и data-contract reset.
 
 UX correction 2026-07-17: первый moment of value — sourced comparison 2–3 Features; Research Slice сохраняет результат и не является обязательным первым действием. Полный decision record: `2026-07-17_UX_CONCEPT_CORRECTION_v1.md`.
+
+Wireframe status 2026-07-17: desktop/tablet/mobile geometry, mandatory states, comparison tray, capability-aware behavior, focus/collision rules and implementation batch boundaries определены в `2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md`. Этот spec является acceptance owner для следующего runtime cycle.
 
 Audit status 2026-07-17: documentation/data prerequisites are complete. The CSS audit confirmed 2793 lines in `style.css`, a 183-line competing `main-screen.css` override layer, active structural rail ownership and tests that still protect hardcoded timeline anchors. Runtime rollout must follow the batches and selector-owner matrix in the CSS audit.
 
@@ -219,4 +222,6 @@ Layout refinement не должен продолжать рост `js/ui.js` к�
 - Manual: load → search → set time point/range → open research tools → select object → open/close detail.
 - Viewports: 2048×1152, 1440×900, 1024×768, 390×844.
 - States: ready, filtered, no results, detail open, panel open, mobile sheet.
+- Comparison states: collecting `1 из 3`, ready `2–3 из 3`, active compare, partial source/relation data.
+- Capability state: public backend unavailable без ложных Slice/Stories navigation promises.
 - Compare before/after screenshots for map area, top dock, tool placement and timeline height.
