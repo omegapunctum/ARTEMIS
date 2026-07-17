@@ -3,10 +3,10 @@
 ## Статус
 
 - Issue: `#288`.
-- Статус: **AUDIT COMPLETE / BATCH C1 MAP-FIRST SHELL IMPLEMENTED IN PR CANDIDATE**.
+- Статус: **AUDIT COMPLETE / BATCH C2 COMPACT TIMELINE IMPLEMENTED IN PR CANDIDATE**.
 - Snapshot: 2026-07-17, `main` at `7971b7d`.
 - Scope: CSS ownership, main Workspace geometry, responsive contract and migration safety.
-- Runtime changes: Batch B foundation merged; Batch C1 shell geometry implemented in the current PR candidate.
+- Runtime changes: Batch B foundation and Batch C1 shell geometry merged; Batch C2 compact timeline implemented in the current PR candidate.
 
 Этот audit переводит согласованный map-first target в исполнимый CSS migration contract. Он не вводит новый visual direction и не заменяет `2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`.
 
@@ -253,7 +253,7 @@ This is a target ownership map, not a requirement to create every file in one co
 - [x] migration batches and recovery defined;
 - [x] owner-scoped runtime foundation modules created;
 - [x] map-first shell geometry implemented;
-- [ ] compact timeline implemented;
+- [x] compact timeline implemented;
 - [ ] `main-screen.css` retired;
 - [ ] desktop/tablet/mobile visual regression accepted.
 
@@ -295,4 +295,24 @@ Map-first shell реализован отдельным runtime patch без и�
 - `node --check js/ui.js` и `node --check js/map.js`;
 - HTML parser smoke и `git diff --check`.
 
-Остаются отдельными batches: C2 compact timeline, D object comparison, E sourced detail и F responsive/accessibility visual acceptance.
+Batch C1 merged in PR `#299`. Остаются отдельными batches: D object comparison, E sourced detail и F responsive/accessibility visual acceptance.
+
+## 12. Batch C2 execution evidence
+
+Compact timeline реализован отдельным runtime patch без изменения map shell, object comparison или data/API contracts:
+
+- desktop/tablet dock contract установлен на `84 px`, mobile — на `80 px`;
+- track сокращён с `78 px` до `24 px`, сохраняя два handles и hit areas range inputs;
+- `TIMELINE_SEMANTIC_ANCHORS`, `renderTimelineAxis`, axis DOM и весь anchor CSS удалены;
+- point/range modes, keyboard-capable native range inputs, pointer drag, selected-period capsule и filter commit сохранены;
+- initial HTML state синхронизирован с runtime default `range`, чтобы исключить ложный point flash;
+- service-worker cache и structural contracts обновлены атомарно.
+
+Visual screenshot acceptance остаётся в Batch F: cloud browser не открывает локальный runtime, а C2 не создаёт внешний preview environment.
+
+Проверки PR candidate:
+
+- focused UI/style/service-worker contracts: `15 passed`;
+- полный test suite: `275 passed, 3 skipped, 10 subtests passed`;
+- release check: все обязательные sections `PASS`;
+- `node --check js/ui.js`, `node --check js/map.js`, HTML parser smoke и `git diff --check`.
