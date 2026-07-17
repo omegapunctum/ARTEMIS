@@ -62,15 +62,13 @@
       <div class="top-shell-left">
         <div class="brand" aria-label="Логотип ARTEMIS">ARTEMIS</div>
         <nav class="project-nav" aria-label="Основная навигация проекта">
-          <button type="button" class="project-nav-link" data-workspace-nav="workspace" aria-current="page">Рабочая область</button>
-          <button type="button" class="project-nav-link" data-workspace-nav="research">Исследования</button>
-          <button type="button" class="project-nav-link" data-workspace-nav="stories">Истории</button>
-          <button type="button" class="project-nav-link" data-workspace-nav="courses">Курсы</button>
-          <button type="button" class="project-nav-link" data-workspace-nav="saved">Сохранённое</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="research" aria-current="page">Исследование</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="stories" data-requires-capability="stories" hidden>Истории</button>
+          <button type="button" class="project-nav-link" data-workspace-nav="saved" data-requires-capability="slices" hidden>Сохранённые исследования</button>
         </nav>
       </div>
       <div class="search-shell">
-        <input id="global-search" type="search" placeholder="Поиск объектов, людей, мест и дат..." autocomplete="off" />
+        <input id="global-search" type="search" placeholder="Найти здание, стиль, город или период…" autocomplete="off" />
         <button id="search-clear-btn" class="icon-btn search-clear-btn" type="button" aria-label="Очистить поиск" title="Очистить поиск" hidden>×</button>
         <div id="search-no-results-state" class="search-no-results-state" hidden aria-live="polite">
           <span id="search-no-results-text">Ничего не найдено. Измените поиск, фильтры или период.</span>
@@ -78,11 +76,29 @@
         </div>
         <div id="search-dropdown" class="top-panel search-dropdown" hidden></div>
       </div>
+      <section id="research-context-bar" class="workspace-unified-strip" aria-label="Текущий исследовательский контекст">
+        <div class="workspace-strip-context">
+          <div class="research-context-main" data-requires-capability="slices" hidden>
+            <button id="research-slice-trigger" type="button" title="Сохранённое исследование: новое">Новое исследование</button>
+            <span id="research-slice-state" class="research-slice-status">Сохранено</span>
+          </div>
+          <div class="research-context-meta" aria-label="Сводка исследовательского контекста">
+            <span id="research-period-meta" class="research-context-chip">Период: —</span>
+            <span id="research-layers-meta" class="research-context-chip">Слои: —</span>
+            <span id="research-objects-meta" class="research-context-chip">Объекты: —</span>
+          </div>
+          <div class="research-context-actions" role="group" aria-label="Действия с сохранённым исследованием" data-requires-capability="slices" hidden>
+            <button id="research-slice-save-btn" type="button">Сохранить</button>
+            <button id="research-slice-compare-btn" type="button">Сопоставить исследования</button>
+            <button id="research-slice-open-btn" type="button">Поделиться</button>
+          </div>
+        </div>
+      </section>
       <div class="top-actions">
         <div class="top-utility-group" role="group" aria-label="Служебные действия">
           <button id="ugc-create-btn" class="ui-button ui-button-secondary" type="button" aria-label="Создать черновик" hidden>Создать черновик</button>
           <button id="moderation-toggle-btn" type="button" aria-label="Открыть модерацию" aria-expanded="false" data-moderation-action="toggle-workspace" hidden>Модерация</button>
-          <div class="profile-shell">
+          <div class="profile-shell" data-requires-capability="account" hidden>
             <button id="profile-menu-trigger" class="profile-trigger" type="button" aria-label="Открыть меню профиля" aria-expanded="false" aria-controls="profile-menu">
               <span class="profile-trigger-icon" aria-hidden="true">👤</span>
             </button>
@@ -96,34 +112,14 @@
             </div>
           </div>
           <nav class="compact-project-nav" aria-label="Навигация по разделам">
-            <button type="button" class="project-nav-link" data-workspace-nav="workspace" aria-current="page">Рабочая область</button>
-            <button type="button" class="project-nav-link" data-workspace-nav="research">Исследования</button>
-            <button type="button" class="project-nav-link" data-workspace-nav="stories">Истории</button>
-            <button type="button" class="project-nav-link" data-workspace-nav="courses">Курсы</button>
-            <button type="button" class="project-nav-link" data-workspace-nav="saved">Сохранённое</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="research" aria-current="page">Исследование</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="stories" data-requires-capability="stories" hidden>Истории</button>
+            <button type="button" class="project-nav-link" data-workspace-nav="saved" data-requires-capability="slices" hidden>Сохранённые исследования</button>
           </nav>
         </div>
         <button id="overflow-btn" class="icon-btn" type="button" aria-label="Ещё действия">⋯</button>
       </div>
         </header>
-        <section id="research-context-bar" class="workspace-unified-strip" aria-label="Подпанель среза и инструменты исследования">
-      <div class="workspace-strip-context">
-        <div class="research-context-main">
-          <button id="research-slice-trigger" type="button" title="Срез: Новый">Срез: Новый</button>
-          <span id="research-slice-state" class="research-slice-status">Сохранено</span>
-        </div>
-        <div class="research-context-meta" aria-label="Сводка контекста среза">
-          <span id="research-period-meta" class="research-context-chip">Период: —</span>
-          <span id="research-layers-meta" class="research-context-chip">Слои: —</span>
-          <span id="research-objects-meta" class="research-context-chip">Объекты: —</span>
-        </div>
-        <div class="research-context-actions" role="group" aria-label="Действия со срезом">
-          <button id="research-slice-save-btn" type="button">Сохранить</button>
-          <button id="research-slice-compare-btn" type="button">Сравнить</button>
-          <button id="research-slice-open-btn" type="button">Поделиться</button>
-        </div>
-      </div>
-        </section>
       </div>
 
       <div id="workspace-main">
@@ -151,7 +147,7 @@
             <div class="workspace-tab-row" role="tablist" aria-label="Секции исследования">
               <button id="layers-btn" class="workspace-tab" type="button" role="tab" aria-selected="true" aria-controls="layers-panel">Слои</button>
               <button id="filters-btn" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="filters-panel">Фильтры</button>
-              <button id="slices-btn" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="slices-panel">Срезы</button>
+              <button id="slices-btn" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="slices-panel" data-requires-capability="slices" hidden>Сохранённые</button>
               <button id="bookmarks-btn" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="bookmarks-panel">Закладки</button>
             </div>
             <div class="workspace-section-groups" aria-label="Группы секций">
@@ -212,11 +208,11 @@
     <section id="onboarding-overlay" class="onboarding-overlay" aria-live="polite">
       <div class="onboarding-card glass-panel" role="note" aria-label="Подсказка первого шага">
         <p class="onboarding-eyebrow">Первый шаг</p>
-        <h2 class="onboarding-title">Начните с исследовательского среза</h2>
-        <p class="onboarding-copy">Настройте период и слои, выберите объект на карте, затем сохраните получившийся пространственно-временной контекст.</p>
+        <h2 class="onboarding-title">Начните с объекта на карте</h2>
+        <p class="onboarding-copy">Выберите период или слой, затем откройте объект, чтобы изучить его описание, источники и связи.</p>
         <div class="onboarding-actions">
-          <button id="onboarding-explore-btn" class="ui-button ui-button-primary" type="button">Настроить исследование</button>
-          <button id="onboarding-slices-btn" class="ui-button ui-button-secondary" type="button">Открыть мои срезы</button>
+          <button id="onboarding-explore-btn" class="ui-button ui-button-primary" type="button">Открыть слои и фильтры</button>
+          <button id="onboarding-slices-btn" class="ui-button ui-button-secondary" type="button" data-requires-capability="slices" hidden>Открыть сохранённые исследования</button>
         </div>
         <button id="onboarding-dismiss-btn" class="icon-btn onboarding-dismiss-btn" type="button" aria-label="Закрыть подсказку">×</button>
       </div>
