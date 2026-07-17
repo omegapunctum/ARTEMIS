@@ -11,6 +11,7 @@
 - Component owner: `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md`.
 - Visual owner: `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md`.
 - Product owner: `docs/MVP_ARCHITECTURE_ATLAS.md`.
+- CSS audit/execution bridge: `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
 
 Этот документ не создаёт новую продуктовую архитектуру и не заменяет owner-docs. Он фиксирует согласованный target для следующего UI patch cycle внутри Architecture Atlas vertical.
 
@@ -20,6 +21,8 @@ Product constraint:
 - Courses, AI и UGC не получают новый public UX в этом cycle;
 - relation/similarity semantics определяются canonical product/data docs;
 - UI implementation начинается после documentation и data-contract reset.
+
+Audit status 2026-07-17: documentation/data prerequisites are complete. The CSS audit confirmed 2793 lines in `style.css`, a 183-line competing `main-screen.css` override layer, active structural rail ownership and tests that still protect hardcoded timeline anchors. Runtime rollout must follow the batches and selector-owner matrix in the CSS audit.
 
 ## 1. Причина refinement
 

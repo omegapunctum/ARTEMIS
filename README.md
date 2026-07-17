@@ -309,6 +309,7 @@ Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRA
 
 For the active main-screen refinement cycle, the track-specific implementation target is:
 - `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`
+- `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md` — measured CSS ownership baseline and rollout batches.
 
 This active spec governs the compact map-first shell, removal of the structural desktop rail, compact timeline, icon consistency and CSS owner cleanup. It does not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
 
