@@ -47,6 +47,8 @@ ARTEMIS должен уменьшить этот разрыв, не выдава
 
 Research Slice остаётся главной единицей повторного использования, но первая ценность возникает раньше — в доказательном сравнении объектов.
 
+UX decision 2026-07-17: comparison-first означает, что интерфейс сначала помогает выбрать и сопоставить 2–3 Features, а затем предлагает сохранить полученный контекст. Research Slice не является обязательным первым действием или заменой object comparison. Пользовательская подпись до validation — «Сохранённое исследование», внутреннее canonical name остаётся `Research Slice`.
+
 ## 5. Product principles
 
 1. Evidence before breadth.
@@ -56,6 +58,7 @@ Research Slice остаётся главной единицей повторно
 5. Map, time and detail form one research surface.
 6. AI may explain sourced context, but may not manufacture provenance.
 7. Smaller curated corpus is preferable to a large weak corpus.
+8. Comparison creates understanding; Slice preserves it.
 
 ## 6. Hypotheses to validate
 

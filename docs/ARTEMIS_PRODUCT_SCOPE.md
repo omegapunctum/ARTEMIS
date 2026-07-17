@@ -42,6 +42,8 @@ Primary job:
 
 Главный момент ценности — доказательное сравнение объектов. Главная сохраняемая единица — Research Slice.
 
+Следствие для UX: object comparison является primary analytical action, а Research Slice — результатом, который сохраняет уже собранный контекст. Сравнение сохранённых срезов не заменяет сравнение 2–3 Features и не использует тот же primary action без явного уточнения.
+
 Research Slice включает:
 
 - spatial focus/viewport;
@@ -74,6 +76,8 @@ Research Slice включает:
 7. Вернуться к Slice или поделиться им.
 
 Stories являются curated входом и downstream-слоем. Courses и AI не входят в active MVP loop.
+
+User-facing terminology: до отдельной validation термин `Research Slice` отображается как «Сохранённое исследование» с возможной вторичной подписью «срез». Onboarding не требует знания внутреннего термина до получения первой ценности.
 
 ## 5. Обязательный scope
 

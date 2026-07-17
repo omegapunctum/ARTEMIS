@@ -42,18 +42,17 @@
 
 ## 2. Главный принцип карты компонентов
 
-Главный объект интерфейса ARTEMIS v1.0 — **research slice**.
+Первичный интерактивный объект ARTEMIS v1.0 — **sourced Architecture Feature в map-time context**. Первый analytical outcome — **comparison 2–3 Features**. Главный сохраняемый объект — **Research Slice / Сохранённое исследование**.
 
 Следовательно, все ключевые компоненты должны обслуживать один базовый цикл:
 
 1. пользователь открывает тему;
 2. ориентируется на карте и во времени;
-3. собирает или находит нужную конфигурацию;
-4. понимает, что в ней важно;
-5. сохраняет её как slice;
-6. возвращается к ней позже;
-7. развивает её в story / course / comparison;
-8. при необходимости использует AI assistance.
+3. открывает sourced detail;
+4. добавляет 2–3 Features в comparison selection;
+5. различает facts, reviewed Relations и computed Similarity;
+6. сохраняет полезную конфигурацию как Research Slice;
+7. возвращается к ней или делится read-only представлением.
 
 Если компонент не усиливает этот цикл, он не является load-bearing элементом v1.0.
 
@@ -61,24 +60,26 @@
 
 ## 3. Карта главных компонентных зон
 
-ARTEMIS v1.0 должен состоять из 8 основных UI-зон:
+Active public MVP ARTEMIS должен состоять из 7 основных UI-зон:
 
 1. **Global Shell**
 2. **Map Workspace**
 3. **Time System**
 4. **Knowledge Detail System**
 5. **Slice System**
-6. **Story / Course System**
-7. **AI Assistance System**
-8. **Support / Utility Layer**
+6. **Story System**
+7. **Support / Utility Layer**
+
+Courses и AI components сохраняются как future/frozen definitions ниже по документу, но не являются load-bearing зонами active public MVP.
 
 ### 3.1 Main-screen refinement bridge (updated 2026-07-16)
 Для активного `main screen / primary workspace` refinement component mapping фиксируется так:
 
-- **Compact top shell** → `Top Navigation Bar` + `Route / Mode Switcher` + compact Slice/Temporal Context Indicator; без multiple parallel top bars.
+- **Compact top shell** → `Top Navigation Bar` + compact search + contextual Temporal/Comparison Indicator; без multiple parallel top bars.
 - **Full-width map workspace** → `Main Map Canvas`; отдельный structural desktop rail не является компонентной зоной.
 - **Map tool overlay** → `Layer Control Panel` + `Spatial Filter Tools`; overlay не резервирует grid-column и не перекрывает MapLibre controls.
 - **Right detail on demand** → `Object Preview Card` + `Detail Panel` + provenance/related/AI entry surfaces; закрытое состояние не резервирует ширину.
+- **Comparison tray** → contextual selection surface для 2–3 Features; появляется после первого выбора и не является отдельным пустым route.
 - **Compact timeline dock** → `Timeline Bar` + `Time Range Control` + active `Temporal Context Indicator`; hardcoded semantic anchors не входят в default component.
 - **Mobile staged adaptation** → compact overlay tools + compact timeline + bottom-sheet preview/detail flow.
 - **Icon system** → shared SVG icon primitive с едиными size, hit-area, focus и accessible-name contracts.
@@ -369,6 +370,43 @@ Bridge-мэппинг:
 
 ---
 
+### 4.4.5 Object Comparison Selection / Tray
+**Функция:**
+собрать от двух до трёх sourced Features для primary analytical comparison.
+
+**Обязательные действия:**
+- add current Feature;
+- remove/replace Feature;
+- clear selection;
+- open comparison when ready.
+
+**Обязательные состояния:**
+- hidden before first selection;
+- `1 из 3` collecting;
+- ready with 2–3 Features;
+- limit reached;
+- referenced Feature unavailable.
+
+**Приоритет:** A+
+
+---
+
+### 4.4.6 Object Compare Surface
+**Функция:**
+сопоставить 2–3 Features по времени, месту, направлению, factual properties, sources, reviewed Relations и separately labelled Similarity.
+
+**Обязательные состояния:**
+- compare ready;
+- partial/missing field;
+- no reviewed relation;
+- similarity criteria visible;
+- source unavailable;
+- return to map context.
+
+**Приоритет:** A+
+
+---
+
 ## 4.5 Slice System
 
 ### 4.5.1 Slice Create Action
@@ -454,6 +492,8 @@ Bridge-мэппинг:
 ---
 
 ### 4.5.5 Slice Compare Mode
+**Статус:** secondary / frozen до доказательства primary object comparison.
+
 **Функция:**
 сравнивать два среза.
 
@@ -464,11 +504,11 @@ Bridge-мэппинг:
 - compare explanation available;
 - compare impossible.
 
-**Приоритет:** B+
+**Приоритет:** C
 
 ---
 
-## 4.6 Story / Course System
+## 4.6 Story System / frozen Course definitions
 
 ### 4.6.1 Story Entry Card
 **Функция:**
@@ -540,7 +580,7 @@ Bridge-мэппинг:
 
 ---
 
-## 4.7 AI Assistance System
+## 4.7 AI Assistance System — frozen
 Примечание архитектуры v1.0: AI — contextual layer в рабочих режимах, не отдельный detached section.
 
 ### 4.7.1 AI Entry Point
@@ -693,8 +733,8 @@ Bridge-мэппинг:
 - Main Map Canvas
 - Timeline Bar
 - Detail Panel
-- Slice Create Action
-- Slice Restore Action
+- Object Comparison Selection / Tray
+- Object Compare Surface
 - Epistemic Status Marker
 
 ## Priority A — критично для рабочего ядра
@@ -704,11 +744,10 @@ Bridge-мэппинг:
 - Time Range Control
 - Object Preview Card
 - Provenance Block
+- Slice Create Action
+- Slice Restore Action
 - Slice Save Dialog
 - Saved Slice List
-- AI Entry Point
-- AI Explain Panel
-- AI Provenance Block
 - Search
 - Status Feedback
 - Empty/Error/Loading States
@@ -717,16 +756,15 @@ Bridge-мэппинг:
 ## Priority B / B+
 - Spatial Filters
 - Related Entities Block
-- Slice Compare Mode
 - Story Entry Card
 - Story Outline
-- Course Player
-- AI Compare Panel
-- AI Suggest Block
 - Temporal Context Indicator
 
 ## Priority C — позже
 - secondary polish layers;
+- Slice Compare Mode;
+- Course Player;
+- AI Entry/Explain/Compare/Suggest surfaces;
 - advanced personalization;
 - non-essential authoring conveniences;
 - tertiary profile features.
@@ -737,15 +775,12 @@ Bridge-мэппинг:
 
 ## Базовые зависимости
 - `Detail Panel` зависит от `Map Canvas` и selection state.
+- `Object Compare Surface` зависит от sourced Feature detail и selection 2–3 Features.
 - `Slice System` зависит от `Map Workspace + Time System + Layer Control + Filters`.
 - `Story Step Viewer` зависит от `Slice logic`.
-- `Course Player` зависит от `Story/Slice logic`.
-- `AI Explain` зависит от:
-  - object context;
-  - slice context;
-  - provenance model;
-  - epistemic markers.
-- `Compare Mode` зависит от `Saved Slice List + Restore logic + AI Compare`.
+- Frozen `Course Player` зависит от `Story/Slice logic`.
+- Frozen `AI Explain` зависит от object/slice context, provenance model и epistemic markers.
+- Secondary `Slice Compare Mode` зависит от `Saved Slice List + Restore logic` и не заменяет Object Compare Surface.
 
 ---
 
@@ -753,20 +788,23 @@ Bridge-мэппинг:
 
 Минимальный UI-слой, без которого ARTEMIS не должен считаться собранным как продукт:
 
-1. Top Navigation Bar  
-2. Main Map Canvas  
-3. Timeline Bar  
-4. Layer Control Panel  
-5. Object Preview Card  
-6. Detail Panel  
-7. Slice Create Action  
-8. Slice Save Dialog  
-9. Saved Slice List  
-10. Slice Restore Action  
-11. Search  
-12. AI Entry Point  
-13. AI Explain Panel  
-14. Epistemic Status Marker  
+1. Top Navigation Bar
+2. Main Map Canvas
+3. Timeline Bar
+4. Layer Control Panel
+5. Object Preview Card
+6. Detail Panel
+7. Provenance Block
+8. Object Comparison Selection / Tray
+9. Object Compare Surface
+10. Slice Create Action
+11. Slice Save Dialog
+12. Saved Slice List
+13. Slice Restore Action
+14. Search
+15. Epistemic Status Marker
+16. Empty/Error/Loading States
+17. Mobile staged adaptation
 15. Provenance Block  
 16. Empty / Error / Loading States  
 17. Базовый Story Step Viewer

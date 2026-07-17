@@ -17,10 +17,12 @@
 
 Product constraint:
 
-- primary navigation target: Исследование, Сравнение, Срезы, Истории;
+- primary IA target: Исследование; contextual Сравнение; capability-gated Сохранённые исследования и Истории;
 - Courses, AI и UGC не получают новый public UX в этом cycle;
 - relation/similarity semantics определяются canonical product/data docs;
 - UI implementation начинается после documentation и data-contract reset.
+
+UX correction 2026-07-17: первый moment of value — sourced comparison 2–3 Features; Research Slice сохраняет результат и не является обязательным первым действием. Полный decision record: `2026-07-17_UX_CONCEPT_CORRECTION_v1.md`.
 
 Audit status 2026-07-17: documentation/data prerequisites are complete. The CSS audit confirmed 2793 lines in `style.css`, a 183-line competing `main-screen.css` override layer, active structural rail ownership and tests that still protect hardcoded timeline anchors. Runtime rollout must follow the batches and selector-owner matrix in the CSS audit.
 
@@ -47,12 +49,13 @@ Refinement должен устранить эти причины, не меня�
 - Граница допускается только как функциональный divider между смысловыми зонами.
 - Map canvas остаётся главным визуальным объектом.
 
-### 2.2 Top shell and slice context
+### 2.2 Top shell and research context
 
 - Desktop target: один компактный top dock.
 - Целевая высота primary header: 56–64 px.
 - Отдельная постоянно видимая 48 px context strip не является обязательной.
-- Slice title/status, period/layers/objects metadata и actions собираются в compact contextual group без растянутой пустой центральной колонки.
+- Period/filters/comparison metadata собираются в compact contextual group без растянутой пустой центральной колонки.
+- Slice/save status появляется после полезного interaction state и не доминирует над пустым workspace.
 - Search получает ограниченную полезную ширину; его размер не должен искусственно создавать симметричные пустоты.
 - Secondary actions раскрываются через progressive disclosure.
 
@@ -70,6 +73,7 @@ Refinement должен устранить эти причины, не меня�
 - Закрытый detail не резервирует ширину.
 - На tablet detail может быть overlay; на mobile — bottom sheet.
 - Открытие/закрытие detail не должно ломать timeline и map resize.
+- Detail содержит явное `Добавить к сравнению`; после первого выбора появляется compact comparison tray `1 из 3`.
 
 ### 2.5 Timeline
 
@@ -148,9 +152,11 @@ Layout refinement не должен продолжать рост `js/ui.js` к�
 
 В scope:
 
+- capability-aware navigation и terminology correction;
 - shell geometry;
 - map tools placement;
 - compact timeline;
+- object comparison selection/tray contract;
 - icon consistency;
 - CSS owner cleanup;
 - responsive preservation;
@@ -167,14 +173,16 @@ Layout refinement не должен продолжать рост `js/ui.js` к�
 
 ## 7. Implementation order
 
-1. Зафиксировать documentation contract.
-2. Удалить structural desktop rail и перенести tools в overlay.
-3. Упростить outer frame и top dock.
-4. Сжать timeline и удалить semantic anchors.
-5. Унифицировать icons.
-6. Разнести CSS по владельцам и удалить late override layer.
-7. Проверить desktop/tablet/mobile layout and interactions.
-8. Выполнить visual regression review и runtime smoke.
+1. Зафиксировать documentation contract и comparison-first wireframes.
+2. Синхронизировать capability-aware navigation и user-facing terminology.
+3. Удалить structural desktop rail и перенести tools в overlay.
+4. Упростить outer frame и top dock.
+5. Сжать timeline и удалить semantic anchors.
+6. Реализовать object comparison selection/tray отдельным batch.
+7. Унифицировать icons и typography runtime.
+8. Разнести CSS/JS по владельцам без framework rewrite.
+9. Проверить desktop/tablet/mobile layout and interactions.
+10. Выполнить visual regression review и runtime smoke.
 
 ## 8. Acceptance criteria
 
@@ -187,6 +195,7 @@ Layout refinement не должен продолжать рост `js/ui.js` к�
 - На timeline нет вручную заданных исторических подписей.
 - MapLibre controls, custom tools и overlays не перекрываются.
 - Detail при закрытии не резервирует место.
+- После выбора Feature видим add-to-compare action; comparison tray не занимает место до первого выбора.
 
 ### Tablet and mobile
 
