@@ -3,10 +3,10 @@
 ## Статус
 
 - Issue: `#288`.
-- Статус: **AUDIT COMPLETE / BATCH B FOUNDATION IMPLEMENTED**.
+- Статус: **AUDIT COMPLETE / BATCH C1 MAP-FIRST SHELL IMPLEMENTED IN PR CANDIDATE**.
 - Snapshot: 2026-07-17, `main` at `7971b7d`.
 - Scope: CSS ownership, main Workspace geometry, responsive contract and migration safety.
-- Runtime changes: not started by this document.
+- Runtime changes: Batch B foundation merged; Batch C1 shell geometry implemented in the current PR candidate.
 
 Этот audit переводит согласованный map-first target в исполнимый CSS migration contract. Он не вводит новый visual direction и не заменяет `2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`.
 
@@ -251,8 +251,8 @@ This is a target ownership map, not a requirement to create every file in one co
 - [x] CSS/JS/test coupling identified;
 - [x] target owner matrix defined;
 - [x] migration batches and recovery defined;
-- [ ] owner-scoped runtime modules created;
-- [ ] map-first geometry implemented;
+- [x] owner-scoped runtime foundation modules created;
+- [x] map-first shell geometry implemented;
 - [ ] compact timeline implemented;
 - [ ] `main-screen.css` retired;
 - [ ] desktop/tablet/mobile visual regression accepted.
@@ -275,3 +275,24 @@ Runtime load order закреплён в `index.html`: tokens → base → contr
 До изменения заголовочного комментария конкатенация четырёх owner-файлов и оставшейся части `style.css` побайтно совпала с pre-extraction `style.css`: SHA-256 `511c2608c24f041f4af9a02406f82a4ab8d8303502d519ad44a5caa16041cfd2`.
 
 Batch B намеренно не меняет structural rail, timeline height, semantic anchors или `main-screen.css`. Эти изменения принадлежат следующим independently reviewable batches.
+
+## 11. Batch C1 execution evidence
+
+Map-first shell реализован отдельным runtime patch без изменения timeline semantics, object comparison или canonical data/API contracts:
+
+- public navigation сокращена до `Исследование`, capability-gated `Истории` и `Сохранённые исследования`;
+- decorative outer gutter/frame удалены;
+- structural desktop rail и `--map-rail-width` удалены, инструменты перенесены в map overlay;
+- отдельная context strip встроена в единый компактный top shell;
+- карта занимает всю доступную ширину при закрытом inspector;
+- при смене dock-геометрии inspector карта получает отложенный `resize()` после layout transition;
+- onboarding начинает путь с объекта на карте, а недоступные backend capabilities не обещаются в public shell.
+
+Проверки PR candidate:
+
+- focused UI/style/service-worker contracts: `15 passed`;
+- полный test suite: `275 passed, 3 skipped, 10 subtests passed`;
+- `node --check js/ui.js` и `node --check js/map.js`;
+- HTML parser smoke и `git diff --check`.
+
+Остаются отдельными batches: C2 compact timeline, D object comparison, E sourced detail и F responsive/accessibility visual acceptance.
