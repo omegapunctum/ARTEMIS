@@ -6,7 +6,7 @@
 - Дата: 2026-07-17.
 - Product direction: Architecture Atlas vertical MVP.
 - UX decision owner: `2026-07-17_UX_CONCEPT_CORRECTION_v1.md`.
-- Runtime status: Batch C1 implemented in a separate PR candidate; C2/D/E/F remain pending.
+- Runtime status: Batch C1 merged; Batch C2 implemented in a separate PR candidate; D/E/F remain pending.
 - Reference viewports: desktop `1440×900`, tablet `1024×768`, mobile `390×844`.
 
 Этот документ фиксирует структуру, состояния и responsive behavior. Он не является high-fidelity visual mockup и не вводит новый feature scope.
@@ -362,10 +362,10 @@ Capability state не выводится из наличия DOM-кнопки; �
 
 ### Batch C2 — timeline
 
-- compact `72–88 px` default;
-- remove hardcoded anchors and obsolete tests/constants;
-- add real-data temporal marks only if evidence is available;
-- point/range and accessibility hardening.
+- [x] compact `84 px` desktop/tablet and `80 px` mobile default;
+- [x] remove hardcoded anchors and obsolete tests/constants;
+- [x] omit temporal marks because the current feed exposes no evidence-backed mark contract;
+- [x] preserve point/range, native range-input keyboard behavior and pointer drag.
 
 ### Batch D — object comparison
 
