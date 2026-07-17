@@ -91,4 +91,4 @@ def test_service_worker_precaches_both_style_layers() -> None:
 
     assert "'css/style.css'" in service_worker
     assert "'css/main-screen.css'" in service_worker
-    assert "2026-07-11-v8-style-system" in service_worker
+    assert "2026-07-16-v9-relations" in service_worker

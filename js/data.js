@@ -4,9 +4,11 @@ import { showError, clearError, showLoading, hideLoading, showSystemMessage } fr
 let featuresCache = null;
 let layersCache = null;
 let coursesCache = null;
+let relationsCache = null;
 let featuresInFlight = null;
 let layersInFlight = null;
 let coursesInFlight = null;
+let relationsInFlight = null;
 const DATA_BASE_PATH = 'data/';
 // INTERNAL/NON-CANONICAL runtime endpoint.
 // Public/canonical map source remains data/features.geojson.
@@ -141,6 +143,31 @@ export async function loadLayers() {
   } finally {
     layersInFlight = null;
     hideLoading();
+  }
+}
+
+export async function loadRelations() {
+  if (relationsCache) return relationsCache;
+  if (relationsInFlight) return relationsInFlight;
+
+  relationsInFlight = (async () => {
+    try {
+      const response = await fetchWithRetry(`${DATA_BASE_PATH}relations.json`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = await response.json();
+      relationsCache = Array.isArray(payload) ? payload : [];
+      return relationsCache;
+    } catch (error) {
+      console.warn('[ARTEMIS:data] Documented Relations unavailable; using an empty reviewed set.', error);
+      relationsCache = [];
+      return relationsCache;
+    }
+  })();
+
+  try {
+    return await relationsInFlight;
+  } finally {
+    relationsInFlight = null;
   }
 }
 

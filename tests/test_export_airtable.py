@@ -4,6 +4,7 @@ import uuid
 from scripts.export_airtable import (
     aggregate_issues,
     attach_source_media_refs,
+    attach_relation_ids,
     build_id_aliases,
     build_geojson_features,
     build_validation_report,
@@ -17,8 +18,11 @@ from scripts.export_airtable import (
     map_feature_source_refs,
     map_layers,
     map_media,
+    map_relations,
+    map_relation_source_refs,
     map_record,
     map_sources,
+    finalize_relations,
     normalize_coordinates_confidence,
     normalize_coordinates_source,
     validate_feature,
@@ -496,6 +500,100 @@ class ExportAirtableEvidenceTests(unittest.TestCase):
             "_normalized_source_refs_checked": True,
         }
         self.assertEqual(get_etl_error(feature), "missing_reviewed_source")
+
+    def test_reviewed_relation_requires_reviewed_evidence(self):
+        relation_record = {
+            "id": "recRelation",
+            "fields": {
+                "id": "c9f0f895-fb98-4f6f-91f6-7ca4f8d76a33",
+                "source_feature": ["recFeature"],
+                "target_feature": ["recFeature2"],
+                "relation_type": "influenced",
+                "description": "The first Feature influenced the second Feature.",
+                "epistemic_status": "fact",
+                "confidence": "medium",
+                "review_status": "reviewed",
+            },
+        }
+        errors = []
+        by_record_id, candidates = map_relations(
+            [relation_record],
+            {"recFeature": self.feature_id, "recFeature2": "8f14e45f-ea26-4c4b-9b29-7c1d0b6f9a22"},
+            errors,
+        )
+        self.assertIn("recRelation", by_record_id)
+        self.assertEqual(finalize_relations(candidates, {}, errors), [])
+        self.assertTrue(any(item.get("reason") == "missing_reviewed_relation_evidence" for item in errors))
+
+    def test_relation_evidence_and_feature_projection(self):
+        errors = []
+        _, sources = map_sources([self._source_record()], [], errors)
+        relation_record = {
+            "id": "recRelation",
+            "fields": {
+                "id": "c9f0f895-fb98-4f6f-91f6-7ca4f8d76a33",
+                "source_feature": ["recFeature"],
+                "target_feature": ["recFeature2"],
+                "relation_type": "influenced",
+                "description": "The first Feature influenced the second Feature.",
+                "epistemic_status": "fact",
+                "confidence": "medium",
+                "review_status": "reviewed",
+            },
+        }
+        relation_by_record_id, candidates = map_relations(
+            [relation_record],
+            {"recFeature": self.feature_id, "recFeature2": "8f14e45f-ea26-4c4b-9b29-7c1d0b6f9a22"},
+            errors,
+        )
+        refs = map_relation_source_refs(
+            [
+                {
+                    "id": "recRelationSource",
+                    "fields": {
+                        "relation": ["recRelation"],
+                        "source": ["recSource"],
+                        "roles": ["relation_evidence"],
+                        "claim_note": "The source explicitly supports the influence claim.",
+                        "review_status": "reviewed",
+                    },
+                }
+            ],
+            relation_by_record_id,
+            {item["source_record_id"]: item for item in sources},
+            errors,
+        )
+        relations = finalize_relations(candidates, refs, errors)
+        features = [
+            {"id": self.feature_id},
+            {"id": "8f14e45f-ea26-4c4b-9b29-7c1d0b6f9a22"},
+        ]
+        attach_relation_ids(features, relations)
+        self.assertEqual(relations[0]["source_ids"], ["src_reference"])
+        self.assertEqual(features[0]["relation_ids"], ["c9f0f895-fb98-4f6f-91f6-7ca4f8d76a33"])
+        self.assertEqual(features[1]["relation_ids"], ["c9f0f895-fb98-4f6f-91f6-7ca4f8d76a33"])
+        self.assertEqual(errors, [])
+
+    def test_relation_validation_rejects_self_duplicate_and_causal_shortcuts(self):
+        base = {
+            "id": "recRelation",
+            "fields": {
+                "id": "c9f0f895-fb98-4f6f-91f6-7ca4f8d76a33",
+                "source_feature": ["recFeature"],
+                "target_feature": ["recFeature"],
+                "relation_type": "influenced",
+                "description": "The first Feature caused the second Feature.",
+                "epistemic_status": "fact",
+                "confidence": "medium",
+                "review_status": "reviewed",
+            },
+        }
+        errors = []
+        _, relations = map_relations([base], {"recFeature": self.feature_id}, errors)
+        self.assertEqual(relations, [])
+        reasons = {item.get("reason") for item in errors}
+        self.assertIn("self_relation", reasons)
+        self.assertIn("unsupported_causal_relation_claim", reasons)
 
 
 if __name__ == "__main__":

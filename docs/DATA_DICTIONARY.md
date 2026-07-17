@@ -182,7 +182,7 @@ Directionality:
 
 Evidence хранится в association table `RelationSources`: `id`, `relation`, `source`, `roles`, `claim_note`, `review_status`. Каждая строка обязана ссылаться ровно на одну Relation и один Source. Reviewed Relation обязана иметь минимум одну reviewed связь с reviewed Source и ролью `relation_evidence`.
 
-Public `relations.json` содержит только reviewed Relations с валидными canonical Feature UUIDs и reviewed evidence. Feature projections могут содержать только `relation_ids`; полный description/status/evidence contract принадлежит `relations.json`.
+Public `relations.json` содержит только reviewed Relations с валидными canonical Feature UUIDs и reviewed evidence. Каждый `source_refs` элемент включает canonical `source_id`, `roles`, `claim_note` и денормализованные `title`/`url` для отображения evidence без второго runtime-запроса. Feature projections могут содержать только `relation_ids`; полный description/status/evidence contract принадлежит `relations.json`.
 
 ## 7. Similarity
 

@@ -1,4 +1,4 @@
-import { loadLayers, getRecentFeatures } from './data.js';
+import { loadLayers, loadRelations, getRecentFeatures } from './data.js';
 import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, getMapBuildDiagnostics, setMapFeatureClickHandler, setMapFeatureHoverHandler, setMapLayerFilter, setSelectedFeatureId, setHoveredFeatureId, setMapDisplayMode, getMapThemeOptions, getMapTheme, setMapTheme } from './map.js';
 import { debounce, createInlineStateBlock } from './ux.js';
 import { normalizeSafeUrl, setSafeImageSource, setSafeLink, toSafeText } from './safe-dom.js';
@@ -134,12 +134,14 @@ export async function initUI(map, features) {
     ? features.features.filter(isFeatureLike).map(enrichFeatureForUiKey)
     : [];
   let layers;
+  let relations = [];
   try {
     layers = await loadLayers();
   } catch (error) {
     showGlobalDataError({ message: 'Не удалось загрузить данные карты.' });
     throw error;
   }
+  relations = await loadRelations();
   const layerLookup = buildLayerLookup(layers, allFeatures);
   setLayerLookup(map, layers);
 
@@ -227,6 +229,7 @@ export async function initUI(map, features) {
   if (elements.resultsSummary) elements.resultsSummary.hidden = !telemetryMode;
   const state = {
     allFeatures,
+    relations: Array.isArray(relations) ? relations : [],
     filteredFeatures: [],
     layerLookup,
     search: '',
@@ -4351,7 +4354,7 @@ function extractDomain(value) {
     return '';
   }
 }
-function getRelatedFeatures(state, feature, limit = 3) {
+function getSimilarityResults(state, feature, limit = 3) {
   const currentProps = normalizeProps(feature);
   const currentId = getFeatureUiId(feature);
   const currentLayer = String(currentProps.layer_id || '').trim();
@@ -4368,12 +4371,121 @@ function getRelatedFeatures(state, feature, limit = 3) {
       const overlap = hasDates && candidateStart <= currentEnd && candidateEnd >= currentStart;
       const rangeDistance = hasDates ? Math.abs(((candidateStart + candidateEnd) / 2) - ((currentStart + currentEnd) / 2)) : Number.MAX_SAFE_INTEGER;
       const timeScore = overlap ? 1 : 0;
-      return { candidate, score: layerScore + timeScore, rangeDistance };
+      const criteria = [];
+      if (layerScore) criteria.push('same_layer');
+      if (overlap) criteria.push('date_overlap');
+      if (hasDates && !overlap) criteria.push('date_distance');
+      return { feature: candidate, score: layerScore + timeScore, rangeDistance, criteria };
     })
     .filter((entry) => entry.score > 0)
     .sort((a, b) => b.score - a.score || a.rangeDistance - b.rangeDistance)
-    .slice(0, limit)
-    .map((entry) => entry.candidate);
+    .slice(0, limit);
+}
+
+function getDocumentedRelations(state, feature, limit = 3) {
+  const currentId = getFeatureUiId(feature);
+  if (!currentId || !Array.isArray(state?.relations)) return [];
+  return state.relations
+    .filter((relation) => relation?.source_feature_id === currentId || relation?.target_feature_id === currentId)
+    .map((relation) => {
+      const otherFeatureId = relation.source_feature_id === currentId
+        ? relation.target_feature_id
+        : relation.source_feature_id;
+      const relatedFeature = state.allFeatures.find((candidate) => getFeatureUiId(candidate) === otherFeatureId);
+      return relatedFeature ? { relation, feature: relatedFeature, currentIsSource: relation.source_feature_id === currentId } : null;
+    })
+    .filter(Boolean)
+    .slice(0, limit);
+}
+
+function formatSimilarityCriteria(criteria = []) {
+  const labels = {
+    same_layer: 'тот же слой',
+    date_overlap: 'пересечение периода',
+    date_distance: 'близкий период'
+  };
+  return criteria.map((criterion) => labels[criterion] || criterion).join(' · ');
+}
+
+function formatRelationType(relation, currentIsSource) {
+  const direct = {
+    influenced: 'Повлиял на',
+    inspired_by: 'Вдохновлён объектом',
+    same_movement: 'Общее движение',
+    reconstructed_from: 'Реконструирован по',
+    part_of: 'Является частью'
+  };
+  const inverse = {
+    influenced: 'Испытал влияние',
+    inspired_by: 'Источник вдохновения для',
+    same_movement: 'Общее движение',
+    reconstructed_from: 'Основа реконструкции для',
+    part_of: 'Содержит объект'
+  };
+  return (currentIsSource ? direct : inverse)[relation?.relation_type] || relation?.relation_type || 'Связь';
+}
+
+function appendDocumentedRelationItems(block, state, elements, map, entries) {
+  if (!entries.length) {
+    appendMetaRow(block, 'Статус', 'Нет reviewed связей с источниками');
+    return;
+  }
+  entries.forEach(({ relation, feature: relatedFeature, currentIsSource }) => {
+    const relatedProps = normalizeProps(relatedFeature);
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'related-item documented-relation-item';
+    const titleNode = document.createElement('span');
+    titleNode.className = 'related-title';
+    titleNode.textContent = getPrimaryTitle(relatedProps);
+    const metaNode = document.createElement('span');
+    metaNode.className = 'related-meta';
+    metaNode.textContent = [
+      formatRelationType(relation, currentIsSource),
+      relation.description,
+      relation.epistemic_status,
+      relation.confidence
+    ].filter(Boolean).join(' · ');
+    item.append(titleNode, metaNode);
+    item.addEventListener('click', () => {
+      selectFeature(state, elements, map, relatedFeature, { centerOnMap: true, openDetail: true, scrollCard: true });
+    });
+    block.appendChild(item);
+    const evidence = Array.isArray(relation.source_refs)
+      ? relation.source_refs.find((ref) => normalizeSafeUrl(String(ref?.url || '').trim()))
+      : null;
+    if (evidence?.url) {
+      const sourceLink = document.createElement('a');
+      sourceLink.className = 'detail-action-link relation-source-link';
+      sourceLink.textContent = evidence.title || 'Источник связи';
+      setSafeLink(sourceLink, evidence.url);
+      block.appendChild(sourceLink);
+    }
+  });
+}
+
+function appendSimilarityItems(block, state, elements, map, entries) {
+  if (!entries.length) {
+    appendMetaRow(block, 'Критерии', 'Похожие объекты не найдены');
+    return;
+  }
+  entries.forEach(({ feature: similarFeature, criteria }) => {
+    const similarProps = normalizeProps(similarFeature);
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'related-item similarity-item';
+    const titleNode = document.createElement('span');
+    titleNode.className = 'related-title';
+    titleNode.textContent = getPrimaryTitle(similarProps);
+    const metaNode = document.createElement('span');
+    metaNode.className = 'related-meta';
+    metaNode.textContent = formatSimilarityCriteria(criteria);
+    item.append(titleNode, metaNode);
+    item.addEventListener('click', () => {
+      selectFeature(state, elements, map, similarFeature, { centerOnMap: true, openDetail: true, scrollCard: true });
+    });
+    block.appendChild(item);
+  });
 }
 function createDetailSkeleton() {
   const skeleton = document.createElement('div');
@@ -4608,7 +4720,8 @@ function buildEpistemicBlock(type, bodyBuilder) {
   block.dataset.epistemicType = type;
   const labels = {
     fact: 'Факт',
-    relation: 'Связь',
+    relation: 'Документированные связи',
+    similarity: 'Похожие объекты',
     interpretation: 'Интерпретация',
     ai: 'AI-подсказка'
   };
@@ -4667,7 +4780,8 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
   const description = getPreviewDescription(props);
   const sourceUrl = normalizeSafeUrl(String(props.source_url || '').trim());
   const sourceDomain = extractDomain(sourceUrl);
-  const relatedFeatures = getRelatedFeatures(state, feature, 2);
+  const documentedRelations = getDocumentedRelations(state, feature, 2);
+  const similarityResults = getSimilarityResults(state, feature, 2);
 
   const detail = document.createElement('article');
   detail.className = 'detail-content detail-content-preview detail-panel-body-inner';
@@ -4703,29 +4817,14 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
   detail.appendChild(factBlock);
 
   const relationBlock = buildEpistemicBlock('relation', (block) => {
-    if (!relatedFeatures.length) {
-      appendMetaRow(block, 'Сеть', 'В текущем виде нет связанных сущностей');
-      return;
-    }
-    relatedFeatures.forEach((relatedFeature) => {
-      const relatedProps = normalizeProps(relatedFeature);
-      const item = document.createElement('button');
-      item.type = 'button';
-      item.className = 'related-item';
-      const titleNode = document.createElement('span');
-      titleNode.className = 'related-title';
-      titleNode.textContent = getPrimaryTitle(relatedProps);
-      const metaNode = document.createElement('span');
-      metaNode.className = 'related-meta';
-      metaNode.textContent = formatRangeLabel(relatedProps.date_start, relatedProps.date_end);
-      item.append(titleNode, metaNode);
-      item.addEventListener('click', () => {
-        selectFeature(state, elements, map, relatedFeature, { centerOnMap: true, openDetail: true, scrollCard: true });
-      });
-      block.appendChild(item);
-    });
+    appendDocumentedRelationItems(block, state, elements, map, documentedRelations);
   });
   detail.appendChild(relationBlock);
+
+  const similarityBlock = buildEpistemicBlock('similarity', (block) => {
+    appendSimilarityItems(block, state, elements, map, similarityResults);
+  });
+  detail.appendChild(similarityBlock);
 
   const interpretationBlock = buildEpistemicBlock('interpretation', (block) => {
     const text = document.createElement('p');
@@ -4759,7 +4858,8 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
 
 function buildFullDetailContent(state, elements, map, props, feature) {
   const featureId = getFeatureUiId(feature);
-  const relatedFeatures = getRelatedFeatures(state, feature, 3);
+  const documentedRelations = getDocumentedRelations(state, feature, 3);
+  const similarityResults = getSimilarityResults(state, feature, 3);
   const layerLabel = state.layerLookup.get(String(props.layer_id || '').trim()) || String(props.layer_id || '').trim();
   const dateLabel = formatRangeLabel(props.date_start, props.date_end);
   const title = getPrimaryTitle(props);
@@ -4812,33 +4912,14 @@ function buildFullDetailContent(state, elements, map, props, feature) {
   detail.appendChild(factBlock);
 
   const relationBlock = buildEpistemicBlock('relation', (block) => {
-    if (!Array.isArray(relatedFeatures) || !relatedFeatures.length) {
-      appendMetaRow(block, 'Связанные', 'Связанные сущности не найдены');
-      return;
-    }
-    relatedFeatures.forEach((relatedFeature) => {
-      const relatedProps = normalizeProps(relatedFeature);
-      const relatedTitle = getPrimaryTitle(relatedProps);
-      const relatedLayerLabel = state.layerLookup.get(String(relatedProps.layer_id || '').trim()) || String(relatedProps.layer_id || '').trim();
-      const relatedDateLabel = formatRangeLabel(relatedProps.date_start, relatedProps.date_end);
-      const relatedMeta = [relatedDateLabel, relatedLayerLabel].filter(Boolean).join(' · ');
-      const relatedItem = document.createElement('button');
-      relatedItem.type = 'button';
-      relatedItem.className = 'related-item';
-      const relatedTitleNode = document.createElement('span');
-      relatedTitleNode.className = 'related-title';
-      relatedTitleNode.textContent = relatedTitle;
-      const relatedMetaNode = document.createElement('span');
-      relatedMetaNode.className = 'related-meta';
-      relatedMetaNode.textContent = relatedMeta;
-      relatedItem.append(relatedTitleNode, relatedMetaNode);
-      relatedItem.addEventListener('click', () => {
-        selectFeature(state, elements, map, relatedFeature, { centerOnMap: true, openDetail: true, scrollCard: true });
-      });
-      block.appendChild(relatedItem);
-    });
+    appendDocumentedRelationItems(block, state, elements, map, documentedRelations);
   });
   detail.appendChild(relationBlock);
+
+  const similarityBlock = buildEpistemicBlock('similarity', (block) => {
+    appendSimilarityItems(block, state, elements, map, similarityResults);
+  });
+  detail.appendChild(similarityBlock);
 
   const interpretationBlock = buildEpistemicBlock('interpretation', (block) => {
     const descriptionNode = document.createElement('p');
