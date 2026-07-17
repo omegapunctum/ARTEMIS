@@ -88,9 +88,11 @@ MVP не обязан доказать универсальную платфор
 Основная навигация MVP:
 
 1. Исследование.
-2. Сравнение.
-3. Срезы.
-4. Истории.
+2. Сравнение — contextual mode после выбора Features, а не пустой top-level route.
+3. Сохранённые исследования — только при работающем public Slice backend.
+4. Истории — только при наличии curated public Stories.
+
+Courses, AI, UGC и moderation не входят в primary public navigation. Недоступная `BACKEND-AVAILABLE` или `FUTURE` capability скрывается, а не выглядит обычным рабочим разделом.
 
 Главная иерархия:
 
@@ -98,6 +100,8 @@ MVP не обязан доказать универсальную платфор
 2. selected object/detail;
 3. active time and comparison context;
 4. navigation and utilities.
+
+Первый UX-момент ценности — sourced object comparison. Research Slice сохраняет результат и не является обязательным первым действием.
 
 UI refinement выполняется по `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`, но semantic product behavior определяется этим документом.
 
