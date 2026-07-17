@@ -94,6 +94,11 @@
 ```text
 index.html
 css/
+├── tokens.css
+├── base.css
+├── components/
+│   ├── controls.css
+│   └── surfaces.css
 ├── style.css
 └── main-screen.css
 
@@ -122,7 +127,8 @@ js/
 - `/api/map/feed` не становится альтернативным public data source;
 - безопасный DOM-rendering обязателен для пользовательского контента;
 - PWA и UX-hardenings не должны подменять архитектурные boundaries;
-- `css/style.css` является новым shared UI system layer: tokens, reset, shared components, feature surfaces, accessibility and state semantics;
+- `css/tokens.css`, `css/base.css` и `css/components/*` являются первой owner-scoped foundation extraction без изменения visual contract;
+- `css/style.css` временно владеет оставшимися layout/feature/legacy rules до следующих migration batches;
 - `css/main-screen.css` является текущим transitional override layer, а не целевой архитектурой;
 - в Architecture Atlas UX cycle актуальные правила должны быть перенесены к owner-scoped modules, после чего competing override удаляется;
 - owner-scoped split должен разделять tokens/base/layout/features и не создавать параллельные visual systems.
