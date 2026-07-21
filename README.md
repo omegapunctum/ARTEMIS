@@ -45,6 +45,9 @@ The current operational state is **controlled engineering prototype / product-da
   - `/data/features.geojson`
   - `/data/id_aliases.json`
   - `/data/layers.json`
+  - `/data/sources.json`, `/data/media.json`, `/data/relations.json`
+  - `/data/validation_report.json`
+  - `/data/content_profile.json`
   - `/data/export_meta.json`
   - `/data/rejected.json`
 - Publication chain:

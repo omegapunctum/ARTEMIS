@@ -192,7 +192,11 @@ UI обязан маркировать similarity как «Похожие объ
 
 ## 8. Semantic validation gate
 
-Implementation status 2026-07-21: executable ETL/release contract implemented in the #284 change set and pending review. Canonical enforcement owners are `scripts/semantic_data_gate.py`, `scripts/export_airtable.py`, `scripts/release_check.py` and `data/validation_report.json` schema version 2.
+Implementation status 2026-07-21: executable ETL/release contract merged in #302 (`d4e8b53`). Canonical enforcement owners are `scripts/semantic_data_gate.py`, `scripts/export_airtable.py`, `scripts/release_check.py` and `data/validation_report.json` schema version 2.
+
+### Content profile
+
+`data/content_profile.json` schema version 1 is derived release evidence for the approved comparison pilot. It records current Feature/cohort/Relation counts and Source/Media/evidence coverage against the 30–40 / 6–8 / 12–20 envelope. `building` is an honest non-blocking readiness state; a missing or stale profile blocks release.
 
 Публикация блокируется при:
 

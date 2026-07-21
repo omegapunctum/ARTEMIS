@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from scripts import release_check
+from scripts.content_profile import build_content_profile_from_root
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -188,6 +189,10 @@ def _build_fixture(
         ),
     )
     _write(root / "data" / "rejected.json", json.dumps(rejected_payload))
+    _write(
+        root / "data" / "content_profile.json",
+        json.dumps(build_content_profile_from_root(root)),
+    )
 
     if frontend_fallback:
         data_js = """
@@ -357,6 +362,7 @@ def test_release_check_happy_path(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stdout + result.stderr
     assert "[PASS] Data layer" in result.stdout
     assert "[PASS] Semantic data" in result.stdout
+    assert "[PASS] Content profile" in result.stdout
     assert "[PASS] Backend" in result.stdout
     assert "[PASS] Frontend" in result.stdout
     assert "[PASS] PWA" in result.stdout

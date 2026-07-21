@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "profile_id": "architecture-atlas-comparison-pilot-v1",
+  "scope": "comparison-first Round 0 validation corpus",
+  "decision": {
+    "status": "approved_narrower_pilot",
+    "purpose": "validate comparison, provenance, and Relation/Similarity literacy before corpus scaling",
+    "does_not_claim": "full MVP content maturity or public Slice workflow readiness"
+  },
+  "targets": {
+    "features": {
+      "minimum": 30,
+      "maximum": 40
+    },
+    "comparison_cohorts": {
+      "minimum": 6,
+      "maximum": 8,
+      "minimum_features_per_cohort": 3
+    },
+    "reviewed_relations": {
+      "minimum": 12,
+      "maximum": 20
+    },
+    "feature_source_coverage": {
+      "minimum_ratio": 1.0
+    },
+    "primary_media_coverage": {
+      "minimum_ratio": 0.9
+    },
+    "relation_evidence_coverage": {
+      "minimum_ratio": 1.0
+    },
+    "published_empty_layers": {
+      "maximum": 0
+    }
+  },
+  "maturity_reference": {
+    "features": "100-150",
+    "populated_layers": "15-20",
+    "reviewed_relations": "50+",
+    "curated_stories": 3,
+    "reference_research_slices": "5-10"
+  },
+  "actual": {
+    "features": 19,
+    "published_layers": 19,
+    "comparison_cohorts": 0,
+    "cohorts": [],
+    "singleton_layers": 19,
+    "reviewed_sources": 19,
+    "reviewed_media": 16,
+    "reviewed_relations": 2,
+    "relation_connected_features": 3,
+    "relation_connected_feature_ratio": 0.1579,
+    "feature_source_coverage": {
+      "covered": 19,
+      "total": 19,
+      "ratio": 1.0
+    },
+    "primary_media_coverage": {
+      "covered": 16,
+      "total": 19,
+      "ratio": 0.8421
+    },
+    "relation_evidence_coverage": {
+      "covered": 2,
+      "total": 2,
+      "ratio": 1.0
+    },
+    "published_empty_layers": 0,
+    "empty_published_layer_ids": [],
+    "semantic_status": "ready_with_warnings"
+  },
+  "readiness": {
+    "status": "building",
+    "passed": false,
+    "failed_check_ids": [
+      "features",
+      "comparison_cohorts",
+      "reviewed_relations",
+      "primary_media_coverage"
+    ],
+    "checks": [
+      {
+        "id": "features",
+        "passed": false,
+        "current": 19,
+        "requirement": "30-40"
+      },
+      {
+        "id": "comparison_cohorts",
+        "passed": false,
+        "current": 0,
+        "requirement": "6-8 layers with at least 3 Features each"
+      },
+      {
+        "id": "reviewed_relations",
+        "passed": false,
+        "current": 2,
+        "requirement": "12-20"
+      },
+      {
+        "id": "feature_source_coverage",
+        "passed": true,
+        "current": 1.0,
+        "requirement": "100%"
+      },
+      {
+        "id": "primary_media_coverage",
+        "passed": false,
+        "current": 0.8421,
+        "requirement": ">=90%"
+      },
+      {
+        "id": "relation_evidence_coverage",
+        "passed": true,
+        "current": 1.0,
+        "requirement": "100%"
+      },
+      {
+        "id": "published_empty_layers",
+        "passed": true,
+        "current": 0,
+        "requirement": "0"
+      },
+      {
+        "id": "semantic_gate",
+        "passed": true,
+        "current": "ready_with_warnings",
+        "requirement": "ready or ready_with_warnings"
+      }
+    ],
+    "gaps": {
+      "features_to_minimum": 11,
+      "comparison_cohorts_to_minimum": 6,
+      "reviewed_relations_to_minimum": 10,
+      "primary_media_records_to_current_minimum": 2
+    }
+  }
+}

@@ -20,7 +20,7 @@
 - Auth/session baseline is accepted for the current controlled baseline with explicit constraints: `AUTH_SECRET_KEY` must be explicitly configured for real runtime, current guarantees are baseline-capable but not fully production-hardened for multi-instance deployments, and scaling/persistence/ops hardening remains a dedicated next cycle.
 
 Release unit (current baseline contract):
-- required artifacts: `data/features.geojson`, `data/features.json`, `data/id_aliases.json`, `data/export_meta.json`, `data/rejected.json`;
+- required artifacts: `data/features.geojson`, `data/features.json`, `data/id_aliases.json`, `data/export_meta.json`, `data/rejected.json`, `data/validation_report.json`, `data/content_profile.json`;
 - canonical public map dataset: `data/features.geojson`;
 - supporting/derived artifacts: `features.json`, `export_meta.json`, `rejected.json`;
 - release gate blocks if required artifacts are missing, if record counts diverge, or if warning thresholds exceed policy.

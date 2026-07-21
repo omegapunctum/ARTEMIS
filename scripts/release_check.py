@@ -28,6 +28,10 @@ except ModuleNotFoundError:  # Direct execution with RELEASE_CHECK_ROOT fixture.
         SemanticGateError,
         validate_semantic_release,
     )
+try:
+    from scripts.content_profile import ContentProfileError, validate_checked_in_profile  # noqa: E402
+except ModuleNotFoundError:  # Direct execution with RELEASE_CHECK_ROOT fixture.
+    from content_profile import ContentProfileError, validate_checked_in_profile  # type: ignore[no-redef]  # noqa: E402
 BEHAVIORAL_PWA_TEST_PATH = REPO_ROOT / "tests" / "test_sw_fetch_behavior.py"
 DEV_LIKE_ENVS = {"development", "dev", "testing", "test", "local"}
 
@@ -255,6 +259,23 @@ def check_semantic_data() -> None:
         f"layers={summary['layers']} sources={summary['sources']} "
         f"media={summary['media']} relations={summary['relations']} "
         f"warnings={summary['warnings']}"
+    )
+
+
+def check_content_profile() -> None:
+    try:
+        profile = validate_checked_in_profile(ROOT)
+    except ContentProfileError as exc:
+        fail(str(exc))
+    actual = profile["actual"]
+    readiness = profile["readiness"]
+    print(
+        "[INFO] Content profile: "
+        f"status={readiness['status']} "
+        f"features={actual['features']} "
+        f"cohorts={actual['comparison_cohorts']} "
+        f"relations={actual['reviewed_relations']} "
+        f"media={actual['primary_media_coverage']['ratio']}"
     )
 
 
@@ -535,6 +556,7 @@ def run_check(name: str, func) -> None:
 def main() -> None:
     run_check("Data layer", check_data_layer)
     run_check("Semantic data", check_semantic_data)
+    run_check("Content profile", check_content_profile)
     run_check("Backend", check_backend)
     run_check("Runtime/deployment", check_runtime_deployment)
     run_check("Frontend", check_frontend)

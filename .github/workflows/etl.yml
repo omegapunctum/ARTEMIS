@@ -45,6 +45,7 @@ jobs:
           test -f data/_test_relations.json
           test -f data/_test_validation_report.json
           test -f data/_test_export_meta.json
+          test -f data/_test_content_profile.json
 
       - name: Validate GeoJSON structure
         run: |
@@ -105,4 +106,18 @@ jobs:
           assert data["blocking_errors"] == []
           assert data["status"] in {"ready", "ready_with_warnings"}
           print("Semantic report OK")
+          EOF
+
+      - name: Validate content profile
+        run: |
+          python - <<EOF
+          import json
+          with open("data/_test_content_profile.json") as f:
+              data = json.load(f)
+          assert data["schema_version"] == 1
+          assert data["profile_id"] == "architecture-atlas-comparison-pilot-v1"
+          assert data["actual"]["features"] == 1
+          assert data["readiness"]["status"] == "building"
+          assert data["decision"]["status"] == "approved_narrower_pilot"
+          print("Content profile OK")
           EOF

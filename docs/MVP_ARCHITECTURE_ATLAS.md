@@ -41,19 +41,20 @@ MVP не обязан доказать универсальную платфор
 - каждый шаг связывает текст, карту, timeline, объекты и источники;
 - Story строится поверх проверенных объектов и relations.
 
-## 3. Минимальный content envelope
+## 3. Content envelope
 
-Перед product validation corpus должен содержать:
+Для comparison-first Round 0 утверждён сокращённый pilot threshold:
 
-- 100–150 active Features;
-- 15–20 непустых Layers/periods/styles;
-- 50+ reviewed Relations;
-- минимум один valid Source для каждого Feature;
-- минимум одно корректно атрибутированное Media для большей части ключевых Features;
-- 3 curated Stories;
-- 5–10 reference Research Slices для smoke и демонстрации.
+- 30–40 active reviewed Features;
+- 6–8 comparison cohorts минимум по 3 Features;
+- 12–20 reviewed evidence-backed Relations;
+- valid reviewed Source для каждого Feature;
+- reviewed primary Media минимум для 90% Features;
+- 0 пустых опубликованных Layers.
 
-Числа являются validation threshold, а не обещанием окончательного масштаба.
+Исполнимый профиль и текущие gaps находятся в `data/content_profile.json`; решение и batching — в `docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`.
+
+Ориентир зрелого корпуса остаётся прежним: 100–150 Features, 15–20 наполненных Layers/periods/styles, 50+ Relations, 3 curated Stories и 5–10 reference Research Slices. Он не является входным барьером Round 0 и пересматривается после пользовательского decision gate.
 
 ## 4. Public runtime boundary
 
