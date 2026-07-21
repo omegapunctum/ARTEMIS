@@ -114,9 +114,11 @@ jobs:
           import json
           with open("data/_test_content_profile.json") as f:
               data = json.load(f)
+          with open("data/_test_features.geojson") as f:
+              features = json.load(f)
           assert data["schema_version"] == 1
           assert data["profile_id"] == "architecture-atlas-comparison-pilot-v1"
-          assert data["actual"]["features"] == 1
+          assert data["actual"]["features"] == len(features["features"])
           assert data["readiness"]["status"] == "building"
           assert data["decision"]["status"] == "approved_narrower_pilot"
           print("Content profile OK")
