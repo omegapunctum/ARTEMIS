@@ -1,10 +1,13 @@
 {
-  "timestamp": "2026-07-21T13:17:43Z",
+  "timestamp": "2026-07-21T19:04:28Z",
   "source": "airtable",
   "records_total_source": 19,
   "records_exported": 19,
   "records_geojson": 19,
   "records_rejected": 0,
+  "layers_total_source": 26,
+  "layers_published": 19,
+  "enabled_empty_layers_excluded": 7,
   "sources_total_source": 20,
   "sources_reviewed": 19,
   "media_total_source": 16,
@@ -18,24 +21,21 @@
   "warnings": 14,
   "error_stats": {},
   "warning_stats": {
-    "broad_temporal_range": 1,
     "enabled_empty_layer_excluded": 7,
-    "missing_classification_depth": 1,
     "missing_primary_media": 3,
+    "broad_temporal_range": 1,
     "uniform_coordinates_confidence": 1,
+    "missing_classification_depth": 1,
     "weak_source_depth": 1
   },
   "warning_categories": {
     "expected_fallback": 0,
     "data_quality": 14
   },
-  "duration_seconds": 5.09,
-  "layers_total_source": 26,
-  "layers_published": 19,
-  "enabled_empty_layers_excluded": 7,
   "semantic_gate": {
     "status": "ready_with_warnings",
     "blocking_errors": 0,
     "warnings": 14
-  }
+  },
+  "duration_seconds": 3.767
 }
