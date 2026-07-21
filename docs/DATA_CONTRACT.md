@@ -34,18 +34,22 @@ Canonical public map dataset:
 Supporting release artifacts:
 - `data/features.json`
 - `data/id_aliases.json`
+- `data/layers.json`
+- `data/sources.json`
+- `data/media.json`
+- `data/relations.json`
 - `data/export_meta.json`
 - `data/rejected.json`
 
-Diagnostic artifacts:
+Release-evidence / diagnostic artifacts:
 - `data/validation_report.json`
 - `data/export_errors.log`
 
 Rules:
 - `data/features.geojson` is the production-default public source for map rendering.
 - `data/features.json` is a supporting/raw validated artifact, not the public source of truth.
-- `export_meta.json` and `rejected.json` are release-quality and diagnostic artifacts.
-- diagnostic artifacts do not become competing source-of-truth layers unless release gate explicitly depends on them.
+- `export_meta.json`, `rejected.json` and `validation_report.json` are release-quality evidence.
+- `validation_report.json` is not a competing content source, but release gate explicitly depends on its blocking-error/warning contract.
 
 ---
 
@@ -55,6 +59,11 @@ Required release artifacts:
 - `data/features.geojson`
 - `data/features.json`
 - `data/id_aliases.json`
+- `data/layers.json`
+- `data/sources.json`
+- `data/media.json`
+- `data/relations.json`
+- `data/validation_report.json`
 - `data/export_meta.json`
 - `data/rejected.json`
 
@@ -71,11 +80,20 @@ Release gate rules:
 - `data/rejected.json` must be an array;
 - if `records_rejected` exists in `export_meta.json`, it must match `len(data/rejected.json)`;
 - if `records_total_source` exists in `export_meta.json`, it must equal exported plus rejected records;
-- release gate blocks on missing artifacts, mismatched record counts, invalid warning categories, warning threshold violations, or invalid public GeoJSON payload.
+- `validation_report.json` must use `schema_version=2`, separate `blocking_errors` from `warnings`, and report status `ready`, `ready_with_warnings` or `blocked` truthfully;
+- `blocking_errors_count`, compatibility `errors_count`, `export_meta.errors` and `semantic_gate.blocking_errors` must agree and must be zero for publication;
+- `data/rejected.json` must be empty for a publishable release;
+- public Features, Layers, Sources, Media and Relations must pass cross-artifact identity, review, evidence, rights, date, geometry and projection checks;
+- disabled Layers and enabled empty Layers are excluded from public `layers.json`; enabled empty Layers remain visible as warnings in release evidence;
+- Feature `image_url` may only mirror a reviewed primary Media `asset_url`; without reviewed primary Media it is `null`;
+- release gate blocks on missing artifacts, mismatched record counts, blocking semantic errors, invalid warning categories/budgets, invalid cross-references or invalid public payloads.
 
 Current warning policy:
-- `warning_categories.expected_fallback` must be an integer and must not exceed the release-check threshold;
-- `warning_categories.data_quality` must be an integer and must not exceed the release-check threshold;
+- `warning_categories.expected_fallback` must be `0`;
+- `warning_categories.data_quality` must equal the warnings stored in `validation_report.json` and must not exceed the current aggregate ceiling of `14`;
+- every warning reason has an explicit pilot regression ceiling in `scripts/semantic_data_gate.py`: 7 excluded enabled-empty Layers, 3 missing primary Media, and one each for uniform coordinate confidence, missing classification depth, weak Source depth and broad temporal range;
+- a new warning reason or a count above its explicit ceiling blocks release until data is corrected or governance changes the budget intentionally;
+- passing with warnings means semantic publish safety under the approved pilot boundary, not production content maturity;
 - raw source diagnostic metadata alone is not release-gating unless ETL converts it into release warnings or rejections.
 
 ---
@@ -248,6 +266,10 @@ Exported public records must satisfy:
 - valid or accepted date payload;
 - accepted `coordinates_source`;
 - required display fields for public UI;
+- at least one reviewed Source and exactly one primary Source projection;
+- only reviewed direct Media assets with rights/attribution metadata;
+- only reviewed Relations whose endpoints, evidence and Feature projections agree;
+- a reference to a published enabled, non-empty Layer;
 - no release-blocking data-quality warnings.
 
 Rejected records:
@@ -257,7 +279,16 @@ Rejected records:
 
 Release-quality warnings:
 - must be aggregated in `export_meta.json.warning_categories` when they affect release policy;
+- must be represented in `validation_report.json.warnings` and `export_meta.warning_stats` without count drift;
+- remain non-blocking only while their reason and count fit the explicit pilot budgets;
 - must not be inferred directly from raw Airtable-only fields unless ETL converts them into release warnings.
+
+`validation_report.json` schema version 2 owns:
+
+- `status`: `ready`, `ready_with_warnings` or `blocked`;
+- `blocking_errors_count` and `blocking_errors`;
+- `warnings_count` and `warnings`;
+- compatibility aliases `errors_count` and `errors`, which must exactly equal the blocking-error fields during migration.
 
 ---
 

@@ -45,7 +45,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 На дату фиксации Airtable/public export содержит:
 
 - 19 Features;
-- 26 Layers;
+- 26 source Layers / 19 enabled populated public Layers;
 - 20 Sources (`19 reviewed / 1 draft`);
 - 16 reviewed Media records linked as primary to 16 pilot Features;
 - 2 reviewed canonical Relation records, each with one reviewed evidence link;
@@ -56,12 +56,13 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - canonical identity migration v1 завершена в PR `#290`: ETL и public artifacts используют `Features.id` UUID v4, а Airtable record ID отделён как `source_record_id`;
 - source migration выполнена: контрольное чтение Airtable подтверждает `19/19 id_status=ok`; точная таблица, execution evidence и recovery-план зафиксированы в `docs/work/2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`;
 - Source batch #283 выполнен: для `19/19` Features существует ровно один reviewed primary Source; Airtable содержит `20 Sources / 19 reviewed / 1 unverifiable legacy candidate in draft` и `20 FeatureSources / 19 reviewed / 1 draft`;
-- пять Media batch #283 содержат 16 reviewed direct assets и 16 reviewed primary FeatureMedia links; оставшиеся 3 legacy `Features.image_url` не считаются нормализованными Media и явно заблокированы проверкой прав (Бурдж-Халифа, Вилла Савой и Центр Помпиду); полный перечень, evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
-- часть включённых слоёв пуста;
+- пять Media batch #283 содержат 16 reviewed direct assets и 16 reviewed primary FeatureMedia links; для трёх rights-blocked объектов public `image_url=null`, поэтому legacy Commons HTML pages не публикуются как изображения (Бурдж-Халифа, Вилла Савой и Центр Помпиду); полный перечень, evidence и migration plan находятся в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
+- 7 enabled empty source Layers исключены из public `layers.json` и сохранены как actionable semantic warnings; public Layer set содержит только 19 populated Layers;
 - Media semantics реализованы в ETL, но reviewed-миграция охватывает 16 из 19 пилотных Features; для трёх современных зданий требуется отдельный источник изображения с достаточными правами;
 - Relations/Similarity pilot реализован: detail panel показывает reviewed evidence-backed записи из `data/relations.json` в блоке «Документированные связи», а эвристику одинакового слоя/периода — отдельно как «Похожие объекты» с явными критериями;
 - 2 reviewed Relations достаточны для проверки контракта, но ещё не образуют полноценный исследовательский relation graph;
-- текущий structural release gate не заменяет semantic content validation.
+- semantic ETL/release gate проверяет blocking errors отдельно от budgeted warnings, cross-artifact evidence/review semantics, enabled populated Layers и отсутствие unreviewed legacy image URLs;
+- текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
 

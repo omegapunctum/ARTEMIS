@@ -1,33 +1,141 @@
 {
+  "schema_version": 2,
+  "status": "ready_with_warnings",
   "total_records": 19,
   "valid_records": 19,
   "skipped_records": 0,
-  "warnings_count": 3,
+  "blocking_errors_count": 0,
+  "warnings_count": 14,
+  "blocking_errors": [],
   "errors_count": 0,
   "warnings": [
     {
-      "id": "rec0x9MvhXQFWErOy",
-      "record_id": "rec0x9MvhXQFWErOy",
-      "reason": "legacy_image_without_reviewed_media",
-      "severity": "warning",
-      "field": "image_url",
-      "warning": "legacy_image_without_reviewed_media"
+      "id": "minoan_architecture",
+      "record_id": "minoan_architecture",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
     },
     {
-      "id": "rec1GDGqssFGehzEx",
-      "record_id": "rec1GDGqssFGehzEx",
-      "reason": "legacy_image_without_reviewed_media",
-      "severity": "warning",
-      "field": "image_url",
-      "warning": "legacy_image_without_reviewed_media"
+      "id": "early_christian",
+      "record_id": "early_christian",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
+    },
+    {
+      "id": "mannerism",
+      "record_id": "mannerism",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
+    },
+    {
+      "id": "rococo_france",
+      "record_id": "rococo_france",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
+    },
+    {
+      "id": "etruscan_architecture",
+      "record_id": "etruscan_architecture",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
+    },
+    {
+      "id": "pre_romanesque",
+      "record_id": "pre_romanesque",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
+    },
+    {
+      "id": "victorian_architecture",
+      "record_id": "victorian_architecture",
+      "field": "layer_id",
+      "warning": "enabled_empty_layer_excluded",
+      "reason": "enabled_empty_layer_excluded",
+      "severity": "warning"
     },
     {
       "id": "rec9KIQPB9M377wgE",
       "record_id": "rec9KIQPB9M377wgE",
-      "reason": "legacy_image_without_reviewed_media",
+      "field": "media_refs",
+      "warning": "missing_primary_media",
+      "reason": "missing_primary_media",
+      "severity": "warning"
+    },
+    {
+      "id": "rec1GDGqssFGehzEx",
+      "record_id": "rec1GDGqssFGehzEx",
+      "field": "media_refs",
+      "warning": "missing_primary_media",
+      "reason": "missing_primary_media",
+      "severity": "warning"
+    },
+    {
+      "id": "rec0x9MvhXQFWErOy",
+      "record_id": "rec0x9MvhXQFWErOy",
+      "field": "media_refs",
+      "warning": "missing_primary_media",
+      "reason": "missing_primary_media",
+      "severity": "warning"
+    },
+    {
+      "id": "recZsGTVquE5d26YO",
+      "record_id": "recZsGTVquE5d26YO",
+      "field": "date_start/date_end",
+      "warning": "broad_temporal_range",
+      "reason": "broad_temporal_range",
       "severity": "warning",
-      "field": "image_url",
-      "warning": "legacy_image_without_reviewed_media"
+      "value": {
+        "start": -3100,
+        "end": -1600,
+        "span_years": 1500
+      }
+    },
+    {
+      "id": "<dataset>",
+      "record_id": "<dataset>",
+      "field": "coordinates_confidence",
+      "warning": "uniform_coordinates_confidence",
+      "reason": "uniform_coordinates_confidence",
+      "severity": "warning",
+      "value": {
+        "confidence": "exact",
+        "feature_count": 19
+      }
+    },
+    {
+      "id": "<dataset>",
+      "record_id": "<dataset>",
+      "field": "tags",
+      "warning": "missing_classification_depth",
+      "reason": "missing_classification_depth",
+      "severity": "warning",
+      "value": {
+        "feature_count": 19
+      }
+    },
+    {
+      "id": "<dataset>",
+      "record_id": "<dataset>",
+      "field": "source_refs",
+      "warning": "weak_source_depth",
+      "reason": "weak_source_depth",
+      "severity": "warning",
+      "value": {
+        "feature_count": 19,
+        "threshold": "<=1 reviewed Source"
+      }
     }
   ],
   "errors": []

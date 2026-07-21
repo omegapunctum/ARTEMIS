@@ -91,6 +91,8 @@ Structural release success не равен semantic content validation.
 - добавить semantic ETL/release gate;
 - устранить enabled empty Layers.
 
+Execution status 2026-07-21: identity, normalized Source/Media export and Relation/Similarity semantics are merged. The #284 change set implements the semantic gate and excludes 7 enabled empty Layers from public artifacts while retaining warnings; review/merge remains pending. Three Media-rights gaps stay tracked separately in #283.
+
 ### Track C — Content pilot
 
 - 100–150 architecture Features;

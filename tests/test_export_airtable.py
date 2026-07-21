@@ -8,6 +8,7 @@ from scripts.export_airtable import (
     build_id_aliases,
     build_geojson_features,
     build_validation_report,
+    collect_semantic_quality_warnings,
     get_etl_error,
     get_canonical_publish_id,
     get_dedupe_key,
@@ -25,6 +26,7 @@ from scripts.export_airtable import (
     finalize_relations,
     normalize_coordinates_confidence,
     normalize_coordinates_source,
+    select_publishable_layers,
     validate_feature,
 )
 
@@ -214,6 +216,59 @@ class ExportAirtableIdempotencyTests(unittest.TestCase):
         errors = []
         self.assertFalse(validate_feature(self._build_mapped(latitude=None), {"roman_empire"}, warnings, errors))
         self.assertTrue(any(e.get("reason") == "missing_geometry_coordinate" for e in errors))
+
+
+class ExportAirtableSemanticGateTests(unittest.TestCase):
+    def test_enabled_empty_layers_are_excluded_with_actionable_warning(self):
+        layers = [
+            {"layer_id": "used", "is_enabled": True},
+            {"layer_id": "empty", "is_enabled": True},
+            {"layer_id": "disabled", "is_enabled": False},
+        ]
+        features = [{"id": str(uuid.uuid4()), "layer_id": "used"}]
+
+        published, warnings = select_publishable_layers(layers, features)
+
+        self.assertEqual([layer["layer_id"] for layer in published], ["used"])
+        self.assertEqual([warning["reason"] for warning in warnings], ["enabled_empty_layer_excluded"])
+        self.assertEqual(warnings[0]["id"], "empty")
+
+    def test_quality_warnings_cover_confidence_sources_dates_tags_and_media(self):
+        features = []
+        for index in range(3):
+            features.append(
+                {
+                    "id": str(uuid.uuid4()),
+                    "source_record_id": f"rec{index}",
+                    "coordinates_confidence": "exact",
+                    "tags": [],
+                    "source_refs": [{"source_id": f"src{index}", "is_primary": True}],
+                    "media_refs": [],
+                    "date_start": "-3000" if index == 0 else "1900",
+                    "date_end": "-2000" if index == 0 else "1901",
+                }
+            )
+
+        warnings = collect_semantic_quality_warnings(features)
+        reasons = [warning["reason"] for warning in warnings]
+
+        self.assertEqual(reasons.count("missing_primary_media"), 3)
+        self.assertEqual(reasons.count("broad_temporal_range"), 1)
+        self.assertIn("uniform_coordinates_confidence", reasons)
+        self.assertIn("missing_classification_depth", reasons)
+        self.assertIn("weak_source_depth", reasons)
+
+    def test_validation_report_names_blocking_errors_separately(self):
+        error = {"reason": "invalid_id_uuid_v4", "severity": "critical"}
+        warning = {"reason": "weak_source_depth", "severity": "warning"}
+
+        report = build_validation_report(2, 1, 1, [warning], [error])
+
+        self.assertEqual(report["schema_version"], 2)
+        self.assertEqual(report["status"], "blocked")
+        self.assertEqual(report["blocking_errors"], [error])
+        self.assertEqual(report["blocking_errors_count"], 1)
+        self.assertEqual(report["warnings"], [warning])
 
 
 class ExportAirtablePipelineTests(unittest.TestCase):

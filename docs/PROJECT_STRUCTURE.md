@@ -64,7 +64,7 @@
 | `manifest.json` | PWA manifest | основной |
 
 Дополнение по release/workflow layer:
-- structural release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`) и в `scripts/release_check.py`;
+- structural and semantic release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`), `scripts/release_check.py` и `scripts/semantic_data_gate.py`;
 - `scripts/release_check.py` остаётся canonical executable release/readiness entrypoint;
 - точные enforcement points должны определяться по текущим workflow files, а не по упрощённой формулировке в одном summary-документе;
 - workflow-слой не заменяет полный regression suite и не должен описываться как его эквивалент.
@@ -193,7 +193,10 @@ data/
 ├── features.json
 ├── id_aliases.json
 ├── layers.json
+├── media.json
+├── relations.json
 ├── rejected.json
+├── sources.json
 └── validation_report.json
 ```
 
@@ -203,7 +206,8 @@ data/
 - `data/id_aliases.json` — versioned compatibility map from legacy/source IDs to canonical UUID v4;
 - raw / validated / rejected слои не смешиваются;
 - checked-in data artifacts должны использовать тот же contract, что и release gate;
-- `validation_report.json` и `export_errors.log` следует трактовать как диагностические артефакты, а не как отдельные source-of-truth слои, если release gate не опирается на них напрямую.
+- `validation_report.json` schema version 2 — обязательное release evidence с разделёнными blocking errors и budgeted warnings; это не content source-of-truth, но semantic release gate опирается на него напрямую;
+- `export_errors.log` остаётся человекочитаемой JSONL-проекцией тех же diagnostics и не создаёт отдельную validation truth.
 
 ---
 
@@ -215,7 +219,8 @@ scripts/
 ├── build_geojson.py
 ├── export_airtable.py
 ├── import_features.py
-└── release_check.py
+├── release_check.py
+└── semantic_data_gate.py
 ```
 
 ```text

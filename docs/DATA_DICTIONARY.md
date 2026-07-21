@@ -192,6 +192,8 @@ UI обязан маркировать similarity как «Похожие объ
 
 ## 8. Semantic validation gate
 
+Implementation status 2026-07-21: executable ETL/release contract implemented in the #284 change set and pending review. Canonical enforcement owners are `scripts/semantic_data_gate.py`, `scripts/export_airtable.py`, `scripts/release_check.py` and `data/validation_report.json` schema version 2.
+
 Публикация блокируется при:
 
 - invalid/missing canonical ID;
@@ -205,6 +207,10 @@ UI обязан маркировать similarity как «Похожие объ
 - unreviewed active Feature/Relation;
 - duplicate canonical ID.
 
+Техническая реализация также блокирует drift между public artifacts: отсутствующий Source/Media/Relation target, несовпадающие Feature projections, legacy HTML image URL без reviewed Media, непустой `rejected.json`, скрытый blocking error в validation report или неизвестный warning reason.
+
+Enabled empty Layers не входят в public `layers.json`; каждый исключённый Layer остаётся отдельным warning, а количество сверяется с `export_meta.layers_total_source`, `layers_published` и `enabled_empty_layers_excluded`.
+
 Warnings должны появляться при:
 
 - всех координатах одного confidence level;
@@ -212,6 +218,8 @@ Warnings должны появляться при:
 - слабом или единственном general-purpose source;
 - large temporal range без пояснения;
 - missing media у ключевого Feature.
+
+Warnings не превращаются в молчаливое разрешение: каждый reason имеет временный pilot ceiling. Превышение ceiling или новый reason блокирует release до исправления данных либо явного governance decision. `ready_with_warnings` означает publish-safe pilot, но не production-grade corpus.
 
 ## 9. ETL write-back truth
 

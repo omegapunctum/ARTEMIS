@@ -48,6 +48,11 @@ from urllib.parse import urlparse
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+try:
+    from scripts.semantic_data_gate import collect_semantic_quality_warnings, select_publishable_layers
+except ModuleNotFoundError:  # Direct `python scripts/export_airtable.py` execution.
+    from semantic_data_gate import collect_semantic_quality_warnings, select_publishable_layers
+
 # Установка зависимости: pip install requests
 REQUESTS_AVAILABLE = importlib.util.find_spec("requests") is not None
 if REQUESTS_AVAILABLE:
@@ -1410,8 +1415,10 @@ def attach_source_media_refs(
             media = media_by_id.get(primary_media[0]["media_id"])
             if media and media.get("asset_url"):
                 feature["image_url"] = media["asset_url"]
-        elif feature.get("image_url"):
-            add_issue(warnings, "warning", get_diagnostic_record_id(feature), "legacy_image_without_reviewed_media", "image_url")
+        else:
+            # Legacy page URLs are not publishable Media. Missing reviewed Media
+            # is reported later as an explicit semantic-quality warning.
+            feature["image_url"] = None
 
 
 def relation_date_sort_key(value: Optional[str]) -> Optional[Tuple[int, str]]:
@@ -1726,11 +1733,17 @@ def build_validation_report(
     warnings: List[Dict[str, Any]],
     errors: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
+    status = "blocked" if errors else "ready_with_warnings" if warnings else "ready"
     return {
+        "schema_version": 2,
+        "status": status,
         "total_records": total_records,
         "valid_records": valid_records,
         "skipped_records": skipped_records,
+        "blocking_errors_count": len(errors),
         "warnings_count": len(warnings),
+        "blocking_errors": errors,
+        # Compatibility aliases retained for existing diagnostics consumers.
         "errors_count": len(errors),
         "warnings": warnings,
         "errors": errors,
@@ -2102,8 +2115,12 @@ def main() -> int:
         warnings,
     )
 
-    valid_layers = [layer for layer in layers if validate_layer(layer, warnings, errors)]
-    valid_layer_ids = {layer["layer_id"] for layer in valid_layers}
+    validated_layers = [layer for layer in layers if validate_layer(layer, warnings, errors)]
+    enabled_layer_ids = {
+        layer["layer_id"]
+        for layer in validated_layers
+        if layer.get("is_enabled") is True
+    }
 
     valid_features: List[Dict[str, Any]] = []
     rejected_features: List[Dict[str, Any]] = []
@@ -2111,19 +2128,6 @@ def main() -> int:
     for mapped in candidate_records:
         mapped["etl_status"] = "pending"
         mapped["etl_error"] = None
-
-        if parse_bool(mapped.get("validated")) is not True:
-            mapped["etl_status"] = "rejected"
-            mapped["etl_error"] = "not_validated"
-            rejected_features.append(
-                {
-                    "id": mapped.get("id") or "<missing>",
-                    "source_record_id": mapped.get("source_record_id"),
-                    "name_ru": mapped.get("name_ru"),
-                    "reasons": ["not_validated"],
-                }
-            )
-            continue
 
         if not args.include_inactive and mapped.get("is_active") is False:
             mapped["etl_status"] = "rejected"
@@ -2138,8 +2142,28 @@ def main() -> int:
             )
             continue
 
+        if parse_bool(mapped.get("validated")) is not True:
+            mapped["etl_status"] = "rejected"
+            mapped["etl_error"] = "unreviewed_active_feature"
+            add_issue(
+                errors,
+                "critical",
+                get_diagnostic_record_id(mapped),
+                "unreviewed_active_feature",
+                "validated",
+            )
+            rejected_features.append(
+                {
+                    "id": mapped.get("id") or "<missing>",
+                    "source_record_id": mapped.get("source_record_id"),
+                    "name_ru": mapped.get("name_ru"),
+                    "reasons": ["unreviewed_active_feature"],
+                }
+            )
+            continue
+
         record_errors_start = len(errors)
-        feature_valid = validate_feature(mapped, valid_layer_ids, warnings, errors)
+        feature_valid = validate_feature(mapped, enabled_layer_ids, warnings, errors)
         if not feature_valid:
             diagnostic_record_id = get_diagnostic_record_id(mapped)
             critical_reasons = [
@@ -2229,6 +2253,10 @@ def main() -> int:
     reviewed_relations = finalize_relations(reviewed_relation_candidates, relation_source_refs, errors)
     attach_relation_ids(valid_features, reviewed_relations)
 
+    published_layers, layer_warnings = select_publishable_layers(validated_layers, valid_features)
+    warnings.extend(layer_warnings)
+    warnings.extend(collect_semantic_quality_warnings(valid_features))
+
     try:
         existing_id_aliases = load_id_aliases(id_aliases_seed_path)
         id_aliases = build_id_aliases(valid_features, existing_id_aliases)
@@ -2252,6 +2280,7 @@ def main() -> int:
     error_stats = aggregate_issues(errors)
     warning_stats = aggregate_issues(warnings)
     warning_categories = aggregate_warning_categories(warnings)
+    semantic_status = "blocked" if errors else "ready_with_warnings" if warnings else "ready"
 
     export_meta = {
         "timestamp": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -2260,6 +2289,9 @@ def main() -> int:
         "records_exported": exported_records,
         "records_geojson": geojson_records,
         "records_rejected": rejected_records,
+        "layers_total_source": len(layer_records),
+        "layers_published": len(published_layers),
+        "enabled_empty_layers_excluded": warning_stats.get("enabled_empty_layer_excluded", 0),
         "sources_total_source": len(source_records),
         "sources_reviewed": len(reviewed_sources),
         "media_total_source": len(media_records),
@@ -2274,6 +2306,11 @@ def main() -> int:
         "error_stats": error_stats,
         "warning_stats": warning_stats,
         "warning_categories": warning_categories,
+        "semantic_gate": {
+            "status": semantic_status,
+            "blocking_errors": len(errors),
+            "warnings": len(warnings),
+        },
         "duration_seconds": round(time.time() - started_at, 3),
     }
 
@@ -2282,7 +2319,7 @@ def main() -> int:
         write_json(geojson_path, geojson)
         write_json(id_aliases_path, id_aliases)
         write_json(rejected_path, rejected_features)
-        write_json(layers_path, valid_layers)
+        write_json(layers_path, published_layers)
         write_json(sources_path, reviewed_sources)
         write_json(media_path, reviewed_media)
         write_json(relations_path, reviewed_relations)
@@ -2302,7 +2339,7 @@ def main() -> int:
 
     # Финальный вывод — в формате, согласованном с мастер-промптом
     print(f"OK: {len(valid_features)} | Errors: {len(errors)} | Rejected: {len(rejected_features)}")
-    print(f"LAYERS: {len(valid_layers)}")
+    print(f"LAYERS: {len(published_layers)}")
     if rejected_features:
         preview = rejected_features[:3]
         print(f"REJECT_PREVIEW: {json.dumps(preview, ensure_ascii=False)}")

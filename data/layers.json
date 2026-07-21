@@ -32,26 +32,10 @@
     "is_enabled": true
   },
   {
-    "layer_id": "minoan_architecture",
-    "name_ru": "Минойская архитектура",
-    "name_en": "Minoan Architecture",
-    "color_hex": "#6b9ea8",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
     "layer_id": "ancient_egypt",
     "name_ru": "Древнеегипетская архитектура",
     "name_en": "Ancient Egyptian Architecture",
     "color_hex": "#d4a017",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
-    "layer_id": "early_christian",
-    "name_ru": "Раннехристианская архитектура",
-    "name_en": "Early Christian Architecture",
-    "color_hex": "#9b6b9e",
     "icon": null,
     "is_enabled": true
   },
@@ -68,14 +52,6 @@
     "name_ru": "Барокко",
     "name_en": "Baroque Architecture",
     "color_hex": "#d4810a",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
-    "layer_id": "mannerism",
-    "name_ru": "Маньеризм",
-    "name_en": "Mannerism",
-    "color_hex": "#7a5c8a",
     "icon": null,
     "is_enabled": true
   },
@@ -128,14 +104,6 @@
     "is_enabled": true
   },
   {
-    "layer_id": "rococo_france",
-    "name_ru": "Рококо",
-    "name_en": "Rococo Architecture",
-    "color_hex": "#e8a0c0",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
     "layer_id": "high_tech_modern",
     "name_ru": "Хай-тек",
     "name_en": "High-tech Architecture",
@@ -144,34 +112,10 @@
     "is_enabled": true
   },
   {
-    "layer_id": "etruscan_architecture",
-    "name_ru": "Этрусская архитектура",
-    "name_en": "Etruscan Architecture",
-    "color_hex": "#a05c3b",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
     "layer_id": "art_deco_usa",
     "name_ru": "Ар-деко",
     "name_en": "Art Deco",
     "color_hex": "#d4a800",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
-    "layer_id": "pre_romanesque",
-    "name_ru": "Дороманский стиль",
-    "name_en": "Pre-Romanesque",
-    "color_hex": "#8b6914",
-    "icon": null,
-    "is_enabled": true
-  },
-  {
-    "layer_id": "victorian_architecture",
-    "name_ru": "Викторианская архитектура",
-    "name_en": "Victorian Architecture",
-    "color_hex": "#7a5c3a",
     "icon": null,
     "is_enabled": true
   },
