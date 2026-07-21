@@ -1,4 +1,4 @@
-name: Release Discipline Gate (Structural)
+name: Release Discipline Gate
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   release-gate:
-    name: Structural release gate
+    name: Structural + semantic release gate
     runs-on: ubuntu-latest
 
     steps:
@@ -32,5 +32,5 @@ jobs:
         run: python scripts/preflight_migration_check.py
 
       - name: Run release gate
-        # Structural release-discipline check; this workflow does not replace full regression testing.
+        # Cross-artifact structural and semantic publish check; full regression remains separate.
         run: python scripts/release_check.py

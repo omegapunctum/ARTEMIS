@@ -32,16 +32,36 @@ def _build_fixture(
     rejected_items: list[dict] | None = None,
 ) -> None:
     canonical_id = "550e8400-e29b-41d4-a716-446655440000"
+    source_id = "src_fixture"
+    media_id = "media_fixture"
+    media_asset_url = "https://example.com/fixture.jpg"
     features = [] if empty_features else [
         {
             "type": "Feature",
             "id": canonical_id,
-            "geometry": None,
+            "geometry": {"type": "Point", "coordinates": [10.0, 20.0]},
             "properties": {
                 "id": canonical_id,
                 "canonical_publish_id": canonical_id,
                 "source_record_id": "recFixture",
                 "legacy_ids": ["recFixture"],
+                "layer_id": "fixture_layer",
+                "layer_type": "architecture",
+                "date_start": "2000",
+                "date_end": "2001",
+                "image_url": media_asset_url,
+                "source_ids": [source_id],
+                "source_refs": [
+                    {"source_id": source_id, "roles": ["general_reference"], "is_primary": True}
+                ],
+                "media_ids": [media_id],
+                "media_refs": [
+                    {"media_id": media_id, "display_role": "primary", "sort_order": 1}
+                ],
+                "relation_ids": [],
+                "coordinates_confidence": "approximate",
+                "tags": ["fixture"],
+                "validated": True,
             },
         }
     ]
@@ -58,7 +78,7 @@ def _build_fixture(
     )
     _write(
         root / "data" / "features.json",
-        json.dumps([{"id": "recFixture", "fields": {"id": canonical_id}} for _ in features]),
+        json.dumps([{"id": "recFixture", "fields": {"id": canonical_id, "validated": True}} for _ in features]),
     )
     _write(
         root / "data" / "id_aliases.json",
@@ -71,16 +91,99 @@ def _build_fixture(
         ),
     )
     _write(
+        root / "data" / "layers.json",
+        json.dumps(
+            [] if empty_features else [
+                {
+                    "layer_id": "fixture_layer",
+                    "name_ru": "Тестовый слой",
+                    "name_en": "Fixture layer",
+                    "color_hex": "#112233",
+                    "icon": "fixture",
+                    "is_enabled": True,
+                }
+            ]
+        ),
+    )
+    _write(
+        root / "data" / "sources.json",
+        json.dumps(
+            [] if empty_features else [
+                {
+                    "id": source_id,
+                    "source_record_id": "recSourceFixture",
+                    "url": "https://example.com/source",
+                    "bibliographic_locator": None,
+                    "title": "Fixture source",
+                    "author_or_organization": "Fixture organization",
+                    "source_type": "institutional",
+                    "review_status": "reviewed",
+                }
+            ]
+        ),
+    )
+    _write(
+        root / "data" / "media.json",
+        json.dumps(
+            [] if empty_features else [
+                {
+                    "id": media_id,
+                    "source_record_id": "recMediaFixture",
+                    "asset_url": media_asset_url,
+                    "source_page_url": "https://example.com/media",
+                    "creator": "Fixture creator",
+                    "license": "CC BY",
+                    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+                    "attribution_text": "Fixture creator, CC BY 4.0",
+                    "media_type": "image",
+                    "review_status": "reviewed",
+                }
+            ]
+        ),
+    )
+    _write(root / "data" / "relations.json", "[]")
+    _write(
+        root / "data" / "validation_report.json",
+        json.dumps(
+            {
+                "schema_version": 2,
+                "status": "ready",
+                "total_records": len(features),
+                "valid_records": len(features),
+                "skipped_records": resolved_records_rejected,
+                "blocking_errors_count": 0,
+                "warnings_count": 0,
+                "blocking_errors": [],
+                "errors_count": 0,
+                "warnings": [],
+                "errors": [],
+            }
+        ),
+    )
+    _write(
         root / "data" / "export_meta.json",
         json.dumps(
             {
                 "records_exported": len(features),
                 "records_rejected": resolved_records_rejected,
                 "records_total_source": resolved_records_total_source,
+                "layers_total_source": 0 if empty_features else 1,
+                "layers_published": 0 if empty_features else 1,
+                "enabled_empty_layers_excluded": 0,
+                "sources_total_source": len(features),
+                "sources_reviewed": len(features),
+                "media_total_source": len(features),
+                "media_reviewed": len(features),
+                "relations_total_source": 0,
+                "relations_reviewed": 0,
+                "errors": 0,
+                "warnings": 0,
+                "warning_stats": {},
                 "warning_categories": {
                     "expected_fallback": expected_fallback_warnings,
                     "data_quality": data_quality_warnings,
                 },
+                "semantic_gate": {"status": "ready", "blocking_errors": 0, "warnings": 0},
             }
         ),
     )
@@ -253,6 +356,7 @@ def test_release_check_happy_path(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "[PASS] Data layer" in result.stdout
+    assert "[PASS] Semantic data" in result.stdout
     assert "[PASS] Backend" in result.stdout
     assert "[PASS] Frontend" in result.stdout
     assert "[PASS] PWA" in result.stdout
@@ -315,6 +419,76 @@ def test_release_check_fails_when_canonical_id_is_not_uuid_v4(tmp_path: Path) ->
     assert "feature[0].id must be UUID v4" in result.stdout
 
 
+def test_release_check_fails_on_blocking_semantic_error(tmp_path: Path) -> None:
+    _build_fixture(tmp_path)
+    report_path = tmp_path / "data" / "validation_report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    error = {
+        "id": "recFixture",
+        "record_id": "recFixture",
+        "field": "validated",
+        "reason": "unreviewed_active_feature",
+        "severity": "critical",
+        "error": "unreviewed_active_feature",
+    }
+    report.update(
+        {
+            "status": "blocked",
+            "blocking_errors_count": 1,
+            "blocking_errors": [error],
+            "errors_count": 1,
+            "errors": [error],
+        }
+    )
+    _write(report_path, json.dumps(report))
+
+    result = _run_release_check(tmp_path)
+
+    assert result.returncode == 1
+    assert "[FAIL] Semantic data: semantic validation has 1 blocking error(s)" in result.stdout
+
+
+def test_release_check_fails_on_html_page_used_as_media_asset(tmp_path: Path) -> None:
+    _build_fixture(tmp_path)
+    media_path = tmp_path / "data" / "media.json"
+    media = json.loads(media_path.read_text(encoding="utf-8"))
+    media[0]["asset_url"] = "https://commons.wikimedia.org/wiki/File:Fixture.jpg"
+    _write(media_path, json.dumps(media))
+
+    result = _run_release_check(tmp_path)
+
+    assert result.returncode == 1
+    assert "[FAIL] Semantic data: Media media_fixture has invalid direct asset_url" in result.stdout
+
+
+def test_release_check_fails_on_published_enabled_empty_layer(tmp_path: Path) -> None:
+    _build_fixture(tmp_path)
+    layers_path = tmp_path / "data" / "layers.json"
+    layers = json.loads(layers_path.read_text(encoding="utf-8"))
+    layers.append(
+        {
+            "layer_id": "empty_layer",
+            "name_ru": "Пустой слой",
+            "name_en": "Empty layer",
+            "color_hex": "#445566",
+            "icon": "empty",
+            "is_enabled": True,
+        }
+    )
+    _write(layers_path, json.dumps(layers))
+
+    meta_path = tmp_path / "data" / "export_meta.json"
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    meta["layers_total_source"] = 2
+    meta["layers_published"] = 2
+    _write(meta_path, json.dumps(meta))
+
+    result = _run_release_check(tmp_path)
+
+    assert result.returncode == 1
+    assert "[FAIL] Semantic data: published enabled Layer empty_layer is empty" in result.stdout
+
+
 def test_release_check_fails_on_frontend_fallback_pattern(tmp_path: Path) -> None:
     _build_fixture(tmp_path, frontend_fallback=True)
     result = _run_release_check(tmp_path)
@@ -346,15 +520,15 @@ def test_release_check_fails_when_expected_fallback_exceeds_threshold(tmp_path: 
     result = _run_release_check(tmp_path)
 
     assert result.returncode == 1
-    assert "[FAIL] Data layer: expected_fallback warnings exceed threshold (11 > 10)" in result.stdout
+    assert "[FAIL] Data layer: expected_fallback warnings exceed threshold (11 > 0)" in result.stdout
 
 
 def test_release_check_fails_when_data_quality_exceeds_threshold(tmp_path: Path) -> None:
-    _build_fixture(tmp_path, data_quality_warnings=1)
+    _build_fixture(tmp_path, data_quality_warnings=15)
     result = _run_release_check(tmp_path)
 
     assert result.returncode == 1
-    assert "[FAIL] Data layer: data_quality warnings exceed threshold (1 > 0)" in result.stdout
+    assert "[FAIL] Data layer: data_quality warnings exceed threshold (15 > 14)" in result.stdout
 
 
 def test_release_check_fails_on_legacy_upload_path_assumption(tmp_path: Path) -> None:

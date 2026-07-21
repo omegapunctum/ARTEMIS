@@ -16,11 +16,23 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ROOT = Path(os.environ.get("RELEASE_CHECK_ROOT", REPO_ROOT)).resolve()
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+try:
+    from scripts.semantic_data_gate import (  # noqa: E402
+        SEMANTIC_WARNING_BUDGETS,
+        SemanticGateError,
+        validate_semantic_release,
+    )
+except ModuleNotFoundError:  # Direct execution with RELEASE_CHECK_ROOT fixture.
+    from semantic_data_gate import (  # type: ignore[no-redef]  # noqa: E402
+        SEMANTIC_WARNING_BUDGETS,
+        SemanticGateError,
+        validate_semantic_release,
+    )
 BEHAVIORAL_PWA_TEST_PATH = REPO_ROOT / "tests" / "test_sw_fetch_behavior.py"
 DEV_LIKE_ENVS = {"development", "dev", "testing", "test", "local"}
 
-MAX_EXPECTED_FALLBACK_WARNINGS = 10
-MAX_DATA_QUALITY_WARNINGS = 0
+MAX_EXPECTED_FALLBACK_WARNINGS = 0
+MAX_DATA_QUALITY_WARNINGS = sum(SEMANTIC_WARNING_BUDGETS.values())
 
 
 class CheckFailed(Exception):
@@ -230,6 +242,20 @@ def check_backend() -> None:
     app = getattr(module, "app", None)
     if app is None:
         fail("app.main:app is missing")
+
+
+def check_semantic_data() -> None:
+    try:
+        summary = validate_semantic_release(ROOT)
+    except SemanticGateError as exc:
+        fail(str(exc))
+    print(
+        "[INFO] Semantic data: "
+        f"status={summary['status']} features={summary['features']} "
+        f"layers={summary['layers']} sources={summary['sources']} "
+        f"media={summary['media']} relations={summary['relations']} "
+        f"warnings={summary['warnings']}"
+    )
 
 
 def check_frontend() -> None:
@@ -508,6 +534,7 @@ def run_check(name: str, func) -> None:
 
 def main() -> None:
     run_check("Data layer", check_data_layer)
+    run_check("Semantic data", check_semantic_data)
     run_check("Backend", check_backend)
     run_check("Runtime/deployment", check_runtime_deployment)
     run_check("Frontend", check_frontend)

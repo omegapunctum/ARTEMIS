@@ -42,10 +42,12 @@ Owner docs:
 
 ### P0.4 Semantic data gate
 
-- проверка identity/source/media/relation/review semantics;
-- пустые enabled Layers не публикуются;
-- validation report отражает semantic warnings;
-- source schema не обещает ETL write-back, если write-back отсутствует.
+Статус 2026-07-21: implementation candidate для #284 подготовлен; merge/review gate pending.
+
+- [x] проверка identity/source/media/relation/review semantics;
+- [x] пустые enabled Layers не публикуются;
+- [x] validation report разделяет blocking errors и budgeted semantic warnings;
+- [x] source schema не обещает ETL write-back, если write-back отсутствует.
 
 ### P0.5 Public capability alignment
 

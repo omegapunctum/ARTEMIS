@@ -43,6 +43,7 @@ jobs:
           test -f data/_test_sources.json
           test -f data/_test_media.json
           test -f data/_test_relations.json
+          test -f data/_test_validation_report.json
           test -f data/_test_export_meta.json
 
       - name: Validate GeoJSON structure
@@ -88,5 +89,20 @@ jobs:
           assert data["media_reviewed"] == 1
           assert data["relations_reviewed"] == 1
           assert "errors" in data
+          assert data["semantic_gate"]["blocking_errors"] == 0
+          assert data["semantic_gate"]["status"] in {"ready", "ready_with_warnings"}
           print("Meta OK")
+          EOF
+
+      - name: Validate semantic report
+        run: |
+          python - <<EOF
+          import json
+          with open("data/_test_validation_report.json") as f:
+              data = json.load(f)
+          assert data["schema_version"] == 2
+          assert data["blocking_errors_count"] == 0
+          assert data["blocking_errors"] == []
+          assert data["status"] in {"ready", "ready_with_warnings"}
+          print("Semantic report OK")
           EOF

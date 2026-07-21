@@ -653,7 +653,7 @@
         "influence_radius_km": 1,
         "title_short": "Манифест архитектуры хай-тек в центре Парижа",
         "description": "Здание «вывернутое наизнанку»: все коммуникации вынесены на фасад и выделены цветом.",
-        "image_url": "https://commons.wikimedia.org/wiki/File:Centre_Pompidou_Paris_2021.jpg",
+        "image_url": null,
         "source_url": "https://en.wikipedia.org/wiki/Centre_Pompidou",
         "source_ids": [
           "src_centre_pompidou_wikipedia"
@@ -850,7 +850,7 @@
         "influence_radius_km": 1,
         "title_short": "Манифест современной архитектуры Ле Корбюзье",
         "description": "Воплощение 5 принципов: опоры, крыша-сад, свободный план, ленточные окна, свободный фасад.",
-        "image_url": "https://commons.wikimedia.org/wiki/File:Villa_Savoye_Front_View.jpg",
+        "image_url": null,
         "source_url": "https://en.wikipedia.org/wiki/Villa_Savoye",
         "source_ids": [
           "src_villa_savoye_wikipedia"
@@ -982,7 +982,7 @@
         "influence_radius_km": 5,
         "title_short": "Самое высокое здание в истории человечества",
         "description": "828-метровый небоскрёб. Форма основана на геометрии цветка и минимизирует ветровые нагрузки.",
-        "image_url": "https://commons.wikimedia.org/wiki/File:Burj_Khalifa_Dubai_Skyline.jpg",
+        "image_url": null,
         "source_url": "https://www.burjkhalifa.ae/en/",
         "source_ids": [
           "src_burj_khalifa_official"
