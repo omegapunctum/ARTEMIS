@@ -38,6 +38,7 @@ Supporting release artifacts:
 - `data/sources.json`
 - `data/media.json`
 - `data/relations.json`
+- `data/content_profile.json`
 - `data/export_meta.json`
 - `data/rejected.json`
 
@@ -48,8 +49,9 @@ Release-evidence / diagnostic artifacts:
 Rules:
 - `data/features.geojson` is the production-default public source for map rendering.
 - `data/features.json` is a supporting/raw validated artifact, not the public source of truth.
-- `export_meta.json`, `rejected.json` and `validation_report.json` are release-quality evidence.
+- `export_meta.json`, `rejected.json`, `validation_report.json` and `content_profile.json` are release-quality evidence.
 - `validation_report.json` is not a competing content source, but release gate explicitly depends on its blocking-error/warning contract.
+- `content_profile.json` is a deterministic readiness snapshot derived from public artifacts; it does not create or override content.
 
 ---
 
@@ -63,6 +65,7 @@ Required release artifacts:
 - `data/sources.json`
 - `data/media.json`
 - `data/relations.json`
+- `data/content_profile.json`
 - `data/validation_report.json`
 - `data/export_meta.json`
 - `data/rejected.json`
@@ -84,6 +87,7 @@ Release gate rules:
 - `blocking_errors_count`, compatibility `errors_count`, `export_meta.errors` and `semantic_gate.blocking_errors` must agree and must be zero for publication;
 - `data/rejected.json` must be empty for a publishable release;
 - public Features, Layers, Sources, Media and Relations must pass cross-artifact identity, review, evidence, rights, date, geometry and projection checks;
+- `content_profile.json` must exactly match the current public artifacts and approved pilot thresholds; `building` is valid, stale or manually inflated metrics are not;
 - disabled Layers and enabled empty Layers are excluded from public `layers.json`; enabled empty Layers remain visible as warnings in release evidence;
 - Feature `image_url` may only mirror a reviewed primary Media `asset_url`; without reviewed primary Media it is `null`;
 - release gate blocks on missing artifacts, mismatched record counts, blocking semantic errors, invalid warning categories/budgets, invalid cross-references or invalid public payloads.

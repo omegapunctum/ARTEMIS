@@ -91,16 +91,16 @@ Structural release success не равен semantic content validation.
 - добавить semantic ETL/release gate;
 - устранить enabled empty Layers.
 
-Execution status 2026-07-21: identity, normalized Source/Media export and Relation/Similarity semantics are merged. The #284 change set implements the semantic gate and excludes 7 enabled empty Layers from public artifacts while retaining warnings; review/merge remains pending. Three Media-rights gaps stay tracked separately in #283.
+Execution status 2026-07-21: identity, normalized Source/Media export and Relation/Similarity semantics are merged. #284 is merged as `d4e8b53`; the semantic gate excludes 7 enabled empty Layers from public artifacts while retaining bounded warnings. Three Media-rights gaps stay tracked separately in #283.
 
 ### Track C — Content pilot
 
-- 100–150 architecture Features;
-- 15–20 непустых Layers/periods/styles;
-- 50+ reviewed Relations;
-- source/media coverage;
-- 3 curated Stories;
-- reference Slices.
+- approved Round 0 envelope: 30–40 architecture Features;
+- 6–8 comparison cohorts минимум по 3 Features;
+- 12–20 reviewed Relations;
+- 100% Source coverage, ≥90% primary Media, 100% Relation evidence;
+- executable checked-in content profile;
+- 100–150 / 50+ / Stories / reference Slices остаются maturity reference после decision gate.
 
 ### Track D — Public product loop
 
@@ -127,7 +127,7 @@ Execution status 2026-07-21: identity, normalized Source/Media export and Relati
 
 ### Exit criteria
 
-- MVP data threshold достигнут;
+- approved Round 0 data threshold достигнут;
 - semantic validation проходит;
 - public Slice loop проходит E2E;
 - relation/similarity semantics корректны;

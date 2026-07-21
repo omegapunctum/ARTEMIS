@@ -22,6 +22,7 @@
   - data/layers.json          : агрегированные метаданные слоёв
   - data/export_errors.log    : ошибки в формате JSON Lines
   - data/export_meta.json     : метаданные экспорта (timestamp, counts, source)
+  - data/content_profile.json : comparison-pilot readiness snapshot
 
 Если передан --dry-run или нет обязательных переменных/параметров для API, скрипт
 переходит в dry-run режим: не обращается к Airtable и пишет mock-выход в data/_test_*.
@@ -52,6 +53,10 @@ try:
     from scripts.semantic_data_gate import collect_semantic_quality_warnings, select_publishable_layers
 except ModuleNotFoundError:  # Direct `python scripts/export_airtable.py` execution.
     from semantic_data_gate import collect_semantic_quality_warnings, select_publishable_layers
+try:
+    from scripts.content_profile import build_content_profile
+except ModuleNotFoundError:  # Direct `python scripts/export_airtable.py` execution.
+    from content_profile import build_content_profile
 
 # Установка зависимости: pip install requests
 REQUESTS_AVAILABLE = importlib.util.find_spec("requests") is not None
@@ -2024,6 +2029,7 @@ def main() -> int:
     relations_path = out_dir / f"{prefix}relations.json"
     validation_report_path = out_dir / f"{prefix}validation_report.json"
     export_meta_path = out_dir / f"{prefix}export_meta.json"
+    content_profile_path = out_dir / f"{prefix}content_profile.json"
     error_log_path = out_dir / f"{prefix}export_errors.log"
 
     records: List[Dict[str, Any]]
@@ -2313,6 +2319,14 @@ def main() -> int:
         },
         "duration_seconds": round(time.time() - started_at, 3),
     }
+    content_profile = build_content_profile(
+        features=geojson["features"],
+        layers=published_layers,
+        sources=reviewed_sources,
+        media=reviewed_media,
+        relations=reviewed_relations,
+        semantic_status=semantic_status,
+    )
 
     try:
         write_json(raw_path, records)
@@ -2325,6 +2339,7 @@ def main() -> int:
         write_json(relations_path, reviewed_relations)
         write_json(validation_report_path, validation_report)
         write_json(export_meta_path, export_meta)
+        write_json(content_profile_path, content_profile)
 
         # Перезаписываем лог ошибок на каждый запуск
         if error_log_path.exists():
@@ -2359,6 +2374,7 @@ def main() -> int:
                 relations_path,
                 validation_report_path,
                 export_meta_path,
+                content_profile_path,
                 error_log_path,
             ],
             len(valid_features),

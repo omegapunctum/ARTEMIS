@@ -186,6 +186,7 @@ app/
 
 ```text
 data/
+├── content_profile.json
 ├── courses.json
 ├── export_errors.log
 ├── export_meta.json
@@ -206,6 +207,7 @@ data/
 - `data/id_aliases.json` — versioned compatibility map from legacy/source IDs to canonical UUID v4;
 - raw / validated / rejected слои не смешиваются;
 - checked-in data artifacts должны использовать тот же contract, что и release gate;
+- `content_profile.json` schema version 1 — детерминированный snapshot comparison-pilot readiness; генерируется из public artifacts и проверяется на drift;
 - `validation_report.json` schema version 2 — обязательное release evidence с разделёнными blocking errors и budgeted warnings; это не content source-of-truth, но semantic release gate опирается на него напрямую;
 - `export_errors.log` остаётся человекочитаемой JSONL-проекцией тех же diagnostics и не создаёт отдельную validation truth.
 

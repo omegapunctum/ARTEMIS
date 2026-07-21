@@ -161,17 +161,16 @@ Thin CRUD не считается полноценной Stories/Courses product
 
 ## 8. Content threshold
 
-Перед первой внешней validation:
+Перед comparison-first Round 0:
 
-- 100–150 Features;
-- 15–20 непустых Layers/periods/styles;
-- 50+ reviewed Relations;
-- source coverage для всех Features;
-- media attribution для ключевых Features;
-- 3 curated Stories;
-- 5–10 reference Slices.
+- 30–40 Features;
+- 6–8 comparison cohorts минимум по 3 Features;
+- 12–20 reviewed Relations;
+- source coverage 100%;
+- primary Media coverage не ниже 90%;
+- relation evidence coverage 100%.
 
-Полная граница MVP определяется `MVP_ARCHITECTURE_ATLAS.md`.
+Порог является утверждённым узким pilot envelope из `docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`. Более широкий ориентир 100–150 Features / 50+ Relations / Stories / reference Slices остаётся maturity reference после decision gate. Полная граница MVP определяется `MVP_ARCHITECTURE_ATLAS.md`.
 
 ## 9. AI boundary
 

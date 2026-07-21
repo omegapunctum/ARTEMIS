@@ -63,6 +63,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - 2 reviewed Relations достаточны для проверки контракта, но ещё не образуют полноценный исследовательский relation graph;
 - semantic ETL/release gate проверяет blocking errors отдельно от budgeted warnings, cross-artifact evidence/review semantics, enabled populated Layers и отсутствие unreviewed legacy image URLs;
 - текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
+- comparison-pilot profile имеет статус `building`: 19/30 минимальных Features, 0/6 comparison cohorts, 2/12 Relations и 84.21%/90% primary Media; Source и Relation evidence coverage уже 100%.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
 
@@ -92,7 +93,7 @@ ARTEMIS находится в состоянии **controlled engineering protot
 
 1. синхронизация продукта и документации;
 2. исправление data foundation;
-3. сбор архитектурного content pilot;
+3. сбор утверждённого comparison-first content pilot 30–40 / 6–8 cohorts / 12–20 Relations;
 4. подключение публичного backend для Slice loop;
 5. UX refinement;
 6. пользовательская проверка.

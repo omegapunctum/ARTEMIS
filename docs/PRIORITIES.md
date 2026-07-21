@@ -42,7 +42,7 @@ Owner docs:
 
 ### P0.4 Semantic data gate
 
-Статус 2026-07-21: implementation candidate для #284 подготовлен; merge/review gate pending.
+Статус 2026-07-21: #284 закрыт merge-коммитом `d4e8b53`; semantic gate работает в ETL и release-check.
 
 - [x] проверка identity/source/media/relation/review semantics;
 - [x] пустые enabled Layers не публикуются;
@@ -61,11 +61,12 @@ Owner docs:
 
 ### P1.1 Architecture content pilot
 
-- 100–150 Features;
-- 15–20 populated Layers/styles/periods;
-- 50+ reviewed Relations;
-- source/media coverage;
-- 3 Stories и reference Slices.
+- 30–40 Features для comparison-first Round 0;
+- 6–8 comparison cohorts минимум по 3 Features;
+- 12–20 reviewed Relations;
+- 100% Source coverage и ≥90% primary Media coverage;
+- детерминированный `data/content_profile.json`;
+- Stories/reference Slices — после public Slice E2E; maturity reference остаётся 100–150 / 50+.
 
 ### P1.2 Compare and sourced detail
 
