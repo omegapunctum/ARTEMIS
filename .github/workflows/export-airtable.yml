@@ -1,9 +1,6 @@
 name: Export Airtable Data
 
 on:
-  push:
-    branches:
-      - agent/validation-corpus-v2-export
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
