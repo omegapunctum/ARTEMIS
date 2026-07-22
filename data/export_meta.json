@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-22T08:09:34Z",
+  "timestamp": "2026-07-22T13:22:58Z",
   "source": "airtable",
   "records_total_source": 31,
   "records_exported": 31,
@@ -8,15 +8,15 @@
   "layers_total_source": 26,
   "layers_published": 19,
   "enabled_empty_layers_excluded": 7,
-  "sources_total_source": 32,
-  "sources_reviewed": 31,
+  "sources_total_source": 36,
+  "sources_reviewed": 35,
   "media_total_source": 28,
   "media_reviewed": 28,
   "feature_source_links_total": 32,
   "feature_media_links_total": 28,
-  "relations_total_source": 2,
-  "relations_reviewed": 2,
-  "relation_source_links_total": 2,
+  "relations_total_source": 12,
+  "relations_reviewed": 12,
+  "relation_source_links_total": 21,
   "errors": 0,
   "warnings": 14,
   "error_stats": {},
@@ -37,5 +37,5 @@
     "blocking_errors": 0,
     "warnings": 14
   },
-  "duration_seconds": 4.696
+  "duration_seconds": 5.248
 }

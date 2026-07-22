@@ -1,5 +1,180 @@
 [
   {
+    "id": "27d8a886-6443-4afd-a013-f7918df5355b",
+    "source_feature_id": "47080747-1fb1-4dff-aaa7-5d777ef079b2",
+    "target_feature_id": "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+    "relation_type": "same_movement",
+    "description": "Cologne Cathedral and Chartres Cathedral are documented major works of the European Gothic cathedral tradition.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_chartres_unesco",
+      "src_cologne_cathedral_unesco"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_chartres_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO identifies Chartres as a defining and highly influential expression of Gothic cathedral art and architecture.",
+        "title": "Chartres Cathedral — UNESCO World Heritage Centre",
+        "url": "https://whc.unesco.org/en/list/81/"
+      },
+      {
+        "source_id": "src_cologne_cathedral_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO identifies Cologne Cathedral as a High Gothic basilica and a Gothic masterpiece begun in 1248.",
+        "title": "Cologne Cathedral",
+        "url": "https://whc.unesco.org/en/list/292/"
+      }
+    ]
+  },
+  {
+    "id": "2c5901a8-64e7-4538-89c6-a7f02a11f365",
+    "source_feature_id": "2760f275-b68a-4ff9-bc8e-01fdb12d3652",
+    "target_feature_id": "71ab11dd-f159-43d3-bcf9-711380973f0e",
+    "relation_type": "same_movement",
+    "description": "Preston Central Bus Station and the Royal National Theatre are documented examples of British Brutalist architecture.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_national_theatre_brutalism_official",
+      "src_preston_bus_station_historic_england"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_national_theatre_brutalism_official",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "The National Theatre’s official press release describes Denys Lasdun’s building as iconic Brutalist architecture.",
+        "title": "Abstractions: Studies of the National Theatre — press release",
+        "url": "https://images.nationaltheatre.org.uk/uploads/2024/01/Abstractions-exhibition-press-release-Jan-2024.pdf"
+      },
+      {
+        "source_id": "src_preston_bus_station_historic_england",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Historic England identifies Preston Bus Station as an example of New Brutalist architecture influenced by late Le Corbusier.",
+        "title": "Preston Central Bus Station and Car Park",
+        "url": "https://historicengland.org.uk/listing/the-list/list-entry/1416042"
+      }
+    ]
+  },
+  {
+    "id": "516d0431-71dc-4ca1-beee-76adfad68f52",
+    "source_feature_id": "44de5bf1-a716-46e6-8494-0e42ba5dab1c",
+    "target_feature_id": "e5e19f09-054f-4e38-9733-58355ca6768a",
+    "relation_type": "same_movement",
+    "description": "The Colosseum and Maison Carrée are surviving monuments of Roman imperial architecture: a Flavian amphitheatre and an Augustan imperial-cult temple.",
+    "epistemic_status": "interpretation",
+    "confidence": "medium",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_colosseum_official",
+      "src_maison_carree_unesco"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_colosseum_official",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Parco archeologico del Colosseo identifies the Colosseum as the 1st-century Flavian Amphitheatre commissioned by emperors and a symbol of the Roman Empire.",
+        "title": "The Colosseum",
+        "url": "https://colosseo.it/en/area/the-colosseum/"
+      },
+      {
+        "source_id": "src_maison_carree_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO identifies Maison Carrée as an Augustan Roman temple associated with imperial worship and the consolidation of the Roman Empire.",
+        "title": "The Maison Carrée of Nîmes",
+        "url": "https://whc.unesco.org/en/list/1569/"
+      }
+    ]
+  },
+  {
+    "id": "609a2665-ffcb-4ed7-8f85-3850f67371c0",
+    "source_feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+    "target_feature_id": "2760f275-b68a-4ff9-bc8e-01fdb12d3652",
+    "relation_type": "same_movement",
+    "description": "Park Hill and Preston Central Bus Station are documented examples of British Brutalist architecture.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_park_hill_brutalism_historic_england",
+      "src_preston_bus_station_historic_england"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_park_hill_brutalism_historic_england",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Historic England’s housing case study explicitly identifies Park Hill as a post-war housing estate built in the Brutalist style.",
+        "title": "Heritage Works for Housing — Park Hill case study",
+        "url": "https://historicengland.org.uk/advice/planning/housing/heritage-works-for-housing/process/stakeholder-engagement/"
+      },
+      {
+        "source_id": "src_preston_bus_station_historic_england",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Historic England identifies Preston Bus Station as an example of New Brutalist architecture influenced by late Le Corbusier.",
+        "title": "Preston Central Bus Station and Car Park",
+        "url": "https://historicengland.org.uk/listing/the-list/list-entry/1416042"
+      }
+    ]
+  },
+  {
+    "id": "6f1ff09a-e6ce-4c01-bd5c-caa386b13a0a",
+    "source_feature_id": "393c7d17-d266-4e8b-8412-b96eb427f941",
+    "target_feature_id": "92ba97a4-ac18-4e17-a5c8-34c5b81bfcb8",
+    "relation_type": "same_movement",
+    "description": "St. Peter's Basilica and Palladio’s Villa La Rotonda are documented works of Italian Renaissance architecture.",
+    "epistemic_status": "interpretation",
+    "confidence": "medium",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_st_peters_basilica_wikipedia",
+      "src_villa_rotonda_official"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_st_peters_basilica_wikipedia",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "St. Peter’s Basilica reference identifies the church as an Italian Renaissance work, while noting its later Baroque elements.",
+        "title": "St. Peter's Basilica — Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica"
+      },
+      {
+        "source_id": "src_villa_rotonda_official",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Villa La Rotonda’s official site identifies Palladio’s villa as a Renaissance microcosm and documents its 16th-century authorship.",
+        "title": "Villa Almerico Capra Valmarana — La Rotonda",
+        "url": "https://www.villalarotonda.it/en/"
+      }
+    ]
+  },
+  {
     "id": "83f297bb-a954-4091-b6a1-36cc4c135010",
     "source_feature_id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
     "target_feature_id": "393c7d17-d266-4e8b-8412-b96eb427f941",
@@ -25,6 +200,101 @@
     ]
   },
   {
+    "id": "8fde422b-7b31-4715-958e-952dd246e27d",
+    "source_feature_id": "393c7d17-d266-4e8b-8412-b96eb427f941",
+    "target_feature_id": "8a68e7c4-bd4c-44c8-8b7d-ba41b24ca570",
+    "relation_type": "same_movement",
+    "description": "St. Peter's Basilica and Brunelleschi’s Dome are major works of Italian Renaissance architecture and dome design.",
+    "epistemic_status": "interpretation",
+    "confidence": "medium",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_brunelleschi_dome_opera_duomo",
+      "src_st_peters_basilica_wikipedia"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_brunelleschi_dome_opera_duomo",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Opera del Duomo identifies Brunelleschi’s Dome as a symbol and masterpiece of Renaissance culture, built from 1420 to 1436.",
+        "title": "Brunelleschi's Dome",
+        "url": "https://duomo.firenze.it/en/discover/dome"
+      },
+      {
+        "source_id": "src_st_peters_basilica_wikipedia",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "St. Peter’s Basilica reference identifies the church as Italian Renaissance architecture and documents its Renaissance dome design.",
+        "title": "St. Peter's Basilica — Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica"
+      }
+    ]
+  },
+  {
+    "id": "99db0449-a56d-4ef8-9171-4c08fbfd577e",
+    "source_feature_id": "6c97b04c-9ebe-4c5e-a7e4-637b630f8e3e",
+    "target_feature_id": "c7b6a5d4-0532-4f9e-8d2c-1b3a4f5e6d7c",
+    "relation_type": "same_movement",
+    "description": "The Erechtheion and Parthenon belong to the Periclean building programme of the Athenian Acropolis and the classical Greek architectural tradition.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_acropolis_athens_unesco"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_acropolis_athens_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO Acropolis, Athens brief synthesis and criteria identify the Parthenon and Erechtheion among the principal monuments of the Periclean programme and classical Greek civilization.",
+        "title": "Acropolis, Athens",
+        "url": "https://whc.unesco.org/en/list/404/"
+      }
+    ]
+  },
+  {
+    "id": "a29aa17f-0b04-4a94-83ab-e6b0c4e4744f",
+    "source_feature_id": "81dce408-f483-4bf3-b1a2-2f4e52864517",
+    "target_feature_id": "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+    "relation_type": "same_movement",
+    "description": "Canterbury Cathedral and Chartres Cathedral are documented works of the European Gothic architectural tradition.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_canterbury_cathedral_unesco",
+      "src_chartres_unesco"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_canterbury_cathedral_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO documents Canterbury Cathedral’s Early and Late Gothic architecture and its flowering of Gothic style.",
+        "title": "Canterbury Cathedral, St Augustine's Abbey, and St Martin's Church",
+        "url": "https://whc.unesco.org/en/list/496/"
+      },
+      {
+        "source_id": "src_chartres_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO identifies Chartres as a defining expression of Gothic cathedral art and records the wider diffusion of its Gothic model.",
+        "title": "Chartres Cathedral — UNESCO World Heritage Centre",
+        "url": "https://whc.unesco.org/en/list/81/"
+      }
+    ]
+  },
+  {
     "id": "bd667055-80ef-405d-8c2b-e1b9642972b5",
     "source_feature_id": "acfb7492-c49d-4e71-9bbc-bd446b52d32d",
     "target_feature_id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
@@ -46,6 +316,76 @@
         "claim_note": "Panthéon (Paris), lead/history passage: in 1791 the former church was transformed into a national mausoleum modelled on the Pantheon in Rome. Evidence scope is institutional use, not inferred formal design.",
         "title": "Panthéon — Wikipedia",
         "url": "https://en.wikipedia.org/wiki/Panth%C3%A9on"
+      }
+    ]
+  },
+  {
+    "id": "e110edba-4e71-4196-a9c2-08a11b0caf37",
+    "source_feature_id": "1f49bb51-07a2-4c86-8101-edb6e525503e",
+    "target_feature_id": "b0685472-ec71-400d-8b01-8809b165ba77",
+    "relation_type": "same_movement",
+    "description": "Villa Savoye and the Bauhaus Building are canonical works associated with the international Modern Movement.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_bauhaus_dessau_unesco",
+      "src_villa_savoye_unesco"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_bauhaus_dessau_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO states that the Bauhaus launched and formed the foundation of the Modern Movement in 20th-century architecture.",
+        "title": "Bauhaus and its Sites in Weimar, Dessau and Bernau",
+        "url": "https://whc.unesco.org/en/list/729/"
+      },
+      {
+        "source_id": "src_villa_savoye_unesco",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "UNESCO identifies Villa Savoye as an icon of the Modern Movement and an exemplary transcription of Le Corbusier’s Five Points.",
+        "title": "The Architectural Work of Le Corbusier",
+        "url": "https://whc.unesco.org/en/list/1321/"
+      }
+    ]
+  },
+  {
+    "id": "f2d062e1-57a8-4285-a3c8-811547476cb1",
+    "source_feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+    "target_feature_id": "71ab11dd-f159-43d3-bcf9-711380973f0e",
+    "relation_type": "same_movement",
+    "description": "Park Hill and the Royal National Theatre are documented examples of British Brutalist architecture.",
+    "epistemic_status": "fact",
+    "confidence": "high",
+    "valid_from": null,
+    "valid_to": null,
+    "source_ids": [
+      "src_national_theatre_brutalism_official",
+      "src_park_hill_brutalism_historic_england"
+    ],
+    "source_refs": [
+      {
+        "source_id": "src_national_theatre_brutalism_official",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "The National Theatre’s official press release describes Denys Lasdun’s building as iconic Brutalist architecture.",
+        "title": "Abstractions: Studies of the National Theatre — press release",
+        "url": "https://images.nationaltheatre.org.uk/uploads/2024/01/Abstractions-exhibition-press-release-Jan-2024.pdf"
+      },
+      {
+        "source_id": "src_park_hill_brutalism_historic_england",
+        "roles": [
+          "relation_evidence"
+        ],
+        "claim_note": "Historic England’s housing case study explicitly identifies Park Hill as a post-war housing estate built in the Brutalist style.",
+        "title": "Heritage Works for Housing — Park Hill case study",
+        "url": "https://historicengland.org.uk/advice/planning/housing/heritage-works-for-housing/process/stakeholder-engagement/"
       }
     ]
   }

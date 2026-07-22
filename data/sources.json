@@ -1,5 +1,17 @@
 [
   {
+    "id": "src_acropolis_athens_unesco",
+    "source_record_id": "recBfNy0OzojK9BRV",
+    "url": "https://whc.unesco.org/en/list/404/",
+    "bibliographic_locator": null,
+    "title": "Acropolis, Athens",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_alhambra_wikipedia",
     "source_record_id": "recBSDZJwiaOQq64t",
     "url": "https://en.wikipedia.org/wiki/Alhambra",
@@ -204,6 +216,18 @@
     "content_license": null
   },
   {
+    "id": "src_national_theatre_brutalism_official",
+    "source_record_id": "recNDAAHi8qzTtNQX",
+    "url": "https://images.nationaltheatre.org.uk/uploads/2024/01/Abstractions-exhibition-press-release-Jan-2024.pdf",
+    "bibliographic_locator": null,
+    "title": "Abstractions: Studies of the National Theatre — press release",
+    "author_or_organization": "National Theatre",
+    "source_type": "official",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_pantheon_paris_wikipedia",
     "source_record_id": "receZjrpka5zGZQn9",
     "url": "https://en.wikipedia.org/wiki/Panth%C3%A9on",
@@ -224,6 +248,18 @@
     "author_or_organization": "Wikipedia contributors",
     "source_type": "reference",
     "accessed_at": "2026-07-16",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_park_hill_brutalism_historic_england",
+    "source_record_id": "recML23esScW14Ybp",
+    "url": "https://historicengland.org.uk/advice/planning/housing/heritage-works-for-housing/process/stakeholder-engagement/",
+    "bibliographic_locator": null,
+    "title": "Heritage Works for Housing — Park Hill case study",
+    "author_or_organization": "Historic England",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
     "review_status": "reviewed",
     "content_license": null
   },
@@ -343,6 +379,18 @@
     "title": "Villa Almerico Capra Valmarana — La Rotonda",
     "author_or_organization": "Villa Almerico Capra Valmarana",
     "source_type": "official",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_villa_savoye_unesco",
+    "source_record_id": "recwZyvJP9icfMinc",
+    "url": "https://whc.unesco.org/en/list/1321/",
+    "bibliographic_locator": null,
+    "title": "The Architectural Work of Le Corbusier",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
     "accessed_at": "2026-07-22",
     "review_status": "reviewed",
     "content_license": null

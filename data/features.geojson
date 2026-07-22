@@ -336,7 +336,10 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "609a2665-ffcb-4ed7-8f85-3850f67371c0",
+          "f2d062e1-57a8-4285-a3c8-811547476cb1"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Official Site",
@@ -411,7 +414,10 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "2c5901a8-64e7-4538-89c6-a7f02a11f365",
+          "f2d062e1-57a8-4285-a3c8-811547476cb1"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Dezeen",
@@ -482,7 +488,10 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "2c5901a8-64e7-4538-89c6-a7f02a11f365",
+          "609a2665-ffcb-4ed7-8f85-3850f67371c0"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Official Site",
@@ -626,7 +635,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "99db0449-a56d-4ef8-9171-4c08fbfd577e"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Official Site",
@@ -701,7 +712,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "99db0449-a56d-4ef8-9171-4c08fbfd577e"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Saylor",
@@ -919,7 +932,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "a29aa17f-0b04-4a94-83ab-e6b0c4e4744f"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "UNESCO",
@@ -994,7 +1009,10 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "27d8a886-6443-4afd-a013-f7918df5355b",
+          "a29aa17f-0b04-4a94-83ab-e6b0c4e4744f"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "UNESCO",
@@ -1065,7 +1083,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "27d8a886-6443-4afd-a013-f7918df5355b"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "UNESCO",
@@ -1339,7 +1359,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "e110edba-4e71-4196-a9c2-08a11b0caf37"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "UNESCO",
@@ -1406,7 +1428,9 @@
         ],
         "media_ids": [],
         "media_refs": [],
-        "relation_ids": [],
+        "relation_ids": [
+          "e110edba-4e71-4196-a9c2-08a11b0caf37"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Britannica",
@@ -1755,7 +1779,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "8fde422b-7b31-4715-958e-952dd246e27d"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Official Site",
@@ -1831,7 +1857,9 @@
           }
         ],
         "relation_ids": [
-          "83f297bb-a954-4091-b6a1-36cc4c135010"
+          "6f1ff09a-e6ce-4c01-bd5c-caa386b13a0a",
+          "83f297bb-a954-4091-b6a1-36cc4c135010",
+          "8fde422b-7b31-4715-958e-952dd246e27d"
         ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
@@ -1903,7 +1931,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "6f1ff09a-e6ce-4c01-bd5c-caa386b13a0a"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Official Site",
@@ -1981,7 +2011,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "516d0431-71dc-4ca1-beee-76adfad68f52"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "UNESCO",
@@ -2059,7 +2091,9 @@
             "sort_order": 1
           }
         ],
-        "relation_ids": [],
+        "relation_ids": [
+          "516d0431-71dc-4ca1-beee-76adfad68f52"
+        ],
         "source_license": "CC BY-SA",
         "coordinates_confidence": "exact",
         "coordinates_source": "Official Site",

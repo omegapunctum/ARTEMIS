@@ -40,6 +40,9 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Воплощение 5 принципов: опоры, крыша-сад, свободный план, ленточные окна, свободный фасад.",
+      "Relations": [
+        "rec3K1Jbe9cX1eNuG"
+      ],
       "image_url": "https://commons.wikimedia.org/wiki/File:Villa_Savoye_Front_View.jpg",
       "id_status": "ok",
       "source_url": "https://en.wikipedia.org/wiki/Villa_Savoye",
@@ -70,7 +73,8 @@
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
       "Relations": [
-        "rec7V6gJtyGFGE8a1"
+        "recxhlrB5pJCOYttm",
+        "recW5OvUC1WrqgiiF"
       ],
       "influence_radius_km": 1,
       "validated": true,
@@ -108,6 +112,10 @@
     "id": "rec8RKV55zHUCA4bc",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
+      "Relations": [
+        "recTGXAVcWTUcHeXM",
+        "recJaf1Mhm27co5Jf"
+      ],
       "influence_radius_km": 2,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -216,6 +224,9 @@
     "id": "recBRFcSAP08Kix1D",
     "createdTime": "2026-07-22T05:44:59.000Z",
     "fields": {
+      "Relations": [
+        "rec3K1Jbe9cX1eNuG"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -334,6 +345,9 @@
     "id": "recFA7xPKWUl4HBgL",
     "createdTime": "2026-07-22T05:44:59.000Z",
     "fields": {
+      "Relations": [
+        "recxhlrB5pJCOYttm"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -453,6 +467,9 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Ионический храмовый комплекс на афинском Акрополе, приспособленный к неровному рельефу и нескольким культам. Портик кариатид стал его наиболее узнаваемой частью.",
+      "Relations": [
+        "recEcIfVx0VnnGOok"
+      ],
       "tags": [
         "architecture",
         "ancient",
@@ -529,6 +546,9 @@
     "id": "recV2eIeq3ccuUvYu",
     "createdTime": "2026-07-22T05:44:59.000Z",
     "fields": {
+      "Relations": [
+        "recW5OvUC1WrqgiiF"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -657,6 +677,9 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Пятинефная базилика высокой готики с монументальным западным фасадом. Средневековая кампания началась в 1248 году и остановилась в 1473-м; завершение XIX века сохранило исходный готический замысел.",
+      "Relations": [
+        "recTGXAVcWTUcHeXM"
+      ],
       "tags": [
         "architecture",
         "gothic",
@@ -696,6 +719,9 @@
     "id": "recY7p6R3QULYfBuC",
     "createdTime": "2026-07-22T05:44:59.000Z",
     "fields": {
+      "Relations": [
+        "recp8INB1cn2ttYZD"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -738,6 +764,9 @@
     "id": "recZbIE0P3vL62bPj",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
+      "Relations": [
+        "recEcIfVx0VnnGOok"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -850,6 +879,9 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Амфитеатр Флавиев, возведённый в I веке н. э. Ярусные аркады, сложная система проходов и подземных помещений организовывали движение больших потоков зрителей и постановочные зрелища.",
+      "Relations": [
+        "receESeEjvCXhdqhW"
+      ],
       "tags": [
         "architecture",
         "ancient",
@@ -889,6 +921,9 @@
     "id": "reck9qzEmWLIKlKxW",
     "createdTime": "2026-07-22T05:44:59.000Z",
     "fields": {
+      "Relations": [
+        "receESeEjvCXhdqhW"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -969,6 +1004,10 @@
     "id": "recr1NbkVTbJwP5Ia",
     "createdTime": "2026-03-30T09:18:21.000Z",
     "fields": {
+      "Relations": [
+        "recs8RfacFedxyyLS",
+        "recp8INB1cn2ttYZD"
+      ],
       "influence_radius_km": 1,
       "validated": true,
       "source_license": "CC BY-SA",
@@ -1009,6 +1048,10 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "Крупный муниципальный жилой комплекс, ступенчато следующий рельефу холма. Каркас из обнажённого бетона и широкие галереи — «улицы в небе» — связывают квартиры с коллективными пространствами.",
+      "Relations": [
+        "recb3Jt26AcR5haoD",
+        "recs8RfacFedxyyLS"
+      ],
       "tags": [
         "architecture",
         "brutalism",
@@ -1089,6 +1132,9 @@
       "validated": true,
       "source_license": "CC BY-SA",
       "description": "После пожара 1174 года хор и восточная часть собора были перестроены в раннеготических формах; последующие кампании добавили зрелую и перпендикулярную готику. Собор стал одним из главных центров паломничества Англии.",
+      "Relations": [
+        "recJaf1Mhm27co5Jf"
+      ],
       "tags": [
         "architecture",
         "gothic",
