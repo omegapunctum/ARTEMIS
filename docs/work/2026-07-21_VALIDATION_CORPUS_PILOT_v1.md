@@ -6,6 +6,7 @@
 - Дата: 2026-07-21.
 - Scope: comparison-first Round 0 corpus.
 - Не является заявлением о зрелом MVP-корпусе.
+- Execution: V2 cohort expansion загружен в Airtable 2026-07-22; V3 Relation graph остаётся открытым.
 
 ## 1. Решение
 
@@ -69,6 +70,34 @@ Status остаётся `building`. Прохождение semantic gate озн�
 - для каждого Feature до promotion создать reviewed primary Source;
 - primary Media обязателен, если права подтверждены; batch должен удержать coverage ≥90%;
 - не создавать новые singleton Layers.
+
+#### V2 execution snapshot — 2026-07-22
+
+V2 выполнен через Airtable в порядке `draft → control read → reviewed links → active/validated Feature`. Публичные JSON вручную не редактировались.
+
+| Existing Layer | Добавленные Features | Primary evidence | Primary Media |
+|---|---|---|---|
+| `classical_greece` | Erechtheion; Temple of Apollo Epicurius at Bassae | Acropolis Museum; UNESCO | CC BY-SA 4.0; PD |
+| `roman_empire` | Colosseum; Maison Carrée of Nîmes | Parco archeologico del Colosseo; UNESCO | CC BY-SA 2.5; CC BY-SA 4.0 |
+| `gothic_europe` | Cologne Cathedral; Canterbury Cathedral | UNESCO; UNESCO | CC BY-SA 3.0; CC BY-SA 4.0 |
+| `renaissance_italy` | Brunelleschi’s Dome; Villa Almerico Capra “La Rotonda” | Opera di Santa Maria del Fiore; official property site | CC BY-SA 4.0; CC BY-SA 4.0 |
+| `modernism_global` | Bauhaus Building, Dessau; Sydney Opera House | UNESCO; UNESCO | CC BY-SA 4.0; CC BY-SA 3.0 |
+| `brutalism_uk` | Preston Central Bus Station and Car Park; Park Hill, Sheffield | Historic England; Historic England | CC BY-SA 2.0; CC BY-SA 4.0 |
+
+Airtable control read после promotion:
+
+| Метрика | Результат |
+|---|---:|
+| Active + validated Features | 31 |
+| Reviewed Source coverage | 31 / 31, 100% |
+| Reviewed primary Media coverage | 28 / 31, 90.32% |
+| Comparison cohorts ≥3 Features | 6 |
+| Новые singleton Layers | 0 |
+| Разорванные V2 Source/Media links | 0 |
+
+Три прежних Media-rights gap остаются намеренно незакрытыми: Burj Khalifa, Villa Savoye и Centre Pompidou. Неподтверждённые изображения не публиковались; V2 достиг порога Media coverage за счёт двенадцати полностью лицензированных новых объектов.
+
+Canonical `Export Airtable Data` snapshot создан 2026-07-22 в `06:26:26Z`: 31 Feature, 6 comparison cohorts, 31 reviewed Source, 28 reviewed Media и 2 reviewed Relation. Semantic gate: `ready_with_warnings`, 0 blocking errors, 14 контролируемых warnings. Content profile честно остаётся `building`; единственный незакрытый readiness check — ещё 10 Relations до минимального порога 12.
 
 ### V3 — Relation graph
 
