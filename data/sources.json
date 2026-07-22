@@ -12,6 +12,42 @@
     "content_license": null
   },
   {
+    "id": "src_bassae_unesco",
+    "source_record_id": "recFEwKRZZTXJhuLv",
+    "url": "https://whc.unesco.org/en/list/392/",
+    "bibliographic_locator": "UNESCO World Heritage List, property 392",
+    "title": "Temple of Apollo Epicurius at Bassae",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_bauhaus_dessau_unesco",
+    "source_record_id": "recjsPk15rTg6yK6u",
+    "url": "https://whc.unesco.org/en/list/729/",
+    "bibliographic_locator": "UNESCO World Heritage List, property 729",
+    "title": "Bauhaus and its Sites in Weimar, Dessau and Bernau",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_brunelleschi_dome_opera_duomo",
+    "source_record_id": "recZGIZTChsmodwnn",
+    "url": "https://duomo.firenze.it/en/discover/dome",
+    "bibliographic_locator": "Opera di Santa Maria del Fiore — Discover the Dome",
+    "title": "Brunelleschi's Dome",
+    "author_or_organization": "Opera di Santa Maria del Fiore",
+    "source_type": "official",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_burj_khalifa_official",
     "source_record_id": "recI0DEi5kV2CiEr4",
     "url": "https://www.burjkhalifa.ae/en/",
@@ -20,6 +56,18 @@
     "author_or_organization": "Emaar Properties",
     "source_type": "official",
     "accessed_at": "2026-07-16",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_canterbury_cathedral_unesco",
+    "source_record_id": "recUWEqAjrKkJqA2J",
+    "url": "https://whc.unesco.org/en/list/496/",
+    "bibliographic_locator": "UNESCO World Heritage List, property 496",
+    "title": "Canterbury Cathedral, St Augustine's Abbey, and St Martin's Church",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
     "review_status": "reviewed",
     "content_license": null
   },
@@ -72,6 +120,42 @@
     "content_license": null
   },
   {
+    "id": "src_cologne_cathedral_unesco",
+    "source_record_id": "rech5AER2aFYQDvVi",
+    "url": "https://whc.unesco.org/en/list/292/",
+    "bibliographic_locator": "UNESCO World Heritage List, property 292",
+    "title": "Cologne Cathedral",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_colosseum_official",
+    "source_record_id": "reccxn8klheoUXOQj",
+    "url": "https://colosseo.it/en/area/the-colosseum/",
+    "bibliographic_locator": "Parco archeologico del Colosseo — The Colosseum",
+    "title": "The Colosseum",
+    "author_or_organization": "Parco archeologico del Colosseo",
+    "source_type": "official",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_erechtheion_acropolis_museum",
+    "source_record_id": "rechjUobLRA3vZ3lA",
+    "url": "https://www.theacropolismuseum.gr/en/other-monuments-periklean-building-programme/erechtheion",
+    "bibliographic_locator": "Other monuments of the Periklean building programme — Erechtheion",
+    "title": "The Erechtheion",
+    "author_or_organization": "Acropolis Museum",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_great_pyramid_wikipedia",
     "source_record_id": "recqRwiViXUD9wvyT",
     "url": "https://en.wikipedia.org/wiki/Great_Pyramid_of_Giza",
@@ -108,6 +192,18 @@
     "content_license": null
   },
   {
+    "id": "src_maison_carree_unesco",
+    "source_record_id": "recyAANDRjV0dezpK",
+    "url": "https://whc.unesco.org/en/list/1569/",
+    "bibliographic_locator": "UNESCO World Heritage List, property 1569",
+    "title": "The Maison Carrée of Nîmes",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_pantheon_paris_wikipedia",
     "source_record_id": "receZjrpka5zGZQn9",
     "url": "https://en.wikipedia.org/wiki/Panth%C3%A9on",
@@ -132,6 +228,18 @@
     "content_license": null
   },
   {
+    "id": "src_park_hill_historic_england",
+    "source_record_id": "recTbIt12LIx7CtVg",
+    "url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+    "bibliographic_locator": "National Heritage List for England, entry 1246881",
+    "title": "Park Hill",
+    "author_or_organization": "Historic England",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_parthenon_wikipedia",
     "source_record_id": "recjESQElUcZUujyf",
     "url": "https://en.wikipedia.org/wiki/Parthenon",
@@ -140,6 +248,18 @@
     "author_or_organization": "Wikipedia contributors",
     "source_type": "reference",
     "accessed_at": "2026-07-16",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_preston_bus_station_historic_england",
+    "source_record_id": "recY9RmrtCs4l6nVR",
+    "url": "https://historicengland.org.uk/listing/the-list/list-entry/1416042",
+    "bibliographic_locator": "National Heritage List for England, entry 1416042",
+    "title": "Preston Central Bus Station and Car Park",
+    "author_or_organization": "Historic England",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
     "review_status": "reviewed",
     "content_license": null
   },
@@ -192,6 +312,18 @@
     "content_license": null
   },
   {
+    "id": "src_sydney_opera_house_unesco",
+    "source_record_id": "recm3kwKQRSa5nnIe",
+    "url": "https://whc.unesco.org/en/list/166/",
+    "bibliographic_locator": "UNESCO World Heritage List, property 166",
+    "title": "Sydney Opera House",
+    "author_or_organization": "UNESCO World Heritage Centre",
+    "source_type": "institutional",
+    "accessed_at": "2026-07-22",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
     "id": "src_versailles_wikipedia",
     "source_record_id": "recf7GLYZro9PxkVH",
     "url": "https://en.wikipedia.org/wiki/Palace_of_Versailles",
@@ -200,6 +332,18 @@
     "author_or_organization": "Wikipedia contributors",
     "source_type": "reference",
     "accessed_at": "2026-07-16",
+    "review_status": "reviewed",
+    "content_license": null
+  },
+  {
+    "id": "src_villa_rotonda_official",
+    "source_record_id": "recHJHI0t3RYzjV1e",
+    "url": "https://www.villalarotonda.it/en/",
+    "bibliographic_locator": "Official Villa La Rotonda website",
+    "title": "Villa Almerico Capra Valmarana — La Rotonda",
+    "author_or_organization": "Villa Almerico Capra Valmarana",
+    "source_type": "official",
+    "accessed_at": "2026-07-22",
     "review_status": "reviewed",
     "content_license": null
   },
