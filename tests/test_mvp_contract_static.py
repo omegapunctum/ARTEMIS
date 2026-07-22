@@ -16,7 +16,7 @@ class MvpContractStaticTests(unittest.TestCase):
         for route in app.routes:
             if not isinstance(route, APIRoute):
                 continue
-            path_to_methods[route.path] = set(route.methods or set())
+            path_to_methods.setdefault(route.path, set()).update(route.methods or set())
 
         expected_paths = {
             '/api/health',
@@ -25,11 +25,19 @@ class MvpContractStaticTests(unittest.TestCase):
             '/api/auth/login',
             '/api/auth/refresh',
             '/api/auth/logout',
+            '/api/research-slices/shared/{share_token}',
+            '/api/research-slices/{slice_id}/share',
         }
         self.assertTrue(expected_paths.issubset(path_to_methods.keys()))
 
         for auth_path in ['/api/auth/register', '/api/auth/login', '/api/auth/refresh', '/api/auth/logout']:
             self.assertIn('POST', path_to_methods[auth_path])
+
+        self.assertIn('GET', path_to_methods['/api/research-slices/shared/{share_token}'])
+        self.assertEqual(
+            {'POST', 'DELETE'},
+            path_to_methods['/api/research-slices/{slice_id}/share'],
+        )
 
         schema = DraftResponse.model_json_schema()
         properties = schema.get('properties', {})

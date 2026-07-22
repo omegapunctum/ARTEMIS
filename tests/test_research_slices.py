@@ -8,7 +8,7 @@ import requests
 
 from app.auth.service import DATABASE_URL, SessionLocal, User, reset_refresh_sessions_for_tests, init_db as init_auth_db
 from app.drafts.service import Draft, init_db as init_drafts_db
-from app.research_slices.service import ResearchSlice, init_db as init_research_slices_db
+from app.research_slices.service import ResearchSlice, ResearchSliceShare, init_db as init_research_slices_db
 from tests.db_rebind_helper import build_clean_test_env
 
 os.environ.setdefault("AUTH_SECRET_KEY", "test-secret-research-slices")
@@ -61,6 +61,7 @@ class ResearchSlicesApiTests(unittest.TestCase):
         init_drafts_db()
         init_research_slices_db()
         db = SessionLocal()
+        db.query(ResearchSliceShare).delete()
         db.query(ResearchSlice).delete()
         db.query(Draft).delete()
         db.query(User).delete()
@@ -200,6 +201,118 @@ class ResearchSlicesApiTests(unittest.TestCase):
 
         outsider_delete = self.session.delete(f"{self.BASE_URL}/api/research-slices/{slice_id}", headers=outsider_headers, timeout=5)
         self.assertEqual(outsider_delete.status_code, 404)
+
+        outsider_share = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=outsider_headers,
+            timeout=5,
+        )
+        self.assertEqual(outsider_share.status_code, 404)
+
+    def test_read_only_share_rotation_and_revocation(self):
+        owner_headers = self._register_login(f"slice-share-{uuid4().hex}@example.com")
+        created = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=self._payload(),
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(created.status_code, 201, created.text)
+        slice_id = created.json()["id"]
+
+        share = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(share.status_code, 201, share.text)
+        first_token = share.json()["share_token"]
+        self.assertGreaterEqual(len(first_token), 40)
+        db = SessionLocal()
+        try:
+            stored_share = db.query(ResearchSliceShare).filter(
+                ResearchSliceShare.slice_id == slice_id
+            ).one()
+            self.assertNotEqual(stored_share.token_hash, first_token)
+            self.assertEqual(len(stored_share.token_hash), 64)
+        finally:
+            db.close()
+
+        public = self.session.get(
+            f"{self.BASE_URL}/api/research-slices/shared/{first_token}",
+            timeout=5,
+        )
+        self.assertEqual(public.status_code, 200, public.text)
+        public_body = public.json()
+        self.assertEqual(public_body["id"], slice_id)
+        self.assertEqual(public_body["visibility"], "shared")
+        self.assertEqual(public_body["annotations"][1]["type"], "interpretation")
+        self.assertNotIn("owner_id", public_body)
+        self.assertEqual(public.headers.get("Cache-Control"), "private, no-store")
+        self.assertEqual(public.headers.get("Referrer-Policy"), "no-referrer")
+
+        rotated = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(rotated.status_code, 201, rotated.text)
+        second_token = rotated.json()["share_token"]
+        self.assertNotEqual(second_token, first_token)
+        self.assertEqual(
+            self.session.get(
+                f"{self.BASE_URL}/api/research-slices/shared/{first_token}", timeout=5
+            ).status_code,
+            404,
+        )
+        self.assertEqual(
+            self.session.get(
+                f"{self.BASE_URL}/api/research-slices/shared/{second_token}", timeout=5
+            ).status_code,
+            200,
+        )
+
+        revoked = self.session.delete(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(revoked.status_code, 204)
+        self.assertEqual(
+            self.session.get(
+                f"{self.BASE_URL}/api/research-slices/shared/{second_token}", timeout=5
+            ).status_code,
+            404,
+        )
+
+    def test_deleting_slice_invalidates_share(self):
+        owner_headers = self._register_login(f"slice-share-delete-{uuid4().hex}@example.com")
+        created = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=self._payload(),
+            headers=owner_headers,
+            timeout=5,
+        )
+        slice_id = created.json()["id"]
+        share = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=owner_headers,
+            timeout=5,
+        )
+        share_token = share.json()["share_token"]
+
+        deleted = self.session.delete(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}",
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(deleted.status_code, 204)
+        self.assertEqual(
+            self.session.get(
+                f"{self.BASE_URL}/api/research-slices/shared/{share_token}", timeout=5
+            ).status_code,
+            404,
+        )
 
     def test_validation_errors(self):
         headers = self._register_login(f"slice-validate-{uuid4().hex}@example.com")

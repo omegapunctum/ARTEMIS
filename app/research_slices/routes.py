@@ -6,18 +6,51 @@ from sqlalchemy.orm import Session
 from app.auth.service import User, get_current_user, get_db
 from app.observability import internal_error_response, log_event
 
-from .schemas import ResearchSliceCreate, ResearchSliceListItem, ResearchSliceResponse, ResearchSliceUpdate
+from .schemas import (
+    ResearchSliceCreate,
+    ResearchSliceListItem,
+    ResearchSliceResponse,
+    ResearchSliceShareResponse,
+    ResearchSliceUpdate,
+    SharedResearchSliceResponse,
+)
 from .service import (
     create_research_slice,
     delete_user_research_slice,
+    get_shared_research_slice,
     get_user_research_slice,
     list_user_research_slices,
+    revoke_research_slice_share,
+    rotate_research_slice_share,
     serialize_research_slice,
     serialize_research_slice_list_item,
+    serialize_shared_research_slice,
     update_user_research_slice,
 )
 
 router = APIRouter(prefix="/research-slices", tags=["research-slices"])
+
+
+@router.get("/shared/{share_token}", response_model=SharedResearchSliceResponse)
+def get_shared_research_slice_endpoint(
+    share_token: str,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    try:
+        item, share = get_shared_research_slice(db, share_token)
+        response = Response(
+            content=serialize_shared_research_slice(item, share).model_dump_json(),
+            media_type="application/json",
+        )
+        response.headers["Cache-Control"] = "private, no-store"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        return response
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log_event(logging.ERROR, "research_slice.share.get.error", path=request.url.path, request_id=request.state.request_id, error=str(exc))
+        return internal_error_response(request)
 
 
 @router.post("", response_model=ResearchSliceResponse, status_code=status.HTTP_201_CREATED)
@@ -108,6 +141,44 @@ def patch_research_slice_endpoint(
         raise
     except Exception as exc:
         log_event(logging.ERROR, "research_slice.patch.error", path=request.url.path, request_id=request.state.request_id, user_id=current_user.id, slice_id=slice_id, error=str(exc))
+        return internal_error_response(request)
+
+
+@router.post("/{slice_id}/share", response_model=ResearchSliceShareResponse, status_code=status.HTTP_201_CREATED)
+def rotate_research_slice_share_endpoint(
+    slice_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    request.state.user_id = current_user.id
+    try:
+        item = get_user_research_slice(db, current_user, slice_id)
+        share_token, share = rotate_research_slice_share(db, item)
+        return ResearchSliceShareResponse(share_token=share_token, shared_at=share.created_at)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log_event(logging.ERROR, "research_slice.share.rotate.error", path=request.url.path, request_id=request.state.request_id, user_id=current_user.id, slice_id=slice_id, error=str(exc))
+        return internal_error_response(request)
+
+
+@router.delete("/{slice_id}/share", status_code=status.HTTP_204_NO_CONTENT)
+def revoke_research_slice_share_endpoint(
+    slice_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    request.state.user_id = current_user.id
+    try:
+        item = get_user_research_slice(db, current_user, slice_id)
+        revoke_research_slice_share(db, item)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log_event(logging.ERROR, "research_slice.share.revoke.error", path=request.url.path, request_id=request.state.request_id, user_id=current_user.id, slice_id=slice_id, error=str(exc))
         return internal_error_response(request)
 
 

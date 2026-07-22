@@ -509,6 +509,72 @@ class ResearchSlicesFrontendStateTests(unittest.TestCase):
         self.assertEqual(data["feature_ids"], ["f1", "f2"])
         self.assertEqual(data["time_range"]["start"], 1500)
 
+    def test_shared_slice_url_round_trip(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: {
+                hostname: 'omegapunctum.github.io',
+                origin: 'https://omegapunctum.github.io',
+                href: 'https://omegapunctum.github.io/ARTEMIS/?debug=1#old'
+              },
+              ARTEMIS_API_BASE: 'https://api.example.test/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+
+            const { buildSharedResearchSliceUrl, readSharedResearchSliceToken } = await import('./js/research_slices.js');
+            const url = buildSharedResearchSliceUrl('token-abc');
+            const token = readSharedResearchSliceToken({ href: url });
+            console.log(JSON.stringify({ url, token }));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertEqual(data["token"], "token-abc")
+        self.assertIn("/ARTEMIS/?debug=1#shared_slice=token-abc", data["url"])
+        self.assertNotIn("shared_slice=token-abc&", data["url"])
+
+    def test_shared_slice_api_helpers_use_read_only_routes(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: { hostname: 'localhost', origin: 'http://localhost', href: 'http://localhost/' },
+              ARTEMIS_API_BASE: 'https://api.example.test/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+            const calls = [];
+            globalThis.fetch = async (request) => {
+              calls.push({ url: request.url, method: request.method });
+              const body = request.method === 'POST'
+                ? { share_token: 'token-1', shared_at: '2026-07-22T00:00:00Z' }
+                : { id: 'slice-1', visibility: 'shared', title: 'Shared' };
+              return new Response(JSON.stringify(body), {
+                status: request.method === 'POST' ? 201 : 200,
+                headers: { 'Content-Type': 'application/json' }
+              });
+            };
+
+            const { createResearchSliceShare, getSharedResearchSlice } = await import('./js/research_slices.js');
+            const created = await createResearchSliceShare('slice-1');
+            const shared = await getSharedResearchSlice(created.share_token);
+            console.log(JSON.stringify({ calls, created, shared }));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertEqual(data["calls"][0]["method"], "POST")
+        self.assertTrue(data["calls"][0]["url"].endswith("/api/research-slices/slice-1/share"))
+        self.assertEqual(data["calls"][1]["method"], "GET")
+        self.assertTrue(data["calls"][1]["url"].endswith("/api/research-slices/shared/token-1"))
+        self.assertEqual(data["shared"]["visibility"], "shared")
 
 
 if __name__ == "__main__":

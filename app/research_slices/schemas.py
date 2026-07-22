@@ -191,6 +191,29 @@ class ResearchSliceResponse(ResearchSliceBase):
     updated_at: datetime
 
 
+class ResearchSliceShareResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    share_token: str
+    shared_at: datetime
+
+
+class SharedResearchSliceResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    title: str
+    description: str
+    feature_refs: list[FeatureRef]
+    time_range: TimeRange
+    view_state: ViewState
+    annotations: list[SliceAnnotation]
+    visibility: Literal["shared"] = "shared"
+    created_at: datetime
+    updated_at: datetime
+    shared_at: datetime
+
+
 class ResearchSliceListItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

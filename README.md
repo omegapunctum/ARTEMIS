@@ -206,6 +206,9 @@ For detailed boundaries and interpretation, read together with:
   - `GET /api/research-slices/{slice_id}` (open/restore)
   - `PATCH /api/research-slices/{slice_id}`
   - `DELETE /api/research-slices/{slice_id}`
+  - `POST /api/research-slices/{slice_id}/share` (rotate an unlisted read-only link)
+  - `DELETE /api/research-slices/{slice_id}/share` (revoke the link)
+  - `GET /api/research-slices/shared/{share_token}` (open without auth; no owner identity or write access)
   - current baseline visibility/access model: private-only, owner-only
 - Stories (`/api/stories/*`):
   - `POST /api/stories`
@@ -253,7 +256,7 @@ uvicorn app.main:app --reload --port 8001
 python -m http.server 8000
 ```
 
-By default frontend tries `window.ARTEMIS_API_BASE`/meta override, then `/api`.
+By default frontend tries `window.ARTEMIS_API_BASE`/meta override, then `/api`. An external base includes the canonical API prefix, for example `https://api.example.org/api`; authenticated Slice/Story/Course requests use the same resolved base.
 
 ### Import / Export datasets (local ETL input/output)
 Without direct Airtable writes, you can import prepared CSV/GeoJSON datasets into local `data/*`

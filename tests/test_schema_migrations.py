@@ -47,7 +47,7 @@ def test_schema_migrations_apply_on_fresh_db(monkeypatch: pytest.MonkeyPatch, tm
     draft_columns = _table_columns(db_path, "drafts")
     assert {"image_url", "status", "publish_status", "airtable_record_id", "published_at", "payload"}.issubset(draft_columns)
 
-    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201]
+    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202]
 
 
 def test_schema_migrations_are_idempotent(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -64,7 +64,7 @@ def test_schema_migrations_are_idempotent(monkeypatch: pytest.MonkeyPatch, tmp_p
     research_slices_service.init_db()
     second_versions = _schema_versions(db_path)
 
-    assert first_versions == second_versions == [1, 101, 102, 103, 104, 105, 106, 201]
+    assert first_versions == second_versions == [1, 101, 102, 103, 104, 105, 106, 201, 202]
 
 
 def test_schema_migrations_upgrade_partially_evolved_db(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -95,7 +95,7 @@ def test_schema_migrations_upgrade_partially_evolved_db(monkeypatch: pytest.Monk
     assert "is_admin" in _table_columns(db_path, "users")
     draft_columns = _table_columns(db_path, "drafts")
     assert {"image_url", "status", "publish_status", "airtable_record_id", "published_at", "payload"}.issubset(draft_columns)
-    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201]
+    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202]
 
 
 def test_auth_and_drafts_flow_works_after_migration_init(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

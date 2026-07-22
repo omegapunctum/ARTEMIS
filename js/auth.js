@@ -8,12 +8,11 @@ const sessionRestoreLogCache = new Set();
 const SESSION_RESTORE_TIMEOUT_MS = 4500;
 const REFRESH_TIMEOUT_MS = 8000;
 
-const API_BASE_CANDIDATES = [
+const CONFIGURED_API_BASES = [
   (window.ARTEMIS_API_BASE || '').trim(),
-  document.querySelector('meta[name="artemis-api-base"]')?.getAttribute('content')?.trim() || '',
-  '/api',
-  ''
-].filter((value, index, array) => value !== null && value !== undefined && array.indexOf(value) === index);
+  document.querySelector('meta[name="artemis-api-base"]')?.getAttribute('content')?.trim() || ''
+].filter((value, index, array) => Boolean(value) && array.indexOf(value) === index);
+const API_BASE_CANDIDATES = [...new Set([...CONFIGURED_API_BASES, '/api', ''])];
 
 function notifyAuthChanged() {
   window.dispatchEvent(new CustomEvent('artemis:auth-changed', { detail: getCurrentUser() }));
@@ -39,6 +38,15 @@ function buildApiUrl(base, path) {
   if (!base) return normalizedPath;
   const normalizedBase = String(base).replace(/\/+$/, '');
   return `${normalizedBase}${normalizedPath}`;
+}
+
+function resolveConfiguredApiInput(input) {
+  if (input instanceof Request || input instanceof URL) return input;
+  const rawInput = String(input || '').trim();
+  if (!(rawInput === '/api' || rawInput.startsWith('/api/'))) return input;
+  const apiBase = resolvedApiBase !== null ? resolvedApiBase : API_BASE_CANDIDATES[0];
+  const apiRelativePath = rawInput.slice('/api'.length) || '/';
+  return buildApiUrl(apiBase, apiRelativePath);
 }
 
 function logRouteFallback({ method, path, tried, status, level = 'info' }) {
@@ -353,7 +361,8 @@ function normalizeRefreshError(error) {
 }
 
 export async function fetchWithAuth(input, options = {}) {
-  const originalRequest = input instanceof Request ? input : new Request(input, options);
+  const resolvedInput = resolveConfiguredApiInput(input);
+  const originalRequest = resolvedInput instanceof Request ? resolvedInput : new Request(resolvedInput, options);
   const firstAttempt = buildAuthRequest(originalRequest);
   const response = await fetch(firstAttempt);
 

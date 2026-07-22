@@ -3,7 +3,7 @@ import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, g
 import { debounce, createInlineStateBlock } from './ux.js';
 import { normalizeSafeUrl, setSafeImageSource, setSafeLink, toSafeText } from './safe-dom.js';
 import { DEFAULT_DISPLAY_MODE, aggregateFeaturesByDecade, createLiveState } from './state.js';
-import { buildResearchSlicePayload, buildSliceAnnotationDisplayPlan, buildSliceListMetaSummary, normalizeSliceForRestore, listResearchSlices, getResearchSlice, createResearchSlice, deleteResearchSlice } from './research_slices.js';
+import { buildResearchSlicePayload, buildSharedResearchSliceUrl, buildSliceAnnotationDisplayPlan, buildSliceListMetaSummary, normalizeSliceForRestore, readSharedResearchSliceToken, listResearchSlices, getResearchSlice, getSharedResearchSlice, createResearchSlice, createResearchSliceShare, deleteResearchSlice } from './research_slices.js';
 import { buildStoryPayload, clampStoryStepIndex, resolveStoryStepSliceId, listStories, getStory, createStory, deleteStory } from './stories.js';
 import { buildCoursePayload, clampCourseStepIndex, resolveCourseStepStoryId, listCourses, getCourse, createCourse, deleteCourse } from './courses_runtime.js';
 
@@ -164,6 +164,26 @@ function showUiSystemMessage(message, { variant = 'success', timeout = 2600 } = 
   }, Math.max(800, Number(timeout) || 2600));
 }
 
+async function copyShareUrl(url) {
+  if (globalThis.navigator?.clipboard?.writeText) {
+    try {
+      await globalThis.navigator.clipboard.writeText(url);
+      return true;
+    } catch (_error) {
+      // Fall through to an explicit copy prompt when clipboard permission is denied.
+    }
+  }
+  window.prompt('Скопируйте ссылку только для чтения:', url);
+  return false;
+}
+
+async function createAndCopyResearchSliceShare(sliceId) {
+  const share = await createResearchSliceShare(sliceId);
+  const shareUrl = buildSharedResearchSliceUrl(share?.share_token);
+  const copied = await copyShareUrl(shareUrl);
+  return { shareUrl, copied };
+}
+
 export async function initUI(map, features) {
   hideGlobalDataError();
   const allFeatures = Array.isArray(features?.features)
@@ -298,6 +318,7 @@ export async function initUI(map, features) {
     bookmarks: [],
     researchSlices: [],
     researchSlicesLoaded: false,
+    sharedSliceReadOnly: false,
     researchSlicesLoading: false,
     researchSlicesError: '',
     applyState: null,
@@ -526,9 +547,19 @@ export async function initUI(map, features) {
     await openResearchSlicesWorkspace(elements, state, map);
   });
   elements.researchSliceOpenBtn?.addEventListener('click', async () => {
-    setActiveProjectNavigation(elements, 'saved');
-    await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
-    showUiSystemMessage('Используйте открытый контекст как базу для публикации из панели сохранённых исследований.', { variant: 'info', timeout: 3000 });
+    const sliceId = String(state.sliceOpenedId || '').trim();
+    if (!sliceId || state.sharedSliceReadOnly) {
+      showUiSystemMessage('Сначала откройте своё сохранённое исследование.', { variant: 'warning', timeout: 3000 });
+      return;
+    }
+    const confirmed = window.confirm('Создать новую ссылку только для чтения? Предыдущая ссылка на этот срез перестанет работать.');
+    if (!confirmed) return;
+    try {
+      const { copied } = await createAndCopyResearchSliceShare(sliceId);
+      showUiSystemMessage(copied ? 'Ссылка скопирована' : 'Ссылка создана', { variant: 'success', timeout: 3000 });
+    } catch (error) {
+      showUiSystemMessage(normalizeAppError(error, 'Не удалось создать ссылку.').message, { variant: 'warning', timeout: 3200 });
+    }
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
     setActiveProjectNavigation(elements, 'research');
@@ -655,12 +686,39 @@ export async function initUI(map, features) {
   state.loading = false;
   applyState();
   applyResponsiveLayout(elements, state, map);
+  await openSharedResearchSliceFromLocation(state, elements, map);
 
   return {
     getVisibleCounts() {
       return { listCount: state.filteredFeatures.length, mapCount: getMapFeatureCount(map) };
     }
   };
+}
+
+async function openSharedResearchSliceFromLocation(state, elements, map) {
+  const shareToken = readSharedResearchSliceToken();
+  if (!shareToken) return;
+  if (!state?.capabilities?.backend) {
+    showUiSystemMessage('Публичный API для этой ссылки не настроен.', { variant: 'warning', timeout: 4200 });
+    return;
+  }
+  try {
+    const rawSlice = await getSharedResearchSlice(shareToken);
+    applyResearchSliceContext(rawSlice, state, elements, map);
+    state.sliceOpenedId = '';
+    state.sliceOpenedTitle = String(rawSlice?.title || '').trim();
+    state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
+    state.sharedSliceReadOnly = true;
+    markResearchContextAsSaved(state);
+    updateResearchContextBar(elements, state);
+    if (elements.researchSliceOpenBtn) {
+      elements.researchSliceOpenBtn.disabled = true;
+      elements.researchSliceOpenBtn.textContent = 'Только чтение';
+    }
+    showUiSystemMessage('Открыта ссылка только для чтения', { variant: 'success', timeout: 3200 });
+  } catch (error) {
+    showUiSystemMessage(normalizeAppError(error, 'Ссылка недействительна или отозвана.').message, { variant: 'warning', timeout: 4200 });
+  }
 }
 
 function setupOnboardingOverlay(elements) {
@@ -1453,6 +1511,11 @@ function renderSlicesPanel(elements, state, map) {
       if (state.sliceSelectionSet instanceof Set) state.sliceSelectionSet.clear();
       state.sliceOpenedId = createdSliceId || '';
       state.sliceOpenedTitle = String(payload?.title || '').trim();
+      state.sharedSliceReadOnly = false;
+      if (elements.researchSliceOpenBtn) {
+        elements.researchSliceOpenBtn.disabled = false;
+        elements.researchSliceOpenBtn.textContent = 'Поделиться';
+      }
       markResearchContextAsSaved(state);
       updateResearchContextBar(elements, state);
       showUiSystemMessage('Исследование сохранено', { variant: 'success', timeout: 2200 });
@@ -1549,6 +1612,11 @@ function renderSlicesPanel(elements, state, map) {
         state.sliceOpenedId = String(rawSlice?.id || slice?.id || '').trim();
         state.sliceOpenedTitle = String(rawSlice?.title || slice?.title || '').trim();
         state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
+        state.sharedSliceReadOnly = false;
+        if (elements.researchSliceOpenBtn) {
+          elements.researchSliceOpenBtn.disabled = false;
+          elements.researchSliceOpenBtn.textContent = 'Поделиться';
+        }
         markResearchContextAsSaved(state);
         updateResearchContextBar(elements, state);
         renderSlicesPanel(elements, state, map);
@@ -1990,7 +2058,23 @@ function renderSlicesPanel(elements, state, map) {
         }
       });
 
-      actions.append(compareToggleBtn, openBtn, deleteBtn);
+      const shareBtn = document.createElement('button');
+      shareBtn.type = 'button';
+      shareBtn.className = 'ui-button ui-button-secondary slice-share-btn';
+      shareBtn.textContent = 'Поделиться';
+      shareBtn.addEventListener('click', async () => {
+        if (!sliceId) return;
+        const confirmed = window.confirm('Создать новую ссылку только для чтения? Предыдущая ссылка на этот срез перестанет работать.');
+        if (!confirmed) return;
+        try {
+          const { copied } = await createAndCopyResearchSliceShare(sliceId);
+          showUiSystemMessage(copied ? 'Ссылка скопирована' : 'Ссылка создана', { variant: 'success', timeout: 3000 });
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось создать ссылку.').message, { variant: 'warning', timeout: 3200 });
+        }
+      });
+
+      actions.append(compareToggleBtn, openBtn, shareBtn, deleteBtn);
       row.appendChild(actions);
       list.appendChild(row);
     });

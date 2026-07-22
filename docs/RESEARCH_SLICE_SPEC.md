@@ -44,7 +44,8 @@ Research Slice — это canonical runtime-сущность пользоват�
 - `time_range.start <= time_range.end`;
 - `view_state.selected_feature_id` (если задан) обязан ссылаться на `feature_refs[*].feature_id`;
 - `annotation.type ∈ ["fact", "interpretation", "hypothesis"]`;
-- `visibility` фиксирован как `private`.
+- owner CRUD сохраняет `visibility` как `private`;
+- read-only share response использует вычисляемое значение `shared`, но не меняет owner resource и не публикует Slice в canonical dataset.
 
 ## 2.1 Field constraints
 - `feature_refs`: required, non-empty.
@@ -57,11 +58,19 @@ Research Slice — это canonical runtime-сущность пользоват�
 - `GET /api/research-slices` — получить список моих slices.
 - `GET /api/research-slices/{slice_id}` — открыть/восстановить slice по id.
 - `DELETE /api/research-slices/{slice_id}` — удалить slice по id.
+- `POST /api/research-slices/{slice_id}/share` — создать новую opaque read-only ссылку; предыдущая ссылка этого Slice аннулируется.
+- `DELETE /api/research-slices/{slice_id}/share` — отозвать текущую read-only ссылку.
+- `GET /api/research-slices/shared/{share_token}` — открыть Slice без аутентификации по capability-token.
 
 ## 4. Ownership and visibility
 - Доступ только для аутентифицированного владельца.
-- Slice не является публичным ресурсом.
-- Cross-user доступ и shared-режим отсутствуют.
+- Owner CRUD остаётся private и owner-only.
+- Cross-user authenticated access к owner endpoint отсутствует и возвращает `404`.
+- Share является unlisted capability access, а не public listing: token должен быть известен читателю заранее.
+- В БД хранится только SHA-256 token; raw token возвращается владельцу один раз при создании ссылки.
+- Повторный `POST .../share`, revoke и удаление Slice делают ранее выданный token недействительным.
+- Shared response не содержит `owner_id` и отправляется с `Cache-Control: private, no-store` и `Referrer-Policy: no-referrer`.
+- Читатель не получает write endpoint; изменения и удаление требуют owner auth.
 
 ## 5. Integration points
 - Map integration: **part of** slice-контракта (состояние карты фиксируется в `view_state` и `time_range`).
@@ -70,9 +79,10 @@ Research Slice — это canonical runtime-сущность пользоват�
 
 ## 6. Out of scope (current baseline)
 - AI assistance (explain/compare/suggest).
-- Sharing/public links/collaborative access.
+- Collaborative access и searchable/public listing.
 - Stories/scenario-layer orchestration.
 
 ## 6.1 Response shapes
 - LIST (`GET /api/research-slices`) → lightweight payload (без `description` и без тяжёлых JSON-полей).
 - DETAIL (`GET /api/research-slices/{slice_id}`) → full payload.
+- SHARED DETAIL (`GET /api/research-slices/shared/{share_token}`) → full research context без `owner_id`, с `visibility=shared` и `shared_at`.

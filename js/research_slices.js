@@ -201,6 +201,50 @@ export async function createResearchSlice(payload) {
   return await response.json();
 }
 
+export async function createResearchSliceShare(sliceId) {
+  const normalizedId = String(sliceId || '').trim();
+  if (!normalizedId) throw new Error('Open a saved research slice before sharing it.');
+  const response = await fetchWithAuth(`${BASE_PATH}/${encodeURIComponent(normalizedId)}/share`, {
+    method: 'POST'
+  });
+  if (!response.ok) throw await buildApiError(response, 'Failed to create a read-only share link.');
+  return await response.json();
+}
+
+export async function revokeResearchSliceShare(sliceId) {
+  const normalizedId = String(sliceId || '').trim();
+  if (!normalizedId) throw new Error('Open a saved research slice before revoking its share link.');
+  const response = await fetchWithAuth(`${BASE_PATH}/${encodeURIComponent(normalizedId)}/share`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) throw await buildApiError(response, 'Failed to revoke the read-only share link.');
+}
+
+export async function getSharedResearchSlice(shareToken) {
+  const normalizedToken = String(shareToken || '').trim();
+  if (!normalizedToken) throw new Error('Shared research slice token is missing.');
+  const response = await fetchWithAuth(`${BASE_PATH}/shared/${encodeURIComponent(normalizedToken)}`, {
+    method: 'GET'
+  });
+  if (!response.ok) throw await buildApiError(response, 'Shared research slice is unavailable.');
+  return await response.json();
+}
+
+export function buildSharedResearchSliceUrl(shareToken, locationLike = window.location) {
+  const normalizedToken = String(shareToken || '').trim();
+  if (!normalizedToken) throw new Error('Shared research slice token is missing.');
+  const url = new URL(String(locationLike?.href || locationLike || ''), window.location.origin);
+  url.searchParams.delete('shared_slice');
+  url.hash = new URLSearchParams({ shared_slice: normalizedToken }).toString();
+  return url.href;
+}
+
+export function readSharedResearchSliceToken(locationLike = window.location) {
+  const url = new URL(String(locationLike?.href || locationLike || ''), window.location.origin);
+  const fragmentParams = new URLSearchParams(url.hash.replace(/^#/, ''));
+  return String(fragmentParams.get('shared_slice') || url.searchParams.get('shared_slice') || '').trim();
+}
+
 export async function deleteResearchSlice(sliceId) {
   const response = await fetchWithAuth(`${BASE_PATH}/${encodeURIComponent(sliceId)}`, { method: 'DELETE' });
   if (!response.ok) throw await buildApiError(response, 'Failed to delete research slice.');

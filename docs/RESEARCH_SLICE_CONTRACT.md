@@ -256,7 +256,17 @@ Delete не должен:
 
 ### 6.6 Share
 
-Share является planned product layer, если он ещё не реализован полноценно.
+Share реализуется как явно создаваемая владельцем unlisted read-only capability link.
+
+Baseline semantics:
+
+- private owner resource не меняет visibility и не становится частью canonical public knowledge base;
+- читатель ссылки получает полный сохранённый research context, но не owner identity и не write capability;
+- raw token не хранится в БД;
+- создание новой ссылки ротирует token и аннулирует предыдущую;
+- revoke или удаление Slice немедленно закрывают доступ;
+- ссылка отражает текущее состояние Slice, поэтому последующие owner updates видны по действующему token;
+- UI обязан явно обозначать read-only state.
 
 Share не должен нарушать:
 - owner/privacy model;
