@@ -213,6 +213,49 @@
     }
   },
   {
+    "id": "recBRFcSAP08Kix1D",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Комплекс школы Баухаус Вальтера Гропиуса объединяет мастерские, учебные и жилые функции в ясно расчленённых объёмах. Стеклянный фасад мастерских демонстрирует отделение оболочки от несущего каркаса.",
+      "tags": [
+        "architecture",
+        "modernism",
+        "bauhaus",
+        "functionalism",
+        "germany"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Au%C3%9Fenansichten_des_Bauhaus-Geb%C3%A4udes_in_Dessau_06.jpg/1280px-Au%C3%9Fenansichten_des_Bauhaus-Geb%C3%A4udes_in_Dessau_06.jpg",
+      "id_status": "ok",
+      "source_url": "https://whc.unesco.org/en/list/729/",
+      "longitude": 12.2272,
+      "name_ru": "Здание Баухауса в Дессау",
+      "name_en": "Bauhaus Building, Dessau",
+      "FeatureSources": [
+        "rec49NiCYiAl2C8dk"
+      ],
+      "is_active": true,
+      "date_end": "1926",
+      "coordinates_confidence": "exact",
+      "id": "b0685472-ec71-400d-8b01-8809b165ba77",
+      "FeatureMedia": [
+        "recbxSyvrRsb8Y0oI"
+      ],
+      "coordinates_source": [
+        "UNESCO"
+      ],
+      "layer_id": [
+        "recGFqZ87FnbU0yS2"
+      ],
+      "title_short": "Манифест функциональной школы и стеклянного навесного фасада",
+      "latitude": 51.8389,
+      "date_start": "1925",
+      "layer_type": "architecture"
+    }
+  },
+  {
     "id": "recC9HLvvR9Xi1rKR",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
@@ -284,6 +327,49 @@
       "title_short": "Главный паломнический собор средневековой Европы",
       "latitude": 42.8806,
       "date_start": "1075",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "recFA7xPKWUl4HBgL",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Восьмигранный двойной купол, построенный Филиппо Брунеллески в 1420–1436 годах. Система оболочек, горизонтальных связей и кирпичной кладки «ёлочкой» позволила возвести свод без сплошной временной опалубки.",
+      "tags": [
+        "architecture",
+        "renaissance",
+        "dome",
+        "florence",
+        "italy"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Santa_Maria_del_Fiore_Cathedral_Florence_04_2024_0801.jpg/960px-Santa_Maria_del_Fiore_Cathedral_Florence_04_2024_0801.jpg",
+      "id_status": "ok",
+      "source_url": "https://duomo.firenze.it/en/discover/dome",
+      "longitude": 11.256,
+      "name_ru": "Купол Брунеллески (собор Санта-Мария-дель-Фьоре)",
+      "name_en": "Brunelleschi’s Dome (Florence Cathedral)",
+      "FeatureSources": [
+        "rece7MEZHcLeDuZab"
+      ],
+      "is_active": true,
+      "date_end": "1436",
+      "coordinates_confidence": "exact",
+      "id": "8a68e7c4-bd4c-44c8-8b7d-ba41b24ca570",
+      "FeatureMedia": [
+        "recqiROsztVYYQ6Zg"
+      ],
+      "coordinates_source": [
+        "Official Site"
+      ],
+      "layer_id": [
+        "recd5a9BoEUWzKe26"
+      ],
+      "title_short": "Крупнейший каменный свод, возведённый без сплошных деревянных кружал",
+      "latitude": 43.7731,
+      "date_start": "1420",
       "layer_type": "architecture"
     }
   },
@@ -360,6 +446,50 @@
     }
   },
   {
+    "id": "recMQaGL0rOEGKm3P",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Ионический храмовый комплекс на афинском Акрополе, приспособленный к неровному рельефу и нескольким культам. Портик кариатид стал его наиболее узнаваемой частью.",
+      "tags": [
+        "architecture",
+        "ancient",
+        "temple",
+        "greece",
+        "athens",
+        "acropolis"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Erechtheion%2C_Athens_-_Joy_of_Museum.jpg/1280px-Erechtheion%2C_Athens_-_Joy_of_Museum.jpg",
+      "id_status": "ok",
+      "source_url": "https://www.theacropolismuseum.gr/en/other-monuments-periklean-building-programme/erechtheion",
+      "longitude": 23.726667,
+      "name_ru": "Эрехтейон",
+      "name_en": "Erechtheion",
+      "FeatureSources": [
+        "recaelZohuGuvsiOv"
+      ],
+      "is_active": true,
+      "date_end": "-0406",
+      "coordinates_confidence": "exact",
+      "id": "6c97b04c-9ebe-4c5e-a7e4-637b630f8e3e",
+      "FeatureMedia": [
+        "recxHrhKRWMoyYDFw"
+      ],
+      "coordinates_source": [
+        "Official Site"
+      ],
+      "layer_id": [
+        "rectnuWteYliOpxow"
+      ],
+      "title_short": "Асимметричный ионический храмовый комплекс Акрополя",
+      "latitude": 37.971667,
+      "date_start": "-0421",
+      "layer_type": "architecture"
+    }
+  },
+  {
     "id": "recS69tE4CQPTy105",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
@@ -396,6 +526,50 @@
     }
   },
   {
+    "id": "recV2eIeq3ccuUvYu",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Центрическая загородная резиденция Андреа Палладио: купольный зал окружён четырьмя портиками, каждый из которых обращён к своему фрагменту ландшафта. Композиция стала канонической моделью палладианства.",
+      "tags": [
+        "architecture",
+        "renaissance",
+        "villa",
+        "palladio",
+        "vicenza",
+        "italy"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/07-Villa-Rotonda-Palladio.jpg/1280px-07-Villa-Rotonda-Palladio.jpg",
+      "id_status": "ok",
+      "source_url": "https://www.villalarotonda.it/en/",
+      "longitude": 11.559899,
+      "name_ru": "Вилла Альмерико-Капра «Ла Ротонда»",
+      "name_en": "Villa Almerico Capra “La Rotonda”",
+      "FeatureSources": [
+        "rec7td7km6z8qoD61"
+      ],
+      "is_active": true,
+      "date_end": "1605",
+      "coordinates_confidence": "exact",
+      "id": "92ba97a4-ac18-4e17-a5c8-34c5b81bfcb8",
+      "FeatureMedia": [
+        "reciLnU2XqylWBnd7"
+      ],
+      "coordinates_source": [
+        "Official Site"
+      ],
+      "layer_id": [
+        "recd5a9BoEUWzKe26"
+      ],
+      "title_short": "Центрическая вилла-храм Палладио с четырьмя равноправными фасадами",
+      "latitude": 45.531743,
+      "date_start": "1567",
+      "layer_type": "architecture"
+    }
+  },
+  {
     "id": "recV3Kj5ounTF55mw",
     "createdTime": "2026-03-30T09:18:21.000Z",
     "fields": {
@@ -428,6 +602,135 @@
       "title_short": "Архитектурное воплощение немецко-еврейской истории",
       "latitude": 52.502,
       "date_start": "1992",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "recVZ1YE2fJKVgMoa",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Проект Йорна Утзона превратил комплекс исполнительских залов в последовательность взаимосвязанных оболочек-парусов. Архитектурный образ вырос из новаторского решения геометрии и сборки железобетонных сегментов.",
+      "tags": [
+        "architecture",
+        "modern",
+        "opera",
+        "theatre",
+        "australia",
+        "sydney"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Sydney_Opera_House_-_Dec_2008.jpg/1280px-Sydney_Opera_House_-_Dec_2008.jpg",
+      "id_status": "ok",
+      "source_url": "https://whc.unesco.org/en/list/166/",
+      "longitude": 151.2153,
+      "name_ru": "Сиднейский оперный театр",
+      "name_en": "Sydney Opera House",
+      "FeatureSources": [
+        "rec0Lfe4LOgOijPfY"
+      ],
+      "is_active": true,
+      "date_end": "1973",
+      "coordinates_confidence": "exact",
+      "id": "04937d72-f602-4d57-9927-b4b0d137b9c0",
+      "FeatureMedia": [
+        "recbxk5VBUXOOY4bd"
+      ],
+      "coordinates_source": [
+        "UNESCO"
+      ],
+      "layer_id": [
+        "recGFqZ87FnbU0yS2"
+      ],
+      "title_short": "Система взаимосвязанных оболочек на границе гавани",
+      "latitude": -33.8568,
+      "date_start": "1957",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "recVumBiBORgMCqvj",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 2,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Пятинефная базилика высокой готики с монументальным западным фасадом. Средневековая кампания началась в 1248 году и остановилась в 1473-м; завершение XIX века сохранило исходный готический замысел.",
+      "tags": [
+        "architecture",
+        "gothic",
+        "cathedral",
+        "germany",
+        "cologne"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Cologne_Germany_Exterior-view-of-Cologne-Cathedral-05.jpg/960px-Cologne_Germany_Exterior-view-of-Cologne-Cathedral-05.jpg",
+      "id_status": "ok",
+      "source_url": "https://whc.unesco.org/en/list/292/",
+      "longitude": 6.9583,
+      "name_ru": "Кёльнский собор",
+      "name_en": "Cologne Cathedral",
+      "FeatureSources": [
+        "rec0E2HTTwO9HIiVz"
+      ],
+      "is_active": true,
+      "date_end": "1473",
+      "coordinates_confidence": "exact",
+      "id": "47080747-1fb1-4dff-aaa7-5d777ef079b2",
+      "FeatureMedia": [
+        "reclhVN71ph1Wml9L"
+      ],
+      "coordinates_source": [
+        "UNESCO"
+      ],
+      "layer_id": [
+        "recyseSDjnvVbf4kd"
+      ],
+      "title_short": "Высокая готика, продолженная по средневековому замыслу в XIX веке",
+      "latitude": 50.9413,
+      "date_start": "1248",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "recY7p6R3QULYfBuC",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Интегрированный автовокзал и многоэтажный паркинг, спроектированный BDP. Повторяющиеся изогнутые бетонные парапеты формируют масштабный фасад и одновременно направляют движение и защищают автомобили.",
+      "tags": [
+        "architecture",
+        "brutalism",
+        "concrete",
+        "england"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Preston_Bus_Station_-_geograph.org.uk_-_1182121.jpg",
+      "id_status": "ok",
+      "source_url": "https://historicengland.org.uk/listing/the-list/list-entry/1416042",
+      "longitude": -2.697,
+      "name_ru": "Центральный автовокзал и паркинг Престона",
+      "name_en": "Preston Central Bus Station and Car Park",
+      "FeatureSources": [
+        "rec67ycAeWeMfcu9O"
+      ],
+      "is_active": true,
+      "date_end": "1969",
+      "coordinates_confidence": "exact",
+      "id": "2760f275-b68a-4ff9-bc8e-01fdb12d3652",
+      "FeatureMedia": [
+        "recpQVu8krzwKoKam"
+      ],
+      "coordinates_source": [
+        "Official Site"
+      ],
+      "layer_id": [
+        "recLxj4PljgKcqGCj"
+      ],
+      "title_short": "Транспортная мегаструктура с пластичными бетонными балконными лентами",
+      "latitude": 53.7603,
+      "date_start": "1968",
       "layer_type": "architecture"
     }
   },
@@ -540,6 +843,93 @@
     }
   },
   {
+    "id": "rech7vNAHHh5XUTd2",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Амфитеатр Флавиев, возведённый в I веке н. э. Ярусные аркады, сложная система проходов и подземных помещений организовывали движение больших потоков зрителей и постановочные зрелища.",
+      "tags": [
+        "architecture",
+        "ancient",
+        "roman",
+        "amphitheatre",
+        "rome"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/1280px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+      "id_status": "ok",
+      "source_url": "https://colosseo.it/en/area/the-colosseum/",
+      "longitude": 12.4922,
+      "name_ru": "Колизей",
+      "name_en": "Colosseum",
+      "FeatureSources": [
+        "recKRtEHhFYcjP2nw"
+      ],
+      "is_active": true,
+      "date_end": "0080",
+      "coordinates_confidence": "exact",
+      "id": "44de5bf1-a716-46e6-8494-0e42ba5dab1c",
+      "FeatureMedia": [
+        "recalhS2FNrcdd2yY"
+      ],
+      "coordinates_source": [
+        "Official Site"
+      ],
+      "layer_id": [
+        "recfoIIqDhG0Y4Xho"
+      ],
+      "title_short": "Амфитеатр Флавиев и инженерная машина массовых зрелищ",
+      "latitude": 41.8902,
+      "date_start": "0070",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "reck9qzEmWLIKlKxW",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Псевдопериптерный коринфский храм I века н. э. в римском Немаусе. Его программа была связана с императорским культом и наследниками Августа, а цельный объём сохранился исключительно полно.",
+      "tags": [
+        "architecture",
+        "ancient",
+        "roman",
+        "temple",
+        "france",
+        "imperial"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Maison_Carree_in_Nimes_%289%29.jpg/1280px-Maison_Carree_in_Nimes_%289%29.jpg",
+      "id_status": "ok",
+      "source_url": "https://whc.unesco.org/en/list/1569/",
+      "longitude": 4.3561,
+      "name_ru": "Мезон Карре в Ниме",
+      "name_en": "Maison Carrée of Nîmes",
+      "FeatureSources": [
+        "recEgIYK5x980UnCA"
+      ],
+      "is_active": true,
+      "date_end": "0100",
+      "coordinates_confidence": "exact",
+      "id": "e5e19f09-054f-4e38-9733-58355ca6768a",
+      "FeatureMedia": [
+        "rec7qxm47VnoO8w4t"
+      ],
+      "coordinates_source": [
+        "UNESCO"
+      ],
+      "layer_id": [
+        "recfoIIqDhG0Y4Xho"
+      ],
+      "title_short": "Редко сохранившийся римский храм императорского культа",
+      "latitude": 43.838,
+      "date_start": "0001",
+      "layer_type": "architecture"
+    }
+  },
+  {
     "id": "recmLwS8nYaR2dYEF",
     "createdTime": "2026-03-30T09:18:21.000Z",
     "fields": {
@@ -612,6 +1002,49 @@
     }
   },
   {
+    "id": "recs15CbqhEKwSKen",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 1,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "Крупный муниципальный жилой комплекс, ступенчато следующий рельефу холма. Каркас из обнажённого бетона и широкие галереи — «улицы в небе» — связывают квартиры с коллективными пространствами.",
+      "tags": [
+        "architecture",
+        "brutalism",
+        "concrete",
+        "housing",
+        "england"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Park_Hill_May_2025.jpg",
+      "id_status": "ok",
+      "source_url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+      "longitude": -1.4582,
+      "name_ru": "Парк-Хилл в Шеффилде",
+      "name_en": "Park Hill, Sheffield",
+      "FeatureSources": [
+        "rechEeR00lUnGgN14"
+      ],
+      "is_active": true,
+      "date_end": "1960",
+      "coordinates_confidence": "exact",
+      "id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+      "FeatureMedia": [
+        "recIWrhLKkkL0ITqh"
+      ],
+      "coordinates_source": [
+        "Official Site"
+      ],
+      "layer_id": [
+        "recLxj4PljgKcqGCj"
+      ],
+      "title_short": "Террасный жилой мегакомплекс с «улицами в небе»",
+      "latitude": 53.38163,
+      "date_start": "1957",
+      "layer_type": "architecture"
+    }
+  },
+  {
     "id": "recylJimofuhRUv49",
     "createdTime": "2026-03-30T09:16:13.000Z",
     "fields": {
@@ -645,6 +1078,93 @@
       "title_short": "Главный храм-гора древнего Шумера",
       "latitude": 30.9628,
       "date_start": "-2100",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "reczKemCzdUUZ5Zgk",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 2,
+      "validated": true,
+      "source_license": "CC BY-SA",
+      "description": "После пожара 1174 года хор и восточная часть собора были перестроены в раннеготических формах; последующие кампании добавили зрелую и перпендикулярную готику. Собор стал одним из главных центров паломничества Англии.",
+      "tags": [
+        "architecture",
+        "gothic",
+        "cathedral",
+        "england",
+        "pilgrimage"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Exterior_of_Canterbury_Cathedral%2C_August_2022.jpg/1280px-Exterior_of_Canterbury_Cathedral%2C_August_2022.jpg",
+      "id_status": "ok",
+      "source_url": "https://whc.unesco.org/en/list/496/",
+      "longitude": 1.083,
+      "name_ru": "Кентерберийский собор",
+      "name_en": "Canterbury Cathedral",
+      "FeatureSources": [
+        "recswUItKhouwUgG5"
+      ],
+      "is_active": true,
+      "date_end": "1503",
+      "coordinates_confidence": "exact",
+      "id": "81dce408-f483-4bf3-b1a2-2f4e52864517",
+      "FeatureMedia": [
+        "recqBcCFC9NGGMlzk"
+      ],
+      "coordinates_source": [
+        "UNESCO"
+      ],
+      "layer_id": [
+        "recyseSDjnvVbf4kd"
+      ],
+      "title_short": "Последовательность ранней и перпендикулярной английской готики",
+      "latitude": 51.2798,
+      "date_start": "1174",
+      "layer_type": "architecture"
+    }
+  },
+  {
+    "id": "reczXw6WOK1fnab7V",
+    "createdTime": "2026-07-22T05:44:59.000Z",
+    "fields": {
+      "influence_radius_km": 2,
+      "validated": true,
+      "source_license": "PD",
+      "description": "Храм середины V века до н. э. в аркадском ландшафте. В его композиции сочетаются архаические черты и новаторские решения, включая один из раннейших известных коринфских капителей.",
+      "tags": [
+        "architecture",
+        "ancient",
+        "temple",
+        "greece",
+        "apollo",
+        "sanctuary"
+      ],
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Temple_of_Apollo_at_Bassai_from_the_S_by_Paul_des_Granges_%281869%29_-_crop.jpg/1280px-Temple_of_Apollo_at_Bassai_from_the_S_by_Paul_des_Granges_%281869%29_-_crop.jpg",
+      "id_status": "ok",
+      "source_url": "https://whc.unesco.org/en/list/392/",
+      "longitude": 21.9002,
+      "name_ru": "Храм Аполлона Эпикурия в Бассах",
+      "name_en": "Temple of Apollo Epicurius at Bassae",
+      "FeatureSources": [
+        "rechkVeKfR6gYZPaw"
+      ],
+      "is_active": true,
+      "date_end": "-0400",
+      "coordinates_confidence": "exact",
+      "id": "aa8103b8-a3a7-4984-a5b4-fff1f9b6a8c3",
+      "FeatureMedia": [
+        "recNFzlFs7EDbQAt9"
+      ],
+      "coordinates_source": [
+        "UNESCO"
+      ],
+      "layer_id": [
+        "rectnuWteYliOpxow"
+      ],
+      "title_short": "Горный храм, объединивший дорический, ионический и коринфский ордера",
+      "latitude": 37.4297,
+      "date_start": "-0450",
       "layer_type": "architecture"
     }
   },

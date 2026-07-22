@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
   "status": "ready_with_warnings",
-  "total_records": 19,
-  "valid_records": 19,
+  "total_records": 31,
+  "valid_records": 31,
   "skipped_records": 0,
   "blocking_errors_count": 0,
   "warnings_count": 14,
@@ -111,7 +111,7 @@
       "severity": "warning",
       "value": {
         "confidence": "exact",
-        "feature_count": 19
+        "feature_count": 31
       }
     },
     {
@@ -133,7 +133,7 @@
       "reason": "weak_source_depth",
       "severity": "warning",
       "value": {
-        "feature_count": 19,
+        "feature_count": 31,
         "threshold": "<=1 reviewed Source"
       }
     }

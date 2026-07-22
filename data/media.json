@@ -12,6 +12,54 @@
     "review_status": "reviewed"
   },
   {
+    "id": "media_bassae_des_granges_1869",
+    "source_record_id": "recjlIS44g8ZzmBji",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Temple_of_Apollo_at_Bassai_from_the_S_by_Paul_des_Granges_%281869%29_-_crop.jpg/1280px-Temple_of_Apollo_at_Bassai_from_the_S_by_Paul_des_Granges_%281869%29_-_crop.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Temple_of_Apollo_at_Bassai_from_the_S_by_Paul_des_Granges_(1869)_-_crop.jpg",
+    "creator": "Paul des Granges (1825–1911)",
+    "license": "PD",
+    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "attribution_text": "Temple of Apollo at Bassae, 1869 — Paul des Granges, public domain, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_bauhaus_dessau_jenskunstfreund_2025",
+    "source_record_id": "recEtDYYLoYFhneCK",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Au%C3%9Fenansichten_des_Bauhaus-Geb%C3%A4udes_in_Dessau_06.jpg/1280px-Au%C3%9Fenansichten_des_Bauhaus-Geb%C3%A4udes_in_Dessau_06.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Au%C3%9Fenansichten_des_Bauhaus-Geb%C3%A4udes_in_Dessau_06.jpg",
+    "creator": "JensKunstfreund",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Bauhaus Building, Dessau — JensKunstfreund, CC BY-SA 4.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_brunelleschi_dome_mariordo_2024",
+    "source_record_id": "rec5E3Q1V9Ce80O45",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Santa_Maria_del_Fiore_Cathedral_Florence_04_2024_0801.jpg/960px-Santa_Maria_del_Fiore_Cathedral_Florence_04_2024_0801.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Santa_Maria_del_Fiore_Cathedral_Florence_04_2024_0801.jpg",
+    "creator": "Mario Roberto Duran Ortiz (Mariordo)",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Brunelleschi’s Dome — Mariordo, CC BY-SA 4.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_canterbury_cathedral_no_swan_so_fine_2022",
+    "source_record_id": "recwllre4zOKkd8VO",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Exterior_of_Canterbury_Cathedral%2C_August_2022.jpg/1280px-Exterior_of_Canterbury_Cathedral%2C_August_2022.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Exterior_of_Canterbury_Cathedral,_August_2022.jpg",
+    "creator": "No Swan So Fine",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Canterbury Cathedral — No Swan So Fine, CC BY-SA 4.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
     "id": "media_casa_batllo_christianschd_2013",
     "source_record_id": "recZ6Y0K0jLTrgaJV",
     "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Casa_Batllo_Overview_Barcelona_Spain_cut.jpg/960px-Casa_Batllo_Overview_Barcelona_Spain_cut.jpg",
@@ -44,6 +92,42 @@
     "license": "CC BY-SA",
     "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
     "attribution_text": "Chrysler Building — David Shankbone, retouched by Overand, CC BY-SA 3.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_cologne_cathedral_aranas_2014",
+    "source_record_id": "reclzoneRGHvXLFVu",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Cologne_Germany_Exterior-view-of-Cologne-Cathedral-05.jpg/960px-Cologne_Germany_Exterior-view-of-Cologne-Cathedral-05.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Cologne_Germany_Exterior-view-of-Cologne-Cathedral-05.jpg",
+    "creator": "CEphoto, Uwe Aranas",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "attribution_text": "Photo by CEphoto, Uwe Aranas / CC-BY-SA-3.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_colosseum_iliff_2007",
+    "source_record_id": "rec0jlMPpoXg55tHJ",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/1280px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Colosseum_in_Rome,_Italy_-_April_2007.jpg",
+    "creator": "David Iliff",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
+    "attribution_text": "Photo by DAVID ILIFF. License: CC BY-SA 2.5, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_erechtheion_joyofmuseums_2018",
+    "source_record_id": "recPGYFenbnuGcnjL",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Erechtheion%2C_Athens_-_Joy_of_Museum.jpg/1280px-Erechtheion%2C_Athens_-_Joy_of_Museum.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Erechtheion,_Athens_-_Joy_of_Museum.jpg",
+    "creator": "Joyofmuseums",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Erechtheion, Athens — Joyofmuseums, CC BY-SA 4.0, via Wikimedia Commons",
     "media_type": "image",
     "review_status": "reviewed"
   },
@@ -84,6 +168,18 @@
     "review_status": "reviewed"
   },
   {
+    "id": "media_maison_carree_golik_2019",
+    "source_record_id": "recMOHwe5D9CXHQCG",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Maison_Carree_in_Nimes_%289%29.jpg/1280px-Maison_Carree_in_Nimes_%289%29.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Maison_Carree_in_Nimes_(9).jpg",
+    "creator": "Krzysztof Golik",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Maison Carrée, Nîmes — Krzysztof Golik, CC BY-SA 4.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
     "id": "media_national_theatre_oneil_2010",
     "source_record_id": "recOR5EfLw8et48rn",
     "asset_url": "https://upload.wikimedia.org/wikipedia/commons/4/41/The_National_Theatre%2C_South_Bank%2C_London_-_geograph.org.uk_-_1861458.jpg",
@@ -120,6 +216,18 @@
     "review_status": "reviewed"
   },
   {
+    "id": "media_park_hill_sheffield_tiger_2025",
+    "source_record_id": "recNzVUfpxn9XkdIp",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Park_Hill_May_2025.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Park_Hill_May_2025.jpg",
+    "creator": "Sheffield Tiger",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Park Hill, Sheffield — Sheffield Tiger, CC BY-SA 4.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
     "id": "media_parthenon_swayne_1978",
     "source_record_id": "recc3pTLNHihrn8sE",
     "asset_url": "https://upload.wikimedia.org/wikipedia/commons/d/da/The_Parthenon_in_Athens.jpg",
@@ -128,6 +236,18 @@
     "license": "CC BY",
     "license_url": "https://creativecommons.org/licenses/by/2.0/",
     "attribution_text": "The Parthenon in Athens — Steve Swayne, CC BY 2.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_preston_bus_station_jenkins_2009",
+    "source_record_id": "rec2FpZBYFnCSxma9",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Preston_Bus_Station_-_geograph.org.uk_-_1182121.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Preston_Bus_Station_-_geograph.org.uk_-_1182121.jpg",
+    "creator": "Bob Jenkins",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "attribution_text": "Bob Jenkins / Preston Bus Station / CC BY-SA 2.0, via Wikimedia Commons",
     "media_type": "image",
     "review_status": "reviewed"
   },
@@ -168,6 +288,18 @@
     "review_status": "reviewed"
   },
   {
+    "id": "media_sydney_opera_house_iliff_2008",
+    "source_record_id": "recYtOFH1tr7aZRIX",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Sydney_Opera_House_-_Dec_2008.jpg/1280px-Sydney_Opera_House_-_Dec_2008.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Sydney_Opera_House_-_Dec_2008.jpg",
+    "creator": "David Iliff",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "attribution_text": "Photo by DAVID ILIFF. License: CC BY-SA 3.0, via Wikimedia Commons",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
     "id": "media_versailles_suomi_2008",
     "source_record_id": "rectvCmcp3J7MRwIf",
     "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Versaillespanoraama2.jpg/1280px-Versaillespanoraama2.jpg",
@@ -176,6 +308,18 @@
     "license": "CC BY-SA",
     "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
     "attribution_text": "Palace of Versailles panorama — Samuli Suomi, CC BY-SA 3.0, via Wikimedia Commons.",
+    "media_type": "image",
+    "review_status": "reviewed"
+  },
+  {
+    "id": "media_villa_rotonda_quinok_2013",
+    "source_record_id": "recqvQ2mPIhvC5l1z",
+    "asset_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/07-Villa-Rotonda-Palladio.jpg/1280px-07-Villa-Rotonda-Palladio.jpg",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:07-Villa-Rotonda-Palladio.jpg",
+    "creator": "Quinok",
+    "license": "CC BY-SA",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution_text": "Villa Capra “La Rotonda” — Quinok, CC BY-SA 4.0, via Wikimedia Commons",
     "media_type": "image",
     "review_status": "reviewed"
   },

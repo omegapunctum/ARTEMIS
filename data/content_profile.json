@@ -42,25 +42,50 @@
     "reference_research_slices": "5-10"
   },
   "actual": {
-    "features": 19,
+    "features": 31,
     "published_layers": 19,
-    "comparison_cohorts": 0,
-    "cohorts": [],
-    "singleton_layers": 19,
-    "reviewed_sources": 19,
-    "reviewed_media": 16,
+    "comparison_cohorts": 6,
+    "cohorts": [
+      {
+        "layer_id": "brutalism_uk",
+        "feature_count": 3
+      },
+      {
+        "layer_id": "classical_greece",
+        "feature_count": 3
+      },
+      {
+        "layer_id": "gothic_europe",
+        "feature_count": 3
+      },
+      {
+        "layer_id": "modernism_global",
+        "feature_count": 3
+      },
+      {
+        "layer_id": "renaissance_italy",
+        "feature_count": 3
+      },
+      {
+        "layer_id": "roman_empire",
+        "feature_count": 3
+      }
+    ],
+    "singleton_layers": 13,
+    "reviewed_sources": 31,
+    "reviewed_media": 28,
     "reviewed_relations": 2,
     "relation_connected_features": 3,
-    "relation_connected_feature_ratio": 0.1579,
+    "relation_connected_feature_ratio": 0.0968,
     "feature_source_coverage": {
-      "covered": 19,
-      "total": 19,
+      "covered": 31,
+      "total": 31,
       "ratio": 1.0
     },
     "primary_media_coverage": {
-      "covered": 16,
-      "total": 19,
-      "ratio": 0.8421
+      "covered": 28,
+      "total": 31,
+      "ratio": 0.9032
     },
     "relation_evidence_coverage": {
       "covered": 2,
@@ -75,22 +100,19 @@
     "status": "building",
     "passed": false,
     "failed_check_ids": [
-      "features",
-      "comparison_cohorts",
-      "reviewed_relations",
-      "primary_media_coverage"
+      "reviewed_relations"
     ],
     "checks": [
       {
         "id": "features",
-        "passed": false,
-        "current": 19,
+        "passed": true,
+        "current": 31,
         "requirement": "30-40"
       },
       {
         "id": "comparison_cohorts",
-        "passed": false,
-        "current": 0,
+        "passed": true,
+        "current": 6,
         "requirement": "6-8 layers with at least 3 Features each"
       },
       {
@@ -107,8 +129,8 @@
       },
       {
         "id": "primary_media_coverage",
-        "passed": false,
-        "current": 0.8421,
+        "passed": true,
+        "current": 0.9032,
         "requirement": ">=90%"
       },
       {
@@ -131,10 +153,10 @@
       }
     ],
     "gaps": {
-      "features_to_minimum": 11,
-      "comparison_cohorts_to_minimum": 6,
+      "features_to_minimum": 0,
+      "comparison_cohorts_to_minimum": 0,
       "reviewed_relations_to_minimum": 10,
-      "primary_media_records_to_current_minimum": 2
+      "primary_media_records_to_current_minimum": 0
     }
   }
 }

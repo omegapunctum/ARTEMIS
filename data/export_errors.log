@@ -9,6 +9,6 @@
 {"id": "rec1GDGqssFGehzEx", "record_id": "rec1GDGqssFGehzEx", "field": "media_refs", "warning": "missing_primary_media", "reason": "missing_primary_media", "severity": "warning"}
 {"id": "rec0x9MvhXQFWErOy", "record_id": "rec0x9MvhXQFWErOy", "field": "media_refs", "warning": "missing_primary_media", "reason": "missing_primary_media", "severity": "warning"}
 {"id": "recZsGTVquE5d26YO", "record_id": "recZsGTVquE5d26YO", "field": "date_start/date_end", "warning": "broad_temporal_range", "reason": "broad_temporal_range", "severity": "warning", "value": {"start": -3100, "end": -1600, "span_years": 1500}}
-{"id": "<dataset>", "record_id": "<dataset>", "field": "coordinates_confidence", "warning": "uniform_coordinates_confidence", "reason": "uniform_coordinates_confidence", "severity": "warning", "value": {"confidence": "exact", "feature_count": 19}}
+{"id": "<dataset>", "record_id": "<dataset>", "field": "coordinates_confidence", "warning": "uniform_coordinates_confidence", "reason": "uniform_coordinates_confidence", "severity": "warning", "value": {"confidence": "exact", "feature_count": 31}}
 {"id": "<dataset>", "record_id": "<dataset>", "field": "tags", "warning": "missing_classification_depth", "reason": "missing_classification_depth", "severity": "warning", "value": {"feature_count": 19}}
-{"id": "<dataset>", "record_id": "<dataset>", "field": "source_refs", "warning": "weak_source_depth", "reason": "weak_source_depth", "severity": "warning", "value": {"feature_count": 19, "threshold": "<=1 reviewed Source"}}
+{"id": "<dataset>", "record_id": "<dataset>", "field": "source_refs", "warning": "weak_source_depth", "reason": "weak_source_depth", "severity": "warning", "value": {"feature_count": 31, "threshold": "<=1 reviewed Source"}}
