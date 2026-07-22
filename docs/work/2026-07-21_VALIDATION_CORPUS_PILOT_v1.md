@@ -6,7 +6,7 @@
 - Дата: 2026-07-21.
 - Scope: comparison-first Round 0 corpus.
 - Не является заявлением о зрелом MVP-корпусе.
-- Execution: V2 cohort expansion загружен в Airtable 2026-07-22; V3 Relation graph остаётся открытым.
+- Execution: V2 cohort expansion и V3 Relation graph загружены в Airtable 2026-07-22; профиль достиг `comparison_ready`.
 
 ## 1. Решение
 
@@ -25,7 +25,7 @@
 
 Этого достаточно для проверки сравнения, provenance и различения Relation/Similarity. Более широкий ориентир 100–150 Features, 50+ Relations, 3 Stories и 5–10 reference Slices сохраняется как maturity reference, а не как входной барьер Round 0.
 
-## 2. Текущий baseline
+## 2. Исходный baseline
 
 `data/content_profile.json` фиксирует:
 
@@ -39,7 +39,7 @@
 | Relation evidence coverage | 100% | 100% | 0 |
 | Published empty Layers | 0 | 0 | 0 |
 
-Status остаётся `building`. Прохождение semantic gate означает publish-safe данные, но не comparison readiness.
+На исходном snapshot status был `building`. Прохождение semantic gate означало publish-safe данные, но ещё не comparison readiness.
 
 ## 3. Состав минимального набора
 
@@ -107,6 +107,34 @@ Canonical `Export Airtable Data` snapshot создан 2026-07-22 в `06:26:26Z`
 - предпочтительны связи, полезные для сравнения внутри cohort и между эпохами.
 
 Каждый batch проходит Airtable control read, export, semantic gate, content-profile check и обычный release gate.
+
+#### V3 execution snapshot — 2026-07-22
+
+V3 выполнен через Airtable в порядке `draft Sources/Relations → draft RelationSources → control read → reviewed Sources → reviewed RelationSources → reviewed Relations`. Публичные JSON сформированы только canonical exporter; вручную они не редактировались.
+
+| Cohort | Reviewed Relations | Evidence |
+|---|---:|---|
+| `classical_greece` | 1 | UNESCO Acropolis source covering the Parthenon and Erechtheion |
+| `roman_empire` | 1 | Parco archeologico del Colosseo + UNESCO Maison Carrée |
+| `gothic_europe` | 2 | UNESCO records for Cologne, Chartres and Canterbury |
+| `renaissance_italy` | 2 | St. Peter’s reference + Opera del Duomo + Villa La Rotonda official site |
+| `modernism_global` | 1 | UNESCO Bauhaus + UNESCO Le Corbusier/Villa Savoye |
+| `brutalism_uk` | 3 | Historic England Park Hill/Preston + National Theatre official source |
+
+Все 10 новых predicates имеют тип `same_movement`. Это не вычисленная same-layer Similarity: каждый endpoint классифицирован в reviewed evidence, а для cross-source синтеза используются два отдельных `RelationSources`. Три более широкие историко-архитектурные группировки (`roman_empire`, две `renaissance_italy`) маркированы как `interpretation / medium`; остальные — `fact / high`.
+
+Airtable control read после promotion:
+
+| Метрика | Результат |
+|---|---:|
+| Reviewed Relations | 12 / 12 |
+| Новые RelationSources | 19 / 19 reviewed |
+| Всего RelationSources | 21 |
+| Relations с evidence | 12 / 12, 100% |
+| Relation-connected Features | 17 / 31, 54.84% |
+| Разорванные Relation/Source/Feature links | 0 |
+
+Canonical `Export Airtable Data` snapshot создан 2026-07-22 в `12:58:03Z`: 31 Feature, 6 comparison cohorts, 35 reviewed Sources, 28 reviewed Media и 12 reviewed Relations. Semantic gate: `ready_with_warnings`, 0 blocking errors, 14 прежних контролируемых warnings. `data/content_profile.json.readiness.status` стал `comparison_ready`; все gaps равны нулю.
 
 ## 5. Исполнимый профиль
 

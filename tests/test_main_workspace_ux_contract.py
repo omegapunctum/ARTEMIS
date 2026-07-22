@@ -124,7 +124,7 @@ def test_checked_in_relations_reference_public_features_and_evidence() -> None:
     features = {feature["id"]: feature for feature in feature_collection["features"]}
     relation_ids = {relation["id"] for relation in relations}
 
-    assert len(relations) == 2
+    assert len(relations) == 12
     for relation in relations:
         assert uuid.UUID(relation["id"]).version == 4
         assert relation["source_feature_id"] in features

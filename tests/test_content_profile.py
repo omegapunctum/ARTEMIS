@@ -65,10 +65,14 @@ def test_checked_in_content_profile_matches_public_artifacts() -> None:
     assert profile["actual"]["features"] == 31
     assert profile["actual"]["comparison_cohorts"] == 6
     assert profile["actual"]["primary_media_coverage"]["ratio"] == 0.9032
-    assert profile["readiness"]["status"] == "building"
-    assert profile["readiness"]["failed_check_ids"] == ["reviewed_relations"]
+    assert profile["actual"]["reviewed_relations"] == 12
+    assert profile["actual"]["relation_connected_features"] == 17
+    assert profile["actual"]["relation_evidence_coverage"]["ratio"] == 1.0
+    assert profile["readiness"]["status"] == "comparison_ready"
+    assert profile["readiness"]["passed"] is True
+    assert profile["readiness"]["failed_check_ids"] == []
     assert profile["readiness"]["gaps"]["features_to_minimum"] == 0
-    assert profile["readiness"]["gaps"]["reviewed_relations_to_minimum"] == 10
+    assert profile["readiness"]["gaps"]["reviewed_relations_to_minimum"] == 0
 
 
 def test_profile_becomes_ready_at_approved_pilot_thresholds() -> None:
