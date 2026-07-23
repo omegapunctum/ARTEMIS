@@ -94,7 +94,7 @@ _run_startup_migration_apply_sequence(
     ),
 )
 
-UPLOADS_DIR = "uploads"
+UPLOADS_DIR = os.getenv("UPLOADS_DIR", "uploads").strip() or "uploads"
 Path(UPLOADS_DIR).mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="ARTEMIS API")
