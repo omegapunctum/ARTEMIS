@@ -1,0 +1,16 @@
+.git
+.github
+.pytest_cache
+**/__pycache__
+*.py[cod]
+*.db
+*.sqlite
+*.sqlite3
+*.log
+.env
+.env.*
+node_modules
+uploads
+tests
+docs
+data
