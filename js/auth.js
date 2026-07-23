@@ -41,6 +41,21 @@ function buildApiUrl(base, path) {
   return `${normalizedBase}${normalizedPath}`;
 }
 
+export function resolveApiUrl(path) {
+  const rawPath = String(path || '').trim();
+  if (/^https?:\/\//i.test(rawPath)) return rawPath;
+
+  const normalizedPath = normalizePath(rawPath);
+  const apiPath = normalizedPath === '/api'
+    ? '/'
+    : normalizedPath.startsWith('/api/')
+      ? normalizedPath.slice(4)
+      : normalizedPath;
+  const candidates = resolvedApiBase !== null ? [resolvedApiBase] : API_BASE_CANDIDATES;
+  const preferredBase = candidates.find((candidate) => String(candidate || '').trim()) || '/api';
+  return buildApiUrl(preferredBase, apiPath);
+}
+
 function logRouteFallback({ method, path, tried, status, level = 'info' }) {
   const key = `${method}:${path}:${status}`;
   if (routeFallbackLogCache.has(key)) return;
@@ -353,7 +368,8 @@ function normalizeRefreshError(error) {
 }
 
 export async function fetchWithAuth(input, options = {}) {
-  const originalRequest = input instanceof Request ? input : new Request(input, options);
+  const requestInput = input instanceof Request ? input : resolveApiUrl(input);
+  const originalRequest = input instanceof Request ? input : new Request(requestInput, options);
   const firstAttempt = buildAuthRequest(originalRequest);
   const response = await fetch(firstAttempt);
 
@@ -380,6 +396,18 @@ export async function fetchWithAuth(input, options = {}) {
     throw await buildApiError(retryResponse, 'Session expired. Please sign in again.');
   }
   return retryResponse;
+}
+
+export async function fetchPublicApi(input, options = {}) {
+  const requestInput = input instanceof Request ? input : resolveApiUrl(input);
+  const request = input instanceof Request
+    ? input
+    : new Request(requestInput, {
+        ...options,
+        credentials: 'omit',
+        cache: 'no-store'
+      });
+  return await fetch(request);
 }
 
 export const apiFetch = fetchWithAuth;

@@ -256,12 +256,20 @@ Delete не должен:
 
 ### 6.6 Share
 
-Share является planned product layer, если он ещё не реализован полноценно.
+Share реализуется как явная unlisted read-only capability-ссылка поверх private-by-default Slice.
 
 Share не должен нарушать:
 - owner/privacy model;
 - source/provenance discipline;
 - distinction between private research state and public canonical knowledge.
+
+Текущий baseline:
+- raw capability token передаётся владельцу только при создании/rotation;
+- backend хранит только hash token;
+- повторный share инвалидирует предыдущую ссылку;
+- revoke и delete немедленно закрывают публичное чтение;
+- shared response не раскрывает owner identity и не допускает mutation;
+- sharing не создаёт searchable/public-curated запись.
 
 ### 6.7 Compare
 
@@ -415,7 +423,7 @@ Rules:
 - Slice may store annotations, but annotations do not become public facts automatically.
 - Slice deletion must not affect source features.
 - Slice sharing must not alter public dataset.
-- Slice API must enforce owner-only access unless a separate sharing contract is introduced.
+- Slice API enforces owner-only CRUD; отдельный share-контракт разрешает только unlisted read-only capability access.
 
 Runtime/API details remain in:
 
@@ -433,8 +441,8 @@ Baseline v1.0:
 
 - slice is private by default;
 - owner-only access is required;
-- cross-user access is not baseline unless explicitly introduced;
-- public sharing requires a separate sharing contract;
+- unlisted read-only access разрешён только по явно созданному capability token;
+- share capability не даёт owner/update/delete permissions;
 - collaborative editing is out of baseline scope.
 
 Visibility states may evolve later, but must be explicit:
@@ -444,7 +452,7 @@ Visibility states may evolve later, but must be explicit:
 - public curated;
 - collaborative.
 
-Only `private` is baseline unless implemented and documented otherwise.
+Текущий реализованный baseline: `private` owner resource + `unlisted/share-link` read-only capability. `public curated` и `collaborative` не реализованы.
 
 ---
 

@@ -238,10 +238,12 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
         detail=exc.detail,
     )
     error_value = exc.detail if isinstance(exc.detail, str) and exc.detail else 'request_error'
+    response_headers = dict(exc.headers or {})
+    response_headers['X-Request-ID'] = getattr(request.state, 'request_id', '')
     return JSONResponse(
         status_code=status_code,
         content={'error': error_value, 'request_id': getattr(request.state, 'request_id', None)},
-        headers={'X-Request-ID': getattr(request.state, 'request_id', '')},
+        headers=response_headers,
     )
 
 

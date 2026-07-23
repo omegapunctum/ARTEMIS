@@ -3,7 +3,7 @@ import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, g
 import { debounce, createInlineStateBlock } from './ux.js';
 import { normalizeSafeUrl, setSafeImageSource, setSafeLink, toSafeText } from './safe-dom.js';
 import { DEFAULT_DISPLAY_MODE, aggregateFeaturesByDecade, createLiveState } from './state.js';
-import { buildResearchSlicePayload, buildSliceAnnotationDisplayPlan, buildSliceListMetaSummary, normalizeSliceForRestore, listResearchSlices, getResearchSlice, createResearchSlice, deleteResearchSlice } from './research_slices.js';
+import { buildResearchSlicePayload, buildSliceAnnotationDisplayPlan, buildSliceListMetaSummary, normalizeSliceForRestore, listResearchSlices, getResearchSlice, createResearchSlice, deleteResearchSlice, createResearchSliceShare, revokeResearchSliceShare, getSharedResearchSlice, getSharedSliceTokenFromLocation, buildResearchSliceShareUrl } from './research_slices.js';
 import { buildStoryPayload, clampStoryStepIndex, resolveStoryStepSliceId, listStories, getStory, createStory, deleteStory } from './stories.js';
 import { buildCoursePayload, clampCourseStepIndex, resolveCourseStepStoryId, listCourses, getCourse, createCourse, deleteCourse } from './courses_runtime.js';
 
@@ -162,6 +162,22 @@ function showUiSystemMessage(message, { variant = 'success', timeout = 2600 } = 
     activeUiToastEl = null;
     activeUiToastTimerId = null;
   }, Math.max(800, Number(timeout) || 2600));
+}
+
+async function copyShareUrl(url) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(url);
+    return true;
+  }
+  window.prompt('Скопируйте ссылку на исследование:', url);
+  return false;
+}
+
+async function createAndCopySliceShare(sliceId) {
+  const share = await createResearchSliceShare(sliceId);
+  const shareUrl = buildResearchSliceShareUrl(share?.share_token);
+  const copied = await copyShareUrl(shareUrl);
+  return { shareUrl, copied };
 }
 
 export async function initUI(map, features) {
@@ -327,6 +343,7 @@ export async function initUI(map, features) {
     sliceOpenedId: '',
     sliceOpenedTitle: '',
     sliceOpenedAnnotationPlan: null,
+    sharedSliceReadOnly: false,
     stories: [],
     storiesLoaded: false,
     storiesLoading: false,
@@ -526,9 +543,28 @@ export async function initUI(map, features) {
     await openResearchSlicesWorkspace(elements, state, map);
   });
   elements.researchSliceOpenBtn?.addEventListener('click', async () => {
-    setActiveProjectNavigation(elements, 'saved');
-    await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
-    showUiSystemMessage('Используйте открытый контекст как базу для публикации из панели сохранённых исследований.', { variant: 'info', timeout: 3000 });
+    const openedSliceId = String(state.sliceOpenedId || '').trim();
+    if (state.sharedSliceReadOnly) {
+      const copied = await copyShareUrl(window.location.href);
+      showUiSystemMessage(copied ? 'Ссылка скопирована' : 'Ссылка готова для копирования', { variant: 'success', timeout: 2400 });
+      return;
+    }
+    if (!openedSliceId) {
+      setActiveProjectNavigation(elements, 'saved');
+      await openResearchSlicesWorkspace(elements, state, map, { focusZone: 'saved' });
+      showUiSystemMessage('Сначала откройте сохранённое исследование.', { variant: 'info', timeout: 3000 });
+      return;
+    }
+    try {
+      const { copied } = await createAndCopySliceShare(openedSliceId);
+      state.researchSlicesLoaded = false;
+      showUiSystemMessage(
+        copied ? 'Новая read-only ссылка скопирована; предыдущая отключена' : 'Новая read-only ссылка создана; предыдущая отключена',
+        { variant: 'success', timeout: 3800 }
+      );
+    } catch (error) {
+      showUiSystemMessage(normalizeAppError(error, 'Не удалось создать общую ссылку.').message, { variant: 'warning', timeout: 3400 });
+    }
   });
   elements.researchSliceSaveBtn?.addEventListener('click', async () => {
     setActiveProjectNavigation(elements, 'research');
@@ -655,12 +691,35 @@ export async function initUI(map, features) {
   state.loading = false;
   applyState();
   applyResponsiveLayout(elements, state, map);
+  await restoreSharedSliceFromLocation(state, elements, map, onboardingHint);
 
   return {
     getVisibleCounts() {
       return { listCount: state.filteredFeatures.length, mapCount: getMapFeatureCount(map) };
     }
   };
+}
+
+async function restoreSharedSliceFromLocation(state, elements, map, onboardingHint) {
+  const shareToken = getSharedSliceTokenFromLocation(window.location);
+  if (!shareToken) return false;
+
+  try {
+    const rawSlice = await getSharedResearchSlice(shareToken);
+    applyResearchSliceContext(rawSlice, state, elements, map);
+    state.sliceOpenedId = String(rawSlice?.id || '').trim();
+    state.sliceOpenedTitle = String(rawSlice?.title || '').trim();
+    state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
+    state.sharedSliceReadOnly = true;
+    markResearchContextAsSaved(state);
+    onboardingHint?.markInteracted?.();
+    updateResearchContextBar(elements, state);
+    showUiSystemMessage('Открыто общее исследование · только чтение', { variant: 'success', timeout: 3200 });
+    return true;
+  } catch (error) {
+    showUiSystemMessage(normalizeAppError(error, 'Общая ссылка недоступна или была отозвана.').message, { variant: 'warning', timeout: 4200 });
+    return false;
+  }
 }
 
 function setupOnboardingOverlay(elements) {
@@ -1453,6 +1512,7 @@ function renderSlicesPanel(elements, state, map) {
       if (state.sliceSelectionSet instanceof Set) state.sliceSelectionSet.clear();
       state.sliceOpenedId = createdSliceId || '';
       state.sliceOpenedTitle = String(payload?.title || '').trim();
+      state.sharedSliceReadOnly = false;
       markResearchContextAsSaved(state);
       updateResearchContextBar(elements, state);
       showUiSystemMessage('Исследование сохранено', { variant: 'success', timeout: 2200 });
@@ -1549,6 +1609,7 @@ function renderSlicesPanel(elements, state, map) {
         state.sliceOpenedId = String(rawSlice?.id || slice?.id || '').trim();
         state.sliceOpenedTitle = String(rawSlice?.title || slice?.title || '').trim();
         state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
+        state.sharedSliceReadOnly = false;
         markResearchContextAsSaved(state);
         updateResearchContextBar(elements, state);
         renderSlicesPanel(elements, state, map);
@@ -1972,6 +2033,45 @@ function renderSlicesPanel(elements, state, map) {
         await restoreSliceFromEntry(slice);
       });
 
+      const shareBtn = document.createElement('button');
+      shareBtn.type = 'button';
+      shareBtn.className = 'ui-button ui-button-secondary slice-share-btn';
+      shareBtn.textContent = slice?.is_shared ? 'Новая ссылка' : 'Поделиться';
+      shareBtn.title = slice?.is_shared
+        ? 'Создать новую ссылку и отключить предыдущую'
+        : 'Создать read-only ссылку';
+      shareBtn.addEventListener('click', async () => {
+        if (!sliceId) return;
+        try {
+          const { copied } = await createAndCopySliceShare(sliceId);
+          await ensureResearchSlicesLoaded(state, { force: true });
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage(
+            copied ? 'Read-only ссылка скопирована' : 'Read-only ссылка создана',
+            { variant: 'success', timeout: 3000 }
+          );
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось создать общую ссылку.').message, { variant: 'warning', timeout: 3400 });
+        }
+      });
+
+      const revokeShareBtn = document.createElement('button');
+      revokeShareBtn.type = 'button';
+      revokeShareBtn.className = 'ui-button ui-button-secondary slice-share-revoke-btn';
+      revokeShareBtn.textContent = 'Отключить ссылку';
+      revokeShareBtn.hidden = !Boolean(slice?.is_shared);
+      revokeShareBtn.addEventListener('click', async () => {
+        if (!sliceId) return;
+        try {
+          await revokeResearchSliceShare(sliceId);
+          await ensureResearchSlicesLoaded(state, { force: true });
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage('Общая ссылка отключена', { variant: 'success', timeout: 2600 });
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось отключить общую ссылку.').message, { variant: 'warning', timeout: 3400 });
+        }
+      });
+
       const deleteBtn = document.createElement('button');
       deleteBtn.type = 'button';
       deleteBtn.className = 'ui-button ui-button-danger slice-delete-btn';
@@ -1990,7 +2090,7 @@ function renderSlicesPanel(elements, state, map) {
         }
       });
 
-      actions.append(compareToggleBtn, openBtn, deleteBtn);
+      actions.append(compareToggleBtn, openBtn, shareBtn, revokeShareBtn, deleteBtn);
       row.appendChild(actions);
       list.appendChild(row);
     });
@@ -3959,12 +4059,14 @@ function updateResearchContextBar(elements, state) {
     ? `Выбрано: ${draftSliceCount}`
     : `Объекты: ${visibleObjectsCount}${hasAnchor ? ' · якорь' : ''}`;
   const hasOpenedSliceTitle = Boolean(String(state?.sliceOpenedTitle || '').trim());
-  const sliceStateLabel = state.researchContextDirty ? 'Изменено' : 'Сохранено';
+  const sliceStateLabel = state.sharedSliceReadOnly
+    ? (state.researchContextDirty ? 'Общий · изменено локально' : 'Общий · только чтение')
+    : (state.researchContextDirty ? 'Изменено' : 'Сохранено');
   const rawSliceTitle = hasOpenedSliceTitle ? String(state.sliceOpenedTitle).trim() : 'Новое исследование';
   const rawTriggerLabel = hasOpenedSliceTitle ? rawSliceTitle : 'Новое исследование';
   const triggerLabel = truncateText(rawTriggerLabel, 40);
   const triggerTitle = hasOpenedSliceTitle
-    ? `Сохранённое исследование: ${rawSliceTitle}`
+    ? `${state.sharedSliceReadOnly ? 'Общее исследование' : 'Сохранённое исследование'}: ${rawSliceTitle}`
     : 'Создать сохранённое исследование';
   const renderKey = [periodLabel, layersLabel, objectsLabel, sliceStateLabel, triggerLabel, triggerTitle, draftSliceCount, hasAnchor].join('||');
   if (renderKey === state.researchContextLastRenderedKey) return;
@@ -4627,6 +4729,9 @@ function getCurrentSliceTitle(state) {
 }
 
 function getCurrentSliceStatus(state) {
+  if (state?.sharedSliceReadOnly) {
+    return state?.researchContextDirty ? 'Общий · изменено локально' : 'Общий · только чтение';
+  }
   return state?.researchContextDirty ? 'Изменено' : 'Сохранено';
 }
 

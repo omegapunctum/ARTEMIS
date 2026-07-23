@@ -1,4 +1,4 @@
-import { fetchWithAuth, buildApiError } from './auth.js';
+import { fetchPublicApi, fetchWithAuth, buildApiError } from './auth.js';
 
 const BASE_PATH = '/api/research-slices';
 const ANNOTATION_TYPES = ['fact', 'interpretation', 'hypothesis'];
@@ -68,6 +68,8 @@ export function buildSliceAnnotationDisplayPlan(slice) {
 export function buildSliceListMetaSummary(slice) {
   const payload = slice && typeof slice === 'object' ? slice : {};
   const parts = [];
+
+  if (payload.is_shared === true) parts.push('общая ссылка активна');
 
   const featureCount = normalizeCount(payload.feature_count);
   if (featureCount !== null) parts.push(`${featureCount} объектов`);
@@ -204,4 +206,43 @@ export async function createResearchSlice(payload) {
 export async function deleteResearchSlice(sliceId) {
   const response = await fetchWithAuth(`${BASE_PATH}/${encodeURIComponent(sliceId)}`, { method: 'DELETE' });
   if (!response.ok) throw await buildApiError(response, 'Failed to delete research slice.');
+}
+
+export async function createResearchSliceShare(sliceId) {
+  const response = await fetchWithAuth(`${BASE_PATH}/${encodeURIComponent(sliceId)}/share`, {
+    method: 'POST'
+  });
+  if (!response.ok) throw await buildApiError(response, 'Failed to create a read-only share link.');
+  return await response.json();
+}
+
+export async function revokeResearchSliceShare(sliceId) {
+  const response = await fetchWithAuth(`${BASE_PATH}/${encodeURIComponent(sliceId)}/share`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) throw await buildApiError(response, 'Failed to revoke the share link.');
+}
+
+export async function getSharedResearchSlice(shareToken) {
+  const token = String(shareToken || '').trim();
+  const response = await fetchPublicApi('/api/public/research-slices/shared', {
+    method: 'GET',
+    headers: { 'X-ARTEMIS-Share-Token': token }
+  });
+  if (!response.ok) throw await buildApiError(response, 'Shared research slice is unavailable.', { logLevel: 'warn' });
+  return await response.json();
+}
+
+export function getSharedSliceTokenFromLocation(locationLike = window.location) {
+  const rawHash = String(locationLike?.hash || '').replace(/^#/, '');
+  const token = new URLSearchParams(rawHash).get('share');
+  return String(token || '').trim();
+}
+
+export function buildResearchSliceShareUrl(shareToken, locationLike = window.location) {
+  const token = String(shareToken || '').trim();
+  if (!token) throw new Error('Share token is required.');
+  const url = new URL(String(locationLike?.href || locationLike || ''), window.location.href);
+  url.hash = new URLSearchParams({ share: token }).toString();
+  return url.href;
 }

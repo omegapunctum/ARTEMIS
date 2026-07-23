@@ -1,23 +1,45 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
 
 from app.auth.service import User, get_current_user, get_db
 from app.observability import internal_error_response, log_event
 
-from .schemas import ResearchSliceCreate, ResearchSliceListItem, ResearchSliceResponse, ResearchSliceUpdate
+from .schemas import (
+    PublicResearchSliceResponse,
+    ResearchSliceCreate,
+    ResearchSliceListItem,
+    ResearchSliceResponse,
+    ResearchSliceShareResponse,
+    ResearchSliceUpdate,
+)
 from .service import (
     create_research_slice,
     delete_user_research_slice,
+    get_shared_research_slice,
     get_user_research_slice,
     list_user_research_slices,
     serialize_research_slice,
     serialize_research_slice_list_item,
+    serialize_public_research_slice,
+    revoke_research_slice_share,
+    rotate_research_slice_share,
     update_user_research_slice,
 )
 
 router = APIRouter(prefix="/research-slices", tags=["research-slices"])
+public_router = APIRouter(prefix="/public/research-slices", tags=["public-research-slices"])
+PUBLIC_SHARE_HEADERS = {
+    "Cache-Control": "no-store, max-age=0",
+    "Pragma": "no-cache",
+    "Referrer-Policy": "no-referrer",
+    "X-Robots-Tag": "noindex, nofollow, noarchive",
+}
+
+
+def _apply_public_share_headers(response: Response) -> None:
+    response.headers.update(PUBLIC_SHARE_HEADERS)
 
 
 @router.post("", response_model=ResearchSliceResponse, status_code=status.HTTP_201_CREATED)
@@ -128,3 +150,66 @@ def delete_research_slice_endpoint(
     except Exception as exc:
         log_event(logging.ERROR, "research_slice.delete.error", path=request.url.path, request_id=request.state.request_id, user_id=current_user.id, slice_id=slice_id, error=str(exc))
         return internal_error_response(request)
+
+
+@router.post("/{slice_id}/share", response_model=ResearchSliceShareResponse)
+def share_research_slice_endpoint(
+    slice_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    request.state.user_id = current_user.id
+    try:
+        item = get_user_research_slice(db, current_user, slice_id)
+        share_token, shared_at = rotate_research_slice_share(db, item)
+        return ResearchSliceShareResponse(
+            share_token=share_token,
+            share_fragment=f"#share={share_token}",
+            shared_at=shared_at,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log_event(logging.ERROR, "research_slice.share.error", path=request.url.path, request_id=request.state.request_id, user_id=current_user.id, slice_id=slice_id, error=str(exc))
+        return internal_error_response(request)
+
+
+@router.delete("/{slice_id}/share", status_code=status.HTTP_204_NO_CONTENT)
+def revoke_research_slice_share_endpoint(
+    slice_id: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    request.state.user_id = current_user.id
+    try:
+        item = get_user_research_slice(db, current_user, slice_id)
+        revoke_research_slice_share(db, item)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log_event(logging.ERROR, "research_slice.share_revoke.error", path=request.url.path, request_id=request.state.request_id, user_id=current_user.id, slice_id=slice_id, error=str(exc))
+        return internal_error_response(request)
+
+
+@public_router.get("/shared", response_model=PublicResearchSliceResponse)
+def get_shared_research_slice_endpoint(
+    request: Request,
+    response: Response,
+    share_token: str = Header(default="", alias="X-ARTEMIS-Share-Token"),
+    db: Session = Depends(get_db),
+):
+    try:
+        item = get_shared_research_slice(db, share_token)
+        _apply_public_share_headers(response)
+        return serialize_public_research_slice(item)
+    except HTTPException as exc:
+        exc.headers = {**(exc.headers or {}), **PUBLIC_SHARE_HEADERS}
+        raise
+    except Exception as exc:
+        log_event(logging.ERROR, "research_slice.public_get.error", path=request.url.path, request_id=request.state.request_id, error=str(exc))
+        error_response = internal_error_response(request)
+        _apply_public_share_headers(error_response)
+        return error_response

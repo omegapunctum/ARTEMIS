@@ -509,6 +509,67 @@ class ResearchSlicesFrontendStateTests(unittest.TestCase):
         self.assertEqual(data["feature_ids"], ["f1", "f2"])
         self.assertEqual(data["time_range"]["start"], 1500)
 
+    def test_api_url_resolution_uses_configured_public_backend(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: { href: 'https://omegapunctum.github.io/ARTEMIS/', hostname: 'omegapunctum.github.io' },
+              ARTEMIS_API_BASE: 'https://api.artemis.example/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+
+            const { resolveApiUrl } = await import('./js/auth.js');
+            console.log(JSON.stringify({
+              slices: resolveApiUrl('/api/research-slices'),
+              moderation: resolveApiUrl('/moderation/queue'),
+              absolute: resolveApiUrl('https://elsewhere.example/health')
+            }));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertEqual(data["slices"], "https://api.artemis.example/api/research-slices")
+        self.assertEqual(data["moderation"], "https://api.artemis.example/api/moderation/queue")
+        self.assertEqual(data["absolute"], "https://elsewhere.example/health")
+
+    def test_share_url_keeps_capability_token_in_fragment(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: {
+                href: 'https://omegapunctum.github.io/ARTEMIS/?debug=1',
+                hostname: 'omegapunctum.github.io',
+                hash: '#share=token-123'
+              },
+              ARTEMIS_API_BASE: '/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+
+            const { buildResearchSliceShareUrl, getSharedSliceTokenFromLocation } = await import('./js/research_slices.js');
+            const url = buildResearchSliceShareUrl('new-token', window.location);
+            const parsed = new URL(url);
+            console.log(JSON.stringify({
+              url,
+              search: parsed.search,
+              hash: parsed.hash,
+              currentToken: getSharedSliceTokenFromLocation(window.location)
+            }));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertEqual(data["search"], "?debug=1")
+        self.assertEqual(data["hash"], "#share=new-token")
+        self.assertEqual(data["currentToken"], "token-123")
+
 
 
 if __name__ == "__main__":
