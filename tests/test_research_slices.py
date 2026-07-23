@@ -262,6 +262,124 @@ class ResearchSlicesApiTests(unittest.TestCase):
         self.assertEqual([entry["type"] for entry in body["annotations"]], ["fact", "interpretation", "hypothesis"])
         self.assertEqual(body["visibility"], "private")
 
+    def test_read_only_share_rotation_revocation_and_public_privacy(self):
+        owner_headers = self._register_login(f"slice-share-owner-{uuid4().hex}@example.com")
+        outsider_headers = self._register_login(f"slice-share-outsider-{uuid4().hex}@example.com")
+
+        created = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=self._payload(),
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(created.status_code, 201, created.text)
+        slice_id = created.json()["id"]
+
+        outsider_share = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=outsider_headers,
+            timeout=5,
+        )
+        self.assertEqual(outsider_share.status_code, 404)
+
+        first_share = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=owner_headers,
+            timeout=5,
+        )
+        self.assertEqual(first_share.status_code, 200, first_share.text)
+        first_token = first_share.json()["share_token"]
+        self.assertGreaterEqual(len(first_token), 40)
+        self.assertEqual(first_share.json()["share_fragment"], f"#share={first_token}")
+
+        db = SessionLocal()
+        try:
+            stored = db.query(ResearchSlice).filter(ResearchSlice.id == slice_id).one()
+            self.assertNotEqual(stored.share_token_hash, first_token)
+            self.assertEqual(len(stored.share_token_hash), 64)
+        finally:
+            db.close()
+
+        public_session = requests.Session()
+        try:
+            public_get = public_session.get(
+                f"{self.BASE_URL}/api/public/research-slices/shared",
+                headers={"X-ARTEMIS-Share-Token": first_token},
+                timeout=5,
+            )
+            self.assertEqual(public_get.status_code, 200, public_get.text)
+            public_body = public_get.json()
+            self.assertEqual(public_body["id"], slice_id)
+            self.assertEqual(public_body["visibility"], "shared_read_only")
+            self.assertEqual([entry["feature_id"] for entry in public_body["feature_refs"]], ["recA", "recB"])
+            self.assertNotIn("owner_id", public_body)
+            self.assertIn("no-store", public_get.headers.get("Cache-Control", ""))
+            self.assertEqual(public_get.headers.get("Referrer-Policy"), "no-referrer")
+            self.assertIn("noindex", public_get.headers.get("X-Robots-Tag", ""))
+
+            owner_list = self.session.get(
+                f"{self.BASE_URL}/api/research-slices",
+                headers=owner_headers,
+                timeout=5,
+            )
+            self.assertEqual(owner_list.status_code, 200, owner_list.text)
+            self.assertTrue(owner_list.json()[0]["is_shared"])
+
+            second_share = self.session.post(
+                f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+                headers=owner_headers,
+                timeout=5,
+            )
+            self.assertEqual(second_share.status_code, 200, second_share.text)
+            second_token = second_share.json()["share_token"]
+            self.assertNotEqual(second_token, first_token)
+
+            old_link = public_session.get(
+                f"{self.BASE_URL}/api/public/research-slices/shared",
+                headers={"X-ARTEMIS-Share-Token": first_token},
+                timeout=5,
+            )
+            self.assertEqual(old_link.status_code, 404)
+            self.assertIn("no-store", old_link.headers.get("Cache-Control", ""))
+
+            new_link = public_session.get(
+                f"{self.BASE_URL}/api/public/research-slices/shared",
+                headers={"X-ARTEMIS-Share-Token": second_token},
+                timeout=5,
+            )
+            self.assertEqual(new_link.status_code, 200, new_link.text)
+
+            outsider_revoke = self.session.delete(
+                f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+                headers=outsider_headers,
+                timeout=5,
+            )
+            self.assertEqual(outsider_revoke.status_code, 404)
+
+            revoked = self.session.delete(
+                f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+                headers=owner_headers,
+                timeout=5,
+            )
+            self.assertEqual(revoked.status_code, 204, revoked.text)
+
+            revoked_link = public_session.get(
+                f"{self.BASE_URL}/api/public/research-slices/shared",
+                headers={"X-ARTEMIS-Share-Token": second_token},
+                timeout=5,
+            )
+            self.assertEqual(revoked_link.status_code, 404)
+            self.assertIn("no-store", revoked_link.headers.get("Cache-Control", ""))
+
+            owner_list_after_revoke = self.session.get(
+                f"{self.BASE_URL}/api/research-slices",
+                headers=owner_headers,
+                timeout=5,
+            )
+            self.assertFalse(owner_list_after_revoke.json()[0]["is_shared"])
+        finally:
+            public_session.close()
+
 
 if __name__ == "__main__":
     unittest.main()

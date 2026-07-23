@@ -197,7 +197,31 @@ class ResearchSliceListItem(BaseModel):
     id: str
     title: str
     visibility: Literal["private"]
+    is_shared: bool = False
     feature_count: int
     annotation_count: int
     created_at: datetime
+    updated_at: datetime
+
+
+class ResearchSliceShareResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    share_token: str
+    share_fragment: str
+    shared_at: datetime
+
+
+class PublicResearchSliceResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    title: str
+    description: str
+    feature_refs: list[FeatureRef]
+    time_range: TimeRange
+    view_state: ViewState
+    annotations: list[SliceAnnotation]
+    visibility: Literal["shared_read_only"] = "shared_read_only"
+    shared_at: datetime
     updated_at: datetime

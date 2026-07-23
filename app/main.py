@@ -20,6 +20,7 @@ from app.research_slices.service import init_db as init_research_slices_db
 from app.stories.service import init_db as init_stories_db
 from app.moderation.routes import router as moderation_router
 from app.routes.map import router as map_router
+from app.research_slices.routes import public_router as public_research_slices_router
 from app.research_slices.routes import router as research_slices_router
 from app.stories.routes import router as stories_router
 from app.observability import (
@@ -127,7 +128,7 @@ async def uploads_static_headers_middleware(request: Request, call_next):
     return response
 
 
-for router in (auth_router, drafts_router, uploads_router, moderation_router, map_router, research_slices_router, stories_router, courses_router, explain_context_router):
+for router in (auth_router, drafts_router, uploads_router, moderation_router, map_router, research_slices_router, public_research_slices_router, stories_router, courses_router, explain_context_router):
     app.include_router(router, prefix="/api")
 
 app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")

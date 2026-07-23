@@ -206,7 +206,10 @@ For detailed boundaries and interpretation, read together with:
   - `GET /api/research-slices/{slice_id}` (open/restore)
   - `PATCH /api/research-slices/{slice_id}`
   - `DELETE /api/research-slices/{slice_id}`
-  - current baseline visibility/access model: private-only, owner-only
+  - `POST /api/research-slices/{slice_id}/share` (create/rotate unlisted read-only capability)
+  - `DELETE /api/research-slices/{slice_id}/share` (revoke active capability)
+  - `GET /api/public/research-slices/shared` with `X-ARTEMIS-Share-Token` (clean-session read-only restore)
+  - owner CRUD remains private-only/owner-only; sharing is unlisted, revocable, no-store and does not publish into canonical data
 - Stories (`/api/stories/*`):
   - `POST /api/stories`
   - `GET /api/stories`

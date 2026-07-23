@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from datetime import datetime
+from hashlib import sha256
+from secrets import token_urlsafe
 from uuid import uuid4
 
 from fastapi import HTTPException, status
@@ -11,7 +13,13 @@ from sqlalchemy.orm import Session
 from app.auth.migrations import apply_versioned_migrations
 from app.auth.service import Base, User, engine
 
-from .schemas import ResearchSliceCreate, ResearchSliceListItem, ResearchSliceResponse, ResearchSliceUpdate
+from .schemas import (
+    PublicResearchSliceResponse,
+    ResearchSliceCreate,
+    ResearchSliceListItem,
+    ResearchSliceResponse,
+    ResearchSliceUpdate,
+)
 
 
 class ResearchSlice(Base):
@@ -26,6 +34,8 @@ class ResearchSlice(Base):
     time_range_json = Column(JSON, nullable=False)
     view_state_json = Column(JSON, nullable=False)
     annotations_json = Column(JSON, nullable=False)
+    share_token_hash = Column(String, nullable=True, unique=True)
+    shared_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
@@ -56,6 +66,24 @@ def _migration_create_research_slices(connection: Connection) -> None:
     )
 
 
+def _research_slice_columns(connection: Connection) -> set[str]:
+    return {row[1] for row in connection.execute(text("PRAGMA table_info(research_slices)"))}
+
+
+def _migration_research_slices_add_share_capability(connection: Connection) -> None:
+    columns = _research_slice_columns(connection)
+    if "share_token_hash" not in columns:
+        connection.execute(text("ALTER TABLE research_slices ADD COLUMN share_token_hash VARCHAR"))
+    if "shared_at" not in columns:
+        connection.execute(text("ALTER TABLE research_slices ADD COLUMN shared_at DATETIME"))
+    connection.execute(
+        text(
+            "CREATE UNIQUE INDEX IF NOT EXISTS "
+            "ix_research_slices_share_token_hash ON research_slices(share_token_hash)"
+        )
+    )
+
+
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
 
@@ -64,6 +92,7 @@ def init_db() -> None:
             connection,
             [
                 (201, "research_slices_create_table", _migration_create_research_slices),
+                (202, "research_slices_add_share_capability", _migration_research_slices_add_share_capability),
             ],
         )
 
@@ -144,6 +173,40 @@ def delete_user_research_slice(db: Session, item: ResearchSlice) -> None:
     db.commit()
 
 
+def _hash_share_token(share_token: str) -> str:
+    return sha256(share_token.encode("utf-8")).hexdigest()
+
+
+def rotate_research_slice_share(db: Session, item: ResearchSlice) -> tuple[str, datetime]:
+    share_token = token_urlsafe(32)
+    shared_at = datetime.utcnow()
+    item.share_token_hash = _hash_share_token(share_token)
+    item.shared_at = shared_at
+    db.commit()
+    db.refresh(item)
+    return share_token, shared_at
+
+
+def revoke_research_slice_share(db: Session, item: ResearchSlice) -> None:
+    item.share_token_hash = None
+    item.shared_at = None
+    db.commit()
+
+
+def get_shared_research_slice(db: Session, share_token: str) -> ResearchSlice:
+    normalized_token = share_token.strip()
+    if not normalized_token:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Shared research slice not found")
+    item = (
+        db.query(ResearchSlice)
+        .filter(ResearchSlice.share_token_hash == _hash_share_token(normalized_token))
+        .first()
+    )
+    if not item or item.shared_at is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Shared research slice not found")
+    return item
+
+
 def serialize_research_slice(item: ResearchSlice) -> ResearchSliceResponse:
     return ResearchSliceResponse(
         id=item.id,
@@ -167,8 +230,26 @@ def serialize_research_slice_list_item(item: ResearchSlice) -> ResearchSliceList
         id=item.id,
         title=item.title,
         visibility="private",
+        is_shared=bool(item.share_token_hash and item.shared_at),
         feature_count=len(refs),
         annotation_count=len(annotations),
         created_at=item.created_at,
+        updated_at=item.updated_at,
+    )
+
+
+def serialize_public_research_slice(item: ResearchSlice) -> PublicResearchSliceResponse:
+    if item.shared_at is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Shared research slice not found")
+    return PublicResearchSliceResponse(
+        id=item.id,
+        title=item.title,
+        description=item.description or "",
+        feature_refs=item.feature_refs_json or [],
+        time_range=item.time_range_json or {},
+        view_state=item.view_state_json or {},
+        annotations=item.annotations_json or [],
+        visibility="shared_read_only",
+        shared_at=item.shared_at,
         updated_at=item.updated_at,
     )
