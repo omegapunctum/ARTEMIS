@@ -26,6 +26,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pytest
 
+      - name: Validate public API deployment artifacts
+        run: |
+          python -m py_compile app/main.py scripts/public_api_smoke.py scripts/sqlite_backup.py
+          pytest -q tests/test_public_api_deployment_contract.py
+
       - name: Run migration preflight discipline check
         env:
           AUTH_DATABASE_URL: "sqlite:///:memory:"
