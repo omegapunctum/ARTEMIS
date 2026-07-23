@@ -12,6 +12,7 @@ def test_dockerfile_runs_canonical_api_as_non_root_with_healthcheck():
     dockerfile = _read("Dockerfile")
 
     assert "FROM python:3.12-slim" in dockerfile
+    assert "APP_ENV=production" in dockerfile
     assert "USER artemis" in dockerfile
     assert "uvicorn app.main:app" in dockerfile
     assert "/api/health" in dockerfile
