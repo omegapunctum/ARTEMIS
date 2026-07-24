@@ -32,7 +32,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - auth и refresh-session flow;
 - drafts и uploads;
 - moderation lifecycle;
-- Research Slices owner CRUD и unlisted read-only share/revoke contract для текущего persistence envelope;
+- Research Slice v2 owner create/edit/reopen/delete, explicit question/rationale/evidence/findings/conclusion/uncertainty, nested Saved View и unlisted read-only share/rotate/revoke;
 - Stories CRUD как thin orchestration над slices;
 - Courses CRUD как thin orchestration над stories;
 - Explain Context Contract без генеративного AI-ответа;
@@ -40,7 +40,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 
 Наличие backend-кода не означает, что функция доступна на публичном GitHub Pages URL.
 
-Текущий Slice schema сохраняет Features, time/view state и annotations, но не имеет отдельных first-class полей для research question, evidence refs, conclusion, uncertainty и content version. Поэтому кодовый Slice baseline не считается product-complete Research Slice до schema/code sync и public validation.
+Research Slice schema/code sync выполнен как v2: migration 203, API, client и tests используют explicit question/rationale, fail-closed evidence state и Source/Relation refs, typed findings, conclusion/unresolved, uncertainty, schema/content version и вложенный Saved View. Migration preflight и полный release gate прошли в GitHub Actions. Это подтверждает backend capability, но не публичную доступность и не продуктовую ценность.
 
 ## 4. Текущее состояние данных
 
@@ -73,7 +73,6 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 - универсальная историческая knowledge platform;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
-- product-complete Research Slice с отдельными question/evidence/conclusion/uncertainty/version semantics;
 - полноценные guided Stories и Courses;
 - AI explanation, comparison или hypothesis generation;
 - зрелый relation graph за пределами 12-record validation pilot;
@@ -86,7 +85,7 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 3. Identity/source/media contracts допускают формально успешный, но семантически слабый export.
 4. Малый объём Relations может создать впечатление более полной графовой модели, чем фактически существует.
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
-6. Текущий Slice persistence envelope может быть ошибочно принят за завершённый исследовательский артефакт.
+6. Backend-complete Slice v2 может быть ошибочно принят за публично доступный и пользовательски подтверждённый продукт до deployment E2E.
 7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
 
 ## 7. Текущий operational verdict
@@ -97,9 +96,9 @@ ARTEMIS находится в состоянии **controlled engineering protot
 
 1. синхронизация продукта и документации;
 2. исправление data foundation;
-3. завершение product-complete Slice schema/code sync;
-4. подключение публичного backend для Slice loop;
-5. UX refinement вокруг Question → Compare → Evidence → Conclusion → Save;
+3. подключение публичного backend для Slice loop;
+4. public E2E для Question → Compare → Evidence → Conclusion → Save → Reopen/Share;
+5. UX refinement по результатам E2E;
 6. validation против catalogue/list baseline;
 7. usability, cognitive и behavioral evidence;
 8. отдельное решение в `VALIDATION_DECISION.md`.
