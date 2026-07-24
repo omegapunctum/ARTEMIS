@@ -1,131 +1,202 @@
 # RESEARCH SLICE SPEC
 
 ## 1. Concept definition
-Research Slice — canonical runtime-сущность для сохранения исследовательского результата и его Saved View.
 
-Product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Текущий runtime schema сохраняет выбор объектов, временной диапазон, состояние карты и annotations, но ещё не имеет отдельных first-class полей для research question, evidence refs, conclusion, uncertainty и content version.
+Research Slice — canonical runtime-сущность для сохранения воспроизводимого исследовательского результата и его вложенного Saved View.
 
-Следствие:
+Product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Эта спецификация фиксирует executable schema v2 и compatibility boundary.
 
-- API baseline является рабочим persistence envelope;
-- `view_state` + `time_range` образуют Saved View;
-- наличие сохранённой записи не доказывает product-complete Research Slice;
-- capability остаётся `BACKEND-AVAILABLE/PILOT` до schema/code sync и public validation.
+Текущий capability status:
 
-## 2. JSON model (current runtime baseline)
+- schema/database/API/client sync: implemented and covered by executable release checks;
+- owner create/edit/reopen/delete and unlisted share/rotate/revoke: backend-available;
+- public deployment E2E: not yet proved;
+- product validation: `PENDING` until the protocol in `PRODUCT_VALIDATION_PLAN.md` is completed.
+
+## 2. JSON model v2
+
 ```json
 {
   "id": "string",
   "title": "string",
   "description": "string",
+  "research_question": "string",
+  "selection_rationale": "string",
   "feature_refs": [
     { "feature_id": "string" }
   ],
-  "time_range": {
-    "start": 0,
-    "end": 0,
-    "mode": "range"
-  },
-  "view_state": {
-    "center": [0.0, 0.0],
-    "zoom": 0.0,
-    "enabled_layer_ids": ["string"],
-    "active_quick_layer_ids": ["string"],
-    "selected_feature_id": "string"
-  },
-  "annotations": [
+  "evidence_state": "supported",
+  "evidence_refs": [
     {
-      "id": "string",
-      "type": "fact",
+      "kind": "source",
+      "ref_id": "string",
+      "supports_finding_ids": ["finding-id"]
+    },
+    {
+      "kind": "relation",
+      "ref_id": "string",
+      "supports_finding_ids": ["finding-id"]
+    }
+  ],
+  "findings": [
+    {
+      "id": "finding-id",
+      "type": "interpretation",
       "text": "string",
       "feature_id": "string"
     }
   ],
+  "conclusion_status": "concluded",
+  "conclusion": "string",
+  "uncertainty_notes": "string",
+  "saved_view": {
+    "time_range": {
+      "start": 0,
+      "end": 0,
+      "mode": "range"
+    },
+    "view_state": {
+      "center": [0.0, 0.0],
+      "zoom": 0.0,
+      "enabled_layer_ids": ["string"],
+      "active_quick_layer_ids": ["string"],
+      "selected_feature_id": "string"
+    },
+    "filter_state": {
+      "search": "string",
+      "confidence": "reviewed"
+    },
+    "comparison_feature_ids": ["string"]
+  },
+  "schema_version": "2.0",
+  "content_version": 1,
+  "content_status": "complete",
   "visibility": "private",
-  "user_id": "string",
+  "owner_id": "string",
   "created_at": "2026-01-01T00:00:00Z",
   "updated_at": "2026-01-01T00:00:00Z"
 }
 ```
 
-Нормативные ограничения:
-- `feature_refs` не пустой;
-- `time_range.start <= time_range.end`;
-- `view_state.selected_feature_id` (если задан) обязан ссылаться на `feature_refs[*].feature_id`;
-- `annotation.type ∈ ["fact", "interpretation", "hypothesis"]`;
-- owner CRUD сохраняет `visibility = private`;
-- явный share создаёт отдельную unlisted capability-ссылку и не меняет owner resource на публичную запись.
+`evidence_state = missing` обязан сопровождаться пустым `evidence_refs`. `conclusion_status = unresolved` явно фиксирует отсутствие завершённого вывода и не требует искусственного текста.
 
-## 2.1 Field constraints
-- `feature_refs`: required, non-empty.
-- `description`: optional.
-- `annotations`: optional.
-- `selected_feature_id`: optional, but must belong to `feature_refs[*].feature_id`.
+## 2.1 Normative constraints
 
-## 2.2 Temporary semantic mapping
+- `feature_refs` required, non-empty and unique;
+- `research_question` required after compatibility normalization;
+- `selection_rationale` required after compatibility normalization;
+- `saved_view.time_range.start <= saved_view.time_range.end`;
+- `saved_view.view_state.selected_feature_id`, `comparison_feature_ids` и `finding.feature_id` обязаны ссылаться на `feature_refs[*].feature_id`;
+- `finding.type ∈ [fact, interpretation, hypothesis]`;
+- finding ids unique;
+- `evidence.kind ∈ [source, relation]`;
+- evidence `ref_id` non-empty;
+- `supports_finding_ids` ссылаются только на существующие findings;
+- `evidence_state = supported` требует минимум один evidence ref;
+- `evidence_state = missing` запрещает evidence refs;
+- `conclusion_status = concluded` требует непустой `conclusion`;
+- `content_version` начинается с 1 и увеличивается при каждом успешном PATCH;
+- owner CRUD всегда сохраняет `visibility = private`;
+- share создаёт unlisted read-only capability и не превращает Slice в searchable/public-curated запись.
 
-До введения first-class fields клиент может использовать текущую форму только как transitional compatibility mapping:
+## 2.2 Saved View boundary
 
-- `title` — короткая тема или research question;
-- `description` — question, selection rationale, conclusion и uncertainty в человекочитаемой форме;
-- `feature_refs` — selected entities;
-- `annotations` — findings с явным epistemic type;
-- `view_state` + `time_range` — Saved View.
+Saved View является вложенным компонентом Research Slice, а не самостоятельным исследовательским результатом.
 
-Ограничения mapping:
+Он хранит:
 
-- он не создаёт структурированных evidence refs;
-- он не обеспечивает отдельную content/schema version;
-- он недостаточен для объявления Research Slice validation-ready;
-- migration к следующей schema должна сохранять существующие owner resources и share/revoke guarantees.
+- time range and mode;
+- viewport and zoom;
+- enabled and quick layers;
+- selected Feature;
+- serializable filter state;
+- comparison Feature ids.
 
-## 2.3 Required next schema outcome
+Question, rationale, evidence, findings, conclusion и uncertainty находятся вне Saved View и не могут быть заменены viewport snapshot.
 
-Следующий contract sync должен добавить или эквивалентно представить:
+## 2.3 Compatibility mirrors
 
-- explicit research question;
-- selection rationale;
-- evidence/source/relation refs;
-- findings;
-- conclusion;
-- uncertainty/unresolved state;
-- schema/content version.
+Для одного rolling-deployment cycle DETAIL/PUBLIC DETAIL сохраняют legacy mirrors:
 
-Изменение считается завершённым только после migration, API/client tests, public save/reopen/share E2E и обновления `PROJECT_TRUTH.md`.
+- `time_range` = `saved_view.time_range`;
+- `view_state` = `saved_view.view_state`;
+- `annotations` = `findings`.
 
-## 3. API endpoints (core runtime contract)
-- `POST /api/research-slices` — сохранить новый slice.
-- `GET /api/research-slices` — получить список моих slices.
-- `GET /api/research-slices/{slice_id}` — открыть/восстановить slice по id.
-- `DELETE /api/research-slices/{slice_id}` — удалить slice по id.
-- `PATCH /api/research-slices/{slice_id}` — обновить owner-only slice.
-- `POST /api/research-slices/{slice_id}/share` — создать новый read-only capability token; предыдущий token этого Slice становится недействительным.
-- `DELETE /api/research-slices/{slice_id}/share` — отозвать активную share-ссылку.
-- `GET /api/public/research-slices/shared` + `X-ARTEMIS-Share-Token` — открыть unlisted read-only Slice без аутентификации; token не помещается в request URL/access log.
+Legacy create/update payloads принимаются и нормализуются в v2. Новые клиенты обязаны отправлять canonical v2 fields.
 
-## 4. Ownership and visibility
-- Доступ только для аутентифицированного владельца.
-- Owner CRUD остаётся owner-only и возвращает `404` для другого пользователя.
-- Share является явным unlisted read-only доступом по capability token, а не публикацией в каталоге.
-- В базе хранится только SHA-256 token; raw token возвращается владельцу один раз при создании/rotation.
-- Public response не содержит `owner_id`, не допускает mutation и отправляется с `Cache-Control: no-store`, `Referrer-Policy: no-referrer` и `X-Robots-Tag: noindex`.
-- UI-ссылка хранит token во fragment `#share=...`, поэтому он не передаётся Pages-серверу и не входит в обычный HTTP referrer.
-- Повторный share атомарно ротирует capability; revoke, rotation или удаление Slice делают прежнюю ссылку недействительной.
+Compatibility не разрешает скрывать неполноту:
 
-## 5. Integration points
-- Map integration: **part of** slice-контракта (состояние карты фиксируется в `view_state` и `time_range`).
-- Auth integration: **part of** slice-доступа (owner-only enforcement).
-- Drafts integration: **not part of** Research Slice runtime-контракта.
+- отсутствие evidence становится `evidence_state = missing`;
+- отсутствие завершённого вывода становится `conclusion_status = unresolved`;
+- lightweight LIST возвращает `content_status`, `evidence_state`, `conclusion_status`, `finding_count` и `content_version`.
 
-## 6. Out of scope (current baseline)
-- AI assistance (explain/compare/suggest).
+## 2.4 Migration 203
+
+Migration `203/research_slices_product_complete_v2`:
+
+- добавляет v2 columns;
+- сохраняет `id`, `user_id`, timestamps, share-token hash и `shared_at`;
+- переносит legacy `annotations_json` в `findings_json`;
+- формирует Saved View из существующих time/view columns;
+- не создаёт evidence и conclusion;
+- ставит legacy rows в `missing/unresolved`;
+- идемпотентна в versioned migration registry.
+
+## 3. API endpoints
+
+- `POST /api/research-slices` — создать Slice.
+- `GET /api/research-slices` — получить lightweight owner list.
+- `GET /api/research-slices/{slice_id}` — открыть полный owner Slice.
+- `PATCH /api/research-slices/{slice_id}` — обновить Slice и увеличить `content_version`.
+- `DELETE /api/research-slices/{slice_id}` — удалить Slice.
+- `POST /api/research-slices/{slice_id}/share` — создать/ротировать read-only capability token.
+- `DELETE /api/research-slices/{slice_id}/share` — отозвать token.
+- `GET /api/public/research-slices/shared` + `X-ARTEMIS-Share-Token` — открыть unlisted read-only Slice без owner identity.
+
+## 4. Ownership, privacy and sharing
+
+- Owner CRUD требует аутентификацию и возвращает `404` для другого пользователя.
+- В базе хранится только SHA-256 capability token.
+- Raw token возвращается владельцу только при create/rotate.
+- Public response не содержит `owner_id` и не допускает mutation.
+- Public response отправляется с `Cache-Control: no-store`, `Pragma: no-cache`, `Referrer-Policy: no-referrer` и `X-Robots-Tag: noindex`.
+- UI хранит token во fragment `#share=...`; backend получает его через header, а не request URL.
+- Rotate, revoke или удаление Slice делают прежний token недействительным.
+
+## 5. Client behavior
+
+Клиент поддерживает:
+
+- create complete Slice from current comparison/map context;
+- explicit `source:<id>` / `relation:<id>` evidence refs;
+- explicit evidence missing state;
+- typed findings;
+- concluded/unresolved state and uncertainty;
+- owner edit through PATCH;
+- full Saved View restore;
+- save-as-copy from shared read-only Slice;
+- unlisted share/rotate/revoke.
+
+## 6. Executable evidence
+
+Обязательное test coverage:
+
+- v2 API round trip and PATCH version increment;
+- malformed evidence and epistemic-state rejection;
+- Saved View semantic restoration;
+- deterministic legacy migration;
+- owner isolation;
+- public response privacy/no-store headers;
+- share rotation and revoke;
+- frontend payload construction and nested Saved View precedence.
+
+Schema/code sync не равен public validation. Capability становится validation-ready только после #309: deployment evidence для create → edit → reopen → share на canonical public Pages/API runtime.
+
+## 7. Out of scope
+
 - public searchable Slice directory;
-- collaborative/edit access по share-ссылке;
-- multi-token ACL и per-recipient permissions;
-- immutable share snapshot: текущая ссылка показывает актуальную owner-версию Slice до revoke/rotation.
-- Stories/scenario-layer orchestration.
-
-## 6.1 Response shapes
-- LIST (`GET /api/research-slices`) → lightweight payload (без `description` и без тяжёлых JSON-полей).
-- DETAIL (`GET /api/research-slices/{slice_id}`) → full payload.
-- PUBLIC DETAIL (`GET /api/public/research-slices/shared`) → full read-only state без owner identity, `visibility = shared_read_only`; capability передаётся только в `X-ARTEMIS-Share-Token`.
+- collaborative editing;
+- multi-token ACL/per-recipient permissions;
+- immutable share snapshot;
+- Stories, Courses or AI expansion;
+- conversion of findings into canonical facts without governance.

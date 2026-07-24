@@ -3,7 +3,7 @@ import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, g
 import { debounce, createInlineStateBlock } from './ux.js';
 import { normalizeSafeUrl, setSafeImageSource, setSafeLink, toSafeText } from './safe-dom.js';
 import { DEFAULT_DISPLAY_MODE, aggregateFeaturesByDecade, createLiveState } from './state.js';
-import { buildResearchSlicePayload, buildSliceAnnotationDisplayPlan, buildSliceListMetaSummary, normalizeSliceForRestore, listResearchSlices, getResearchSlice, createResearchSlice, deleteResearchSlice, createResearchSliceShare, revokeResearchSliceShare, getSharedResearchSlice, getSharedSliceTokenFromLocation, buildResearchSliceShareUrl } from './research_slices.js';
+import { buildResearchSlicePayload, buildSliceAnnotationDisplayPlan, buildSliceListMetaSummary, formatEvidenceRefs, normalizeSliceForRestore, listResearchSlices, getResearchSlice, createResearchSlice, updateResearchSlice, deleteResearchSlice, createResearchSliceShare, revokeResearchSliceShare, getSharedResearchSlice, getSharedSliceTokenFromLocation, buildResearchSliceShareUrl } from './research_slices.js';
 import { buildStoryPayload, clampStoryStepIndex, resolveStoryStepSliceId, listStories, getStory, createStory, deleteStory } from './stories.js';
 import { buildCoursePayload, clampCourseStepIndex, resolveCourseStepStoryId, listCourses, getCourse, createCourse, deleteCourse } from './courses_runtime.js';
 
@@ -342,6 +342,7 @@ export async function initUI(map, features) {
     sliceAnchorFeatureId: null,
     sliceOpenedId: '',
     sliceOpenedTitle: '',
+    sliceOpenedRaw: null,
     sliceOpenedAnnotationPlan: null,
     sharedSliceReadOnly: false,
     stories: [],
@@ -709,6 +710,7 @@ async function restoreSharedSliceFromLocation(state, elements, map, onboardingHi
     applyResearchSliceContext(rawSlice, state, elements, map);
     state.sliceOpenedId = String(rawSlice?.id || '').trim();
     state.sliceOpenedTitle = String(rawSlice?.title || '').trim();
+    state.sliceOpenedRaw = rawSlice;
     state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
     state.sharedSliceReadOnly = true;
     markResearchContextAsSaved(state);
@@ -1377,49 +1379,116 @@ function renderSlicesPanel(elements, state, map) {
   form.className = 'panel-stack';
   form.noValidate = true;
 
+  const openedSlice = state.sliceOpenedRaw && typeof state.sliceOpenedRaw === 'object'
+    ? state.sliceOpenedRaw
+    : null;
+  const openedFindings = Array.isArray(openedSlice?.findings)
+    ? openedSlice.findings
+    : (Array.isArray(openedSlice?.annotations) ? openedSlice.annotations : []);
+  const findingText = (type) => String(openedFindings.find((item) => item?.type === type)?.text || '');
+
   const titleInput = document.createElement('input');
   titleInput.type = 'text';
   titleInput.name = 'slice_title';
   titleInput.maxLength = 180;
   titleInput.placeholder = 'Название исследования';
   titleInput.required = true;
+  titleInput.value = String(openedSlice?.title || '');
+
+  const questionInput = document.createElement('textarea');
+  questionInput.name = 'slice_research_question';
+  questionInput.maxLength = 1000;
+  questionInput.rows = 2;
+  questionInput.placeholder = 'Исследовательский вопрос';
+  questionInput.required = true;
+  questionInput.value = String(openedSlice?.research_question || openedSlice?.title || '');
 
   const descInput = document.createElement('textarea');
   descInput.name = 'slice_description';
   descInput.maxLength = 4000;
-  descInput.rows = 3;
+  descInput.rows = 2;
   descInput.placeholder = 'Краткое описание (опционально)';
+  descInput.value = String(openedSlice?.description || '');
+
+  const rationaleInput = document.createElement('textarea');
+  rationaleInput.name = 'slice_selection_rationale';
+  rationaleInput.maxLength = 4000;
+  rationaleInput.rows = 2;
+  rationaleInput.placeholder = 'Почему выбраны именно эти объекты?';
+  rationaleInput.required = true;
+  rationaleInput.value = String(openedSlice?.selection_rationale || openedSlice?.description || '');
+
+  const evidenceInput = document.createElement('textarea');
+  evidenceInput.name = 'slice_evidence_refs';
+  evidenceInput.maxLength = 12000;
+  evidenceInput.rows = 3;
+  evidenceInput.placeholder = 'source:<id> или relation:<id>, по одному на строку. Оставьте пустым, если evidence ещё не найдено.';
+  evidenceInput.value = formatEvidenceRefs(openedSlice?.evidence_refs || []);
+
+  const evidenceHelper = document.createElement('p');
+  evidenceHelper.className = 'status-summary';
+  evidenceHelper.textContent = 'Пустое поле сохраняется явно как evidence missing — система не подставляет доказательства автоматически.';
 
   const annotationsSection = document.createElement('section');
   annotationsSection.className = 'panel-stack';
   const annotationsTitle = document.createElement('p');
   annotationsTitle.className = 'status-summary';
-  annotationsTitle.textContent = 'Аннотации (опционально)';
+  annotationsTitle.textContent = 'Findings: добавьте минимум одну заметку';
 
   const factInput = document.createElement('textarea');
   factInput.name = 'slice_annotation_fact';
   factInput.maxLength = 4000;
   factInput.rows = 2;
   factInput.placeholder = 'Факт';
+  factInput.value = findingText('fact');
 
   const interpretationInput = document.createElement('textarea');
   interpretationInput.name = 'slice_annotation_interpretation';
   interpretationInput.maxLength = 4000;
   interpretationInput.rows = 2;
   interpretationInput.placeholder = 'Интерпретация';
+  interpretationInput.value = findingText('interpretation');
 
   const hypothesisInput = document.createElement('textarea');
   hypothesisInput.name = 'slice_annotation_hypothesis';
   hypothesisInput.maxLength = 4000;
   hypothesisInput.rows = 2;
   hypothesisInput.placeholder = 'Гипотеза';
+  hypothesisInput.value = findingText('hypothesis');
 
   annotationsSection.append(annotationsTitle, factInput, interpretationInput, hypothesisInput);
+
+  const conclusionStatusInput = document.createElement('select');
+  conclusionStatusInput.name = 'slice_conclusion_status';
+  [
+    ['unresolved', 'Вопрос остаётся открытым'],
+    ['concluded', 'Вывод сформулирован']
+  ].forEach(([value, label]) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = label;
+    conclusionStatusInput.appendChild(option);
+  });
+  conclusionStatusInput.value = openedSlice?.conclusion_status === 'concluded' ? 'concluded' : 'unresolved';
+
+  const conclusionInput = document.createElement('textarea');
+  conclusionInput.name = 'slice_conclusion';
+  conclusionInput.maxLength = 4000;
+  conclusionInput.rows = 3;
+  conclusionInput.placeholder = 'Вывод (обязателен для статуса «вывод сформулирован»)';
+  conclusionInput.value = String(openedSlice?.conclusion || '');
+
+  const uncertaintyInput = document.createElement('textarea');
+  uncertaintyInput.name = 'slice_uncertainty';
+  uncertaintyInput.maxLength = 4000;
+  uncertaintyInput.rows = 2;
+  uncertaintyInput.placeholder = 'Неопределённость, ограничения и открытые вопросы';
+  uncertaintyInput.value = String(openedSlice?.uncertainty_notes || '');
 
   const saveBtn = document.createElement('button');
   saveBtn.type = 'submit';
   saveBtn.className = 'ui-button ui-button-primary';
-  saveBtn.textContent = 'Сохранить исследование';
+  saveBtn.textContent = state.sliceOpenedId && !state.sharedSliceReadOnly ? 'Обновить исследование' : (state.sharedSliceReadOnly ? 'Сохранить копию' : 'Сохранить исследование');
   saveBtn.disabled = !getSaveFeatureIds().length || state.researchSlicesLoading;
 
   const selectionActions = document.createElement('div');
@@ -1472,7 +1541,7 @@ function renderSlicesPanel(elements, state, map) {
       ? `Выбрано для исследования: ${selectionCount}.`
       : 'Чтобы сохранить первое исследование, выберите объект на карте или добавьте его в выборку.');
 
-  form.append(titleInput, descInput, annotationsSection, selectionActions, saveBtn, hint);
+  form.append(titleInput, questionInput, descInput, rationaleInput, evidenceInput, evidenceHelper, annotationsSection, conclusionStatusInput, conclusionInput, uncertaintyInput, selectionActions, saveBtn, hint);
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const saveFeatureIds = getSaveFeatureIds();
@@ -1486,6 +1555,9 @@ function renderSlicesPanel(elements, state, map) {
       const payload = buildResearchSlicePayload({
         title: titleInput.value,
         description: descInput.value,
+        researchQuestion: questionInput.value,
+        selectionRationale: rationaleInput.value,
+        evidenceInput: evidenceInput.value,
         selectedFeatureId: primarySelectedId || saveFeatureIds[0],
         selectedFeatureIds: saveFeatureIds,
         annotationInputs: {
@@ -1493,6 +1565,10 @@ function renderSlicesPanel(elements, state, map) {
           interpretation: interpretationInput.value,
           hypothesis: hypothesisInput.value
         },
+        conclusionStatus: conclusionStatusInput.value,
+        conclusion: conclusionInput.value,
+        uncertaintyNotes: uncertaintyInput.value,
+        contentVersion: Number(openedSlice?.content_version || 1),
         timeRange: {
           start: state.currentStartYear,
           end: state.currentEndYear,
@@ -1500,22 +1576,26 @@ function renderSlicesPanel(elements, state, map) {
         },
         map,
         enabledLayerIds: Array.from(state.enabledLayerIds || []),
-        activeQuickLayerIds: Array.from(state.activeQuickLayerIds || [])
+        activeQuickLayerIds: Array.from(state.activeQuickLayerIds || []),
+        filterState: {
+          search: String(state.search || ''),
+          confidence: String(state.confidenceFilter || 'all')
+        }
       });
-      const createdSlice = await createResearchSlice(payload);
-      const createdSliceId = String(createdSlice?.id || '').trim();
-      titleInput.value = '';
-      descInput.value = '';
-      factInput.value = '';
-      interpretationInput.value = '';
-      hypothesisInput.value = '';
+      const updatingSliceId = !state.sharedSliceReadOnly ? String(state.sliceOpenedId || '').trim() : '';
+      const persistedSlice = updatingSliceId
+        ? await updateResearchSlice(updatingSliceId, payload)
+        : await createResearchSlice(payload);
+      const persistedSliceId = String(persistedSlice?.id || updatingSliceId).trim();
       if (state.sliceSelectionSet instanceof Set) state.sliceSelectionSet.clear();
-      state.sliceOpenedId = createdSliceId || '';
-      state.sliceOpenedTitle = String(payload?.title || '').trim();
+      state.sliceOpenedId = persistedSliceId;
+      state.sliceOpenedTitle = String(persistedSlice?.title || payload?.title || '').trim();
+      state.sliceOpenedRaw = persistedSlice;
+      state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(persistedSlice);
       state.sharedSliceReadOnly = false;
       markResearchContextAsSaved(state);
       updateResearchContextBar(elements, state);
-      showUiSystemMessage('Исследование сохранено', { variant: 'success', timeout: 2200 });
+      showUiSystemMessage(updatingSliceId ? 'Исследование обновлено' : 'Исследование сохранено', { variant: 'success', timeout: 2200 });
       await ensureResearchSlicesLoaded(state, { force: true });
       renderSlicesPanel(elements, state, map);
     } catch (error) {
@@ -1608,6 +1688,7 @@ function renderSlicesPanel(elements, state, map) {
         applyResearchSliceContext(rawSlice, state, elements, map);
         state.sliceOpenedId = String(rawSlice?.id || slice?.id || '').trim();
         state.sliceOpenedTitle = String(rawSlice?.title || slice?.title || '').trim();
+        state.sliceOpenedRaw = rawSlice;
         state.sliceOpenedAnnotationPlan = buildSliceAnnotationDisplayPlan(rawSlice);
         state.sharedSliceReadOnly = false;
         markResearchContextAsSaved(state);
@@ -2081,7 +2162,15 @@ function renderSlicesPanel(elements, state, map) {
         const ok = window.confirm(sliceTitleForDelete ? `Удалить срез «${sliceTitleForDelete}»?` : 'Удалить исследовательский срез?');
         if (!ok) return;
         try {
-          await deleteResearchSlice(String(slice?.id || ''));
+          const deletedSliceId = String(slice?.id || '').trim();
+          await deleteResearchSlice(deletedSliceId);
+          if (deletedSliceId && deletedSliceId === String(state.sliceOpenedId || '').trim()) {
+            state.sliceOpenedId = '';
+            state.sliceOpenedTitle = '';
+            state.sliceOpenedRaw = null;
+            state.sliceOpenedAnnotationPlan = null;
+            state.sharedSliceReadOnly = false;
+          }
           await ensureResearchSlicesLoaded(state, { force: true });
           renderSlicesPanel(elements, state, map);
           showUiSystemMessage('Срез удалён', { variant: 'success', timeout: 2200 });

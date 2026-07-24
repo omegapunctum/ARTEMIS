@@ -572,5 +572,125 @@ class ResearchSlicesFrontendStateTests(unittest.TestCase):
 
 
 
+    def test_build_research_slice_v2_semantics(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: { hostname: 'localhost' },
+              ARTEMIS_API_BASE: '/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+
+            const { buildResearchSlicePayload } = await import('./js/research_slices.js');
+            const payload = buildResearchSlicePayload({
+              title: 'Comparison',
+              researchQuestion: 'Why do these buildings differ?',
+              selectionRationale: 'Same period, different patrons.',
+              evidenceInput: 'source:src-1\\nrelation:rel-1\\nsource:src-1',
+              selectedFeatureId: 'recA',
+              selectedFeatureIds: ['recA', 'recB'],
+              annotationInputs: { interpretation: 'The patronage context matters.' },
+              conclusionStatus: 'concluded',
+              conclusion: 'Institutional setting explains part of the difference.',
+              uncertaintyNotes: 'One attribution remains contested.',
+              timeRange: { start: 1500, end: 1700, mode: 'range' },
+              map: {
+                getCenter: () => ({ lng: 12.5, lat: 41.9 }),
+                getZoom: () => 6.2,
+              },
+              enabledLayerIds: ['renaissance'],
+              filterState: { search: 'patronage', confidence: 'reviewed' }
+            });
+            console.log(JSON.stringify(payload));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertEqual(data["schema_version"], "2.0")
+        self.assertEqual(data["research_question"], "Why do these buildings differ?")
+        self.assertEqual(data["evidence_state"], "supported")
+        self.assertEqual(
+            [(entry["kind"], entry["ref_id"]) for entry in data["evidence_refs"]],
+            [("source", "src-1"), ("relation", "rel-1")],
+        )
+        self.assertEqual(data["findings"], data["annotations"])
+        self.assertEqual(data["conclusion_status"], "concluded")
+        self.assertEqual(data["saved_view"]["comparison_feature_ids"], ["recA", "recB"])
+        self.assertEqual(data["saved_view"]["filter_state"]["search"], "patronage")
+        self.assertEqual(data["saved_view"]["time_range"], data["time_range"])
+        self.assertEqual(data["saved_view"]["view_state"], data["view_state"])
+
+    def test_evidence_parser_rejects_untyped_refs(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: { hostname: 'localhost' },
+              ARTEMIS_API_BASE: '/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+
+            const { parseEvidenceRefs } = await import('./js/research_slices.js');
+            let message = '';
+            try { parseEvidenceRefs('src-without-kind'); } catch (error) { message = String(error?.message || ''); }
+            console.log(JSON.stringify({ message }));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertIn("source:<id>", data["message"])
+
+    def test_normalize_slice_prefers_nested_saved_view(self):
+        script = textwrap.dedent(
+            """
+            globalThis.window = {
+              location: { hostname: 'localhost' },
+              ARTEMIS_API_BASE: '/api',
+              dispatchEvent: () => {},
+              addEventListener: () => {},
+              setTimeout,
+              clearTimeout,
+            };
+            globalThis.document = { querySelector: () => null };
+            globalThis.CustomEvent = class { constructor(name, options) { this.name = name; this.detail = options?.detail; } };
+
+            const { normalizeSliceForRestore } = await import('./js/research_slices.js');
+            const normalized = normalizeSliceForRestore({
+              id: 'v2',
+              title: 'V2',
+              research_question: 'Question',
+              feature_refs: [{ feature_id: 'recA' }, { feature_id: 'recB' }],
+              saved_view: {
+                time_range: { start: 1200, end: 1300, mode: 'range' },
+                view_state: {
+                  center: [1, 2],
+                  zoom: 4,
+                  enabled_layer_ids: ['nested'],
+                  selected_feature_id: 'recB'
+                },
+                filter_state: { search: 'nested' },
+                comparison_feature_ids: ['recA', 'recB']
+              },
+              time_range: { start: 1800, end: 1900, mode: 'range' },
+              view_state: { center: [9, 9], zoom: 9 }
+            });
+            console.log(JSON.stringify(normalized));
+            """
+        )
+        data = self.run_node_json(script)
+        self.assertEqual(data["start"], 1200)
+        self.assertEqual(data["center"], [1, 2])
+        self.assertEqual(data["enabledLayerIds"], ["nested"])
+        self.assertEqual(data["selectedFeatureId"], "recB")
+        self.assertEqual(data["filterState"]["search"], "nested")
+
+
 if __name__ == "__main__":
     unittest.main()
