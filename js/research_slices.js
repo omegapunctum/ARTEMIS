@@ -34,7 +34,7 @@ function buildSliceFindings(annotationInputs) {
     const text = String(source[type] || '').trim();
     if (!text) return;
     findings.push({
-      id: `finding-${baseId}-${type}-${index + 1}`,
+      id: `ann-${baseId}-${type}-${index + 1}`,
       type,
       text
     });
