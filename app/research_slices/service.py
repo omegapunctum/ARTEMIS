@@ -316,6 +316,35 @@ def update_user_research_slice(db: Session, item: ResearchSlice, payload: Resear
     merged["content_version"] = max(1, int(current["content_version"])) + 1
     merged["visibility"] = "private"
 
+    # A legacy partial PATCH may change the selected Feature set without sending
+    # canonical v2 comparison/finding links. Preserve the research text while
+    # removing only references that no longer exist in the new Feature set.
+    if "feature_refs" in changes:
+        allowed_feature_ids = [
+            str(entry.get("feature_id", "")).strip()
+            for entry in merged["feature_refs"]
+            if isinstance(entry, dict) and str(entry.get("feature_id", "")).strip()
+        ]
+        allowed_feature_id_set = set(allowed_feature_ids)
+        saved_view = dict(merged["saved_view"])
+        comparison_ids = [
+            str(feature_id).strip()
+            for feature_id in saved_view.get("comparison_feature_ids", [])
+            if str(feature_id).strip() in allowed_feature_id_set
+        ]
+        saved_view["comparison_feature_ids"] = comparison_ids or allowed_feature_ids
+        merged["saved_view"] = saved_view
+
+        if "findings" not in changes and "annotations" not in changes:
+            normalized_findings = []
+            for finding in merged.get("findings", []):
+                normalized_finding = dict(finding)
+                if normalized_finding.get("feature_id") not in allowed_feature_id_set:
+                    normalized_finding["feature_id"] = None
+                normalized_findings.append(normalized_finding)
+            merged["findings"] = normalized_findings
+            merged["annotations"] = normalized_findings
+
     try:
         normalized = ResearchSliceCreate.model_validate(merged)
     except ValidationError as exc:
