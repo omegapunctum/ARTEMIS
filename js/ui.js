@@ -2162,7 +2162,15 @@ function renderSlicesPanel(elements, state, map) {
         const ok = window.confirm(sliceTitleForDelete ? `Удалить срез «${sliceTitleForDelete}»?` : 'Удалить исследовательский срез?');
         if (!ok) return;
         try {
-          await deleteResearchSlice(String(slice?.id || ''));
+          const deletedSliceId = String(slice?.id || '').trim();
+          await deleteResearchSlice(deletedSliceId);
+          if (deletedSliceId && deletedSliceId === String(state.sliceOpenedId || '').trim()) {
+            state.sliceOpenedId = '';
+            state.sliceOpenedTitle = '';
+            state.sliceOpenedRaw = null;
+            state.sliceOpenedAnnotationPlan = null;
+            state.sharedSliceReadOnly = false;
+          }
           await ensureResearchSlicesLoaded(state, { force: true });
           renderSlicesPanel(elements, state, map);
           showUiSystemMessage('Срез удалён', { variant: 'success', timeout: 2200 });
