@@ -309,6 +309,8 @@ class ResearchSliceUpdate(BaseModel):
     conclusion: str | None = Field(default=None, max_length=4000)
     uncertainty_notes: str | None = Field(default=None, max_length=4000)
     saved_view: SavedView | None = None
+    schema_version: Literal["2.0"] | None = None
+    content_version: int | None = Field(default=None, ge=1)
     time_range: TimeRange | None = None
     view_state: ViewState | None = None
     annotations: list[SliceFinding] | None = None
