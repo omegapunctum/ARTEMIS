@@ -48,8 +48,8 @@ def test_schema_migrations_apply_on_fresh_db(monkeypatch: pytest.MonkeyPatch, tm
     assert {"image_url", "status", "publish_status", "airtable_record_id", "published_at", "payload"}.issubset(draft_columns)
 
     research_slice_columns = _table_columns(db_path, "research_slices")
-    assert {"share_token_hash", "shared_at"}.issubset(research_slice_columns)
-    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202]
+    assert {\n        "share_token_hash",\n        "shared_at",\n        "research_question",\n        "selection_rationale",\n        "evidence_state",\n        "evidence_refs_json",\n        "findings_json",\n        "conclusion_status",\n        "conclusion",\n        "uncertainty_notes",\n        "schema_version",\n        "content_version",\n        "filter_state_json",\n        "comparison_feature_ids_json",\n    }.issubset(research_slice_columns)
+    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202, 203]
 
 
 def test_schema_migrations_are_idempotent(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -66,7 +66,7 @@ def test_schema_migrations_are_idempotent(monkeypatch: pytest.MonkeyPatch, tmp_p
     research_slices_service.init_db()
     second_versions = _schema_versions(db_path)
 
-    assert first_versions == second_versions == [1, 101, 102, 103, 104, 105, 106, 201, 202]
+    assert first_versions == second_versions == [1, 101, 102, 103, 104, 105, 106, 201, 202, 203]
 
 
 def test_schema_migrations_upgrade_partially_evolved_db(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -98,8 +98,8 @@ def test_schema_migrations_upgrade_partially_evolved_db(monkeypatch: pytest.Monk
     draft_columns = _table_columns(db_path, "drafts")
     assert {"image_url", "status", "publish_status", "airtable_record_id", "published_at", "payload"}.issubset(draft_columns)
     research_slice_columns = _table_columns(db_path, "research_slices")
-    assert {"share_token_hash", "shared_at"}.issubset(research_slice_columns)
-    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202]
+    assert {\n        "share_token_hash",\n        "shared_at",\n        "research_question",\n        "selection_rationale",\n        "evidence_state",\n        "evidence_refs_json",\n        "findings_json",\n        "conclusion_status",\n        "conclusion",\n        "uncertainty_notes",\n        "schema_version",\n        "content_version",\n        "filter_state_json",\n        "comparison_feature_ids_json",\n    }.issubset(research_slice_columns)
+    assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202, 203]
 
 
 def test_auth_and_drafts_flow_works_after_migration_init(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
