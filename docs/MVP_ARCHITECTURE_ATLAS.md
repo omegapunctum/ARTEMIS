@@ -3,15 +3,15 @@
 ## Статус
 
 - Тип: canonical MVP boundary document.
-- Версия: 1.0.
-- Дата: 2026-07-16.
+- Версия: 1.1.
+- Дата: 2026-07-24.
 - Зависит от: `PRODUCT_THESIS.md`, `PROJECT_TRUTH.md`, `DATA_DICTIONARY.md`.
 
 ## 1. Цель MVP
 
-Доказать, что ARTEMIS помогает исследовать историю архитектуры через пространственно-временное сравнение и прозрачные источники, а Research Slice создаёт возвращаемый результат работы.
+Доказать, что ARTEMIS помогает продвинутому студенту получить более качественное или более быстрое доказательное сравнение 2–3 архитектурных объектов, чем обычный каталог/список, а Research Slice сохраняет вопрос, evidence и вывод как возвращаемый результат работы.
 
-MVP не обязан доказать универсальную платформу, Courses, UGC или AI generation.
+MVP не обязан доказать универсальную платформу, Stories как отдельный продуктовый слой, Courses, UGC или AI generation.
 
 ## 2. Обязательные пользовательские возможности
 
@@ -30,17 +30,17 @@ MVP не обязан доказать универсальную платфор
 
 ### Research Slice
 
-- создать и назвать срез;
-- сохранить выбранные объекты, время, слои, viewport и notes;
+- сформулировать вопрос и назвать исследование;
+- сохранить выбранные объекты, evidence, заметку/вывод и uncertainty;
+- сохранить Saved View: время, слои, фильтры, comparison state и viewport;
 - повторно открыть;
 - получить shareable read-only URL.
 
-### Curated Story
+### Optional curated entry
 
-- минимум три редакционных маршрута;
-- каждый шаг связывает текст, карту, timeline, объекты и источники;
-- Story строится поверх проверенных объектов и relations.
-
+- может помочь пользователю начать основной сценарий;
+- должен вести в Compare → Evidence → Save;
+- не является MVP exit requirement.
 ## 3. Content envelope
 
 Для comparison-first Round 0 утверждён сокращённый pilot threshold:
@@ -54,7 +54,7 @@ MVP не обязан доказать универсальную платфор
 
 Исполнимый профиль и текущие gaps находятся в `data/content_profile.json`; решение и batching — в `docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`.
 
-Ориентир зрелого корпуса остаётся прежним: 100–150 Features, 15–20 наполненных Layers/periods/styles, 50+ Relations, 3 curated Stories и 5–10 reference Research Slices. Он не является входным барьером Round 0 и пересматривается после пользовательского decision gate.
+Ориентир зрелого корпуса остаётся прежним: 100–150 Features, 15–20 наполненных Layers/periods/styles, 50+ Relations и 5–10 reference Research Slices. Curated Stories оцениваются отдельно как onboarding-механизм. Этот ориентир не является входным барьером Round 0 и пересматривается после пользовательского decision gate.
 
 ## 4. Public runtime boundary
 
@@ -65,7 +65,7 @@ MVP не обязан доказать универсальную платфор
 - auth, если он нужен для save;
 - save/list/open/delete Slice;
 - shareable read-only Slice;
-- curated Stories.
+- фиксация вопроса, evidence, заметки/вывода и uncertainty в Slice.
 
 Пункт навигации запрещено показывать как primary action, если соответствующий public flow не работает.
 
@@ -91,9 +91,8 @@ MVP не обязан доказать универсальную платфор
 1. Исследование.
 2. Сравнение — contextual mode после выбора Features, а не пустой top-level route.
 3. Сохранённые исследования — только при работающем public Slice backend.
-4. Истории — только при наличии curated public Stories.
 
-Courses, AI, UGC и moderation не входят в primary public navigation. Недоступная `BACKEND-AVAILABLE` или `FUTURE` capability скрывается, а не выглядит обычным рабочим разделом.
+Stories, Courses, AI, UGC и moderation не входят в primary public navigation. Curated entry может быть вторичным onboarding-маршрутом. Недоступная `BACKEND-AVAILABLE` или `FUTURE` capability скрывается, а не выглядит обычным рабочим разделом.
 
 Главная иерархия:
 
@@ -129,8 +128,12 @@ UI refinement выполняется по `docs/work/uiux/2026-07-16_UIUX_MAIN_S
 - semantic data gate проходит;
 - identity/source/media/relation contracts соблюдаются;
 - public save/restore/share flow проходит E2E;
+- сохранённое исследование содержит вопрос, evidence и пользовательский вывод, а не только UI state;
 - desktop/tablet/mobile primary flows не имеют blocking defects;
-- 5–8 целевых пользователей прошли validation;
+- primary cohort из 5–8 целевых пользователей прошёл usability и cognitive validation;
 - не менее 80% завершили основной сценарий;
+- не менее 70% формулируют новое/уточнённое понимание и показывают supporting evidence;
+- полевой follow-up подтверждает самостоятельный возврат, изменение или передачу Slice;
+- map + time + compare протестированы против catalogue/list baseline;
 - unresolved epistemic mislabeling отсутствует;
-- принято отдельное решение: iterate, expand или stop.
+- принято отдельное решение: `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK`.

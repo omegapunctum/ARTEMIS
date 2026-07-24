@@ -1,19 +1,19 @@
-# ARTEMIS — PRODUCT SCOPE v1.1
+# ARTEMIS — PRODUCT SCOPE v1.2
 
 ## Статус
 
 - Тип: canonical product scope document.
 - Статус: active.
-- Дата решения: 2026-07-16.
+- Дата решения: 2026-07-24.
 - Активный delivery focus: Architecture Atlas vertical MVP.
-- Долгосрочная миссия определяется `ARTEMIS_CONCEPT.md`.
+- North Star определяется `ARTEMIS_CONCEPT.md`.
 - Фактическая доступность определяется `PROJECT_TRUTH.md`.
 
 Этот документ защищает текущий цикл от product drift. Он не отменяет долгосрочную explainable spatial-temporal architecture, но запрещает выдавать её за scope ближайшего продукта.
 
 ## 1. Формула текущего продукта
 
-ARTEMIS v1.1 — **доказательный пространственно-временной атлас истории архитектуры**.
+ARTEMIS Architecture Atlas — **инструмент доказательного сравнения архитектурных объектов в пространстве и времени**.
 
 Его задача:
 
@@ -21,22 +21,23 @@ ARTEMIS v1.1 — **доказательный пространственно-в�
 - дать содержательное сравнение;
 - показать документированные relations и отдельно вычисляемую similarity;
 - сделать provenance видимым;
-- сохранить исследовательский контекст как Research Slice;
-- предложить ограниченные curated Stories.
+- сохранить вопрос, evidence, заметку/вывод и восстановимый контекст как Research Slice.
+
+Stories могут использоваться как curated вход в основной цикл, но не являются самостоятельным обязательным продуктовым слоем MVP.
 
 ## 2. Primary user
 
 Первичный пользователь:
 
-- продвинутый студент истории архитектуры/искусства;
-- преподаватель;
-- исследователь, автор или куратор.
+- продвинутый студент истории архитектуры/искусства, готовящий сравнительное эссе, семинар или исследовательское задание.
 
 Primary job:
 
-> Найти, сопоставить и сохранить архитектурные объекты в пространстве и времени, понимая источники и статус показанных связей.
+> Сопоставить 2–3 архитектурных объекта, понять основания сходства и различий, проверить источники и сохранить доказательное сравнение для дальнейшей работы.
 
 Формулировка «любой интеллектуальный пользователь» недостаточна для приоритизации и не используется как primary persona текущего цикла.
+
+Преподаватели и кураторы являются вторичной exploratory-аудиторией. Профессиональные исследователи не считаются beachhead-аудиторией до расширения корпуса и provenance depth.
 
 ## 3. Главная ценность
 
@@ -46,14 +47,16 @@ Primary job:
 
 Research Slice включает:
 
-- spatial focus/viewport;
-- time state;
+- research question;
 - выбранные Features;
-- active filters/layers;
-- comparison state;
-- user notes;
-- title и metadata;
-- source-aware references.
+- rationale выбора;
+- отобранные evidence/source-aware references;
+- user notes, findings и uncertainty;
+- conclusion;
+- Saved View: spatial focus/viewport, time state, active filters/layers и comparison state;
+- title, metadata и version.
+
+`Saved View` — компонент Research Slice, а не его синоним. Сохранённый viewport без вопроса, evidence и человеческого вывода не считается продуктово завершённым Research Slice.
 
 Обязательные Slice actions для MVP:
 
@@ -67,15 +70,15 @@ Research Slice включает:
 
 ## 4. Core product loop
 
-1. Выбрать эпоху, направление или регион.
-2. Найти объекты через map/time/filter.
-3. Открыть sourced detail.
-4. Сравнить 2–3 объекта.
-5. Изучить reviewed relations либо clearly labelled similarity.
+1. Сформулировать или выбрать исследовательский вопрос.
+2. Найти 2–3 объекта через map/time/filter.
+3. Сравнить sourced detail, properties и relations.
+4. Проверить reviewed evidence и отдельно labelled similarity.
+5. Зафиксировать заметку, вывод и неопределённость.
 6. Сохранить Research Slice.
 7. Вернуться к Slice или поделиться им.
 
-Stories являются curated входом и downstream-слоем. Courses и AI не входят в active MVP loop.
+Stories допускаются только как curated вход в этот цикл. Courses и AI не входят в active MVP loop.
 
 User-facing terminology: до отдельной validation термин `Research Slice` отображается как «Сохранённое исследование» с возможной вторичной подписью «срез». Onboarding не требует знания внутреннего термина до получения первой ценности.
 
@@ -91,6 +94,8 @@ User-facing terminology: до отдельной validation термин `Resear
 - semantic validation gate;
 - controlled publish flow.
 
+Контент производится сравнительными когортами, а не отдельными несвязанными объектами. Для каждой когорты фиксируются research question, 3–5 Features, evidence-backed Relations, Sources, rights-clean Media и reference Slice. Измеряются preparation time, review time и reuse.
+
 Семантика полей определяется `DATA_DICTIONARY.md`, export mechanics — `DATA_CONTRACT.md`.
 
 ### 5.2 Map-time workspace
@@ -103,6 +108,12 @@ User-facing terminology: до отдельной validation термин `Resear
 - sourced detail panel;
 - desktop/tablet/mobile adaptation.
 
+Temporal claim boundary:
+
+- MVP является time-indexed исследованием объектов, а не полной моделью их изменения;
+- даты/периоды и timeline не доказывают поддержку reconstruction, destruction, function change или evolving geometry;
+- будущая модель `Entity → Event → Time interval → State change → Evidence` открывается только после validation decision и начинается с одного архитектурного сценария.
+
 ### 5.3 Compare
 
 - выбор 2–3 объектов;
@@ -114,26 +125,27 @@ User-facing terminology: до отдельной validation термин `Resear
 
 - полный public end-to-end loop;
 - backend persistence;
+- research question, evidence selection, notes/findings, conclusion и uncertainty;
+- Saved View как восстановимый UI-компонент;
 - восстановление контекста;
 - shareable read-only state.
 
-### 5.5 Curated Stories
+### 5.5 Optional curated entry
 
-- минимум три редакционных маршрута;
-- шаги на основе sourced Features/Relations;
-- синхронизация с map/time/detail.
+- один или несколько curated entry points допустимы для onboarding;
+- каждый вход должен вести в основной Compare–Evidence–Save loop;
+- отсутствие Stories не блокирует MVP validation и exit.
 
 ### 5.6 Provenance and epistemic clarity
 
-UI различает:
+Внутренняя epistemic model остаётся детальной. Primary UI группирует статусы в четыре понятных класса:
 
-- fact;
-- source;
-- reviewed relation;
-- computed similarity;
-- interpretation;
-- hypothesis;
-- unavailable/future AI.
+- подтверждено источником;
+- редакционная интерпретация;
+- гипотеза или неопределённость;
+- вычисленное сходство.
+
+Подробный canonical status доступен по запросу и не теряется при упрощённом представлении.
 
 ## 6. Public capability rule
 
@@ -170,7 +182,9 @@ Thin CRUD не считается полноценной Stories/Courses product
 - primary Media coverage не ниже 90%;
 - relation evidence coverage 100%.
 
-Порог является утверждённым узким pilot envelope из `docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`. Более широкий ориентир 100–150 Features / 50+ Relations / Stories / reference Slices остаётся maturity reference после decision gate. Полная граница MVP определяется `MVP_ARCHITECTURE_ATLAS.md`.
+Порог является утверждённым узким pilot envelope из `docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`. Более широкий ориентир 100–150 Features / 50+ Relations / reference Slices остаётся maturity reference после decision gate. Stories оцениваются отдельно как onboarding-механизм. Полная граница MVP определяется `MVP_ARCHITECTURE_ATLAS.md`.
+
+До expansion необходимо зафиксировать стоимость подготовки и проверки одной comparison cohort. Рост числа Features без этого показателя не доказывает масштабируемую content model.
 
 ## 9. AI boundary
 
@@ -187,6 +201,14 @@ Explain Context Contract может существовать как backend cont
 ## 10. Validation gate
 
 Product expansion запрещён до выполнения `PRODUCT_VALIDATION_PLAN.md`.
+
+Проверка разделяется на три независимых gate:
+
+- usability — пользователь завершает сценарий;
+- cognitive value — сравнение создаёт новое или уточнённое понимание, связанное с evidence;
+- behavioral value — пользователь самостоятельно возвращается, изменяет или передаёт сохранённое исследование.
+
+Map + time должны сравниваться с catalogue/list baseline. Прохождение usability без cognitive и behavioral evidence не открывает expansion.
 
 Минимальное решение после validation:
 

@@ -3,10 +3,10 @@
 ## Статус документа
 
 - Тип: foundation product/data/UI/AI contract document
-- Статус: active, pending canonical registration in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
-- Роль: фиксирует Research Slice как главную единицу ценности ARTEMIS v1.0
-- Назначение: определить смысл, состав, границы, lifecycle и downstream-роль research slice для map workspace, stories, courses и AI assistance
-- Scope: product semantics, data semantics, UI semantics, AI-context semantics, lifecycle, v1.0 baseline, out-of-scope boundaries
+- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Роль: фиксирует Research Slice как воспроизводимый результат исследовательской работы; доказательное сравнение создаёт первую ценность, Slice сохраняет и передаёт её
+- Назначение: определить отличие Research Slice от Saved View, обязательный смысловой состав, lifecycle и границы интеграции
+- Scope: product semantics, data semantics, UI semantics, lifecycle, MVP baseline, out-of-scope boundaries
 
 ---
 
@@ -18,17 +18,25 @@ Research Slice — это **минимальная сохраняемая еди
 
 Он фиксирует, что пользователь исследовал:
 
-- где;
-- когда;
-- какие слои были активны;
+- какой вопрос был поставлен;
 - какие сущности были выбраны;
-- какие фильтры и состояния карты формировали контекст;
-- какие заметки, интерпретации или гипотезы были добавлены;
-- какой объяснимый контекст может быть передан stories, courses и AI.
+- почему они были выбраны;
+- какие sources/relations использованы как evidence;
+- какие заметки, интерпретации, выводы и uncertainty были зафиксированы;
+- какой Saved View позволяет восстановить пространственно-временной UI-контекст.
+
+`Saved View` фиксирует viewport, time state, layers, filters и selection. Он является компонентом Research Slice, но не исследовательским результатом сам по себе.
+
+Минимальный смысл Research Slice должен отвечать на четыре вопроса:
+
+1. Что исследовалось?
+2. Почему выбраны эти объекты?
+3. Какие доказательства использованы?
+4. К какому выводу пришёл пользователь и что осталось неопределённым?
 
 ---
 
-## 2. Почему Research Slice является главной единицей ценности
+## 2. Почему Research Slice является главным повторно используемым артефактом
 
 ARTEMIS не должен строиться вокруг отдельного объекта.
 
@@ -53,7 +61,9 @@ Course:
 
 Следовательно:
 
-> Object opens research. Slice preserves research. Story sequences research. Course teaches through research. AI explains research context.
+> Object opens research. Comparison creates understanding. Slice preserves and communicates the result.
+
+Story, Course и AI могут использовать Slice позднее, но не определяют его MVP-семантику.
 
 ---
 
@@ -62,11 +72,11 @@ Course:
 Research Slice нужен, чтобы пользователь мог:
 
 1. собрать исследовательское состояние;
-2. сохранить его;
-3. вернуться к нему;
-4. сравнить его с другим состоянием;
-5. развить его в story, collection или course;
-6. получить AI-assisted explanation без потери контекста.
+2. связать вопрос и вывод с evidence;
+3. сохранить его;
+4. вернуться к нему;
+5. передать read-only результат другому человеку;
+6. позднее использовать как source-bound context для downstream layers.
 
 Без Research Slice ARTEMIS остаётся:
 - картой с фильтрами;
@@ -77,16 +87,58 @@ Research Slice нужен, чтобы пользователь мог:
 С Research Slice ARTEMIS становится:
 - средой накопления исследовательской работы;
 - системой возвращаемых контекстов;
-- основой для stories/courses;
-- базой для explainable AI assistance.
+- системой воспроизводимых evidence-aware сравнений;
+- потенциальной основой для будущих stories/courses/AI assistance.
 
 ---
 
 ## 4. Что входит в Research Slice
 
-Research Slice состоит из нескольких обязательных смысловых блоков.
+Research Slice состоит из обязательного исследовательского содержания и вложенного Saved View.
 
-### 4.1 Spatial context
+### 4.1 Research question
+
+Фиксирует:
+- вопрос или проверяемую тему;
+- краткую цель сравнения.
+
+Цель:
+- объяснить, что именно пользователь пытался понять.
+
+### 4.2 Selection rationale
+
+Фиксирует:
+- выбранные Features/entities;
+- причину выбора;
+- порядок или фокус сравнения.
+
+Цель:
+- сделать выбор объектов воспроизводимым, а не случайным.
+
+### 4.3 Evidence context
+
+Фиксирует:
+- source references;
+- reviewed Relations;
+- явно обозначенную computed similarity;
+- связь evidence с заметкой или выводом.
+
+Цель:
+- показать основание исследования и не смешать evidence с inference.
+
+### 4.4 Human findings
+
+Фиксирует:
+- notes;
+- interpretation;
+- hypothesis;
+- conclusion;
+- uncertainty или unresolved questions.
+
+Цель:
+- сохранить человеческий смысл и результат, а не только машинное состояние UI.
+
+### 4.5 Saved View: spatial context
 
 Фиксирует:
 - viewport;
@@ -98,7 +150,7 @@ Research Slice состоит из нескольких обязательных
 Цель:
 - восстановить исследовательское положение пользователя в пространстве.
 
-### 4.2 Temporal context
+### 4.6 Saved View: temporal context
 
 Фиксирует:
 - выбранный год или диапазон дат;
@@ -109,7 +161,7 @@ Research Slice состоит из нескольких обязательных
 Цель:
 - восстановить исследовательское положение пользователя во времени.
 
-### 4.3 Layer context
+### 4.7 Saved View: layer context
 
 Фиксирует:
 - активные слои;
@@ -120,7 +172,7 @@ Research Slice состоит из нескольких обязательных
 Цель:
 - сохранить не всю базу, а конкретную конфигурацию видимости.
 
-### 4.4 Entity context
+### 4.8 Saved View: entity context
 
 Фиксирует:
 - выбранные объекты/features;
@@ -131,7 +183,7 @@ Research Slice состоит из нескольких обязательных
 Цель:
 - определить, какие entities входят в исследовательскую конфигурацию.
 
-### 4.5 Filter context
+### 4.9 Saved View: filter context
 
 Фиксирует:
 - search/filter state;
@@ -142,22 +194,22 @@ Research Slice состоит из нескольких обязательных
 Цель:
 - восстановить не только карту, но и логику отбора.
 
-### 4.6 Human context
+### 4.10 Metadata and version
 
 Фиксирует:
 - title;
 - description;
-- note;
-- annotation;
-- curator/user explanation;
-- explicit hypothesis or interpretation, if present.
+- owner;
+- created/updated timestamps;
+- schema/content version;
+- visibility/share state.
 
 Цель:
-- сохранить человеческий смысл среза, а не только машинное состояние UI.
+- обеспечить traceability, update и воспроизводимость.
 
-### 4.7 AI context
+### 4.11 Future AI context
 
-Фиксирует или предоставляет:
+Может позднее предоставлять:
 - explainability context;
 - selected entities;
 - temporal/spatial/layer constraints;
@@ -169,21 +221,26 @@ Research Slice состоит из нескольких обязательных
 
 ---
 
-## 5. Minimal v1.0 baseline
+## 5. Minimal MVP baseline
 
-Минимальный Research Slice v1.0 должен включать:
+Минимальный product-complete Research Slice MVP должен включать:
 
 - unique id;
 - owner/user id;
 - title;
-- optional description;
+- research question;
+- optional description/selection rationale;
 - feature refs;
+- evidence refs или явно зафиксированное отсутствие evidence;
+- минимум одну user note/finding;
+- conclusion либо explicit unresolved state;
+- uncertainty notes where relevant;
 - time range;
 - view state;
 - selected feature id if present;
 - enabled layer ids;
-- optional annotations;
 - visibility state;
+- schema/content version;
 - created/updated timestamps.
 
 Runtime/API baseline для JSON model и endpoints определён в:
@@ -195,7 +252,10 @@ Runtime/API baseline для JSON model и endpoints определён в:
 Если contract и spec расходятся:
 - текущий runtime проверяется по `RESEARCH_SLICE_SPEC.md` и tests;
 - продуктовый смысл проверяется по этому contract;
+- capability нельзя объявлять validation-ready;
 - расхождение должно быть устранено через отдельный docs/code sync cycle.
+
+Текущий runtime baseline ещё не имеет отдельных first-class полей для question, evidence refs, conclusion и content version. До schema/code sync он является persistence envelope для Slice, но не доказательством product-complete Research Slice.
 
 ---
 
@@ -206,7 +266,11 @@ Runtime/API baseline для JSON model и endpoints определён в:
 Пользователь формирует slice из текущего map-time workspace.
 
 Create должен сохранять:
+- research question;
 - selected entities;
+- evidence context;
+- notes/findings;
+- conclusion или unresolved state;
 - current time state;
 - current view state;
 - active layers;
@@ -217,7 +281,7 @@ Create должен сохранять:
 
 Slice сохраняется как owner-only resource.
 
-Для baseline v1.0:
+Для MVP baseline:
 - slice private by default;
 - canonical public dataset не меняется;
 - slice не публикует UGC в public knowledge base.
@@ -227,6 +291,8 @@ Slice сохраняется как owner-only resource.
 Пользователь может восстановить slice.
 
 Reopen должен возвращать:
+- research question и findings;
+- evidence refs;
 - карту;
 - timeline;
 - layers;
@@ -239,7 +305,10 @@ Reopen должен возвращать:
 
 Update допустим для:
 - title;
+- research question;
 - description;
+- evidence refs;
+- conclusion/uncertainty;
 - selected entities;
 - time range;
 - view state;
@@ -271,21 +340,21 @@ Share не должен нарушать:
 - shared response не раскрывает owner identity и не допускает mutation;
 - sharing не создаёт searchable/public-curated запись.
 
-### 6.7 Compare
+### 6.7 Object comparison
 
-Compare является важным planned product behavior.
+Сравнение 2–3 Features является обязательным upstream behavior, которое создаёт содержание Slice.
 
 Compare должен сопоставлять:
-- time ranges;
-- selected entities;
-- layers;
-- spatial focus;
-- annotations;
-- AI summaries if present.
+- temporal/spatial/style/source properties;
+- reviewed Relations;
+- clearly labelled Similarity;
+- provenance.
 
 Compare не должен автоматически превращать correlation into causation.
 
-### 6.8 Evolve into Story / Course
+Slice-to-Slice compare является future behavior и не заменяет object comparison в MVP.
+
+### 6.8 Future downstream use
 
 Slice может стать строительным блоком:
 - story step;
@@ -293,7 +362,7 @@ Slice может стать строительным блоком:
 - guided learning state;
 - collection item.
 
-Story/course должны ссылаться на slice или slice-like state, а не дублировать его логику.
+Downstream layer должен ссылаться на slice или slice-like state, а не дублировать его логику. Этот пункт не открывает Stories/Courses/AI в active MVP.
 
 ---
 
@@ -306,44 +375,18 @@ Object or Feature:
 - provides factual/detail context;
 - may be selected into a slice.
 
-It is not the primary value unit.
+Object comparison creates the first user value.
 
 ### 7.2 Research Slice
 
 Research Slice:
-- is the primary value unit;
-- preserves research context;
-- enables return, compare, share and explanation.
+- is the primary reusable research artifact;
+- preserves question, evidence, findings and Saved View;
+- enables return, update and read-only share.
 
-### 7.3 Collection
+### 7.3–7.6 Future downstream entities
 
-Collection:
-- groups slices, entities or scenarios;
-- is an organizational layer;
-- must not replace slice semantics.
-
-### 7.4 Story
-
-Story:
-- sequences slices or slice-like states;
-- adds narrative/analytical progression;
-- should not become a standalone article detached from map-time context.
-
-### 7.5 Course
-
-Course:
-- uses stories/slices for guided learning;
-- adds educational progression;
-- must not turn ARTEMIS into a generic LMS detached from spatial-temporal research.
-
-### 7.6 AI Insight
-
-AI Insight:
-- may explain a slice;
-- may compare slices;
-- may suggest hypotheses;
-- must be marked as AI output;
-- must not become canonical fact without review.
+Collection, Story, Course и AI Insight могут использовать Slice после соответствующего validation/scope decision. Они не входят в обязательный MVP loop и не должны определять текущий Slice schema.
 
 ---
 
@@ -373,7 +416,7 @@ Current annotation baseline in `RESEARCH_SLICE_SPEC.md` supports:
 - `interpretation`;
 - `hypothesis`.
 
-Future epistemic expansion must align with `EPISTEMIC_CONTRACT.md` after that document is created.
+Future epistemic expansion must align with the active `EPISTEMIC_CONTRACT.md`.
 
 ---
 
@@ -437,7 +480,7 @@ Public data/export details remain in:
 
 ## 11. Visibility and ownership
 
-Baseline v1.0:
+MVP baseline:
 
 - slice is private by default;
 - owner-only access is required;
@@ -476,14 +519,16 @@ The following are not part of the current baseline unless separately implemented
 
 Research Slice is correctly implemented conceptually if:
 
-1. It restores a meaningful map-time research state.
-2. It contains selected entities or equivalent research focus.
-3. It preserves enough context for later return.
-4. It is distinct from object, story and course.
-5. It can serve as basis for story/course/AI explanation.
-6. It does not alter canonical public data by itself.
-7. It preserves epistemic separation of facts, interpretations, hypotheses and AI output.
-8. It is owner-controlled unless a separate sharing model is explicitly defined.
+1. It records a research question or explicit topic.
+2. It contains selected entities and selection rationale.
+3. It exposes source/relation evidence or explicitly records that evidence is missing.
+4. It preserves at least one human note/finding and a conclusion or unresolved state.
+5. It restores a meaningful Saved View without being reduced to that view.
+6. It preserves enough versioned context for later return.
+7. It is distinct from object, Story and Course.
+8. It does not alter canonical public data by itself.
+9. It preserves epistemic separation of facts, interpretations, hypotheses and AI output.
+10. It is owner-controlled unless a separate sharing model is explicitly defined.
 
 ---
 
@@ -493,6 +538,8 @@ The slice model is considered degraded if:
 
 - slice becomes just a bookmark;
 - slice becomes just a saved viewport;
+- question, evidence and conclusion cannot be recovered;
+- a conclusion cannot be traced to supporting evidence;
 - slice duplicates story logic;
 - slice stores unmarked AI output as fact;
 - slice changes public data without governance;
@@ -509,7 +556,7 @@ Any change to Research Slice semantics must check impact on:
 - `docs/ARTEMIS_PRODUCT_SCOPE.md`;
 - `docs/RESEARCH_SLICE_SPEC.md`;
 - `docs/DATA_CONTRACT.md`;
-- `docs/EPISTEMIC_CONTRACT.md` after creation;
+- `docs/EPISTEMIC_CONTRACT.md`;
 - stories runtime;
 - courses runtime;
 - AI/ECC layer;
@@ -523,24 +570,21 @@ A slice-related change is incomplete if product semantics, runtime/API shape and
 
 ## 16. Итог
 
-Research Slice is the core unit that prevents ARTEMIS from collapsing into separate modules.
+Research Slice is the reusable research artifact that prevents ARTEMIS from collapsing into a map with bookmarks.
 
 It connects:
 
-- map;
-- time;
-- entities;
-- filters;
-- layers;
+- research question;
+- selected entities;
+- evidence;
 - human notes;
-- stories;
-- courses;
-- AI assistance.
+- conclusion and uncertainty;
+- Saved View: map, time, filters and layers.
 
 The correct development direction is:
 
-1. stabilize slice as research context;
-2. build stories from slices;
-3. build courses from stories/slices;
-4. let AI explain and compare slice contexts;
-5. avoid turning ARTEMIS into generic map, LMS, social platform or AI chat.
+1. separate Saved View from product-complete Research Slice;
+2. make question, evidence, finding and conclusion explicit;
+3. prove public save/reopen/share on a real research task;
+4. validate cognitive and behavioral reuse;
+5. consider Stories, Courses or AI only after an explicit scope decision.

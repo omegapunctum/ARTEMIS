@@ -65,6 +65,7 @@ Canonical layer — это source of truth для текущего состоя�
 - `docs/MVP_ARCHITECTURE_ATLAS.md`
 - `docs/DATA_DICTIONARY.md`
 - `docs/PRODUCT_VALIDATION_PLAN.md`
+- `docs/VALIDATION_DECISION.md`
 - `docs/RESEARCH_SLICE_CONTRACT.md`
 - `docs/RESEARCH_SLICE_SPEC.md`
 - `docs/EPISTEMIC_CONTRACT.md`
@@ -170,14 +171,15 @@ Canonical layer — это source of truth для текущего состоя�
 Чтобы уменьшить semantic overlap, в ARTEMIS фиксируются владельцы смысла.
 
 - `FOUNDATION_INDEX.md` — навигация foundation-layer, порядок чтения, выбор source of truth по типам решений
-- `ARTEMIS_CONCEPT.md` — миссия, принципы, epistemic foundation, лестница развития
+- `ARTEMIS_CONCEPT.md` — North Star, миссия, принципы, epistemic foundation, лестница развития
 - `PROJECT_TRUTH.md` — фактическая capability/maturity boundary
 - `PRODUCT_THESIS.md` — active product audience/problem/hypotheses
 - `ARTEMIS_PRODUCT_SCOPE.md` — границы текущего vertical scope
 - `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary и exit criteria
 - `DATA_DICTIONARY.md` — semantic data model
-- `PRODUCT_VALIDATION_PLAN.md` — evidence и decision gate
-- `RESEARCH_SLICE_CONTRACT.md` — product/data/UI/AI semantics Research Slice как главной единицы ценности
+- `PRODUCT_VALIDATION_PLAN.md` — evidence protocol и thresholds
+- `VALIDATION_DECISION.md` — доказанный validation outcome и разрешённый следующий scope
+- `RESEARCH_SLICE_CONTRACT.md` — product/data/UI/AI semantics Research Slice как воспроизводимого исследовательского результата
 - `RESEARCH_SLICE_SPEC.md` — runtime/API shape Research Slice baseline
 - `EPISTEMIC_CONTRACT.md` — операционные правила fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual
 - `ENTITY_MODEL.md` — knowledge/product/runtime/context entities и relation model
@@ -210,18 +212,19 @@ Canonical layer — это source of truth для текущего состоя�
 7. `docs/MVP_ARCHITECTURE_ATLAS.md`
 8. `docs/DATA_DICTIONARY.md`
 9. `docs/PRODUCT_VALIDATION_PLAN.md`
-10. `docs/ARTEMIS_CONCEPT.md`
-11. `docs/RESEARCH_SLICE_CONTRACT.md`
-12. `docs/EPISTEMIC_CONTRACT.md`
-13. `docs/ENTITY_MODEL.md`
-14. `docs/CONTENT_GOVERNANCE.md`
-15. `docs/AI_POLICY.md`
-16. `docs/DATA_CONTRACT.md`
-17. `docs/PROJECT_STRUCTURE.md`
-18. `docs/PROJECT_PHASES.md`
-19. `docs/PRIORITIES.md`
-20. затем профильные canonical docs (`CONTROLLED_RELEASE_DECISION`, `ARTEMIS_MASTER_PROMPT`, `RESEARCH_SLICE_SPEC`)
-21. только после этого `docs/work/*`, `docs/audits/*`, `docs/reference/*`, `docs/archive/*`
+10. `docs/VALIDATION_DECISION.md`
+11. `docs/ARTEMIS_CONCEPT.md`
+12. `docs/RESEARCH_SLICE_CONTRACT.md`
+13. `docs/EPISTEMIC_CONTRACT.md`
+14. `docs/ENTITY_MODEL.md`
+15. `docs/CONTENT_GOVERNANCE.md`
+16. `docs/AI_POLICY.md`
+17. `docs/DATA_CONTRACT.md`
+18. `docs/PROJECT_STRUCTURE.md`
+19. `docs/PROJECT_PHASES.md`
+20. `docs/PRIORITIES.md`
+21. затем профильные canonical docs (`CONTROLLED_RELEASE_DECISION`, `ARTEMIS_MASTER_PROMPT`, `RESEARCH_SLICE_SPEC`)
+22. только после этого `docs/work/*`, `docs/audits/*`, `docs/reference/*`, `docs/archive/*`
 
 Для ИИ-агентов и новых участников проекта это обязательный navigation order.
 

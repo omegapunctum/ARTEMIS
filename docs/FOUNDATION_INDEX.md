@@ -33,7 +33,8 @@ ARTEMIS нельзя развивать через отдельные функц
 Любое новое направление должно усиливать одну из базовых опор:
 
 - spatial-temporal research workspace;
-- research slice as primary value unit;
+- evidence-aware comparison as first value;
+- research slice as reusable research artifact;
 - explainable knowledge structure;
 - curated and governed content;
 - clear epistemic separation of facts, interpretations, hypotheses and AI outputs;
@@ -43,7 +44,20 @@ ARTEMIS нельзя развивать через отдельные функц
 
 ---
 
-## 3. Текущий canonical foundation set
+## 3. Четыре уровня продуктовой истины
+
+| Уровень | Owner documents | Вопрос |
+|---|---|---|
+| North Star | `ARTEMIS_CONCEPT.md` | Куда проект может прийти и какие принципы нельзя нарушать? |
+| Current product | `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `MVP_ARCHITECTURE_ATLAS.md` | Для кого, какую проблему и какой scope мы проверяем сейчас? |
+| Current reality | `PROJECT_TRUTH.md` | Что действительно работает и с какой зрелостью? |
+| Validated outcome | `VALIDATION_DECISION.md` | Что доказано пользователями и какой следующий scope разрешён? |
+
+Уровни нельзя смешивать. North Star не является release promise; реализованный backend-код не является public capability; пройденный usability task не является доказанной cognitive/behavioral ценностью; `PENDING` не разрешает expansion.
+
+---
+
+## 4. Текущий canonical foundation set
 
 На текущем этапе foundation-layer состоит из действующих canonical docs.
 
@@ -51,14 +65,15 @@ ARTEMIS нельзя развивать через отдельные функц
 |---|---|
 | `README.md` | root entrypoint проекта |
 | `docs/FOUNDATION_INDEX.md` | навигатор foundation-layer, порядок чтения и source-of-truth routing |
-| `docs/ARTEMIS_CONCEPT.md` | миссия, видение, принципы, epistemic model, стратегическая лестница развития |
+| `docs/ARTEMIS_CONCEPT.md` | North Star, миссия, принципы, epistemic model, стратегическая лестница развития |
 | `docs/PROJECT_TRUTH.md` | фактическая граница public/backend/pilot/future capabilities |
 | `docs/PRODUCT_THESIS.md` | active Architecture Atlas audience, problem, hypotheses и value proposition |
-| `docs/ARTEMIS_PRODUCT_SCOPE.md` | продуктовые границы v1.1 и запреты против product drift |
+| `docs/ARTEMIS_PRODUCT_SCOPE.md` | продуктовые границы текущего vertical и запреты против product drift |
 | `docs/MVP_ARCHITECTURE_ATLAS.md` | vertical MVP boundary, content threshold и exit criteria |
 | `docs/DATA_DICTIONARY.md` | semantic identity/source/media/relation data model |
 | `docs/PRODUCT_VALIDATION_PLAN.md` | user evidence protocol и decision gate |
-| `docs/RESEARCH_SLICE_CONTRACT.md` | canonical product/data/UI/AI contract для Research Slice как главной единицы ценности |
+| `docs/VALIDATION_DECISION.md` | validation outcome и разрешённый следующий scope |
+| `docs/RESEARCH_SLICE_CONTRACT.md` | canonical contract для Research Slice как воспроизводимого исследовательского результата |
 | `docs/RESEARCH_SLICE_SPEC.md` | runtime/API spec Research Slice baseline |
 | `docs/EPISTEMIC_CONTRACT.md` | operational contract для fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual |
 | `docs/ENTITY_MODEL.md` | единая модель knowledge/product/runtime/context entities и relation model |
@@ -79,7 +94,7 @@ ARTEMIS нельзя развивать через отдельные функц
 
 ---
 
-## 4. Порядок чтения foundation docs
+## 5. Порядок чтения foundation docs
 
 Рекомендуемый порядок чтения:
 
@@ -91,16 +106,17 @@ ARTEMIS нельзя развивать через отдельные функц
 6. `docs/MVP_ARCHITECTURE_ATLAS.md` — что должно быть доказано в MVP.
 7. `docs/DATA_DICTIONARY.md` — какие semantic data rules обязательны.
 8. `docs/PRODUCT_VALIDATION_PLAN.md` — какое evidence открывает следующий этап.
-9. `docs/ARTEMIS_CONCEPT.md` — долгосрочная миссия и принципы.
-10. `docs/RESEARCH_SLICE_CONTRACT.md` — как работает сохраняемая единица исследования.
-11. `docs/EPISTEMIC_CONTRACT.md`, `docs/ENTITY_MODEL.md`, `docs/CONTENT_GOVERNANCE.md` и `docs/AI_POLICY.md` — knowledge governance.
-12. `docs/DATA_CONTRACT.md` — export/public artifact mechanics.
-13. `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md` и `docs/PRIORITIES.md` — структура и active order.
-14. `docs/DOCUMENTATION_SYSTEM.md`, `docs/CONTROLLED_RELEASE_DECISION.md` и `docs/ARTEMIS_MASTER_PROMPT.md` — governance/release/agent rules.
+9. `docs/VALIDATION_DECISION.md` — что доказано и какой scope разрешён.
+10. `docs/ARTEMIS_CONCEPT.md` — долгосрочная миссия и принципы.
+11. `docs/RESEARCH_SLICE_CONTRACT.md` — как работает сохраняемая единица исследования.
+12. `docs/EPISTEMIC_CONTRACT.md`, `docs/ENTITY_MODEL.md`, `docs/CONTENT_GOVERNANCE.md` и `docs/AI_POLICY.md` — knowledge governance.
+13. `docs/DATA_CONTRACT.md` — export/public artifact mechanics.
+14. `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md` и `docs/PRIORITIES.md` — структура и active order.
+15. `docs/DOCUMENTATION_SYSTEM.md`, `docs/CONTROLLED_RELEASE_DECISION.md` и `docs/ARTEMIS_MASTER_PROMPT.md` — governance/release/agent rules.
 
 ---
 
-## 5. Решения по типам вопросов
+## 6. Решения по типам вопросов
 
 ### 5.1 Concept / mission questions
 
@@ -250,7 +266,7 @@ Executable authority:
 
 ---
 
-## 6. Правило разрешения конфликтов
+## 7. Правило разрешения конфликтов
 
 Если документы расходятся, действует порядок:
 
@@ -258,26 +274,27 @@ Executable authority:
 2. `PROJECT_TRUTH.md` for current capability/maturity statements;
 3. `DATA_CONTRACT.md` and `DATA_DICTIONARY.md` for export and semantic data contracts;
 4. `CONTROLLED_RELEASE_DECISION.md` for release/readiness interpretation;
-5. `ARTEMIS_CONCEPT.md` for mission/principles/epistemic constraints;
+5. `VALIDATION_DECISION.md` for validated outcomes and permission to expand;
 6. `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `MVP_ARCHITECTURE_ATLAS.md` and `PRODUCT_VALIDATION_PLAN.md` for active product decisions;
-7. foundation contracts:
+7. `ARTEMIS_CONCEPT.md` for North Star mission/principles/epistemic constraints;
+8. foundation contracts:
    - `RESEARCH_SLICE_CONTRACT.md`;
    - `EPISTEMIC_CONTRACT.md`;
    - `ENTITY_MODEL.md`;
    - `CONTENT_GOVERNANCE.md`;
    - `AI_POLICY.md`;
-8. `PROJECT_STRUCTURE.md` for repo/runtime/docs boundaries;
-9. `PROJECT_PHASES.md` and `PRIORITIES.md` for current work order;
-10. `DOCUMENTATION_SYSTEM.md` for doc placement/governance conflicts;
-11. working docs;
-12. audits;
-13. archive/reference.
+9. `PROJECT_STRUCTURE.md` for repo/runtime/docs boundaries;
+10. `PROJECT_PHASES.md` and `PRIORITIES.md` for current work order;
+11. `DOCUMENTATION_SYSTEM.md` for doc placement/governance conflicts;
+12. working docs;
+13. audits;
+14. archive/reference.
 
 Audit documents may reveal a conflict, but they do not become source of truth by themselves. The relevant canonical or working document must be updated.
 
 ---
 
-## 7. Foundation change-control rule
+## 8. Foundation change-control rule
 
 A foundation document may be created or changed only if the change clearly states:
 
@@ -291,14 +308,16 @@ Foundation changes must not be mixed with unrelated UI/runtime refactors.
 
 ---
 
-## 8. Forbidden shortcuts
+## 9. Forbidden shortcuts
 
 Запрещено:
 
 - добавлять AI-функции без проверки against `AI_POLICY.md` and `EPISTEMIC_CONTRACT.md`;
 - развивать stories/courses вне `RESEARCH_SLICE_CONTRACT.md`;
 - расширять entity/relation/source/media model вне `ENTITY_MODEL.md`;
-- превращать object card в главную продуктовую единицу вместо slice;
+- подменять evidence-aware comparison просмотром object cards;
+- называть Saved View product-complete Research Slice;
+- расширять scope при `VALIDATION_DECISION=PENDING`;
 - использовать UGC as canonical content без `CONTENT_GOVERNANCE.md`;
 - смешивать fact, interpretation, hypothesis, AI-output и counterfactual;
 - создавать новый source of truth в working docs или audits;
@@ -307,7 +326,7 @@ Foundation changes must not be mixed with unrelated UI/runtime refactors.
 
 ---
 
-## 9. Текущий статус foundation work
+## 10. Текущий статус foundation work
 
 Status:
 - foundation-layer создан;
@@ -327,6 +346,7 @@ Closed foundation setup items:
 7. `docs/DOCUMENTATION_SYSTEM.md` обновлён.
 8. `docs/ARTEMIS_MASTER_PROMPT.md` обновлён.
 9. `docs/archive/README.md` обновлён.
+10. `docs/VALIDATION_DECISION.md` зарегистрирован с исходным статусом `PENDING`.
 
 Remaining non-blocking follow-up:
 - semantic review оставшихся `DO_NOT_DELETE_YET` archive files;
@@ -335,19 +355,20 @@ Remaining non-blocking follow-up:
 
 ---
 
-## 10. Итоговое правило
+## 11. Итоговое правило
 
 ARTEMIS должен развиваться от фундаментальной модели знания к продуктовым слоям, а не наоборот.
 
 Порядок развития:
 
 1. concept and product scope;
-2. research slice contract;
-3. epistemic contract;
-4. entity model;
-5. content governance;
-6. AI policy;
-7. focused vertical validation;
-8. только после decision gate — selected product/runtime expansion.
+2. evidence-aware comparison;
+3. product-complete research slice contract;
+4. epistemic contract;
+5. entity model;
+6. content governance;
+7. AI policy;
+8. focused vertical validation;
+9. только после recorded decision gate — selected product/runtime expansion.
 
 Если новый функциональный слой не может быть объяснён через foundation-layer, он не должен становиться частью ядра проекта.

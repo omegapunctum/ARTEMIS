@@ -3,7 +3,7 @@
 ## Статус документа
 
 - Тип: foundation AI policy document
-- Статус: active, pending canonical registration in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
 - Роль: фиксирует допустимую и недопустимую роль AI в ARTEMIS
 - Назначение: защитить проект от AI drift, source substitution, hallucinated authority и смешения фактов, интерпретаций, гипотез и AI-output
 - Scope: AI behavior, AI outputs, AI limits, source/provenance discipline, slice/story/course AI use, moderation/content governance integration
@@ -40,7 +40,7 @@ AI in ARTEMIS is an assistant, not an authority.
 
 ## 2. Зачем нужна AI policy
 
-ARTEMIS строится как AI-native explainable spatial-temporal research platform, но AI-native не означает AI-authoritative.
+ARTEMIS строится как source-aware spatial-temporal research environment. AI является будущим опциональным слоем и никогда не означает AI-authoritative.
 
 AI policy нужна, чтобы:
 
@@ -218,7 +218,7 @@ AI should prefer:
 
 ## 8. AI and Research Slice
 
-Research Slice is the primary AI context unit in ARTEMIS v1.0.
+После отдельного validation/scope decision Research Slice может стать primary AI context unit. AI generation не входит в active MVP.
 
 AI over slice may:
 - summarize slice;

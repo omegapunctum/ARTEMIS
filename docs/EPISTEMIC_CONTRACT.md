@@ -3,7 +3,7 @@
 ## Статус документа
 
 - Тип: foundation epistemic contract document
-- Статус: active, pending canonical registration in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
 - Роль: фиксирует операционную модель знания ARTEMIS
 - Назначение: определить, как ARTEMIS различает факты, источники, связи, интерпретации, гипотезы, AI-output, неопределённость и контрфактические сценарии
 - Scope: data, UI, moderation, research slices, stories, courses, AI assistance, content governance

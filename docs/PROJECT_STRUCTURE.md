@@ -276,6 +276,7 @@ docs/
 ├── PRIORITIES.md
 ├── PRODUCT_THESIS.md
 ├── PRODUCT_VALIDATION_PLAN.md
+├── VALIDATION_DECISION.md
 ├── PROJECT_PHASES.md
 ├── PROJECT_TRUTH.md
 ├── PROJECT_STRUCTURE.md
@@ -285,14 +286,15 @@ docs/
 
 Назначение:
 - `FOUNDATION_INDEX.md` — главный навигатор foundation-layer, порядок чтения и правила выбора source of truth по типам решений;
-- `ARTEMIS_CONCEPT.md` — миссия, видение, жёсткие принципы, эпистемическая модель и строгая лестница развития проекта;
+- `ARTEMIS_CONCEPT.md` — North Star, миссия, жёсткие принципы, эпистемическая модель и строгая лестница развития проекта;
 - `PROJECT_TRUTH.md` — current capability and maturity truth;
 - `PRODUCT_THESIS.md` — active audience/problem/value hypotheses;
 - `ARTEMIS_PRODUCT_SCOPE.md` — границы Architecture Atlas vertical и запреты против product drift;
 - `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary, content threshold и exit criteria;
 - `DATA_DICTIONARY.md` — semantic data vocabulary и constraints;
-- `PRODUCT_VALIDATION_PLAN.md` — user evidence и decision gate;
-- `RESEARCH_SLICE_CONTRACT.md` — foundation product/data/UI/AI contract для Research Slice как главной единицы ценности;
+- `PRODUCT_VALIDATION_PLAN.md` — user evidence protocol и thresholds;
+- `VALIDATION_DECISION.md` — validation outcome и разрешённый следующий scope;
+- `RESEARCH_SLICE_CONTRACT.md` — foundation contract для Research Slice как воспроизводимого исследовательского результата;
 - `RESEARCH_SLICE_SPEC.md` — runtime/API spec Research Slice baseline;
 - `EPISTEMIC_CONTRACT.md` — операционный контракт знания: fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;
 - `ENTITY_MODEL.md` — единая модель knowledge/product/runtime/context entities и relation model;
