@@ -49,7 +49,22 @@ def test_schema_migrations_apply_on_fresh_db(monkeypatch: pytest.MonkeyPatch, tm
     assert {"image_url", "status", "publish_status", "airtable_record_id", "published_at", "payload"}.issubset(draft_columns)
 
     research_slice_columns = _table_columns(db_path, "research_slices")
-    assert {\n        "share_token_hash",\n        "shared_at",\n        "research_question",\n        "selection_rationale",\n        "evidence_state",\n        "evidence_refs_json",\n        "findings_json",\n        "conclusion_status",\n        "conclusion",\n        "uncertainty_notes",\n        "schema_version",\n        "content_version",\n        "filter_state_json",\n        "comparison_feature_ids_json",\n    }.issubset(research_slice_columns)
+    assert {
+        "share_token_hash",
+        "shared_at",
+        "research_question",
+        "selection_rationale",
+        "evidence_state",
+        "evidence_refs_json",
+        "findings_json",
+        "conclusion_status",
+        "conclusion",
+        "uncertainty_notes",
+        "schema_version",
+        "content_version",
+        "filter_state_json",
+        "comparison_feature_ids_json",
+    }.issubset(research_slice_columns)
     assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202, 203]
 
 
@@ -99,7 +114,22 @@ def test_schema_migrations_upgrade_partially_evolved_db(monkeypatch: pytest.Monk
     draft_columns = _table_columns(db_path, "drafts")
     assert {"image_url", "status", "publish_status", "airtable_record_id", "published_at", "payload"}.issubset(draft_columns)
     research_slice_columns = _table_columns(db_path, "research_slices")
-    assert {\n        "share_token_hash",\n        "shared_at",\n        "research_question",\n        "selection_rationale",\n        "evidence_state",\n        "evidence_refs_json",\n        "findings_json",\n        "conclusion_status",\n        "conclusion",\n        "uncertainty_notes",\n        "schema_version",\n        "content_version",\n        "filter_state_json",\n        "comparison_feature_ids_json",\n    }.issubset(research_slice_columns)
+    assert {
+        "share_token_hash",
+        "shared_at",
+        "research_question",
+        "selection_rationale",
+        "evidence_state",
+        "evidence_refs_json",
+        "findings_json",
+        "conclusion_status",
+        "conclusion",
+        "uncertainty_notes",
+        "schema_version",
+        "content_version",
+        "filter_state_json",
+        "comparison_feature_ids_json",
+    }.issubset(research_slice_columns)
     assert _schema_versions(db_path) == [1, 101, 102, 103, 104, 105, 106, 201, 202, 203]
 
 
