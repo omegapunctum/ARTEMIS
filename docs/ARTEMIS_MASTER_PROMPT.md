@@ -1,4 +1,4 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v4.2
+# ARTEMIS — МАСТЕР-ПРОМПТ v4.3
 
 Статус: canonical operational governance document for AI agents and assistants in ARTEMIS.
 Назначение: единая инструкция для ИИ-ассистентов и агентов, работающих над проектом ARTEMIS.
@@ -7,19 +7,23 @@
 
 ## 1. РОЛЬ ПРОЕКТА
 
-Долгосрочно ARTEMIS — AI-native explainable spatial-temporal research platform.
+North Star ARTEMIS — source-aware spatial-temporal research environment с воспроизводимыми исследовательскими результатами.
 В активном operational контуре ARTEMIS — focused Architecture Atlas vertical:
-- map-first исследование истории архитектуры;
-- интерактивная карта, временная навигация и слои данных как базовый runtime;
-- sourced comparison, reviewed relations и Research Slices;
+- один primary user: продвинутый студент истории архитектуры;
+- один JTBD: evidence-aware comparison 2–3 объектов для реальной учебной/исследовательской задачи;
+- map/time как проверяемые инструменты, а не конечная ценность;
+- Research Slice сохраняет question, evidence, findings, conclusion, uncertainty и Saved View;
 - public capability не может быть заявлена только на основании backend-кода;
 - Courses, AI generation, UGC expansion и multi-domain scope заморожены до validation decision.
 
 Ключевой принцип продукта:
-**explore first, learn second, create third**.
+**question → compare → evidence → conclusion → save → reuse**.
 
-Ключевая продуктовая единица ARTEMIS v1.0:
-**research slice / исследовательский срез**.
+Первая ценность:
+**evidence-aware object comparison**.
+
+Ключевой повторно используемый артефакт:
+**product-complete Research Slice / сохранённое исследование**.
 
 ---
 
@@ -39,6 +43,7 @@
 - `docs/MVP_ARCHITECTURE_ATLAS.md`
 - `docs/DATA_DICTIONARY.md`
 - `docs/PRODUCT_VALIDATION_PLAN.md`
+- `docs/VALIDATION_DECISION.md`
 - `docs/RESEARCH_SLICE_CONTRACT.md`
 - `docs/RESEARCH_SLICE_SPEC.md`
 - `docs/EPISTEMIC_CONTRACT.md`
@@ -55,14 +60,15 @@
 Правило:
 - если информация не синхронизирована с canonical docs, она не должна считаться окончательной;
 - `FOUNDATION_INDEX.md` определяет foundation-layer, порядок чтения и выбор source of truth по типам решений;
-- `ARTEMIS_CONCEPT.md` определяет миссию, жёсткие принципы, эпистемическую модель и долгосрочную лестницу развития;
+- `ARTEMIS_CONCEPT.md` определяет North Star, миссию, жёсткие принципы, эпистемическую модель и долгосрочную лестницу развития;
 - `PROJECT_TRUTH.md` определяет factual public/backend/pilot/future boundary;
 - `PRODUCT_THESIS.md` определяет активную аудиторию, проблему и hypotheses;
 - `ARTEMIS_PRODUCT_SCOPE.md` определяет границы текущего vertical и запреты против product drift;
 - `MVP_ARCHITECTURE_ATLAS.md` определяет MVP boundary и exit criteria;
 - `DATA_DICTIONARY.md` определяет semantic data rules;
-- `PRODUCT_VALIDATION_PLAN.md` определяет evidence и decision gate;
-- `RESEARCH_SLICE_CONTRACT.md` определяет Research Slice как главную product/data/UI/AI единицу ценности;
+- `PRODUCT_VALIDATION_PLAN.md` определяет evidence protocol и thresholds;
+- `VALIDATION_DECISION.md` фиксирует доказанный outcome и разрешённый следующий scope;
+- `RESEARCH_SLICE_CONTRACT.md` определяет Research Slice как воспроизводимый исследовательский результат, отличный от Saved View;
 - `EPISTEMIC_CONTRACT.md` определяет операционное разделение fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;
 - `ENTITY_MODEL.md` определяет knowledge/product/runtime/context entities и relation model;
 - `CONTENT_GOVERNANCE.md` определяет source policy, UGC/moderation, validation, trust, correction и publish governance;
@@ -164,9 +170,11 @@
 - PWA semantics проверяются по реальному поведению, а не по наличию/отсутствию строк в `sw.js`.
 
 ### 5.6 Foundation invariants
-- Research Slice остаётся главной единицей ценности ARTEMIS v1.0.
+- Evidence-aware comparison создаёт первую пользовательскую ценность.
+- Research Slice сохраняет вопрос, evidence и вывод; Saved View является только его компонентом.
 - Stories/courses должны строиться поверх slices или slice-like context, а не заменять slice model.
-- AI работает как assistant/explainer/hypothesis generator, но не как source of truth.
+- Stories/Courses/AI не входят в active MVP без recorded scope decision.
+- AI после такого решения работает как assistant/explainer/hypothesis generator, но не как source of truth.
 - Fact, interpretation, hypothesis, AI-output and counterfactual scenario must not be visually or semantically collapsed.
 - Entity/relation/source/media model must remain coherent with `ENTITY_MODEL.md` and `EPISTEMIC_CONTRACT.md`.
 
@@ -184,9 +192,10 @@
 4. Architecture Atlas content pilot;
 5. public backend и Slice end-to-end loop;
 6. product UX refinement и required maintainability;
-7. user validation и explicit decision gate.
+7. usability, cognitive и behavioral validation;
+8. explicit outcome в `VALIDATION_DECISION.md`.
 
-Phase 5 Scaling/Hardening приостановлена, кроме critical security/reliability и MVP deployment blockers. Phase 6 Product Expansion заблокирована до решения `EXPAND` либо отдельного canonical decision.
+Phase 5 Scaling/Hardening приостановлена, кроме critical security/reliability и MVP deployment blockers. Phase 6 Product Expansion заблокирована, пока `VALIDATION_DECISION.md` не содержит `EXPAND` либо отдельного canonical decision.
 
 ---
 

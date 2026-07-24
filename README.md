@@ -1,10 +1,10 @@
 # ARTEMIS
 
-**ARTEMIS** is a source-aware spatial-temporal atlas for exploring the history of architecture with **MapLibre + GeoJSON**.
+**ARTEMIS Architecture Atlas** is an evidence-aware comparison tool for architecture history, built with **MapLibre + GeoJSON**.
 
-The active delivery focus is a validated architecture-history vertical: explore objects through map and time, compare them, distinguish documented relations from computed similarity, inspect provenance, and preserve useful context as a Research Slice.
+The active delivery focus is one concrete job: help an advanced architecture-history student compare 2–3 objects, inspect the evidence behind relations, record a finding, and preserve the result as a Research Slice.
 
-The broader explainable spatial-temporal research workspace remains the long-term architecture. Courses, open UGC, multi-domain expansion and generative AI are not part of the active MVP cycle.
+Map and time are research instruments, not the end product. The differentiator is evidence-aware comparison plus a reproducible saved result. The broader spatial-temporal research environment is the North Star; Stories as a separate product layer, Courses, open UGC, multi-domain expansion and generative AI are not part of the active MVP cycle.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -297,7 +297,12 @@ Repository documentation is organized into five pragmatic layers:
 
 Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`.
 
-Canonical docs are maintained in root `README.md` and in `docs/`. The active product decision set is `docs/PROJECT_TRUTH.md`, `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/MVP_ARCHITECTURE_ATLAS.md`, `docs/DATA_DICTIONARY.md` and `docs/PRODUCT_VALIDATION_PLAN.md`.
+Canonical docs are maintained in root `README.md` and in `docs/`. Product decisions follow four distinct levels:
+
+1. `docs/ARTEMIS_CONCEPT.md` — North Star.
+2. `docs/PRODUCT_THESIS.md` and `docs/ARTEMIS_PRODUCT_SCOPE.md` — the user, problem and product being tested now.
+3. `docs/PROJECT_TRUTH.md` — what actually works.
+4. `docs/VALIDATION_DECISION.md` — what user evidence has proved and which next scope is allowed.
 
 Recommended reading order:
 1. `README.md`
@@ -308,8 +313,9 @@ Recommended reading order:
 6. `docs/MVP_ARCHITECTURE_ATLAS.md`
 7. `docs/DATA_DICTIONARY.md`
 8. `docs/PRODUCT_VALIDATION_PLAN.md`
-9. `docs/PROJECT_PHASES.md` and `docs/PRIORITIES.md`
-10. then the remaining canonical and working layers according to `docs/DOCUMENTATION_SYSTEM.md`
+9. `docs/VALIDATION_DECISION.md`
+10. `docs/PROJECT_PHASES.md` and `docs/PRIORITIES.md`
+11. then the remaining canonical and working layers according to `docs/DOCUMENTATION_SYSTEM.md`
 
 Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` remains the primary UI/UX working spec, `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` remains the system-level implementation map, and `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` owns the visual design layer: official style, palette, typography, state semantics and design-token baseline.
 

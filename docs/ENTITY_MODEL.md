@@ -3,7 +3,7 @@
 ## Статус документа
 
 - Тип: foundation entity model document
-- Статус: active, pending canonical registration in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
 - Роль: фиксирует базовую модель сущностей ARTEMIS и связи между ними
 - Назначение: предотвратить хаотичное добавление новых типов данных, runtime-моделей и продуктовых сущностей без единого conceptual/data/product контракта
 - Scope: knowledge entities, product entities, runtime entities, source/provenance entities, AI-context entities, relation model
@@ -268,15 +268,19 @@ Rules:
 
 ### 5.1 ResearchSlice
 
-`ResearchSlice` — главная единица ценности ARTEMIS v1.0.
+`ResearchSlice` — главный повторно используемый исследовательский артефакт ARTEMIS. Evidence-aware object comparison создаёт первую пользовательскую ценность; Slice сохраняет и передаёт её.
 
 It preserves:
+- research question;
+- selection rationale;
+- evidence refs;
+- findings;
+- conclusion and uncertainty;
 - spatial context;
 - temporal context;
 - layer/filter state;
 - selected entities;
-- human annotations;
-- AI/explainability context.
+- Saved View.
 
 Rules:
 - ResearchSlice references entities but does not redefine them;
@@ -582,7 +586,8 @@ Forbidden inversion:
 - Course must not define core data model.
 - Story must not replace slice model.
 - AI must not create canonical entities without governance.
-- Object card must not become the primary value unit.
+- Object card browsing must not replace evidence-aware comparison.
+- Saved View must not be presented as product-complete ResearchSlice.
 
 ---
 

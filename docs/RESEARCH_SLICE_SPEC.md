@@ -1,9 +1,18 @@
 # RESEARCH SLICE SPEC
 
 ## 1. Concept definition
-Research Slice — это canonical runtime-сущность пользовательского исследовательского состояния (выбор объектов, временной диапазон, состояние карты и заметки), сохраняемая для последующего восстановления контекста.
+Research Slice — canonical runtime-сущность для сохранения исследовательского результата и его Saved View.
 
-## 2. JSON model (final)
+Product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Текущий runtime schema сохраняет выбор объектов, временной диапазон, состояние карты и annotations, но ещё не имеет отдельных first-class полей для research question, evidence refs, conclusion, uncertainty и content version.
+
+Следствие:
+
+- API baseline является рабочим persistence envelope;
+- `view_state` + `time_range` образуют Saved View;
+- наличие сохранённой записи не доказывает product-complete Research Slice;
+- capability остаётся `BACKEND-AVAILABLE/PILOT` до schema/code sync и public validation.
+
+## 2. JSON model (current runtime baseline)
 ```json
 {
   "id": "string",
@@ -52,6 +61,37 @@ Research Slice — это canonical runtime-сущность пользоват�
 - `description`: optional.
 - `annotations`: optional.
 - `selected_feature_id`: optional, but must belong to `feature_refs[*].feature_id`.
+
+## 2.2 Temporary semantic mapping
+
+До введения first-class fields клиент может использовать текущую форму только как transitional compatibility mapping:
+
+- `title` — короткая тема или research question;
+- `description` — question, selection rationale, conclusion и uncertainty в человекочитаемой форме;
+- `feature_refs` — selected entities;
+- `annotations` — findings с явным epistemic type;
+- `view_state` + `time_range` — Saved View.
+
+Ограничения mapping:
+
+- он не создаёт структурированных evidence refs;
+- он не обеспечивает отдельную content/schema version;
+- он недостаточен для объявления Research Slice validation-ready;
+- migration к следующей schema должна сохранять существующие owner resources и share/revoke guarantees.
+
+## 2.3 Required next schema outcome
+
+Следующий contract sync должен добавить или эквивалентно представить:
+
+- explicit research question;
+- selection rationale;
+- evidence/source/relation refs;
+- findings;
+- conclusion;
+- uncertainty/unresolved state;
+- schema/content version.
+
+Изменение считается завершённым только после migration, API/client tests, public save/reopen/share E2E и обновления `PROJECT_TRUTH.md`.
 
 ## 3. API endpoints (core runtime contract)
 - `POST /api/research-slices` — сохранить новый slice.

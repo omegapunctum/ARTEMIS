@@ -1,9 +1,9 @@
-# ARTEMIS — PRIORITIES v4.2
+# ARTEMIS — PRIORITIES v4.3
 
 ## Статус
 
 - Тип: canonical active priorities document.
-- Дата: 2026-07-16.
+- Дата: 2026-07-24.
 - Активный цикл: Architecture Atlas Product/Data Validation.
 
 Приоритет получает только работа, которая подтверждает продуктовую ценность, исправляет semantic data truth, делает core loop публично доступным или предотвращает критическую деградацию.
@@ -13,6 +13,9 @@
 ### P0.1 Strategy and documentation truth
 
 - зафиксировать Option A во всём canonical set;
+- разделить North Star, current product, current reality и validated outcome;
+- зафиксировать одного primary user и один JTBD;
+- отделить Saved View от product-complete Research Slice;
 - различать public/backend/pilot/future capabilities;
 - обновить issues, противоречащие active scope;
 - не расширять implementation до завершения documentation reset.
@@ -23,6 +26,7 @@ Owner docs:
 - `PRODUCT_THESIS.md`;
 - `ARTEMIS_PRODUCT_SCOPE.md`;
 - `MVP_ARCHITECTURE_ATLAS.md`.
+- `VALIDATION_DECISION.md`.
 
 ### P0.2 Canonical identity
 
@@ -66,7 +70,8 @@ Owner docs:
 - 12–20 reviewed Relations;
 - 100% Source coverage и ≥90% primary Media coverage;
 - детерминированный `data/content_profile.json`;
-- Stories/reference Slices — после public Slice E2E; maturity reference остаётся 100–150 / 50+.
+- measured preparation/review cost per comparison cohort;
+- reference Slices — после public Slice E2E; curated Story допускается только как отдельно проверяемый onboarding-механизм; maturity reference остаётся 100–150 / 50+.
 
 ### P1.2 Compare and sourced detail
 
@@ -87,6 +92,11 @@ Owner docs:
 ### P1.4 Research Slice loop
 
 - create/save/list/open/update/delete;
+- first-class research question;
+- evidence refs;
+- findings, conclusion и uncertainty;
+- schema/content version;
+- Saved View как вложенный UI state;
 - restore complete context;
 - read-only share;
 - public E2E and error states.
@@ -94,10 +104,13 @@ Owner docs:
 ### P1.5 Product validation
 
 - Round 0 truth check;
-- Round 1 with 5–8 users;
+- Round 1 with 5–8 primary users;
+- catalogue/list control versus map + time + compare;
+- usability, cognitive и behavioral gates;
+- 7-day field follow-up;
 - corrective pass;
 - Round 2;
-- explicit decision gate.
+- explicit outcome in `VALIDATION_DECISION.md`.
 
 ## P2 — maintainability in service of MVP
 
@@ -163,7 +176,7 @@ Framework rewrite is not a priority.
 2. P0.2–P0.4 data foundation.
 3. P1.1 content pilot.
 4. P0.5 public capability.
-5. P1.2–P1.4 product loop and UX.
+5. P1.2–P1.4 Question → Compare → Evidence → Conclusion → Save loop and UX.
 6. P2 maintainability required by the changed product surface.
 7. P1.5 validation and decision.
 

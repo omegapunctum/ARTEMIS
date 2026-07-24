@@ -100,11 +100,12 @@ Execution status 2026-07-21: identity, normalized Source/Media export and Relati
 - 12–20 reviewed Relations;
 - 100% Source coverage, ≥90% primary Media, 100% Relation evidence;
 - executable checked-in content profile;
-- 100–150 / 50+ / Stories / reference Slices остаются maturity reference после decision gate.
+- 100–150 / 50+ / reference Slices остаются maturity reference после decision gate; Stories оцениваются отдельно как onboarding-механизм.
 
 ### Track D — Public product loop
 
 - deploy/configure backend;
+- синхронизировать Slice schema с question/evidence/findings/conclusion/uncertainty/version contract;
 - обеспечить public save/open/share Slice;
 - скрыть или clearly label недоступные surfaces;
 - проверить public E2E.
@@ -120,10 +121,12 @@ Execution status 2026-07-21: identity, normalized Source/Media export and Relati
 
 ### Track F — User validation
 
-- 5–8 участников первой волны;
-- Round 1 comprehension/core loop;
+- 5–8 primary users первой волны;
+- Round 1 comprehension/core loop и catalogue/list control;
+- usability, cognitive и behavioral gates;
 - исправления;
-- Round 2 decision gate.
+- Round 2 и 7-day field follow-up;
+- outcome в `VALIDATION_DECISION.md`.
 
 ### Exit criteria
 
@@ -133,7 +136,7 @@ Execution status 2026-07-21: identity, normalized Source/Media export and Relati
 - relation/similarity semantics корректны;
 - primary flows подтверждены на desktop/tablet/mobile;
 - validation thresholds из `PRODUCT_VALIDATION_PLAN.md` проверены;
-- принято `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK`.
+- решение `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK` записано в `VALIDATION_DECISION.md`.
 
 ## Фаза 5 — Scaling/Hardening [приостановлена]
 

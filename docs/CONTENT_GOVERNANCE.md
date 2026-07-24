@@ -3,7 +3,7 @@
 ## Статус документа
 
 - Тип: foundation content governance document
-- Статус: active, pending canonical registration in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
 - Роль: фиксирует правила доверия к данным, источникам, UGC, модерации и публикации content в ARTEMIS
 - Назначение: определить, как candidate content становится trusted/canonical content и какие данные не могут попасть в public knowledge layer без проверки
 - Scope: source policy, content lifecycle, validation, moderation, UGC promotion, uncertainty, corrections, public publish boundaries
