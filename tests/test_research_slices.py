@@ -381,5 +381,138 @@ class ResearchSlicesApiTests(unittest.TestCase):
             public_session.close()
 
 
+    @classmethod
+    def _payload_v2(cls) -> dict:
+        payload = cls._payload()
+        payload.update(
+            {
+                "research_question": "How do the selected buildings express patronage?",
+                "selection_rationale": "The pair shares a period but differs in institutional setting.",
+                "evidence_state": "supported",
+                "evidence_refs": [
+                    {
+                        "kind": "source",
+                        "ref_id": "source-1",
+                        "supports_finding_ids": ["ann-1"],
+                    },
+                    {
+                        "kind": "relation",
+                        "ref_id": "relation-1",
+                        "supports_finding_ids": ["ann-2"],
+                    },
+                ],
+                "findings": payload["annotations"],
+                "conclusion_status": "concluded",
+                "conclusion": "The comparison supports a qualified difference in patronage.",
+                "uncertainty_notes": "The relation evidence is reviewed; attribution remains interpretive.",
+                "saved_view": {
+                    "time_range": payload["time_range"],
+                    "view_state": payload["view_state"],
+                    "filter_state": {"search": "patronage", "confidence": "reviewed"},
+                    "comparison_feature_ids": ["recA", "recB"],
+                },
+                "schema_version": "2.0",
+                "content_version": 1,
+            }
+        )
+        return payload
+
+    def test_v2_semantic_round_trip_update_and_share(self):
+        headers = self._register_login(f"slice-v2-{uuid4().hex}@example.com")
+        created = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=self._payload_v2(),
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(created.status_code, 201, created.text)
+        body = created.json()
+        self.assertEqual(body["schema_version"], "2.0")
+        self.assertEqual(body["content_version"], 1)
+        self.assertEqual(body["content_status"], "complete")
+        self.assertEqual(body["evidence_state"], "supported")
+        self.assertEqual(body["saved_view"]["filter_state"]["search"], "patronage")
+        self.assertEqual(body["findings"], body["annotations"])
+
+        slice_id = body["id"]
+        patched = self.session.patch(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}",
+            json={
+                "conclusion_status": "unresolved",
+                "conclusion": "",
+                "uncertainty_notes": "A second source is still required.",
+            },
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(patched.status_code, 200, patched.text)
+        patched_body = patched.json()
+        self.assertEqual(patched_body["content_version"], 2)
+        self.assertEqual(patched_body["conclusion_status"], "unresolved")
+        self.assertEqual(patched_body["research_question"], body["research_question"])
+        self.assertEqual(patched_body["saved_view"], body["saved_view"])
+
+        share = self.session.post(
+            f"{self.BASE_URL}/api/research-slices/{slice_id}/share",
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(share.status_code, 200, share.text)
+        public_get = requests.get(
+            f"{self.BASE_URL}/api/public/research-slices/shared",
+            headers={"X-ARTEMIS-Share-Token": share.json()["share_token"]},
+            timeout=5,
+        )
+        self.assertEqual(public_get.status_code, 200, public_get.text)
+        public_body = public_get.json()
+        self.assertEqual(public_body["research_question"], body["research_question"])
+        self.assertEqual(public_body["content_version"], 2)
+        self.assertEqual(public_body["saved_view"]["comparison_feature_ids"], ["recA", "recB"])
+        self.assertNotIn("owner_id", public_body)
+
+    def test_v2_rejects_malformed_evidence_and_invalid_conclusion(self):
+        headers = self._register_login(f"slice-v2-invalid-{uuid4().hex}@example.com")
+
+        malformed_kind = self._payload_v2()
+        malformed_kind["evidence_refs"][0]["kind"] = "similarity"
+        response = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=malformed_kind,
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(response.status_code, 422)
+
+        unsupported = self._payload_v2()
+        unsupported["evidence_refs"][0]["supports_finding_ids"] = ["missing-finding"]
+        response = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=unsupported,
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(response.status_code, 422)
+
+        missing_refs = self._payload_v2()
+        missing_refs["evidence_refs"] = []
+        response = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=missing_refs,
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(response.status_code, 422)
+
+        missing_conclusion = self._payload_v2()
+        missing_conclusion["conclusion"] = "   "
+        response = self.session.post(
+            f"{self.BASE_URL}/api/research-slices",
+            json=missing_conclusion,
+            headers=headers,
+            timeout=5,
+        )
+        self.assertEqual(response.status_code, 422)
+
+
 if __name__ == "__main__":
     unittest.main()
