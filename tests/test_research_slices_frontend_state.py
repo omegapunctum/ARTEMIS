@@ -591,7 +591,7 @@ class ResearchSlicesFrontendStateTests(unittest.TestCase):
               title: 'Comparison',
               researchQuestion: 'Why do these buildings differ?',
               selectionRationale: 'Same period, different patrons.',
-              evidenceInput: 'source:src-1\nrelation:rel-1\nsource:src-1',
+              evidenceInput: 'source:src-1\\nrelation:rel-1\\nsource:src-1',
               selectedFeatureId: 'recA',
               selectedFeatureIds: ['recA', 'recB'],
               annotationInputs: { interpretation: 'The patronage context matters.' },
