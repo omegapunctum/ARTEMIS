@@ -113,8 +113,9 @@ export function buildSliceListMetaSummary(slice) {
   const featureCount = normalizeCount(payload.feature_count);
   if (featureCount !== null) parts.push(`${featureCount} объектов`);
 
-  const findingCount = normalizeCount(payload.finding_count ?? payload.annotation_count);
-  if (findingCount !== null) parts.push(`findings: ${findingCount}`);
+  const hasCanonicalFindingCount = payload.finding_count !== null && payload.finding_count !== undefined;
+  const findingCount = normalizeCount(hasCanonicalFindingCount ? payload.finding_count : payload.annotation_count);
+  if (findingCount !== null) parts.push(`${hasCanonicalFindingCount ? 'findings' : 'ann'}: ${findingCount}`);
   if (payload.evidence_state === 'missing') parts.push('evidence отсутствует');
   if (payload.conclusion_status === 'unresolved') parts.push('вопрос открыт');
   if (payload.content_status === 'incomplete') parts.push('нужно дополнить');
