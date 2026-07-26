@@ -145,10 +145,11 @@ Candidate content заносится в рабочий контур.
 
 На intake фиксируется:
 - source or source candidate;
+- proposed atomic Claim;
 - proposed entity type;
 - proposed date/spatial attribution;
 - contributor/curator if known;
-- epistemic status if already clear;
+- claim kind/origin/review/confidence/evidence/uncertainty where known;
 - required review notes.
 
 ### 4.3 Technical validation
@@ -173,20 +174,26 @@ Technical validation does not equal content approval.
 
 Проверяется:
 - source quality;
+- Claim atomicity and scope;
+- evidence relevance to the specific Claim;
+- reproducible locator;
+- `supports/challenges/contextualizes`;
+- direct/indirect/background evidence strength;
 - date confidence;
 - coordinate confidence;
 - relation support;
 - uncertainty markers;
-- fact/interpretation/hypothesis separation;
+- claim kind/origin/review/confidence separation;
 - AI-output contamination risk.
 
 Результат:
-- accept as fact/source-backed content;
-- accept as uncertain/estimated;
+- accept reviewed factual Claim;
+- accept with confidence/uncertainty;
 - accept as interpretation;
-- keep as hypothesis;
+- keep as hypothesis/missing evidence;
+- mark mixed/contested;
 - reject;
-- request better source.
+- request narrower Claim, better Source or locator.
 
 ### 4.5 Editorial approval
 
@@ -264,6 +271,10 @@ Default trust order:
 
 - AI is not a source.
 - Source URL alone is not enough if the claim is not supported by that source.
+- Every validation-module EvidenceLink requires a locator.
+- Source review does not approve every Claim that cites that Source.
+- Challenging evidence must not be omitted because supporting evidence exists.
+- Indirect cross-source synthesis must be labelled and reviewable.
 - A weak source may be used only if uncertainty is explicit.
 - Conflicting sources must not be flattened into false certainty.
 - Media source/license is separate from factual source.
@@ -312,19 +323,24 @@ Rules:
 
 ## 8. Relation governance
 
-Relations require stricter governance than standalone fields.
+Relations are structured Claims and require stricter governance than standalone fields.
 
 Rules:
-- relation must have type;
-- relation must have source/provenance or explicit status;
+- relation must have precise predicate;
+- relation must have Claim-level EvidenceLinks and locator;
+- relation must expose independent claim kind, origin, review, confidence, evidence state and uncertainty;
 - relation must not imply causality unless supported;
 - AI-suggested relation remains hypothesis until reviewed;
 - weak relation must be marked as weak/uncertain/hypothesis;
-- relation used in story/course must preserve epistemic status.
+- relation used in any downstream Brief/Story/Course must preserve epistemic dimensions;
+- shared classification is modelled through ClassificationAssertions;
+- `same_movement` compatibility record is not substantive Relation;
+- computed Similarity is not evidence.
 
 Examples:
-- `associated-with` is weak unless further specified;
+- `associated-with` is rejected when it substitutes for an unknown predicate;
 - `influenced-by` requires stronger support than spatial/temporal proximity;
+- same Movement requires classification evidence but does not prove influence;
 - `caused-by` should be avoided unless there is explicit evidentiary basis and policy approval.
 
 ---
@@ -362,7 +378,7 @@ UGC may become canonical public content only if:
 
 1. it passes technical validation;
 2. it has sufficient source/provenance;
-3. epistemic status is clear;
+3. claim kind/origin/review/confidence/evidence/uncertainty are explicit where applicable;
 4. moderation/editorial approval is complete;
 5. it enters controlled publish/export path;
 6. public artifact is regenerated and checked.
@@ -488,10 +504,10 @@ Reject or defer content that is:
 
 - `ARTEMIS_CONCEPT.md` defines why ARTEMIS requires verifiable and explainable knowledge.
 - `ARTEMIS_PRODUCT_SCOPE.md` defines the active Architecture Atlas product boundaries and frozen scope.
-- `EPISTEMIC_CONTRACT.md` defines knowledge statuses and uncertainty rules.
-- `ENTITY_MODEL.md` defines entities, relations, sources and product/runtime/context entities.
+- `EPISTEMIC_CONTRACT.md` defines Claim/EvidenceLink and independent epistemic dimensions.
+- `ENTITY_MODEL.md` defines entities, Claims, Relations, Sources and product/runtime/context entities.
 - `DATA_CONTRACT.md` defines current ETL/public artifact shape.
-- `RESEARCH_SLICE_CONTRACT.md` defines how content is used inside research context.
+- `RESEARCH_SLICE_CONTRACT.md` defines how content is used inside Investigation/revision context.
 - `AI_POLICY.md` will define AI-specific behavior boundaries after creation.
 - `CONTROLLED_RELEASE_DECISION.md` defines release/readiness interpretation and baseline limitations.
 
@@ -507,6 +523,9 @@ Content governance is broken if:
 - approximate coordinates are shown as exact;
 - disputed dates are flattened into one unmarked value;
 - relation implies causality without support;
+- shared classification or Similarity is published as substantive Relation;
+- a Source is accepted as blanket proof without Claim/locator review;
+- challenging evidence is silently dropped;
 - media is used publicly without source/license confidence;
 - public dataset changes without controlled publish/export path;
 - rejected records are not traceable;
@@ -530,7 +549,7 @@ Any change to content governance must check impact on:
 - UI labels/detail panels;
 - tests and release checks if executable behavior changes.
 
-A content-related change is incomplete if technical validation, epistemic status and publish governance are not synchronized.
+A content-related change is incomplete if technical validation, Claim/Evidence semantics and publish governance are not synchronized.
 
 ---
 

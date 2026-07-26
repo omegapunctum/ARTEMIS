@@ -1,590 +1,443 @@
-# ARTEMIS — RESEARCH SLICE CONTRACT
+# ARTEMIS — RESEARCH WORK / SLICE REVISION CONTRACT
 
 ## Статус документа
 
-- Тип: foundation product/data/UI/AI contract document
-- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
-- Роль: фиксирует Research Slice как воспроизводимый результат исследовательской работы; доказательное сравнение создаёт первую ценность, Slice сохраняет и передаёт её
-- Назначение: определить отличие Research Slice от Saved View, обязательный смысловой состав, lifecycle и границы интеграции
-- Scope: product semantics, data semantics, UI semantics, lifecycle, MVP baseline, out-of-scope boundaries
-
----
+- Тип: canonical foundation product/data/UI contract.
+- Версия: 2.0.
+- Дата: 2026-07-26.
+- Статус: active concept target with explicit runtime compatibility boundary.
+- Filename сохранён для совместимости ссылок; документ владеет полной research-work model.
+- Runtime/API authority: `RESEARCH_SLICE_SPEC.md`.
 
 ## 1. Главная формула
 
-Research Slice — это не просто сохранённый вид карты.
+ARTEMIS сохраняет не viewport и не mutable note, а версионированный результат исследования.
 
-Research Slice — это **минимальная сохраняемая единица исследовательского контекста ARTEMIS**.
+Canonical model:
 
-Он фиксирует, что пользователь исследовал:
+```text
+Investigation
+└── Slice Revision (immutable)
+    ├── Question
+    ├── Compared entities
+    ├── Claims / Findings
+    ├── Evidence Links
+    ├── Conclusion or Unresolved
+    ├── Uncertainty
+    ├── Dataset / schema identity
+    └── Saved View
+         ├── map
+         ├── time
+         ├── filters
+         └── selection
 
-- какой вопрос был поставлен;
-- какие сущности были выбраны;
-- почему они были выбраны;
-- какие sources/relations использованы как evidence;
-- какие заметки, интерпретации, выводы и uncertainty были зафиксированы;
-- какой Saved View позволяет восстановить пространственно-временной UI-контекст.
+Research Brief = readable projection of one Slice Revision
+```
 
-`Saved View` фиксирует viewport, time state, layers, filters и selection. Он является компонентом Research Slice, но не исследовательским результатом сам по себе.
+Первая пользовательская ценность возникает в evidence-aware comparison. Investigation удерживает работу во времени; Slice Revision делает состояние проверяемым; Research Brief переносит результат в реальную задачу.
 
-Минимальный смысл Research Slice должен отвечать на четыре вопроса:
+## 2. Термины и identity
 
-1. Что исследовалось?
-2. Почему выбраны эти объекты?
-3. Какие доказательства использованы?
-4. К какому выводу пришёл пользователь и что осталось неопределённым?
+### 2.1 Investigation
 
----
+`Investigation` — развивающаяся работа пользователя вокруг одного вопроса или связанной линии исследования.
 
-## 2. Почему Research Slice является главным повторно используемым артефактом
+It owns:
 
-ARTEMIS не должен строиться вокруг отдельного объекта.
-
-Одиночный объект:
-- полезен как точка входа;
-- важен для карты и detail panel;
-- но слишком мал, чтобы быть устойчивой продуктовой единицей.
-
-ARTEMIS не должен строиться вокруг story как первичной единицы.
-
-Story:
-- важна как narrative layer;
-- но строится поверх уже выбранных исследовательских состояний;
-- не должна заменять базовый research workflow.
-
-ARTEMIS не должен строиться вокруг course как первичной единицы.
-
-Course:
-- важен как guided learning layer;
-- но должен использовать slices и stories;
-- не должен превращать ARTEMIS в обычную LMS.
-
-Следовательно:
-
-> Object opens research. Comparison creates understanding. Slice preserves and communicates the result.
-
-Story, Course и AI могут использовать Slice позднее, но не определяют его MVP-семантику.
-
----
-
-## 3. Product meaning
-
-Research Slice нужен, чтобы пользователь мог:
-
-1. собрать исследовательское состояние;
-2. связать вопрос и вывод с evidence;
-3. сохранить его;
-4. вернуться к нему;
-5. передать read-only результат другому человеку;
-6. позднее использовать как source-bound context для downstream layers.
-
-Без Research Slice ARTEMIS остаётся:
-- картой с фильтрами;
-- каталогом объектов;
-- набором карточек;
-- или narrative-first продуктом без исследовательского ядра.
-
-С Research Slice ARTEMIS становится:
-- средой накопления исследовательской работы;
-- системой возвращаемых контекстов;
-- системой воспроизводимых evidence-aware сравнений;
-- потенциальной основой для будущих stories/courses/AI assistance.
-
----
-
-## 4. Что входит в Research Slice
-
-Research Slice состоит из обязательного исследовательского содержания и вложенного Saved View.
-
-### 4.1 Research question
-
-Фиксирует:
-- вопрос или проверяемую тему;
-- краткую цель сравнения.
-
-Цель:
-- объяснить, что именно пользователь пытался понять.
-
-### 4.2 Selection rationale
-
-Фиксирует:
-- выбранные Features/entities;
-- причину выбора;
-- порядок или фокус сравнения.
-
-Цель:
-- сделать выбор объектов воспроизводимым, а не случайным.
-
-### 4.3 Evidence context
-
-Фиксирует:
-- source references;
-- reviewed Relations;
-- явно обозначенную computed similarity;
-- связь evidence с заметкой или выводом.
-
-Цель:
-- показать основание исследования и не смешать evidence с inference.
-
-### 4.4 Human findings
-
-Фиксирует:
-- notes;
-- interpretation;
-- hypothesis;
-- conclusion;
-- uncertainty или unresolved questions.
-
-Цель:
-- сохранить человеческий смысл и результат, а не только машинное состояние UI.
-
-### 4.5 Saved View: spatial context
-
-Фиксирует:
-- viewport;
-- центр карты;
-- zoom;
-- возможную область интереса;
-- выбранные пространственные сущности.
-
-Цель:
-- восстановить исследовательское положение пользователя в пространстве.
-
-### 4.6 Saved View: temporal context
-
-Фиксирует:
-- выбранный год или диапазон дат;
-- режим timeline;
-- временной фильтр;
-- temporal state, влияющий на отображение объектов.
-
-Цель:
-- восстановить исследовательское положение пользователя во времени.
-
-### 4.7 Saved View: layer context
-
-Фиксирует:
-- активные слои;
-- отключённые слои;
-- быстрые фильтры;
-- category/layer state.
-
-Цель:
-- сохранить не всю базу, а конкретную конфигурацию видимости.
-
-### 4.8 Saved View: entity context
-
-Фиксирует:
-- выбранные объекты/features;
-- selected feature;
-- связанные сущности, если они поддерживаются текущим runtime;
-- порядок или фокус исследования.
-
-Цель:
-- определить, какие entities входят в исследовательскую конфигурацию.
-
-### 4.9 Saved View: filter context
-
-Фиксирует:
-- search/filter state;
-- confidence filters;
-- category filters;
-- other workspace constraints.
-
-Цель:
-- восстановить не только карту, но и логику отбора.
-
-### 4.10 Metadata and version
-
-Фиксирует:
-- title;
-- description;
+- stable investigation id;
 - owner;
-- created/updated timestamps;
-- schema/content version;
-- visibility/share state.
-
-Цель:
-- обеспечить traceability, update и воспроизводимость.
-
-### 4.11 Future AI context
-
-Может позднее предоставлять:
-- explainability context;
-- selected entities;
-- temporal/spatial/layer constraints;
-- user notes;
-- allowed epistemic status for AI output.
-
-Цель:
-- дать AI не произвольный prompt, а ограниченный исследовательский контекст.
-
----
-
-## 5. Minimal MVP baseline
-
-Минимальный product-complete Research Slice MVP должен включать:
-
-- unique id;
-- owner/user id;
 - title;
-- research question;
-- optional description/selection rationale;
-- feature refs;
-- evidence refs или явно зафиксированное отсутствие evidence;
-- минимум одну user note/finding;
-- conclusion либо explicit unresolved state;
-- uncertainty notes where relevant;
-- time range;
-- view state;
-- selected feature id if present;
-- enabled layer ids;
-- visibility state;
-- schema/content version;
+- current question/scope;
+- ordered revision ids;
+- latest revision pointer;
+- private/share policy;
 - created/updated timestamps.
 
-Runtime/API baseline для JSON model и endpoints определён в:
+Investigation может меняться. Его history не должна переписываться.
 
-- `docs/RESEARCH_SLICE_SPEC.md`
+### 2.2 Slice Revision
 
-Этот contract определяет смысл и границы slice. `RESEARCH_SLICE_SPEC.md` определяет текущую runtime/API форму.
+`Slice Revision` — неизменяемая версия Investigation в конкретный момент.
 
-Если contract и spec расходятся:
-- текущий runtime проверяется по `RESEARCH_SLICE_SPEC.md` и tests;
-- продуктовый смысл проверяется по этому contract;
-- capability нельзя объявлять validation-ready;
-- расхождение должно быть устранено через отдельный docs/code sync cycle.
+Revision pins:
 
-Текущий runtime baseline ещё не имеет отдельных first-class полей для question, evidence refs, conclusion и content version. До schema/code sync он является persistence envelope для Slice, но не доказательством product-complete Research Slice.
+- revision id and number;
+- parent investigation id;
+- optional parent revision id;
+- research content;
+- epistemic content;
+- dataset/content identifier;
+- schema version;
+- created timestamp;
+- creator/origin context.
 
----
+После создания revision не редактируется. Update Investigation создаёт новую revision.
 
-## 6. Lifecycle
+### 2.3 Saved View
 
-### 6.1 Create
+`Saved View` — вложенный serializable UI-context:
 
-Пользователь формирует slice из текущего map-time workspace.
+- viewport;
+- time range/mode;
+- enabled layers;
+- filters;
+- selected/compared entities;
+- optional display mode.
 
-Create должен сохранять:
+Saved View:
+
+- помогает восстановить контекст;
+- может быть пустым/ограниченным для вопроса, где map/time несущественны;
+- не содержит conclusion;
+- не является Research Slice Revision сам по себе.
+
+### 2.4 Research Brief
+
+`Research Brief` — детерминированное человекочитаемое представление одной revision.
+
+Brief:
+
+- не имеет независимого epistemic content;
+- показывает revision id/version;
+- сохраняет Claim/Evidence/uncertainty semantics;
+- пригоден для copy/export в Markdown/plain text;
+- является citation-ready в пределах доступных source metadata/locators.
+
+Если Brief и revision расходятся, revision является source of truth, а Brief должен быть перегенерирован.
+
+## 3. Почему mutable ResearchSlice недостаточен
+
+Mutable record полезен для editing, но не обеспечивает:
+
+- воспроизводимость старого вывода;
+- стабильную shared citation;
+- понимание, какие data были видимы на момент вывода;
+- безопасное сравнение изменений;
+- rollback without data loss.
+
+`content_version += 1` в одной mutable row не является immutable revision history.
+
+Поэтому current runtime `ResearchSlice v2` трактуется как compatibility persistence envelope/latest working state, а не завершённая target model.
+
+## 4. Обязательный состав Slice Revision
+
+### 4.1 Question and scope
+
 - research question;
-- selected entities;
-- evidence context;
-- notes/findings;
-- conclusion или unresolved state;
-- current time state;
-- current view state;
-- active layers;
-- relevant filters;
-- minimal metadata.
+- optional task/context;
+- selection rationale;
+- explicit scope limits.
 
-### 6.2 Save
+### 4.2 Compared entities
 
-Slice сохраняется как owner-only resource.
+- stable entity/Feature refs;
+- display labels as snapshot only where needed;
+- comparison order/focus;
+- no silent identity remapping.
 
-Для MVP baseline:
-- slice private by default;
-- canonical public dataset не меняется;
-- slice не публикует UGC в public knowledge base.
+### 4.3 Claims and findings
 
-### 6.3 Reopen
+Revision содержит:
 
-Пользователь может восстановить slice.
+- selected canonical Claims or stable refs;
+- user-authored Claims/findings;
+- claim kind and origin;
+- review/confidence/evidence summary;
+- optional entity/relation references.
 
-Reopen должен возвращать:
-- research question и findings;
-- evidence refs;
-- карту;
-- timeline;
-- layers;
-- selected entities;
-- detail context if available.
+User finding не становится canonical public Claim без отдельного governance flow.
 
-### 6.4 Update
+### 4.4 EvidenceLinks
 
-Пользователь может изменить slice.
+Major Claims связываются с:
 
-Update допустим для:
-- title;
-- research question;
-- description;
-- evidence refs;
+- Source id;
+- locator;
+- `supports`, `challenges` or `contextualizes`;
+- evidence strength;
+- review state.
+
+Source list без claim linkage не является полноценной evidence chain.
+
+### 4.5 Conclusion
+
+Revision содержит:
+
+- conclusion Claim; или
+- explicit `unresolved`.
+
+`unresolved` является полноценным исследовательским результатом, если объяснены missing/conflicting evidence.
+
+### 4.6 Uncertainty
+
+Material uncertainty фиксируется по типу и влиянию на conclusion.
+
+### 4.7 Versions
+
+Revision обязана идентифицировать:
+
+- revision schema version;
+- dataset/content export version or immutable snapshot reference;
+- relevant relation/source artifact versions where available.
+
+Хеш/номер без определённой semantics не считается pinned dataset identity.
+
+### 4.8 Saved View
+
+Saved View вложен и отделён от epistemic content.
+
+## 5. Lifecycle
+
+### 5.1 Create Investigation
+
+Создаётся stable investigation identity и первая revision.
+
+Create не должен заставлять пользователя выдумывать conclusion или evidence:
+
+- evidence может быть `missing`;
+- conclusion может быть `unresolved`;
+- uncertainty должна быть сохранена честно.
+
+### 5.2 Create revision
+
+Каждое содержательное изменение создаёт новую immutable revision:
+
+- question/scope;
+- entity selection;
+- Claims/findings;
+- EvidenceLinks;
 - conclusion/uncertainty;
-- selected entities;
-- time range;
-- view state;
-- annotations.
+- Saved View when material.
 
-### 6.5 Delete
+Autosave draft mechanics могут быть mutable, но draft не называется revision до explicit save/commit.
 
-Пользователь может удалить private slice.
+### 5.3 Reopen
 
-Delete не должен:
-- удалять public data;
-- менять canonical dataset;
-- удалять source entities.
+Reopen Investigation:
 
-### 6.6 Share
+- показывает latest revision by default;
+- позволяет открыть конкретную prior revision;
+- восстанавливает research content before or alongside Saved View;
+- не заменяет unavailable entity/source новой записью без notice.
 
-Share реализуется как явная unlisted read-only capability-ссылка поверх private-by-default Slice.
+### 5.4 Compare revisions
 
-Share не должен нарушать:
-- owner/privacy model;
-- source/provenance discipline;
-- distinction between private research state and public canonical knowledge.
+Future but compatible behavior:
 
-Текущий baseline:
-- raw capability token передаётся владельцу только при создании/rotation;
-- backend хранит только hash token;
-- повторный share инвалидирует предыдущую ссылку;
-- revoke и delete немедленно закрывают публичное чтение;
-- shared response не раскрывает owner identity и не допускает mutation;
-- sharing не создаёт searchable/public-curated запись.
+- added/removed Claims;
+- changed EvidenceLinks;
+- conclusion changes;
+- uncertainty changes;
+- Saved View changes.
 
-### 6.7 Object comparison
+Revision compare не входит в current MVP exit, но target model не должна его блокировать.
 
-Сравнение 2–3 Features является обязательным upstream behavior, которое создаёт содержание Slice.
+### 5.5 Delete
 
-Compare должен сопоставлять:
-- temporal/spatial/style/source properties;
-- reviewed Relations;
-- clearly labelled Similarity;
-- provenance.
+Owner may delete Investigation under privacy policy.
 
-Compare не должен автоматически превращать correlation into causation.
+До реализации retention/recovery policy продукт не обещает audit-grade permanent archive. Delete должен отзывать public capabilities.
 
-Slice-to-Slice compare является future behavior и не заменяет object comparison в MVP.
+### 5.6 Share
 
-### 6.8 Future downstream use
+Target baseline:
 
-Slice может стать строительным блоком:
-- story step;
-- course module;
-- guided learning state;
-- collection item.
+- share URL pins one immutable revision;
+- response is read-only;
+- owner identity is not exposed by default;
+- capability is unlisted and revocable;
+- response is no-store/noindex;
+- recipient can copy into own Investigation without mutating original.
 
-Downstream layer должен ссылаться на slice или slice-like state, а не дублировать его логику. Этот пункт не открывает Stories/Courses/AI в active MVP.
+Optional future `live` share may follow latest revision only with visible mutable/live label.
 
----
+Current runtime share points to mutable `ResearchSlice`. До revision migration он не может называться revision-pinned or reproducible share.
 
-## 7. Relationship to other product entities
+### 5.7 Export Brief
 
-### 7.1 Object / Feature
+Revision can render:
 
-Object or Feature:
-- is an entry point;
-- provides factual/detail context;
-- may be selected into a slice.
+- Markdown;
+- plain text;
+- read-only web representation.
 
-Object comparison creates the first user value.
+Minimal export contains:
 
-### 7.2 Research Slice
+- title/question;
+- entity selection/rationale;
+- Claims/findings;
+- evidence citations and locators;
+- conclusion/unresolved;
+- uncertainty;
+- revision and dataset identifiers.
 
-Research Slice:
-- is the primary reusable research artifact;
-- preserves question, evidence, findings and Saved View;
-- enables return, update and read-only share.
+PDF/DOCX are not required for current MVP.
 
-### 7.3–7.6 Future downstream entities
+## 6. Reproducibility semantics
 
-Collection, Story, Course и AI Insight могут использовать Slice после соответствующего validation/scope decision. Они не входят в обязательный MVP loop и не должны определять текущий Slice schema.
+ARTEMIS may call a result reproducible only if:
 
----
+1. a specific immutable revision can be reopened;
+2. dataset/content identity is pinned and meaningful;
+3. Claims and EvidenceLinks preserve stable refs or explicit snapshots;
+4. source locator is retained;
+5. Brief identifies the revision;
+6. mutable/live behavior is labelled.
 
-## 8. Epistemic requirements
+If an external Source changes or disappears:
 
-Research Slice may contain different epistemic layers:
+- ARTEMIS preserves metadata/locator available at revision time;
+- it may show source-unavailable state;
+- it must not silently substitute a different Source.
 
-- fact;
-- relation;
-- interpretation;
-- hypothesis;
-- AI-generated summary;
-- AI-generated comparison;
-- uncertainty notes.
+ARTEMIS does not promise legal archival copy of third-party source content unless separately authorized.
 
-Rules:
+## 7. Epistemic rules
 
-1. Fact must not be mixed with interpretation.
-2. Hypothesis must be explicitly marked.
-3. AI output must be explicitly marked.
-4. User annotation must be distinguishable from source-backed data.
-5. Counterfactual or speculative content must not be shown as historical reality.
-6. Strong claims based on slice context must expose their basis.
+`EPISTEMIC_CONTRACT.md` owns Claim/Evidence semantics.
 
-Current annotation baseline in `RESEARCH_SLICE_SPEC.md` supports:
-- `fact`;
-- `interpretation`;
-- `hypothesis`.
+Inside revision:
 
-Future epistemic expansion must align with the active `EPISTEMIC_CONTRACT.md`.
+- factual, interpretation, hypothesis and counterfactual kinds remain distinct;
+- origin remains visible where material;
+- major conclusion is traceable;
+- shared classification and Similarity are not substantive Relations;
+- challenging evidence is not dropped;
+- unsupported Claim remains hypothesis/missing-evidence or is removed;
+- AI-origin content, if introduced, remains marked.
 
----
+## 8. Ownership and privacy
 
-## 9. AI requirements
+Default:
 
-AI must work from slice context, not from detached conversation alone.
+- Investigation private;
+- owner-only mutation;
+- public share is unlisted read-only capability;
+- canonical public dataset is unchanged;
+- user-authored Claims are not searchable public knowledge;
+- recipient cannot infer owner identity from public payload;
+- token rotation/revoke invalidates prior capability.
 
-Allowed AI behaviors:
+Collaborative editing, searchable public directory and per-recipient ACL are outside current scope.
 
-- explain selected slice;
-- summarize selected entities;
-- compare two slices;
-- identify visible patterns;
-- suggest hypotheses;
-- point out missing or weak data;
-- help transform slice into story/course draft.
+## 9. Relationship to product entities
 
-Forbidden AI behaviors:
+- `Entity/Feature` is researched.
+- `Claim` states something about Entity/context.
+- `EvidenceLink` connects Claim to Source.
+- `Relation` is a structured Claim.
+- `Investigation` organizes evolving research.
+- `Slice Revision` freezes one result state.
+- `Saved View` preserves UI context.
+- `Research Brief` transfers revision content.
+- future Story/Course/AI may consume revision, but cannot define its core semantics.
 
-- present AI output as source-backed fact;
-- create canonical public content without review;
-- infer causality without explicit epistemic marking;
-- hide uncertainty;
-- ignore source/provenance constraints;
-- generate counterfactual scenarios as if they were history.
+## 10. Current runtime compatibility
 
-AI outputs related to slice must include or be able to expose:
+`RESEARCH_SLICE_SPEC.md` v2 currently provides:
 
-- input slice id/context;
-- entities considered;
-- time/spatial/layer constraints;
-- epistemic status;
-- confidence/uncertainty note where relevant;
-- source/provenance basis where available.
+- one mutable `ResearchSlice` id;
+- question and rationale;
+- Feature refs;
+- Source/Relation evidence refs;
+- typed findings;
+- conclusion/unresolved;
+- uncertainty;
+- nested Saved View;
+- content/schema version;
+- owner CRUD and mutable unlisted share.
 
----
+It does not provide:
 
-## 10. Data and runtime boundaries
+- Investigation/revision separation;
+- immutable revision history;
+- claim-level locator/relation/strength;
+- pinned dataset export identity;
+- revision-pinned share;
+- deterministic Brief export.
 
-Research Slice is not the canonical public data source.
+Documentation and UI must not describe absent target capabilities as implemented.
 
-Rules:
+## 11. Migration constraints
 
-- `data/features.geojson` remains the canonical public map dataset.
-- Research Slice references public features/entities but does not redefine them.
-- Slice may store private user context.
-- Slice may store annotations, but annotations do not become public facts automatically.
-- Slice deletion must not affect source features.
-- Slice sharing must not alter public dataset.
-- Slice API enforces owner-only CRUD; отдельный share-контракт разрешает только unlisted read-only capability access.
+Future migration must:
 
-Runtime/API details remain in:
+1. preserve current ids, owner, timestamps and share state where safe;
+2. create Investigation identity without inventing user intent;
+3. migrate current row as an initial revision snapshot;
+4. preserve `missing`/`unresolved`;
+5. not invent locators, EvidenceLinks, confidence or dataset version;
+6. identify current mutable shares and explicitly choose pin-latest or pin-migrated-revision behavior;
+7. remain idempotent and covered by rollback/preflight tests;
+8. retain compatibility read path for one controlled cycle.
 
-- `docs/RESEARCH_SLICE_SPEC.md`
+## 12. Out of scope
 
-Public data/export details remain in:
-
-- `docs/DATA_CONTRACT.md`
-
----
-
-## 11. Visibility and ownership
-
-MVP baseline:
-
-- slice is private by default;
-- owner-only access is required;
-- unlisted read-only access разрешён только по явно созданному capability token;
-- share capability не даёт owner/update/delete permissions;
-- collaborative editing is out of baseline scope.
-
-Visibility states may evolve later, but must be explicit:
-
-- private;
-- unlisted/share-link;
-- public curated;
-- collaborative.
-
-Текущий реализованный baseline: `private` owner resource + `unlisted/share-link` read-only capability. `public curated` и `collaborative` не реализованы.
-
----
-
-## 12. Out of scope for current baseline
-
-The following are not part of the current baseline unless separately implemented and documented:
-
-- fully public slice publishing;
-- collaborative slice editing;
-- social feed of slices;
-- automatic canonical publishing from slice annotations;
-- AI-generated public knowledge without moderation;
-- causal engine over slices;
-- counterfactual simulation layer;
-- unrestricted import/export of arbitrary user datasets;
-- standalone AI conversations detached from slice context as core product value.
-
----
+- real-time collaboration;
+- public searchable Investigation directory;
+- automatic canonical promotion;
+- mandatory AI summaries;
+- Story/Course generation;
+- citation-style completeness beyond available metadata;
+- source-content archiving without rights;
+- revision merge/conflict resolution;
+- institutional retention policy.
 
 ## 13. Acceptance criteria
 
-Research Slice is correctly implemented conceptually if:
+Target research-work model is product-complete when:
 
-1. It records a research question or explicit topic.
-2. It contains selected entities and selection rationale.
-3. It exposes source/relation evidence or explicitly records that evidence is missing.
-4. It preserves at least one human note/finding and a conclusion or unresolved state.
-5. It restores a meaningful Saved View without being reduced to that view.
-6. It preserves enough versioned context for later return.
-7. It is distinct from object, Story and Course.
-8. It does not alter canonical public data by itself.
-9. It preserves epistemic separation of facts, interpretations, hypotheses and AI output.
-10. It is owner-controlled unless a separate sharing model is explicitly defined.
-
----
+1. Investigation has stable identity and multiple immutable revisions.
+2. Update creates a revision rather than rewriting history.
+3. Revision preserves question, Claims, EvidenceLinks, conclusion/unresolved and uncertainty.
+4. Saved View is nested and optional to epistemic completeness.
+5. Dataset/schema identity is meaningful and pinned.
+6. Shared URL points to an immutable revision or is visibly `live`.
+7. Brief is generated from revision and includes citations/locators.
+8. Reopen and share do not disclose owner or permit mutation.
+9. Legacy migration does not invent evidence.
+10. Public E2E and product validation pass the canonical gates.
 
 ## 14. Failure modes
 
-The slice model is considered degraded if:
+The model is degraded if:
 
-- slice becomes just a bookmark;
-- slice becomes just a saved viewport;
-- question, evidence and conclusion cannot be recovered;
-- a conclusion cannot be traced to supporting evidence;
-- slice duplicates story logic;
-- slice stores unmarked AI output as fact;
-- slice changes public data without governance;
-- slice sharing bypasses ownership/privacy rules;
-- slice cannot be used by stories/courses/AI as context;
-- object card becomes the main value unit instead of slice.
+- Research Slice is only a bookmark;
+- one mutable row is called immutable history;
+- content version is called reproducibility without pinned data;
+- Source list is shown without claim linkage;
+- conclusion cannot be traced;
+- shared link changes silently after author edits;
+- Brief becomes an independent stale copy;
+- Saved View is mandatory even when irrelevant to question;
+- user Claims become public facts automatically;
+- migration fabricates evidence or confidence.
 
----
+## 15. Change control
 
-## 15. Change-control rule
+Any research-work change must check:
 
-Any change to Research Slice semantics must check impact on:
+- `PRODUCT_THESIS.md`;
+- `ARTEMIS_PRODUCT_SCOPE.md`;
+- `PRODUCT_VALIDATION_PLAN.md`;
+- `RESEARCH_SLICE_SPEC.md`;
+- `EPISTEMIC_CONTRACT.md`;
+- `ENTITY_MODEL.md`;
+- `DATA_CONTRACT.md`;
+- `CONTENT_GOVERNANCE.md`;
+- privacy/share headers and token behavior;
+- migrations and executable tests.
 
-- `docs/ARTEMIS_PRODUCT_SCOPE.md`;
-- `docs/RESEARCH_SLICE_SPEC.md`;
-- `docs/DATA_CONTRACT.md`;
-- `docs/EPISTEMIC_CONTRACT.md`;
-- stories runtime;
-- courses runtime;
-- AI/ECC layer;
-- frontend map-time workspace;
-- auth/ownership model;
-- tests and release checks if executable behavior changes.
-
-A slice-related change is incomplete if product semantics, runtime/API shape and downstream story/course/AI assumptions are not synchronized.
-
----
+Product semantics, runtime shape and UI must not drift silently.
 
 ## 16. Итог
 
-Research Slice is the reusable research artifact that prevents ARTEMIS from collapsing into a map with bookmarks.
+The stable research chain is:
 
-It connects:
+`Investigation → immutable Slice Revision → Research Brief`
 
-- research question;
-- selected entities;
-- evidence;
-- human notes;
-- conclusion and uncertainty;
-- Saved View: map, time, filters and layers.
+Each revision preserves:
 
-The correct development direction is:
+`Question → Claims → Evidence → Findings → Conclusion / Unresolved`
 
-1. separate Saved View from product-complete Research Slice;
-2. make question, evidence, finding and conclusion explicit;
-3. prove public save/reopen/share on a real research task;
-4. validate cognitive and behavioral reuse;
-5. consider Stories, Courses or AI only after an explicit scope decision.
+Saved View enriches this result with spatial-temporal context but does not replace it.

@@ -3,6 +3,8 @@
 ## Статус документа
 Рабочий производный документ от `ARTEMIS_CONCEPT_v1.0`.
 
+> Superseded for active planning by Concept Lock v2 (2026-07-26). AI is a future optional branch, not a second project mission. Current authority: `ARTEMIS_CONCEPT.md`, `AI_POLICY.md`, `EPISTEMIC_CONTRACT.md` and `PRODUCT_THESIS.md`. This file remains historical working context and cannot open AI implementation scope.
+
 Цель: зафиксировать роль ИИ в ARTEMIS v1.0, определить допустимые и недопустимые AI-функции, а также описать стратегию развития ARTEMIS как AI-native системы без утраты научной и продуктовой устойчивости.
 
 ---

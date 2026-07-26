@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-07-24.
+- Дата фиксации: 2026-07-26.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных или пользовательского сценария.
 
@@ -11,7 +11,7 @@
 
 ## 1. Принятое продуктовое направление
 
-Активный delivery focus ARTEMIS — **инструмент доказательного сравнения 2–3 архитектурных объектов для продвинутого студента истории архитектуры**.
+Активный delivery focus ARTEMIS — **инструмент evidence-first сравнения 2–3 архитектурных объектов с переносимым Research Brief для старшекурсника/магистранта истории архитектуры**.
 
 `ARTEMIS_CONCEPT.md` определяет North Star, а не текущую версию продукта. Долгосрочная explainable spatial-temporal research workspace сохраняется, но не является обещанием текущего публичного продукта. Расширение на другие предметные области допускается только после решения `EXPAND` в `VALIDATION_DECISION.md`.
 
@@ -40,7 +40,18 @@ GitHub Pages не исполняет FastAPI. Без отдельно настр
 
 Наличие backend-кода не означает, что функция доступна на публичном GitHub Pages URL.
 
-Research Slice schema/code sync выполнен как v2: migration 203, API, client и tests используют explicit question/rationale, fail-closed evidence state и Source/Relation refs, typed findings, conclusion/unresolved, uncertainty, schema/content version и вложенный Saved View. Migration preflight и полный release gate прошли в GitHub Actions. Это подтверждает backend capability, но не публичную доступность и не продуктовую ценность.
+Research Slice schema/code sync выполнен как v2: migration 203, API, client и tests используют explicit question/rationale, fail-closed evidence state и Source/Relation refs, typed findings, conclusion/unresolved, uncertainty, schema/content version и вложенный Saved View.
+
+После Concept Lock v2 current model честно классифицируется как mutable compatibility envelope. Она не реализует:
+
+- first-class Investigation;
+- immutable Slice Revisions;
+- Claim/EvidenceLinks with locators and evidence relation/strength;
+- pinned dataset identity;
+- revision-pinned share;
+- deterministic citation-ready Research Brief.
+
+Migration preflight и release gate подтверждают current backend capability, но не target research model, public availability or product value.
 
 ## 4. Текущее состояние данных
 
@@ -50,7 +61,7 @@ Research Slice schema/code sync выполнен как v2: migration 203, API, 
 - 6 comparison cohorts минимум по 3 Features;
 - 35 reviewed Sources;
 - 28 reviewed Media records linked as primary к 28 Features (`90.32%`);
-- 12 reviewed canonical Relations и 21 reviewed evidence links (`100%` evidence coverage);
+- 12 reviewed current Relation records и 21 reviewed legacy relation-source links;
 - только архитектурные объекты.
 
 Известные ограничения:
@@ -61,10 +72,13 @@ Research Slice schema/code sync выполнен как v2: migration 203, API, 
 - initial Media batch #283 содержал 16 reviewed direct assets; V2 довёл текущий корпус до `28/31` primary Media, а для трёх rights-blocked объектов public `image_url=null` (Бурдж-Халифа, Вилла Савой и Центр Помпиду); полный перечень исходной миграции и blockers находится в `docs/work/2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`;
 - 7 enabled empty source Layers исключены из public `layers.json` и сохранены как actionable semantic warnings;
 - Media semantics реализованы в ETL; текущая reviewed coverage составляет `28/31`, а для трёх rights-blocked объектов public `image_url=null`;
-- Relations/Similarity pilot реализован: detail panel показывает 12 reviewed evidence-backed записей из `data/relations.json` в блоке «Документированные связи», а эвристику одинакового слоя/периода — отдельно как «Похожие объекты» с явными критериями;
+- Relations/Similarity pilot реализован технически: detail panel показывает 12 reviewed records, а computed Similarity — отдельно;
+- 10 из 12 current Relation records имеют тип `same_movement`; Concept Lock v2 классифицирует их как documented shared-classification compatibility records, а не substantive historical Relations;
+- только два current records (`influenced`, `inspired_by`) являются кандидатами на substantive Relation value, но ещё не имеют target claim-level locator/evidence semantics;
 - semantic ETL/release gate проверяет blocking errors отдельно от budgeted warnings, cross-artifact evidence/review semantics, enabled populated Layers и отсутствие unreviewed legacy image URLs;
 - текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
-- comparison-pilot profile имеет статус `comparison_ready`: 31 Feature, 6 cohorts, 12 Relations, 100% Source/Relation evidence coverage и 90.32% primary Media.
+- comparison-pilot profile имеет технический статус `comparison_ready`: 31 Feature, 6 cohorts, 12 legacy-counted Relations, 100% current link coverage и 90.32% primary Media;
+- этот profile не означает product-validation readiness; три deep research modules имеют статус `NOT READY`.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
 
@@ -76,6 +90,9 @@ Research Slice schema/code sync выполнен как v2: migration 203, API, 
 - полноценные guided Stories и Courses;
 - AI explanation, comparison или hypothesis generation;
 - зрелый relation graph за пределами 12-record validation pilot;
+- first-class Claim/EvidenceLink corpus;
+- три READY research modules;
+- immutable Investigation/revision model and Research Brief export;
 - causal, predictive или counterfactual engine.
 
 ## 6. Главные риски текущего состояния
@@ -83,25 +100,26 @@ Research Slice schema/code sync выполнен как v2: migration 203, API, 
 1. Интерфейс обещает больше, чем доступно в public runtime.
 2. Документация и backend breadth создают впечатление зрелости, не подтверждённое содержанием.
 3. Identity/source/media contracts допускают формально успешный, но семантически слабый export.
-4. Малый объём Relations может создать впечатление более полной графовой модели, чем фактически существует.
+4. Legacy `same_movement` count может создать впечатление relation graph, хотя 10/12 записей являются shared classification.
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
-6. Backend-complete Slice v2 может быть ошибочно принят за публично доступный и пользовательски подтверждённый продукт до deployment E2E.
+6. Backend-complete mutable Slice v2 может быть ошибочно принят за target immutable research model.
 7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / product-data validation**.
+ARTEMIS находится в состоянии **controlled engineering prototype / concept-locked pre-validation**.
 
 Следующая активная фаза — не scaling и не feature expansion, а:
 
-1. синхронизация продукта и документации;
-2. исправление data foundation;
-3. подключение публичного backend для Slice loop;
-4. public E2E для Question → Compare → Evidence → Conclusion → Save → Reopen/Share;
-5. UX refinement по результатам E2E;
-6. validation против catalogue/list baseline;
-7. usability, cognitive и behavioral evidence;
-8. отдельное решение в `VALIDATION_DECISION.md`.
+1. завершить Concept Lock v2 docs/test gate;
+2. подготовить три deep research modules and claim-level evidence;
+3. выполнить отдельную data/runtime migration для Claim/Evidence and immutable revisions;
+4. реализовать Research Brief and honest share semantics;
+5. подключить public backend и выполнить target E2E;
+6. провести six-person controlled/field validation;
+7. записать отдельное решение в `VALIDATION_DECISION.md`.
+
+Infrastructure work допускается только если оно не закрепляет прежнюю mutable Slice semantics как окончательный public contract.
 
 ## 8. Правило честного описания
 
@@ -110,6 +128,7 @@ README, UI, issues, release notes и публичные материалы об�
 - `PUBLIC NOW` — работает на опубликованном URL;
 - `BACKEND-AVAILABLE` — реализовано, но требует отдельного runtime/configuration;
 - `PILOT` — существует, но недостаточно подтверждено данными или пользователями;
+- `CONCEPT TARGET` — утверждено концептуально, но не реализовано;
 - `FUTURE` — концепция или запланированный слой.
 
 Формулировка более высокого уровня зрелости запрещена без исполнимого evidence.

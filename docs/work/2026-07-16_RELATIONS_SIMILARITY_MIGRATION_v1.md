@@ -7,6 +7,8 @@
 - Snapshot date: 2026-07-16.
 - Scope: reviewed Feature↔Feature Relations, Relation evidence, public export and explicit separation from computed Similarity for the 19-Feature Architecture Atlas pilot.
 
+> Concept Lock v2 supersession (2026-07-26): this remains the historical executable v1 migration contract. `same_movement` is now classified as shared-classification compatibility data, excluded from substantive Relation value and must not be migrated into influence/derivation without new evidence. Target semantics belong to `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md` and `DATA_DICTIONARY.md`.
+
 Документ фиксирует contract, Airtable execution evidence и реализацию пилота.
 
 ## 1. Verified pre-write baseline

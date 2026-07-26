@@ -2,223 +2,261 @@
 
 ## Статус документа
 
-- Тип: foundation epistemic contract document
-- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
-- Роль: фиксирует операционную модель знания ARTEMIS
-- Назначение: определить, как ARTEMIS различает факты, источники, связи, интерпретации, гипотезы, AI-output, неопределённость и контрфактические сценарии
-- Scope: data, UI, moderation, research slices, stories, courses, AI assistance, content governance
-
----
+- Тип: canonical foundation epistemic contract.
+- Версия: 2.0.
+- Дата: 2026-07-26.
+- Статус: active.
+- Роль: определяет Claim/Evidence model и независимые epistemic dimensions.
+- Scope: canonical knowledge, user research, UI, moderation, future AI assistance and migration compatibility.
 
 ## 1. Главный принцип
 
 ARTEMIS не должен притворяться системой абсолютного знания.
 
-ARTEMIS должен явно различать:
-
-- что известно;
-- откуда это известно;
-- насколько это надёжно;
-- что является фактом;
-- что является связью;
-- что является интерпретацией;
-- что является гипотезой;
-- что сгенерировано AI;
-- где есть неопределённость;
-- что является альтернативным или контрфактическим сценарием.
+Проверяемая единица — не объект, карточка или source URL, а конкретный `Claim` и его evidence chain.
 
 Главное правило:
 
-> Fact, interpretation, hypothesis, AI output and counterfactual scenario must never be presented as the same epistemic type.
+> Claim kind, origin, review state, confidence, evidence state and uncertainty are independent dimensions and must never be collapsed into one ambiguous status.
 
----
+Следствия:
 
-## 2. Зачем нужен epistemic contract
+- Source не подтверждает сущность «в целом»;
+- AI является origin, а не типом истины;
+- `reviewed` не означает `high confidence`;
+- `source-backed` не означает, что source действительно supports claim;
+- uncertainty не превращает автоматически factual Claim в hypothesis;
+- Relation не имеет особой эпистемологии: это структурированный Claim.
 
-Без epistemic contract ARTEMIS рискует стать:
+## 2. Core objects
 
-- красивой картой с непроверяемыми утверждениями;
-- AI-слоем, который смешивает факты и предположения;
-- образовательным продуктом с неявной достоверностью;
-- базой данных, где источник и интерпретация неразличимы;
-- псевдоисследовательской системой, выдающей уверенные выводы без оснований.
+### 2.1 Claim
 
-Epistemic contract нужен, чтобы:
+`Claim` — атомарное утверждение, которое можно понять, проверить, поддержать, оспорить или оставить unresolved.
 
-- сохранить научную и логическую дисциплину;
-- сделать AI-output объяснимым и ограниченным;
-- обеспечить trust model для content governance;
-- дать UI понятные статусы знания;
-- защитить stories/courses от смешения факта и narrative interpretation;
-- подготовить фундамент для будущих reasoning layers.
+Минимальный conceptual shape:
 
----
+```text
+Claim
+├── id
+├── statement
+├── subject/reference context
+├── claim_kind
+├── origin
+├── review_state
+├── confidence
+├── evidence_state
+├── uncertainty[]
+└── evidence_links[]
+```
 
-## 3. Epistemic layers
+Claim должен быть достаточно узким, чтобы один EvidenceLink имел ясный смысл.
 
-ARTEMIS использует несколько уровней знания.
+Плохо:
 
-### 3.1 Fact
+> Объект важен, красив, повлиял на архитектуру и относится к движению X.
 
-Fact — утверждение, которое ARTEMIS принимает как проверенное в пределах текущего источникового и data-governance baseline.
+Хорошо:
 
-Примеры:
-- объект существует;
-- объект имеет название;
-- объект связан с координатами;
-- событие относится к определённой дате или диапазону;
-- источник подтверждает указанный атрибут.
+> Источник датирует завершение объекта 1931 годом.
 
-Правила:
-- fact должен иметь provenance или быть частью curated baseline;
-- fact может иметь confidence/uncertainty;
-- fact не обязан быть абсолютно бесспорным, но его статус должен быть обоснован;
-- contested fact должен быть маркирован как contested или uncertain, если конфликт известен.
+> Автор интерпретирует композицию как переосмысление конкретного прецедента.
 
-### 3.2 Source
+### 2.2 Source
 
-Source — происхождение данных или утверждения.
+`Source` — библиографическая/provenance единица. Source может содержать множество утверждений и не принимается целиком как доказательство любого Claim.
 
-Source может быть:
-- primary source;
-- academic/curated secondary source;
-- official source;
-- reference source;
-- expert estimate;
-- user-provided source;
-- AI-generated reference candidate, not accepted as source until reviewed.
+Минимальные свойства:
 
-Правила:
-- AI не является source;
-- source должен быть отделён от текста интерпретации;
-- отсутствие source должно быть видимо для curator/reviewer;
-- source quality влияет на confidence.
+- stable id;
+- title;
+- author/organization;
+- source type;
+- URL or bibliographic locator;
+- review state;
+- optional publication metadata.
 
-### 3.3 Relation
+AI output не является Source. AI может предложить source candidate, который требует отдельной проверки.
 
-Relation — связь между сущностями.
+### 2.3 EvidenceLink
 
-Relation может быть:
-- spatial;
-- temporal;
-- part-of;
-- located-in;
-- influenced-by;
-- caused-by candidate;
-- associated-with;
-- sequence;
-- membership;
-- authorship;
-- provenance relation.
+`EvidenceLink` связывает один Claim с одним Source.
 
-Правила:
-- relation должна иметь type;
-- relation должна иметь epistemic status;
-- relation не должна автоматически означать causality;
-- weak relation должна быть маркирована как weak/uncertain/hypothesis;
-- AI-suggested relation не становится canonical relation без review.
+Минимальный conceptual shape:
 
-### 3.4 Interpretation
+```text
+EvidenceLink
+├── claim_id
+├── source_id
+├── locator
+├── relation_to_claim
+├── evidence_strength
+├── reviewer
+└── review_state
+```
 
-Interpretation — объяснительная рамка или прочтение фактов и связей.
+`relation_to_claim`:
 
-Примеры:
-- почему группа объектов важна;
-- как можно понимать пространственное распределение;
-- как один historical pattern связан с другим;
-- что означает выбранная конфигурация объектов.
-
-Правила:
-- interpretation не является fact;
-- interpretation должна быть маркирована;
-- interpretation должна показывать, на каких facts/relations она основана;
-- competing interpretations допустимы и не должны подавляться ложной уверенностью.
-
-### 3.5 Hypothesis
-
-Hypothesis — предположение, которое может объяснять данные, но не подтверждено как факт.
-
-Примеры:
-- возможная связь между двумя процессами;
-- вероятная причина spatial pattern;
-- возможная реконструкция отсутствующих данных;
-- AI-suggested explanation.
-
-Правила:
-- hypothesis всегда маркируется явно;
-- hypothesis не может быть показана как fact;
-- hypothesis должна иметь основание или объяснение, почему она предложена;
-- hypothesis может быть rejected, promoted или archived after review.
-
-### 3.6 AI Output
-
-AI Output — любой вывод, summary, comparison, explanation, hypothesis или draft, созданный AI.
-
-Правила:
-- AI output не является source;
-- AI output не является fact by default;
-- AI output должен иметь visible AI marking;
-- AI output должен быть привязан к input context where possible;
-- AI output must expose epistemic type: summary, explanation, comparison, hypothesis, draft, warning;
-- AI output может стать human-reviewed interpretation или draft content, но не automatically canonical fact.
-
-### 3.7 Uncertainty
-
-Uncertainty — явная неполнота, спорность или ограниченность знания.
-
-Типы uncertainty:
-- date uncertainty;
-- coordinate uncertainty;
-- source conflict;
-- attribution uncertainty;
-- identity ambiguity;
-- reconstruction uncertainty;
-- AI confidence limitation;
-- incomplete data.
-
-Правила:
-- uncertainty must be visible when relevant;
-- uncertainty is not a failure of ARTEMIS, but part of the knowledge model;
-- hiding uncertainty is epistemic degradation;
-- uncertain records may still be useful if correctly marked.
-
-### 3.8 Counterfactual
-
-Counterfactual — альтернативный сценарий, который не описывает фактически произошедшую историю.
-
-Правила:
-- counterfactual must be separated from historical reality;
-- counterfactual is not baseline v1.0 product promise;
-- counterfactual cannot be mixed into public data as event/fact;
-- future counterfactual layers require explicit product, epistemic and UI contract.
-
----
-
-## 4. Epistemic status vocabulary
-
-Базовые статусы:
-
-| Status | Meaning |
+| Value | Meaning |
 |---|---|
-| `verified` | принято как проверенное в curated baseline |
-| `source_backed` | поддержано источником, но может требовать контекста |
-| `curated` | принято curator/editorial process |
-| `estimated` | оценочное значение, например coordinates/date |
-| `uncertain` | достоверность ограничена или неполна |
-| `contested` | есть конфликт источников или интерпретаций |
-| `interpretation` | объяснительное прочтение, не fact |
-| `hypothesis` | предположение, не подтверждённое как fact |
-| `ai_generated` | создано AI, не source-backed by default |
-| `counterfactual` | альтернативный сценарий, не historical reality |
-| `rejected` | отклонено moderation/validation process |
+| `supports` | source даёт основание принять Claim в заявленной форме |
+| `challenges` | source противоречит Claim или существенно его ограничивает |
+| `contextualizes` | source объясняет контекст, но сам по себе не доказывает Claim |
 
-Status vocabulary может расширяться, но новые статусы должны быть согласованы с `CONTENT_GOVERNANCE.md`, `DATA_CONTRACT.md` и UI labels.
+`evidence_strength`:
 
----
+| Value | Meaning |
+|---|---|
+| `direct` | source явно утверждает или документирует Claim |
+| `indirect` | Claim следует из допустимого ограниченного синтеза |
+| `background` | source даёт общий контекст, не достаточный для сильного вывода |
 
-## 5. Source hierarchy
+Locator обязателен для validation modules. Это может быть page, section, chapter, figure, stable fragment or equivalent bibliographic pointer.
 
-Базовая иерархия источников:
+### 2.4 RelationClaim
+
+`Relation` — структурированная форма Claim:
+
+`subject → predicate → object`
+
+RelationClaim дополнительно определяет:
+
+- directionality;
+- temporal validity where relevant;
+- scope/qualifiers;
+- allowed predicate;
+- evidence chain.
+
+Relation не становится доказанной только потому, что endpoints существуют или похожи.
+
+### 2.5 ClassificationAssertion
+
+`ClassificationAssertion` связывает Entity с Movement, Layer, typology or other classification.
+
+`Feature A` и `Feature B` в одном Movement означают две assertions:
+
+- `Feature A classified_as Movement X`;
+- `Feature B classified_as Movement X`.
+
+Pairwise `same_movement` является derived shared-classification view, а не substantive historical Relation.
+
+### 2.6 Similarity
+
+`Similarity` — вычисляемая близость по явно названным критериям.
+
+Similarity:
+
+- не имеет canonical Relation identity;
+- не является evidence;
+- не становится influence/derivation claim без editorial review и EvidenceLinks;
+- должна показывать критерии расчёта.
+
+## 3. Independent epistemic dimensions
+
+### 3.1 Claim kind
+
+| Value | Meaning |
+|---|---|
+| `factual` | утверждение о внешнем мире, принимаемое как проверяемое |
+| `interpretation` | объяснительное или аналитическое прочтение |
+| `hypothesis` | проверяемое предположение с недостаточным подтверждением |
+| `counterfactual` | условный сценарий, не описывающий фактически произошедшее |
+
+`RelationClaim` и `ClassificationAssertion` являются structural forms, а не отдельными claim kinds. Например, influence Relation может быть factual, interpretive or hypothetical.
+
+### 3.2 Origin
+
+| Value | Meaning |
+|---|---|
+| `curator` | сформулировано редактором/исследователем corpus |
+| `user` | сформулировано пользователем Investigation |
+| `ai` | предложено AI |
+| `system` | детерминированно сформировано системой из явных данных |
+| `imported` | пришло из source system и ещё требует ownership/review context |
+
+Origin не определяет истинность. Human-authored Claim может быть слабым; AI-origin Claim может быть полезной hypothesis, но не Source.
+
+### 3.3 Review state
+
+| Value | Meaning |
+|---|---|
+| `draft` | не прошёл review |
+| `reviewed` | проверен в заявленном scope |
+| `contested` | существует существенное несогласие или конфликт |
+| `rejected` | отклонён для заявленного использования |
+| `superseded` | заменён новой revision, сохранён для traceability |
+
+`curated` — governance role/process label, а не отдельный epistemic state.
+
+### 3.4 Confidence
+
+| Value | Meaning |
+|---|---|
+| `high` | сильное основание, low known uncertainty |
+| `medium` | достаточное основание с material limitations |
+| `low` | слабое основание, требуется осторожность |
+| `unknown` | оценка не проведена |
+
+Confidence должен иметь basis. Декоративная уверенность запрещена.
+
+### 3.5 Evidence state
+
+| Value | Meaning |
+|---|---|
+| `supported` | есть reviewed supporting EvidenceLink |
+| `mixed` | supporting и challenging evidence materially coexist |
+| `challenged` | available evidence существенно противоречит Claim |
+| `missing` | evidence отсутствует |
+| `not_applicable` | evidence link не применим, например к явно личной заметке |
+
+Evidence state является derived summary EvidenceLinks, а не ручным substitute для них.
+
+### 3.6 Uncertainty
+
+Uncertainty хранится отдельно и может включать:
+
+- date;
+- location;
+- attribution;
+- identity;
+- classification;
+- relation;
+- source conflict;
+- reconstruction;
+- missing evidence;
+- scope limitation;
+- translation/terminology.
+
+Uncertainty должна описывать, что именно неизвестно и как это влияет на Claim.
+
+## 4. Compatibility vocabulary
+
+Current data/runtime использует смешанное поле `epistemic_status`. Оно сохраняется до отдельной migration, но считается compatibility projection.
+
+| Legacy value | Target interpretation |
+|---|---|
+| `verified` | `review_state=reviewed`; evidence/confidence определяются отдельно |
+| `source_backed` | derived `evidence_state=supported`, если EvidenceLink действительно supports |
+| `curated` | governance provenance; обычно `origin=curator`, но не review/confidence |
+| `estimated` | factual Claim + explicit uncertainty; confidence отдельно |
+| `uncertain` | explicit uncertainty; не claim kind |
+| `contested` | `review_state=contested` и обычно `evidence_state=mixed/challenged` |
+| `interpretation` | `claim_kind=interpretation` |
+| `hypothesis` | `claim_kind=hypothesis` |
+| `ai_generated` | `origin=ai` |
+| `counterfactual` | `claim_kind=counterfactual` |
+| `rejected` | `review_state=rejected` |
+
+Запрещено:
+
+- добавлять новые target capabilities, полагаясь только на legacy status;
+- мигрировать legacy records догадкой;
+- назначать EvidenceLinks, locators или confidence без evidence;
+- считать compatibility mapping lossless.
+
+## 5. Source quality
+
+Default source-quality order:
 
 1. primary/official source;
 2. peer-reviewed academic source;
@@ -228,240 +266,192 @@ Status vocabulary может расширяться, но новые стату�
 6. user-provided source pending review;
 7. AI-suggested source candidate pending verification.
 
-Правила:
-- source hierarchy влияет на confidence, но не заменяет curator judgment;
-- lower-tier source может быть принят, если он явно маркирован и лучше недоступен;
-- conflicting high-quality sources должны сохранять conflict marker;
-- AI-suggested sources require human/source verification before use.
+Source hierarchy:
 
----
+- помогает оценить evidence strength;
+- не заменяет проверку конкретного passage;
+- не гарантирует поддержку любого Claim;
+- не разрешает скрывать конфликт качественных sources.
 
-## 6. Confidence model
+## 6. Relation rules
 
-Confidence не должен быть декоративным полем.
+Substantive Relation predicates должны быть конкретными.
 
-Confidence используется для:
-- coordinates;
-- dates;
-- attribution;
-- identity matching;
-- relation strength;
-- AI output limitations;
-- source quality.
+Current Architecture Atlas target families:
 
-Минимальная шкала:
-
-| Confidence | Meaning |
+| Family | Examples |
 |---|---|
-| `high` | хорошо подтверждено, low known uncertainty |
-| `medium` | подтверждено, но есть ограничения |
-| `low` | слабое основание, нужна осторожность |
-| `unknown` | confidence не установлен |
+| structural | `part_of`, `contains` |
+| derivation/reception | `influenced`, `modelled_on`, `derived_from`, `adapted_from`, `inspired_by` |
+| reconstruction | `reconstructed_from` |
+| agency/authorship | reserved for entity-model expansion |
+| event/state | reserved for temporal-state expansion |
 
-Для coordinates допустимы отдельные domain-specific значения, если они закреплены в `DATA_CONTRACT.md`.
+Rules:
 
-Правило:
-- confidence не должен скрываться в UI, если от него зависит смысл вывода.
+- `associated_with` не используется как замена неизвестному predicate;
+- before/after from dates is a comparison result, not automatically a stored Relation;
+- `same_movement` is ClassificationAssertion projection;
+- influence/derivation needs Claim-level evidence and locator;
+- indirect cross-source synthesis must be marked `indirect` and explain the inference;
+- AI-suggested Relation remains `origin=ai`, `review_state=draft`, usually `claim_kind=hypothesis`;
+- causal predicate requires separate approved policy and is out of current scope.
 
----
+## 7. Research-work requirements
 
-## 7. Data requirements
+Slice Revision contains or references:
 
-Data layer должен поддерживать epistemic clarity.
+- research question;
+- compared entities;
+- user-authored Claims/findings;
+- EvidenceLinks selected for major Claims;
+- conclusion Claim or explicit `unresolved`;
+- uncertainty;
+- dataset/schema revision;
+- Saved View.
 
-Минимальные требования:
+Rules:
 
-- entity/feature должен иметь source/provenance where available;
-- date uncertainty должна быть представима;
-- coordinate confidence должна быть представима;
-- relation должен иметь type and epistemic status;
-- AI-generated data must not enter canonical dataset without review;
-- rejected or uncertain data must be traceable in validation/moderation flow.
+- major conclusion must be traceable to Claims and EvidenceLinks;
+- unsupported user Claim may be preserved as hypothesis or missing-evidence finding;
+- user note is not canonical fact;
+- revision does not promote Claims into public knowledge;
+- Research Brief must preserve epistemic dimensions material to the conclusion;
+- shared output must pin a revision or explicitly identify itself as mutable/live.
 
-`DATA_CONTRACT.md` определяет текущую checked-in/public artifact shape. Этот document определяет epistemic meaning, который должен учитываться при расширении data schema.
-
----
+`RESEARCH_SLICE_CONTRACT.md` owns the research-work lifecycle. This document owns epistemic meaning inside it.
 
 ## 8. UI requirements
 
-UI должен помогать пользователю различать epistemic types.
+Primary UI may simplify labels, but must not erase target meaning.
 
-Минимальные требования:
+At minimum the user can distinguish:
 
-- fact-like content must not look identical to hypothesis;
-- AI-generated summary must be marked as AI-generated;
-- uncertainty/confidence should be visible where relevant;
-- source/provenance should be reachable from detail context;
-- contested/estimated data must not be visually flattened into verified data;
-- counterfactual mode, if ever introduced, must be visually and structurally separated.
+- source-supported factual Claim;
+- interpretation;
+- hypothesis/unresolved;
+- substantive Relation;
+- shared classification;
+- computed Similarity;
+- challenging or missing evidence;
+- material uncertainty;
+- AI-origin content if introduced.
+
+Source title without locator is insufficient for claim-level validation.
 
 Failure mode:
-- if UI makes uncertain/AI/hypothesis content look like verified fact, epistemic contract is broken.
 
----
+- if shared classification, Similarity or AI output looks like reviewed substantive Relation, this contract is broken.
 
-## 9. Research Slice requirements
+## 9. Moderation and governance
 
-Research Slice may contain:
-- facts;
-- selected source-backed entities;
-- user annotations;
-- interpretations;
-- hypotheses;
-- AI summaries;
-- AI comparisons.
+Technical validity and epistemic validity are separate.
 
-Rules:
-- annotations must have epistemic type;
-- AI annotations must be marked;
-- hypothesis annotations must be marked;
-- user note must not be treated as source-backed fact;
-- slice-level AI summary must expose input context;
-- slice compare must not imply causality unless explicitly marked and supported.
+A valid record may still contain:
 
-`RESEARCH_SLICE_CONTRACT.md` owns product semantics of slice. This document owns epistemic rules for content inside or derived from slice.
+- irrelevant EvidenceLink;
+- source that does not support the Claim;
+- locator that cannot be reproduced;
+- overbroad Claim;
+- unmarked synthesis;
+- wrong claim kind;
+- hidden conflict;
+- unsupported Relation.
 
----
+Review decisions operate on Claim/EvidenceLink where possible:
 
-## 10. Stories and courses requirements
+- accept as reviewed Claim;
+- accept with medium/low confidence;
+- accept as interpretation;
+- keep as hypothesis;
+- mark mixed/contested;
+- request better evidence/locator;
+- reject;
+- supersede without erasing history.
 
-Stories and courses may simplify, sequence and explain content, but they must not erase epistemic distinctions.
+Canonical promotion requires explicit governance. Investigation content remains private/user-authored unless separately submitted and reviewed.
 
-Rules:
-- narrative compression must not remove uncertainty when uncertainty is material;
-- course explanations must not present hypothesis as established fact;
-- story steps should preserve source/provenance access where relevant;
-- AI-assisted story/course drafts must remain drafts until reviewed;
-- educational clarity must not override epistemic honesty.
+## 10. Conflict handling
 
----
+When sources conflict:
+
+1. Preserve both EvidenceLinks when material.
+2. Mark `relation_to_claim=challenges` where appropriate.
+3. Set evidence state to `mixed` or `challenged`.
+4. Record uncertainty and scope.
+5. Do not let AI silently resolve conflict.
+6. Do not flatten competing interpretations into a factual Claim.
 
 ## 11. AI requirements
 
-AI in ARTEMIS is assistant, explainer and hypothesis generator, not source of truth.
+AI is future optional assistance, not current mission.
 
-Allowed AI functions:
+If introduced, AI may:
 
-- summarize source-backed context;
-- explain visible slice configuration;
-- compare selected entities/slices;
-- identify possible patterns;
+- propose atomic Claims;
+- summarize selected source passages;
+- identify missing EvidenceLinks;
+- compare supported Claims;
 - suggest hypotheses;
-- expose uncertainty;
-- draft story/course explanations;
-- point out weak evidence or missing data.
+- point out conflicts and uncertainty.
 
-Forbidden AI functions:
+AI must not:
 
-- invent source-backed facts;
-- silently upgrade hypothesis to fact;
-- hide uncertainty;
-- make causal claims without status marking;
-- publish canonical content without review;
-- treat AI answer as evidence;
-- mix counterfactual and historical reality.
+- become Source;
+- invent locator;
+- promote its Claim without review;
+- hide `origin=ai`;
+- turn Similarity/classification into Relation;
+- resolve contested evidence as fact;
+- publish canonical knowledge automatically.
 
-AI output must include, where relevant:
-
-- input context;
-- entities considered;
-- source/provenance basis;
-- epistemic status;
-- uncertainty note;
-- whether output is summary, interpretation, hypothesis or draft.
-
----
-
-## 12. Moderation and content governance requirements
-
-Moderation must distinguish data validity from epistemic validity.
-
-A record may be technically valid but epistemically weak.
-
-Examples:
-- correct JSON but weak source;
-- valid coordinates but low confidence;
-- plausible relation but unsupported;
-- useful user note but not canonical fact;
-- AI-generated draft that requires human review.
-
-Moderation decisions should be able to classify:
-
-- accept as fact;
-- accept as source-backed but uncertain;
-- accept as interpretation;
-- keep as hypothesis;
-- request better source;
-- reject;
-- archive as non-canonical note.
-
-`CONTENT_GOVERNANCE.md` will own the full governance lifecycle after creation.
-
----
-
-## 13. Conflict handling
-
-When sources or interpretations conflict:
-
-1. Do not silently choose one unless governance policy allows it.
-2. Preserve conflict marker if material.
-3. Prefer better source quality, but document uncertainty.
-4. Keep interpretations separate from source-backed facts.
-5. Do not let AI resolve source conflicts without review.
-6. If conflict affects public display, UI should expose uncertainty or contested status.
-
----
-
-## 14. Epistemic failure modes
+## 12. Failure modes
 
 The system violates this contract if:
 
-- AI output appears as verified fact;
-- hypothesis appears as fact;
-- counterfactual appears as history;
-- source is missing but confidence is shown as high;
-- user annotation becomes canonical content automatically;
-- relation implies causality without support;
-- uncertainty is hidden because it is visually inconvenient;
-- course/story text simplifies away essential source conflict;
-- public data includes AI-generated facts without review.
+- one ambiguous status carries kind, origin, review and confidence;
+- Source is attached only to Entity while strong Claim remains untraceable;
+- source URL is treated as proof without locator/relevance;
+- `same_movement` counts as substantive relation-value;
+- Similarity becomes evidence;
+- Relation implies influence/causality without support;
+- AI output appears as Source or reviewed fact;
+- uncertainty is hidden;
+- user conclusion is silently promoted into canonical data;
+- mutable shared state is described as immutable/reproducible revision.
 
----
+## 13. Current implementation boundary
 
-## 15. Relationship to other foundation docs
+Current checked-in artifacts implement only part of this contract:
 
-- `ARTEMIS_CONCEPT.md` defines the philosophical and strategic need for epistemic separation.
-- `EPISTEMIC_CONTRACT.md` defines operational epistemic rules.
-- `DATA_CONTRACT.md` defines current data artifact shape.
-- `RESEARCH_SLICE_CONTRACT.md` defines how epistemic content appears inside slice context.
-- `CONTENT_GOVERNANCE.md` will define how epistemic claims are accepted, rejected, reviewed or promoted.
-- `AI_POLICY.md` will define AI behavior boundaries.
-- `ENTITY_MODEL.md` will define entity/relation/source/media model.
+- Sources and RelationSources exist;
+- Relation `claim_note` provides limited context;
+- ResearchSlice v2 has evidence refs and typed findings;
+- legacy `epistemic_status` remains mixed;
+- first-class Claims, EvidenceLinks with locator/relation/strength and immutable revisions are not implemented;
+- current `same_movement` data remains compatibility content.
 
-If those documents conflict after creation, the conflict must be resolved by updating the relevant foundation docs rather than relying on an audit note.
+Therefore schema/code sync of current models is not evidence that Epistemic Contract v2 is fully implemented.
 
----
+## 14. Change control
 
-## 16. Change-control rule
-
-Any change that affects epistemic status, source confidence, AI output marking, moderation classification, relation types or public presentation of uncertainty must check impact on:
+Any change to Claim, EvidenceLink, Source, Relation, classification, Similarity, confidence, uncertainty, AI origin or public labels must check:
 
 - `ARTEMIS_CONCEPT.md`;
+- `PRODUCT_THESIS.md`;
 - `ARTEMIS_PRODUCT_SCOPE.md`;
+- `DATA_DICTIONARY.md`;
 - `DATA_CONTRACT.md`;
+- `ENTITY_MODEL.md`;
 - `RESEARCH_SLICE_CONTRACT.md`;
-- `CONTENT_GOVERNANCE.md` after creation;
-- `AI_POLICY.md` after creation;
-- UI labels and detail panels;
-- moderation flows;
-- tests/release checks if executable behavior changes.
+- `CONTENT_GOVERNANCE.md`;
+- `AI_POLICY.md`;
+- current runtime/spec and migration requirements;
+- UI labels and validation rubric;
+- executable tests if behavior changes.
 
----
+## 15. Итоговое правило
 
-## 17. Итоговое правило
+ARTEMIS should be confident only where a specific Claim has a reviewable evidence chain.
 
-ARTEMIS should be confident only where the knowledge model justifies confidence.
-
-The project must prefer visible uncertainty over false certainty.
-
-A weaker but honest epistemic state is better than a strong but unsupported claim.
+A narrower honest Claim is better than a broad unsupported conclusion.

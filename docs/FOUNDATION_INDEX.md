@@ -6,7 +6,7 @@
 - Статус: active
 - Роль: главный навигатор фундаментального слоя ARTEMIS
 - Назначение: фиксирует, какие документы образуют foundation-layer, в каком порядке их читать и какой документ отвечает за какой тип решений
-- Scope: concept, product scope, research slice, epistemic model, entity model, content governance, AI policy, data/release/runtime/documentation boundaries
+- Scope: concept, product scope, research-work model, epistemic/entity model, content governance, AI policy, data/release/runtime/documentation boundaries
 
 ---
 
@@ -17,12 +17,13 @@ Foundation-layer ARTEMIS нужен, чтобы проект развивалс�
 Фундаментальный слой отвечает на вопросы:
 
 1. Что такое ARTEMIS.
-2. Что является главной единицей ценности.
-3. Что считается знанием внутри ARTEMIS.
-4. Какие сущности существуют в системе.
-5. Как проверяется и утверждается контент.
-6. Что может и не может делать AI.
-7. Какие документы являются source of truth для архитектуры, данных, release и документационной системы.
+2. Как устроена проверяемая цепочка от вопроса к выводу.
+3. Что считается Claim, EvidenceLink, Relation, classification и Similarity.
+4. Как Investigation, immutable Slice Revision, Saved View and Research Brief связаны.
+5. Какие сущности существуют в системе.
+6. Как проверяется и утверждается контент.
+7. Что может и не может делать future AI.
+8. Какие документы являются source of truth для architecture, data, release and documentation.
 
 ---
 
@@ -32,9 +33,10 @@ ARTEMIS нельзя развивать через отдельные функц
 
 Любое новое направление должно усиливать одну из базовых опор:
 
-- spatial-temporal research workspace;
+- evidence chain `Question → Claims → Evidence → Conclusion`;
 - evidence-aware comparison as first value;
-- research slice as reusable research artifact;
+- spatial-temporal lenses with independently validated contribution;
+- Investigation/Slice Revision/Research Brief as reusable research model;
 - explainable knowledge structure;
 - curated and governed content;
 - clear epistemic separation of facts, interpretations, hypotheses and AI outputs;
@@ -65,7 +67,7 @@ ARTEMIS нельзя развивать через отдельные функц
 |---|---|
 | `README.md` | root entrypoint проекта |
 | `docs/FOUNDATION_INDEX.md` | навигатор foundation-layer, порядок чтения и source-of-truth routing |
-| `docs/ARTEMIS_CONCEPT.md` | North Star, миссия, принципы, epistemic model, стратегическая лестница развития |
+| `docs/ARTEMIS_CONCEPT.md` | North Star, human-research mission, principles и independent branch gates |
 | `docs/PROJECT_TRUTH.md` | фактическая граница public/backend/pilot/future capabilities |
 | `docs/PRODUCT_THESIS.md` | active Architecture Atlas audience, problem, hypotheses и value proposition |
 | `docs/ARTEMIS_PRODUCT_SCOPE.md` | продуктовые границы текущего vertical и запреты против product drift |
@@ -73,10 +75,10 @@ ARTEMIS нельзя развивать через отдельные функц
 | `docs/DATA_DICTIONARY.md` | semantic identity/source/media/relation data model |
 | `docs/PRODUCT_VALIDATION_PLAN.md` | user evidence protocol и decision gate |
 | `docs/VALIDATION_DECISION.md` | validation outcome и разрешённый следующий scope |
-| `docs/RESEARCH_SLICE_CONTRACT.md` | canonical contract для Research Slice как воспроизводимого исследовательского результата |
-| `docs/RESEARCH_SLICE_SPEC.md` | runtime/API spec Research Slice baseline |
-| `docs/EPISTEMIC_CONTRACT.md` | operational contract для fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual |
-| `docs/ENTITY_MODEL.md` | единая модель knowledge/product/runtime/context entities и relation model |
+| `docs/RESEARCH_SLICE_CONTRACT.md` | canonical contract для Investigation, immutable Slice Revision, Saved View и Research Brief |
+| `docs/RESEARCH_SLICE_SPEC.md` | current mutable ResearchSlice v2 runtime/API compatibility spec |
+| `docs/EPISTEMIC_CONTRACT.md` | Claim/EvidenceLink model и независимые epistemic dimensions |
+| `docs/ENTITY_MODEL.md` | knowledge/product/runtime/context entities, Claim and Relation model |
 | `docs/CONTENT_GOVERNANCE.md` | правила источников, валидации, модерации, UGC promotion, trust, correction и publish governance |
 | `docs/AI_POLICY.md` | canonical границы AI behavior, AI-output, source discipline и запреты против AI drift |
 | `docs/ARTEMIS_MASTER_PROMPT.md` | operational governance для AI-агентов и docs-first discipline |
@@ -108,7 +110,7 @@ ARTEMIS нельзя развивать через отдельные функц
 8. `docs/PRODUCT_VALIDATION_PLAN.md` — какое evidence открывает следующий этап.
 9. `docs/VALIDATION_DECISION.md` — что доказано и какой scope разрешён.
 10. `docs/ARTEMIS_CONCEPT.md` — долгосрочная миссия и принципы.
-11. `docs/RESEARCH_SLICE_CONTRACT.md` — как работает сохраняемая единица исследования.
+11. `docs/RESEARCH_SLICE_CONTRACT.md` — Investigation/revision/Saved View/Brief model и current-runtime gap.
 12. `docs/EPISTEMIC_CONTRACT.md`, `docs/ENTITY_MODEL.md`, `docs/CONTENT_GOVERNANCE.md` и `docs/AI_POLICY.md` — knowledge governance.
 13. `docs/DATA_CONTRACT.md` — export/public artifact mechanics.
 14. `docs/PROJECT_STRUCTURE.md`, `docs/PROJECT_PHASES.md` и `docs/PRIORITIES.md` — структура и active order.
@@ -118,7 +120,7 @@ ARTEMIS нельзя развивать через отдельные функц
 
 ## 6. Решения по типам вопросов
 
-### 5.1 Concept / mission questions
+### 6.1 Concept / mission questions
 
 Primary authority:
 - `docs/ARTEMIS_CONCEPT.md`
@@ -134,7 +136,7 @@ Secondary authority:
 - почему AI не является source of truth;
 - почему факт, интерпретация и гипотеза должны быть разделены.
 
-### 5.2 Product scope questions
+### 6.2 Product scope questions
 
 Primary authority:
 - `docs/ARTEMIS_PRODUCT_SCOPE.md`
@@ -151,10 +153,10 @@ Secondary authority:
 Примеры вопросов:
 - входит ли feature в active vertical MVP;
 - что является primary user value;
-- что делать сначала: slice, story, course или AI;
+- что делать сначала: evidence chain, research persistence или future branch;
 - какие направления являются forbidden product drift.
 
-### 5.3 Research slice questions
+### 6.3 Research-work questions
 
 Primary authority:
 - `docs/RESEARCH_SLICE_CONTRACT.md`
@@ -168,13 +170,13 @@ Supporting authority:
 - `docs/ENTITY_MODEL.md`
 
 Примеры вопросов:
-- чем slice отличается от saved view;
-- как slice связан со story/course/AI;
-- что входит в minimal slice;
-- как работает lifecycle slice;
-- как slice связан с AI context и epistemic status.
+- чем Investigation отличается от immutable Slice Revision;
+- чем Saved View отличается от research result;
+- как Research Brief связан с revision;
+- что означает reproducibility и pinned dataset identity;
+- чем target model отличается от current mutable ResearchSlice v2.
 
-### 5.4 Knowledge / epistemic questions
+### 6.4 Knowledge / epistemic questions
 
 Primary authority:
 - `docs/EPISTEMIC_CONTRACT.md`
@@ -185,14 +187,14 @@ Supporting authority:
 - `docs/AI_POLICY.md`
 
 Примеры вопросов:
-- что является фактом;
-- что является интерпретацией;
-- как маркировать гипотезу;
-- как показывать AI-output;
-- как работать с uncertainty;
+- что является atomic Claim;
+- как Source связывается с Claim через EvidenceLink and locator;
+- чем claim kind отличается от origin/review/confidence/evidence state;
+- как показывать interpretation/hypothesis/AI origin;
+- как работать с uncertainty and challenging evidence;
 - почему counterfactual не является history.
 
-### 5.5 Entity / relation questions
+### 6.5 Entity / relation questions
 
 Primary authority:
 - `docs/ENTITY_MODEL.md`
@@ -205,11 +207,12 @@ Supporting authority:
 Примеры вопросов:
 - что такое entity;
 - чем object отличается от event/process/place;
-- как relation связывает сущности;
+- как RelationClaim связывает сущности;
+- почему shared classification и Similarity не являются substantive Relation;
 - как source/media относятся к entity;
-- как entity входит в slice/story/course/AI context.
+- как entity входит в Investigation/revision/future consumer context.
 
-### 5.6 Content trust / governance questions
+### 6.6 Content trust / governance questions
 
 Primary authority:
 - `docs/CONTENT_GOVERNANCE.md`
@@ -228,7 +231,7 @@ Supporting authority:
 - когда запись отклоняется;
 - почему AI-generated content не становится source-backed fact без review.
 
-### 5.7 AI behavior questions
+### 6.7 AI behavior questions
 
 Primary authority:
 - `docs/AI_POLICY.md`
@@ -246,7 +249,7 @@ Supporting authority:
 - как AI должен использовать slice context;
 - почему AI не является source.
 
-### 5.8 Data / release / runtime questions
+### 6.8 Data / release / runtime questions
 
 Primary authority:
 - `docs/DATA_CONTRACT.md`
@@ -313,10 +316,13 @@ Foundation changes must not be mixed with unrelated UI/runtime refactors.
 Запрещено:
 
 - добавлять AI-функции без проверки against `AI_POLICY.md` and `EPISTEMIC_CONTRACT.md`;
-- развивать stories/courses вне `RESEARCH_SLICE_CONTRACT.md`;
+- развивать Stories/Courses вне independent validation gate;
 - расширять entity/relation/source/media model вне `ENTITY_MODEL.md`;
 - подменять evidence-aware comparison просмотром object cards;
-- называть Saved View product-complete Research Slice;
+- называть Saved View product-complete revision;
+- называть mutable ResearchSlice immutable/reproducible revision;
+- считать `same_movement` substantive Relation;
+- прикреплять Source как blanket proof без Claim/EvidenceLink/locator;
 - расширять scope при `VALIDATION_DECISION=PENDING`;
 - использовать UGC as canonical content без `CONTENT_GOVERNANCE.md`;
 - смешивать fact, interpretation, hypothesis, AI-output и counterfactual;
@@ -348,9 +354,22 @@ Closed foundation setup items:
 9. `docs/archive/README.md` обновлён.
 10. `docs/VALIDATION_DECISION.md` зарегистрирован с исходным статусом `PENDING`.
 
-Remaining non-blocking follow-up:
+Concept Lock v2 status:
+
+- rationale/migration record: `docs/work/2026-07-26_CONCEPT_LOCK_V2.md` (not an owner document);
+- human research утверждено как единственная миссия;
+- map/time переведены в independently validated lenses;
+- Claim/EvidenceLink model утверждена;
+- Investigation/SliceRevision/SavedView/ResearchBrief model утверждена;
+- `same_movement` исключён из substantive relation-value;
+- three-module validation prerequisite и blind Brief protocol утверждены;
+- current runtime/data migrations ещё не выполнены.
+
+Remaining follow-up:
 - semantic review оставшихся `DO_NOT_DELETE_YET` archive files;
-- Architecture Atlas data/content/runtime/validation tasks из active Phase 4.5;
+- three validation research modules;
+- Claim/Evidence and immutable revision data/runtime migration;
+- Architecture Atlas public runtime/validation tasks из active Phase 4.5;
 - critical production constraints, только если они блокируют public MVP loop.
 
 ---
@@ -362,13 +381,13 @@ ARTEMIS должен развиваться от фундаментальной 
 Порядок развития:
 
 1. concept and product scope;
-2. evidence-aware comparison;
-3. product-complete research slice contract;
-4. epistemic contract;
-5. entity model;
+2. Claim/Evidence foundation;
+3. evidence-aware comparison;
+4. Investigation/SliceRevision/ResearchBrief contract;
+5. epistemic and entity contracts;
 6. content governance;
-7. AI policy;
-8. focused vertical validation;
-9. только после recorded decision gate — selected product/runtime expansion.
+7. focused vertical validation;
+8. только после recorded decision gate — one selected branch;
+9. AI policy applies only if an AI branch is separately opened.
 
 Если новый функциональный слой не может быть объяснён через foundation-layer, он не должен становиться частью ядра проекта.
