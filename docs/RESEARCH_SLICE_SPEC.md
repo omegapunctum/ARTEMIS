@@ -2,15 +2,16 @@
 
 ## 1. Concept definition
 
-Research Slice — canonical runtime-сущность для сохранения воспроизводимого исследовательского результата и его вложенного Saved View.
+`ResearchSlice v2` — current mutable runtime persistence envelope для одного сохранённого исследовательского состояния и его вложенного Saved View.
 
-Product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Эта спецификация фиксирует executable schema v2 и compatibility boundary.
+Target product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Там зафиксирована модель `Investigation → immutable Slice Revision → Research Brief`. Эта спецификация описывает уже реализованный executable schema v2 и не переименовывает current mutable row в immutable revision.
 
 Текущий capability status:
 
 - schema/database/API/client sync: implemented and covered by executable release checks;
 - owner create/edit/reopen/delete and unlisted share/rotate/revoke: backend-available;
 - public deployment E2E: not yet proved;
+- Investigation identity, immutable revisions, claim-level EvidenceLinks with locators, pinned dataset identity and Brief export: not implemented;
 - product validation: `PENDING` until the protocol in `PRODUCT_VALIDATION_PLAN.md` is completed.
 
 ## 2. JSON model v2
@@ -95,13 +96,13 @@ Product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Эта с
 - `evidence_state = supported` требует минимум один evidence ref;
 - `evidence_state = missing` запрещает evidence refs;
 - `conclusion_status = concluded` требует непустой `conclusion`;
-- `content_version` начинается с 1 и увеличивается при каждом успешном PATCH;
+- `content_version` начинается с 1 и увеличивается при каждом успешном PATCH; это optimistic content counter, а не immutable revision id;
 - owner CRUD всегда сохраняет `visibility = private`;
 - share создаёт unlisted read-only capability и не превращает Slice в searchable/public-curated запись.
 
 ## 2.2 Saved View boundary
 
-Saved View является вложенным компонентом Research Slice, а не самостоятельным исследовательским результатом.
+Saved View является вложенным компонентом current ResearchSlice и future Slice Revision, а не самостоятельным исследовательским результатом.
 
 Он хранит:
 
@@ -142,12 +143,14 @@ Migration `203/research_slices_product_complete_v2`:
 - ставит legacy rows в `missing/unresolved`;
 - идемпотентна в versioned migration registry.
 
+Название существующей migration отражает прежний scope. После Concept Lock v2 оно не является доказательством product-complete target research model и не переименовывается задним числом.
+
 ## 3. API endpoints
 
 - `POST /api/research-slices` — создать Slice.
 - `GET /api/research-slices` — получить lightweight owner list.
 - `GET /api/research-slices/{slice_id}` — открыть полный owner Slice.
-- `PATCH /api/research-slices/{slice_id}` — обновить Slice и увеличить `content_version`.
+- `PATCH /api/research-slices/{slice_id}` — изменить current mutable row и увеличить `content_version`; immutable history не создаётся.
 - `DELETE /api/research-slices/{slice_id}` — удалить Slice.
 - `POST /api/research-slices/{slice_id}/share` — создать/ротировать read-only capability token.
 - `DELETE /api/research-slices/{slice_id}/share` — отозвать token.
@@ -162,6 +165,7 @@ Migration `203/research_slices_product_complete_v2`:
 - Public response отправляется с `Cache-Control: no-store`, `Pragma: no-cache`, `Referrer-Policy: no-referrer` и `X-Robots-Tag: noindex`.
 - UI хранит token во fragment `#share=...`; backend получает его через header, а не request URL.
 - Rotate, revoke или удаление Slice делают прежний token недействительным.
+- Shared response отражает current mutable row. Author PATCH может изменить последующее содержимое по прежней share capability; поэтому current share является `live/mutable`, а не revision-pinned.
 
 ## 5. Client behavior
 
@@ -192,11 +196,18 @@ Migration `203/research_slices_product_complete_v2`:
 
 Schema/code sync не равен public validation. Capability становится validation-ready только после #309: deployment evidence для create → edit → reopen → share на canonical public Pages/API runtime.
 
+Даже после #309 current capability подтверждает только mutable Slice v2 loop. Target Investigation/revision/Brief model требует отдельного docs/data/runtime migration и нового E2E.
+
 ## 7. Out of scope
 
 - public searchable Slice directory;
 - collaborative editing;
 - multi-token ACL/per-recipient permissions;
 - immutable share snapshot;
+- first-class Investigation;
+- immutable revision history;
+- Claim/EvidenceLink entities with source locator, evidence relation and strength;
+- pinned dataset/export identity;
+- deterministic citation-ready Research Brief;
 - Stories, Courses or AI expansion;
 - conversion of findings into canonical facts without governance.

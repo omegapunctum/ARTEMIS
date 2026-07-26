@@ -6,7 +6,7 @@
 - Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
 - Роль: фиксирует допустимую и недопустимую роль AI в ARTEMIS
 - Назначение: защитить проект от AI drift, source substitution, hallucinated authority и смешения фактов, интерпретаций, гипотез и AI-output
-- Scope: AI behavior, AI outputs, AI limits, source/provenance discipline, slice/story/course AI use, moderation/content governance integration
+- Scope: future optional AI branch, Claim/Evidence discipline, Investigation/revision context, moderation/content governance integration
 
 ---
 
@@ -40,14 +40,14 @@ AI in ARTEMIS is an assistant, not an authority.
 
 ## 2. Зачем нужна AI policy
 
-ARTEMIS строится как source-aware spatial-temporal research environment. AI является будущим опциональным слоем и никогда не означает AI-authoritative.
+ARTEMIS строится как evidence-first human research environment with privileged spatial-temporal lenses. AI является future optional branch, не второй миссией и не AI-authoritative layer по умолчанию.
 
 AI policy нужна, чтобы:
 
 - сохранить доверие к знаниям;
 - защитить source/provenance discipline;
 - не превратить ARTEMIS в chatbot over map;
-- не дать AI подменить research slice model;
+- не дать AI подменить Investigation/revision/Brief model;
 - не смешивать факт, интерпретацию, гипотезу и генерацию;
 - обеспечить explainable AI assistance поверх structured context;
 - подготовить безопасный фундамент для будущих reasoning layers.
@@ -60,7 +60,7 @@ AI должен работать как:
 
 ### 3.1 Explainer
 
-Объясняет выбранный объект, slice, story step или course context.
+Объясняет selected Claims, EvidenceLinks, entities or revision context.
 
 Rules:
 - must use provided context;
@@ -70,7 +70,7 @@ Rules:
 
 ### 3.2 Comparator
 
-Сравнивает entities, slices, time ranges or layer configurations.
+Сравнивает Claims/entities/revisions and relevant lenses.
 
 Rules:
 - comparison must name compared contexts;
@@ -97,7 +97,7 @@ Rules:
 
 ### 3.5 Structuring assistant
 
-Помогает превращать slice context into story/course draft.
+Помогает структурировать Claims/Evidence into a draft while preserving user authorship.
 
 Rules:
 - draft remains draft;
@@ -122,7 +122,7 @@ Rules:
 
 ## 4. AI output types
 
-AI output must have an explicit type.
+AI output must have an explicit function and always has `origin=ai`.
 
 Allowed baseline types:
 
@@ -139,8 +139,9 @@ Allowed baseline types:
 
 Rules:
 - every AI output must be visibly marked as AI-generated;
-- AI output may be reviewed, edited and promoted to human-authored interpretation/draft;
-- AI output cannot become fact without source-backed governance review.
+- review does not erase AI origin from the original output;
+- a human may create a new reviewed Claim based on independently verified evidence;
+- AI output cannot become factual Claim or Relation without Source/EvidenceLink governance.
 
 ---
 
@@ -149,7 +150,8 @@ Rules:
 AI should operate from structured ARTEMIS context.
 
 Preferred input contexts:
-- Research Slice;
+- immutable Slice Revision or explicitly labelled mutable ResearchSlice context;
+- selected Claims and EvidenceLinks;
 - selected entity/detail context;
 - Story step;
 - Course module;
@@ -161,8 +163,8 @@ Minimum context for strong AI output:
 - entities considered;
 - time range;
 - spatial/layer context where relevant;
-- known sources/provenance where available;
-- epistemic status of claims;
+- known Sources, EvidenceLinks and locators;
+- claim kind, origin, review, confidence, evidence state and uncertainty;
 - user note/question.
 
 Forbidden default:
@@ -179,6 +181,7 @@ Rules:
 - AI may suggest source candidates;
 - AI may point out missing provenance;
 - AI may not invent source-backed claims;
+- AI may not invent locators;
 - AI may not cite unverifiable source as confirmed;
 - AI-suggested source must be verified before use;
 - AI output must not overwrite source/provenance fields.
@@ -194,10 +197,11 @@ If AI answer and source-backed data conflict:
 AI must obey `EPISTEMIC_CONTRACT.md`.
 
 Required separations:
-- fact vs interpretation;
-- interpretation vs hypothesis;
-- hypothesis vs AI-generated speculation;
-- source-backed claim vs model-generated text;
+- claim kind vs origin;
+- review state vs confidence/evidence state;
+- factual Claim vs interpretation/hypothesis;
+- Source/EvidenceLink vs model-generated text;
+- substantive Relation vs classification/Similarity;
 - historical reality vs counterfactual scenario.
 
 AI must not:
@@ -216,32 +220,34 @@ AI should prefer:
 
 ---
 
-## 8. AI and Research Slice
+## 8. AI and research-work context
 
-После отдельного validation/scope decision Research Slice может стать primary AI context unit. AI generation не входит в active MVP.
+После отдельного AI branch decision immutable Slice Revision может стать primary AI context unit. AI generation не входит в active MVP.
 
-AI over slice may:
-- summarize slice;
+AI over revision may:
+- summarize selected Claims;
 - explain why selected entities matter;
-- compare current slice with another slice;
+- compare revisions/Claims;
 - identify visible patterns;
 - suggest hypotheses;
-- prepare story/course draft from slice;
+- propose missing evidence checks;
 - flag weak evidence.
 
-AI over slice must include or preserve:
-- slice id/context;
+AI over revision must include or preserve:
+- investigation/revision id;
 - selected entities;
+- selected Claims/EvidenceLinks and locators;
 - time range;
 - map/layer/filter state where relevant;
-- annotation epistemic types;
+- independent epistemic dimensions;
 - source/provenance limitations.
 
-AI over slice must not:
+AI over revision must not:
 - modify canonical public data;
-- publish slice annotations as facts;
+- publish user Claims as facts;
 - infer hidden causal structure without marking;
-- detach answer from slice context.
+- detach answer from revision/evidence context;
+- modify the immutable revision.
 
 ---
 
@@ -402,8 +408,8 @@ If working AI strategy conflicts with this policy:
 
 - `ARTEMIS_CONCEPT.md` defines why AI must not replace human judgment or source discipline.
 - `ARTEMIS_PRODUCT_SCOPE.md` keeps AI generation outside the active Architecture Atlas MVP; ECC may remain as a backend context contract, but no generated explanation is a current public product promise.
-- `RESEARCH_SLICE_CONTRACT.md` defines slice as primary AI context unit.
-- `EPISTEMIC_CONTRACT.md` defines epistemic marking rules AI must obey.
+- `RESEARCH_SLICE_CONTRACT.md` defines Investigation/revision as possible future AI context.
+- `EPISTEMIC_CONTRACT.md` defines Claim/EvidenceLink and independent dimensions AI must obey.
 - `ENTITY_MODEL.md` defines AIInsight and ExplainabilityContext.
 - `CONTENT_GOVERNANCE.md` defines how AI-generated candidates may be reviewed/promoted/rejected.
 - `DATA_CONTRACT.md` defines canonical public data artifacts AI must not bypass.
@@ -421,7 +427,7 @@ AI policy is broken if:
 - AI makes causal claims without marking;
 - AI-generated content enters public data directly;
 - AI story/course draft is published without review;
-- AI works from detached prompt while UI implies it used current slice;
+- AI works from detached prompt while UI implies it used current revision/evidence;
 - AI treats private user context as public knowledge;
 - AI suggests fake/unverified sources as confirmed.
 
@@ -449,7 +455,7 @@ No AI feature should be implemented only as a prompt or UI addition if it change
 
 ## 20. Итоговое правило
 
-ARTEMIS should use AI to make structured knowledge more understandable, not to replace structured knowledge.
+If an AI branch is ever opened, ARTEMIS should use AI to make structured evidence more understandable, not to replace human research.
 
 AI strengthens ARTEMIS only when it remains:
 

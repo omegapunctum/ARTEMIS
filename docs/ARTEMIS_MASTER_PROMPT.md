@@ -1,4 +1,4 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v4.3
+# ARTEMIS — МАСТЕР-ПРОМПТ v5.0
 
 Статус: canonical operational governance document for AI agents and assistants in ARTEMIS.
 Назначение: единая инструкция для ИИ-ассистентов и агентов, работающих над проектом ARTEMIS.
@@ -7,23 +7,25 @@
 
 ## 1. РОЛЬ ПРОЕКТА
 
-North Star ARTEMIS — source-aware spatial-temporal research environment с воспроизводимыми исследовательскими результатами.
+North Star ARTEMIS — evidence-first human research environment with privileged spatial-temporal lenses and versioned outcomes.
 В активном operational контуре ARTEMIS — focused Architecture Atlas vertical:
-- один primary user: продвинутый студент истории архитектуры;
-- один JTBD: evidence-aware comparison 2–3 объектов для реальной учебной/исследовательской задачи;
-- map/time как проверяемые инструменты, а не конечная ценность;
-- Research Slice сохраняет question, evidence, findings, conclusion, uncertainty и Saved View;
+- один primary user: старшекурсник/магистрант истории архитектуры с реальным сравнительным заданием;
+- один JTBD: превратить вопрос о 2–3 объектах в evidence-backed Research Brief;
+- Claim/EvidenceLink and locator as epistemic foundation;
+- map/time как independently validated lenses;
+- target model: Investigation → immutable Slice Revision → Research Brief, with nested Saved View;
+- current ResearchSlice v2 as mutable compatibility runtime;
 - public capability не может быть заявлена только на основании backend-кода;
-- Courses, AI generation, UGC expansion и multi-domain scope заморожены до validation decision.
+- Stories/Courses, AI, institutional workflow, UGC and new domains заморожены до branch-specific decision.
 
 Ключевой принцип продукта:
-**question → compare → evidence → conclusion → save → reuse**.
+**question → claims → evidence → comparison → conclusion/unresolved → revision → brief → reuse**.
 
 Первая ценность:
 **evidence-aware object comparison**.
 
 Ключевой повторно используемый артефакт:
-**product-complete Research Slice / сохранённое исследование**.
+**immutable Slice Revision and its Research Brief**.
 
 ---
 
@@ -60,7 +62,7 @@ North Star ARTEMIS — source-aware spatial-temporal research environment с в�
 Правило:
 - если информация не синхронизирована с canonical docs, она не должна считаться окончательной;
 - `FOUNDATION_INDEX.md` определяет foundation-layer, порядок чтения и выбор source of truth по типам решений;
-- `ARTEMIS_CONCEPT.md` определяет North Star, миссию, жёсткие принципы, эпистемическую модель и долгосрочную лестницу развития;
+- `ARTEMIS_CONCEPT.md` определяет North Star, human mission, invariants and independent branch gates;
 - `PROJECT_TRUTH.md` определяет factual public/backend/pilot/future boundary;
 - `PRODUCT_THESIS.md` определяет активную аудиторию, проблему и hypotheses;
 - `ARTEMIS_PRODUCT_SCOPE.md` определяет границы текущего vertical и запреты против product drift;
@@ -68,9 +70,10 @@ North Star ARTEMIS — source-aware spatial-temporal research environment с в�
 - `DATA_DICTIONARY.md` определяет semantic data rules;
 - `PRODUCT_VALIDATION_PLAN.md` определяет evidence protocol и thresholds;
 - `VALIDATION_DECISION.md` фиксирует доказанный outcome и разрешённый следующий scope;
-- `RESEARCH_SLICE_CONTRACT.md` определяет Research Slice как воспроизводимый исследовательский результат, отличный от Saved View;
-- `EPISTEMIC_CONTRACT.md` определяет операционное разделение fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;
-- `ENTITY_MODEL.md` определяет knowledge/product/runtime/context entities и relation model;
+- `RESEARCH_SLICE_CONTRACT.md` определяет Investigation/SliceRevision/SavedView/ResearchBrief target and current-runtime gap;
+- `RESEARCH_SLICE_SPEC.md` определяет current mutable ResearchSlice v2 API;
+- `EPISTEMIC_CONTRACT.md` определяет Claim/EvidenceLink and independent epistemic dimensions;
+- `ENTITY_MODEL.md` определяет knowledge/product/runtime/context entities, Claim and Relation model;
 - `CONTENT_GOVERNANCE.md` определяет source policy, UGC/moderation, validation, trust, correction и publish governance;
 - `AI_POLICY.md` определяет canonical границы AI behavior, AI-output, source discipline и запреты против AI drift;
 - `DOCUMENTATION_SYSTEM.md` определяет роли слоёв, порядок чтения, правила размещения документов и приоритет разрешения doc-conflicts;
@@ -171,29 +174,31 @@ North Star ARTEMIS — source-aware spatial-temporal research environment с в�
 
 ### 5.6 Foundation invariants
 - Evidence-aware comparison создаёт первую пользовательскую ценность.
-- Research Slice сохраняет вопрос, evidence и вывод; Saved View является только его компонентом.
-- Stories/courses должны строиться поверх slices или slice-like context, а не заменять slice model.
-- Stories/Courses/AI не входят в active MVP без recorded scope decision.
-- AI после такого решения работает как assistant/explainer/hypothesis generator, но не как source of truth.
-- Fact, interpretation, hypothesis, AI-output and counterfactual scenario must not be visually or semantically collapsed.
-- Entity/relation/source/media model must remain coherent with `ENTITY_MODEL.md` and `EPISTEMIC_CONTRACT.md`.
+- Claim is the unit of evidence; Source uses EvidenceLink and locator.
+- Claim kind, origin, review, confidence, evidence state and uncertainty are independent.
+- Relation is a structured Claim; classification and Similarity are separate.
+- `same_movement` does not count as substantive Relation.
+- Target research model is Investigation → immutable Slice Revision → Research Brief.
+- Saved View is nested context, not the result.
+- Current mutable ResearchSlice/content_version/share must not be described as immutable/revision-pinned.
+- Stories/Courses/AI/institutional/new-domain branches require independent decisions.
+- AI, if opened, remains origin/assistant and never Source.
 
 ---
 
 ## 6. ТЕКУЩИЙ ПОРЯДОК РАБОТ
 
-Активный рабочий контур — **Phase 4.5 Product/Data Validation**.
+Активный рабочий контур — **Phase 4.5 Concept-Locked Product Validation**.
 
 Порядок:
 
-1. documentation/strategy truth;
-2. canonical identity, Sources, Media и Relations;
-3. semantic data gate;
-4. Architecture Atlas content pilot;
-5. public backend и Slice end-to-end loop;
-6. product UX refinement и required maintainability;
-7. usability, cognitive и behavioral validation;
-8. explicit outcome в `VALIDATION_DECISION.md`.
+1. Concept Lock v2;
+2. three deep research modules;
+3. Claim/Evidence/Relation migration;
+4. Investigation/revision/Brief migration;
+5. research interface and public target E2E;
+6. six-person controlled and field validation;
+7. explicit outcome in `VALIDATION_DECISION.md`.
 
 Phase 5 Scaling/Hardening приостановлена, кроме critical security/reliability и MVP deployment blockers. Phase 6 Product Expansion заблокирована, пока `VALIDATION_DECISION.md` не содержит `EXPAND` либо отдельного canonical decision.
 
@@ -285,9 +290,9 @@ Phase 5 Scaling/Hardening приостановлена, кроме critical secu
 - upload/auth/runtime API surface;
 - статуса фаз и порядка работ;
 - миссии, продуктового ядра и допустимой роли ИИ в проекте;
-- Research Slice semantics;
-- epistemic status / uncertainty / source discipline;
-- entity/relation/source/media model;
+- Investigation/revision/SavedView/Brief semantics;
+- Claim/EvidenceLink/uncertainty/source discipline;
+- entity/relation/classification/similarity model;
 - content governance / UGC promotion / moderation trust model;
 - AI behavior / AI-output / AI policy.
 
@@ -347,13 +352,13 @@ Phase 5 Scaling/Hardening приостановлена, кроме critical secu
 Не расширять ARTEMIS ценой потери целостности.
 
 Сначала:
-- устойчивый map-first runtime;
-- устойчивый release/data/docs coherence;
-- foundation-layer as hard guardrail;
-- scaling/hardening цикл без ложных production-ready claims.
+- coherent Claim/Evidence foundation;
+- three deep research modules;
+- versioned Investigation/revision/Brief outcome;
+- honest public E2E;
+- blind cognitive and behavioral validation.
 
 Потом:
-- research slices как стабильная продуктовая единица;
-- stories и courses поверх slice model;
-- explainable AI assistance в рамках AI policy and epistemic contract;
-- только затем вторичные продуктовые сценарии и platform-level expansion.
+- one evidence-backed branch;
+- only branch-specific implementation;
+- no automatic platform/AI/Courses expansion.

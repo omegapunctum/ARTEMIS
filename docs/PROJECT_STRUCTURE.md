@@ -165,7 +165,7 @@ app/
 - Redis-backed refresh-session consume в текущем baseline трактуется как atomic one-time operation (`GETDEL` или atomic fallback path), а legacy non-atomic `get+delete` не должен считаться допустимым baseline-поведением;
 - rate limiting в текущем baseline остаётся process-local/in-memory; `X-Forwarded-For` для извлечения client IP в rate-limit key trusted только от configured trusted proxy peers (`ARTEMIS_TRUSTED_PROXIES` / `TRUSTED_PROXY_IPS`, exact IP + CIDR), иначе используется peer IP (`request.client.host`);
 - текущий persistence baseline использует shared SQLAlchemy scope: `app.auth.service` задаёт общий `engine`/`Base`, который переиспользуется в `drafts` / `research_slices` / `stories` / `courses`;
-- Research Slice sharing хранит только SHA-256 capability token в `research_slices.share_token_hash`; raw token существует только в owner response и URL fragment, public response является read-only/no-store и не раскрывает owner identity;
+- current mutable ResearchSlice sharing хранит только SHA-256 capability token в `research_slices.share_token_hash`; raw token существует только в owner response и URL fragment, public response является read-only/no-store и не раскрывает owner identity; share reads the mutable row and is not revision-pinned;
 - migration/bootstrap path текущего baseline выполняется при runtime startup через `init_db()` вызовы в `app.main.py`, а не через отдельный внешний migration orchestrator;
 - versioned migrations в backend опираются на общую `schema_version` discipline как baseline-механизм и не должны трактоваться как fully hardened production migration platform;
 - общая `schema_version` таблица рассматривается как shared baseline coordination mechanism для всех runtime-доменов, а не как изолированный per-service журнал;
@@ -286,7 +286,7 @@ docs/
 
 Назначение:
 - `FOUNDATION_INDEX.md` — главный навигатор foundation-layer, порядок чтения и правила выбора source of truth по типам решений;
-- `ARTEMIS_CONCEPT.md` — North Star, миссия, жёсткие принципы, эпистемическая модель и строгая лестница развития проекта;
+- `ARTEMIS_CONCEPT.md` — North Star, human mission, жёсткие принципы и independent branch gates;
 - `PROJECT_TRUTH.md` — current capability and maturity truth;
 - `PRODUCT_THESIS.md` — active audience/problem/value hypotheses;
 - `ARTEMIS_PRODUCT_SCOPE.md` — границы Architecture Atlas vertical и запреты против product drift;
@@ -294,10 +294,10 @@ docs/
 - `DATA_DICTIONARY.md` — semantic data vocabulary и constraints;
 - `PRODUCT_VALIDATION_PLAN.md` — user evidence protocol и thresholds;
 - `VALIDATION_DECISION.md` — validation outcome и разрешённый следующий scope;
-- `RESEARCH_SLICE_CONTRACT.md` — foundation contract для Research Slice как воспроизводимого исследовательского результата;
-- `RESEARCH_SLICE_SPEC.md` — runtime/API spec Research Slice baseline;
-- `EPISTEMIC_CONTRACT.md` — операционный контракт знания: fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual;
-- `ENTITY_MODEL.md` — единая модель knowledge/product/runtime/context entities и relation model;
+- `RESEARCH_SLICE_CONTRACT.md` — foundation contract для Investigation/immutable SliceRevision/SavedView/ResearchBrief;
+- `RESEARCH_SLICE_SPEC.md` — current mutable ResearchSlice v2 runtime/API compatibility spec;
+- `EPISTEMIC_CONTRACT.md` — Claim/EvidenceLink model and independent epistemic dimensions;
+- `ENTITY_MODEL.md` — knowledge/product/runtime/context entities, Claim and Relation model;
 - `CONTENT_GOVERNANCE.md` — правила источников, UGC, moderation, validation, trust, correction и publish governance;
 - `AI_POLICY.md` — canonical границы AI behavior, AI-output, source discipline и запреты против AI drift;
 - `ARTEMIS_MASTER_PROMPT.md` — общие правила работы агентов, docs-first discipline, архитектурные инварианты и порядок принятия решений;
@@ -391,7 +391,9 @@ docs/reference/
 - обновление кода без обязательного docs sync для архитектурных, data и release изменений;
 - сохранение в canonical docs старых имён документов или старых API summary после смены фактической структуры проекта;
 - добавление product/data/UI/AI решений без проверки against foundation-layer;
-- развитие stories/courses/AI вне Research Slice model;
+- развитие Stories/Courses/AI вне independent branch decision;
+- описание current mutable ResearchSlice as immutable revision;
+- использование classification/Similarity as substantive Relation;
 - использование AI output как source-backed/canonical knowledge без governance.
 
 ---
@@ -404,7 +406,7 @@ docs/reference/
 - release gate / workflow / readiness semantics;
 - canonical public map source;
 - auth/runtime deployment constraints;
-- mission, product scope, research slice semantics, epistemic model, entity model, content governance and AI policy;
+- mission, product scope, research-work semantics, Claim/Evidence model, entity model, content governance and AI policy;
 - documentation governance и правила размещения документов.
 
 Без этого change считается незавершённым.

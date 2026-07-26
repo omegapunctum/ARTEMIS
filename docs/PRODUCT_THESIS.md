@@ -3,131 +3,163 @@
 ## Статус
 
 - Тип: canonical active product thesis.
-- Версия: 1.1.
-- Дата: 2026-07-24.
-- Решение: Option A — focused architecture-history vertical.
+- Версия: 2.0.
+- Дата: 2026-07-26.
+- Решение: focused architecture-history research vertical.
+- Основание: Concept Lock v2 (`docs/work/2026-07-26_CONCEPT_LOCK_V2.md`).
 
 ## 1. Product statement
 
-**ARTEMIS Architecture Atlas помогает продвинутому студенту истории архитектуры сопоставить 2–3 объекта в пространстве и времени, проверить основания связей и сохранить доказательное сравнение для дальнейшей работы или передачи другому человеку.**
+**ARTEMIS Architecture Atlas помогает старшекурснику или магистранту истории архитектуры превратить сравнительный вопрос о 2–3 объектах в проверяемый Research Brief с claims, источниками, выводом, неопределённостью и пространственно-временным контекстом.**
 
-Дифференциация продукта:
+Дифференциация:
 
-> ARTEMIS показывает не только где и когда существовали объекты, но и почему их можно сопоставлять, чем подтверждены связи и какой исследовательский вывод сохранил пользователь.
+> ARTEMIS сохраняет не набор найденных карточек, а проверяемую цепочку от вопроса к выводу: что утверждается, каким evidence это поддерживается или оспаривается и где остаётся неопределённость.
 
-Карта и timeline являются средствами исследования. Конечная ценность — evidence-aware comparison и воспроизводимый результат работы.
+Map и timeline являются привилегированными исследовательскими линзами. Их дополнительная ценность должна быть доказана отдельно от ценности Compare/Evidence.
 
 ## 2. Проблема
 
-При подготовке сравнительного эссе, семинара или исследовательского задания студент обычно собирает контекст из линейных текстов, каталогов, карт, изображений и множества вкладок. Ему трудно одновременно:
+При подготовке сравнительного эссе, семинара или исследовательского задания студент собирает контекст из статей, каталогов, карт, изображений и заметок. В результате:
 
-- где находились объекты;
-- когда они возникли;
-- какие направления и регионы можно сопоставить;
-- чем подтверждается предполагаемое влияние;
-- как сохранить не только найденные объекты, но и вопрос, доказательства и собственный вывод.
+- утверждения отделяются от точных источников и locators;
+- формальное сходство легко принимается за влияние;
+- классификация смешивается с исторической relation;
+- собственный вывод трудно восстановить и проверить;
+- карта, хронология и evidence остаются в разных инструментах;
+- перенос результата в эссе или презентацию требует повторной ручной сборки.
 
-ARTEMIS должен уменьшить этот разрыв, не выдавая визуальную близость или AI-output за исторический факт.
+ARTEMIS должен уменьшить этот разрыв, не выдавая similarity, classification, interpretation или AI output за доказанную связь.
 
-Проверяемый job-to-be-done:
+## 3. Primary user and job
 
-> Когда мне нужно подготовить доказательное сравнение архитектурных объектов, я хочу увидеть их одновременно в пространстве и времени, проверить источники и сохранить получившееся сравнение, чтобы не собирать контекст заново из множества сайтов.
+Первичный пользователь:
 
-## 3. Primary user
+- старшекурсник или магистрант истории архитектуры/искусства;
+- у него есть сравнительное учебное или исследовательское задание со сроком в ближайшие 1–2 недели;
+- он умеет читать источники, но не обязан знать внутреннюю терминологию ARTEMIS.
 
-Первичный пользователь vertical MVP:
+Job-to-be-done:
 
-- продвинутый студент истории архитектуры или искусства, готовящий сравнительное эссе, семинар или исследовательское задание.
+> Когда мне нужно подготовить сравнительное задание, я хочу собрать контекст 2–3 объектов, проверить конкретные утверждения и сформулировать доказательный вывод, чтобы перенести результат в свою работу без повторного восстановления evidence chain.
 
-Первичный сценарий:
+Secondary exploratory audiences:
 
-> Сопоставить 2–3 архитектурных объекта, понять основания сходства и различий, проверить источники и сохранить результат для дальнейшей работы.
+- преподаватель или куратор — для оценки provenance, rubric и возможного guided use;
+- профессиональный исследователь — только для требований к corpus depth и citation precision.
 
-Вторичные исследовательские аудитории:
+Результаты вторичных аудиторий не заменяют evidence по primary user.
 
-- преподаватели и кураторы — для exploratory tests и curated entry points;
-- профессиональные исследователи — после расширения корпуса и provenance depth.
+## 4. Core value and loop
 
-Результаты вторичных аудиторий не заменяют evidence по первичному пользователю.
+Инвариант ценности:
 
-## 4. Core value loop
+`Question → Claims → Evidence → Comparison → Findings → Conclusion / Unresolved`
+
+Текущий product loop:
 
 1. Сформулировать или выбрать исследовательский вопрос.
-2. Найти 2–3 релевантных объекта через map/time/filter.
-3. Сравнить их свойства, источники и связи.
-4. Проверить evidence и отделить documented relation от computed similarity.
-5. Зафиксировать заметку, вывод и неопределённость.
-6. Сохранить Research Slice.
-7. Вернуться к нему или передать read-only представление.
+2. Найти 2–3 объекта через доступные линзы, включая map/time/filter.
+3. Сопоставить factual Claims, classifications и substantive Relations.
+4. Проверить EvidenceLinks и locators; отдельно увидеть Similarity.
+5. Зафиксировать findings, conclusion или explicit `unresolved`, а также uncertainty.
+6. Сохранить immutable Slice Revision внутри Investigation.
+7. Получить citation-ready Research Brief.
+8. Вернуться к Investigation, создать новую revision или передать revision-pinned read-only результат.
 
-Доказательное сравнение создаёт первую ценность. Research Slice сохраняет и делает её повторно используемой.
+Первая ценность возникает при доказательном сравнении. Повторная ценность возникает, когда revision и Brief позволяют продолжить или передать работу без потери evidence chain.
 
-UX decision 2026-07-17: comparison-first означает, что интерфейс сначала помогает выбрать и сопоставить 2–3 Features, а затем предлагает сохранить полученный контекст. Research Slice не является обязательным первым действием или заменой object comparison. Пользовательская подпись до validation — «Сохранённое исследование», внутреннее canonical name остаётся `Research Slice`.
+## 5. Research-work model
 
-## 5. Product principles
+- `Investigation` — развивающаяся исследовательская работа с устойчивой identity.
+- `Slice Revision` — неизменяемая версия Investigation.
+- `Saved View` — вложенный UI-контекст map/time/filter/selection; полезный, но не достаточный результат.
+- `Research Brief` — читаемая и экспортируемая проекция одной revision.
 
-1. Evidence before breadth.
-2. Real relations before inferred relations.
-3. Content depth before platform expansion.
-4. Public capability before navigation promise.
-5. Map, time and detail form one research surface.
-6. AI may explain sourced context, but may not manufacture provenance.
-7. Smaller curated corpus is preferable to a large weak corpus.
-8. Comparison creates understanding; Slice preserves it.
-9. Map and time must prove cognitive value against a simpler catalogue baseline.
-10. A saved interface state is not yet a research result.
+Current runtime `ResearchSlice v2` является compatibility persistence envelope. Он не доказывает, что Investigation/revision/Brief model уже реализована.
 
-## 6. Hypotheses to validate
+## 6. Product principles
 
-### H1 — comparison value
+1. Human judgment is the mission; AI is optional assistance.
+2. Claims before generic notes.
+3. EvidenceLinks before source lists.
+4. Locators before unverifiable URLs.
+5. Substantive Relations before pairwise classifications.
+6. Evidence depth before corpus breadth.
+7. Comparison creates understanding; revision preserves it; Brief transfers it.
+8. Saved View supports research but does not define research.
+9. Map/time must prove incremental cognitive value.
+10. Visible uncertainty is preferable to false completion.
+11. Public capability must precede navigation promise.
+12. Current reality must never be inferred from North Star documentation.
 
-Пользователь получает новое понимание темы, когда может сопоставить объекты одновременно по карте, времени, направлению и источникам.
+## 7. Hypotheses to validate
 
-### H2 — relation value
+### H1 — evidence-chain value
 
-Документированные relations повышают ценность сильнее, чем дополнительное число несвязанных map points.
+Claim-level evidence помогает пользователю создать более корректный, трассируемый и убедительный сравнительный Brief, чем его обычный workflow.
 
-### H3 — slice value
+### H2 — comparison value
 
-Пользователь понимает Research Slice как сохраняемый исследовательский результат, а не как технический snapshot интерфейса.
+Сопоставление одних и тех же типов Claims по 2–3 объектам создаёт более глубокий вывод, чем последовательный просмотр карточек.
 
-### H4 — focused domain
+### H3 — relation literacy
 
-Архитектурный vertical достаточно узок для качественной курации и достаточно богат для проверки общей модели ARTEMIS.
+Пользователь отличает substantive Relation от shared classification и computed Similarity и не использует последние как доказательство influence/causality.
 
-### H5 — spatial-temporal advantage
+### H4 — spatial-temporal increment
 
-Map + time + compare улучшают качество или скорость исследовательского вывода относительно обычного каталога/списка.
+Map/time дают измеримое преимущество над same-content list/detail baseline хотя бы для части исследовательских вопросов.
 
-### H6 — behavioral reuse
+### H5 — reusable outcome
 
-Пользователь самостоятельно возвращается к сохранённому исследованию, изменяет его или передаёт другому человеку в контексте реальной задачи.
+Revision-pinned Research Brief полезнее mutable bookmark: пользователь переносит его в задание, дополняет новой revision или передаёт другому человеку.
 
-## 7. MVP success definition
+### H6 — focused domain
 
-Vertical MVP считается продуктово доказанным, если:
+Architecture-history vertical достаточно узок для claim-level curation и достаточно богат для проверки общей evidence-first модели ARTEMIS.
 
-- пользователь без помощи находит и сравнивает минимум два объекта;
-- provenance читается рядом с factual content;
-- relation и similarity не смешиваются;
-- Slice сохраняет вопрос, выбор объектов, evidence, заметку/вывод и восстановимый Saved View;
-- Slice можно сохранить, закрыть, восстановить и передать на публичном runtime;
-- минимум 80% тестовых пользователей завершают основной сценарий;
-- пользователь может назвать новое или уточнённое понимание и показать evidence, на котором оно основано;
-- полевой пилот показывает самостоятельный возврат или передачу сохранённого исследования;
-- продуктовая ценность объясняется пользователем без терминов внутренней архитектуры.
+### H7 — sustainable curation
 
-## 8. Non-goals текущего цикла
+Один глубокий research module можно подготовить и проверить с измеримой стоимостью, пригодной для следующего пилота.
 
-- универсальный исторический охват;
-- Courses expansion;
-- open-ended UGC;
+## 8. MVP success definition
+
+MVP считается продуктово подтверждённым только по `PRODUCT_VALIDATION_PLAN.md`.
+
+Минимальный смысл результата:
+
+- участник завершает core loop без критической помощи;
+- major Claims в Brief имеют traceable EvidenceLinks или явно помечены как unsupported/unresolved;
+- shared classification и Similarity не превращаются в historical Relation;
+- blind rubric показывает улучшение качества Brief относительно control;
+- пользователь может объяснить отдельный вклад Compare/Evidence и map/time;
+- хотя бы часть primary cohort самостоятельно использует результат на реальной задаче в течение 7 дней;
+- стоимость подготовки одного module зафиксирована;
+- принято явное решение `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK`.
+
+Нравящийся интерфейс, технически успешное сохранение или высокий task completion сами по себе не подтверждают thesis.
+
+## 9. Non-goals текущего цикла
+
+- universal history platform;
+- Stories/Courses как отдельные продукты;
 - AI generation как primary feature;
-- causal/predictive/counterfactual claims;
-- enterprise/platform integrations;
-- framework rewrite ради самого rewrite;
-- scaling до подтверждения product loop.
+- open-ended UGC;
+- causal/predictive/counterfactual engine;
+- multi-domain expansion;
+- institution/enterprise workflows;
+- framework rewrite;
+- corpus scaling до deep-module и curation-cost evidence.
 
-## 9. Long-term option
+## 10. Long-term options
 
-После доказательства vertical MVP модель может быть расширена на события, людей, процессы и другие культурно-исторические области. Такое расширение является отдельным решением и не должно неявно входить в текущий backlog.
+После core proof независимыми gates могут проверяться:
+
+- guided exploration;
+- source-bound AI assistance;
+- institutional/teaching workflow;
+- новые предметные domains;
+- structured inference experiments.
+
+Ни одна ветвь не открывается автоматически другой ветвью или общим обещанием «платформы».

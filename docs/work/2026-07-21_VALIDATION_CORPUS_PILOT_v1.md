@@ -7,6 +7,14 @@
 - Scope: comparison-first Round 0 corpus.
 - Не является заявлением о зрелом MVP-корпусе.
 - Execution: V2 cohort expansion и V3 Relation graph загружены в Airtable 2026-07-22; профиль достиг `comparison_ready`.
+- Concept Lock v2 supersession: остаётся historical/technical execution contract, но больше не является достаточным входом во внешнюю product validation.
+
+После 2026-07-26:
+
+- `comparison_ready` означает только прохождение legacy quantitative content profile;
+- 10 `same_movement` records трактуются как documented shared-classification compatibility data;
+- они не считаются substantive Relations и не доказывают relation-value;
+- product-validation readiness требует три deep research modules из `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
 
 ## 1. Решение
 
@@ -23,7 +31,7 @@
 - 0 пустых опубликованных Layers;
 - semantic gate имеет статус `ready` или `ready_with_warnings`.
 
-Этого достаточно для проверки сравнения, provenance и различения Relation/Similarity. Более широкий ориентир 100–150 Features, 50+ Relations, 3 Stories и 5–10 reference Slices сохраняется как maturity reference, а не как входной барьер Round 0.
+Этот envelope оказался достаточным для технической проверки UI/export/provenance paths, но недостаточным для cognitive product validation. Более широкий количественный ориентир также не заменяет deep-module readiness.
 
 ## 2. Исходный baseline
 
@@ -121,7 +129,9 @@ V3 выполнен через Airtable в порядке `draft Sources/Relatio
 | `modernism_global` | 1 | UNESCO Bauhaus + UNESCO Le Corbusier/Villa Savoye |
 | `brutalism_uk` | 3 | Historic England Park Hill/Preston + National Theatre official source |
 
-Все 10 новых predicates имеют тип `same_movement`. Это не вычисленная same-layer Similarity: каждый endpoint классифицирован в reviewed evidence, а для cross-source синтеза используются два отдельных `RelationSources`. Три более широкие историко-архитектурные группировки (`roman_empire`, две `renaissance_italy`) маркированы как `interpretation / medium`; остальные — `fact / high`.
+Все 10 новых predicates имеют тип `same_movement`. На момент V3 они корректно отделялись от computed Similarity и имели reviewed classification evidence.
+
+Concept Lock v2 уточняет их смысл: это pairwise compatibility projection двух ClassificationAssertions, а не substantive historical Relation. Они сохраняются без выдумывания новой evidence, исключаются из relation-value и должны быть перенесены только отдельной data migration.
 
 Airtable control read после promotion:
 
@@ -148,14 +158,14 @@ Canonical `Export Airtable Data` snapshot создан 2026-07-22 в `12:58:03Z`
 
 Release не блокируется только потому, что corpus ещё `building`: это честное состояние активной работы. Release блокируется, если профиль отсутствует, не совпадает с данными или semantic artifacts не проходят gate.
 
-## 6. Граница Stories и Research Slices
+## 6. Граница external validation
 
-Этот corpus contract проверяет data prerequisites для comparison-first Round 0. Он не объявляет публичные Stories или Research Slice loop готовыми.
+Этот corpus contract проверяет legacy technical data prerequisites. Он не объявляет external product validation, target Investigation/revision model или Stories ready.
 
-- deployment и save → reopen → share принадлежат issue #286;
-- reference Slices создаются только на работающем public loop;
-- curated Story создаётся поверх reviewed Features/Relations после подтверждения Slice E2E;
-- полная внешняя validation не начинается до выполнения соответствующих runtime criteria.
+- three deep modules must become `READY`;
+- first-class claim/evidence and Brief behavior must be available to the test condition;
+- current mutable Slice E2E does not prove immutable revision/share;
+- Stories remain outside scope.
 
 ## 7. Acceptance для #285
 
@@ -167,4 +177,4 @@ Issue #285 закрывается, когда:
 - Source/Media/evidence coverage достигает утверждённых порогов;
 - фактический content batch и control-read evidence задокументированы.
 
-Достижение maturity reference 100–150 / 50+ не требуется для закрытия сокращённого пилота и рассматривается только после пользовательского decision gate.
+Достижение maturity reference 100–150 / 50+ не требуется для закрытия исторического execution item и не должно выполняться до deep-module/validation evidence.

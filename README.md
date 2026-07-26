@@ -1,10 +1,10 @@
 # ARTEMIS
 
-**ARTEMIS Architecture Atlas** is an evidence-aware comparison tool for architecture history, built with **MapLibre + GeoJSON**.
+**ARTEMIS Architecture Atlas** is an evidence-first research tool for architecture history, built with **MapLibre + GeoJSON**.
 
-The active delivery focus is one concrete job: help an advanced architecture-history student compare 2–3 objects, inspect the evidence behind relations, record a finding, and preserve the result as a Research Slice.
+The active job is to help an advanced architecture-history student turn a comparative question about 2–3 objects into a traceable Research Brief with Claims, evidence, a conclusion or explicit unresolved state, uncertainty, and spatial-temporal context.
 
-Map and time are research instruments, not the end product. The differentiator is evidence-aware comparison plus a reproducible saved result. The broader spatial-temporal research environment is the North Star; Stories as a separate product layer, Courses, open UGC, multi-domain expansion and generative AI are not part of the active MVP cycle.
+The core is `Question → Claims → Evidence → Conclusion`. Map and time are privileged research lenses whose incremental value must be validated, not assumed. The target saved model is `Investigation → immutable Slice Revision → Research Brief`, with a nested Saved View. The current mutable ResearchSlice v2 backend is a compatibility capability, not that final model.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -16,13 +16,13 @@ ARTEMIS currently combines:
 - curated architecture data (Airtable → ETL → GeoJSON)
 - interactive map visualization (MapLibre)
 - backend implementations for auth, UGC/moderation and research workflows
-- research slices (backend-available private/owner-only knowledge snapshots)
+- mutable ResearchSlice v2 compatibility runtime (backend-available, private/owner-only)
 - stories and courses as frozen thin orchestration layers
 - explain-context contract payloads without AI generation
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The current operational state is **controlled engineering prototype / product-data validation**. See `docs/PROJECT_TRUTH.md` for the authoritative public/backend/pilot/future boundary.
+The current operational state is **controlled engineering prototype / concept-locked pre-validation**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 
@@ -31,6 +31,7 @@ The current operational state is **controlled engineering prototype / product-da
 | `PUBLIC NOW` | Works on GitHub Pages without backend execution | map, timeline/filter/detail baseline, checked-in `data/*` |
 | `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
 | `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
+| `CONCEPT TARGET` | Canonically approved but not implemented | Claims/EvidenceLinks, immutable revisions, Research Brief |
 | `FUTURE` | Not an active product capability | AI generation, universal domains, causal/predictive layers |
 
 ---
@@ -201,6 +202,7 @@ For detailed boundaries and interpretation, read together with:
   - current baseline approval semantics are two-step: `pending -> review -> approved/publish-attempt`
   - first `approve` advances draft from `pending` to `review` only; publish-attempt path is allowed only after review stage
 - Research slices (`/api/research-slices/*`):
+  - current API mutates one ResearchSlice row and increments `content_version`; it does not create immutable Slice Revisions
   - `POST /api/research-slices` (save slice)
   - `GET /api/research-slices` (list my slices)
   - `GET /api/research-slices/{slice_id}` (open/restore)
@@ -210,6 +212,7 @@ For detailed boundaries and interpretation, read together with:
   - `DELETE /api/research-slices/{slice_id}/share` (revoke active capability)
   - `GET /api/public/research-slices/shared` with `X-ARTEMIS-Share-Token` (clean-session read-only restore)
   - owner CRUD remains private-only/owner-only; sharing is unlisted, revocable, no-store and does not publish into canonical data
+  - current share reads the mutable row and is therefore live/mutable, not revision-pinned reproducibility
 - Stories (`/api/stories/*`):
   - `POST /api/stories`
   - `GET /api/stories`
@@ -331,10 +334,10 @@ Recommended reading order:
 
 Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` remains the primary UI/UX working spec, `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` remains the system-level implementation map, and `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` owns the visual design layer: official style, palette, typography, state semantics and design-token baseline.
 
-For the active main-screen refinement cycle, the track-specific implementation target is:
+The current accepted main-screen shell is documented by:
 - `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`
 - `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md` — measured CSS ownership baseline and rollout batches.
 
-This active spec governs the compact map-first shell, removal of the structural desktop rail, compact timeline, icon consistency and CSS owner cleanup. It does not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
+These files describe the implemented visual-shell baseline. They do not define the next product hierarchy: any new UI work must follow Concept Lock v2 (`Question → Claims → Evidence → Conclusion/Brief`) and treat map/time as validated lenses. They also do not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
 
 Historical documents live in `docs/archive/`, and diagnostic/reference documents live in `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.

@@ -171,7 +171,7 @@ Canonical layer — это source of truth для текущего состоя�
 Чтобы уменьшить semantic overlap, в ARTEMIS фиксируются владельцы смысла.
 
 - `FOUNDATION_INDEX.md` — навигация foundation-layer, порядок чтения, выбор source of truth по типам решений
-- `ARTEMIS_CONCEPT.md` — North Star, миссия, принципы, epistemic foundation, лестница развития
+- `ARTEMIS_CONCEPT.md` — North Star, human mission, principles and independent branch gates
 - `PROJECT_TRUTH.md` — фактическая capability/maturity boundary
 - `PRODUCT_THESIS.md` — active product audience/problem/hypotheses
 - `ARTEMIS_PRODUCT_SCOPE.md` — границы текущего vertical scope
@@ -179,10 +179,10 @@ Canonical layer — это source of truth для текущего состоя�
 - `DATA_DICTIONARY.md` — semantic data model
 - `PRODUCT_VALIDATION_PLAN.md` — evidence protocol и thresholds
 - `VALIDATION_DECISION.md` — доказанный validation outcome и разрешённый следующий scope
-- `RESEARCH_SLICE_CONTRACT.md` — product/data/UI/AI semantics Research Slice как воспроизводимого исследовательского результата
-- `RESEARCH_SLICE_SPEC.md` — runtime/API shape Research Slice baseline
-- `EPISTEMIC_CONTRACT.md` — операционные правила fact/source/relation/interpretation/hypothesis/AI-output/uncertainty/counterfactual
-- `ENTITY_MODEL.md` — knowledge/product/runtime/context entities и relation model
+- `RESEARCH_SLICE_CONTRACT.md` — Investigation/SliceRevision/SavedView/ResearchBrief target semantics
+- `RESEARCH_SLICE_SPEC.md` — current mutable ResearchSlice v2 runtime/API compatibility shape
+- `EPISTEMIC_CONTRACT.md` — Claim/EvidenceLink and independent epistemic dimensions
+- `ENTITY_MODEL.md` — knowledge/product/runtime/context entities, Claim and Relation model
 - `CONTENT_GOVERNANCE.md` — source policy, UGC/moderation, validation, trust, correction, publish governance
 - `AI_POLICY.md` — canonical границы AI behavior, AI-output, source discipline и запреты против AI drift
 - `PROJECT_STRUCTURE.md` — структура репозитория, entrypoints, runtime/documentation boundaries
@@ -416,7 +416,9 @@ Google Drive используется для collaborative drafting layer:
 - отсутствие docs sync после изменения architecture/data/release/product rules;
 - хранение load-bearing governance только вне GitHub;
 - несоответствие физического размещения документа его реальной роли;
-- развитие stories/courses/AI вне `RESEARCH_SLICE_CONTRACT.md`;
+- развитие Stories/Courses/AI вне independent validation branch decision;
+- описание mutable ResearchSlice/SavedView как immutable revision;
+- использование `same_movement` или Similarity как substantive Relation;
 - использование AI-output как canonical/source-backed content вопреки `AI_POLICY.md` и `EPISTEMIC_CONTRACT.md`;
 - публикация UGC как trusted public content без `CONTENT_GOVERNANCE.md`.
 

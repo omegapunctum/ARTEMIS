@@ -1,232 +1,267 @@
-# ARTEMIS — PRODUCT SCOPE v1.2
+# ARTEMIS — PRODUCT SCOPE
 
 ## Статус
 
-- Тип: canonical product scope document.
-- Статус: active.
-- Дата решения: 2026-07-24.
-- Активный delivery focus: Architecture Atlas vertical MVP.
-- North Star определяется `ARTEMIS_CONCEPT.md`.
-- Фактическая доступность определяется `PROJECT_TRUTH.md`.
+- Тип: canonical current product scope.
+- Версия: 2.0.
+- Дата: 2026-07-26.
+- Active vertical: Architecture Atlas.
+- North Star: `ARTEMIS_CONCEPT.md`.
+- Current reality: `PROJECT_TRUTH.md`.
+- Validation authority: `PRODUCT_VALIDATION_PLAN.md` and `VALIDATION_DECISION.md`.
 
-Этот документ защищает текущий цикл от product drift. Он не отменяет долгосрочную explainable spatial-temporal architecture, но запрещает выдавать её за scope ближайшего продукта.
+Этот документ запрещает feature/product drift. Concept target не является утверждением о current implementation.
 
 ## 1. Формула текущего продукта
 
-ARTEMIS Architecture Atlas — **инструмент доказательного сравнения архитектурных объектов в пространстве и времени**.
+ARTEMIS Architecture Atlas — **инструмент evidence-first сравнения архитектурных объектов с пространственно-временными линзами и переносимым Research Brief**.
 
-Его задача:
+Продукт помогает:
 
-- показать архитектурные объекты в пространстве и времени;
-- дать содержательное сравнение;
-- показать документированные relations и отдельно вычисляемую similarity;
-- сделать provenance видимым;
-- сохранить вопрос, evidence, заметку/вывод и восстановимый контекст как Research Slice.
-
-Stories могут использоваться как curated вход в основной цикл, но не являются самостоятельным обязательным продуктовым слоем MVP.
+- поставить сравнительный вопрос;
+- выбрать 2–3 объекта;
+- сопоставить Claims;
+- проверить EvidenceLinks and locators;
+- отличить substantive Relation от classification and Similarity;
+- сформулировать conclusion or unresolved;
+- сохранить revision и перенести Brief в реальную работу.
 
 ## 2. Primary user
 
 Первичный пользователь:
 
-- продвинутый студент истории архитектуры/искусства, готовящий сравнительное эссе, семинар или исследовательское задание.
+- старшекурсник или магистрант истории архитектуры/искусства;
+- готовит сравнительное эссе, семинар или исследовательское задание в ближайшие 1–2 недели.
 
 Primary job:
 
-> Сопоставить 2–3 архитектурных объекта, понять основания сходства и различий, проверить источники и сохранить доказательное сравнение для дальнейшей работы.
+> Собрать и проверить сравнительный вывод по 2–3 объектам и перенести evidence chain в свою работу без повторной ручной сборки.
 
-Формулировка «любой интеллектуальный пользователь» недостаточна для приоритизации и не используется как primary persona текущего цикла.
-
-Преподаватели и кураторы являются вторичной exploratory-аудиторией. Профессиональные исследователи не считаются beachhead-аудиторией до расширения корпуса и provenance depth.
+Преподаватель/куратор и профессиональный исследователь являются exploratory audiences.
 
 ## 3. Главная ценность
 
-Главный момент ценности — доказательное сравнение объектов. Главная сохраняемая единица — Research Slice.
+Первая ценность — evidence-aware comparison.
 
-Следствие для UX: object comparison является primary analytical action, а Research Slice — результатом, который сохраняет уже собранный контекст. Сравнение сохранённых срезов не заменяет сравнение 2–3 Features и не использует тот же primary action без явного уточнения.
+Reusable outcome:
 
-Research Slice включает:
+- Investigation;
+- immutable Slice Revision;
+- Research Brief;
+- optional nested Saved View.
 
-- research question;
-- выбранные Features;
-- rationale выбора;
-- отобранные evidence/source-aware references;
-- user notes, findings и uncertainty;
-- conclusion;
-- Saved View: spatial focus/viewport, time state, active filters/layers и comparison state;
-- title, metadata и version.
-
-`Saved View` — компонент Research Slice, а не его синоним. Сохранённый viewport без вопроса, evidence и человеческого вывода не считается продуктово завершённым Research Slice.
-
-Обязательные Slice actions для MVP:
-
-- create;
-- save;
-- list;
-- reopen/restore;
-- update/rename;
-- delete;
-- share as read-only state.
+Saved View without question/Claims/Evidence/conclusion is not a complete research result.
 
 ## 4. Core product loop
 
-1. Сформулировать или выбрать исследовательский вопрос.
-2. Найти 2–3 объекта через map/time/filter.
-3. Сравнить sourced detail, properties и relations.
-4. Проверить reviewed evidence и отдельно labelled similarity.
-5. Зафиксировать заметку, вывод и неопределённость.
-6. Сохранить Research Slice.
-7. Вернуться к Slice или поделиться им.
+1. Question.
+2. Entity selection.
+3. Claim comparison.
+4. Evidence and locator review.
+5. Relation/classification/Similarity distinction.
+6. Findings.
+7. Conclusion or unresolved.
+8. Save revision.
+9. Generate/open/share Brief.
+10. Return and create next revision.
 
-Stories допускаются только как curated вход в этот цикл. Courses и AI не входят в active MVP loop.
-
-User-facing terminology: до отдельной validation термин `Research Slice` отображается как «Сохранённое исследование» с возможной вторичной подписью «срез». Onboarding не требует знания внутреннего термина до получения первой ценности.
+Stories, Courses and AI are not part of the active loop.
 
 ## 5. Обязательный scope
 
-### 5.1 Curated architecture data
+### 5.1 Curated research modules
 
-- Architecture Features с canonical UUID;
-- reviewed Layers;
-- Sources с ролью evidence;
-- Media с direct asset URL, license и attribution;
-- reviewed Relations;
-- semantic validation gate;
-- controlled publish flow.
+- ровно три deep validation modules before external pilot;
+- 4–6 Features per module;
+- 6–10 atomic Claims per module;
+- reviewed EvidenceLinks with locators;
+- минимум две substantive Relations per module;
+- challenging/contested/medium-confidence evidence;
+- reference revision and hidden reference Brief;
+- measured preparation and review cost.
 
-Контент производится сравнительными когортами, а не отдельными несвязанными объектами. Для каждой когорты фиксируются research question, 3–5 Features, evidence-backed Relations, Sources, rights-clean Media и reference Slice. Измеряются preparation time, review time и reuse.
+Execution owner:
 
-Семантика полей определяется `DATA_DICTIONARY.md`, export mechanics — `DATA_CONTRACT.md`.
+- `docs/work/2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
 
-### 5.2 Map-time workspace
+The existing 31-Feature/six-cohort corpus remains useful exploration content and technical release evidence, but it is not sufficient validation corpus by itself.
 
-- map;
-- compact timeline;
-- search;
-- filters по периоду, направлению и региону;
-- selected state;
-- sourced detail panel;
-- desktop/tablet/mobile adaptation.
+### 5.2 Research interface
 
-Temporal claim boundary:
+- question framing;
+- list/detail/evidence surface;
+- Compare for 2–3 Features;
+- map and compact timeline as synchronized lenses;
+- filters/search;
+- visible source and locator;
+- visible classification/Relation/Similarity distinction;
+- uncertainty and challenged evidence.
 
-- MVP является time-indexed исследованием объектов, а не полной моделью их изменения;
-- даты/периоды и timeline не доказывают поддержку reconstruction, destruction, function change или evolving geometry;
-- будущая модель `Entity → Event → Time interval → State change → Evidence` открывается только после validation decision и начинается с одного архитектурного сценария.
+Map/time must not hide non-spatial evidence dimensions such as function, material, patronage, construction and interpretation.
 
-### 5.3 Compare
+### 5.3 Claim/Evidence
 
-- выбор 2–3 объектов;
-- сравнение temporal/spatial/style/source properties;
-- отдельное отображение Relations и Similarity;
-- отсутствие неподтверждённых causal claims.
+- Claim is the unit of evidence;
+- Source is not blanket proof of Entity;
+- EvidenceLink identifies `supports/challenges/contextualizes`;
+- locator enables independent re-finding;
+- claim kind/origin/review/confidence/evidence/uncertainty remain independent;
+- user Claim is private until separate governance promotion.
 
-### 5.4 Research Slices
+Current artifacts do not yet implement this full schema. Data/runtime migration is separate work.
 
-- полный public end-to-end loop;
-- backend persistence;
-- research question, evidence selection, notes/findings, conclusion и uncertainty;
-- Saved View как восстановимый UI-компонент;
-- восстановление контекста;
-- shareable read-only state.
+### 5.4 Relations, classification and Similarity
 
-### 5.5 Optional curated entry
+- Relation is a specific structured Claim;
+- substantive Relation requires reviewed evidence and locator;
+- shared Movement/Layer is ClassificationAssertion;
+- `same_movement` is legacy compatibility projection and excluded from substantive Relation threshold;
+- Similarity is computed and displays criteria;
+- causal claims remain out of scope.
 
-- один или несколько curated entry points допустимы для onboarding;
-- каждый вход должен вести в основной Compare–Evidence–Save loop;
-- отсутствие Stories не блокирует MVP validation и exit.
+### 5.5 Research persistence
 
-### 5.6 Provenance and epistemic clarity
+Target baseline:
 
-Внутренняя epistemic model остаётся детальной. Primary UI группирует статусы в четыре понятных класса:
+- stable Investigation identity;
+- immutable revisions;
+- question, Claims/findings, EvidenceLinks, conclusion/unresolved and uncertainty;
+- meaningful dataset/schema identity;
+- nested Saved View;
+- revision-pinned read-only share;
+- Markdown/plain-text Research Brief;
+- return and new revision.
 
-- подтверждено источником;
-- редакционная интерпретация;
-- гипотеза или неопределённость;
-- вычисленное сходство.
+Current mutable ResearchSlice v2 remains `BACKEND-AVAILABLE/COMPATIBILITY` until separate migration.
 
-Подробный canonical status доступен по запросу и не теряется при упрощённом представлении.
+### 5.6 Optional curated entry
+
+One or more curated entry points may lead into a ready research module.
+
+They:
+
+- do not create a separate Story product;
+- must lead to Question/Compare/Evidence;
+- do not block MVP exit if absent.
 
 ## 6. Public capability rule
 
-Функция входит в пользовательскую primary navigation только если она работает на public deployment end-to-end.
+Capability enters primary navigation only when it works on the public deployment end-to-end.
 
-Backend-код без public API deployment обозначается `BACKEND-AVAILABLE`, а не «доступно пользователю».
+Labels:
 
-Thin CRUD не считается полноценной Stories/Courses product depth.
+- `PUBLIC NOW`;
+- `BACKEND-AVAILABLE`;
+- `PILOT`;
+- `CONCEPT TARGET`;
+- `FUTURE`.
 
-## 7. Frozen scope до validation gate
+Code or schema without public runtime is not a user capability. Public mutable share is not revision-pinned reproducibility.
 
-- Courses expansion;
+## 7. Frozen scope
+
+Until `VALIDATION_DECISION` opens one named branch:
+
+- Stories/Courses product depth;
 - AI generation/explanation;
 - open-ended UGC;
-- new domain/entity expansion;
-- causal engine;
-- counterfactual simulation;
-- predictive layers;
-- gamification;
+- multi-domain expansion;
+- institutional collaboration;
+- causal/predictive/counterfactual engine;
 - native apps;
-- enterprise API/integrations;
-- non-critical scaling и framework rewrite.
+- enterprise APIs/integrations;
+- framework rewrite;
+- corpus scaling beyond module prerequisites;
+- non-critical scaling.
 
-Существующий код замороженных слоёв может сохраняться, тестироваться и получать security fixes, но не задаёт product roadmap.
+Security and compatibility maintenance of existing frozen code remains allowed.
 
-## 8. Content threshold
+## 8. Content readiness
 
-Перед comparison-first Round 0:
+Technical release readiness and product-validation readiness are separate.
 
-- 30–40 Features;
-- 6–8 comparison cohorts минимум по 3 Features;
-- 12–20 reviewed Relations;
-- source coverage 100%;
-- primary Media coverage не ниже 90%;
-- relation evidence coverage 100%.
+### Technical corpus envelope
 
-Порог является утверждённым узким pilot envelope из `docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`. Более широкий ориентир 100–150 Features / 50+ Relations / reference Slices остаётся maturity reference после decision gate. Stories оцениваются отдельно как onboarding-механизм. Полная граница MVP определяется `MVP_ARCHITECTURE_ATLAS.md`.
+Existing profile:
 
-До expansion необходимо зафиксировать стоимость подготовки и проверки одной comparison cohort. Рост числа Features без этого показателя не доказывает масштабируемую content model.
+- 31 Features;
+- six comparison cohorts;
+- 12 current Relations;
+- Source and Media coverage thresholds;
+- semantic release gate.
 
-## 9. AI boundary
+This supports exploration/runtime tests.
 
-Explain Context Contract может существовать как backend contract, но AI generation не считается реализованной product feature.
+### Validation-ready corpus
 
-Будущий AI обязан:
+Requires all three deep modules `READY`.
 
-- опираться на selected sourced context;
-- отделять fact от interpretation/hypothesis;
-- показывать provenance;
-- не создавать canonical Relations;
-- не скрывать uncertainty.
+Pairwise `same_movement` records:
 
-## 10. Validation gate
+- remain legacy data until migration;
+- do not count toward substantive Relation readiness;
+- do not prove H3 relation literacy/value;
+- must not be upgraded to influence by inference.
 
-Product expansion запрещён до выполнения `PRODUCT_VALIDATION_PLAN.md`.
+## 9. Temporal claim boundary
 
-Проверка разделяется на три независимых gate:
+Current product is time-indexed, not a full model of change.
 
-- usability — пользователь завершает сценарий;
-- cognitive value — сравнение создаёт новое или уточнённое понимание, связанное с evidence;
-- behavioral value — пользователь самостоятельно возвращается, изменяет или передаёт сохранённое исследование.
+Dates/timeline do not prove:
 
-Map + time должны сравниваться с catalogue/list baseline. Прохождение usability без cognitive и behavioral evidence не открывает expansion.
+- reconstruction;
+- destruction;
+- function change;
+- evolving geometry;
+- transmission;
+- causality.
 
-Минимальное решение после validation:
+Future `Entity → Event → State change → Evidence` requires branch-specific scope after validation.
+
+## 10. AI boundary
+
+AI generation is frozen.
+
+Future AI, if separately approved:
+
+- uses selected Claims/EvidenceLinks;
+- preserves locators;
+- exposes `origin=ai`;
+- may propose hypothesis or evidence gap;
+- does not become Source;
+- does not publish canonical Claims/Relations.
+
+AI compatibility does not determine current product architecture beyond preserving clean evidence/context boundaries.
+
+## 11. Validation gate
+
+Canonical protocol: `PRODUCT_VALIDATION_PLAN.md`.
+
+External pilot cannot start until:
+
+- three modules are `READY`;
+- public capability truth is recorded;
+- output Brief is available in every condition;
+- assignment and scoring rubric are frozen;
+- current share semantics are honestly described.
+
+Possible decision:
 
 - `ITERATE`;
-- `EXPAND`;
+- `EXPAND` one named branch;
 - `NARROW`;
 - `STOP/RETHINK`.
 
-Только явно зафиксированное решение может изменить этот scope.
+## 12. Owner documents
 
-## 11. Связанные owner documents
-
-- `PRODUCT_THESIS.md` — аудитория, проблема, hypotheses и value proposition;
-- `PROJECT_TRUTH.md` — фактическое текущее состояние;
-- `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary и exit criteria;
-- `DATA_DICTIONARY.md` — semantic data model;
-- `PRODUCT_VALIDATION_PLAN.md` — evidence gate;
-- `RESEARCH_SLICE_CONTRACT.md` — Slice semantics;
-- `EPISTEMIC_CONTRACT.md` — knowledge-type rules;
-- `CONTENT_GOVERNANCE.md` — trusted content governance;
-- `PROJECT_PHASES.md` и `PRIORITIES.md` — operational order.
+- audience/job/hypotheses: `PRODUCT_THESIS.md`;
+- North Star: `ARTEMIS_CONCEPT.md`;
+- current reality: `PROJECT_TRUTH.md`;
+- MVP exit: `MVP_ARCHITECTURE_ATLAS.md`;
+- validation: `PRODUCT_VALIDATION_PLAN.md`;
+- research-work model: `RESEARCH_SLICE_CONTRACT.md`;
+- current runtime schema: `RESEARCH_SLICE_SPEC.md`;
+- Claim/Evidence semantics: `EPISTEMIC_CONTRACT.md`;
+- entities/relations: `ENTITY_MODEL.md`;
+- content promotion: `CONTENT_GOVERNANCE.md`;
+- data artifacts: `DATA_DICTIONARY.md` and `DATA_CONTRACT.md`.

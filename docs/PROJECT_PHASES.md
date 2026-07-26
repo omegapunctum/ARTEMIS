@@ -1,13 +1,13 @@
-# ARTEMIS — PROJECT PHASES v4.2
+# ARTEMIS — PROJECT PHASES v5.0
 
 ## Статус
 
 - Тип: canonical operational phases document.
 - Статус: active.
-- Дата изменения модели: 2026-07-16.
-- Активная фаза: **4.5 Product/Data Validation**.
+- Дата изменения модели: 2026-07-26.
+- Активная фаза: **4.5 Concept-Locked Product Validation**.
 
-Фазы управляют порядком исполнения. Они не заменяют долгосрочную лестницу `ARTEMIS_CONCEPT.md` и не используются как список всех идей.
+Фазы управляют порядком исполнения. Они не заменяют North Star and independent branch gates из `ARTEMIS_CONCEPT.md` и не используются как список всех идей.
 
 ## Принцип перехода
 
@@ -68,74 +68,86 @@ Structural release success не равен semantic content validation.
 
 Закрытие baseline не означает завершённый product UX. Новый refinement выполняется после data/product decisions и не требует переоткрывать старый stabilization scope.
 
-## Фаза 4.5 — Product/Data Validation [активная]
+## Фаза 4.5 — Concept-Locked Product Validation [активная]
 
 ### Цель
 
-Доказать focused Architecture Atlas vertical до scaling и product expansion.
+Превратить Concept Lock v2 в validation-ready evidence-first Architecture Atlas и доказать либо сузить current vertical до scaling/expansion.
 
-### Track A — Strategy truth
+### Track A — Concept Lock v2
 
-- синхронизировать canonical documentation с Option A;
-- разделить `PUBLIC NOW`, `BACKEND-AVAILABLE`, `PILOT` и `FUTURE`;
-- привести GitHub backlog к новой фазе;
-- убрать противоречивые navigation/product claims.
+- human research as only mission;
+- evidence chain as core;
+- map/time as independently validated lenses;
+- Claim/EvidenceLink model;
+- Investigation/SliceRevision/SavedView/ResearchBrief model;
+- independent future branch gates.
 
-### Track B — Data foundation
+### Track B — Claim/Evidence and Relation foundation
 
-- выбрать UUID как canonical public ID;
-- отделить `source_record_id`;
-- нормализовать Sources и Media;
-- создать reviewed Relations model;
-- отделить Relation от Similarity;
-- добавить semantic ETL/release gate;
-- устранить enabled empty Layers.
+- first-class Claims and EvidenceLinks with locators;
+- independent epistemic dimensions;
+- ClassificationAssertions;
+- substantive Relation predicates;
+- preserve current data without invented evidence;
+- exclude `same_movement` from substantive readiness.
 
-Execution status 2026-07-21: identity, normalized Source/Media export and Relation/Similarity semantics are merged. #284 is merged as `d4e8b53`; the semantic gate excludes 7 enabled empty Layers from public artifacts while retaining bounded warnings. Three Media-rights gaps stay tracked separately in #283.
+Existing UUID/Source/Media/semantic-gate work remains completed technical foundation.
 
-### Track C — Content pilot
+### Track C — Deep research modules
 
-- approved Round 0 envelope: 30–40 architecture Features;
-- 6–8 comparison cohorts минимум по 3 Features;
-- 12–20 reviewed Relations;
-- 100% Source coverage, ≥90% primary Media, 100% Relation evidence;
-- executable checked-in content profile;
-- 100–150 / 50+ / reference Slices остаются maturity reference после decision gate; Stories оцениваются отдельно как onboarding-механизм.
+- exactly three modules;
+- 4–6 Features and 6–10 Claims each;
+- claim-level EvidenceLinks/locators;
+- minimum two substantive Relations;
+- challenge/contest/uncertainty;
+- reference revision and hidden Brief;
+- two-reviewer `READY`;
+- curation cost.
 
-### Track D — Public product loop
+The 31-Feature/six-cohort profile remains technical envelope, not external-validation readiness.
 
-- deploy/configure backend;
-- синхронизировать Slice schema с question/evidence/findings/conclusion/uncertainty/version contract;
-- обеспечить public save/open/share Slice;
-- скрыть или clearly label недоступные surfaces;
-- проверить public E2E.
+### Track D — Versioned research outcome
 
-### Track E — Product UX
+- stable Investigation;
+- immutable revisions;
+- pinned dataset/schema identity;
+- revision-pinned share or visible live mode;
+- Research Brief export;
+- safe legacy migration.
 
-- map-first shell refinement;
-- compare workflow;
-- sourced detail;
-- compact timeline;
-- CSS/JS ownership cleanup;
-- browser-level regression coverage.
+### Track E — Public research interface
+
+- question/Claim/evidence/conclusion hierarchy;
+- Compare 2–3 Features;
+- source locator access;
+- Relation/classification/Similarity literacy;
+- map/time synchronized without dominating evidence;
+- public target E2E;
+- browser regression.
 
 ### Track F — User validation
 
-- 5–8 primary users первой волны;
-- Round 1 comprehension/core loop и catalogue/list control;
-- usability, cognitive и behavioral gates;
-- исправления;
-- Round 2 и 7-day field follow-up;
-- outcome в `VALIDATION_DECISION.md`.
+- exactly six primary users in one wave;
+- same-content controlled baseline;
+- normal-workflow benchmark;
+- counterbalanced order and equal timebox;
+- blind two-evaluator Brief rubric;
+- absolute thresholds and critical errors;
+- separate map/time contribution;
+- 7-day unprompted reuse;
+- outcome in `VALIDATION_DECISION.md`.
 
 ### Exit criteria
 
-- approved Round 0 data threshold достигнут;
+- Concept Lock v2 complete;
+- `3/3` research modules `READY`;
 - semantic validation проходит;
-- public Slice loop проходит E2E;
-- relation/similarity semantics корректны;
+- Claim/Evidence and Relation semantics implemented for test condition;
+- public Investigation/revision/Brief loop passes target E2E;
+- Relation/classification/Similarity semantics correct;
 - primary flows подтверждены на desktop/tablet/mobile;
-- validation thresholds из `PRODUCT_VALIDATION_PLAN.md` проверены;
+- six-person validation thresholds checked;
 - решение `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK` записано в `VALIDATION_DECISION.md`.
 
 ## Фаза 5 — Scaling/Hardening [приостановлена]
@@ -153,9 +165,9 @@ Execution status 2026-07-21: identity, normalized Source/Media export and Relati
 
 ## Фаза 6 — Product Expansion [заблокирована]
 
-Stories depth, Courses, AI assistance, new domains и secondary extensions не открываются до Phase 4.5 decision gate.
+Stories depth, Courses, AI assistance, new domains, institutional workflows и secondary extensions не открываются до Phase 4.5 decision gate.
 
-Возможный порядок после `EXPAND` определяется отдельным phase update, а не наследуется автоматически из старого roadmap.
+`EXPAND` открывает только одну named branch. Возможный порядок определяется отдельным phase update, а не старым roadmap.
 
 ## Фаза 7 — Business/Platform [отложена]
 
@@ -163,16 +175,15 @@ Stories depth, Courses, AI assistance, new domains и secondary extensions не 
 
 ## Активный порядок работ
 
-1. Documentation/strategy reset.
-2. Identity, Sources, Media и Relations contract.
-3. Semantic validation gate.
-4. Architecture content pilot.
-5. Public backend/Slice loop.
-6. Product UX refinement и maintainability.
-7. User validation.
-8. Decision gate.
+1. Concept Lock v2.
+2. Three deep research modules.
+3. Claim/Evidence/Relation migration.
+4. Investigation/revision/Brief migration.
+5. Research interface and public target E2E.
+6. Six-person controlled/field validation.
+7. Decision gate.
 
-Scaling и expansion рассматриваются только после пункта 8.
+Scaling и expansion рассматриваются только после пункта 7.
 
 ## Правило обновления
 

@@ -1,191 +1,159 @@
-# ARTEMIS — PRIORITIES v4.3
+# ARTEMIS — PRIORITIES v5.0
 
 ## Статус
 
-- Тип: canonical active priorities document.
-- Дата: 2026-07-24.
-- Активный цикл: Architecture Atlas Product/Data Validation.
+- Тип: canonical active priorities.
+- Дата: 2026-07-26.
+- Active cycle: Concept-Locked Architecture Atlas Pre-Validation.
 
-Приоритет получает только работа, которая подтверждает продуктовую ценность, исправляет semantic data truth, делает core loop публично доступным или предотвращает критическую деградацию.
+Приоритет получает работа, которая делает evidence chain, research outcome или validation честнее. Infrastructure does not outrank missing product semantics.
 
 ## P0 — обязательные блокеры
 
-### P0.1 Strategy and documentation truth
+### P0.1 Concept Lock v2 [current]
 
-- зафиксировать Option A во всём canonical set;
-- разделить North Star, current product, current reality и validated outcome;
-- зафиксировать одного primary user и один JTBD;
-- отделить Saved View от product-complete Research Slice;
-- различать public/backend/pilot/future capabilities;
-- обновить issues, противоречащие active scope;
-- не расширять implementation до завершения documentation reset.
+- synchronize canonical concept/product/research/epistemic/entity docs;
+- separate human mission from future AI option;
+- lock Claim/EvidenceLink model;
+- lock Investigation/SliceRevision/SavedView/ResearchBrief model;
+- exclude `same_movement` from substantive Relation value;
+- lock three-module and blind-Brief validation protocol;
+- add executable concept-drift guard;
+- complete full release/test gate.
 
 Owner docs:
 
-- `PROJECT_TRUTH.md`;
+- `ARTEMIS_CONCEPT.md`;
 - `PRODUCT_THESIS.md`;
 - `ARTEMIS_PRODUCT_SCOPE.md`;
-- `MVP_ARCHITECTURE_ATLAS.md`.
-- `VALIDATION_DECISION.md`.
+- `EPISTEMIC_CONTRACT.md`;
+- `ENTITY_MODEL.md`;
+- `RESEARCH_SLICE_CONTRACT.md`;
+- `PRODUCT_VALIDATION_PLAN.md`.
 
-### P0.2 Canonical identity
+### P0.2 Deep research modules
 
-- canonical public UUID;
-- Airtable record ID только как `source_record_id`;
-- migration aliases;
-- invalid ID блокирует публикацию;
-- Research Slice/Relation references используют canonical ID.
+- prepare exactly three modules from approved execution contract;
+- 4–6 Features and 6–10 Claims per module;
+- claim-level Sources and locators;
+- minimum two substantive Relations per module;
+- challenge/contest/uncertainty;
+- two-reviewer readiness;
+- hidden reference Brief;
+- record preparation/review cost.
 
-### P0.3 Sources, Media and Relations
+External validation is blocked until `3/3 READY`.
 
-- Source URL/role/review semantics;
-- direct Media assets, license и attribution;
-- canonical reviewed Relations table;
-- Relation не выводится из same-layer/time heuristic;
-- Similarity получает отдельную маркировку.
+### P0.3 Claim/Evidence data migration
 
-### P0.4 Semantic data gate
+- first-class Claim and EvidenceLink schema;
+- independent epistemic dimensions;
+- locator and evidence relation/strength;
+- ClassificationAssertion model;
+- retain legacy records without invented evidence;
+- reclassify/exclude `same_movement` safely;
+- update ETL/artifacts/UI/tests through a separate migration plan.
 
-Статус 2026-07-21: #284 закрыт merge-коммитом `d4e8b53`; semantic gate работает в ETL и release-check.
+### P0.4 Investigation/revision runtime migration
 
-- [x] проверка identity/source/media/relation/review semantics;
-- [x] пустые enabled Layers не публикуются;
-- [x] validation report разделяет blocking errors и budgeted semantic warnings;
-- [x] source schema не обещает ETL write-back, если write-back отсутствует.
+- stable Investigation identity;
+- immutable Slice Revisions;
+- meaningful dataset/schema identity;
+- revision-pinned share or visible `live` mode;
+- deterministic Markdown/plain-text Research Brief;
+- deterministic legacy migration;
+- preserve privacy/owner isolation.
 
-### P0.5 Public capability alignment
+### P0.5 Public target E2E
 
-- выбрать public backend deployment contour;
-- настроить API base;
-- реализовать public Slice save/open/share E2E;
-- скрыть или label Stories/Courses/auth surfaces, если backend недоступен;
-- public UI не обещает internal-only capability.
+- deploy/configure required backend only after target contract is ready;
+- public Question → Claims → Evidence → Conclusion → Revision → Brief → Reopen/Share;
+- fail-closed unavailable capabilities;
+- honest capability labels;
+- browser evidence and recovery/error states.
 
 ## P1 — product proof
 
-### P1.1 Architecture content pilot
+### P1.1 Research interface
 
-- 30–40 Features для comparison-first Round 0;
-- 6–8 comparison cohorts минимум по 3 Features;
-- 12–20 reviewed Relations;
-- 100% Source coverage и ≥90% primary Media coverage;
-- детерминированный `data/content_profile.json`;
-- measured preparation/review cost per comparison cohort;
-- reference Slices — после public Slice E2E; curated Story допускается только как отдельно проверяемый onboarding-механизм; maturity reference остаётся 100–150 / 50+.
+- question framing;
+- Claim comparison across 2–3 Features;
+- source locator access;
+- substantive Relation / classification / Similarity distinction;
+- challenging evidence and uncertainty;
+- map/time as synchronized but non-dominating lenses.
 
-### P1.2 Compare and sourced detail
+### P1.2 Controlled validation
 
-- compare 2–3 objects;
-- provenance рядом с factual claims;
-- relation/similarity separation;
-- coordinate confidence отдельно от knowledge type.
+- one wave of six primary users;
+- same-content baseline;
+- normal-workflow benchmark;
+- counterbalanced assignment;
+- equal timebox;
+- two blinded evaluators;
+- absolute counts and critical errors;
+- separate spatial-temporal contribution.
 
-### P1.3 Workspace refinement
+### P1.3 Behavioral validation
 
-- map without reserved empty rail;
-- compact top dock и timeline;
-- detail only when active;
-- real-data temporal context вместо hardcoded anchors;
-- consistent SVG icons;
-- responsive staged behavior.
+- 7-day unprompted Brief use, new revision or real share;
+- moderator reminders excluded;
+- evidence package and explicit decision.
 
-### P1.4 Research Slice loop
+## P2 — maintainability required by P0/P1
 
-- create/save/list/open/update/delete;
-- first-class research question;
-- evidence refs;
-- findings, conclusion и uncertainty;
-- schema/content version;
-- Saved View как вложенный UI state;
-- restore complete context;
-- read-only share;
-- public E2E and error states.
+- CSS/JS ownership only where touched by target flow;
+- browser regression at 1440×900, 1024×768 and 390×844;
+- migration integrity;
+- release/docs drift;
+- security/reliability/dependency fixes;
+- no framework rewrite.
 
-### P1.5 Product validation
+## Completed technical foundations
 
-- Round 0 truth check;
-- Round 1 with 5–8 primary users;
-- catalogue/list control versus map + time + compare;
-- usability, cognitive и behavioral gates;
-- 7-day field follow-up;
-- corrective pass;
-- Round 2;
-- explicit outcome in `VALIDATION_DECISION.md`.
+- canonical UUID/source-record split;
+- normalized Source/Media export baseline;
+- current Relation/Similarity technical separation;
+- semantic ETL/release gate;
+- 31-Feature legacy corpus envelope;
+- mutable ResearchSlice v2 backend capability;
+- fail-closed Pages API configuration.
 
-## P2 — maintainability in service of MVP
-
-### P2.1 CSS ownership
-
-- remove `css/main-screen.css` as competing override;
-- separate tokens/base/layout/features;
-- keep critical selector under one owner;
-- preserve visual regression evidence.
-
-### P2.2 JavaScript ownership
-
-Extract from `js/ui.js` in controlled steps:
-
-- timeline;
-- detail;
-- comparison;
-- navigation;
-- viewport/layout;
-- research toolbar.
-
-Framework rewrite is not a priority.
-
-### P2.3 Browser regression coverage
-
-- desktop 1440×900;
-- tablet 1024×768;
-- mobile 390×844;
-- explore/compare/detail/slice/share states;
-- tests synchronized with active UI spec.
-
-## Maintenance guardrails
-
-Разрешены независимо от phase:
-
-- critical security fixes;
-- data-loss fixes;
-- broken deployment/release restoration;
-- migration integrity fixes;
-- dependency vulnerabilities;
-- factual correction/removal.
-
-Они не используются для скрытого расширения scope.
+These are prerequisites, not product-validation evidence.
 
 ## Frozen backlog
 
-Не является active priority:
-
-- Courses depth/progression;
-- AI generation;
-- UGC/social expansion;
-- general-domain entities;
-- causal/counterfactual/predictive systems;
-- gamification;
-- native apps;
+- Stories/Courses;
+- AI generation/analysis;
+- open UGC;
+- new domains;
+- institutional workflow;
+- causal/predictive/counterfactual systems;
+- gamification/native apps;
 - enterprise/platform integrations;
-- heavy multi-node scaling без evidence;
-- marketing campaigns до validation.
+- corpus scaling beyond module need;
+- heavy scaling.
 
-## Порядок исполнения
+## Execution order
 
-1. P0.1 documentation truth.
-2. P0.2–P0.4 data foundation.
-3. P1.1 content pilot.
-4. P0.5 public capability.
-5. P1.2–P1.4 Question → Compare → Evidence → Conclusion → Save loop and UX.
-6. P2 maintainability required by the changed product surface.
-7. P1.5 validation and decision.
+1. P0.1 Concept Lock v2.
+2. P0.2 three deep modules.
+3. P0.3 Claim/Evidence migration design and implementation.
+4. P0.4 Investigation/revision/Brief migration.
+5. P1.1 interface alignment.
+6. P0.5 public target E2E.
+7. P1.2–P1.3 validation.
+8. `VALIDATION_DECISION`.
 
-## Правило завершения
+Parallel work is allowed only when dependency and semantic ownership do not conflict.
 
-Задача снимается с приоритета только при наличии:
+## Completion rule
+
+A priority closes only with:
 
 - implemented artifact;
 - relevant automated/manual evidence;
 - synchronized owner docs;
-- no known contradictory public claim;
-- recorded follow-up or explicit no-follow-up decision.
+- honest current capability statement;
+- no known semantic contradiction;
+- explicit next dependency or no-follow-up decision.

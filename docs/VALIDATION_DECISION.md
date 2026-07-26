@@ -4,72 +4,100 @@
 
 - Тип: canonical validation outcome document.
 - Статус решения: `PENDING`.
-- Дата последнего обновления: 2026-07-24.
-- Evidence protocol: `PRODUCT_VALIDATION_PLAN.md`.
-- Владелец смысла: доказанный результат product validation и разрешение либо запрет следующего product scope.
+- Дата последнего обновления: 2026-07-26.
+- Evidence protocol: `PRODUCT_VALIDATION_PLAN.md` v2.
+- Content prerequisite: `docs/work/2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
 
-Этот документ фиксирует только принятое решение по итогам validation. Он не заменяет протокол тестирования, `PROJECT_TRUTH.md` или product scope.
+Этот документ фиксирует только принятое evidence-backed решение. Он не заменяет protocol, current truth or product scope.
 
 ## 1. Текущее решение
 
 `PENDING`
 
-Usability, cognitive-value и behavioral-value gates ещё не пройдены на primary cohort. Product expansion, новые домены, Courses depth и AI generation остаются закрыты.
+Причины:
+
+- three validation modules are `NOT READY`;
+- target Claim/EvidenceLink model is not implemented;
+- Investigation/immutable revision/Brief target is not implemented;
+- public target E2E is not complete;
+- six-person usability/cognitive/behavioral evidence package отсутствует.
+
+Product expansion and all future branches remain closed.
 
 ## 2. Допустимые решения
 
-- `ITERATE` — core value подтверждена, но нужны точечные исправления текущего loop.
-- `EXPAND` — пройдены все три gate; разрешено планировать следующий domain/product layer.
-- `NARROW` — ценность подтверждена только для более узкого сценария; scope должен быть сужен.
-- `STOP/RETHINK` — core loop не подтверждён; дальнейшее расширение прекращается до новой thesis.
+- `ITERATE` — все core gates поддерживают direction, но current loop требует ограниченных исправлений.
+- `EXPAND` — все core gates пройдены; разрешено планировать ровно одну named branch с отдельным scope/evidence plan.
+- `NARROW` — более узкое ядро полезно; неподтверждённая часть, включая map/time, перестаёт считаться core.
+- `STOP/RETHINK` — Brief не сильнее control, epistemic literacy не достигнута или behavioral value не подтверждается.
 
-## 3. Обязательное evidence перед сменой статуса
+## 3. Обязательное evidence
+
+### Prerequisites
+
+- three modules `READY`;
+- commit/deployment/runtime capability state;
+- dataset/module versions;
+- frozen assignment and counterbalance table;
+- current mutable/immutable share semantics disclosed.
 
 ### Usability
 
-- версия commit/deployment;
-- primary cohort и anonymized profiles;
-- task completion и critical moderator assists;
-- public save/restore/share technical evidence;
-- relation/similarity и provenance literacy.
+- raw outcomes for exactly six primary participants in the wave;
+- critical assists;
+- save/reopen technical evidence;
+- source locator discovery;
+- classification/Relation/Similarity errors.
 
 ### Cognitive value
 
-- control-vs-ARTEMIS protocol;
-- quality rubric;
-- evidence-backed participant conclusions;
-- вывод о том, создают ли map + time дополнительную ценность.
+- ARTEMIS versus same-content baseline Briefs;
+- normal-workflow benchmark;
+- two blind evaluator score sheets;
+- reconciled scores;
+- critical epistemic errors;
+- evidence traceability;
+- separate map/time contribution evidence.
 
 ### Behavioral value
 
-- 7-day field follow-up;
-- самостоятельный reopen, update или share;
-- связь reuse с реальной учебной задачей.
+- 7-day unprompted real-task reuse;
+- Brief use, new revision or real share;
+- moderator reminders excluded from success.
 
-## 4. Decision record
+### Curation
 
-| Поле | Значение |
+- preparation and review cost for each module;
+- unresolved evidence gaps;
+- correction log.
+
+## 4. Current record
+
+| Field | Value |
 |---|---|
 | Decision | `PENDING` |
-| Validation round | Not completed |
-| Commit/deployment | Not recorded |
-| Dataset version | Not recorded |
-| Primary cohort | Not completed |
+| Protocol version | `2.0` |
+| Validation modules | `0/3 READY` |
+| Target runtime | Not implemented |
+| Public target E2E | Not completed |
+| Primary cohort | Not run |
 | Usability gate | Not passed |
 | Cognitive-value gate | Not passed |
+| Spatial-temporal increment | Not assessed |
 | Behavioral-value gate | Not passed |
-| Approved scope change | None |
+| Approved branch | None |
 
-## 5. Change-control rule
+## 5. Decision rules
 
-Статус может быть изменён только отдельным decision commit после завершённого evidence package.
+Decision commit must:
 
-Каждое изменение должно:
+1. identify one allowed decision;
+2. link complete evidence package;
+3. report absolute counts for `n=6`;
+4. report blind rubric and critical errors;
+5. state whether map/time contribution was observed;
+6. list allowed and forbidden scope;
+7. for `EXPAND`, name only one branch;
+8. synchronize `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `PROJECT_TRUTH.md`, `PROJECT_PHASES.md` and `PRIORITIES.md`.
 
-1. указать одно допустимое решение;
-2. сослаться на evidence package;
-3. объяснить, какие thresholds пройдены или не пройдены;
-4. перечислить разрешённые и запрещённые изменения scope;
-5. синхронизировать `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `PROJECT_TRUTH.md`, `PROJECT_PHASES.md` и `PRIORITIES.md`, если решение меняет направление проекта.
-
-Отсутствие заполненного evidence package означает `PENDING`, независимо от субъективной оценки качества продукта.
+Missing evidence means `PENDING` regardless of product quality impressions.

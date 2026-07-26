@@ -3,176 +3,222 @@
 ## Статус
 
 - Тип: canonical validation gate document.
-- Версия: 1.1.
-- Дата: 2026-07-24.
-- Применяется до открытия product expansion и general-platform work.
+- Версия: 2.0.
+- Дата: 2026-07-26.
+- Применяется до открытия любого product expansion.
+- Content prerequisite: три `READY` module из `docs/work/2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
 
 ## 1. Цель
 
-Проверить, помогает ли Architecture Atlas MVP продвинутому студенту истории архитектуры выполнить реальную сравнительную задачу лучше, чем обычный каталог/список: получить evidence-aware вывод и сохранить его как повторно используемый Research Slice.
+Проверить, помогает ли Architecture Atlas primary user создать более сильный и повторно используемый evidence-backed Research Brief, чем:
 
-Validation не является визуальным preference test.
+1. same-content list/detail workflow без map/time;
+2. обычный исследовательский workflow самого участника.
 
-Validation состоит из трёх независимых gate:
+Validation не является preference test, demo feedback или проверкой технической сохранности данных.
 
-1. `USABILITY` — пользователь способен выполнить сценарий.
-2. `COGNITIVE VALUE` — результат меняет или углубляет понимание и связан с evidence.
-3. `BEHAVIORAL VALUE` — пользователь самостоятельно возвращается, изменяет или передаёт сохранённое исследование.
+Три независимых gate:
 
-Прохождение только `USABILITY` не доказывает продуктовую ценность.
+- `USABILITY` — пользователь способен завершить core loop.
+- `COGNITIVE VALUE` — Research Brief становится сильнее и epistemically точнее.
+- `BEHAVIORAL VALUE` — результат самостоятельно используется в реальной работе.
 
-## 2. Исследовательские вопросы
+Прохождение только `USABILITY` не подтверждает product thesis.
 
-1. Понимает ли пользователь назначение ARTEMIS за первые минуты?
-2. Даёт ли связка map + time + detail преимущество перед обычным каталогом?
-3. Может ли пользователь отличить факт, relation, similarity и interpretation?
-4. Создаёт ли Compare новое понимание темы?
-5. Воспринимается ли Research Slice как полезный результат?
-6. Хочет ли пользователь вернуться или поделиться срезом?
-7. Содержит ли Slice исследовательский вопрос, evidence, заметку/вывод и uncertainty, а не только Saved View?
-8. Даёт ли spatial-temporal surface измеримое преимущество относительно catalogue/list baseline?
+## 2. Primary cohort
 
-## 3. Участники
+Основной пилот: ровно 6 primary participants в одной волне.
 
-Primary cohort: 5–8 продвинутых студентов истории архитектуры/искусства, работающих над сравнительным эссе, семинаром или исследовательским заданием.
+Участник:
 
-Secondary exploratory cohort не влияет на прохождение primary gate:
+- старшекурсник или магистрант истории архитектуры/искусства;
+- имеет сравнительное задание со сроком в ближайшие 1–2 недели;
+- не знаком с внутренней терминологией ARTEMIS;
+- не участвовал в подготовке corpus.
 
-- 1–2 преподавателя или куратора;
-- профессиональные исследователи — только для проверки требований к provenance и corpus depth.
+Допускаются 1–2 преподавателя/куратора для оценки rubric и provenance. Их результаты не входят в primary thresholds.
 
-Участник не должен быть знаком с внутренней терминологией ARTEMIS.
+При расширении выборки результаты первой шестёрки не пересчитываются задним числом. Каждая новая wave записывается отдельно.
 
-## 4. Сценарий теста
+## 3. Experimental design
+
+### 3.1 Baseline A — same content
+
+Контроль содержит те же Features, Claims, Sources и EvidenceLinks, что ARTEMIS, но показывает их через list/detail/compare без map и timeline.
+
+Purpose: изолировать дополнительную ценность spatial-temporal lenses.
+
+### 3.2 Baseline B — normal workflow
+
+Участник решает сопоставимую задачу своими обычными инструментами: browser, notes, library resources or other personally used workflow.
+
+Purpose: проверить end-to-end usefulness, а не только компонентное преимущество.
+
+### 3.3 Assignment and order
+
+- используются эквивалентные, но не одинаковые вопросы из `READY` modules;
+- порядок ARTEMIS/Baseline A counterbalanced;
+- Baseline B выполняется на отдельном сопоставимом вопросе;
+- timebox одинаков для controlled conditions;
+- участник заранее получает одинаковый output brief;
+- moderator не объясняет epistemic answer и не подсказывает, какой relation считать доказанным.
+
+Порядок и module assignment фиксируются до первого participant и не меняются после просмотра результатов.
+
+## 4. Обязательный output
+
+Каждое условие заканчивается Research Brief со следующими полями:
+
+1. question;
+2. selected Features and rationale;
+3. major Claims;
+4. EvidenceLinks and locators;
+5. substantive Relations;
+6. findings;
+7. conclusion or `unresolved`;
+8. uncertainty;
+9. references.
+
+ARTEMIS additionally records revision and Saved View identifiers.
+
+Пустой или технически сохранённый Brief без evidence chain считается незавершённым.
+
+## 5. Test tasks
 
 ### Task 1 — orientation
 
-Объяснить своими словами, для чего предназначен продукт, и найти заданное направление/период.
+Своими словами объяснить назначение продукта и определить, где начинается исследовательский вопрос.
 
-### Task 2 — find and compare
+### Task 2 — compare
 
-Найти два объекта из разных регионов и сравнить период, направление, признаки и источники.
+Выбрать 2–3 Features и сопоставить их по заданным comparative lenses.
 
-Задача выполняется в двух сопоставимых вариантах:
+### Task 3 — epistemic literacy
 
-- контроль: catalogue/list/detail без spatial-temporal workspace;
-- ARTEMIS: map + time + compare + evidence.
+Для предложенных примеров различить:
 
-Порядок вариантов чередуется между участниками. Сравниваются время, качество вывода, обнаружение связей и уверенность в evidence.
+- factual/interpretive/hypothetical Claim;
+- substantive Relation;
+- shared classification;
+- computed Similarity;
+- supported, challenged and missing evidence.
 
-### Task 3 — relation literacy
+### Task 4 — evidence chain
 
-Найти документированную relation и объяснить, чем она отличается от similarity.
+Связать major Claims с EvidenceLinks и повторно найти основание по locator.
 
-### Task 4 — slice
+### Task 5 — conclusion
 
-Сохранить вопрос, выбранные объекты, evidence, заметку/вывод, uncertainty и текущий Saved View в Research Slice.
+Сформулировать conclusion либо explicit `unresolved`; назвать material uncertainty.
 
-### Task 5 — return
+### Task 6 — save and transfer
 
-Закрыть сценарий, повторно открыть Slice и проверить восстановление контекста.
+Сохранить revision, повторно открыть её и получить revision-pinned read-only Brief.
 
-### Task 6 — share
-
-Получить read-only ссылку и объяснить, что увидит получатель.
+До реализации immutable revisions test package обязан честно отмечать current share как mutable/live и не засчитывать его как reproducibility success.
 
 ### Task 7 — field follow-up
 
-На реальной учебной задаче в течение 7 дней самостоятельно:
+В течение 7 дней без дополнительной просьбы модератора:
 
-- повторно открыть Slice;
-- изменить или дополнить вывод;
-- либо передать read-only результат преподавателю/коллеге.
+- перенести часть Brief в реальное задание;
+- создать новую revision с дополнением;
+- либо передать revision/Brief преподавателю или коллеге.
 
-## 5. Метрики и gates
+## 6. Blind quality rubric
 
-### 5.1 USABILITY
+Два независимых evaluator не знают, в каком условии создан Brief. Они оценивают каждую dimension от `0` до `4`:
 
-- task completion rate;
-- time to first useful comparison;
-- число критических подсказок модератора;
-- save/restore technical success;
-- relation/similarity classification accuracy;
-- source/provenance discovery rate;
+| Dimension | Что оценивается |
+|---|---|
+| Correctness | отсутствие явных фактических/логических ошибок |
+| Evidence traceability | major Claims ведут к релевантным sources и locators |
+| Comparative depth | вывод действительно сопоставляет объекты, а не перечисляет |
+| Epistemic calibration | classification/similarity/uncertainty не выданы за доказанную Relation |
+| Conclusion clarity | вывод отвечает на вопрос или честно фиксирует unresolved |
 
-Thresholds:
+Total range: `0–20`.
 
-- не менее 80% завершают core tasks;
-- median time to useful comparison — до 5 минут;
-- 100% технический успех save/restore в контролируемых прогонах;
-- не менее 80% корректно различают relation и similarity;
-- не менее 70% самостоятельно находят provenance;
-- отсутствуют критические unsupported factual claims.
+Evaluator также отмечает critical error:
 
-### 5.2 COGNITIVE VALUE
+- invented source;
+- unsupported causal/influence claim;
+- material contradiction with provided evidence;
+- classification or Similarity presented as proved Relation;
+- uncertainty hidden in a way that changes conclusion.
 
-Обязательные evidence:
+Если оценки различаются более чем на 1 point по dimension, evaluator обсуждают только rubric interpretation и фиксируют reconciled score. Исходные оценки сохраняются.
 
-- participant формулирует новое или уточнённое понимание;
-- вывод связан минимум с одним видимым source/relation;
-- independent rubric оценивает качество вывода в control и ARTEMIS вариантах;
-- участник может объяснить, какую роль сыграли map/time и какую — evidence/compare.
+## 7. Gate thresholds
 
-Threshold:
+Для малого `n=6` primary results сообщаются абсолютными числами; проценты могут быть только вторичным представлением.
 
-- не менее 70% primary cohort формулируют обоснованный новый/уточнённый вывод;
-- ARTEMIS не уступает control по времени и превосходит его по quality rubric либо обнаружению evidence-backed relations.
+### 7.1 USABILITY
 
-Если преимущество создаёт Compare/Evidence, но не map + time, решение должно быть `NARROW`, а Comparison Workspace — стать центральной поверхностью.
+Gate проходит, если:
 
-### 5.3 BEHAVIORAL VALUE
+- минимум 5 из 6 завершают Tasks 2–5 без critical moderator assist;
+- 6 из 6 технических controlled runs сохраняют и повторно открывают доступный current artifact;
+- минимум 5 из 6 находят provenance и locator;
+- 6 из 6 не принимают shared classification/Similarity за доказанную Relation в финальном Brief.
 
-Обязательные evidence:
+### 7.2 COGNITIVE VALUE
 
-- самостоятельный reopen;
-- изменение/дополнение Slice или read-only share;
-- связь действия с реальной учебной задачей, а не просьбой модератора.
+Gate проходит, если:
 
-Directional threshold для малого пилота:
+- минимум у 4 из 6 ARTEMIS Brief выше соответствующего controlled baseline минимум на 2 total rubric points;
+- ни один ARTEMIS Brief не содержит critical epistemic error;
+- минимум 4 из 6 major conclusions полностью traceable либо честно marked unresolved;
+- минимум 4 из 6 участников могут отдельно объяснить вклад Compare/Evidence;
+- spatial-temporal increment анализируется отдельно и не выводится из общей оценки продукта.
 
-- не менее 60% primary cohort выполняют хотя бы одно самостоятельное reuse-действие в течение 7 дней.
+Spatial-temporal lens считается подтверждённой для текущего vertical, если минимум у 3 из 6:
 
-Threshold не является статистическим доказательством рынка; он определяет, достоин ли loop следующего пилота.
+- participant называет конкретный вывод, который был получен или скорректирован благодаря map/time;
+- этот вклад виден в Brief или observed behavior;
+- same-content baseline не дал тот же вывод столь же явно в timebox.
 
-## 6. Evidence package
+Если core cognitive gate пройден, а spatial-temporal criterion нет, обязательное решение — `NARROW`.
 
-Для каждой волны сохраняются:
+### 7.3 BEHAVIORAL VALUE
 
-- версия commit/deployment;
-- dataset version;
-- anonymized participant profile;
-- task outcomes;
-- control-vs-ARTEMIS comparison;
-- cognitive-value rubric и evidence links;
-- 7-day reuse outcomes;
-- blockers и observed behavior;
-- screenshots/recording references при наличии согласия;
-- decision log: keep, change, remove;
-- список issues с severity.
+Gate проходит, если минимум 3 из 6 в течение 7 дней без новой просьбы:
 
-## 7. Validation rounds
+- используют Brief в реальном задании;
+- создают содержательно изменённую revision;
+- или передают результат реальному collaborator/teacher.
 
-### Round 0 — internal truth check
+Простое открытие ссылки или действие, выполненное только по напоминанию, не засчитывается.
 
-Проверить public/runtime/data claims до приглашения пользователей.
+## 8. Evidence package
 
-### Round 1 — comprehension prototype
+До decision сохраняются:
 
-5–8 primary users, основной loop, epistemic literacy и control-vs-ARTEMIS comparison.
+- commit, deployment and runtime capability state;
+- dataset and module versions;
+- assignment/counterbalance table, fixed before sessions;
+- anonymized participant profiles;
+- raw task outcomes and critical assists;
+- all produced Briefs;
+- both evaluator score sheets and reconciled scores;
+- evidence-link/locator failures;
+- epistemic errors;
+- map/time contribution evidence;
+- normal-workflow benchmark notes;
+- 7-day field outcomes;
+- preparation and review cost per module;
+- issues with severity;
+- decision log: keep, change, remove.
 
-### Round 2 — corrected pilot
+## 9. Decision rules
 
-Повторить наиболее проблемные задачи после изменений и провести 7-day field follow-up. Не добавлять новый feature scope между раундами без evidence.
+После complete evidence package принимается одно решение:
 
-## 8. Decision gate
+- `ITERATE` — все три gate подтверждают core direction, но current loop требует ограниченных исправлений.
+- `EXPAND` — все три gate пройдены; разрешается только одна отдельно названная branch с собственным scope/evidence plan.
+- `NARROW` — Compare/Evidence/Brief полезны, но map/time либо другая заявленная часть ядра не подтверждена.
+- `STOP/RETHINK` — Brief не сильнее control, evidence literacy не достигнута или behavioral value отсутствует после допустимой corrective wave.
 
-После Round 2 принимается одно решение:
+Automatic expansion запрещён. Даже `EXPAND` не открывает одновременно AI, Courses, new domains и institutional workflows.
 
-- `ITERATE` — ценность подтверждена, но нужны точечные исправления;
-- `EXPAND` — пройдены usability, cognitive и behavioral gates; можно планировать следующий domain/product layer;
-- `NARROW` — ценность подтверждена только для Compare/Evidence или другого более узкого сценария;
-- `STOP/RETHINK` — core loop не подтверждён.
-
-Scaling, Courses expansion и AI generation не открываются до явно зафиксированного `EXPAND` либо отдельного обоснованного решения.
-
-Решение и supporting evidence фиксируются в `VALIDATION_DECISION.md`. Пока документ имеет статус `PENDING`, расширение запрещено.
+Решение записывается в `VALIDATION_DECISION.md`. Пока оно `PENDING`, внешний пилот может готовиться, но product expansion запрещён.
