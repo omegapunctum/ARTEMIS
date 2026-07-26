@@ -143,4 +143,4 @@ def test_service_worker_precaches_all_runtime_style_layers() -> None:
         "css/main-screen.css",
     ):
         assert f"'{path}'" in service_worker
-    assert "2026-07-17-v12-c2-compact-timeline" in service_worker
+    assert "2026-07-26-v13-runtime-capabilities" in service_worker

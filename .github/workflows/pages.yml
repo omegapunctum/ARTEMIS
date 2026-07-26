@@ -65,9 +65,11 @@ jobs:
             "css/main-screen.css"
             "manifest.json"
             "sw.js"
+            "deployment-config.js"
             "icons/icon-192.svg"
             "icons/icon-512.svg"
             "js/auth.js"
+            "js/runtime-config.js"
             "js/data.js"
             "js/map.js"
             "js/pwa.js"
@@ -96,6 +98,14 @@ jobs:
             mkdir -p "pages_artifact/$(dirname "$file")"
             cp "$file" "pages_artifact/$file"
           done
+
+      - name: Generate public runtime configuration
+        env:
+          ARTEMIS_API_BASE: ${{ vars.ARTEMIS_API_BASE }}
+        run: |
+          python scripts/generate_pages_runtime_config.py \
+            --output pages_artifact/deployment-config.js
+          node --check pages_artifact/deployment-config.js
 
       - name: Upload static artifact
         uses: actions/upload-pages-artifact@v5
