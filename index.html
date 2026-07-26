@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="./css/components/surfaces.css" />
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/main-screen.css" />
+  <script src="./deployment-config.js"></script>
+  <script src="./js/runtime-config.js"></script>
 </head>
 <body>
   <aside id="sidebar" class="legacy-sidebar" aria-label="Панель фильтров и списка объектов" hidden>
@@ -86,6 +88,7 @@
             <span id="research-period-meta" class="research-context-chip">Период: —</span>
             <span id="research-layers-meta" class="research-context-chip">Слои: —</span>
             <span id="research-objects-meta" class="research-context-chip">Объекты: —</span>
+            <span id="backend-capability-status" class="research-context-chip" role="status" hidden></span>
           </div>
           <div class="research-context-actions" role="group" aria-label="Действия с сохранённым исследованием" data-requires-capability="slices" hidden>
             <button id="research-slice-save-btn" type="button">Сохранить</button>
@@ -428,6 +431,21 @@
       setStatus(loadingMessage, { loading: true });
     }
 
+    function syncBackendCapabilityStatus() {
+      const node = document.getElementById('backend-capability-status');
+      if (!node) return;
+      const status = String(window.ARTEMIS_RUNTIME_STATUS?.status || 'unconfigured');
+      if (status === 'available') {
+        node.hidden = true;
+        node.textContent = '';
+        return;
+      }
+      node.hidden = false;
+      node.textContent = status === 'unavailable'
+        ? 'Сохранение исследований временно недоступно'
+        : 'Сохранение исследований: API не подключён';
+    }
+
     function createDataLoadTimeoutError(timeoutMs) {
       const error = new Error(`Data load timed out after ${timeoutMs}ms.`);
       error.name = 'DataLoadTimeoutError';
@@ -465,6 +483,8 @@
 
         hideGlobalDataError();
         syncRuntimeStatus();
+        await Promise.resolve(window.ARTEMIS_RUNTIME_READY);
+        syncBackendCapabilityStatus();
         showLoading();
         try {
           await initAuth();

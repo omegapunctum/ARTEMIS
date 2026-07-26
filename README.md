@@ -256,7 +256,19 @@ uvicorn app.main:app --reload --port 8001
 python -m http.server 8000
 ```
 
-By default frontend tries `window.ARTEMIS_API_BASE`/meta override, then `/api`.
+The frontend is fail-closed: without an explicit deployment configuration it
+does not send auth or API requests to the static origin. For local development,
+generate the non-secret configuration before starting the frontend:
+
+```bash
+python scripts/generate_pages_runtime_config.py \
+  --api-base http://127.0.0.1:8001/api \
+  --output deployment-config.js
+```
+
+GitHub Pages generates the same file from the repository/environment variable
+`ARTEMIS_API_BASE`. Production values must be HTTPS URLs ending in `/api`.
+Backend-dependent UI is enabled only after `/api/health` succeeds.
 
 ### Import / Export datasets (local ETL input/output)
 Without direct Airtable writes, you can import prepared CSV/GeoJSON datasets into local `data/*`

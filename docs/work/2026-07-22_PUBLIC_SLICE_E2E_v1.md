@@ -38,6 +38,17 @@ Security semantics:
 
 ## 3. Stage B — deployment gate
 
+Repository-side deployment readiness:
+
+- Pages generates a public `deployment-config.js` from `ARTEMIS_API_BASE`;
+- the generated value must be an HTTPS URL ending in `/api`;
+- an early `/api/health` probe enables an explicit capability set only after success;
+- missing or unavailable API keeps the public UI in Explore-only mode;
+- auth/API resolution has no implicit `/api` or static-origin fallback;
+- `deployment-config.js` and all API responses are network-only in the service worker.
+
+These controls make Stage B deployable but do not prove `PUBLIC NOW`.
+
 До `PUBLIC NOW` требуется:
 
 - provisioned HTTPS FastAPI origin;

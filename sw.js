@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-07-17-v12-c2-compact-timeline';
+const CACHE_VERSION = '2026-07-26-v13-runtime-capabilities';
 const STATIC_CACHE = `artemis-static-${CACHE_VERSION}`;
 const DATA_CACHE = `artemis-data-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `artemis-runtime-${CACHE_VERSION}`;
@@ -29,6 +29,7 @@ const PRECACHE_PATHS = [
   'css/style.css',
   'css/main-screen.css',
   'js/auth.js',
+  'js/runtime-config.js',
   'js/data.js',
   'js/map.js',
   'js/pwa.js',
@@ -106,6 +107,11 @@ self.addEventListener('fetch', (event) => {
   const isNonGetRequest = request.method !== 'GET';
   const isPrivateApiRequest = hasAuthHeader || isPrivateRequest(url);
 
+  if (isDeploymentConfigRequest(url)) {
+    event.respondWith(fetch(request, { cache: 'no-store' }));
+    return;
+  }
+
   if (isNonGetRequest) {
     console.debug('[SW] skip non-GET:', request.method, url.pathname);
     event.respondWith(fetch(request));
@@ -163,6 +169,10 @@ function isPrivateRequest(url) {
   return [
     ...privatePaths
   ].some((path) => normalizedPath === path || normalizedPath.startsWith(`${path}/`));
+}
+
+function isDeploymentConfigRequest(url) {
+  return url.origin === self.location.origin && trimBasePath(url.pathname) === 'deployment-config.js';
 }
 
 function isAllowedCrossOrigin(url) {

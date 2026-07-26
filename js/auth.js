@@ -10,10 +10,8 @@ const REFRESH_TIMEOUT_MS = 8000;
 
 const API_BASE_CANDIDATES = [
   (window.ARTEMIS_API_BASE || '').trim(),
-  document.querySelector('meta[name="artemis-api-base"]')?.getAttribute('content')?.trim() || '',
-  '/api',
-  ''
-].filter((value, index, array) => value !== null && value !== undefined && array.indexOf(value) === index);
+  document.querySelector('meta[name="artemis-api-base"]')?.getAttribute('content')?.trim() || ''
+].filter((value, index, array) => Boolean(value) && array.indexOf(value) === index);
 
 function notifyAuthChanged() {
   window.dispatchEvent(new CustomEvent('artemis:auth-changed', { detail: getCurrentUser() }));
@@ -41,6 +39,14 @@ function buildApiUrl(base, path) {
   return `${normalizedBase}${normalizedPath}`;
 }
 
+function buildApiUnavailableError() {
+  const error = new Error('ARTEMIS API is not configured for this deployment.');
+  error.code = 'API_UNAVAILABLE';
+  error.status = 0;
+  error.responseStatus = 0;
+  return error;
+}
+
 export function resolveApiUrl(path) {
   const rawPath = String(path || '').trim();
   if (/^https?:\/\//i.test(rawPath)) return rawPath;
@@ -52,7 +58,8 @@ export function resolveApiUrl(path) {
       ? normalizedPath.slice(4)
       : normalizedPath;
   const candidates = resolvedApiBase !== null ? [resolvedApiBase] : API_BASE_CANDIDATES;
-  const preferredBase = candidates.find((candidate) => String(candidate || '').trim()) || '/api';
+  const preferredBase = candidates.find((candidate) => String(candidate || '').trim());
+  if (!preferredBase) throw buildApiUnavailableError();
   return buildApiUrl(preferredBase, apiPath);
 }
 
@@ -96,6 +103,8 @@ async function requestApi(path, options = {}, fallbackMessage = 'API request fai
   const expectedErrorLogLevel = requestBehavior?.expectedErrorLogLevel || 'info';
   const defaultErrorLogLevel = requestBehavior?.defaultErrorLogLevel || 'error';
   let lastResponse = null;
+
+  if (!candidates.length) throw buildApiUnavailableError();
 
   for (const base of candidates) {
     const url = buildApiUrl(base, path);
