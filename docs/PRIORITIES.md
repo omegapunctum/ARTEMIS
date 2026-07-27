@@ -10,27 +10,6 @@
 
 ## P0 — обязательные блокеры
 
-### P0.1 Concept Lock v2 [current]
-
-- synchronize canonical concept/product/research/epistemic/entity docs;
-- separate human mission from future AI option;
-- lock Claim/EvidenceLink model;
-- lock Investigation/SliceRevision/SavedView/ResearchBrief model;
-- exclude `same_movement` from substantive Relation value;
-- lock three-module and blind-Brief validation protocol;
-- add executable concept-drift guard;
-- complete full release/test gate.
-
-Owner docs:
-
-- `ARTEMIS_CONCEPT.md`;
-- `PRODUCT_THESIS.md`;
-- `ARTEMIS_PRODUCT_SCOPE.md`;
-- `EPISTEMIC_CONTRACT.md`;
-- `ENTITY_MODEL.md`;
-- `RESEARCH_SLICE_CONTRACT.md`;
-- `PRODUCT_VALIDATION_PLAN.md`.
-
 ### P0.2 Deep research modules
 
 - prepare exactly three modules from approved execution contract;
@@ -111,6 +90,7 @@ External validation is blocked until `3/3 READY`.
 
 ## Completed technical foundations
 
+- Concept Lock v2 and executable concept-drift guard;
 - canonical UUID/source-record split;
 - normalized Source/Media export baseline;
 - current Relation/Similarity technical separation;
@@ -136,14 +116,13 @@ These are prerequisites, not product-validation evidence.
 
 ## Execution order
 
-1. P0.1 Concept Lock v2.
-2. P0.2 three deep modules.
-3. P0.3 Claim/Evidence migration design and implementation.
-4. P0.4 Investigation/revision/Brief migration.
-5. P1.1 interface alignment.
-6. P0.5 public target E2E.
-7. P1.2–P1.3 validation.
-8. `VALIDATION_DECISION`.
+1. P0.2 three deep modules.
+2. P0.3 Claim/Evidence migration design and implementation.
+3. P0.4 Investigation/revision/Brief migration.
+4. P1.1 interface alignment.
+5. P0.5 public target E2E.
+6. P1.2–P1.3 validation.
+7. `VALIDATION_DECISION`.
 
 Parallel work is allowed only when dependency and semantic ownership do not conflict.
 

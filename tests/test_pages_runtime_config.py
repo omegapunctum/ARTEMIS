@@ -123,6 +123,7 @@ def test_pages_and_service_worker_runtime_contracts() -> None:
 
     assert '"deployment-config.js"' in workflow
     assert '"js/runtime-config.js"' in workflow
+    assert '"data/relations.json"' in workflow
     assert "vars.ARTEMIS_API_BASE" in workflow
     assert "generate_pages_runtime_config.py" in workflow
     assert '<script src="./deployment-config.js"></script>' in index

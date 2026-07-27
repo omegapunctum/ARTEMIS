@@ -34,6 +34,11 @@ except ModuleNotFoundError:  # Direct execution with RELEASE_CHECK_ROOT fixture.
     from content_profile import ContentProfileError, validate_checked_in_profile  # type: ignore[no-redef]  # noqa: E402
 BEHAVIORAL_PWA_TEST_PATH = REPO_ROOT / "tests" / "test_sw_fetch_behavior.py"
 DEV_LIKE_ENVS = {"development", "dev", "testing", "test", "local"}
+PUBLIC_RUNTIME_DATA_ASSETS = {
+    "data/features.geojson",
+    "data/layers.json",
+    "data/relations.json",
+}
 
 MAX_EXPECTED_FALLBACK_WARNINGS = 0
 MAX_DATA_QUALITY_WARNINGS = sum(SEMANTIC_WARNING_BUDGETS.values())
@@ -433,6 +438,12 @@ def check_release_docs_drift() -> None:
             fail(f'index.html references missing local asset: "{asset}"')
         if asset not in required_files:
             fail(f'pages artifact required_files missing referenced asset: "{asset}"')
+
+    for asset in sorted(PUBLIC_RUNTIME_DATA_ASSETS):
+        if not (ROOT / asset).exists():
+            fail(f'public runtime data asset is missing: "{asset}"')
+        if asset not in required_files:
+            fail(f'pages artifact required_files missing runtime data asset: "{asset}"')
 
     _check_archive_reference_status_headers()
     _check_canonical_smoke_evidence_references()

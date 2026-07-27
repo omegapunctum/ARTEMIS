@@ -94,7 +94,8 @@ Vanilla JavaScript (no frameworks):
 
 ## Key Principles
 
-- **No localStorage / sessionStorage**
+- Credentials, tokens, owner identity and private research content are never stored in `localStorage` or `sessionStorage`.
+- Current low-sensitivity Web Storage use is limited to UI preference/session hints and frozen Courses progress; it is not a persistence contract for research data.
 - Access token stored **in memory only**
 - Refresh token stored in **httpOnly cookie**
 - **GeoJSON is the single source of truth** for the map
@@ -310,29 +311,18 @@ Repository documentation is organized into five pragmatic layers:
 - **archive** — historical snapshots kept for traceability.
 - **reference** — diagnostic and supporting materials that are useful for analysis but are not normative.
 
-Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`.
+Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`. The authoritative canonical registry, owner routing and reading order live only in `docs/FOUNDATION_INDEX.md`; working-document lifecycle lives only in `docs/work/README.md`.
 
-Canonical docs are maintained in root `README.md` and in `docs/`. Product decisions follow four distinct levels:
+Product decisions follow four distinct levels:
 
 1. `docs/ARTEMIS_CONCEPT.md` — North Star.
 2. `docs/PRODUCT_THESIS.md` and `docs/ARTEMIS_PRODUCT_SCOPE.md` — the user, problem and product being tested now.
 3. `docs/PROJECT_TRUTH.md` — what actually works.
 4. `docs/VALIDATION_DECISION.md` — what user evidence has proved and which next scope is allowed.
 
-Recommended reading order:
-1. `README.md`
-2. `docs/FOUNDATION_INDEX.md`
-3. `docs/PROJECT_TRUTH.md`
-4. `docs/PRODUCT_THESIS.md`
-5. `docs/ARTEMIS_PRODUCT_SCOPE.md`
-6. `docs/MVP_ARCHITECTURE_ATLAS.md`
-7. `docs/DATA_DICTIONARY.md`
-8. `docs/PRODUCT_VALIDATION_PLAN.md`
-9. `docs/VALIDATION_DECISION.md`
-10. `docs/PROJECT_PHASES.md` and `docs/PRIORITIES.md`
-11. then the remaining canonical and working layers according to `docs/DOCUMENTATION_SYSTEM.md`
+Start with `AGENTS.md` for repository work, then follow the current reading order in `docs/FOUNDATION_INDEX.md`. Do not infer that every file under `docs/work/` is active; consult `docs/work/README.md`.
 
-Working strategy docs live in `docs/work/` (including `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`). UI/UX working specs live in `docs/work/uiux/`; `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md` remains the primary UI/UX working spec, `docs/work/uiux/ARTEMIS_UI_UX_COMPONENT_MAP.md` remains the system-level implementation map, and `docs/work/uiux/ARTEMIS_UI_UX_VISUAL_SYSTEM.md` owns the visual design layer: official style, palette, typography, state semantics and design-token baseline.
+UI/UX working specs live in `docs/work/uiux/`. They preserve implemented and transitional design context, but their current lifecycle and authority are defined by `docs/work/README.md` and the canonical product contracts.
 
 The current accepted main-screen shell is documented by:
 - `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`

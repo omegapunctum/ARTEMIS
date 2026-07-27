@@ -2,7 +2,7 @@
 
 ## Статус документа
 
-- Статус: **ACTIVE / IMPLEMENTATION-READY WORKING SPEC**.
+- Статус: **IMPLEMENTED-SHELL COMPATIBILITY / GATED**.
 - Область: главный экран / Workspace Core.
 - Дата фиксации: 2026-07-16.
 - Роль: track-specific target layer для компактного map-first refinement.
@@ -13,6 +13,8 @@
 - Product owner: `docs/MVP_ARCHITECTURE_ATLAS.md`.
 - CSS audit/execution bridge: `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
 - Responsive wireframe contract: `docs/work/uiux/2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md`.
+
+> Lifecycle update 2026-07-27: implemented-shell compatibility context. The historical `ACTIVE` filename/header does not authorize new work; lifecycle is controlled by `docs/work/README.md`.
 
 Этот документ не создаёт новую продуктовую архитектуру и не заменяет owner-docs. Он фиксирует согласованный target для следующего UI patch cycle внутри Architecture Atlas vertical.
 

@@ -4,8 +4,9 @@
 
 - Тип: execution contract/evidence для issue #286.
 - Дата: 2026-07-22.
-- Active stage: A — public read-only Slice contract.
+- Compatibility stage A is implemented; this file is retained as current mutable ResearchSlice v2 evidence.
 - Deployment stage B остаётся pending; backend capability нельзя обозначать `PUBLIC NOW` до smoke на реальном URL.
+- Concept Lock v2 target E2E is gated by Claim/Evidence and immutable revision/Brief migrations; this file cannot close that target.
 
 ## 1. Цель
 

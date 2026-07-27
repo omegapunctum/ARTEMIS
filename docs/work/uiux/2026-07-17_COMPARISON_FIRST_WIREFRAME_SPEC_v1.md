@@ -2,12 +2,14 @@
 
 ## Статус
 
-- Тип: active implementation wireframe contract.
+- Тип: gated compatibility wireframe contract.
 - Дата: 2026-07-17.
 - Product direction: Architecture Atlas vertical MVP.
 - UX decision owner: `2026-07-17_UX_CONCEPT_CORRECTION_v1.md`.
 - Runtime status: Batch C1 merged; Batch C2 implemented in a separate PR candidate; D/E/F remain pending.
 - Reference viewports: desktop `1440×900`, tablet `1024×768`, mobile `390×844`.
+
+> Lifecycle update 2026-07-27: partial current-interface input, gated until module and Claim/Evidence contracts are ready. Target acceptance requires revision around the Concept Lock v2 hierarchy.
 
 Этот документ фиксирует структуру, состояния и responsive behavior. Он не является high-fidelity visual mockup и не вводит новый feature scope.
 

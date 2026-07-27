@@ -34,49 +34,13 @@ North Star ARTEMIS — evidence-first human research environment with privileged
 В проекте действует иерархия документации с отдельным foundation-layer.
 
 ### 2.1 Canonical source of truth
-Единственными canonical документами считаются:
-- `README.md`
-- `docs/FOUNDATION_INDEX.md`
-- `docs/ARTEMIS_CONCEPT.md`
-- `docs/PROJECT_TRUTH.md`
-- `docs/PRODUCT_THESIS.md`
-- `docs/ARTEMIS_MASTER_PROMPT.md`
-- `docs/ARTEMIS_PRODUCT_SCOPE.md`
-- `docs/MVP_ARCHITECTURE_ATLAS.md`
-- `docs/DATA_DICTIONARY.md`
-- `docs/PRODUCT_VALIDATION_PLAN.md`
-- `docs/VALIDATION_DECISION.md`
-- `docs/RESEARCH_SLICE_CONTRACT.md`
-- `docs/RESEARCH_SLICE_SPEC.md`
-- `docs/EPISTEMIC_CONTRACT.md`
-- `docs/ENTITY_MODEL.md`
-- `docs/CONTENT_GOVERNANCE.md`
-- `docs/AI_POLICY.md`
-- `docs/PROJECT_STRUCTURE.md`
-- `docs/PROJECT_PHASES.md`
-- `docs/PRIORITIES.md`
-- `docs/DATA_CONTRACT.md`
-- `docs/CONTROLLED_RELEASE_DECISION.md`
-- `docs/DOCUMENTATION_SYSTEM.md`
+Единственный реестр canonical документов, порядок чтения и маршрутизация владельцев смысла находятся в `docs/FOUNDATION_INDEX.md`. Этот prompt не дублирует реестр.
 
 Правило:
 - если информация не синхронизирована с canonical docs, она не должна считаться окончательной;
-- `FOUNDATION_INDEX.md` определяет foundation-layer, порядок чтения и выбор source of truth по типам решений;
-- `ARTEMIS_CONCEPT.md` определяет North Star, human mission, invariants and independent branch gates;
-- `PROJECT_TRUTH.md` определяет factual public/backend/pilot/future boundary;
-- `PRODUCT_THESIS.md` определяет активную аудиторию, проблему и hypotheses;
-- `ARTEMIS_PRODUCT_SCOPE.md` определяет границы текущего vertical и запреты против product drift;
-- `MVP_ARCHITECTURE_ATLAS.md` определяет MVP boundary и exit criteria;
-- `DATA_DICTIONARY.md` определяет semantic data rules;
-- `PRODUCT_VALIDATION_PLAN.md` определяет evidence protocol и thresholds;
-- `VALIDATION_DECISION.md` фиксирует доказанный outcome и разрешённый следующий scope;
-- `RESEARCH_SLICE_CONTRACT.md` определяет Investigation/SliceRevision/SavedView/ResearchBrief target and current-runtime gap;
-- `RESEARCH_SLICE_SPEC.md` определяет current mutable ResearchSlice v2 API;
-- `EPISTEMIC_CONTRACT.md` определяет Claim/EvidenceLink and independent epistemic dimensions;
-- `ENTITY_MODEL.md` определяет knowledge/product/runtime/context entities, Claim and Relation model;
-- `CONTENT_GOVERNANCE.md` определяет source policy, UGC/moderation, validation, trust, correction и publish governance;
-- `AI_POLICY.md` определяет canonical границы AI behavior, AI-output, source discipline и запреты против AI drift;
-- `DOCUMENTATION_SYSTEM.md` определяет роли слоёв, порядок чтения, правила размещения документов и приоритет разрешения doc-conflicts;
+- `AGENTS.md` является repository entrypoint для агентов и направляет к этому prompt и canonical owner docs;
+- `FOUNDATION_INDEX.md` определяет, какой документ владеет конкретным решением;
+- `docs/work/README.md` определяет lifecycle working-документов;
 - старые целевые имена вроде `ARCHITECTURE.md`, `RELEASE_SYSTEM.md` и `ROADMAP.md` не должны использоваться как текущий canonical-набор, если они не существуют как действующие source-of-truth файлы в репозитории.
 
 ### 2.2 Working docs
@@ -84,7 +48,8 @@ North Star ARTEMIS — evidence-first human research environment with privileged
 Они помогают в разработке, но не заменяют canonical layer.
 
 Отдельное правило:
-- `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md` обязателен к учёту при продуктовых и AI-related решениях, но не может противоречить `AI_POLICY.md`, `EPISTEMIC_CONTRACT.md`, `CONTENT_GOVERNANCE.md`, `RESEARCH_SLICE_CONTRACT.md` и `ARTEMIS_PRODUCT_SCOPE.md`.
+- lifecycle и допустимое использование каждого working-документа определяет `docs/work/README.md`;
+- архивная `docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` сохраняет historical context и не открывает AI scope.
 
 ### 2.3 Audits
 `docs/audits/*` — документы проверки.
@@ -153,7 +118,7 @@ North Star ARTEMIS — evidence-first human research environment with privileged
 
 ### 5.2 Runtime boundaries
 - `app/` — единственный backend runtime.
-- `api/` — только legacy compatibility shim.
+- legacy root package `api/` удалён; competing backend package запрещён.
 - moderation path не равен publish path.
 - upload runtime contract должен быть синхронизирован между `js/*`, `app/uploads/*`, `README.md` и tests; нельзя допускать, чтобы frontend и backend ожидали разные обязательные поля одного и того же endpoint.
 
@@ -192,13 +157,12 @@ North Star ARTEMIS — evidence-first human research environment with privileged
 
 Порядок:
 
-1. Concept Lock v2;
-2. three deep research modules;
-3. Claim/Evidence/Relation migration;
-4. Investigation/revision/Brief migration;
-5. research interface and public target E2E;
-6. six-person controlled and field validation;
-7. explicit outcome in `VALIDATION_DECISION.md`.
+1. three deep research modules;
+2. Claim/Evidence/Relation migration;
+3. Investigation/revision/Brief migration;
+4. research interface and public target E2E;
+5. six-person controlled and field validation;
+6. explicit outcome in `VALIDATION_DECISION.md`.
 
 Phase 5 Scaling/Hardening приостановлена, кроме critical security/reliability и MVP deployment blockers. Phase 6 Product Expansion заблокирована, пока `VALIDATION_DECISION.md` не содержит `EXPAND` либо отдельного canonical decision.
 

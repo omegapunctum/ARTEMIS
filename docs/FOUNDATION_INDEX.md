@@ -92,7 +92,7 @@ ARTEMIS нельзя развивать через отдельные функц
 Правило:
 - эти документы считаются active canonical foundation/source-of-truth set;
 - archive/reference/working/audit docs не могут переопределять этот набор;
-- если новый документ начинает задавать устойчивое правило foundation-layer, он должен быть явно зарегистрирован в `PROJECT_STRUCTURE.md` и `DOCUMENTATION_SYSTEM.md`.
+- если новый документ начинает задавать устойчивое правило foundation-layer, он должен быть явно зарегистрирован в canonical registry этого документа; профильные ссылки обновляются без копирования полного списка.
 
 ---
 
@@ -240,7 +240,9 @@ Supporting authority:
 - `docs/EPISTEMIC_CONTRACT.md`
 - `docs/RESEARCH_SLICE_CONTRACT.md`
 - `docs/CONTENT_GOVERNANCE.md`
-- `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md` where it does not conflict with canonical docs
+
+Historical context:
+- `docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` may explain prior proposals but has no current authority
 
 Примеры вопросов:
 - может ли AI генерировать historical claim;
@@ -336,10 +338,12 @@ Foundation changes must not be mixed with unrelated UI/runtime refactors.
 
 Status:
 - foundation-layer создан;
-- ключевые foundation docs зарегистрированы в `PROJECT_STRUCTURE.md` и `DOCUMENTATION_SYSTEM.md`;
+- canonical owner registry закреплён только в этом документе;
+- `docs/work/README.md` закреплён как единственный lifecycle registry working-слоя;
+- `AGENTS.md` восстановлен как единый repository entrypoint для агентов;
 - `ARTEMIS_MASTER_PROMPT.md` обновлён под foundation invariants;
 - archive index создан и Batch A cleanup выполнен;
-- release/docs drift частично защищён через `scripts/release_check.py`.
+- release/docs drift защищён через `scripts/release_check.py` и repository-governance guards.
 
 Closed foundation setup items:
 

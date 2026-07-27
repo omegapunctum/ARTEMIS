@@ -55,37 +55,15 @@ Canonical layer — это source of truth для текущего состоя�
 - активные приоритеты;
 - систему документации.
 
-Текущий canonical layer:
-- `README.md`
-- `docs/FOUNDATION_INDEX.md`
-- `docs/ARTEMIS_CONCEPT.md`
-- `docs/PROJECT_TRUTH.md`
-- `docs/PRODUCT_THESIS.md`
-- `docs/ARTEMIS_PRODUCT_SCOPE.md`
-- `docs/MVP_ARCHITECTURE_ATLAS.md`
-- `docs/DATA_DICTIONARY.md`
-- `docs/PRODUCT_VALIDATION_PLAN.md`
-- `docs/VALIDATION_DECISION.md`
-- `docs/RESEARCH_SLICE_CONTRACT.md`
-- `docs/RESEARCH_SLICE_SPEC.md`
-- `docs/EPISTEMIC_CONTRACT.md`
-- `docs/ENTITY_MODEL.md`
-- `docs/CONTENT_GOVERNANCE.md`
-- `docs/AI_POLICY.md`
-- `docs/ARTEMIS_MASTER_PROMPT.md`
-- `docs/PROJECT_STRUCTURE.md`
-- `docs/PROJECT_PHASES.md`
-- `docs/PRIORITIES.md`
-- `docs/DATA_CONTRACT.md`
-- `docs/CONTROLLED_RELEASE_DECISION.md`
-- `docs/DOCUMENTATION_SYSTEM.md`
+Текущий canonical layer зарегистрирован только в `docs/FOUNDATION_INDEX.md`.
 
 Правило:
-- если информация не синхронизирована с canonical docs, она не считается окончательной.
+- если информация не синхронизирована с canonical docs, она не считается окончательной;
+- другие документы не должны копировать полный canonical registry: они ссылаются на `FOUNDATION_INDEX.md`.
 
 ### 3.2 Working layer
 
-`docs/work/*` — рабочий слой текущего цикла.
+`docs/work/*` — рабочий слой текущего цикла. Единственный lifecycle registry этого слоя — `docs/work/README.md`.
 
 Назначение:
 - быстрые спецификации;
@@ -99,7 +77,7 @@ Canonical layer — это source of truth для текущего состоя�
 Правила:
 - working docs могут уточнять implementation detail;
 - working docs не имеют права переопределять canonical rules;
-- `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md` обязателен к учёту для AI-related решений, но не может противоречить `AI_POLICY.md`, `EPISTEMIC_CONTRACT.md`, `CONTENT_GOVERNANCE.md` и `ARTEMIS_PRODUCT_SCOPE.md`;
+- файл в `docs/work/` нельзя считать active только по имени или историческому status header: проверяется registry;
 - UI/UX working docs не должны вводить product behavior, нарушающий `RESEARCH_SLICE_CONTRACT.md`, `ENTITY_MODEL.md`, `EPISTEMIC_CONTRACT.md` или `AI_POLICY.md`;
 - при конфликте с canonical docs working doc считается несинхронизированным и должен быть обновлён или перемещён.
 
@@ -168,65 +146,20 @@ Canonical layer — это source of truth для текущего состоя�
 
 ## 5. ВЛАДЕЛЬЦЫ СМЫСЛА ПО ТЕМАМ
 
-Чтобы уменьшить semantic overlap, в ARTEMIS фиксируются владельцы смысла.
-
-- `FOUNDATION_INDEX.md` — навигация foundation-layer, порядок чтения, выбор source of truth по типам решений
-- `ARTEMIS_CONCEPT.md` — North Star, human mission, principles and independent branch gates
-- `PROJECT_TRUTH.md` — фактическая capability/maturity boundary
-- `PRODUCT_THESIS.md` — active product audience/problem/hypotheses
-- `ARTEMIS_PRODUCT_SCOPE.md` — границы текущего vertical scope
-- `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary и exit criteria
-- `DATA_DICTIONARY.md` — semantic data model
-- `PRODUCT_VALIDATION_PLAN.md` — evidence protocol и thresholds
-- `VALIDATION_DECISION.md` — доказанный validation outcome и разрешённый следующий scope
-- `RESEARCH_SLICE_CONTRACT.md` — Investigation/SliceRevision/SavedView/ResearchBrief target semantics
-- `RESEARCH_SLICE_SPEC.md` — current mutable ResearchSlice v2 runtime/API compatibility shape
-- `EPISTEMIC_CONTRACT.md` — Claim/EvidenceLink and independent epistemic dimensions
-- `ENTITY_MODEL.md` — knowledge/product/runtime/context entities, Claim and Relation model
-- `CONTENT_GOVERNANCE.md` — source policy, UGC/moderation, validation, trust, correction, publish governance
-- `AI_POLICY.md` — canonical границы AI behavior, AI-output, source discipline и запреты против AI drift
-- `PROJECT_STRUCTURE.md` — структура репозитория, entrypoints, runtime/documentation boundaries
-- `PROJECT_PHASES.md` — активные фазы и переходы между ними
-- `PRIORITIES.md` — load-bearing приоритеты текущего цикла
-- `DATA_CONTRACT.md` — contract данных, publish/export semantics
-- `CONTROLLED_RELEASE_DECISION.md` — controlled release baseline и критерии допуска
-- `ARTEMIS_MASTER_PROMPT.md` — docs-first discipline, правила агентов, operational invariants
-- `DOCUMENTATION_SYSTEM.md` — правила системы документации
+Таблица владельцев смысла и маршрутизация по типам решений находятся только в `FOUNDATION_INDEX.md`.
 
 Правило:
 - если тема уже имеет владельца смысла, другой документ не должен дублировать её полноценно;
-- в остальных местах допустима только краткая operational связка или ссылка.
+- в остальных местах допустима только краткая operational связка или ссылка;
+- изменение owner routing выполняется сначала в `FOUNDATION_INDEX.md`.
 
 ---
 
 ## 6. ПОРЯДОК ЧТЕНИЯ ДОКУМЕНТАЦИИ
 
-Базовый путь входа в документацию ARTEMIS:
+Базовый путь начинается с `README.md` и `docs/FOUNDATION_INDEX.md`. Полный порядок поддерживается только в `FOUNDATION_INDEX.md`; для repository agents дополнительным entrypoint является `AGENTS.md`.
 
-1. `README.md`
-2. `docs/FOUNDATION_INDEX.md`
-3. `docs/DOCUMENTATION_SYSTEM.md`
-4. `docs/PROJECT_TRUTH.md`
-5. `docs/PRODUCT_THESIS.md`
-6. `docs/ARTEMIS_PRODUCT_SCOPE.md`
-7. `docs/MVP_ARCHITECTURE_ATLAS.md`
-8. `docs/DATA_DICTIONARY.md`
-9. `docs/PRODUCT_VALIDATION_PLAN.md`
-10. `docs/VALIDATION_DECISION.md`
-11. `docs/ARTEMIS_CONCEPT.md`
-12. `docs/RESEARCH_SLICE_CONTRACT.md`
-13. `docs/EPISTEMIC_CONTRACT.md`
-14. `docs/ENTITY_MODEL.md`
-15. `docs/CONTENT_GOVERNANCE.md`
-16. `docs/AI_POLICY.md`
-17. `docs/DATA_CONTRACT.md`
-18. `docs/PROJECT_STRUCTURE.md`
-19. `docs/PROJECT_PHASES.md`
-20. `docs/PRIORITIES.md`
-21. затем профильные canonical docs (`CONTROLLED_RELEASE_DECISION`, `ARTEMIS_MASTER_PROMPT`, `RESEARCH_SLICE_SPEC`)
-22. только после этого `docs/work/*`, `docs/audits/*`, `docs/reference/*`, `docs/archive/*`
-
-Для ИИ-агентов и новых участников проекта это обязательный navigation order.
+Working-документ читается только после проверки его lifecycle в `docs/work/README.md`.
 
 ---
 

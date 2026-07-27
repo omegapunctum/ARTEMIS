@@ -74,7 +74,7 @@ Structural release success не равен semantic content validation.
 
 Превратить Concept Lock v2 в validation-ready evidence-first Architecture Atlas и доказать либо сузить current vertical до scaling/expansion.
 
-### Track A — Concept Lock v2
+### Track A — Concept Lock v2 [completed]
 
 - human research as only mission;
 - evidence chain as core;
@@ -175,15 +175,14 @@ Stories depth, Courses, AI assistance, new domains, institutional workflows и s
 
 ## Активный порядок работ
 
-1. Concept Lock v2.
-2. Three deep research modules.
-3. Claim/Evidence/Relation migration.
-4. Investigation/revision/Brief migration.
-5. Research interface and public target E2E.
-6. Six-person controlled/field validation.
-7. Decision gate.
+1. Three deep research modules.
+2. Claim/Evidence/Relation migration.
+3. Investigation/revision/Brief migration.
+4. Research interface and public target E2E.
+5. Six-person controlled/field validation.
+6. Decision gate.
 
-Scaling и expansion рассматриваются только после пункта 7.
+Scaling и expansion рассматриваются только после decision gate в пункте 6.
 
 ## Правило обновления
 

@@ -34,3 +34,10 @@ jobs:
       - name: Run release gate
         # Cross-artifact structural and semantic publish check; full regression remains separate.
         run: python scripts/release_check.py
+
+      - name: Run concept and repository governance guards
+        run: |
+          pytest -q \
+            tests/test_concept_lock_contract.py \
+            tests/test_repository_governance_contract.py \
+            tests/test_pages_runtime_config.py

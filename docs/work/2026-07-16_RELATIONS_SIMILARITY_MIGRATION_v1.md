@@ -3,7 +3,7 @@
 ## Статус
 
 - Issue: `#282`.
-- Статус: implemented pilot; pending implementation PR review.
+- Статус: completed technical pilot; retained as legacy migration evidence.
 - Snapshot date: 2026-07-16.
 - Scope: reviewed Feature↔Feature Relations, Relation evidence, public export and explicit separation from computed Similarity for the 19-Feature Architecture Atlas pilot.
 

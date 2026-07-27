@@ -114,6 +114,9 @@
 | Файл | Заменён чем |
 |---|---|
 | `Artemis_Analysis_Conclusion_04_04_2026.md` | `docs/FOUNDATION_INDEX.md`, `docs/ARTEMIS_CONCEPT.md`, current canonical docs |
+| `ARTEMIS_AI_STRATEGY_v1_0.md` | `docs/AI_POLICY.md`, Concept Lock v2 and independent future branch gates |
+| `COURSES_MVP_SCOPE.md` | `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md` and frozen backlog |
+| `FUNCTIONAL_EXPANSION_ROADMAP.md` | `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md` and branch-specific validation gates |
 
 ---
 
