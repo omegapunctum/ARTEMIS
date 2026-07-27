@@ -3,9 +3,10 @@
 ## Статус
 
 - Issue: `#284`.
-- Статус: implementation candidate; pending PR review and merge.
+- Статус: completed technical baseline; retained as execution evidence.
 - Snapshot: 2026-07-21, current pilot export at 19 Features.
 - Scope: Airtable export diagnostics, checked-in cross-artifact validation, warning budgets and CI/release enforcement.
+- Current corpus truth belongs to `docs/PROJECT_TRUTH.md`; this historical snapshot is not an active expansion plan.
 
 ## 1. Verified pre-implementation gap
 

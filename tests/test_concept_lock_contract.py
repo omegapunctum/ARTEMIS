@@ -83,7 +83,7 @@ def test_external_validation_requires_three_deep_modules_and_blind_briefs() -> N
 
 
 def test_pre_lock_working_docs_are_explicitly_superseded() -> None:
-    ai_strategy = _read("docs/work/ARTEMIS_AI_STRATEGY_v1_0.md")
+    ai_strategy = _read("docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md")
     ui_plan = _read("docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md")
     relation_migration = _read("docs/work/2026-07-16_RELATIONS_SIMILARITY_MIGRATION_v1.md")
 

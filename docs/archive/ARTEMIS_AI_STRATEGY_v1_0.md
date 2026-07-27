@@ -1,5 +1,7 @@
 # ARTEMIS_AI_STRATEGY_v1.0
 
+> Archived 2026-07-27. Historical pre-Concept-Lock strategy only. It has no current authority and cannot open AI implementation scope.
+
 ## Статус документа
 Рабочий производный документ от `ARTEMIS_CONCEPT_v1.0`.
 

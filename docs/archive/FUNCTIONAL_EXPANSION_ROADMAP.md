@@ -1,5 +1,7 @@
 # Functional Expansion Roadmap
 
+> Archived 2026-07-27. Historical pre-validation roadmap. Current execution order belongs to `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
+
 ## 1. Current baseline
 - Controlled-release baseline is stabilized across data/release/UI-UX and verified by release gate + tests.
 - Core runtime already contains foundations for expansion:

@@ -387,20 +387,9 @@ Rules:
 
 ## 16. Relationship to working AI strategy
 
-`docs/work/ARTEMIS_AI_STRATEGY_v1_0.md` may define:
-- implementation ideas;
-- AI roadmap;
-- prompt patterns;
-- UX experiments;
-- model behavior proposals;
-- next product layers.
+`docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` preserves historical pre-Concept-Lock proposals only.
 
-This file, `docs/AI_POLICY.md`, defines canonical constraints.
-
-If working AI strategy conflicts with this policy:
-- `AI_POLICY.md` wins;
-- the working strategy must be corrected;
-- no implementation task should proceed until conflict is resolved.
+This file, `docs/AI_POLICY.md`, defines canonical constraints. The archived strategy has no authority, cannot open AI implementation scope and must not be used as active planning.
 
 ---
 
@@ -444,7 +433,7 @@ Any change to AI behavior must check impact on:
 - `ENTITY_MODEL.md`;
 - `CONTENT_GOVERNANCE.md`;
 - `DATA_CONTRACT.md`;
-- `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`;
+- `docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` only when historical context is necessary;
 - UI labels and output rendering;
 - moderation/content governance;
 - tests/release checks if executable behavior changes.

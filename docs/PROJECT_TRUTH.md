@@ -111,13 +111,12 @@ ARTEMIS находится в состоянии **controlled engineering protot
 
 Следующая активная фаза — не scaling и не feature expansion, а:
 
-1. завершить Concept Lock v2 docs/test gate;
-2. подготовить три deep research modules and claim-level evidence;
-3. выполнить отдельную data/runtime migration для Claim/Evidence and immutable revisions;
-4. реализовать Research Brief and honest share semantics;
-5. подключить public backend и выполнить target E2E;
-6. провести six-person controlled/field validation;
-7. записать отдельное решение в `VALIDATION_DECISION.md`.
+1. подготовить три deep research modules and claim-level evidence;
+2. выполнить отдельную data/runtime migration для Claim/Evidence and immutable revisions;
+3. реализовать Research Brief and honest share semantics;
+4. подключить public backend и выполнить target E2E;
+5. провести six-person controlled/field validation;
+6. записать отдельное решение в `VALIDATION_DECISION.md`.
 
 Infrastructure work допускается только если оно не закрепляет прежнюю mutable Slice semantics как окончательный public contract.
 

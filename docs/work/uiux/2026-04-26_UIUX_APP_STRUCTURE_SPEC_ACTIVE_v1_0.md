@@ -3,11 +3,13 @@
 ## Статус документа
 
 - Тип: working UI/UX architecture spec
-- Статус: active
+- Статус: historical design context / gated
 - Scope: frontend UI/UX structure, section model, CSS/JS split strategy
 - Layer: `docs/work/uiux/*`
 - Owner-doc relation: subordinate to canonical `docs/PROJECT_STRUCTURE.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`, `docs/ARTEMIS_MASTER_PROMPT.md`
 - Runtime status: planning / controlled migration guidance
+
+> Lifecycle update 2026-07-27: historical design context. The legacy `ACTIVE` name/status does not open Stories, Courses, AI or section expansion; consult `docs/work/README.md`.
 
 ---
 

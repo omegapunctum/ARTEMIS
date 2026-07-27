@@ -4,7 +4,7 @@
 Производный рабочий документ от:
 - `ARTEMIS_CONCEPT.md`
 - `ARTEMIS_PRODUCT_SCOPE.md`
-- `docs/work/ARTEMIS_AI_STRATEGY_v1_0.md`
+- `docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` (historical context only)
 - `docs/work/uiux/ARTEMIS_UI_UX_SYSTEM.md`
 
 Цель: перевести UI/UX-систему ARTEMIS в конкретную карту компонентов, состояний, зависимостей и приоритетов реализации.

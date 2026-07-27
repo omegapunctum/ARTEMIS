@@ -1,5 +1,7 @@
 # Courses MVP Scope
 
+> Archived 2026-07-27. Historical Courses implementation plan. Courses are frozen and this document cannot define active scope.
+
 ## 1. Current baseline fit
 - Courses entrypoints and runtime primitives already exist in current UI: `Courses` top action button, dedicated `courses-panel`, in-memory courses state, step navigation, and map context binding by `feature_id` or `lat/lng`.
 - Courses content is already loadable from static `data/courses.json` via `loadCourses()` with cache + graceful fallback.

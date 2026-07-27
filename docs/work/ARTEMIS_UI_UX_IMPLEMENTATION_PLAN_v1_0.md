@@ -3,6 +3,8 @@
 ## Статус документа
 Рабочий implementation-plan документ для инженерного исполнения UI/UX-слоя ARTEMIS v1.0.
 
+> Lifecycle: gated compatibility context. `docs/work/README.md` is authoritative; this file is not an active execution order.
+
 > Concept Lock v2 supersession (2026-07-26): map-first/slice-core language in this plan is historical. Any new UI work must follow the canonical hierarchy Question → Claims → Evidence → Conclusion/Brief, treat map/time as validated lenses and distinguish current mutable ResearchSlice from target immutable revisions.
 
 > Status update (2026-04-22): для главного экрана принят working visual baseline; отдельный hardening-цикл по shell / top controls / detail panel / timeline завершён. В рамках текущего плана нет обязательного инерционного repatch этих зон без нового audit.

@@ -292,6 +292,9 @@ jobs:
             "css/style.css"
             "css/main-screen.css"
             "js/data.js"
+            "data/features.geojson"
+            "data/layers.json"
+            "data/relations.json"
           )
 """.strip()
         + "\n",
@@ -828,6 +831,23 @@ def test_release_docs_drift_flags_referenced_js_missing_from_pages_required_file
 
     assert result.returncode == 1
     assert '[FAIL] Release/docs drift: pages artifact required_files missing referenced asset: "js/map.js"' in result.stdout
+
+
+def test_release_docs_drift_flags_runtime_relations_missing_from_pages_artifact(tmp_path: Path) -> None:
+    _build_fixture(tmp_path)
+    workflow_path = tmp_path / ".github" / "workflows" / "pages.yml"
+    workflow_path.write_text(
+        workflow_path.read_text(encoding="utf-8").replace('            "data/relations.json"\n', ""),
+        encoding="utf-8",
+    )
+
+    result = _run_release_check(tmp_path)
+
+    assert result.returncode == 1
+    assert (
+        '[FAIL] Release/docs drift: pages artifact required_files missing runtime data asset: '
+        '"data/relations.json"'
+    ) in result.stdout
 
 
 def test_release_docs_drift_fails_when_archive_or_reference_marked_active(tmp_path: Path) -> None:

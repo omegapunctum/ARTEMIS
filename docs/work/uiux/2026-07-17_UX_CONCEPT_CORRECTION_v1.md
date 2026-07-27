@@ -2,12 +2,14 @@
 
 ## Статус
 
-- Тип: active product/UX decision record.
+- Тип: historical pre-Concept-Lock product/UX decision record.
 - Дата: 2026-07-17.
 - Область: Architecture Atlas vertical MVP, public workspace и следующий UI refinement cycle.
 - Решение: comparison-first discovery, Research Slice as saved output.
 - Implementation status: documentation contract only; runtime не изменён этим документом.
 - Responsive wireframe owner: `2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md`.
+
+> Lifecycle update 2026-07-27: pre-Concept-Lock decision history. It preserves implemented UX rationale but cannot override the Claim/Evidence/Brief hierarchy or active order in canonical docs and `docs/work/README.md`.
 
 Этот документ устраняет расхождение между product thesis, component map и текущим runtime. Он не меняет Option A и не открывает новый feature scope.
 

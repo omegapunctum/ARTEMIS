@@ -87,6 +87,7 @@ jobs:
             "data/features.geojson"
             "data/id_aliases.json"
             "data/layers.json"
+            "data/relations.json"
             "data/courses.json"
           )
 

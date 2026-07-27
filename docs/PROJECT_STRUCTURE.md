@@ -27,7 +27,6 @@
 ```text
 /
 ├── .github/
-├── api/
 ├── app/
 ├── css/
 ├── data/
@@ -36,6 +35,7 @@
 ├── js/
 ├── scripts/
 ├── tests/
+├── AGENTS.md
 ├── index.html
 ├── manifest.json
 ├── pytest.ini
@@ -50,7 +50,6 @@
 | Путь | Назначение | Статус |
 |---|---|---|
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
-| `api/` | legacy compatibility shim без самостоятельного runtime; допускается как переходный package marker до cleanup legacy references | legacy |
 | `app/` | canonical backend runtime | основной |
 | `css/` | UI style system; current shared + override baseline pending owner-scoped migration | основной |
 | `data/` | canonical public data layer + export diagnostics | основной |
@@ -59,6 +58,7 @@
 | `js/` | frontend modules | основной |
 | `scripts/` | ETL, import/export, audit, release checks | основной |
 | `tests/` | automated checks | основной |
+| `AGENTS.md` | единый repository entrypoint для агентов; маршрутизирует к canonical owners | operational |
 | `README.md` | корневой entrypoint документации | canonical |
 | `sw.js` | service worker | основной |
 | `manifest.json` | PWA manifest | основной |
@@ -80,6 +80,7 @@
 | ETL | `scripts/export_airtable.py` |
 | Release check | `scripts/release_check.py` |
 | Public map data | `data/features.geojson` |
+| Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
 
 Правило:
@@ -158,8 +159,7 @@ app/
 
 Правила:
 - `app/` — единственный backend runtime;
-- новый runtime-код в `api/` запрещён;
-- сохранение пустого legacy package в `api/` само по себе не считается отдельным runtime entrypoint;
+- legacy root package `api/` удалён; новый competing backend package запрещён;
 - env/runtime configuration закрепляется только за `app.main:app`;
 - session backend deployment policy: memory-backed refresh sessions допустимы только для development/testing/local baseline (включая short aliases `dev`/`test`); non-development/testing/local deployments обязаны использовать Redis-backed session store (`AUTH_SESSION_BACKEND=redis` + `REDIS_URL`) с fail-fast на misconfiguration;
 - Redis-backed refresh-session consume в текущем baseline трактуется как atomic one-time operation (`GETDEL` или atomic fallback path), а legacy non-atomic `get+delete` не должен считаться допустимым baseline-поведением;
@@ -219,7 +219,6 @@ data/
 ```text
 scripts/
 ├── audit_airtable.py
-├── build_geojson.py
 ├── export_airtable.py
 ├── import_features.py
 ├── release_check.py
@@ -256,87 +255,24 @@ README.md
 
 ### 8.2 Canonical docs
 
-Целевой слой:
-
-```text
-docs/
-├── AI_POLICY.md
-├── ARTEMIS_CONCEPT.md
-├── ARTEMIS_MASTER_PROMPT.md
-├── ARTEMIS_PRODUCT_SCOPE.md
-├── CONTENT_GOVERNANCE.md
-├── CONTROLLED_RELEASE_DECISION.md
-├── DATA_CONTRACT.md
-├── DATA_DICTIONARY.md
-├── DOCUMENTATION_SYSTEM.md
-├── ENTITY_MODEL.md
-├── EPISTEMIC_CONTRACT.md
-├── FOUNDATION_INDEX.md
-├── MVP_ARCHITECTURE_ATLAS.md
-├── PRIORITIES.md
-├── PRODUCT_THESIS.md
-├── PRODUCT_VALIDATION_PLAN.md
-├── VALIDATION_DECISION.md
-├── PROJECT_PHASES.md
-├── PROJECT_TRUTH.md
-├── PROJECT_STRUCTURE.md
-├── RESEARCH_SLICE_CONTRACT.md
-└── RESEARCH_SLICE_SPEC.md
-```
-
-Назначение:
-- `FOUNDATION_INDEX.md` — главный навигатор foundation-layer, порядок чтения и правила выбора source of truth по типам решений;
-- `ARTEMIS_CONCEPT.md` — North Star, human mission, жёсткие принципы и independent branch gates;
-- `PROJECT_TRUTH.md` — current capability and maturity truth;
-- `PRODUCT_THESIS.md` — active audience/problem/value hypotheses;
-- `ARTEMIS_PRODUCT_SCOPE.md` — границы Architecture Atlas vertical и запреты против product drift;
-- `MVP_ARCHITECTURE_ATLAS.md` — MVP boundary, content threshold и exit criteria;
-- `DATA_DICTIONARY.md` — semantic data vocabulary и constraints;
-- `PRODUCT_VALIDATION_PLAN.md` — user evidence protocol и thresholds;
-- `VALIDATION_DECISION.md` — validation outcome и разрешённый следующий scope;
-- `RESEARCH_SLICE_CONTRACT.md` — foundation contract для Investigation/immutable SliceRevision/SavedView/ResearchBrief;
-- `RESEARCH_SLICE_SPEC.md` — current mutable ResearchSlice v2 runtime/API compatibility spec;
-- `EPISTEMIC_CONTRACT.md` — Claim/EvidenceLink model and independent epistemic dimensions;
-- `ENTITY_MODEL.md` — knowledge/product/runtime/context entities, Claim and Relation model;
-- `CONTENT_GOVERNANCE.md` — правила источников, UGC, moderation, validation, trust, correction и publish governance;
-- `AI_POLICY.md` — canonical границы AI behavior, AI-output, source discipline и запреты против AI drift;
-- `ARTEMIS_MASTER_PROMPT.md` — общие правила работы агентов, docs-first discipline, архитектурные инварианты и порядок принятия решений;
-- `DATA_CONTRACT.md` — ETL/data/publish contract;
-- `CONTROLLED_RELEASE_DECISION.md` — правила controlled release, baseline-ограничения и критерии допуска;
-- `PROJECT_STRUCTURE.md` — boundaries, entrypoints, runtime rules и структура документационной системы;
-- `PROJECT_PHASES.md` — активные фазы и переходы;
-- `PRIORITIES.md` — load-bearing приоритеты текущего цикла;
-- `DOCUMENTATION_SYSTEM.md` — правила documentation governance, роли слоёв и порядок разрешения doc-conflicts.
+Полный canonical set и назначение каждого owner document зарегистрированы только в `FOUNDATION_INDEX.md`.
 
 Правило:
-- этот набор плюс `README.md` считается source of truth;
+- `FOUNDATION_INDEX.md` является единственным canonical registry;
 - foundation-layer (`FOUNDATION_INDEX.md`, `ARTEMIS_CONCEPT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`) является обязательным контуром для product/data/UI/AI решений;
 - conceptual foundation не может существовать только как внешний черновик;
 - упоминание старого canonical-набора (`ARCHITECTURE.md`, `RELEASE_SYSTEM.md`, `ROADMAP.md`) считается documentation drift, если эти файлы не являются реальными действующими canonical entrypoints.
 
 ### 8.3 Working docs
 
-Текущий слой:
-
-```text
-docs/work/
-├── ARTEMIS_AI_STRATEGY_v1_0.md
-├── ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md
-├── moderation-runbook.md
-└── uiux/
-    ├── 2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md
-    ├── ARTEMIS_UI_UX_SYSTEM.md
-    ├── ARTEMIS_UI_UX_COMPONENT_MAP.md
-    └── ARTEMIS_UI_UX_VISUAL_SYSTEM.md
-```
+Текущий lifecycle registry: `docs/work/README.md`.
 
 Назначение:
 - рабочие документы текущего цикла;
 - допускают быстрые изменения;
 - не считаются canonical по умолчанию;
-- `ARTEMIS_AI_STRATEGY_v1_0.md` является стратегическим рабочим документом высокого уровня: он обязателен к учёту, но не может противоречить `AI_POLICY.md`, `EPISTEMIC_CONTRACT.md`, `CONTENT_GOVERNANCE.md` и `ARTEMIS_PRODUCT_SCOPE.md`;
 - UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer;
-- `2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md` является expansion-planning working spec для App Shell / Workspace Core / Product Sections / Shared Components / Shared Overlays / Feature Modules и section contract; он не заменяет UI/UX owner-docs и не является canonical source-of-truth.
+- historical AI/Courses/expansion plans live in `docs/archive/` and cannot open scope.
 
 ### 8.4 Audits
 
@@ -377,7 +313,7 @@ docs/reference/
 ## 9. ЧТО СЧИТАЕТСЯ НАРУШЕНИЕМ СТРУКТУРЫ
 
 Технические нарушения:
-- новый runtime-код в `api/`;
+- competing backend package рядом с canonical `app/`;
 - прямой доступ frontend к Airtable;
 - implicit fallback public map на runtime API;
 - смешивание draft/runtime/public data contracts;
