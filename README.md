@@ -1,10 +1,12 @@
 # ARTEMIS
 
-**ARTEMIS Architecture Atlas** is an evidence-first research tool for architecture history, built with **MapLibre + GeoJSON**.
+**ARTEMIS** is a source-aware spatial-temporal world model: an interactive environment for exploring entities, events, states and processes as synchronized layers across space and time.
 
-The active job is to help an advanced architecture-history student turn a comparative question about 2–3 objects into a traceable Research Brief with Claims, evidence, a conclusion or explicit unresolved state, uncertainty, and spatial-temporal context.
+Its mission is to help people understand the world as an interconnected system—not as isolated map points, timeline entries or encyclopedia pages. Evidence remains mandatory through Claims, Sources, EvidenceLinks, locators and uncertainty, but it is the trust layer of the world model rather than the product identity.
 
-The core is `Question → Claims → Evidence → Conclusion`. Map and time are privileged research lenses whose incremental value must be validated, not assumed. The target saved model is `Investigation → immutable Slice Revision → Research Brief`, with a nested Saved View. The current mutable ResearchSlice v2 backend is a compatibility capability, not that final model.
+Foundation v3 restores space and time as core coordinates. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
+
+The public runtime does **not** yet implement Foundation v3. Life in Context, first-class State/Process/Trajectory/temporal Region data, generative AI, causal reasoning, 3D/VR and universal coverage remain target or future scope.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -22,7 +24,7 @@ ARTEMIS currently combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The current operational state is **controlled engineering prototype / concept-locked pre-validation**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
+The current operational state is **controlled engineering prototype / Foundation v3 correction**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 
@@ -31,8 +33,8 @@ The current operational state is **controlled engineering prototype / concept-lo
 | `PUBLIC NOW` | Works on GitHub Pages without backend execution | map, timeline/filter/detail baseline, checked-in `data/*` |
 | `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
 | `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
-| `CONCEPT TARGET` | Canonically approved but not implemented | Claims/EvidenceLinks, immutable revisions, Research Brief |
-| `FUTURE` | Not an active product capability | AI generation, universal domains, causal/predictive layers |
+| `CONCEPT TARGET` | Defined but not implemented in public runtime | spatial-temporal world model, Life in Context, State/Process/Trajectory/Region |
+| `FUTURE` | Not an active product capability | source-bound AI, causal/counterfactual runtime, 3D/dynamic Earth, VR/AR |
 
 ---
 
@@ -316,9 +318,10 @@ Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`. The autho
 Product decisions follow four distinct levels:
 
 1. `docs/ARTEMIS_CONCEPT.md` — North Star.
-2. `docs/PRODUCT_THESIS.md` and `docs/ARTEMIS_PRODUCT_SCOPE.md` — the user, problem and product being tested now.
-3. `docs/PROJECT_TRUTH.md` — what actually works.
-4. `docs/VALIDATION_DECISION.md` — what user evidence has proved and which next scope is allowed.
+2. `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` — world-model semantics.
+3. `docs/PRODUCT_THESIS.md` and `docs/ARTEMIS_PRODUCT_SCOPE.md` — the user, problem and product being tested now.
+4. `docs/PROJECT_TRUTH.md` — what actually works.
+5. `docs/VALIDATION_DECISION.md` — what user evidence has proved and which one next branch is allowed.
 
 Start with `AGENTS.md` for repository work, then follow the current reading order in `docs/FOUNDATION_INDEX.md`. Do not infer that every file under `docs/work/` is active; consult `docs/work/README.md`.
 
@@ -328,6 +331,6 @@ The current accepted main-screen shell is documented by:
 - `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`
 - `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md` — measured CSS ownership baseline and rollout batches.
 
-These files describe the implemented visual-shell baseline. They do not define the next product hierarchy: any new UI work must follow Concept Lock v2 (`Question → Claims → Evidence → Conclusion/Brief`) and treat map/time as validated lenses. They also do not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
+These files describe the implemented visual-shell baseline. They do not define the next product hierarchy: any new UI work must follow Foundation v3: synchronized space/time/layers are core, change objects are first-class, and co-presence must remain separate from documented Relations. They also do not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
 
 Historical documents live in `docs/archive/`, and diagnostic/reference documents live in `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.

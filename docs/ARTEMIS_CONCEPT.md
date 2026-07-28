@@ -3,454 +3,336 @@
 ## Статус документа
 
 - Тип: canonical foundational concept document.
-- Версия: 2.0.
-- Дата: 2026-07-26.
-- Статус: active.
-- Роль: фиксирует миссию, инварианты, North Star и gated development logic.
-- Основание: Concept Lock v2; rationale and migration boundary recorded in `docs/work/2026-07-26_CONCEPT_LOCK_V2.md`.
+- Версия: 3.0.
+- Дата: 2026-07-28.
+- Статус: proposed by Foundation v3, pending merge.
+- Роль: фиксирует идентичность, миссию, инварианты и долгосрочное направление ARTEMIS.
+- Основание: Foundation v3 issue `#327` и `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md`.
 
 Границы owner documents:
 
 - `ARTEMIS_CONCEPT.md` — долгосрочная идентичность и инварианты;
-- `PRODUCT_THESIS.md` — конкретный пользователь, job и hypotheses текущего vertical;
-- `ARTEMIS_PRODUCT_SCOPE.md` — текущий разрешённый scope;
-- `PROJECT_TRUTH.md` — что фактически доступно;
-- `VALIDATION_DECISION.md` — что доказано и какую одну следующую ветвь разрешено открыть.
+- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` — обязательная структура пространственно-временной модели;
+- `PRODUCT_THESIS.md` — пользователь, job и hypotheses первого validation vertical;
+- `ARTEMIS_PRODUCT_SCOPE.md` — разрешённый scope текущего цикла;
+- `PROJECT_TRUTH.md` — фактически доступные возможности;
+- `EPISTEMIC_CONTRACT.md` — правила доказательности, вывода и неопределённости;
+- `ENTITY_MODEL.md` — типы сущностей и их роли.
 
 North Star не является release promise.
 
 ## 1. Определение
 
-**ARTEMIS — source-aware research environment, в которой человек сопоставляет сущности и Claims, проверяет EvidenceLinks, различает доказательства и интерпретации и сохраняет версионированный Research Brief. Пространство и время служат привилегированными линзами исследования, когда они усиливают вывод.**
+**ARTEMIS — интерактивная, основанная на источниках пространственно-временная модель мира, в которой человек исследует сущности, события, состояния и процессы как синхронизированные слои пространства и времени, чтобы видеть их сосуществование, изменение и возможные взаимосвязи.**
+
+ARTEMIS соединяет:
+
+`Пространство × Время × Сущности × Состояния × Процессы × Связи × Источники`
+
+Вместо изолированной карточки или текста пользователь получает изменяющуюся конфигурацию мира: что существовало, где находилось, что происходило одновременно, как перемещались люди и явления, как менялись территории и какие связи действительно подтверждены.
 
 ARTEMIS не является:
 
-- картой с точками;
+- обычной картой с историческими точками;
 - геопривязанной энциклопедией;
-- generic notes app;
-- knowledge graph без пользовательского результата;
-- AI chat поверх базы;
-- генератором причинных или эффектных выводов без evidence chain.
+- одной линейной временной шкалой;
+- универсальным knowledge graph без пространственно-временной семантики;
+- генератором готовых причинных выводов;
+- AI chat поверх набора документов;
+- обещанием немедленно смоделировать всё знание человечества.
 
 ## 2. Миссия
 
-### 2.1 Основная формулировка
+**Миссия ARTEMIS — помогать человеку понимать мир как взаимосвязанную систему, наблюдаемую в пространстве и времени.**
 
-**Миссия ARTEMIS — усиливать человеческое исследование: помогать человеку переходить от вопроса к проверяемому выводу, не теряя источники, неопределённость и собственное авторство суждения.**
+ARTEMIS должен помогать:
 
-### 2.2 Практический смысл
+- увидеть локальный объект или биографию внутри современного им окружения;
+- сопоставить процессы, происходившие одновременно в разных местах;
+- исследовать перемещение людей, организмов, идей, технологий и институтов;
+- наблюдать изменение регионов, границ, культурных состояний, экосистем и рельефа;
+- отличать простое сосуществование от встречи, взаимодействия, влияния и причинности;
+- переходить от визуального наблюдения к проверяемому исследовательскому вопросу;
+- сохранять происхождение утверждений, неопределённость и конкурирующие реконструкции.
 
-ARTEMIS должен:
+Evidence не является миссией ARTEMIS. Evidence — условие, при котором пространственно-временной модели можно доверять.
 
-- делать сложное знание сопоставимым;
-- связывать Claims с конкретным evidence;
-- помогать отличать relation от classification/similarity;
-- сохранять развитие исследования без переписывания истории;
-- переносить результат в эссе, семинар, презентацию или совместную работу;
-- показывать, где вывод не завершён.
+## 3. Исходная проблема
 
-### 2.3 Роль AI
+Сегодня знание фрагментировано по носителям:
 
-AI не является второй миссией проекта.
+- карта показывает пространство, но почти не показывает историческое изменение;
+- timeline показывает последовательность, но слабо показывает географию и одновременность;
+- энциклопедия и статья объясняют текстом, но требуют мысленно собирать мир из отдельных страниц;
+- 3D-модель показывает форму, но обычно лишена исторического, культурного и природного контекста;
+- тематические базы разделяют политическую, культурную, биографическую и природную историю;
+- причинные формулировки часто скрывают, где заканчивается факт и начинается интерпретация.
 
-Совместимость с AI — архитектурная опция. После отдельного evidence gate AI может помогать формулировать Claims, находить gaps и объяснять selected evidence, но человек остаётся субъектом суждения, а AI не становится Source.
+Следствие — пользователь изучает явления изолированно и плохо видит:
 
-## 3. Проблема
+- конфигурацию мира в выбранный момент;
+- одновременность;
+- изменение;
+- масштаб;
+- пространственное соседство;
+- возможные механизмы связи;
+- границы доступного корпуса и знания.
 
-Исследовательские знания обычно разделены между:
+ARTEMIS закрывает этот разрыв синхронизированной моделью пространства и времени, а не одним новым форматом карточек или заметок.
 
-- текстами и bibliography;
-- каталогами и object cards;
-- картами;
-- хронологиями;
-- изображениями;
-- заметками и черновиками;
-- экспертными интерпретациями.
+## 4. Неизменяемые принципы
 
-Из-за этого:
+### 4.1 Space and time are core coordinates
 
-- evidence теряет связь с конкретным утверждением;
-- общая классификация принимается за историческую связь;
-- similarity маскирует отсутствие доказательства;
-- uncertainty исчезает при пересказе;
-- mutable note не позволяет восстановить старую версию вывода;
-- результат трудно передать без длинного устного объяснения.
+Пространство и время обязательны для идентичности ARTEMIS. Они не являются факультативными линзами, которые можно удалить при неудаче одного интерфейсного эксперимента.
 
-ARTEMIS закрывает разрыв через evidence-first comparison и версионированный research outcome.
+Конкретная визуализация может меняться: 2D-карта, 3D-глобус, локальная сцена, timeline, animation, VR/AR. Но модель обязана сохранять пространственно-временную адресуемость, изменение и синхронизацию.
 
-## 4. Жёсткие принципы
+### 4.2 The world is modeled through change
 
-### 4.1 Human judgment is primary
+ARTEMIS моделирует не только `Entity`, но и:
 
-Человек формулирует вопрос, выбирает scope и принимает conclusion. Система усиливает, но не заменяет judgment.
+- `Event` — ограниченное событие;
+- `State` — состояние сущности или региона в интервале;
+- `Process` — длительное изменение;
+- `Trajectory` — путь или перемещение;
+- `Region` — изменяющаяся пространственная область.
 
-### 4.2 Проверяемая цепочка — ядро
+Дата на карточке не заменяет модель изменения.
 
-Инвариант:
+### 4.3 Coexistence is not interaction
 
-`Question → Claims → Evidence → Comparison → Findings → Conclusion / Unresolved`
+Нахождение двух сущностей в одном городе или временном интервале означает только пространственно-временное совпадение.
 
-Функция входит в ядро только если усиливает эту цепочку.
+Отдельно моделируются:
 
-### 4.3 Map/time are privileged lenses, not dogma
+`coexistence → possible encounter → documented encounter → interaction → influence → causality`
 
-Пространство и время:
+Переход на более сильный уровень требует отдельного Claim и evidence.
 
-- остаются сильной дифференциацией;
-- должны быть синхронизированы с Compare/Evidence;
-- проверяются against same-content baseline;
-- не обязаны кодировать каждое значимое утверждение.
+### 4.4 Evidence is attached to claims
 
-Если map/time не дают дополнительной ценности, scope сужается.
+Каждое содержательное утверждение о событии, состоянии, границе, траектории, процессе или relation должно быть связано с источником через `Claim` и `EvidenceLink`, когда доказательность применима.
 
-### 4.4 Claim is the unit of evidence
+Source URL не является blanket proof. Locator и отношение `supports | challenges | contextualizes` сохраняются.
 
-Source связывается с конкретным Claim через EvidenceLink и locator. Entity-level source list не заменяет evidence chain.
+### 4.5 Epistemic forms remain distinct
 
-### 4.5 Epistemic dimensions are independent
+Факт, наблюдение, интерпретация, вывод, гипотеза и контрфактический сценарий не сливаются.
 
-Claim kind, origin, review state, confidence, evidence state и uncertainty не смешиваются.
+Origin, review state, confidence, evidence state и uncertainty остаются независимыми измерениями.
 
-### 4.6 Relation is a structured Claim
+### 4.6 Uncertainty is part of the model
 
-Relation требует конкретного predicate и evidence. Shared classification и computed Similarity не являются substantive Relations.
+ARTEMIS обязан показывать:
 
-### 4.7 Uncertainty is a result, not a defect
+- приблизительные и спорные даты;
+- неточные и альтернативные маршруты;
+- изменяющиеся или спорные границы;
+- неполные состояния и процессы;
+- конкурирующие реконструкции;
+- пробелы корпуса;
+- конфликт источников.
 
-`Unresolved` допустим и предпочтительнее искусственного conclusion.
+Точная геометрия или плавная animation не должны создавать ложную точность.
 
-### 4.8 Versioned research over mutable snapshots
+### 4.7 Human judgment remains primary
 
-Investigation развивается через immutable Slice Revisions. Saved View поддерживает revision, но не определяет её смысл.
+Человек выбирает вопрос, scope, слои и уровень допустимого вывода. ARTEMIS помогает видеть структуру мира и основания суждения, но не подменяет решение.
 
-### 4.9 Database breadth is not product value
+### 4.8 Current truth is separate from North Star
 
-Количество Features, Sources или Relations важно только после доказательства глубины module, качества Brief и устойчивости curation cost.
+Концепция, данные, runtime, публичный deployment и подтверждённая пользовательская ценность — разные уровни истины.
 
-### 4.10 Public truth before product promise
+3D, VR, AI reasoning или глобальный охват нельзя описывать как доступные возможности до их фактической реализации.
 
-North Star, code, deployment and user-validated value — разные уровни истины.
+## 5. Пространственно-временное ядро
 
-### 4.11 Future compatibility must not distort present value
+Минимальные knowledge objects:
 
-Stories, Courses, institutional workflows, AI и reasoning experiments не задают current core model.
+- `Entity` — человек, объект, место, организм, институт, идея или другая идентифицируемая единица;
+- `Event` — событие с участниками, временем и пространством;
+- `State` — состояние сущности или области в заданном периоде;
+- `Process` — изменение, развёрнутое во времени и пространстве;
+- `Trajectory` — последовательность мест/состояний перемещающейся сущности;
+- `Region` — точка, линия, область, объём или неопределённая геометрия с temporal validity;
+- `Layer` — тематическая перспектива: политика, культура, религия, биосфера, рельеф и другие;
+- `Relation` — конкретное утверждение между сущностями или явлениями;
+- `Claim` — проверяемое содержательное утверждение;
+- `Source` — provenance unit;
+- `EvidenceLink` — связь Claim с Source и locator;
+- `Uncertainty` — явное описание неизвестности;
+- `View / Investigation` — сохранённая конфигурация наблюдения или исследования.
 
-## 5. Epistemическая основа
+Canonical semantics принадлежат `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `ENTITY_MODEL.md` и `EPISTEMIC_CONTRACT.md`.
 
-Canonical owner: `EPISTEMIC_CONTRACT.md`.
+## 6. Основной пользовательский опыт
 
-Базовые objects:
+Базовый опыт ARTEMIS:
 
-- `Entity` — предмет исследования;
-- `Claim` — атомарное утверждение;
-- `Source` — provenance/bibliographic unit;
-- `EvidenceLink` — supports/challenges/contextualizes Claim с locator;
-- `ClassificationAssertion` — Entity classified as Movement/Layer/type;
-- `Relation` — structured Claim `subject → predicate → object`;
-- `Similarity` — computed comparison output, not evidence.
+1. Выбрать момент или интервал времени.
+2. Выбрать область или масштаб пространства.
+3. Включить релевантные тематические слои.
+4. Увидеть сущности, события, состояния, процессы и траектории в общей конфигурации.
+5. Перемещать время и наблюдать изменения.
+6. Открыть элемент и проверить источник, locator и uncertainty.
+7. Сравнить локальный контекст с синхронными явлениями в другом месте.
+8. Отделить наблюдаемое совпадение от подтверждённой relation.
+9. Сохранить view, вопрос или версионированный исследовательский результат, если это нужно.
 
-Ключевые запреты:
+Первый момент ценности — не экспорт документа, а **новое контекстуальное понимание, возникшее благодаря совместному наблюдению пространства, времени и слоёв**.
 
-- AI as Source;
-- source URL as blanket proof;
-- `same_movement` as substantive historical Relation;
-- Similarity as evidence;
-- hypothesis or interpretation as unmarked fact;
-- hidden challenging evidence;
-- confidence without basis.
+## 7. Evidence и исследовательские артефакты
 
-## 6. Главная единица ценности
+Claim/EvidenceLink остаются фундаментом доверия.
 
-### 6.1 Первый момент ценности
+`Investigation`, immutable revision и `Research Brief` остаются полезными поддерживающими сущностями для глубокого исследования, передачи и воспроизводимости. Они не определяют миссию ARTEMIS и не обязательны для первого момента ценности.
 
-Evidence-aware comparison создаёт первое новое или уточнённое понимание.
+Возможные outcomes:
 
-### 6.2 Повторно используемый результат
+- сохранённый synchronized view;
+- отмеченное наблюдение;
+- вопрос или hypothesis;
+- проверяемая comparison;
+- Investigation revision;
+- Research Brief;
+- guided exploration или teaching module после отдельного решения.
 
-Главный reusable outcome — one immutable `Slice Revision` and its `Research Brief`.
+## 8. Масштабирование знания
 
-### 6.3 Research-work model
+ARTEMIS не пытается сразу включить всю информацию человечества.
 
-```text
-Investigation
-└── Slice Revision
-    ├── Question
-    ├── Entities
-    ├── Claims / Findings
-    ├── EvidenceLinks
-    ├── Conclusion / Unresolved
-    ├── Uncertainty
-    ├── Dataset / schema identity
-    └── Saved View
+Реалистичная стратегия:
 
-Research Brief = readable projection of Slice Revision
-```
+1. универсальный пространственно-временной контракт;
+2. небольшие законченные `World Slice` datasets;
+3. явные тематические layers;
+4. видимая полнота и границы каждого slice;
+5. загрузка детализации по масштабу и запросу;
+6. независимая проверка новых типов данных;
+7. совместимость слоёв через общий контракт, а не через одну гигантскую таблицу.
 
-`Investigation` даёт identity развивающейся работе. `Slice Revision` фиксирует версию. `Saved View` восстанавливает UI-context. `Research Brief` переносит результат.
+Новая предметная область разрешена, если она выражается через общий world-model contract и имеет собственную provenance/uncertainty policy.
 
-Current mutable `ResearchSlice v2` является compatibility runtime, а не окончательной North Star entity.
+## 9. Роль Architecture Atlas
 
-## 7. Пользователь и текущий vertical
+Architecture Atlas сохраняется как:
 
-North Star допускает несколько будущих аудиторий, но current primary user определяется только `PRODUCT_THESIS.md`.
+- первый реализованный тематический слой;
+- источник технических fixtures и pipeline lessons;
+- корпус архитектурных объектов, Sources, Media и ограниченных Relations;
+- возможный компонент междисциплинарных World Slices.
 
-Beachhead:
+Architecture Atlas больше не определяет:
 
-- старшекурсник или магистрант истории архитектуры/искусства;
-- готовит сравнительное задание в ближайшие 1–2 недели.
+- миссию всего ARTEMIS;
+- единственного пользователя;
+- обязательный основной outcome;
+- границы всех будущих сущностей.
 
-Potential downstream audiences требуют собственных validation:
+## 10. Роль AI
 
-- преподаватель/куратор;
-- профессиональный исследователь;
-- institutional knowledge team;
-- author of guided exploration.
+AI является долгосрочным аналитическим слоем над source-aware world model.
 
-Не являются current core:
+После независимых value/safety gates AI сможет:
 
-- casual map browsing;
-- social content consumption;
-- open unmoderated UGC;
-- пользователь, ожидающий готовый causal/predictive answer.
+- находить пространственно-временные совпадения и пропуски;
+- сопоставлять source-backed Claims;
+- предлагать возможные механизмы влияния как явно маркированные hypotheses;
+- объяснять, какие evidence и inference steps ведут к выводу;
+- обнаруживать противоречия и альтернативные реконструкции;
+- помогать исследовать детерминированность и чувствительность сценариев;
+- строить изолированные counterfactual simulations.
 
-## 8. Core loop текущего продукта
-
-1. Сформулировать или выбрать вопрос.
-2. Найти 2–3 объекта через relevant lenses.
-3. Сопоставить Claims, classifications and Relations.
-4. Проверить EvidenceLinks, locators and uncertainty.
-5. Сформулировать findings.
-6. Записать conclusion или `unresolved`.
-7. Сохранить Slice Revision.
-8. Получить Research Brief.
-9. Вернуться к Investigation, создать новую revision или передать pinned result.
-
-Stories/Courses/AI не входят в loop.
-
-## 9. Основные сущности North Star
-
-### Knowledge
-
-- Entity;
-- Claim;
-- Source;
-- EvidenceLink;
-- ClassificationAssertion;
-- Relation;
-- Similarity as computed output;
-- Media.
-
-### Research product
-
-- Investigation;
-- Slice Revision;
-- Saved View;
-- Research Brief.
-
-### Optional future consumers
-
-- Collection;
-- Story/guided route;
-- Course/teaching module;
-- AI-assisted Claim or explanation;
-- institutional workflow.
-
-Optional consumers cannot redefine core research entities.
-
-## 10. Capabilities
-
-### Core data/evidence
-
-- curated entities;
-- atomic Claims;
-- Sources with locators;
-- EvidenceLinks;
-- classification separated from Relations;
-- uncertainty and conflict;
-- controlled publish/review.
-
-### Core research interface
-
-- question framing;
-- evidence-aware compare;
-- map/time/list/detail lenses;
-- visible provenance;
-- relation/classification/similarity literacy;
-- conclusion/unresolved.
-
-### Core research persistence
-
-- Investigation identity;
-- immutable revisions;
-- nested Saved View;
-- revision-pinned read-only share;
-- citation-ready Brief;
-- return and new revision.
-
-### Frozen until independent gate
-
-- guided Stories/Courses;
-- AI generation/analysis;
-- open UGC;
-- institutional collaboration;
-- new domains;
-- structured inference/counterfactual layers.
-
-## 11. Development model: core plus independent branches
-
-ARTEMIS не использует одну линейную лестницу, где каждый слой автоматически ведёт к следующему.
-
-### Core gate
-
-Сначала должны быть доказаны:
-
-- evidence-chain value;
-- comparison value;
-- epistemic literacy;
-- reusable Brief;
-- sustainable curation;
-- honest public capability.
-
-### Branch A — spatial-temporal depth
-
-Открывается, если map/time дают отдельный observed contribution.
-
-Possible scope:
-
-- richer temporal events/state changes;
-- spatial comparison;
-- geographic diffusion views.
-
-### Branch B — guided exploration
-
-Открывается, если пользователь или преподаватель нуждается в curated path.
-
-Possible scope:
-
-- routes;
-- Stories;
-- teaching modules.
-
-### Branch C — source-bound AI assistance
-
-Открывается отдельным safety/value gate.
-
-Possible scope:
-
-- Claim decomposition;
-- evidence-gap detection;
-- supported comparison;
-- hypothesis drafting.
-
-### Branch D — institutional workflow
-
-Открывается только после проверки owner, curation economics, collaboration and governance requirements.
-
-### Branch E — reasoning research
-
-Long-term experimental branch. Она не является продуктовой миссией и не открывается автоматически успехом пользовательского продукта.
-
-Одно решение `EXPAND` разрешает планировать только одну явно названную branch.
-
-## 12. Текущая роль AI
-
-AI generation frozen.
-
-Если branch C будет открыта, AI может:
-
-- разделять broad text на candidate Claims;
-- объяснять selected evidence;
-- находить missing/challenging evidence;
-- сравнивать supported Claims;
-- предлагать marked hypothesis;
-- указывать uncertainty.
-
-AI не может:
+AI не сможет:
 
 - быть Source;
-- выдумывать locator;
-- скрывать origin;
-- повышать Claim без review;
-- создавать canonical Relation;
-- подменять conclusion пользователя.
+- выдумывать факт, locator, геометрию или маршрут;
+- скрывать origin или inference trace;
+- превращать корреляцию/сосуществование в причинность;
+- автоматически публиковать canonical Claims или Relations;
+- смешивать фактический мир с counterfactual branch.
 
-## 13. Критические риски и решения
+Generative AI остаётся замороженным в первом Foundation v3 vertical. Сначала определяется контракт.
 
-### 13.1 Дисциплинированная система без cognitive value
+## 11. 3D, динамическая Земля и VR/AR
 
-Решение: blind Brief rubric и control comparison имеют приоритет над completion metrics.
+Долгосрочная форма ARTEMIS допускает:
 
-### 13.2 Map-first dogma
+- 3D-глобус и локальные сцены;
+- изменение рельефа, береговых линий и регионов;
+- temporal geometry и реконструкции;
+- несколько конкурирующих реконструкций;
+- VR/AR-наблюдение мира и процессов.
 
-Решение: same-content baseline; `NARROW`, если spatial-temporal increment не подтверждён.
+Эти направления являются North Star interaction surfaces. Они не разрешают:
 
-### 13.3 Source laundering
+- использовать декоративный 3D без дополнительной познавательной ценности;
+- выдавать реконструкцию за точное прошлое;
+- откладывать проверку базового 2D synchronized experience;
+- обещать реализацию до отдельных technical and value gates.
 
-Симптом: Source URL создаёт видимость доказанности broad statement.
+## 12. Первый validation vertical
 
-Решение: Claim-level EvidenceLink and locator.
+Foundation v3 начинает с `Life in Context`.
 
-### 13.4 Classification laundering
+Пользователь прослеживает траекторию исторической личности и одновременно видит:
 
-Симптом: `same_movement` выглядит как historical relation graph.
+- события в текущем месте и периоде;
+- политическое и культурное состояние региона;
+- документированные встречи и relations;
+- простое сосуществование без ложного утверждения о связи;
+- значимые синхронные события в других регионах;
+- источники и неопределённость.
 
-Решение: ClassificationAssertion и исключение из substantive Relation counts.
+Первый кандидат: Leonardo da Vinci, 1452–1519.
 
-### 13.5 False reproducibility
+Это не новая идентичность ARTEMIS, а контролируемая проверка пространственно-временного ядра на малом междисциплинарном slice.
 
-Симптом: mutable record/content counter называется reproducible revision.
+## 13. Development model
 
-Решение: immutable revisions, pinned dataset identity, pinned share and Brief.
+Развитие идёт через gates:
 
-### 13.6 Premature AI/platform expansion
+1. `Foundation v3` — согласованная идентичность и contracts.
+2. `World Model Contract` — точная семантика данных и uncertainty.
+3. `Life in Context Dataset` — ограниченный source-aware World Slice.
+4. `Spatial-Temporal Explorer` — synchronized map/timeline/layers.
+5. `Contextual Learning Pilot` — измерение понимания и discovery.
+6. Независимые branches: 3D/dynamic regions, guided learning, source-bound AI, institutional work, VR/AR.
 
-Решение: independent branch gates; AI compatibility does not define mission.
+Один gate не открывает все ветви.
 
-### 13.7 Content scaling without economics
+## 14. Success criteria ядра
 
-Решение: измерять preparation/review cost per deep module до corpus expansion.
+Пространственно-временное ядро получает evidence в свою пользу, если пользователь:
 
-## 14. Success criteria
+- точнее восстанавливает конфигурацию мира в выбранном времени и месте;
+- замечает релевантные одновременные процессы, которые пропустил бы в изолированных материалах;
+- понимает изменение траектории, региона или процесса;
+- не путает co-presence с interaction/influence;
+- может проверить существенные Claims и uncertainty;
+- использует map/time/layer synchronization, а не только карточки;
+- получает ценность при устойчивой стоимости подготовки World Slice.
 
-Current vertical подтверждён только если:
+Если конкретный UI или vertical не даёт этого эффекта, пересматриваются UI, corpus и vertical. Пространственно-временная миссия не заменяется другим продуктом без нового foundation decision.
 
-- participant creates stronger Brief than control;
-- Claims trace to relevant evidence and locators;
-- Relation/classification/Similarity do not collapse;
-- conclusion is calibrated or explicitly unresolved;
-- reusable outcome is used in real work;
-- map/time contribution is separately measured;
-- curation cost is known;
-- public/runtime statements remain honest;
-- `VALIDATION_DECISION.md` records a supported decision.
+## 15. Official Foundation v3 lock
 
-## 15. Финальные формулы
+После merge считаются утверждёнными:
 
-### North Star
+1. миссия — понимание мира как взаимосвязанной системы;
+2. пространство и время — обязательные координаты ядра;
+3. world model включает Entity/Event/State/Process/Trajectory/Region/Layer;
+4. evidence — обязательный trust layer;
+5. co-presence, encounter, interaction, influence и causality различаются;
+6. факты, наблюдения, интерпретации, hypotheses и counterfactuals разделены;
+7. uncertainty и corpus incompleteness видимы;
+8. Architecture Atlas — thematic layer, а не идентичность всего проекта;
+9. AI — будущий source-bound analytical layer, не Source;
+10. 3D/VR/dynamic Earth — North Star surfaces, не current promise;
+11. первый vertical — Life in Context;
+12. изменение этих положений требует нового foundation decision.
 
-**ARTEMIS — evidence-first human research environment with privileged spatial-temporal lenses and versioned, source-aware outcomes.**
+## 16. Финальная формула
 
-### Краткая формула
-
-**ARTEMIS помогает человеку перейти от вопроса к проверяемому выводу и сохранить evidence chain в переносимой форме.**
-
-### Текущий продукт
-
-**ARTEMIS Architecture Atlas помогает студенту истории архитектуры превратить сравнительный вопрос о 2–3 объектах в evidence-backed Research Brief.**
-
-## 16. Official lock
-
-Считаются утверждёнными:
-
-1. human research as the only mission;
-2. evidence chain as core;
-3. map/time as validated lenses, not dogma;
-4. Claim/EvidenceLink foundation;
-5. Relation as structured Claim;
-6. shared classification and Similarity separated from Relation;
-7. Investigation/SliceRevision/SavedView/ResearchBrief model;
-8. current runtime separated from target model;
-9. deep research modules before external validation;
-10. independent evidence gates for future branches.
-
-Пересмотр любого пункта требует нового foundation decision, а не локального feature PR.
+**ARTEMIS помогает увидеть мир во времени: не как набор изолированных фактов, а как проверяемую пространственно-временную систему сущностей, состояний, процессов и связей.**

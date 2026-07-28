@@ -3,163 +3,185 @@
 ## Статус
 
 - Тип: canonical active product thesis.
-- Версия: 2.0.
-- Дата: 2026-07-26.
-- Решение: focused architecture-history research vertical.
-- Основание: Concept Lock v2 (`docs/work/2026-07-26_CONCEPT_LOCK_V2.md`).
+- Версия: 3.0.
+- Дата: 2026-07-28.
+- Решение: Foundation v3 / first `Life in Context` validation vertical.
+- Основание: `ARTEMIS_CONCEPT.md`, issue `#327` и Foundation v3 decision record.
 
 ## 1. Product statement
 
-**ARTEMIS Architecture Atlas помогает старшекурснику или магистранту истории архитектуры превратить сравнительный вопрос о 2–3 объектах в проверяемый Research Brief с claims, источниками, выводом, неопределённостью и пространственно-временным контекстом.**
+**ARTEMIS Life in Context помогает любознательному студенту или самостоятельному исследователю проследить жизнь исторической личности внутри изменяющегося мира: синхронно видеть её перемещения, локальные события, состояние региона, подтверждённые связи и события, происходящие в других частях мира.**
 
 Дифференциация:
 
-> ARTEMIS сохраняет не набор найденных карточек, а проверяемую цепочку от вопроса к выводу: что утверждается, каким evidence это поддерживается или оспаривается и где остаётся неопределённость.
-
-Map и timeline являются привилегированными исследовательскими линзами. Их дополнительная ценность должна быть доказана отдельно от ценности Compare/Evidence.
+> Обычная карта показывает место, биография — последовательность эпизодов, энциклопедия — отдельные статьи. ARTEMIS показывает их как одну source-aware пространственно-временную конфигурацию и не превращает одновременность в выдуманную связь.
 
 ## 2. Проблема
 
-При подготовке сравнительного эссе, семинара или исследовательского задания студент собирает контекст из статей, каталогов, карт, изображений и заметок. В результате:
+При изучении личности или эпохи пользователь вынужден мысленно соединять:
 
-- утверждения отделяются от точных источников и locators;
-- формальное сходство легко принимается за влияние;
-- классификация смешивается с исторической relation;
-- собственный вывод трудно восстановить и проверить;
-- карта, хронология и evidence остаются в разных инструментах;
-- перенос результата в эссе или презентацию требует повторной ручной сборки.
+- биографию;
+- карту;
+- хронологию;
+- политическую и культурную историю;
+- сведения о других людях;
+- источники и спорные реконструкции.
 
-ARTEMIS должен уменьшить этот разрыв, не выдавая similarity, classification, interpretation или AI output за доказанную связь.
+Из-за этого он:
+
+- помнит отдельные факты, но слабо видит конфигурацию мира;
+- теряет масштаб расстояний и длительность перемещений;
+- не замечает релевантные одновременные процессы;
+- принимает co-presence за encounter или influence;
+- плохо видит, где данные точны, приблизительны или отсутствуют;
+- тратит усилия на сбор контекста вместо его осмысления.
 
 ## 3. Primary user and job
 
 Первичный пользователь:
 
-- старшекурсник или магистрант истории архитектуры/искусства;
-- у него есть сравнительное учебное или исследовательское задание со сроком в ближайшие 1–2 недели;
-- он умеет читать источники, но не обязан знать внутреннюю терминологию ARTEMIS.
+- студент гуманитарной дисциплины или самостоятельный learner;
+- изучает историческую личность, период или вопрос;
+- хочет понимать контекст, а не только запоминать биографическую последовательность;
+- не обязан владеть GIS, ontology или внутренней терминологией ARTEMIS.
 
 Job-to-be-done:
 
-> Когда мне нужно подготовить сравнительное задание, я хочу собрать контекст 2–3 объектов, проверить конкретные утверждения и сформулировать доказательный вывод, чтобы перенести результат в свою работу без повторного восстановления evidence chain.
+> Когда я изучаю человека или эпоху, я хочу одновременно видеть путь личности и изменяющийся мир вокруг неё, чтобы понимать контекст, замечать возможные связи и не путать совпадение с доказанным влиянием.
 
 Secondary exploratory audiences:
 
-- преподаватель или куратор — для оценки provenance, rubric и возможного guided use;
-- профессиональный исследователь — только для требований к corpus depth и citation precision.
+- преподаватель — для contextual learning;
+- исследователь — для требований к точности, provenance и конкурирующим реконструкциям;
+- музейный/архивный куратор — для будущих guided slices.
 
-Результаты вторичных аудиторий не заменяют evidence по primary user.
+## 4. Core value
 
-## 4. Core value and loop
+Первая ценность возникает, когда synchronized map/time/layers дают пользователю новое понимание, которого не создаёт тот же материал в виде последовательности текстовых карточек.
 
-Инвариант ценности:
+Core loop:
 
-`Question → Claims → Evidence → Comparison → Findings → Conclusion / Unresolved`
+1. Выбрать личность и временной интервал.
+2. Перемещаться по её траектории.
+3. Видеть локальные события и состояние региона.
+4. Включать/выключать тематические слои.
+5. Сравнивать локальный контекст с синхронными событиями в других местах.
+6. Открывать source/evidence/uncertainty.
+7. Отличать co-presence от documented encounter/relation.
+8. Сохранять view или формулировать исследовательский вопрос.
 
-Текущий product loop:
+Research Brief, immutable revision и advanced comparison могут поддерживать глубокую работу, но не являются обязательным условием первой ценности.
 
-1. Сформулировать или выбрать исследовательский вопрос.
-2. Найти 2–3 объекта через доступные линзы, включая map/time/filter.
-3. Сопоставить factual Claims, classifications и substantive Relations.
-4. Проверить EvidenceLinks и locators; отдельно увидеть Similarity.
-5. Зафиксировать findings, conclusion или explicit `unresolved`, а также uncertainty.
-6. Сохранить immutable Slice Revision внутри Investigation.
-7. Получить citation-ready Research Brief.
-8. Вернуться к Investigation, создать новую revision или передать revision-pinned read-only результат.
+## 5. First World Slice
 
-Первая ценность возникает при доказательном сравнении. Повторная ценность возникает, когда revision и Brief позволяют продолжить или передать работу без потери evidence chain.
+Кандидат: **Leonardo da Vinci, 1452–1519**.
 
-## 5. Research-work model
+Slice должен включать только материал, необходимый для проверки гипотез:
 
-- `Investigation` — развивающаяся исследовательская работа с устойчивой identity.
-- `Slice Revision` — неизменяемая версия Investigation.
-- `Saved View` — вложенный UI-контекст map/time/filter/selection; полезный, но не достаточный результат.
-- `Research Brief` — читаемая и экспортируемая проекция одной revision.
+- documented trajectory between selected places;
+- events in the current place/time window;
+- regional political/cultural states;
+- selected contemporaries;
+- documented encounters/relations;
+- explicit co-presence without relation;
+- selected synchronous global events;
+- sources, locators and uncertainty;
+- at least one changing region/state and one longer process.
 
-Current runtime `ResearchSlice v2` является compatibility persistence envelope. Он не доказывает, что Investigation/revision/Brief model уже реализована.
+Это не попытка дать полную историю Возрождения или мира 1452–1519.
 
-## 6. Product principles
+## 6. Hypotheses
 
-1. Human judgment is the mission; AI is optional assistance.
-2. Claims before generic notes.
-3. EvidenceLinks before source lists.
-4. Locators before unverifiable URLs.
-5. Substantive Relations before pairwise classifications.
-6. Evidence depth before corpus breadth.
-7. Comparison creates understanding; revision preserves it; Brief transfers it.
-8. Saved View supports research but does not define research.
-9. Map/time must prove incremental cognitive value.
-10. Visible uncertainty is preferable to false completion.
-11. Public capability must precede navigation promise.
-12. Current reality must never be inferred from North Star documentation.
+### H1 — contextual configuration
 
-## 7. Hypotheses to validate
+Пользователь лучше понимает, «каким был мир вокруг личности» в выбранный момент, чем при последовательном чтении тех же материалов.
 
-### H1 — evidence-chain value
+### H2 — simultaneity discovery
 
-Claim-level evidence помогает пользователю создать более корректный, трассируемый и убедительный сравнительный Brief, чем его обычный workflow.
+Пользователь замечает релевантные локальные или глобальные одновременные события, которые не назвал бы после изучения изолированной биографии.
 
-### H2 — comparison value
+### H3 — spatial-temporal change
 
-Сопоставление одних и тех же типов Claims по 2–3 объектам создаёт более глубокий вывод, чем последовательный просмотр карточек.
+Синхронизация trajectory, regions, events и time помогает точнее понять перемещение и изменение контекста.
 
-### H3 — relation literacy
+### H4 — relation literacy
 
-Пользователь отличает substantive Relation от shared classification и computed Similarity и не использует последние как доказательство influence/causality.
+Пользователь отличает:
 
-### H4 — spatial-temporal increment
+- co-presence;
+- possible encounter;
+- documented encounter;
+- interaction;
+- influence;
+- causal claim.
 
-Map/time дают измеримое преимущество над same-content list/detail baseline хотя бы для части исследовательских вопросов.
+### H5 — trust and uncertainty
 
-### H5 — reusable outcome
+Источники, locators и uncertainty повышают доверие, не разрушая основной визуальный опыт.
 
-Revision-pinned Research Brief полезнее mutable bookmark: пользователь переносит его в задание, дополняет новой revision или передаёт другому человеку.
+### H6 — layer usefulness
 
-### H6 — focused domain
+Пользователь может объяснить вклад хотя бы двух тематических слоёв в своё понимание, а не только факт их наличия.
 
-Architecture-history vertical достаточно узок для claim-level curation и достаточно богат для проверки общей evidence-first модели ARTEMIS.
+### H7 — sustainable World Slice
 
-### H7 — sustainable curation
+Ограниченный междисциплинарный World Slice можно подготовить и проверить с измеримой стоимостью.
 
-Один глубокий research module можно подготовить и проверить с измеримой стоимостью, пригодной для следующего пилота.
+## 7. Validation comparison
 
-## 8. MVP success definition
+Сравниваются:
 
-MVP считается продуктово подтверждённым только по `PRODUCT_VALIDATION_PLAN.md`.
+- synchronized ARTEMIS experience;
+- same-content baseline без synchronized map/time/layer interaction.
 
-Минимальный смысл результата:
+Обе condition получают одинаковый content scope, source access и timebox.
 
-- участник завершает core loop без критической помощи;
-- major Claims в Brief имеют traceable EvidenceLinks или явно помечены как unsupported/unresolved;
-- shared classification и Similarity не превращаются в historical Relation;
-- blind rubric показывает улучшение качества Brief относительно control;
-- пользователь может объяснить отдельный вклад Compare/Evidence и map/time;
-- хотя бы часть primary cohort самостоятельно использует результат на реальной задаче в течение 7 дней;
-- стоимость подготовки одного module зафиксирована;
-- принято явное решение `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK`.
+Оцениваются:
 
-Нравящийся интерфейс, технически успешное сохранение или высокий task completion сами по себе не подтверждают thesis.
+- reconstruction of context;
+- discovery of simultaneity;
+- understanding of change/trajectory;
+- relation overclaim errors;
+- source/uncertainty comprehension;
+- delayed recall;
+- preparation/review cost.
 
-## 9. Non-goals текущего цикла
+## 8. Success definition
 
-- universal history platform;
-- Stories/Courses как отдельные продукты;
-- AI generation как primary feature;
-- open-ended UGC;
-- causal/predictive/counterfactual engine;
-- multi-domain expansion;
-- institution/enterprise workflows;
-- framework rewrite;
-- corpus scaling до deep-module и curation-cost evidence.
+Vertical получает право на следующую реализацию только если:
 
-## 10. Long-term options
+- участники лучше восстанавливают пространственно-временную конфигурацию, чем baseline;
+- возникает измеримое discovery of simultaneity/context;
+- critical co-presence→influence errors не увеличиваются;
+- пользователи могут проверять существенные claims;
+- минимум два слоя дают объяснимый вклад;
+- observed value не зависит от обещаний AI/3D/VR;
+- World Slice имеет известную стоимость подготовки и review;
+- принято решение `ITERATE`, `EXPAND ONE BRANCH`, `NARROW VERTICAL` или `STOP/RETHINK`.
 
-После core proof независимыми gates могут проверяться:
+## 9. Non-goals
 
-- guided exploration;
-- source-bound AI assistance;
-- institutional/teaching workflow;
-- новые предметные domains;
-- structured inference experiments.
+- полная биография Leonardo;
+- полная мировая история 1452–1519;
+- generative AI;
+- causal engine;
+- counterfactual simulation;
+- high-fidelity 3D reconstruction;
+- VR/AR;
+- public UGC;
+- institution/enterprise workflow;
+- миграция mutable ResearchSlice runtime;
+- отказ от evidence discipline ради визуального впечатления.
 
-Ни одна ветвь не открывается автоматически другой ветвью или общим обещанием «платформы».
+## 10. Product principles
+
+1. Context before isolated cards.
+2. Change before static dates.
+3. Synchronization before adjacent widgets.
+4. Co-presence is not relation.
+5. Evidence supports the model; it does not replace the experience.
+6. Uncertainty is visible and spatial-temporal.
+7. Small complete World Slice before corpus breadth.
+8. Static Pages first unless backend is necessary for the hypothesis.
+9. AI/3D/VR remain separate gates.
+10. Current truth is never inferred from the North Star.

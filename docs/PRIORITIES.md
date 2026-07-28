@@ -1,138 +1,135 @@
-# ARTEMIS — PRIORITIES v5.0
+# ARTEMIS — PRIORITIES v6.0
 
 ## Статус
 
 - Тип: canonical active priorities.
-- Дата: 2026-07-26.
-- Active cycle: Concept-Locked Architecture Atlas Pre-Validation.
+- Дата: 2026-07-28.
+- Active cycle: Foundation v3.
+- Parent: GitHub issue `#327`.
 
-Приоритет получает работа, которая делает evidence chain, research outcome или validation честнее. Infrastructure does not outrank missing product semantics.
+Работа получает приоритет, если она восстанавливает coherent spatial-temporal foundation, делает first World Slice проверяемым или предотвращает необратимую реализацию superseded Concept v2.
 
-## P0 — обязательные блокеры
+## P0 — Foundation decision
 
-### P0.2 Deep research modules
+### P0.1 Canonical alignment
 
-- prepare exactly three modules from approved execution contract;
-- 4–6 Features and 6–10 Claims per module;
-- claim-level Sources and locators;
-- minimum two substantive Relations per module;
-- challenge/contest/uncertainty;
-- two-reviewer readiness;
-- hidden reference Brief;
-- record preparation/review cost.
+- Concept v3;
+- product thesis/scope/truth;
+- spatial-temporal world-model contract;
+- entity and epistemic contracts;
+- Foundation decision and migration matrix;
+- operational docs/lifecycle registry;
+- no runtime capability overclaim.
 
-External validation is blocked until `3/3 READY`.
+Exit: Foundation v3 PR reviewed and merged.
 
-### P0.3 Claim/Evidence data migration
+### P0.2 Hold superseded execution
 
-- first-class Claim and EvidenceLink schema;
-- independent epistemic dimensions;
-- locator and evidence relation/strength;
-- ClassificationAssertion model;
-- retain legacy records without invented evidence;
-- reclassify/exclude `same_movement` safely;
-- update ETL/artifacts/UI/tests through a separate migration plan.
+- no #323–#325 migration;
+- no #286–#289 / #308–#313 execution as active path;
+- PR #314 unmerged;
+- security/compatibility fixes only where necessary;
+- preserve completed Architecture Atlas assets.
 
-### P0.4 Investigation/revision runtime migration
+### P0.3 World-model contract and fixtures
 
-- stable Investigation identity;
-- immutable Slice Revisions;
-- meaningful dataset/schema identity;
-- revision-pinned share or visible `live` mode;
-- deterministic Markdown/plain-text Research Brief;
-- deterministic legacy migration;
-- preserve privacy/owner isolation.
+- Entity/Event/State/Process/Trajectory/Region/Layer semantics;
+- temporal/spatial precision;
+- uncertainty and alternative reconstructions;
+- relation ladder;
+- corpus coverage;
+- deterministic fixtures.
 
-### P0.5 Public target E2E
+Exit: contract review passes before schema implementation.
 
-- deploy/configure required backend only after target contract is ready;
-- public Question → Claims → Evidence → Conclusion → Revision → Brief → Reopen/Share;
-- fail-closed unavailable capabilities;
-- honest capability labels;
-- browser evidence and recovery/error states.
+## P1 — First World Slice
 
-## P1 — product proof
+### P1.1 Life in Context content
 
-### P1.1 Research interface
+- Leonardo trajectory segments;
+- selected local Events and regional States;
+- at least one Process and changing Region;
+- selected contemporaries;
+- co-presence separate from documented Relations;
+- selected synchronous global Events;
+- sources, locators, uncertainty and coverage;
+- preparation/review cost.
 
-- question framing;
-- Claim comparison across 2–3 Features;
-- source locator access;
-- substantive Relation / classification / Similarity distinction;
-- challenging evidence and uncertainty;
-- map/time as synchronized but non-dominating lenses.
+### P1.2 Synchronized explorer
 
-### P1.2 Controlled validation
+- one shared map/time/layer state;
+- trajectory, Events, Regions/States and details;
+- local/global context;
+- source/uncertainty access;
+- honest static Pages-first contour;
+- responsive/accessibility baseline.
 
-- one wave of six primary users;
+### P1.3 Contextual-learning validation
+
 - same-content baseline;
-- normal-workflow benchmark;
-- counterbalanced assignment;
-- equal timebox;
-- two blinded evaluators;
-- absolute counts and critical errors;
-- separate spatial-temporal contribution.
+- frozen task/timebox/rubric;
+- context reconstruction;
+- simultaneity discovery;
+- change/trajectory comprehension;
+- relation overclaim errors;
+- source/uncertainty comprehension;
+- explicit decision.
 
-### P1.3 Behavioral validation
+## P2 — Maintainability required by P0/P1
 
-- 7-day unprompted Brief use, new revision or real share;
-- moderator reminders excluded;
-- evidence package and explicit decision.
-
-## P2 — maintainability required by P0/P1
-
-- CSS/JS ownership only where touched by target flow;
-- browser regression at 1440×900, 1024×768 and 390×844;
-- migration integrity;
-- release/docs drift;
+- compatibility adapters without invented semantics;
+- release/docs drift checks;
+- browser regression for affected flows;
+- source/media rights;
 - security/reliability/dependency fixes;
+- migration design only after contract approval;
 - no framework rewrite.
 
-## Completed technical foundations
+## Preserved technical foundations
 
-- Concept Lock v2 and executable concept-drift guard;
-- canonical UUID/source-record split;
-- normalized Source/Media export baseline;
-- current Relation/Similarity technical separation;
+- public MapLibre/GeoJSON baseline;
+- UUID/source identity split;
+- Source/Media export;
 - semantic ETL/release gate;
-- 31-Feature legacy corpus envelope;
+- Architecture Atlas corpus and Gate A fixtures;
 - mutable ResearchSlice v2 backend capability;
-- fail-closed Pages API configuration.
+- fail-closed Pages API configuration;
+- Concept v2 epistemic discipline retained where compatible.
 
-These are prerequisites, not product-validation evidence.
+These are assets, not evidence that Foundation v3 is implemented.
 
 ## Frozen backlog
 
-- Stories/Courses;
-- AI generation/analysis;
+- generative AI;
+- causal/counterfactual engine;
+- 3D/dynamic terrain;
+- VR/AR;
+- Stories/Courses expansion;
 - open UGC;
-- new domains;
 - institutional workflow;
-- causal/predictive/counterfactual systems;
-- gamification/native apps;
-- enterprise/platform integrations;
-- corpus scaling beyond module need;
-- heavy scaling.
+- universal corpus;
+- native apps;
+- enterprise integrations;
+- heavy scaling;
+- immutable revision migration unless later required.
 
 ## Execution order
 
-1. P0.2 three deep modules.
-2. P0.3 Claim/Evidence migration design and implementation.
-3. P0.4 Investigation/revision/Brief migration.
-4. P1.1 interface alignment.
-5. P0.5 public target E2E.
-6. P1.2–P1.3 validation.
-7. `VALIDATION_DECISION`.
-
-Parallel work is allowed only when dependency and semantic ownership do not conflict.
+1. Merge Foundation v3.
+2. Close superseded v2 execution issues and create clean v3 children.
+3. Review world-model fixtures and uncertainty semantics.
+4. Freeze Leonardo World Slice.
+5. Implement synchronized explorer.
+6. Run controlled validation.
+7. Record one decision and open at most one branch.
 
 ## Completion rule
 
 A priority closes only with:
 
-- implemented artifact;
-- relevant automated/manual evidence;
+- artifact;
+- relevant review/test evidence;
 - synchronized owner docs;
 - honest current capability statement;
-- no known semantic contradiction;
-- explicit next dependency or no-follow-up decision.
+- no semantic contradiction;
+- explicit next dependency or stop decision.

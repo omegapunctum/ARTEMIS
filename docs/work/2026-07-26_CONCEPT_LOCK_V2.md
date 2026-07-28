@@ -2,11 +2,13 @@
 
 ## Статус
 
-- Тип: approved foundation decision record.
+- Тип: superseded foundation decision record.
 - Дата решения: 2026-07-26.
-- Статус: `LOCKED FOR CURRENT VALIDATION CYCLE`.
+- Статус: `SUPERSEDED BY FOUNDATION V3`.
 - Scope: mission, core value, research-work model, epistemic model, relation boundary, validation corpus and decision protocol.
 - Не является runtime/API specification и не утверждает, что target model уже реализована.
+
+> Historical status: superseded by `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md` and GitHub issue #327. Retained decisions apply only where current canonical owner documents preserve them. This record must not authorize Gate B–E execution.
 
 Этот документ фиксирует причины и границы решения. Нормативный смысл перенесён в соответствующие canonical owner documents. При конфликте owner document имеет приоритет.
 

@@ -1,196 +1,178 @@
-# ARTEMIS — PROJECT PHASES v5.0
+# ARTEMIS — PROJECT PHASES v6.0
 
 ## Статус
 
 - Тип: canonical operational phases document.
-- Статус: active.
-- Дата изменения модели: 2026-07-26.
-- Активная фаза: **4.5 Concept-Locked Product Validation**.
+- Дата: 2026-07-28.
+- Активная фаза: **4.6 Foundation v3**.
 
-Фазы управляют порядком исполнения. Они не заменяют North Star and independent branch gates из `ARTEMIS_CONCEPT.md` и не используются как список всех идей.
+Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`.
 
 ## Принцип перехода
 
-Фаза закрывается только при наличии проверяемого exit evidence. Наличие кода, документа или structural check само по себе не подтверждает пользовательскую ценность, semantic data quality или production readiness.
+Фаза закрывается только по exit evidence. Документ или schema сами по себе не подтверждают value, content quality или public capability.
 
-## Фаза 0 — Foundation [закрыта]
+## Фазы 0–4 — Technical baseline [закрыты с ограничениями]
 
-Зафиксировано:
+Сохранены:
 
-- frontend MapLibre/GeoJSON baseline;
-- FastAPI backend baseline;
+- MapLibre/GeoJSON public map;
 - Airtable → ETL → `data/*`;
-- GitHub Actions/Pages;
-- базовая структура репозитория.
+- FastAPI backend baseline;
+- auth/UGC/moderation/research compatibility code;
+- release/workflow/documentation discipline;
+- PWA/UX baseline.
 
-## Фаза 1 — Public Map Baseline [закрыта]
+Ограничения принадлежат `PROJECT_TRUTH.md`.
 
-Зафиксировано:
+## Фаза 4.5 — Concept v2 Architecture Atlas validation [остановлена]
 
-- `data/features.geojson` как public map source;
-- map, layers, filters, list/detail baseline;
-- отсутствие production-default fallback на `/api/map/feed`.
+Статус: **SUPERSEDED BEFORE GATES B–E**.
 
-Закрытие означает техническое наличие public map, но не зрелость content corpus.
+Завершено и сохранено:
 
-## Фаза 2 — UGC/Auth Baseline [закрыта с ограничениями]
+- Concept v2 decision/history;
+- Claim/Evidence and Relation discipline;
+- Gate A architecture validation modules;
+- audits and migration planning.
 
-Зафиксировано:
+Не выполняются:
 
-- auth, drafts, uploads и moderation code paths;
-- governance boundary против direct runtime publish;
-- Redis session proof paths.
+- Claim/Evidence schema migration under #323;
+- Investigation/revision/Brief migration under #324;
+- public target E2E under #325;
+- прежний UI/backend critical path.
 
-Ограничения:
+Причина: architecture comparison vertical был ошибочно превращён в идентичность всего проекта.
 
-- GitHub Pages не исполняет backend;
-- public end-to-end доступность не подтверждена;
-- production multi-node readiness не заявляется.
-
-## Фаза 3 — Controlled Release Stabilization [закрыта]
-
-Зафиксировано:
-
-- release/data artifact consistency baseline;
-- executable structural release gate;
-- workflow и documentation discipline.
-
-Structural release success не равен semantic content validation.
-
-## Фаза 4 — PWA/UX Baseline Stabilization [закрыта как baseline]
-
-Зафиксировано:
-
-- service worker/private API boundaries;
-- loading/error/offline baseline;
-- responsive main-flow baseline;
-- map-first UI foundation.
-
-Закрытие baseline не означает завершённый product UX. Новый refinement выполняется после data/product decisions и не требует переоткрывать старый stabilization scope.
-
-## Фаза 4.5 — Concept-Locked Product Validation [активная]
+## Фаза 4.6 — Foundation v3 [активная]
 
 ### Цель
 
-Превратить Concept Lock v2 в validation-ready evidence-first Architecture Atlas и доказать либо сузить current vertical до scaling/expansion.
+Вернуть spatial-temporal world model в ядро ARTEMIS до irreversible implementation.
 
-### Track A — Concept Lock v2 [completed]
+### Track A — Foundation decision
 
-- human research as only mission;
-- evidence chain as core;
-- map/time as independently validated lenses;
-- Claim/EvidenceLink model;
-- Investigation/SliceRevision/SavedView/ResearchBrief model;
-- independent future branch gates.
+- Concept v3;
+- world-model contract;
+- product thesis/scope/truth;
+- entity/epistemic alignment;
+- migration matrix;
+- operational docs;
+- old decision marked superseded.
 
-### Track B — Claim/Evidence and Relation foundation
+### Track B — Backlog correction
 
-- first-class Claims and EvidenceLinks with locators;
-- independent epistemic dimensions;
-- ClassificationAssertions;
-- substantive Relation predicates;
-- preserve current data without invented evidence;
-- exclude `same_movement` from substantive readiness.
+- hold old issues until Foundation merge;
+- close superseded v2 implementation issues afterward;
+- preserve completed assets/history;
+- create clean v3 child issues.
 
-Existing UUID/Source/Media/semantic-gate work remains completed technical foundation.
+### Exit
 
-### Track C — Deep research modules
+- Foundation PR merged;
+- current truth unchanged except direction/status;
+- no contradictory active owner docs;
+- world-model fixtures are defined;
+- next work is contract/corpus, not schema migration.
 
-- exactly three modules;
-- 4–6 Features and 6–10 Claims each;
-- claim-level EvidenceLinks/locators;
-- minimum two substantive Relations;
-- challenge/contest/uncertainty;
-- reference revision and hidden Brief;
-- two-reviewer `READY`;
-- curation cost.
+## Фаза 4.7 — World Model Contract
 
-The 31-Feature/six-cohort profile remains technical envelope, not external-validation readiness.
+Статус: **GATED**.
 
-### Track D — Versioned research outcome
+Scope:
 
-- stable Investigation;
-- immutable revisions;
-- pinned dataset/schema identity;
-- revision-pinned share or visible live mode;
-- Research Brief export;
-- safe legacy migration.
+- temporal/spatial extent and precision;
+- Entity/Event/State/Process/Trajectory/Region/Layer;
+- uncertainty and alternative reconstruction;
+- relation ladder;
+- corpus coverage;
+- compatibility fixtures.
 
-### Track E — Public research interface
+Exit:
 
-- question/Claim/evidence/conclusion hierarchy;
-- Compare 2–3 Features;
-- source locator access;
-- Relation/classification/Similarity literacy;
-- map/time synchronized without dominating evidence;
-- public target E2E;
-- browser regression.
+- reviewed fixtures;
+- schema proposal;
+- non-inventive legacy mapping;
+- implementation issue approved.
 
-### Track F — User validation
+## Фаза 4.8 — Life in Context Dataset
 
-- exactly six primary users in one wave;
+Статус: **GATED**.
+
+Scope:
+
+- one frozen Leonardo World Slice;
+- source/locator/uncertainty review;
+- coverage statement;
+- curation cost;
+- no claim of comprehensive history.
+
+Exit:
+
+- content ready;
+- no invented trajectory/geometry;
+- relation ladder fixtures valid;
+- same-content baseline can be built.
+
+## Фаза 4.9 — Spatial-Temporal Explorer
+
+Статус: **GATED**.
+
+Scope:
+
+- synchronized 2D map/timeline/layers;
+- trajectory;
+- Events/Regions/States/Processes;
+- local/global context;
+- evidence and uncertainty;
+- responsive/accessibility/browser acceptance.
+
+Exit:
+
+- deterministic shared state;
+- public/static pilot contour;
+- capability truth updated only after deploy evidence.
+
+## Фаза 5 — Contextual Learning Pilot
+
+Статус: **GATED**.
+
+Scope:
+
 - same-content controlled baseline;
-- normal-workflow benchmark;
-- counterbalanced order and equal timebox;
-- blind two-evaluator Brief rubric;
-- absolute thresholds and critical errors;
-- separate map/time contribution;
-- 7-day unprompted reuse;
-- outcome in `VALIDATION_DECISION.md`.
+- 6–8 users;
+- context/simultaneity/change measures;
+- relation overclaim errors;
+- source/uncertainty comprehension;
+- cost;
+- explicit decision.
 
-### Exit criteria
+Possible outcomes:
 
-- Concept Lock v2 complete;
-- `3/3` research modules `READY`;
-- semantic validation проходит;
-- Claim/Evidence and Relation semantics implemented for test condition;
-- public Investigation/revision/Brief loop passes target E2E;
-- Relation/classification/Similarity semantics correct;
-- primary flows подтверждены на desktop/tablet/mobile;
-- six-person validation thresholds checked;
-- решение `ITERATE`, `EXPAND`, `NARROW` или `STOP/RETHINK` записано в `VALIDATION_DECISION.md`.
+- `ITERATE`;
+- `EXPAND ONE BRANCH`;
+- `NARROW VERTICAL`;
+- `STOP/RETHINK`.
 
-## Фаза 5 — Scaling/Hardening [приостановлена]
+## Independent future branches
 
-Статус: **PAUSED / NOT PRIMARY**.
+Blocked until pilot decision:
 
-Допустимы только:
+- richer temporal Regions/States;
+- 3D globe/dynamic Earth;
+- guided learning;
+- source-bound AI;
+- broader World Slices;
+- institutional work;
+- VR/AR.
 
-- security/reliability fixes;
-- deployment work, необходимое для public MVP loop;
-- migration/data-integrity blockers;
-- observability, нужная для validation.
+One decision opens one branch.
 
-Запрещено опережающее scaling ради предполагаемого роста. Полный Phase 5 reopen требует evidence из Phase 4.5 и конкретную нагрузочную/операционную причину.
+## Scaling/Business
 
-## Фаза 6 — Product Expansion [заблокирована]
+Security/reliability maintenance remains allowed. Scaling, platform distribution and monetization require separate evidence and operational reasons.
 
-Stories depth, Courses, AI assistance, new domains, institutional workflows и secondary extensions не открываются до Phase 4.5 decision gate.
+## Rule
 
-`EXPAND` открывает только одну named branch. Возможный порядок определяется отдельным phase update, а не старым roadmap.
-
-## Фаза 7 — Business/Platform [отложена]
-
-Монетизация, enterprise API, integrations, marketplace и platform distribution находятся вне текущего рабочего контура.
-
-## Активный порядок работ
-
-1. Three deep research modules.
-2. Claim/Evidence/Relation migration.
-3. Investigation/revision/Brief migration.
-4. Research interface and public target E2E.
-5. Six-person controlled/field validation.
-6. Decision gate.
-
-Scaling и expansion рассматриваются только после decision gate в пункте 6.
-
-## Правило обновления
-
-Документ обновляется, если:
-
-1. изменена active phase;
-2. достигнут или изменён exit gate;
-3. выявлена новая обязательная зависимость;
-4. validation decision меняет дальнейший порядок.
-
-Execution details живут в issues/working specs; historical snapshots — в archive/audits.
+Update this document whenever active phase, exit gate or dependency order changes.

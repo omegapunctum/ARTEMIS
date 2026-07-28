@@ -3,17 +3,19 @@
 ## Статус документа
 
 - Тип: canonical foundation epistemic contract.
-- Версия: 2.0.
-- Дата: 2026-07-26.
+- Версия: 3.0.
+- Дата: 2026-07-28.
 - Статус: active.
-- Роль: определяет Claim/Evidence model и независимые epistemic dimensions.
+- Роль: определяет Claim/Evidence model, model assertions, inference and independent epistemic dimensions.
 - Scope: canonical knowledge, user research, UI, moderation, future AI assistance and migration compatibility.
 
 ## 1. Главный принцип
 
 ARTEMIS не должен притворяться системой абсолютного знания.
 
-Проверяемая единица — не объект, карточка или source URL, а конкретный `Claim` и его evidence chain.
+Проверяемая единица — не объект, карточка, geometry или source URL, а конкретный `Claim` и его evidence chain.
+
+Это относится к assertions об identity, времени, месте, geometry, Event, State, Process, Trajectory, Region and Relation. Красивое spatial-temporal rendering не повышает epistemic status.
 
 Главное правило:
 
@@ -158,6 +160,8 @@ Similarity:
 | Value | Meaning |
 |---|---|
 | `factual` | утверждение о внешнем мире, принимаемое как проверяемое |
+| `observation` | непосредственное или вычисленное наблюдение, например temporal overlap/co-presence; не равно historical Relation |
+| `inference` | явный вывод из названных premises/assumptions, не выдаваемый за direct evidence |
 | `interpretation` | объяснительное или аналитическое прочтение |
 | `hypothesis` | проверяемое предположение с недостаточным подтверждением |
 | `counterfactual` | условный сценарий, не описывающий фактически произошедшее |
@@ -228,6 +232,39 @@ Uncertainty хранится отдельно и может включать:
 - translation/terminology.
 
 Uncertainty должна описывать, что именно неизвестно и как это влияет на Claim.
+
+### 3.7 Spatial-temporal and model assertions
+
+Claims применяются к:
+
+- temporal value and precision;
+- spatial value, geometry and precision;
+- Event participation;
+- State value and validity;
+- Process stages/mechanism;
+- Trajectory segment and gap;
+- Region boundary/reconstruction;
+- corpus coverage;
+- Relation ladder.
+
+Computed proximity, overlap, before/after and Similarity have `claim_kind=observation` or system-derived output semantics. Они не создают documented encounter, interaction, influence or causality.
+
+### 3.8 Inference trace
+
+Inference or AI-assisted hypothesis must expose:
+
+- input Claim refs;
+- computation/assumption;
+- spatial and temporal scope;
+- uncertainty;
+- output claim kind/origin;
+- evidence gaps.
+
+Hidden inference is prohibited.
+
+### 3.9 Reconstruction and counterfactual isolation
+
+Historical assertion, scholarly reconstruction, alternative reconstruction, analytical model, hypothesis and counterfactual are separate modes. Counterfactual output cannot mutate canonical historical State or Region.
 
 ## 4. Compatibility vocabulary
 
@@ -452,6 +489,8 @@ Any change to Claim, EvidenceLink, Source, Relation, classification, Similarity,
 
 ## 15. Итоговое правило
 
-ARTEMIS should be confident only where a specific Claim has a reviewable evidence chain.
+ARTEMIS should be confident only where a specific model assertion has a reviewable Claim/Evidence chain or is visibly identified as a computed observation/inference.
+
+Spatial-temporal precision, smooth animation and AI fluency never substitute for evidence.
 
 A narrower honest Claim is better than a broad unsupported conclusion.

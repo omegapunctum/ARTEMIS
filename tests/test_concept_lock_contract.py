@@ -8,32 +8,41 @@ def _read(relative_path: str) -> str:
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
-def test_concept_lock_uses_one_human_research_core() -> None:
+def test_foundation_v3_restores_the_spatial_temporal_world_model() -> None:
     concept = _read("docs/ARTEMIS_CONCEPT.md")
     thesis = _read("docs/PRODUCT_THESIS.md")
+    model = _read("docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md")
 
-    assert "Миссия ARTEMIS — усиливать человеческое исследование" in concept
-    assert "AI не является второй миссией проекта" in concept
-    assert "Question → Claims → Evidence → Comparison → Findings → Conclusion / Unresolved" in concept
-    assert "Map/time are privileged lenses, not dogma" in concept
-    assert "проверяемый Research Brief" in thesis
-    assert "EvidenceLinks" in thesis
+    assert "Миссия ARTEMIS — помогать человеку понимать мир как взаимосвязанную систему" in concept
+    assert "Space and time are core coordinates" in concept
+    assert "Evidence не является миссией ARTEMIS" in concept
+    assert "Life in Context" in thesis
+    assert "synchronized map/time/layers" in thesis
+
+    for object_name in ("Entity", "Event", "State", "Process", "Trajectory", "Region", "Layer"):
+        assert object_name in model
+
+    assert "co_present" in model
+    assert "documented_encounter" in model
+    assert "causal" in model
 
 
-def test_research_work_target_is_distinct_from_current_mutable_runtime() -> None:
+def test_research_work_target_is_distinct_from_first_value_and_mutable_runtime() -> None:
     contract = _read("docs/RESEARCH_SLICE_CONTRACT.md")
     spec = _read("docs/RESEARCH_SLICE_SPEC.md")
     truth = _read("docs/PROJECT_TRUTH.md")
 
     assert "Investigation → immutable Slice Revision → Research Brief" in contract
     assert "Research Brief = readable projection of one Slice Revision" in contract
+    assert "contextual spatial-temporal understanding" in contract
+    assert "Не каждый synchronized exploration обязан создавать Investigation или Brief" in contract
     assert "current mutable runtime persistence envelope" in spec
     assert "content counter, а не immutable revision id" in spec
     assert "first-class Investigation" in truth
     assert "revision-pinned share" in truth
 
 
-def test_epistemic_axes_and_claim_level_evidence_are_locked() -> None:
+def test_epistemic_axes_and_model_assertions_are_locked() -> None:
     epistemic = _read("docs/EPISTEMIC_CONTRACT.md")
     dictionary = _read("docs/DATA_DICTIONARY.md")
 
@@ -47,46 +56,62 @@ def test_epistemic_axes_and_claim_level_evidence_are_locked() -> None:
     ):
         assert dimension in epistemic
 
+    for claim_kind in ("`observation`", "`inference`", "`interpretation`", "`hypothesis`", "`counterfactual`"):
+        assert claim_kind in epistemic
+
     assert "supports" in epistemic
     assert "challenges" in epistemic
     assert "contextualizes" in epistemic
     assert "Locator обязателен" in epistemic
+    assert "Computed proximity, overlap, before/after and Similarity" in epistemic
     assert "First-class Claim schema ещё не реализована" in dictionary
 
 
-def test_shared_classification_does_not_satisfy_relation_value() -> None:
+def test_proximity_and_shared_classification_do_not_satisfy_relation_value() -> None:
     epistemic = _read("docs/EPISTEMIC_CONTRACT.md")
+    model = _read("docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md")
     dictionary = _read("docs/DATA_DICTIONARY.md")
     truth = _read("docs/PROJECT_TRUTH.md")
-    legacy_corpus = _read("docs/work/2026-07-21_VALIDATION_CORPUS_PILOT_v1.md")
 
     assert "Pairwise `same_movement` является derived shared-classification view" in epistemic
     assert "`same_movement` is legacy documented shared-classification projection" in dictionary
     assert "10 из 12 current Relation records" in truth
-    assert "не считаются substantive Relations" in legacy_corpus
+    assert "Co-presence вычисляется из модели и не создаёт Relation автоматически" in model
+    assert "Система не повышает уровень автоматически" in model
 
 
-def test_external_validation_requires_three_deep_modules_and_blind_briefs() -> None:
-    modules = _read("docs/work/2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md")
-    validation = _read("docs/PRODUCT_VALIDATION_PLAN.md")
+def test_gate_a_is_preserved_as_ready_architecture_fixture_evidence() -> None:
+    package = _read("docs/work/validation_modules/README.md")
+    registry = _read("docs/work/validation_modules/review_registry.json")
+    work_registry = _read("docs/work/README.md")
     decision = _read("docs/VALIDATION_DECISION.md")
 
-    assert modules.count("## 2. Module") == 1
-    assert modules.count("## 3. Module") == 1
-    assert modules.count("## 4. Module") == 1
-    assert "External product validation запрещена" in modules
-    assert "ровно 6 primary participants" in validation
-    assert "same-content list/detail workflow" in validation
-    assert "Два независимых evaluator" in validation
-    assert "минимум у 4 из 6 ARTEMIS Brief" in validation
-    assert "0/3 READY" in decision
+    assert "Package status: `READY`" in package
+    assert registry.count('"status": "READY"') == 3
+    assert registry.count('"decision": "READY"') == 6
+    assert "completed Gate A executable package" in work_registry
+    assert "Gate A fixtures" in decision
+    assert "not user-value evidence" in decision
 
 
-def test_pre_lock_working_docs_are_explicitly_superseded() -> None:
-    ai_strategy = _read("docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md")
-    ui_plan = _read("docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md")
-    relation_migration = _read("docs/work/2026-07-16_RELATIONS_SIMILARITY_MIGRATION_v1.md")
+def test_foundation_v3_validation_is_same_content_and_relation_safe() -> None:
+    validation = _read("docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md")
+    decision = _read("docs/VALIDATION_DECISION.md")
 
-    assert "Superseded for active planning by Concept Lock v2" in ai_strategy
-    assert "Concept Lock v2 supersession" in ui_plan
-    assert "Concept Lock v2 supersession" in relation_migration
+    assert "6–8 primary users" in validation
+    assert "same-content baseline" in validation
+    assert "two evaluators" in validation
+    assert "co-presence or similarity stated as documented encounter/influence/causality" in validation
+    assert "FOUNDATION V3 / PENDING USER EVIDENCE" in decision
+    assert "Opened future branch | `NONE`" in decision
+
+
+def test_concept_v2_is_preserved_but_cannot_authorize_execution() -> None:
+    old_decision = _read("docs/work/2026-07-26_CONCEPT_LOCK_V2.md")
+    new_decision = _read("docs/work/2026-07-28_FOUNDATION_V3_DECISION.md")
+    migration = _read("docs/work/2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md")
+
+    assert "SUPERSEDED BY FOUNDATION V3" in old_decision
+    assert "must not authorize Gate B–E execution" in old_decision
+    assert "Supersedes: `2026-07-26_CONCEPT_LOCK_V2.md`" in new_decision
+    assert "No runtime or data record is migrated solely because this matrix exists" in migration

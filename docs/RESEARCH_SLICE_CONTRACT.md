@@ -3,15 +3,15 @@
 ## Статус документа
 
 - Тип: canonical foundation product/data/UI contract.
-- Версия: 2.0.
-- Дата: 2026-07-26.
-- Статус: active concept target with explicit runtime compatibility boundary.
-- Filename сохранён для совместимости ссылок; документ владеет полной research-work model.
+- Версия: 3.0.
+- Дата: 2026-07-28.
+- Статус: active supporting concept target with explicit runtime compatibility boundary.
+- Filename сохранён для совместимости ссылок; документ владеет optional deep research-work model, not the first ARTEMIS value.
 - Runtime/API authority: `RESEARCH_SLICE_SPEC.md`.
 
 ## 1. Главная формула
 
-ARTEMIS сохраняет не viewport и не mutable note, а версионированный результат исследования.
+Когда пользователь переходит от spatial-temporal exploration к глубокой исследовательской работе, ARTEMIS может сохранять не только viewport или mutable note, а версионированный результат.
 
 Canonical model:
 
@@ -34,7 +34,7 @@ Investigation
 Research Brief = readable projection of one Slice Revision
 ```
 
-Первая пользовательская ценность возникает в evidence-aware comparison. Investigation удерживает работу во времени; Slice Revision делает состояние проверяемым; Research Brief переносит результат в реальную задачу.
+Первая пользовательская ценность Foundation v3 возникает в contextual spatial-temporal understanding. Investigation удерживает последующую глубокую работу во времени; Slice Revision делает её проверяемой; Research Brief переносит результат. Не каждый synchronized exploration обязан создавать Investigation или Brief.
 
 ## 2. Термины и identity
 

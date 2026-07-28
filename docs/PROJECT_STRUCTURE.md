@@ -259,7 +259,7 @@ README.md
 
 Правило:
 - `FOUNDATION_INDEX.md` является единственным canonical registry;
-- foundation-layer (`FOUNDATION_INDEX.md`, `ARTEMIS_CONCEPT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`) является обязательным контуром для product/data/UI/AI решений;
+- foundation-layer (`FOUNDATION_INDEX.md`, `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`) является обязательным контуром для product/data/UI/AI решений;
 - conceptual foundation не может существовать только как внешний черновик;
 - упоминание старого canonical-набора (`ARCHITECTURE.md`, `RELEASE_SYSTEM.md`, `ROADMAP.md`) считается documentation drift, если эти файлы не являются реальными действующими canonical entrypoints.
 

@@ -2,10 +2,14 @@
 
 ## Статус
 
-- Тип: canonical MVP boundary document.
-- Версия: 2.0.
+- Тип: historical Architecture Layer MVP boundary document.
+- Версия: 2.0 (superseded active scope).
 - Дата: 2026-07-26.
 - Зависит от: `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `PROJECT_TRUTH.md`, `PRODUCT_VALIDATION_PLAN.md`.
+
+- Lifecycle: `SUPERSEDED AS ACTIVE MVP BY FOUNDATION V3`.
+- Use: preserve Architecture Atlas vertical requirements and fixtures; do not treat this file as current ARTEMIS product scope.
+- Active scope: `ARTEMIS_PRODUCT_SCOPE.md` v3.
 
 ## 1. Цель MVP
 

@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-07-26.
+- Дата фиксации: 2026-07-28.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных или пользовательского сценария.
 
@@ -11,9 +11,18 @@
 
 ## 1. Принятое продуктовое направление
 
-Активный delivery focus ARTEMIS — **инструмент evidence-first сравнения 2–3 архитектурных объектов с переносимым Research Brief для старшекурсника/магистранта истории архитектуры**.
+Foundation v3 исправляет долгосрочное направление ARTEMIS: **source-aware spatial-temporal world model**, в которой человек исследует Entities, Events, States, Processes, Trajectories and Regions как synchronized layers пространства и времени.
 
-`ARTEMIS_CONCEPT.md` определяет North Star, а не текущую версию продукта. Долгосрочная explainable spatial-temporal research workspace сохраняется, но не является обещанием текущего публичного продукта. Расширение на другие предметные области допускается только после решения `EXPAND` в `VALIDATION_DECISION.md`.
+Первый proposed validation vertical — `Life in Context` на ограниченном Leonardo World Slice. Architecture Atlas сохраняется как thematic layer и current public/technical baseline.
+
+Важно:
+
+- Foundation v3 documentation не реализует world model;
+- текущий public runtime остаётся статическим Architecture Atlas;
+- Life in Context, temporal Regions, full Trajectories and synchronized multi-layer change ещё не доступны;
+- Claim/Evidence discipline сохраняется как trust layer;
+- Research Brief/revisions остаются optional future research capabilities, а не current public core;
+- generative AI, causal/counterfactual runtime, 3D/VR and universal corpus остаются frozen/future.
 
 ## 2. Что доступно публично
 
@@ -78,20 +87,23 @@ Migration preflight и release gate подтверждают current backend cap
 - semantic ETL/release gate проверяет blocking errors отдельно от budgeted warnings, cross-artifact evidence/review semantics, enabled populated Layers и отсутствие unreviewed legacy image URLs;
 - текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
 - comparison-pilot profile имеет технический статус `comparison_ready`: 31 Feature, 6 cohorts, 12 legacy-counted Relations, 100% current link coverage и 90.32% primary Media;
-- этот profile не означает product-validation readiness; три deep research modules имеют статус `NOT READY`.
+- Architecture Gate A package завершён со статусом `3/3 READY` и двумя independent review processes; он сохраняется как reviewed fixture/evidence package, но не является Foundation v3 user-value validation.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
 
 ## 5. Что не считается реализованным продуктом
 
-- универсальная историческая knowledge platform;
+- universal spatial-temporal world model runtime;
+- Life in Context World Slice and synchronized explorer;
+- first-class State, Process, Trajectory and temporal Region schemas;
+- dynamic terrain/3D/VR experience;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
 - полноценные guided Stories и Courses;
 - AI explanation, comparison или hypothesis generation;
 - зрелый relation graph за пределами 12-record validation pilot;
 - first-class Claim/EvidenceLink corpus;
-- три READY research modules;
+- Foundation v3 Leonardo World Slice and same-content baseline;
 - immutable Investigation/revision model and Research Brief export;
 - causal, predictive или counterfactual engine.
 
@@ -107,18 +119,21 @@ Migration preflight и release gate подтверждают current backend cap
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / concept-locked pre-validation**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Foundation v3 correction**.
 
-Следующая активная фаза — не scaling и не feature expansion, а:
+Current runtime and data remain Architecture Atlas baseline. Foundation v3 changes project identity and execution order, not current capability.
 
-1. подготовить три deep research modules and claim-level evidence;
-2. выполнить отдельную data/runtime migration для Claim/Evidence and immutable revisions;
-3. реализовать Research Brief and honest share semantics;
-4. подключить public backend и выполнить target E2E;
-5. провести six-person controlled/field validation;
-6. записать отдельное решение в `VALIDATION_DECISION.md`.
+Следующий допустимый порядок:
 
-Infrastructure work допускается только если оно не закрепляет прежнюю mutable Slice semantics как окончательный public contract.
+1. review and merge Foundation v3;
+2. close superseded Concept v2 implementation issues without rewriting history;
+3. review world-model fixtures and uncertainty semantics;
+4. prepare one limited source-aware Leonardo World Slice;
+5. implement synchronized 2D map/timeline/layers on the static-first contour;
+6. run contextual-learning validation;
+7. open at most one evidence-backed branch.
+
+До Foundation merge не выполняются #323–#325 и не merge PR #314. Infrastructure work допускается только для security/compatibility/critical reliability and must not harden Concept v2 as final ontology.
 
 ## 8. Правило честного описания
 

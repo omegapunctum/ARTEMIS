@@ -367,7 +367,7 @@ Google Drive используется для collaborative drafting layer:
 4. не осталась ли старая активная версия в другом слое;
 5. не должен ли старый файл уйти в archive/reference;
 6. совпадает ли физическое место документа с его фактической ролью;
-7. не нарушает ли изменение foundation-layer (`FOUNDATION_INDEX.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`).
+7. не нарушает ли изменение foundation-layer (`FOUNDATION_INDEX.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`).
 
 Если хотя бы один ответ отрицательный, docs-change не считается завершённым.
 
