@@ -3,10 +3,12 @@
 ## Статус документа
 
 - Тип: foundation AI policy document
-- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Версия: 3.0
+- Дата: 2026-07-28
+- Статус: active canonical policy
 - Роль: фиксирует допустимую и недопустимую роль AI в ARTEMIS
 - Назначение: защитить проект от AI drift, source substitution, hallucinated authority и смешения фактов, интерпретаций, гипотез и AI-output
-- Scope: future optional AI branch, Claim/Evidence discipline, Investigation/revision context, moderation/content governance integration
+- Scope: future source-bound analysis of the spatial-temporal world model, Claim/Evidence discipline, inference trace, counterfactual isolation and content governance
 
 ---
 
@@ -40,7 +42,7 @@ AI in ARTEMIS is an assistant, not an authority.
 
 ## 2. Зачем нужна AI policy
 
-ARTEMIS строится как evidence-first human research environment with privileged spatial-temporal lenses. AI является future optional branch, не второй миссией и не AI-authoritative layer по умолчанию.
+ARTEMIS строится как source-aware spatial-temporal world model. AI является future analytical branch над этой моделью, не Source, не второй canonical reality и не AI-authoritative layer.
 
 AI policy нужна, чтобы:
 
@@ -50,7 +52,10 @@ AI policy нужна, чтобы:
 - не дать AI подменить Investigation/revision/Brief model;
 - не смешивать факт, интерпретацию, гипотезу и генерацию;
 - обеспечить explainable AI assistance поверх structured context;
-- подготовить безопасный фундамент для будущих reasoning layers.
+- подготовить безопасный фундамент для будущих reasoning layers;
+- не превращать spatial/temporal correlation или co-presence в influence/causality;
+- сохранять inference trace, model assumptions and reconstruction mode;
+- изолировать counterfactual branches from historical assertions.
 
 ---
 
