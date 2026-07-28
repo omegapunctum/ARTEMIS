@@ -57,7 +57,11 @@ Technical/corpus readiness is not Foundation v3 user-value evidence.
 
 ## Archived plans
 
-Documents under `docs/archive/` have no current authority, including historical AI, Courses and expansion roadmaps.
+Documents under `docs/archive/` have no current authority. Explicitly archived plans include:
+
+- `ARTEMIS_AI_STRATEGY_v1_0.md`;
+- `COURSES_MVP_SCOPE.md`;
+- `FUNCTIONAL_EXPANSION_ROADMAP.md`.
 
 ## Lifecycle rule
 
