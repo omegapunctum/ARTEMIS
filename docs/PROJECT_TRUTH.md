@@ -87,7 +87,7 @@ Migration preflight и release gate подтверждают current backend cap
 - semantic ETL/release gate проверяет blocking errors отдельно от budgeted warnings, cross-artifact evidence/review semantics, enabled populated Layers и отсутствие unreviewed legacy image URLs;
 - текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
 - comparison-pilot profile имеет технический статус `comparison_ready`: 31 Feature, 6 cohorts, 12 legacy-counted Relations, 100% current link coverage и 90.32% primary Media;
-- этот profile не означает product-validation readiness; три deep research modules имеют статус `NOT READY`.
+- Architecture Gate A package завершён со статусом `3/3 READY` и двумя independent review processes; он сохраняется как reviewed fixture/evidence package, но не является Foundation v3 user-value validation.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
 
@@ -103,7 +103,7 @@ Migration preflight и release gate подтверждают current backend cap
 - AI explanation, comparison или hypothesis generation;
 - зрелый relation graph за пределами 12-record validation pilot;
 - first-class Claim/EvidenceLink corpus;
-- три READY research modules;
+- Foundation v3 Leonardo World Slice and same-content baseline;
 - immutable Investigation/revision model and Research Brief export;
 - causal, predictive или counterfactual engine.
 
