@@ -3,101 +3,96 @@
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `PENDING`.
-- Дата последнего обновления: 2026-07-26.
-- Evidence protocol: `PRODUCT_VALIDATION_PLAN.md` v2.
-- Content prerequisite: `docs/work/2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
+- Статус решения: `FOUNDATION V3 / PENDING USER EVIDENCE`.
+- Дата последнего обновления: 2026-07-28.
+- Active protocol design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`.
+- Parent decision: GitHub issue `#327`.
 
-Этот документ фиксирует только принятое evidence-backed решение. Он не заменяет protocol, current truth or product scope.
+Этот документ фиксирует только evidence-backed outcome. Foundation decision исправляет identity, но не доказывает user value или current capability.
 
 ## 1. Текущее решение
 
 `PENDING`
 
-Причины:
+Зафиксировано:
 
-- three validation modules are `NOT READY`;
-- target Claim/EvidenceLink model is not implemented;
-- Investigation/immutable revision/Brief target is not implemented;
-- public target E2E is not complete;
-- six-person usability/cognitive/behavioral evidence package отсутствует.
+- Concept v2 validation result не был получен;
+- Gate A architecture modules являются completed fixtures, не user-value evidence;
+- Foundation v3 восстанавливает spatial-temporal world model как mission;
+- Life in Context ещё не имеет frozen content, implementation or participant evidence;
+- никакая future branch не открыта.
 
-Product expansion and all future branches remain closed.
+## 2. Следующее решение
 
-## 2. Допустимые решения
+После одного controlled Life in Context wave допускается:
 
-- `ITERATE` — все core gates поддерживают direction, но current loop требует ограниченных исправлений.
-- `EXPAND` — все core gates пройдены; разрешено планировать ровно одну named branch с отдельным scope/evidence plan.
-- `NARROW` — более узкое ядро полезно; неподтверждённая часть, включая map/time, перестаёт считаться core.
-- `STOP/RETHINK` — Brief не сильнее control, epistemic literacy не достигнута или behavioral value не подтверждается.
+- `ITERATE` — spatial-temporal core показывает promise, но slice/interface/semantics требуют следующей версии;
+- `EXPAND ONE BRANCH` — thresholds пройдены; разрешена ровно одна named branch;
+- `NARROW VERTICAL` — изменить Person/epoch/content/interface scope, сохраняя world-model mission;
+- `STOP/RETHINK` — выбранный подход не создаёт contextual understanding; требуется новый foundation/product decision before implementation.
 
-## 3. Обязательное evidence
+Failure of one vertical does not silently reinstate Concept v2 or make space/time optional. Such identity change requires a new foundation decision.
 
-### Prerequisites
+## 3. Required evidence
 
-- three modules `READY`;
-- commit/deployment/runtime capability state;
-- dataset/module versions;
-- frozen assignment and counterbalance table;
-- current mutable/immutable share semantics disclosed.
+### Contract/content
 
-### Usability
+- reviewed world-model fixtures;
+- frozen World Slice manifest and coverage;
+- sources, locators and uncertainty;
+- no invented route/geometry/relation;
+- curation/review cost.
 
-- raw outcomes for exactly six primary participants in the wave;
-- critical assists;
-- save/reopen technical evidence;
-- source locator discovery;
-- classification/Relation/Similarity errors.
+### Experience
 
-### Cognitive value
+- synchronized map/time/layers;
+- deterministic required states;
+- same-content baseline parity;
+- public/pilot capability truth;
+- responsive/accessibility evidence.
 
-- ARTEMIS versus same-content baseline Briefs;
-- normal-workflow benchmark;
-- two blind evaluator score sheets;
-- reconciled scores;
-- critical epistemic errors;
-- evidence traceability;
-- separate map/time contribution evidence.
+### User value
 
-### Behavioral value
+- context reconstruction;
+- simultaneity discovery;
+- trajectory/change comprehension;
+- relation overclaim errors;
+- source/uncertainty comprehension;
+- layer contribution;
+- delayed recall or reuse where included.
 
-- 7-day unprompted real-task reuse;
-- Brief use, new revision or real share;
-- moderator reminders excluded from success.
+### Evaluation
 
-### Curation
-
-- preparation and review cost for each module;
-- unresolved evidence gaps;
-- correction log.
+- frozen assignment/timebox/rubric;
+- participant inclusion/exclusion;
+- raw anonymized outputs;
+- two-evaluator relation/causal scoring;
+- absolute counts;
+- critical errors;
+- limitations.
 
 ## 4. Current record
 
 | Field | Value |
 |---|---|
-| Decision | `PENDING` |
-| Protocol version | `2.0` |
-| Validation modules | `0/3 READY` |
-| Target runtime | Not implemented |
-| Public target E2E | Not completed |
-| Primary cohort | Not run |
-| Usability gate | Not passed |
-| Cognitive-value gate | Not passed |
-| Spatial-temporal increment | Not assessed |
-| Behavioral-value gate | Not passed |
-| Approved branch | None |
+| Foundation decision | `PROPOSED / PENDING MERGE` |
+| User-value decision | `PENDING` |
+| Active vertical | `Life in Context` |
+| Initial candidate | `Leonardo da Vinci, 1452–1519` |
+| World-model contract | `PROPOSED` |
+| Frozen World Slice | `NOT READY` |
+| Synchronized explorer | `NOT IMPLEMENTED` |
+| Same-content baseline | `NOT READY` |
+| Participant wave | `NOT RUN` |
+| Opened future branch | `NONE` |
 
-## 5. Decision rules
+## 5. Change rule
 
-Decision commit must:
+Update this document only when:
 
-1. identify one allowed decision;
-2. link complete evidence package;
-3. report absolute counts for `n=6`;
-4. report blind rubric and critical errors;
-5. state whether map/time contribution was observed;
-6. list allowed and forbidden scope;
-7. for `EXPAND`, name only one branch;
-8. synchronize `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `PROJECT_TRUTH.md`, `PROJECT_PHASES.md` and `PRIORITIES.md`.
+- Foundation v3 merge status changes;
+- validation readiness is evidenced;
+- a participant wave is completed;
+- a formal decision is taken.
 
-Missing evidence means `PENDING` regardless of product quality impressions.
+Do not record `EXPAND` from design enthusiasm, code completion or preference feedback.
