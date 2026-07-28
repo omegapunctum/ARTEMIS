@@ -18,24 +18,27 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "single entrypoint for agents" in agents
     assert "docs/FOUNDATION_INDEX.md" in agents
     assert "docs/work/README.md" in agents
-    assert "canonical owner registry закреплён только в этом документе" in foundation
+    assert "единственный реестр canonical owner documents" in foundation
     assert "Текущий canonical layer зарегистрирован только" in documentation
     assert "Полный canonical set" in structure
     assert "working-layer lifecycle registry" in work_registry
+    assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in foundation
+    assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in structure
 
 
-def test_completed_concept_lock_is_not_the_next_execution_step() -> None:
+def test_foundation_v3_is_the_only_active_execution_order() -> None:
     priorities = _read("docs/PRIORITIES.md")
     phases = _read("docs/PROJECT_PHASES.md")
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "### P0.1 Concept Lock v2 [current]" not in priorities
-    assert "1. P0.2 three deep modules." in priorities
-    assert "### Track A — Concept Lock v2 [completed]" in phases
-    assert "1. Three deep research modules." in phases
-    assert "1. подготовить три deep research modules" in truth
-    assert "1. three deep research modules;" in master_prompt
+    assert "Active cycle: Foundation v3" in priorities
+    assert "1. Merge Foundation v3." in priorities
+    assert "Активная фаза: **4.6 Foundation v3**" in phases
+    assert "SUPERSEDED BEFORE GATES B–E" in phases
+    assert "1. review and merge Foundation v3;" in truth
+    assert "Active: Foundation v3." in master_prompt
+    assert "No #323–#325 migration and no PR #314 merge" in master_prompt
 
 
 def test_obsolete_plans_are_archived_and_cannot_open_scope() -> None:
@@ -74,16 +77,14 @@ def test_proven_dead_repository_artifacts_do_not_return() -> None:
         assert not (ROOT / relative_path).exists(), relative_path
 
 
-def test_migration_plan_preserves_target_dependency_order() -> None:
-    plan = _read("docs/work/2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md")
+def test_superseded_migration_plan_cannot_open_v2_execution() -> None:
+    old_plan = _read("docs/work/2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md")
+    work_registry = _read("docs/work/README.md")
+    matrix = _read("docs/work/2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md")
 
-    positions = [
-        plan.index("### Gate A — Deep research modules"),
-        plan.index("### Gate B — Claim/Evidence and classification migration"),
-        plan.index("### Gate C — Investigation, revision and Brief migration"),
-        plan.index("### Gate D — Research interface and public target E2E"),
-        plan.index("### Gate E — Controlled and field validation"),
-    ]
-    assert positions == sorted(positions)
-    assert "`#309` Pages/API E2E | rewrite" in plan
-    assert "closed `#316` | historical compatibility evidence" in plan
+    assert "### Gate A — Deep research modules" in old_plan
+    assert "2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md" in work_registry
+    assert "superseded execution plan" in work_registry
+    assert "Must not authorize #323–#325" in work_registry
+    assert "Close old Concept v2 implementation issues `not planned`" in matrix
+    assert "Create clean child issues" in matrix
