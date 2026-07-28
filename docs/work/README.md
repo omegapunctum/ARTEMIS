@@ -14,6 +14,7 @@ A filename containing `ACTIVE`, a historical status header or an old issue refer
 | Document | Role | Exit |
 |---|---|---|
 | `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md` | Prepare exactly three deep validation modules | `3/3 READY` with claim-level evidence, two reviewers and hidden reference Briefs |
+| `validation_modules/` | Executable Gate A package: structured modules, deterministic Briefs and review registry | `python scripts/validation_modules.py --require-ready` passes |
 | `2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md` | Dependency map from Concept Lock v2 to implementation and validation | Replaced by synchronized execution issues and completed migrations |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |

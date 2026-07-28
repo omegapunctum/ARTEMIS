@@ -1,0 +1,431 @@
+{
+  "schema_version": 1,
+  "module_id": "A",
+  "title": "Precedent and architectural reinterpretation",
+  "status": "READY",
+  "question": "How were ancient and earlier domed precedents selectively reinterpreted in Renaissance and later European architecture, and which connections are documented rather than inferred from visual resemblance?",
+  "selection_rationale": "The five Features form a discontinuous sequence from Roman precedent through Renaissance construction and centralized planning to a later national monument. The set was chosen because it supports two explicit derivation claims and two documented limiters instead of treating every dome as one influence chain.",
+  "lenses": [
+    "function and patron",
+    "structural system",
+    "form and composition",
+    "temporal sequence",
+    "geographic transfer",
+    "documented reception versus visual similarity"
+  ],
+  "features": [
+    {
+      "feature_id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
+      "name": "Pantheon (Rome)",
+      "corpus_status": "published",
+      "selection_rationale": "Provides the ancient centralized domed precedent explicitly named by the Villa Rotonda evidence and used as a limiting comparison for St. Peter's."
+    },
+    {
+      "feature_id": "8a68e7c4-bd4c-44c8-8b7d-ba41b24ca570",
+      "name": "Brunelleschi’s Dome (Florence Cathedral)",
+      "corpus_status": "published",
+      "selection_rationale": "Separates documented construction innovation from unsupported assumptions that every later masonry dome derives directly from the Pantheon."
+    },
+    {
+      "feature_id": "393c7d17-d266-4e8b-8412-b96eb427f941",
+      "name": "St. Peter's Basilica",
+      "corpus_status": "published",
+      "selection_rationale": "Supplies the explicitly cited dome model for Soufflot and a contested scholarly comparison with the Pantheon."
+    },
+    {
+      "feature_id": "92ba97a4-ac18-4e17-a5c8-34c5b81bfcb8",
+      "name": "Villa Almerico Capra “La Rotonda”",
+      "corpus_status": "published",
+      "selection_rationale": "Offers an official, unusually explicit statement of derivation from the Pantheon together with evidence that the executed dome differs from Palladio's published design."
+    },
+    {
+      "feature_id": "acfb7492-c49d-4e71-9bbc-bd446b52d32d",
+      "name": "Panthéon (Paris)",
+      "corpus_status": "published",
+      "selection_rationale": "Provides a later documented act of modelling and competitive ambition directed toward St. Peter's rather than a generic classical resemblance."
+    }
+  ],
+  "saved_view": {
+    "id": "3a1b88e1-5f51-4271-9e09-6ef66dac60fe",
+    "feature_ids": [
+      "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
+      "8a68e7c4-bd4c-44c8-8b7d-ba41b24ca570",
+      "393c7d17-d266-4e8b-8412-b96eb427f941",
+      "92ba97a4-ac18-4e17-a5c8-34c5b81bfcb8",
+      "acfb7492-c49d-4e71-9bbc-bd446b52d32d"
+    ],
+    "lenses": [
+      "function and patron",
+      "structural system",
+      "form and composition",
+      "temporal sequence",
+      "geographic transfer",
+      "documented reception versus visual similarity"
+    ]
+  },
+  "reference_revision": {
+    "id": "81a2024b-27b8-454c-b39f-30b1b4146eea",
+    "investigation_id": "f54e9770-c866-4273-a968-9db4500a9dc2",
+    "revision_number": 1,
+    "dataset_identity": {
+      "kind": "git_commit",
+      "value": "5d4e9a60d4b90d9f1e4f112196dc2712021e0b13"
+    },
+    "schema_version": "gate-a-module-v1",
+    "content_version": "2026-07-28.a2",
+    "visibility": "withheld_from_participants",
+    "saved_view_id": "3a1b88e1-5f51-4271-9e09-6ef66dac60fe"
+  },
+  "sources": [
+    {
+      "source_id": "A-S1",
+      "title": "Pantheon e Basilica di Santa Maria ad Martyres",
+      "publisher": "Italian Ministry of Culture",
+      "source_kind": "official_monument_record",
+      "url": "https://cultura.gov.it/luogo/pantheon",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "A-S2",
+      "title": "Brunelleschi Dome",
+      "publisher": "Opera di Santa Maria del Fiore",
+      "source_kind": "official_monument_record",
+      "url": "https://duomo.firenze.it/en/discover/dome",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "A-S3",
+      "title": "Villa La Rotonda",
+      "publisher": "Villa La Rotonda",
+      "source_kind": "official_monument_record",
+      "url": "https://www.villalarotonda.it/en/villa/",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "A-S4",
+      "title": "The Dome",
+      "publisher": "St. Peter's Basilica",
+      "source_kind": "official_monument_record",
+      "url": "https://www.basilicasanpietro.va/en/san-pietro/the-dome",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "A-S5",
+      "title": "Soufflot, The Panthéon (Church of Ste-Geneviève), Paris",
+      "author": "Paul A. Ranogajec",
+      "publisher": "Smarthistory via Humanities LibreTexts",
+      "source_kind": "scholarly_educational_article",
+      "publication_year": 2016,
+      "url": "https://human.libretexts.org/Bookshelves/Art/Art_History_and_Theory/SmartHistory_of_Art/07%3A_Europe_1300_-_1800/7.15%3A_Late_18th_century-_Neoclassicism",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "A-S6",
+      "title": "History of the Panthéon",
+      "publisher": "Centre des monuments nationaux",
+      "source_kind": "official_monument_record",
+      "url": "https://www.paris-pantheon.fr/en/discover/history-of-the-pantheon",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "A-S7",
+      "title": "The New St Peter's: Basilica or Temple?",
+      "author": "Ian Campbell",
+      "publisher": "Oxford Art Journal",
+      "source_kind": "peer_reviewed_article",
+      "publication_year": 1981,
+      "citation": "Oxford Art Journal 4(1), 3–8",
+      "doi": "10.1093/oxartj/4.1.3",
+      "url": "https://www2.gwu.edu/~art/Temporary_SL/129%3A255/Readings/New%20St.%20Peter%27s%20Basilica%20or%20Temple.pdf",
+      "accessed_at": "2026-07-27"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "A-C1",
+      "statement": "The Hadrianic Pantheon's unreinforced dome has a 43.30-metre diameter equal to its interior height.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The official record gives the principal geometry but does not provide a full structural analysis.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C2",
+      "statement": "Brunelleschi's dome was constructed as an octagonal, double-shell masonry structure without timber reinforcement.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The source describes the executed system but does not establish a direct historical relation to any other selected Feature.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C3",
+      "statement": "La Rotonda organizes its cubic volume around a central circular domed room.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "This formal description alone does not prove derivation.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C4",
+      "statement": "The official Villa Rotonda history states that its circular domed conception derives from the Pantheon in Rome.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The source supports conceptual derivation but does not claim literal copying of the Pantheon's structure.",
+      "relation": {
+        "subject_feature_id": "92ba97a4-ac18-4e17-a5c8-34c5b81bfcb8",
+        "predicate": "derived_from",
+        "object_feature_id": "e2a3b4c5-1238-4f91-b0d2-e3f4a5b6c7d8",
+        "qualifier": "central circular domed conception, not a wholesale structural copy"
+      }
+    },
+    {
+      "claim_id": "A-C5",
+      "statement": "The official villa history distinguishes Palladio's published hemispherical dome from Vincenzo Scamozzi's lower executed dome.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The official page does not fully separate Palladio's design decisions from Scamozzi's execution decisions.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C6",
+      "statement": "St. Peter's dome was executed as a double shell with an ogival outer profile.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The concise official page does not assign every design alteration among the successive architects.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C7",
+      "statement": "Soufflot modelled aspects of Sainte-Geneviève, especially its dome, on St. Peter's Basilica.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The same study names St. Paul's and Les Invalides as additional models, so St. Peter's was not an exclusive source.",
+      "relation": {
+        "subject_feature_id": "acfb7492-c49d-4e71-9bbc-bd446b52d32d",
+        "predicate": "modelled_on",
+        "object_feature_id": "393c7d17-d266-4e8b-8412-b96eb427f941",
+        "qualifier": "selected aspects, especially the dome, alongside other church models"
+      }
+    },
+    {
+      "claim_id": "A-C8",
+      "statement": "Ian Campbell argues that the as-built dome of St. Peter's has little formal similarity to the Pantheon apart from size.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "This is a scholarly interpretation within a broader symbolic argument, not a measured comparative survey.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C9",
+      "statement": "Paolo Almerico commissioned La Rotonda to combine residential and representational duties.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The official villa narrative summarizes the commission but does not reproduce the complete patronage archive.",
+      "relation": null
+    },
+    {
+      "claim_id": "A-C10",
+      "statement": "In 1791, the former church of Sainte-Geneviève became a national necropolis.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The building changed between religious and secular uses several more times during the nineteenth century.",
+      "relation": null
+    }
+  ],
+  "evidence_links": [
+    {
+      "evidence_link_id": "A-E1",
+      "claim_id": "A-C1",
+      "source_id": "A-S1",
+      "locator": "English version, paragraph 2 beginning “The present building”",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The ministry record supplies the dome status and equal 43.30-metre diameter and interior height."
+    },
+    {
+      "evidence_link_id": "A-E2",
+      "claim_id": "A-C2",
+      "source_id": "A-S2",
+      "locator": "Dome, opening two paragraphs",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The monument authority describes the octagonal two-shell system and its construction without reinforcement in wood."
+    },
+    {
+      "evidence_link_id": "A-E3",
+      "claim_id": "A-C3",
+      "source_id": "A-S3",
+      "locator": "Structure, first paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The official villa description identifies the cubic volume and central circular domed room."
+    },
+    {
+      "evidence_link_id": "A-E4",
+      "claim_id": "A-C4",
+      "source_id": "A-S3",
+      "locator": "The project, paragraph beginning “The humanistic recovery of antiquity”",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The page explicitly says the circular domed idea is derived from the Pantheon and distinguishes other ancient-temple references."
+    },
+    {
+      "evidence_link_id": "A-E5",
+      "claim_id": "A-C5",
+      "source_id": "A-S3",
+      "locator": "The central hall and the dome, second paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The page distinguishes Palladio's drawn hemisphere from Scamozzi's executed, lower dome and locates the Pantheon resemblance in the latter."
+    },
+    {
+      "evidence_link_id": "A-E6",
+      "claim_id": "A-C6",
+      "source_id": "A-S4",
+      "locator": "The Dome, opening description paragraphs",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The basilica record identifies the double shell and ogival form."
+    },
+    {
+      "evidence_link_id": "A-E7",
+      "claim_id": "A-C7",
+      "source_id": "A-S5",
+      "locator": "Looking to the past to solve modern problems, paragraphs 1–2",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The article explicitly names St. Peter's, especially Michelangelo's dome, among three models for Sainte-Geneviève."
+    },
+    {
+      "evidence_link_id": "A-E8",
+      "claim_id": "A-C7",
+      "source_id": "A-S6",
+      "locator": "An innovative architecture, first paragraph",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The monument authority records Soufflot's ambition to compete with St. Peter's and St. Paul's."
+    },
+    {
+      "evidence_link_id": "A-E9",
+      "claim_id": "A-C8",
+      "source_id": "A-S7",
+      "locator": "PDF page 4, paragraph beginning “Thus, it becomes”",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "Campbell frames a symbolic Pantheon association and then limits the as-built formal resemblance to size."
+    },
+    {
+      "evidence_link_id": "A-E10",
+      "claim_id": "A-C8",
+      "source_id": "A-S1",
+      "locator": "English version, paragraph 2 beginning “The present building”",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The Pantheon's documented geometry provides the institutional baseline for the size comparison without proving transmission."
+    },
+    {
+      "evidence_link_id": "A-E11",
+      "claim_id": "A-C9",
+      "source_id": "A-S3",
+      "locator": "The project, paragraphs on Paolo Almerico's commission and estate management",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The villa history separately describes Almerico's residential and representative requirements for the commission."
+    },
+    {
+      "evidence_link_id": "A-E12",
+      "claim_id": "A-C10",
+      "source_id": "A-S6",
+      "locator": "The last wishes of a king and Church or secular temple?",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The monument authority links Louis XV's vow and reconstruction promise to the 1791 conversion into a national necropolis."
+    }
+  ],
+  "findings": [
+    "A-C4",
+    "A-C5",
+    "A-C7",
+    "A-C8",
+    "A-C10"
+  ],
+  "conclusion": {
+    "status": "provisional",
+    "statement": "The module supports two selective, source-named acts of derivation: La Rotonda from the Pantheon's centralized domed conception and Soufflot's Panthéon from aspects of St. Peter's. It does not support a continuous Pantheon-to-Florence-to-St. Peter's-to-Paris genealogy; construction, execution history and competing models interrupt that shortcut."
+  },
+  "module_uncertainty": [
+    "The package does not claim that every formal resemblance among the five domes records transmission.",
+    "The attribution boundary between Palladio's design and Scamozzi's executed dome requires specialist review.",
+    "The Campbell interpretation should be checked against additional St. Peter's scholarship before external validation.",
+    "Claims and EvidenceLinks remain draft until both independent reviewers confirm the corrected frozen revision."
+  ],
+  "cost": {
+    "currency": "minutes",
+    "curation_elapsed": 4,
+    "measurement_note": "Full audited replacement curation with ID-level coverage, 2026-07-28T08:49:56Z–2026-07-28T08:53:04Z (188 seconds, rounded up to 4 minutes); rejected short verification, correction-only work and earlier preparation remain separately disclosed."
+  }
+}
