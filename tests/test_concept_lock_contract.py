@@ -102,7 +102,7 @@ def test_foundation_v3_validation_is_same_content_and_relation_safe() -> None:
     assert "same-content baseline" in validation
     assert "two evaluators" in validation
     assert "co-presence or similarity stated as documented encounter/influence/causality" in validation
-    assert "Foundation v3 / PENDING USER EVIDENCE" in decision
+    assert "FOUNDATION V3 / PENDING USER EVIDENCE" in decision
     assert "Opened future branch | `NONE`" in decision
 
 
