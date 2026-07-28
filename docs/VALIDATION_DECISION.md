@@ -17,7 +17,7 @@
 Зафиксировано:
 
 - Concept v2 validation result не был получен;
-- Gate A architecture modules являются completed fixtures, не user-value evidence;
+- Gate A architecture modules имеют `3/3 READY` и являются completed fixtures, not user-value evidence;
 - Foundation v3 восстанавливает spatial-temporal world model как mission;
 - Life in Context ещё не имеет frozen content, implementation or participant evidence;
 - никакая future branch не открыта.
@@ -79,6 +79,7 @@ Failure of one vertical does not silently reinstate Concept v2 or make space/tim
 | User-value decision | `PENDING` |
 | Active vertical | `Life in Context` |
 | Initial candidate | `Leonardo da Vinci, 1452–1519` |
+| Architecture Gate A fixtures | `3/3 READY` / not user-value evidence |
 | World-model contract | `PROPOSED` |
 | Frozen World Slice | `NOT READY` |
 | Synchronized explorer | `NOT IMPLEMENTED` |
