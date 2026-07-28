@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "module_id": "B",
+  "title": "Modernism, program and post-war public architecture",
+  "status": "READY",
+  "question": "How did function, material and institutional program reshape architectural form within post-war modernism, and which links between housing, transport and cultural buildings are actually documented?",
+  "selection_rationale": "The six-Feature set places collective housing, transport infrastructure and a national cultural institution beside two explicit precedents. The Olivier Theatre is represented separately from its parent complex so the Epidaurus transmission has an exact endpoint; Preston's broader Le Corbusier attribution remains deliberately unresolved at building level.",
+  "lenses": [
+    "housing, transport and cultural program",
+    "material and construction",
+    "individual monument versus collective infrastructure",
+    "patronage and institution",
+    "chronology",
+    "geography and documented transmission"
+  ],
+  "features": [
+    {
+      "feature_id": "95b223c1-9013-4976-b161-d32cf5cde97a",
+      "name": "Unité d’Habitation, Marseille",
+      "corpus_status": "module_candidate",
+      "selection_rationale": "Provides the named housing precedent for Park Hill and an official account of the vertical-city program."
+    },
+    {
+      "feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+      "name": "Park Hill, Sheffield",
+      "corpus_status": "published",
+      "selection_rationale": "Tests how a documented continental precedent was adapted to a municipal slum-clearance program, steep site and community-preservation objective."
+    },
+    {
+      "feature_id": "2760f275-b68a-4ff9-bc8e-01fdb12d3652",
+      "name": "Preston Central Bus Station and Car Park",
+      "corpus_status": "published",
+      "selection_rationale": "Adds integrated transport infrastructure whose official record names broad Le Corbusier influence but not a specific source building."
+    },
+    {
+      "feature_id": "71ab11dd-f159-43d3-bcf9-711380973f0e",
+      "name": "Royal National Theatre",
+      "corpus_status": "published",
+      "selection_rationale": "Provides the institutional and multi-auditorium parent complex without treating every part of it as derived from Epidaurus."
+    },
+    {
+      "feature_id": "5b2d4a91-7c83-4e26-9f40-1a6b8d3c5e72",
+      "name": "Olivier Theatre",
+      "corpus_status": "module_candidate",
+      "selection_rationale": "Provides the exact auditorium endpoint for the National Theatre archive's explicit Epidaurus influence statement."
+    },
+    {
+      "feature_id": "1a126c25-2ff8-4a54-98ea-3da91d848f23",
+      "name": "Theatre of Epidaurus",
+      "corpus_status": "module_candidate",
+      "selection_rationale": "Supplies the explicit auditorium precedent named by the National Theatre archive and prevents the comparison from reducing program to material style."
+    }
+  ],
+  "saved_view": {
+    "id": "851a67f8-fd47-4865-a80d-da4b327e7dc5",
+    "feature_ids": [
+      "95b223c1-9013-4976-b161-d32cf5cde97a",
+      "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+      "2760f275-b68a-4ff9-bc8e-01fdb12d3652",
+      "71ab11dd-f159-43d3-bcf9-711380973f0e",
+      "5b2d4a91-7c83-4e26-9f40-1a6b8d3c5e72",
+      "1a126c25-2ff8-4a54-98ea-3da91d848f23"
+    ],
+    "lenses": [
+      "housing, transport and cultural program",
+      "material and construction",
+      "individual monument versus collective infrastructure",
+      "patronage and institution",
+      "chronology",
+      "geography and documented transmission"
+    ]
+  },
+  "reference_revision": {
+    "id": "c33371ce-d418-4ec6-bbf1-94d4709ac6d7",
+    "investigation_id": "d2c58c70-5835-4927-8429-ef25a7bff906",
+    "revision_number": 1,
+    "dataset_identity": {
+      "kind": "git_commit",
+      "value": "5d4e9a60d4b90d9f1e4f112196dc2712021e0b13"
+    },
+    "schema_version": "gate-a-module-v1",
+    "content_version": "2026-07-28.b2",
+    "visibility": "withheld_from_participants",
+    "saved_view_id": "851a67f8-fd47-4865-a80d-da4b327e7dc5"
+  },
+  "sources": [
+    {
+      "source_id": "B-S1",
+      "title": "Unité d'habitation, Marseille, France, 1945–1952",
+      "publisher": "Fondation Le Corbusier",
+      "source_kind": "official_work_record",
+      "url": "https://www.fondationlecorbusier.fr/en/work-architecture/achievements-unite-dhabitation-marseille-france-1945-1952/",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "B-S2",
+      "title": "Park Hill, National Heritage List entry 1246881",
+      "publisher": "Historic England",
+      "source_kind": "official_designation_record",
+      "url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "B-S3",
+      "title": "Moore Street Electricity Substation, National Heritage List entry 1415383",
+      "publisher": "Historic England",
+      "source_kind": "official_designation_record",
+      "url": "https://historicengland.org.uk/listing/the-list/list-entry/1415383",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "B-S4",
+      "title": "Preston Central Bus Station and Car Park, National Heritage List entry 1416042",
+      "publisher": "Historic England",
+      "source_kind": "official_designation_record",
+      "url": "https://historicengland.org.uk/listing/the-list/list-entry/1416042",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "B-S5",
+      "title": "Royal National Theatre, National Heritage List entry 1272324",
+      "publisher": "Historic England",
+      "source_kind": "official_designation_record",
+      "url": "https://historicengland.org.uk/listing/the-list/list-entry/1272324",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "B-S6",
+      "title": "Architectural History of the National Theatre — part two",
+      "publisher": "National Theatre archive via Google Arts & Culture",
+      "source_kind": "institutional_archive_story",
+      "url": "https://artsandculture.google.com/story/architectural-history-of-the-national-theatre-part-two-national-theatre/VwWhA0PNKAUA8A?hl=en-GB",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "B-S7",
+      "title": "Sanctuary of Asklepios at Epidaurus",
+      "publisher": "UNESCO World Heritage Centre",
+      "source_kind": "institutional_heritage_record",
+      "url": "https://whc.unesco.org/en/list/491/",
+      "accessed_at": "2026-07-27"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "B-C1",
+      "statement": "The Marseille Unité contains 330 housing units.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The official work record states the unit count but does not evaluate residents' later experience.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C2",
+      "statement": "Its interior streets, shopping levels and roof facilities were organized as a vertical-city program rather than circulation alone.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The source records the architect's programmatic conception; realized social outcomes require separate evidence.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C3",
+      "statement": "Park Hill's wide access decks were designed as streets in the sky and as a means of recreating the community spirit of traditional streets.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The designation record describes design intent and historical assessment, not a controlled measure of social success.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C4",
+      "statement": "Historic England describes Park Hill as based on Le Corbusier's Unité d’Habitation in Marseille.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The explicit statement appears in the contextual history of another Sheffield designation and does not itemize which Park Hill elements were adapted.",
+      "relation": {
+        "subject_feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+        "predicate": "modelled_on",
+        "object_feature_id": "95b223c1-9013-4976-b161-d32cf5cde97a",
+        "qualifier": "overall housing precedent; the source does not enumerate every borrowed element"
+      }
+    },
+    {
+      "claim_id": "B-C5",
+      "statement": "Preston integrates a bus station, multi-storey car park and taxi rank in one civic complex.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The heritage record establishes the integrated program but does not evaluate every user's experience of the complex.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C6",
+      "statement": "Preston's official designation attributes its New Brutalist architecture to influence from late Le Corbusier but does not name a specific source building.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The named influence is agent-level; narrowing it to Unité d’Habitation would exceed the locator.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C7",
+      "statement": "The National Theatre organizes three auditoria within one public complex.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The designation entry is concise and does not capture every later alteration or operational pattern.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C8",
+      "statement": "The Theatre of Epidaurus was a major influence on Lasdun's design for the Olivier Theatre within the National Theatre.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The relation applies specifically to the Olivier auditorium, not to every part of the National Theatre complex.",
+      "relation": {
+        "subject_feature_id": "5b2d4a91-7c83-4e26-9f40-1a6b8d3c5e72",
+        "predicate": "inspired_by",
+        "object_feature_id": "1a126c25-2ff8-4a54-98ea-3da91d848f23",
+        "qualifier": "auditorium design, not the whole National Theatre complex"
+      }
+    },
+    {
+      "claim_id": "B-C9",
+      "statement": "France's Minister of Reconstruction and Urbanism commissioned the Marseille Unité as a collective building within the post-war rehousing program.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The source situates the commission within reconstruction policy but does not measure its comparative policy effectiveness.",
+      "relation": null
+    },
+    {
+      "claim_id": "B-C10",
+      "statement": "Preston's precast-concrete decks use compound curves as a principal element of the building's architectural expression.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The heritage assessment emphasizes design intent and surviving form rather than a complete engineering performance analysis.",
+      "relation": null
+    }
+  ],
+  "evidence_links": [
+    {
+      "evidence_link_id": "B-E1",
+      "claim_id": "B-C1",
+      "source_id": "B-S1",
+      "locator": "Project, opening paragraph and construction paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The foundation records 330 housing units."
+    },
+    {
+      "evidence_link_id": "B-E2",
+      "claim_id": "B-C2",
+      "source_id": "B-S1",
+      "locator": "Project, paragraphs beginning “The apartments are accessed” and “Full use”",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The work record names interior streets, the vertical city, shops, hotel-restaurant and roof institutions."
+    },
+    {
+      "evidence_link_id": "B-E3",
+      "claim_id": "B-C3",
+      "source_id": "B-S2",
+      "locator": "Details, paragraphs on street decks and Assessment",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The list entry explains deck width, ground connections, the streets-in-the-sky image and the community-intent assessment."
+    },
+    {
+      "evidence_link_id": "B-E4",
+      "claim_id": "B-C4",
+      "source_id": "B-S3",
+      "locator": "Reasons for Designation, Historic Interest bullet",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "Historic England explicitly calls Park Hill based on Le Corbusier's Marseille Unité."
+    },
+    {
+      "evidence_link_id": "B-E5",
+      "claim_id": "B-C4",
+      "source_id": "B-S2",
+      "locator": "Details and Assessment, paragraphs on access decks",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The Park Hill record documents the site-specific deck configuration and municipal community objective without itself naming Unité."
+    },
+    {
+      "evidence_link_id": "B-E6",
+      "claim_id": "B-C5",
+      "source_id": "B-S4",
+      "locator": "Summary; Reasons for Designation, Planning interest; History, final-design paragraphs",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The designation records the integrated bus-station, car-park and taxi-rank functions."
+    },
+    {
+      "evidence_link_id": "B-E7",
+      "claim_id": "B-C6",
+      "source_id": "B-S4",
+      "locator": "Reasons for Designation, Architectural innovation bullet",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The bullet names late Le Corbusier as an influence but supplies no work-level endpoint."
+    },
+    {
+      "evidence_link_id": "B-E8",
+      "claim_id": "B-C6",
+      "source_id": "B-S1",
+      "locator": "Subsequent History, opening paragraph",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The Unité record names several later housing units and provides context for why its list cannot establish a Preston work-level Relation."
+    },
+    {
+      "evidence_link_id": "B-E9",
+      "claim_id": "B-C7",
+      "source_id": "B-S5",
+      "locator": "Details, complete theatre-complex description",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The list entry identifies the three auditoria within the public complex."
+    },
+    {
+      "evidence_link_id": "B-E10",
+      "claim_id": "B-C8",
+      "source_id": "B-S6",
+      "locator": "Peter Hall and Denys Lasdun at Epidaurus, explanatory paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The National Theatre archive calls Epidaurus a major influence on Lasdun's Olivier design and describes their 1975 visit."
+    },
+    {
+      "evidence_link_id": "B-E11",
+      "claim_id": "B-C8",
+      "source_id": "B-S7",
+      "locator": "Outstanding Universal Value, Brief synthesis and Criterion (i)",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "UNESCO establishes the fourth-century theatre, its proportions, acoustics and site integration without making the later relation claim."
+    },
+    {
+      "evidence_link_id": "B-E12",
+      "claim_id": "B-C9",
+      "source_id": "B-S1",
+      "locator": "Commission, opening four paragraphs",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The foundation situates the commission after wartime destruction and names minister Raoul Dautry, Le Corbusier and the collective-building brief."
+    },
+    {
+      "evidence_link_id": "B-E13",
+      "claim_id": "B-C10",
+      "source_id": "B-S4",
+      "locator": "Reasons for Designation, External design and Structural interest; History, construction paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "Historic England's structural and design assessments connect the curved precast decks to the building's architectural expression."
+    }
+  ],
+  "findings": [
+    "B-C3",
+    "B-C4",
+    "B-C6",
+    "B-C8",
+    "B-C9"
+  ],
+  "conclusion": {
+    "status": "provisional",
+    "statement": "Program is not a secondary label in this set: interior streets, integrated transport and auditorium organization shape the selected modern works. Two transmissions are documentable with exact endpoints—Park Hill from Unité and the Olivier Theatre from Epidaurus—while Preston's broader Le Corbusier attribution must remain agent-level and unresolved at the building level."
+  },
+  "module_uncertainty": [
+    "Park Hill's official record documents intent more strongly than resident outcomes.",
+    "The Park Hill–Unité relation needs a reviewer to test whether “based on” is best normalized as modelled_on or adapted_from.",
+    "Preston must not be linked to Unité solely because both evidence sets mention Le Corbusier.",
+    "The Epidaurus relation uses the Olivier Theatre as its exact endpoint rather than the whole National Theatre.",
+    "Claims and EvidenceLinks remain draft until both independent reviewers confirm the corrected frozen revision."
+  ],
+  "cost": {
+    "currency": "minutes",
+    "curation_elapsed": 4,
+    "measurement_note": "Full audited replacement curation with ID-level coverage, 2026-07-28T08:53:15Z–2026-07-28T08:56:18Z (183 seconds, rounded up to 4 minutes); rejected short verification, correction-only work and earlier preparation remain separately disclosed."
+  }
+}

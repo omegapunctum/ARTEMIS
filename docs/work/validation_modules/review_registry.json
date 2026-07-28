@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "required_reviewers_per_module": 2,
+  "independence_rule": "A reviewer must not be the module preparer and must inspect the frozen module without inheriting the preparer's decision.",
+  "review_sessions": {
+    "reviewer-1-final-cfab4dda": {
+      "reviewer_id": "independent-agent-reviewer-1",
+      "independence_basis": "Independently assigned subagent; did not prepare the package and did not inspect reviewer 2 findings.",
+      "started_at": "2026-07-28T09:02:44Z",
+      "ended_at": "2026-07-28T09:05:11Z",
+      "elapsed_seconds": 147,
+      "elapsed_minutes": 3,
+      "frozen_tree": "cfab4ddacb5fe28ffadc5d5e5c54a17e0a2ae2a3",
+      "scope_modules": ["A", "B", "C"]
+    },
+    "reviewer-2-final-cfab4dda": {
+      "reviewer_id": "independent-agent-reviewer-2",
+      "independence_basis": "Independently assigned subagent; did not prepare the package and did not inspect reviewer 1 findings.",
+      "started_at": "2026-07-28T09:02:55Z",
+      "ended_at": "2026-07-28T09:05:05Z",
+      "elapsed_seconds": 130,
+      "elapsed_minutes": 3,
+      "frozen_tree": "cfab4ddacb5fe28ffadc5d5e5c54a17e0a2ae2a3",
+      "scope_modules": ["A", "B", "C"]
+    }
+  },
+  "modules": {
+    "A": {
+      "status": "READY",
+      "reviews": [
+        {
+          "reviewer_id": "independent-agent-reviewer-1",
+          "decision": "READY",
+          "session_id": "reviewer-1-final-cfab4dda",
+          "artifact": "docs/work/validation_modules/reviews/module_a_reviewer_1.md"
+        },
+        {
+          "reviewer_id": "independent-agent-reviewer-2",
+          "decision": "READY",
+          "session_id": "reviewer-2-final-cfab4dda",
+          "artifact": "docs/work/validation_modules/reviews/module_a_reviewer_2.md"
+        }
+      ]
+    },
+    "B": {
+      "status": "READY",
+      "reviews": [
+        {
+          "reviewer_id": "independent-agent-reviewer-1",
+          "decision": "READY",
+          "session_id": "reviewer-1-final-cfab4dda",
+          "artifact": "docs/work/validation_modules/reviews/module_b_reviewer_1.md"
+        },
+        {
+          "reviewer_id": "independent-agent-reviewer-2",
+          "decision": "READY",
+          "session_id": "reviewer-2-final-cfab4dda",
+          "artifact": "docs/work/validation_modules/reviews/module_b_reviewer_2.md"
+        }
+      ]
+    },
+    "C": {
+      "status": "READY",
+      "reviews": [
+        {
+          "reviewer_id": "independent-agent-reviewer-1",
+          "decision": "READY",
+          "session_id": "reviewer-1-final-cfab4dda",
+          "artifact": "docs/work/validation_modules/reviews/module_c_reviewer_1.md"
+        },
+        {
+          "reviewer_id": "independent-agent-reviewer-2",
+          "decision": "READY",
+          "session_id": "reviewer-2-final-cfab4dda",
+          "artifact": "docs/work/validation_modules/reviews/module_c_reviewer_2.md"
+        }
+      ]
+    }
+  }
+}

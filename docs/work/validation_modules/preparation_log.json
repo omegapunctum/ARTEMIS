@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "measurement_status": "COMPLETE",
+  "timed_session": {
+    "started_at": "2026-07-27T06:42:17Z",
+    "ended_at": "2026-07-27T06:55:14Z",
+    "elapsed_minutes": 13,
+    "scope": "structured artifact implementation, deterministic Brief generation and first executable checks"
+  },
+  "excluded_work": [
+    "initial source discovery and locator inspection began before the timer",
+    "work cannot be allocated honestly among modules A, B and C because shared validator and package design were produced once"
+  ],
+  "correction_sessions": {
+    "A": {
+      "started_at": "2026-07-28T08:23:39Z",
+      "ended_at": "2026-07-28T08:26:17Z",
+      "elapsed_minutes": 3,
+      "scope": "post-review atomicity, epistemic vocabulary, evidence relation/strength and bibliography corrections"
+    },
+    "B": {
+      "started_at": "2026-07-28T08:26:33Z",
+      "ended_at": "2026-07-28T08:27:47Z",
+      "elapsed_minutes": 2,
+      "scope": "post-review endpoint, atomicity, evidence relation/strength and confidence corrections"
+    },
+    "C": {
+      "started_at": "2026-07-28T08:28:07Z",
+      "ended_at": "2026-07-28T08:29:43Z",
+      "elapsed_minutes": 2,
+      "scope": "post-review source replacement, locator, wording, hedge and evidence relation/strength corrections"
+    }
+  },
+  "superseded_short_verification_sessions": {
+    "A": {
+      "started_at": "2026-07-28T08:38:34Z",
+      "ended_at": "2026-07-28T08:41:34Z",
+      "elapsed_minutes": 3,
+      "scope": "short verification pass",
+      "decision": "Rejected by both independent reviewers as insufficient evidence of full object-level re-curation; excluded from readiness cost."
+    },
+    "B": {
+      "started_at": "2026-07-28T08:41:41Z",
+      "ended_at": "2026-07-28T08:42:17Z",
+      "elapsed_minutes": 1,
+      "scope": "short verification pass",
+      "decision": "Rejected by both independent reviewers as insufficient evidence of full object-level re-curation; excluded from readiness cost."
+    },
+    "C": {
+      "started_at": "2026-07-28T08:42:26Z",
+      "ended_at": "2026-07-28T08:42:47Z",
+      "elapsed_minutes": 1,
+      "scope": "short verification pass",
+      "decision": "Rejected by both independent reviewers as insufficient evidence of full object-level re-curation; excluded from readiness cost."
+    }
+  },
+  "full_recuration_sessions": {
+    "A": {
+      "started_at": "2026-07-28T08:49:56Z",
+      "ended_at": "2026-07-28T08:53:04Z",
+      "elapsed_seconds": 188,
+      "elapsed_minutes": 4,
+      "scope": "complete audited repeat curation of every Claim, EvidenceLink, substantive Relation, Source locator, Feature identity and deterministic Brief",
+      "checklist_path": "docs/work/validation_modules/recuration_checklists.json"
+    },
+    "B": {
+      "started_at": "2026-07-28T08:53:15Z",
+      "ended_at": "2026-07-28T08:56:18Z",
+      "elapsed_seconds": 183,
+      "elapsed_minutes": 4,
+      "scope": "complete audited repeat curation of every Claim, EvidenceLink, substantive Relation, Source locator, Feature identity and deterministic Brief",
+      "checklist_path": "docs/work/validation_modules/recuration_checklists.json"
+    },
+    "C": {
+      "started_at": "2026-07-28T08:56:28Z",
+      "ended_at": "2026-07-28T08:59:30Z",
+      "elapsed_seconds": 182,
+      "elapsed_minutes": 4,
+      "scope": "complete audited repeat curation of every Claim, EvidenceLink, substantive Relation, Source locator, Feature identity and deterministic Brief",
+      "checklist_path": "docs/work/validation_modules/recuration_checklists.json"
+    }
+  },
+  "per_module_curation_minutes": {
+    "A": 4,
+    "B": 4,
+    "C": 4
+  },
+  "decision": "The record is complete for readiness accounting because each corrected module received a new measured replacement curation with an executable ID-level coverage checklist. The earlier discovery limitation, correction-only work and reviewer-rejected short verification sessions remain disclosed separately; no exact total project duration is claimed."
+}

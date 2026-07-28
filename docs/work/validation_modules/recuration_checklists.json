@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "method": "For each module, the curator reopened every Source URL, checked every EvidenceLink locator and summary against the cited passage, checked every Claim and counted Relation, verified Feature identities and Saved View membership, and reproduced the reference Brief from the structured artifact.",
+  "modules": {
+    "A": {
+      "started_at": "2026-07-28T08:49:56Z",
+      "ended_at": "2026-07-28T08:53:04Z",
+      "elapsed_seconds": 188,
+      "elapsed_minutes": 4,
+      "claim_ids": [
+        "A-C1",
+        "A-C2",
+        "A-C3",
+        "A-C4",
+        "A-C5",
+        "A-C6",
+        "A-C7",
+        "A-C8",
+        "A-C9",
+        "A-C10"
+      ],
+      "evidence_link_ids": [
+        "A-E1",
+        "A-E2",
+        "A-E3",
+        "A-E4",
+        "A-E5",
+        "A-E6",
+        "A-E7",
+        "A-E8",
+        "A-E9",
+        "A-E10",
+        "A-E11",
+        "A-E12"
+      ],
+      "relation_claim_ids": [
+        "A-C4",
+        "A-C7"
+      ],
+      "source_ids": [
+        "A-S1",
+        "A-S2",
+        "A-S3",
+        "A-S4",
+        "A-S5",
+        "A-S6",
+        "A-S7"
+      ],
+      "source_locator_coverage": {
+        "A-S1": ["A-E1", "A-E10"],
+        "A-S2": ["A-E2"],
+        "A-S3": ["A-E3", "A-E4", "A-E5", "A-E11"],
+        "A-S4": ["A-E6"],
+        "A-S5": ["A-E7"],
+        "A-S6": ["A-E8", "A-E12"],
+        "A-S7": ["A-E9"]
+      },
+      "brief_path": "docs/work/validation_modules/briefs/module_a_reference_brief.md",
+      "brief_checked": true,
+      "result": "PASS",
+      "notes": "All enumerated objects and locators were checked. A-E2 was corrected to the source's narrower claim: the dome was built without reinforcement in wood."
+    },
+    "B": {
+      "started_at": "2026-07-28T08:53:15Z",
+      "ended_at": "2026-07-28T08:56:18Z",
+      "elapsed_seconds": 183,
+      "elapsed_minutes": 4,
+      "claim_ids": [
+        "B-C1",
+        "B-C2",
+        "B-C3",
+        "B-C4",
+        "B-C5",
+        "B-C6",
+        "B-C7",
+        "B-C8",
+        "B-C9",
+        "B-C10"
+      ],
+      "evidence_link_ids": [
+        "B-E1",
+        "B-E2",
+        "B-E3",
+        "B-E4",
+        "B-E5",
+        "B-E6",
+        "B-E7",
+        "B-E8",
+        "B-E9",
+        "B-E10",
+        "B-E11",
+        "B-E12",
+        "B-E13"
+      ],
+      "relation_claim_ids": [
+        "B-C4",
+        "B-C8"
+      ],
+      "source_ids": [
+        "B-S1",
+        "B-S2",
+        "B-S3",
+        "B-S4",
+        "B-S5",
+        "B-S6",
+        "B-S7"
+      ],
+      "source_locator_coverage": {
+        "B-S1": ["B-E1", "B-E2", "B-E8", "B-E12"],
+        "B-S2": ["B-E3", "B-E5"],
+        "B-S3": ["B-E4"],
+        "B-S4": ["B-E6", "B-E7", "B-E13"],
+        "B-S5": ["B-E9"],
+        "B-S6": ["B-E10"],
+        "B-S7": ["B-E11"]
+      },
+      "brief_path": "docs/work/validation_modules/briefs/module_b_reference_brief.md",
+      "brief_checked": true,
+      "result": "PASS",
+      "notes": "All enumerated objects and locators were checked. B-C2 remains an interpretation whose limits are explicit; the two counted Relations use source-named endpoints."
+    },
+    "C": {
+      "started_at": "2026-07-28T08:56:28Z",
+      "ended_at": "2026-07-28T08:59:30Z",
+      "elapsed_seconds": 182,
+      "elapsed_minutes": 4,
+      "claim_ids": [
+        "C-C1",
+        "C-C2",
+        "C-C3",
+        "C-C4",
+        "C-C5",
+        "C-C6",
+        "C-C7",
+        "C-C8",
+        "C-C9",
+        "C-C10"
+      ],
+      "evidence_link_ids": [
+        "C-E1",
+        "C-E2",
+        "C-E3",
+        "C-E4",
+        "C-E5",
+        "C-E6",
+        "C-E7",
+        "C-E8",
+        "C-E9",
+        "C-E10",
+        "C-E11",
+        "C-E12"
+      ],
+      "relation_claim_ids": [
+        "C-C2",
+        "C-C4"
+      ],
+      "source_ids": [
+        "C-S1",
+        "C-S2",
+        "C-S3",
+        "C-S4",
+        "C-S5",
+        "C-S6",
+        "C-S7"
+      ],
+      "source_locator_coverage": {
+        "C-S1": ["C-E1", "C-E2"],
+        "C-S2": ["C-E3"],
+        "C-S3": ["C-E5"],
+        "C-S4": ["C-E4", "C-E6", "C-E12"],
+        "C-S5": ["C-E7", "C-E11"],
+        "C-S6": ["C-E8", "C-E9"],
+        "C-S7": ["C-E10"]
+      },
+      "brief_path": "docs/work/validation_modules/briefs/module_c_reference_brief.md",
+      "brief_checked": true,
+      "result": "PASS",
+      "notes": "All enumerated objects and locators were checked. The two counted transmissions retain their source-specific qualifiers; shared Gothic classification and chronology remain explicitly insufficient."
+    }
+  }
+}

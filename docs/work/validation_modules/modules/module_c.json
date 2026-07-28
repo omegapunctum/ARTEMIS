@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "module_id": "C",
+  "title": "Gothic classification, transmission and independent development",
+  "status": "READY",
+  "question": "Which similarities among European cathedrals belong to broad stylistic classification, which follow chronology and program, and which support a specific transmission of architectural practice?",
+  "selection_rationale": "The four prescribed corpus Features are joined by Amiens because the Cologne dossier names it directly. The set yields two Feature-level transmissions, one explicit technical limiter, a mixed-style Canterbury case and a Romanesque Santiago boundary without converting chronology into causality.",
+  "lenses": [
+    "construction chronology and duration",
+    "liturgical and institutional program",
+    "structure and construction",
+    "regional context",
+    "documented workshop or model transmission",
+    "Romanesque and Gothic classification boundary"
+  ],
+  "features": [
+    {
+      "feature_id": "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+      "name": "Chartres Cathedral",
+      "corpus_status": "published",
+      "selection_rationale": "Provides a documented early-thirteenth-century formula and the UNESCO statement that its fundamental design was imitated at Cologne."
+    },
+    {
+      "feature_id": "897c97cb-060a-49ca-871b-3f604e9c6160",
+      "name": "Amiens Cathedral",
+      "corpus_status": "module_candidate",
+      "selection_rationale": "Adds the one permitted Feature because the Cologne nomination specifically distinguishes adoption of Amiens artistic components from its technical innovations."
+    },
+    {
+      "feature_id": "47080747-1fb1-4dff-aaa7-5d777ef079b2",
+      "name": "Cologne Cathedral",
+      "corpus_status": "published",
+      "selection_rationale": "Offers two source-named French references and a long construction history that prevents dates alone from being mistaken for a single causal event."
+    },
+    {
+      "feature_id": "81dce408-f483-4bf3-b1a2-2f4e52864517",
+      "name": "Canterbury Cathedral",
+      "corpus_status": "published",
+      "selection_rationale": "Supplies a building with Romanesque, early Gothic and later Gothic phases plus a documented transfer of expertise from Sens."
+    },
+    {
+      "feature_id": "b1c2d3e4-1506-4b9a-8c7d-6e5f4a3b2c1d",
+      "name": "Santiago de Compostela Cathedral",
+      "corpus_status": "published",
+      "selection_rationale": "Acts as the classification stress case: the cathedral is a Romanesque masterpiece inside an urban ensemble that also contains Gothic and Baroque work."
+    }
+  ],
+  "saved_view": {
+    "id": "60e40579-c1ac-4d01-8dd0-93a92d5f2c6c",
+    "feature_ids": [
+      "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+      "897c97cb-060a-49ca-871b-3f604e9c6160",
+      "47080747-1fb1-4dff-aaa7-5d777ef079b2",
+      "81dce408-f483-4bf3-b1a2-2f4e52864517",
+      "b1c2d3e4-1506-4b9a-8c7d-6e5f4a3b2c1d"
+    ],
+    "lenses": [
+      "construction chronology and duration",
+      "liturgical and institutional program",
+      "structure and construction",
+      "regional context",
+      "documented workshop or model transmission",
+      "Romanesque and Gothic classification boundary"
+    ]
+  },
+  "reference_revision": {
+    "id": "f3cbf215-3a7e-4fea-9249-36aae0941009",
+    "investigation_id": "4cae11c7-c07d-46d4-84aa-faf1d1f2cbae",
+    "revision_number": 1,
+    "dataset_identity": {
+      "kind": "git_commit",
+      "value": "5d4e9a60d4b90d9f1e4f112196dc2712021e0b13"
+    },
+    "schema_version": "gate-a-module-v1",
+    "content_version": "2026-07-28.c2",
+    "visibility": "withheld_from_participants",
+    "saved_view_id": "60e40579-c1ac-4d01-8dd0-93a92d5f2c6c"
+  },
+  "sources": [
+    {
+      "source_id": "C-S1",
+      "title": "Chartres Cathedral",
+      "publisher": "UNESCO World Heritage Centre",
+      "source_kind": "institutional_heritage_record",
+      "url": "https://whc.unesco.org/en/list/81/",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "C-S2",
+      "title": "Amiens Cathedral",
+      "publisher": "UNESCO World Heritage Centre",
+      "source_kind": "institutional_heritage_record",
+      "url": "https://whc.unesco.org/en/list/162/",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "C-S3",
+      "title": "Cologne Cathedral",
+      "publisher": "UNESCO World Heritage Centre",
+      "source_kind": "institutional_heritage_record",
+      "url": "https://whc.unesco.org/en/list/292/",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "C-S4",
+      "title": "ICOMOS Evaluation: Cologne Cathedral No. 292rev",
+      "publisher": "ICOMOS via UNESCO World Heritage Centre",
+      "source_kind": "institutional_evaluation",
+      "url": "https://whc.unesco.org/document/153122",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "C-S5",
+      "title": "Canterbury Cathedral, St Augustine's Abbey, and St Martin's Church",
+      "publisher": "UNESCO World Heritage Centre",
+      "source_kind": "institutional_heritage_record",
+      "url": "https://whc.unesco.org/en/list/496/",
+      "accessed_at": "2026-07-27"
+    },
+    {
+      "source_id": "C-S6",
+      "title": "Building the Cathedral",
+      "publisher": "Canterbury Cathedral Learning Resources",
+      "source_kind": "official_cathedral_educational_record",
+      "url": "https://learning.canterbury-cathedral.org/how-did-they-build-that/building-the-cathedral/",
+      "accessed_at": "2026-07-28"
+    },
+    {
+      "source_id": "C-S7",
+      "title": "Santiago de Compostela (Old Town)",
+      "publisher": "UNESCO World Heritage Centre",
+      "source_kind": "institutional_heritage_record",
+      "url": "https://whc.unesco.org/en/list/347/",
+      "accessed_at": "2026-07-27"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C-C1",
+      "statement": "Chartres established an early-thirteenth-century architectural formula that became a major reference for later Gothic work.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "A broadly influential formula does not establish a separate pairwise Relation to every later Gothic cathedral.",
+      "relation": null
+    },
+    {
+      "claim_id": "C-C2",
+      "statement": "UNESCO states that the fundamental design of Chartres was imitated in Cologne.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The heritage statement does not enumerate the exact design components or route of transmission.",
+      "relation": {
+        "subject_feature_id": "47080747-1fb1-4dff-aaa7-5d777ef079b2",
+        "predicate": "modelled_on",
+        "object_feature_id": "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+        "qualifier": "fundamental design at an unspecified component level"
+      }
+    },
+    {
+      "claim_id": "C-C3",
+      "statement": "UNESCO describes Amiens Cathedral as an important influence on the later development of Gothic architecture.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "UNESCO's general influence statement does not by itself identify Cologne as a recipient.",
+      "relation": null
+    },
+    {
+      "claim_id": "C-C4",
+      "statement": "The ICOMOS evaluation judges that Cologne's master builder Gerhard appears to have incorporated artistic components from Amiens into the new cathedral.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The evaluation says Gerhard was familiar with several French cathedrals and emphasizes Amiens, so the relation is selective rather than exclusive.",
+      "relation": {
+        "subject_feature_id": "47080747-1fb1-4dff-aaa7-5d777ef079b2",
+        "predicate": "adapted_from",
+        "object_feature_id": "897c97cb-060a-49ca-871b-3f604e9c6160",
+        "qualifier": "artistic components, with other French precedents also in view"
+      }
+    },
+    {
+      "claim_id": "C-C5",
+      "statement": "The Cologne evaluation explicitly says Gerhard did not incorporate Amiens's technical innovations.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The evaluation does not list the excluded technical innovations, so the boundary needs specialist architectural review.",
+      "relation": null
+    },
+    {
+      "claim_id": "C-C6",
+      "statement": "Canterbury Cathedral is stylistically heterogeneous, combining Romanesque fabric with early and later Gothic campaigns.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "A building-level classification must preserve phase and component qualifiers instead of assigning one undifferentiated style.",
+      "relation": null,
+      "classification_assertion": {
+        "feature_id": "81dce408-f483-4bf3-b1a2-2f4e52864517",
+        "classification": "Romanesque and multiple Gothic phases",
+        "qualifier": "component- and campaign-specific"
+      }
+    },
+    {
+      "claim_id": "C-C7",
+      "statement": "After the 1174 fire, the French master mason William of Sens brought new building techniques and a different architectural style to Canterbury.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The official learning page does not enumerate the techniques or define the style more narrowly, so this remains a contextual Claim rather than a counted pairwise Relation.",
+      "relation": null
+    },
+    {
+      "claim_id": "C-C8",
+      "statement": "UNESCO classifies Santiago's cathedral as a Romanesque masterpiece.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The cathedral includes later interventions, including a Baroque western façade, so the assertion is about the core monument classification rather than every visible element.",
+      "relation": null,
+      "classification_assertion": {
+        "feature_id": "b1c2d3e4-1506-4b9a-8c7d-6e5f4a3b2c1d",
+        "classification": "Romanesque core monument",
+        "qualifier": "later interventions and the surrounding urban ensemble span other styles"
+      }
+    },
+    {
+      "claim_id": "C-C9",
+      "statement": "Offerings from large numbers of pilgrims helped finance Canterbury's east-end enlargement and post-1174 rebuilding.",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty": "The UNESCO passage establishes a financial contribution, not a single cause for every formal decision.",
+      "relation": null
+    },
+    {
+      "claim_id": "C-C10",
+      "statement": "The influx of pilgrims to the relics of the Magi helped motivate Cologne's decision to replace its Romanesque cathedral with a larger building.",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty": "The ICOMOS history also records archiepiscopal ambition, so pilgrimage demand was an important factor rather than the sole cause.",
+      "relation": null
+    }
+  ],
+  "evidence_links": [
+    {
+      "evidence_link_id": "C-E1",
+      "claim_id": "C-C1",
+      "source_id": "C-S1",
+      "locator": "Outstanding Universal Value, Brief synthesis and architectural-formula paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "UNESCO calls Chartres an essential reference and says its 1194 campaign first realized a widely used formula."
+    },
+    {
+      "evidence_link_id": "C-E2",
+      "claim_id": "C-C2",
+      "source_id": "C-S1",
+      "locator": "Outstanding Universal Value, Criterion (ii)",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "Criterion (ii) explicitly says Chartres's fundamental design was imitated in Cologne."
+    },
+    {
+      "evidence_link_id": "C-E3",
+      "claim_id": "C-C3",
+      "source_id": "C-S2",
+      "locator": "Outstanding Universal Value, Brief description and Criteria (i)–(ii)",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The record identifies Amiens as an influence on the later development of Gothic architecture."
+    },
+    {
+      "evidence_link_id": "C-E4",
+      "claim_id": "C-C4",
+      "source_id": "C-S4",
+      "locator": "PDF page 1, History paragraph beginning “The original intention”",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The ICOMOS evaluation says Gerhard appears to have known the French cathedrals, especially Amiens, and to have incorporated its artistic components."
+    },
+    {
+      "evidence_link_id": "C-E5",
+      "claim_id": "C-C4",
+      "source_id": "C-S3",
+      "locator": "Outstanding Universal Value, Brief synthesis",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The public UNESCO record establishes Cologne's High Gothic form and long fidelity to the original plans."
+    },
+    {
+      "evidence_link_id": "C-E6",
+      "claim_id": "C-C5",
+      "source_id": "C-S4",
+      "locator": "PDF page 1, History paragraph beginning “The original intention”",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The same sentence that supports artistic adaptation explicitly excludes Amiens's technical innovations."
+    },
+    {
+      "evidence_link_id": "C-E7",
+      "claim_id": "C-C6",
+      "source_id": "C-S5",
+      "locator": "Outstanding Universal Value, Brief synthesis and paragraph on the 1174 rebuilding",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "UNESCO describes the cathedral as a Romanesque/Gothic mixture and identifies early Gothic work after the fire."
+    },
+    {
+      "evidence_link_id": "C-E8",
+      "claim_id": "C-C6",
+      "source_id": "C-S6",
+      "locator": "Building the Cathedral, paragraph beginning “The earliest parts”",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The cathedral's learning record distinguishes the 1070s Norman work, William of Sens's post-1174 intervention and the later nave rebuilding."
+    },
+    {
+      "evidence_link_id": "C-E9",
+      "claim_id": "C-C7",
+      "source_id": "C-S6",
+      "locator": "Building the Cathedral, paragraph beginning “The earliest parts”, sentences on the 1174 fire",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The cathedral's learning record names William of Sens as a French master mason who brought new building techniques and a different architectural style after the 1174 fire."
+    },
+    {
+      "evidence_link_id": "C-E10",
+      "claim_id": "C-C8",
+      "source_id": "C-S7",
+      "locator": "Outstanding Universal Value, Brief synthesis and Criteria (i)–(ii)",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "UNESCO classifies the cathedral as a Romanesque masterpiece."
+    },
+    {
+      "evidence_link_id": "C-E11",
+      "claim_id": "C-C9",
+      "source_id": "C-S5",
+      "locator": "Outstanding Universal Value, paragraph on the 1174 rebuilding and pilgrimage",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "UNESCO states that offerings from large numbers of pilgrims helped finance the east-end enlargement and rebuilding of the choir and transepts after the 1174 fire."
+    },
+    {
+      "evidence_link_id": "C-E12",
+      "claim_id": "C-C10",
+      "source_id": "C-S4",
+      "locator": "PDF viewer page 1, History paragraph beginning “Despite its generous dimensions” through the Engelbert sentence",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "preparation_state": "curator_checked",
+      "review_state": "reviewed",
+      "evidence_summary": "The evaluation describes the older cathedral as too small for pilgrims after 1164 and records the subsequent ambition for an entirely new cathedral."
+    }
+  ],
+  "findings": [
+    "C-C2",
+    "C-C4",
+    "C-C5",
+    "C-C6",
+    "C-C8",
+    "C-C9",
+    "C-C10"
+  ],
+  "conclusion": {
+    "status": "provisional",
+    "statement": "The evidence distinguishes a broad Gothic classification from two source-named transmissions into Cologne: modelling on Chartres's fundamental design and an ICOMOS judgment that Gerhard appears to have selectively adapted Amiens artistic components. The Amiens technical limiter, Canterbury's phased fabric and Santiago's Romanesque core show why neither shared style nor chronological order can substitute for a qualified RelationClaim."
+  },
+  "module_uncertainty": [
+    "The component meaning of Chartres's “fundamental design” requires specialist review.",
+    "The ICOMOS phrase “artistic components” is not granular enough to identify every Cologne element.",
+    "William of Sens supplies contextual evidence of French expertise reaching Canterbury but is not represented as a counted pairwise Relation.",
+    "Santiago's later fabric must remain visible when applying a Romanesque classification to the core cathedral.",
+    "Claims and EvidenceLinks remain draft until both independent reviewers confirm the corrected frozen revision."
+  ],
+  "cost": {
+    "currency": "minutes",
+    "curation_elapsed": 4,
+    "measurement_note": "Full audited replacement curation with ID-level coverage, 2026-07-28T08:56:28Z–2026-07-28T08:59:30Z (182 seconds, rounded up to 4 minutes); rejected short verification, correction-only work and earlier preparation remain separately disclosed."
+  }
+}
