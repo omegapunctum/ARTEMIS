@@ -503,9 +503,9 @@ Reject or defer content that is:
 ## 16. Relationship to other foundation docs
 
 - `ARTEMIS_CONCEPT.md` defines why ARTEMIS requires verifiable and explainable knowledge.
-- `ARTEMIS_PRODUCT_SCOPE.md` defines the active Architecture Atlas product boundaries and frozen scope.
+- `ARTEMIS_PRODUCT_SCOPE.md` defines the active Life in Context/Foundation v3 boundaries and frozen scope. Architecture Atlas remains a thematic-layer baseline.
 - `EPISTEMIC_CONTRACT.md` defines Claim/EvidenceLink and independent epistemic dimensions.
-- `ENTITY_MODEL.md` defines entities, Claims, Relations, Sources and product/runtime/context entities.
+- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` defines temporal/spatial/change/coverage semantics; `ENTITY_MODEL.md` defines entities, Claims, Relations, Sources and product/runtime/context entities.
 - `DATA_CONTRACT.md` defines current ETL/public artifact shape.
 - `RESEARCH_SLICE_CONTRACT.md` defines how content is used inside Investigation/revision context.
 - `AI_POLICY.md` will define AI-specific behavior boundaries after creation.
