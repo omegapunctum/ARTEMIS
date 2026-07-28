@@ -2,11 +2,15 @@
 
 ## Статус
 
-- Тип: canonical validation gate document.
-- Версия: 2.0.
+- Тип: historical Concept v2 validation protocol.
+- Версия: 2.0 (superseded active protocol).
 - Дата: 2026-07-26.
-- Применяется до открытия любого product expansion.
+- Lifecycle: `SUPERSEDED AS ACTIVE PROTOCOL BY FOUNDATION V3`.
 - Content prerequisite: три `READY` module из `docs/work/2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
+
+- Use: retained for Architecture Atlas evidence-history only.
+- Active validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`.
+- This document must not authorize #323–#325 or make map/time optional.
 
 ## 1. Цель
 
