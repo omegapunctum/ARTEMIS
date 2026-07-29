@@ -4,7 +4,7 @@
 
 - Тип: foundation decision record.
 - Дата решения: 2026-07-28.
-- Статус: `PROPOSED / PENDING MERGE`.
+- Статус: `ACCEPTED / MERGED IN PR #328`.
 - Parent: GitHub issue `#327`.
 - Supersedes: `2026-07-26_CONCEPT_LOCK_V2.md`.
 - Scope: mission, product identity, world model, role of evidence, role of map/time, first validation vertical and backlog boundary.
@@ -161,11 +161,12 @@ Until this decision is merged:
 - security/compatibility maintenance remains allowed;
 - completed Gate A data is preserved.
 
-After merge:
+Completion evidence:
 
-- old Concept v2 implementation issues may be closed `not planned` with links to #327;
-- clean v3 child issues are created;
-- PR #314 is closed without merge unless a later v3 decision explicitly reuses it;
+- PR `#328` was squash-merged into `main` as `ddb0d69`;
+- old Concept v2 implementation issues were closed `not planned` with links to #327;
+- clean v3 child issues `#329`–`#335` were created;
+- PR #314 was closed without merge;
 - contracts and fixtures precede code.
 
 ## 7. First vertical boundary
