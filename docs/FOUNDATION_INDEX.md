@@ -5,7 +5,7 @@
 - Тип: canonical foundation index.
 - Версия: 3.0.
 - Дата: 2026-07-28.
-- Статус: proposed by Foundation v3.
+- Статус: active; Foundation v3 accepted in PR `#328`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
 
 ## 1. Foundation purpose
@@ -78,7 +78,7 @@ Historical vertical documents such as `MVP_ARCHITECTURE_ATLAS.md` and the Concep
 ## 4. Active foundation decision records
 
 - Foundation umbrella: GitHub issue `#327`.
-- Decision: `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md`.
+- Accepted decision: `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md` (PR `#328`).
 - Migration/disposition: `docs/work/2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md`.
 - Validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`.
 
@@ -188,15 +188,16 @@ Foundation owner documents must be synchronized in one decision PR when identity
 
 Active:
 
-1. Foundation v3 alignment and merge.
-2. Backlog correction after merge.
-3. World-model fixtures.
+1. Issue `#329`: versioned executable world-model fixtures and two independent semantic reviews.
 
 Gated:
 
-4. Leonardo World Slice.
-5. Synchronized explorer.
-6. Contextual-learning pilot.
+2. Issue `#330`: temporal/spatial uncertainty semantics.
+3. Issue `#331`: coexistence/encounter/interaction/influence distinctions.
+4. Issue `#332`: Leonardo World Slice.
+5. Issue `#333`: synchronized explorer.
+6. Issue `#334`: contextual-learning pilot.
+7. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
 
 Frozen:
 
