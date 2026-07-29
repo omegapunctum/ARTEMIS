@@ -42,16 +42,17 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 - Do not put credentials, tokens, owner identity or private research in public artifacts/storage/logs.
 - Do not harden a compatibility schema as target without a contract and migration decision.
 
-## Foundation v3 hold
+## Current execution boundary
 
-Until the Foundation v3 decision is merged:
+Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-- no new runtime/data migrations;
-- no merge of PR #314;
-- no execution of old Concept v2 implementation backlog;
+Active work is issue `#329`: executable world-model fixtures and independent semantic review before schema/runtime migration.
+
+- follow clean v3 child issues `#329`–`#335` rather than rewriting old issues;
+- no database/API/runtime migration before #329 and dependent uncertainty/relation decisions pass;
+- the fixture package must not be described as public/runtime capability;
+- #332 Leonardo curation and #333 explorer remain gated;
 - security, compatibility and critical maintenance remain allowed.
-
-After merge, follow the clean v3 child issues rather than rewriting old issues.
 
 ## Verification
 
