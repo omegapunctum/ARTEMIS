@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-world-model-contract-fixture-v1",
+  "required_object_kinds": {
+    "Entity": 7,
+    "Event": 4,
+    "State": 2,
+    "Process": 1,
+    "Trajectory": 1,
+    "Region": 1,
+    "Layer": 4,
+    "Relation": 1,
+    "Claim": 15,
+    "EvidenceLink": 16,
+    "Uncertainty": 4,
+    "SynchronizedView": 1,
+    "Source": 2
+  },
+  "required_scenarios": {
+    "point_event": "event-north-harbor-charter",
+    "approximate_event_with_alternative_date": "event-workshop-arrival",
+    "interval_state": "state-north-harbor-administration",
+    "multi_stage_multi_place_process": "process-coastal-exchange",
+    "trajectory_with_segment_uncertainty": "trajectory-mara-vale",
+    "changing_region_geometry": "region-fixture-basin",
+    "local_global_synchronized_context": "view-1504-local-global",
+    "challenged_or_alternative_reconstruction": "region-geometry-v2-alternative",
+    "co_presence_without_relation": "observation-mara-global-temporal-overlap",
+    "documented_encounter": "relation-mara-ren-encounter",
+    "compatibility_projection": "compatibility/architecture_atlas_projection.json"
+  },
+  "spatial_bounds": "Only the fictional Fixture Basin places plus one distant fictional observatory are represented.",
+  "temporal_bounds": "1498 through 1510, with one event on 1504-03-01.",
+  "included_layers": [
+    "layer-biography",
+    "layer-politics",
+    "layer-exchange",
+    "layer-distant-context"
+  ],
+  "selection_rationale": "Exercise every required semantic distinction with the smallest reviewable package.",
+  "known_exclusions": [
+    {
+      "assertion_kind": "corpus_exclusion",
+      "description": "No unlisted people, events, states, processes or regions are represented."
+    },
+    {
+      "assertion_kind": "corpus_exclusion",
+      "description": "No route geometry is provided for the inferred trajectory gap."
+    },
+    {
+      "assertion_kind": "corpus_exclusion",
+      "description": "The package does not claim historical completeness or historical absence."
+    }
+  ],
+  "density_limitations": "One or two records per semantic case; not suitable for user-value validation.",
+  "source_criteria": "Every fixture Claim with applicable evidence has a reproducible locator in an immutable checked-in synthetic source document.",
+  "review_criteria": "Two independent semantic reviews against the spatial-temporal and epistemic contracts are required before READY.",
+  "last_reviewed_version": null
+}
