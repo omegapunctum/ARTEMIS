@@ -88,5 +88,16 @@ def test_superseded_migration_plan_cannot_open_v2_execution() -> None:
     assert "2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md" in work_registry
     assert "superseded execution plan" in work_registry
     assert "Must not authorize #323–#325" in work_registry
-    assert "Close old Concept v2 implementation issues `not planned`" in matrix
-    assert "Create clean child issues" in matrix
+    assert "Old Concept v2 implementation issues were closed `not planned`" in matrix
+    assert "Clean child issues were created for:" in matrix
+
+    for child_scope in (
+        "universal world-model contract and fixtures",
+        "spatial-temporal uncertainty",
+        "Leonardo World Slice",
+        "synchronized explorer",
+        "relation ladder",
+        "contextual-learning validation",
+        "source-bound AI reasoning contract",
+    ):
+        assert child_scope in matrix
