@@ -1,0 +1,573 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/world-model-fixture/1.0.0",
+  "title": "ARTEMIS spatial-temporal world-model fixture package",
+  "description": "Portable contract-fixture schema. Cross-reference, evidence, precision and compatibility semantics are enforced by scripts/validate_world_model_fixtures.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "package_id",
+    "fixture_mode",
+    "status",
+    "record_time",
+    "world_slice",
+    "sources",
+    "layers",
+    "entities",
+    "events",
+    "states",
+    "processes",
+    "trajectories",
+    "regions",
+    "relations",
+    "derived_observations",
+    "claims",
+    "evidence_links",
+    "uncertainties",
+    "synchronized_views"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "package_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixture_mode": {
+      "enum": [
+        "synthetic_contract_fixture",
+        "historical_fixture"
+      ]
+    },
+    "status": {
+      "enum": [
+        "REVIEW_REQUIRED",
+        "READY"
+      ]
+    },
+    "record_time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "reviewed_at"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "world_slice": {
+      "$ref": "#/$defs/worldSlice"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    },
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/changeObject"
+      }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/changeObject"
+      }
+    },
+    "processes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/process"
+      }
+    },
+    "trajectories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/trajectory"
+      }
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/region"
+      }
+    },
+    "relations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "derived_observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/derivedObservation"
+      }
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "evidence_links": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/evidenceLink"
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/uncertainty"
+      }
+    },
+    "synchronized_views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/synchronizedView"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]+$"
+    },
+    "referenceList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "temporalExtent": {
+      "type": "object",
+      "required": [
+        "kind",
+        "start",
+        "end",
+        "precision",
+        "certainty",
+        "basis_claim_refs"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "instant",
+            "closed_interval",
+            "open_start_interval",
+            "open_end_interval",
+            "approximate_instant",
+            "approximate_interval"
+          ]
+        },
+        "start": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "end": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "precision": {
+          "enum": [
+            "day",
+            "month",
+            "year",
+            "decade",
+            "century",
+            "range",
+            "unknown"
+          ]
+        },
+        "calendar": {
+          "type": "string"
+        },
+        "certainty": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis_claim_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "spatialExtent": {
+      "type": "object",
+      "required": [
+        "kind",
+        "precision",
+        "basis_claim_refs"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "point",
+            "path",
+            "polygon",
+            "multipolygon",
+            "named_place",
+            "region_ref",
+            "multiple_places",
+            "unknown"
+          ]
+        },
+        "geometry": {
+          "type": "object"
+        },
+        "place_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "place_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "region_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "precision": {
+          "enum": [
+            "fixture_defined",
+            "versioned_reconstruction",
+            "exact",
+            "approximate",
+            "unknown"
+          ]
+        },
+        "basis_claim_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
+    },
+    "baseKnowledgeObject": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "claim_refs",
+        "uncertainty_refs",
+        "layer_refs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "claim_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "uncertainty_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "layer_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
+    },
+    "worldSlice": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "label",
+        "version",
+        "selection_rationale",
+        "temporal_bounds",
+        "spatial_bounds",
+        "included_layer_refs",
+        "dataset_identity",
+        "coverage_manifest_ref"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "title",
+        "source_type",
+        "uri",
+        "sha256",
+        "review_state",
+        "provenance"
+      ]
+    },
+    "layer": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "label",
+        "coverage_rule",
+        "claim_refs",
+        "uncertainty_refs"
+      ]
+    },
+    "entity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseKnowledgeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "entity_kind"
+          ]
+        }
+      ]
+    },
+    "changeObject": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseKnowledgeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "temporal_extent",
+            "spatial_extent"
+          ],
+          "properties": {
+            "temporal_extent": {
+              "$ref": "#/$defs/temporalExtent"
+            },
+            "spatial_extent": {
+              "$ref": "#/$defs/spatialExtent"
+            }
+          }
+        }
+      ]
+    },
+    "process": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/changeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "stages"
+          ],
+          "properties": {
+            "stages": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "temporal_extent",
+                  "spatial_extent",
+                  "claim_refs"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "trajectory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseKnowledgeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "subject_ref",
+            "coverage",
+            "segments"
+          ],
+          "properties": {
+            "segments": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "segment_kind",
+                  "temporal_extent",
+                  "spatial_extent",
+                  "claim_refs",
+                  "uncertainty_refs"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "region": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseKnowledgeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "region_kind",
+            "geometry_versions"
+          ],
+          "properties": {
+            "geometry_versions": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "reconstruction_mode",
+                  "is_primary",
+                  "temporal_extent",
+                  "spatial_extent",
+                  "claim_refs",
+                  "uncertainty_refs"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "relation": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/changeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "subject_ref",
+            "predicate",
+            "object_ref",
+            "directionality"
+          ]
+        }
+      ]
+    },
+    "derivedObservation": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "observation_kind",
+        "input_refs",
+        "claim_ref",
+        "relation_created"
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "statement",
+        "target_refs",
+        "claim_kind",
+        "origin",
+        "review_state",
+        "confidence",
+        "evidence_state",
+        "uncertainty_refs"
+      ]
+    },
+    "evidenceLink": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "claim_id",
+        "source_id",
+        "locator",
+        "relation_to_claim",
+        "evidence_strength",
+        "reviewer",
+        "review_state"
+      ]
+    },
+    "uncertainty": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "subject_or_claim_ref",
+        "dimension",
+        "description",
+        "effect",
+        "alternatives",
+        "basis_claim_refs",
+        "review_state"
+      ]
+    },
+    "synchronizedView": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "label",
+        "time_state",
+        "active_layer_refs",
+        "local_context_refs",
+        "global_context_refs",
+        "derived_observation_refs",
+        "reconstruction_mode",
+        "dataset_identity"
+      ]
+    }
+  }
+}
