@@ -11,7 +11,7 @@
 
 ## 1. Принятое продуктовое направление
 
-Foundation v3 исправляет долгосрочное направление ARTEMIS: **source-aware spatial-temporal world model**, в которой человек исследует Entities, Events, States, Processes, Trajectories and Regions как synchronized layers пространства и времени.
+Foundation v3, accepted in PR `#328`, fixes the long-term direction of ARTEMIS: **source-aware spatial-temporal world model**, in which a person explores Entities, Events, States, Processes, Trajectories and Regions as synchronized layers of space and time.
 
 Первый proposed validation vertical — `Life in Context` на ограниченном Leonardo World Slice. Architecture Atlas сохраняется как thematic layer и current public/technical baseline.
 
@@ -119,21 +119,20 @@ Migration preflight и release gate подтверждают current backend cap
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Foundation v3 correction**.
+ARTEMIS находится в состоянии **controlled engineering prototype / World Model Contract**.
 
-Current runtime and data remain Architecture Atlas baseline. Foundation v3 changes project identity and execution order, not current capability.
+Current runtime and data remain the Architecture Atlas baseline. Foundation v3 is accepted, but its world-model objects are not implemented in the public runtime or database/API.
 
 Следующий допустимый порядок:
 
-1. review and merge Foundation v3;
-2. close superseded Concept v2 implementation issues without rewriting history;
-3. review world-model fixtures and uncertainty semantics;
-4. prepare one limited source-aware Leonardo World Slice;
-5. implement synchronized 2D map/timeline/layers on the static-first contour;
-6. run contextual-learning validation;
-7. open at most one evidence-backed branch.
+1. complete #329 versioned world-model fixtures and two independent semantic reviews;
+2. resolve #330 uncertainty and #331 relation semantics exposed by the fixtures;
+3. prepare one limited source-aware Leonardo World Slice under #332;
+4. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
+5. run #334 contextual-learning validation;
+6. open at most one evidence-backed branch.
 
-До Foundation merge не выполняются #323–#325 и не merge PR #314. Infrastructure work допускается только для security/compatibility/critical reliability and must not harden Concept v2 as final ontology.
+The superseded #323–#325 path and PR #314 are closed. Passing fixtures proves contract representability only; it does not change `PUBLIC NOW`, `BACKEND-AVAILABLE` or user-value status.
 
 ## 8. Правило честного описания
 
