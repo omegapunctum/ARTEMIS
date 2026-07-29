@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0.0",
+  "projection_id": "architecture-atlas-villa-savoye-to-world-model-v1",
+  "source_dataset": {
+    "repository": "omegapunctum/ARTEMIS",
+    "commit": "957899ee241f6e0c3af66dd4d91b964db1c3824b",
+    "path": "data/features.json",
+    "record_id": "rec1GDGqssFGehzEx",
+    "canonical_feature_id": "1f49bb51-07a2-4c86-8101-edb6e525503e"
+  },
+  "input_snapshot": {
+    "name_en": "Villa Savoye",
+    "name_ru": "Вилла Савой",
+    "date_start": "1929",
+    "date_end": "1931",
+    "latitude": 48.9244,
+    "longitude": 2.0283,
+    "coordinates_confidence": "exact",
+    "coordinates_source": [
+      "Britannica"
+    ],
+    "source_url": "https://en.wikipedia.org/wiki/Villa_Savoye",
+    "layer_type": "architecture",
+    "validated": true
+  },
+  "target_projection": {
+    "entity": {
+      "id": "1f49bb51-07a2-4c86-8101-edb6e525503e",
+      "type": "Entity",
+      "entity_kind": "Object",
+      "label": "Villa Savoye",
+      "temporal_extent": {
+        "kind": "closed_interval",
+        "start": "1929",
+        "end": "1931",
+        "precision": "year",
+        "certainty": "legacy_unverified",
+        "basis_claim_refs": [
+          "compat-claim-villa-savoye-date"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "point",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            2.0283,
+            48.9244
+          ]
+        },
+        "precision": "unknown",
+        "legacy_precision_value": "exact",
+        "basis_claim_refs": [
+          "compat-claim-villa-savoye-location"
+        ]
+      },
+      "claim_refs": [
+        "compat-claim-villa-savoye-date",
+        "compat-claim-villa-savoye-location"
+      ],
+      "uncertainty_refs": [
+        "compat-uncertainty-villa-savoye-provenance"
+      ],
+      "layer_refs": [
+        "compat-layer-architecture"
+      ]
+    },
+    "claims": [
+      {
+        "id": "compat-claim-villa-savoye-date",
+        "type": "Claim",
+        "statement": "The legacy record gives the interval 1929–1931.",
+        "claim_kind": "factual",
+        "origin": "imported",
+        "review_state": "draft",
+        "confidence": "unknown",
+        "evidence_state": "missing",
+        "evidence_link_refs": []
+      },
+      {
+        "id": "compat-claim-villa-savoye-location",
+        "type": "Claim",
+        "statement": "The legacy record gives the point [2.0283, 48.9244].",
+        "claim_kind": "factual",
+        "origin": "imported",
+        "review_state": "draft",
+        "confidence": "unknown",
+        "evidence_state": "missing",
+        "evidence_link_refs": []
+      }
+    ],
+    "invented_fields": []
+  },
+  "losses_and_unknowns": [
+    "The current reviewed Source has no bibliographic locator, so no target EvidenceLink is created.",
+    "The legacy coordinates_source value does not identify a source record with a reproducible locator.",
+    "The legacy exact coordinate confidence is preserved only as legacy metadata; target spatial precision is unknown.",
+    "The date strings provide year precision but no claim-level supporting locator.",
+    "The current point feature does not encode construction Events, use States, Processes, temporal geometry or uncertainty."
+  ],
+  "determinism_rule": "The same pinned input snapshot must produce this exact projection; missing target semantics remain missing."
+}
