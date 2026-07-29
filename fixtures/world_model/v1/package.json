@@ -41,8 +41,8 @@
       "layer-distant-context"
     ],
     "dataset_identity": {
-      "kind": "git_commit",
-      "value": "PENDING_PR_HEAD"
+      "kind": "fixture_package",
+      "value": "artemis-world-model-contract-fixture-v1@1.0.0"
     },
     "coverage_manifest_ref": "coverage_manifest.json"
   },
@@ -1379,8 +1379,8 @@
       ],
       "reconstruction_mode": "scholarly_reconstruction",
       "dataset_identity": {
-        "kind": "git_commit",
-        "value": "PENDING_PR_HEAD"
+        "kind": "fixture_package",
+        "value": "artemis-world-model-contract-fixture-v1@1.0.0"
       }
     }
   ]
