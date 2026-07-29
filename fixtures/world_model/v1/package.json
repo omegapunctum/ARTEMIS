@@ -907,7 +907,7 @@
     {
       "id": "claim-arrival-event",
       "type": "Claim",
-      "statement": "Mara Vale arrived at Inland Workshop in approximately 1503; an alternative fixture source gives approximately 1504.",
+      "statement": "Mara Vale arrived at Inland Workshop in approximately 1503.",
       "target_refs": [
         "event-workshop-arrival",
         "place-inland-workshop"
