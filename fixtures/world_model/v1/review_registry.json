@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-world-model-contract-fixture-v1",
+  "status": "REVIEW_REQUIRED",
+  "frozen_commit": null,
+  "required_review_count": 2,
+  "reviews": []
+}
