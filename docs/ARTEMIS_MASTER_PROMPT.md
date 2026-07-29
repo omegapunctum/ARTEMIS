@@ -67,18 +67,17 @@ Working/audit/archive files cannot override canonical owners.
 
 ## 5. Current order
 
-Active: Foundation v3.
+Active: World Model Contract / issue `#329`.
 
-1. Align canonical foundation.
-2. Merge the decision.
-3. Correct old backlog and create clean v3 issues.
-4. Review world-model fixtures.
-5. Freeze first World Slice.
-6. Implement synchronized explorer.
-7. Run contextual-learning validation.
-8. Open at most one evidence-backed branch.
+1. Build and validate versioned world-model fixtures.
+2. Obtain two independent semantic reviews on one frozen commit.
+3. Resolve uncertainty/relation gaps through #330/#331.
+4. Freeze the first World Slice under #332.
+5. Implement the synchronized explorer under #333.
+6. Run contextual-learning validation under #334.
+7. Open at most one evidence-backed branch.
 
-No #323–#325 migration and no PR #314 merge before Foundation decision.
+Foundation v3 is accepted in PR `#328`. The superseded #323–#325 path and PR #314 are closed and must not be reopened as the active ontology.
 
 ## 6. Frozen work
 
