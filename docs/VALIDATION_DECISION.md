@@ -75,7 +75,7 @@ Failure of one vertical does not silently reinstate Concept v2 or make space/tim
 
 | Field | Value |
 |---|---|
-| Foundation decision | `PROPOSED / PENDING MERGE` |
+| Foundation decision | `ACCEPTED / PR #328` |
 | User-value decision | `PENDING` |
 | Active vertical | `Life in Context` |
 | Initial candidate | `Leonardo da Vinci, 1452–1519` |
