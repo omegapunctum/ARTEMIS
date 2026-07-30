@@ -47,8 +47,13 @@ Pending independent review.
 The package can become `READY` only when:
 
 - two independent review artifacts inspect the same frozen commit;
+- the artifacts have different reviewer identities, invocation identities and review tracks (`semantic-model`, `validator-integrity`);
+- each review artifact checksum matches the registry;
+- each review binds the same computed review-scope digest;
 - both decisions are `READY`;
 - critical findings are zero;
+- unresolved material findings are zero;
+- each reviewer records an explicit independence attestation;
 - all material findings are resolved on the branch;
 - `review_registry.json` and `package.json` are synchronized;
 - `python scripts/validate_world_model_fixtures.py --require-ready` passes;

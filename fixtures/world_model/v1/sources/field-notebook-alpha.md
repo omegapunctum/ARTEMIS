@@ -30,11 +30,15 @@ The North Harbor council administered the basin from 1500 through 1508.
 
 LOCATOR[alpha-process-north]
 
-Exchange markers were recorded around North Harbor from 1498 through 1503.
+Exchange markers were recorded across the Fixture Basin region around North Harbor from 1498 through 1503.
 
 LOCATOR[alpha-process-south]
 
-Comparable markers were recorded around South Port from 1504 through 1510.
+Comparable markers were recorded within the South Coast analytical region around South Port from 1504 through 1510.
+
+LOCATOR[alpha-region-south]
+
+For this analytical fixture, the reviewed South Coast region encloses the South Port marker observations from 1504 through 1510.
 
 ## Trajectory endpoints
 
@@ -49,6 +53,12 @@ Only the North Harbor and Inland Workshop endpoints are recorded; the route betw
 LOCATOR[alpha-trajectory-workshop]
 
 Mara Vale was recorded at Inland Workshop from 1504 through 1508.
+
+## Independent workshop presence
+
+LOCATOR[alpha-traveler-workshop]
+
+Traveler Sol was recorded at Inland Workshop during 1505. The notebook records no meeting, exchange or relationship between Traveler Sol and Mara Vale.
 
 ## Basin boundary versions
 
@@ -66,3 +76,8 @@ LOCATOR[alpha-encounter]
 
 The register records Mara Vale and Keeper Ren in the same workshop meeting on 1504-03-01.
 
+## Contested protocol influence
+
+LOCATOR[alpha-influence-ren]
+
+The register states that Keeper Ren proposed the phrase later adopted in the North Harbor council protocol.

@@ -3,6 +3,21 @@
   "package_id": "artemis-world-model-contract-fixture-v1",
   "status": "REVIEW_REQUIRED",
   "frozen_commit": null,
+  "reviewed_content_sha256": null,
   "required_review_count": 2,
+  "review_scope": [
+    "docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md",
+    "docs/ENTITY_MODEL.md",
+    "docs/EPISTEMIC_CONTRACT.md",
+    "fixtures/world_model/v1/schema.json",
+    "fixtures/world_model/v1/package.json",
+    "fixtures/world_model/v1/coverage_manifest.json",
+    "fixtures/world_model/v1/compatibility/architecture_atlas_projection.json",
+    "fixtures/world_model/v1/sources/field-notebook-alpha.md",
+    "fixtures/world_model/v1/sources/field-notebook-beta.md",
+    "scripts/validate_world_model_fixtures.py",
+    "tests/test_world_model_fixtures.py",
+    "requirements.txt"
+  ],
   "reviews": []
 }

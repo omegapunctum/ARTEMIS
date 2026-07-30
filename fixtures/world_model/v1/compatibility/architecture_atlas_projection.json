@@ -6,7 +6,8 @@
     "commit": "957899ee241f6e0c3af66dd4d91b964db1c3824b",
     "path": "data/features.json",
     "record_id": "rec1GDGqssFGehzEx",
-    "canonical_feature_id": "1f49bb51-07a2-4c86-8101-edb6e525503e"
+    "canonical_feature_id": "1f49bb51-07a2-4c86-8101-edb6e525503e",
+    "record_sha256": "dc66d9c74903849baef0aeafd7c3af6b44a74012c67ae64ee2da011b5cd34c65"
   },
   "input_snapshot": {
     "name_en": "Villa Savoye",
@@ -70,23 +71,52 @@
         "id": "compat-claim-villa-savoye-date",
         "type": "Claim",
         "statement": "The legacy record gives the interval 1929–1931.",
+        "target_refs": [
+          "1f49bb51-07a2-4c86-8101-edb6e525503e"
+        ],
         "claim_kind": "factual",
         "origin": "imported",
         "review_state": "draft",
         "confidence": "unknown",
         "evidence_state": "missing",
-        "evidence_link_refs": []
+        "evidence_link_refs": [],
+        "uncertainty_refs": [
+          "compat-uncertainty-villa-savoye-provenance"
+        ]
       },
       {
         "id": "compat-claim-villa-savoye-location",
         "type": "Claim",
         "statement": "The legacy record gives the point [2.0283, 48.9244].",
+        "target_refs": [
+          "1f49bb51-07a2-4c86-8101-edb6e525503e"
+        ],
         "claim_kind": "factual",
         "origin": "imported",
         "review_state": "draft",
         "confidence": "unknown",
         "evidence_state": "missing",
-        "evidence_link_refs": []
+        "evidence_link_refs": [],
+        "uncertainty_refs": [
+          "compat-uncertainty-villa-savoye-provenance"
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "compat-layer-architecture",
+        "type": "Layer",
+        "label": "Architecture Atlas compatibility layer"
+      }
+    ],
+    "uncertainties": [
+      {
+        "id": "compat-uncertainty-villa-savoye-provenance",
+        "type": "Uncertainty",
+        "subject_or_claim_ref": "1f49bb51-07a2-4c86-8101-edb6e525503e",
+        "dimension": "missing_evidence",
+        "description": "The legacy record has source-like fields but no claim-level locator.",
+        "effect": "Target Claims remain draft with missing evidence and unknown spatial precision."
       }
     ],
     "invented_fields": []

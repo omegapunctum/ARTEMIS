@@ -94,14 +94,14 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "#/$defs/changeObject"
+        "$ref": "#/$defs/event"
       }
     },
     "states": {
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "#/$defs/changeObject"
+        "$ref": "#/$defs/state"
       }
     },
     "processes": {
@@ -259,6 +259,7 @@
             "named_place",
             "region_ref",
             "multiple_places",
+            "multiple_regions",
             "unknown"
           ]
         },
@@ -273,6 +274,9 @@
         },
         "region_ref": {
           "$ref": "#/$defs/id"
+        },
+        "region_refs": {
+          "$ref": "#/$defs/referenceList"
         },
         "precision": {
           "enum": [
@@ -366,7 +370,13 @@
           "type": "object",
           "required": [
             "entity_kind"
-          ]
+          ],
+          "properties": {
+            "entity_kind": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
         }
       ]
     },
@@ -392,6 +402,47 @@
         }
       ]
     },
+    "event": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/changeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "participant_refs"
+          ],
+          "properties": {
+            "participant_refs": {
+              "$ref": "#/$defs/referenceList"
+            }
+          }
+        }
+      ]
+    },
+    "state": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/changeObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "subject_ref",
+            "value"
+          ],
+          "properties": {
+            "subject_ref": {
+              "$ref": "#/$defs/id"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
     "process": {
       "allOf": [
         {
@@ -400,9 +451,18 @@
         {
           "type": "object",
           "required": [
+            "process_mode",
             "stages"
           ],
           "properties": {
+            "process_mode": {
+              "enum": [
+                "historical_assertion",
+                "scholarly_reconstruction",
+                "analytical_model",
+                "hypothesis"
+              ]
+            },
             "stages": {
               "type": "array",
               "minItems": 2,
@@ -466,7 +526,7 @@
           "properties": {
             "geometry_versions": {
               "type": "array",
-              "minItems": 2,
+              "minItems": 1,
               "items": {
                 "type": "object",
                 "required": [
@@ -502,6 +562,7 @@
     },
     "derivedObservation": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -509,10 +570,39 @@
         "input_refs",
         "claim_ref",
         "relation_created"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "DerivedObservation"
+        },
+        "observation_kind": {
+          "enum": [
+            "temporal_overlap",
+            "spatial_overlap",
+            "co_presence",
+            "before",
+            "after",
+            "route_intersection",
+            "similarity"
+          ]
+        },
+        "input_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "claim_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "relation_created": {
+          "const": false
+        }
+      }
     },
     "claim": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -524,10 +614,77 @@
         "confidence",
         "evidence_state",
         "uncertainty_refs"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Claim"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "input_claim_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "claim_kind": {
+          "enum": [
+            "factual",
+            "observation",
+            "inference",
+            "interpretation",
+            "hypothesis",
+            "counterfactual"
+          ]
+        },
+        "origin": {
+          "enum": [
+            "curator",
+            "user",
+            "ai",
+            "system",
+            "imported"
+          ]
+        },
+        "review_state": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "contested",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "evidence_state": {
+          "enum": [
+            "supported",
+            "mixed",
+            "challenged",
+            "missing",
+            "not_applicable"
+          ]
+        },
+        "uncertainty_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
     },
     "evidenceLink": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -538,7 +695,52 @@
         "evidence_strength",
         "reviewer",
         "review_state"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "EvidenceLink"
+        },
+        "claim_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_id": {
+          "$ref": "#/$defs/id"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relation_to_claim": {
+          "enum": [
+            "supports",
+            "challenges",
+            "contextualizes"
+          ]
+        },
+        "evidence_strength": {
+          "enum": [
+            "direct",
+            "indirect",
+            "background"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_state": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "contested",
+            "rejected",
+            "superseded"
+          ]
+        }
+      }
     },
     "uncertainty": {
       "type": "object",
@@ -565,9 +767,122 @@
         "local_context_refs",
         "global_context_refs",
         "derived_observation_refs",
+        "camera_state",
+        "selected_object_refs",
+        "comparison_scope",
         "reconstruction_mode",
+        "uncertainty_display",
         "dataset_identity"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "SynchronizedView"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time_state": {
+          "$ref": "#/$defs/temporalExtent"
+        },
+        "active_layer_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "camera_state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "bbox",
+            "coordinate_reference"
+          ],
+          "properties": {
+            "kind": {
+              "const": "bounds"
+            },
+            "bbox": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              }
+            },
+            "coordinate_reference": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "selected_object_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "local_context_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "global_context_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "derived_observation_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "comparison_scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "reference_refs"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "none",
+                "local_global",
+                "object_comparison"
+              ]
+            },
+            "reference_refs": {
+              "$ref": "#/$defs/referenceList"
+            }
+          }
+        },
+        "reconstruction_mode": {
+          "enum": [
+            "historical_assertion",
+            "scholarly_reconstruction",
+            "alternative_reconstruction",
+            "analytical_model",
+            "hypothesis",
+            "counterfactual"
+          ]
+        },
+        "uncertainty_display": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "show_material",
+            "show_alternatives",
+            "show_corpus_limits"
+          ],
+          "properties": {
+            "show_material": {
+              "type": "boolean"
+            },
+            "show_alternatives": {
+              "type": "boolean"
+            },
+            "show_corpus_limits": {
+              "type": "boolean"
+            }
+          }
+        },
+        "dataset_identity": {
+          "type": "object"
+        }
+      }
     }
   }
 }

@@ -20,3 +20,9 @@ LOCATOR[beta-global-event]
 
 An observation was logged at Far Observatory on 1504-03-01.
 
+## Challenged protocol attribution
+
+LOCATOR[beta-influence-ren]
+
+The council minutes attribute the adopted protocol phrase to earlier guild rules and explicitly dispute that Keeper Ren's proposal determined the wording.
+
