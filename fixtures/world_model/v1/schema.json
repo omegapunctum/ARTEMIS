@@ -824,8 +824,10 @@
               "$ref": "#/$defs/id"
             },
             "directionality": {
-              "type": "string",
-              "minLength": 1
+              "enum": [
+                "directed",
+                "symmetric"
+              ]
             },
             "mechanism": {
               "type": "string",

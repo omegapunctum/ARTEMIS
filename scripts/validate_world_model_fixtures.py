@@ -100,6 +100,21 @@ DERIVED_ONLY_PREDICATES = {
     "route_intersection",
     "similarity",
 }
+ALLOWED_RELATION_DIRECTIONALITY = {"directed", "symmetric"}
+DIRECTED_RELATION_PREDICATES = {"influence"}
+COMPATIBILITY_SNAPSHOT_FIELDS = (
+    "name_en",
+    "name_ru",
+    "date_start",
+    "date_end",
+    "latitude",
+    "longitude",
+    "coordinates_confidence",
+    "coordinates_source",
+    "source_url",
+    "layer_type",
+    "validated",
+)
 REFERENCE_KEYS = {
     "claim_refs",
     "uncertainty_refs",
@@ -264,6 +279,19 @@ def _git_output(root: Path, *args: str) -> bytes:
             detail = exc.stderr.decode("utf-8", errors="replace").strip()
         raise FixtureValidationError(f"git verification failed: {detail or args[0]}") from exc
     return result.stdout
+
+
+def _git_commit_exists(root: Path, commit: str) -> bool:
+    try:
+        result = subprocess.run(
+            ("git", "-C", str(root), "cat-file", "-e", f"{commit}^{{commit}}"),
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except FileNotFoundError:
+        return False
+    return result.returncode == 0
 
 
 def compute_review_scope_digest_at_commit(root: Path, commit: str) -> str:
@@ -455,8 +483,7 @@ def _validate_extent(
         if kind in {"point", "path", "polygon", "multipolygon"}:
             geometry = extent.get("geometry")
             _require(isinstance(geometry, dict), f"{context} {kind} needs geometry")
-            _require(isinstance(geometry.get("type"), str), f"{context} geometry needs GeoJSON type")
-            _require(isinstance(geometry.get("coordinates"), list), f"{context} geometry needs coordinates")
+            _validate_geometry(geometry, kind=kind, context=context)
         elif kind == "named_place":
             _require(isinstance(extent.get("place_ref"), str), f"{context} named_place needs place_ref")
         elif kind == "region_ref":
@@ -483,6 +510,59 @@ def _validate_extent(
         elif kind == "unknown":
             _require(precision == "unknown", f"{context} unknown space must use unknown precision")
             _require("geometry" not in extent, f"{context} unknown space must not invent geometry")
+
+
+def _validate_geometry(geometry: dict[str, Any], *, kind: str, context: str) -> None:
+    expected_types = {
+        "point": "Point",
+        "path": "LineString",
+        "polygon": "Polygon",
+        "multipolygon": "MultiPolygon",
+    }
+    _require(
+        set(geometry) == {"type", "coordinates"},
+        f"{context} geometry must contain only GeoJSON type and coordinates",
+    )
+    _require(
+        geometry.get("type") == expected_types[kind],
+        f"{context} {kind} must use GeoJSON {expected_types[kind]}",
+    )
+    coordinates = geometry.get("coordinates")
+
+    def position(value: object) -> bool:
+        return (
+            isinstance(value, list)
+            and 2 <= len(value) <= 3
+            and all(isinstance(item, (int, float)) and not isinstance(item, bool) for item in value)
+            and -180 <= value[0] <= 180
+            and -90 <= value[1] <= 90
+        )
+
+    def line(value: object) -> bool:
+        return isinstance(value, list) and len(value) >= 2 and all(position(item) for item in value)
+
+    def ring(value: object) -> bool:
+        return (
+            isinstance(value, list)
+            and len(value) >= 4
+            and all(position(item) for item in value)
+            and value[0] == value[-1]
+        )
+
+    def polygon(value: object) -> bool:
+        return isinstance(value, list) and len(value) >= 1 and all(ring(item) for item in value)
+
+    valid = {
+        "point": position,
+        "path": line,
+        "polygon": polygon,
+        "multipolygon": (
+            lambda value: isinstance(value, list)
+            and len(value) >= 1
+            and all(polygon(item) for item in value)
+        ),
+    }[kind](coordinates)
+    _require(valid, f"{context} has invalid GeoJSON {expected_types[kind]} coordinates")
 
 
 def _validate_claims(
@@ -607,52 +687,72 @@ def _validate_relation_extent_evidence(
         and any(all(label in passage for label in endpoint_labels) for passage in supporting_passages),
         f"{relation_id} endpoints are not stated by its Claim and supporting locator",
     )
+    directionality = relation.get("directionality")
+    _require(
+        directionality in ALLOWED_RELATION_DIRECTIONALITY,
+        f"{relation_id} has invalid directionality",
+    )
+    if relation.get("predicate") in DIRECTED_RELATION_PREDICATES:
+        _require(directionality == "directed", f"{relation_id} predicate requires directed directionality")
+    if directionality == "directed":
+        subject_label = str(subject.get("label")) if isinstance(subject, dict) else ""
+        object_label = str(object_.get("label")) if isinstance(object_, dict) else ""
+
+        def states_ordered_roles(text: str) -> bool:
+            subject_position = text.find(subject_label)
+            object_position = text.find(object_label)
+            return subject_position >= 0 and object_position > subject_position
+
+        _require(
+            states_ordered_roles(statement)
+            and any(states_ordered_roles(passage) for passage in supporting_passages),
+            f"{relation_id} directed endpoint roles are not stated subject-to-object",
+        )
 
     temporal = relation.get("temporal_extent", {})
     start = temporal.get("start")
     end = temporal.get("end")
     temporal_expression = (
-        str(start)
+        f"on {start}"
         if temporal.get("kind") == "instant"
-        else f"{start}–{end}"
+        else f"during {start}–{end}"
         if isinstance(start, str) and isinstance(end, str)
         else ""
     )
+    statement_lower = statement.lower()
     _require(
         temporal_expression
-        and temporal_expression in statement
-        and any(temporal_expression in passage for passage in supporting_passages),
+        and temporal_expression.lower() in statement_lower
+        and any(temporal_expression.lower() in passage.lower() for passage in supporting_passages),
         f"{relation_id} temporal extent is not stated by its Claim and supporting locator",
     )
 
     spatial = relation.get("spatial_extent", {})
-    spatial_tokens: set[str] = set()
+    spatial_expressions: set[str] = set()
     for key, registry in (("place_ref", entities), ("region_ref", regions)):
         ref = spatial.get(key)
         item = registry.get(str(ref)) if isinstance(ref, str) else None
         if isinstance(item, dict) and isinstance(item.get("label"), str):
-            spatial_tokens.add(item["label"])
+            spatial_expressions.add(item["label"])
     for key, registry in (("place_refs", entities), ("region_refs", regions)):
         for ref in spatial.get(key, []):
             item = registry.get(str(ref))
             if isinstance(item, dict) and isinstance(item.get("label"), str):
-                spatial_tokens.add(item["label"])
+                spatial_expressions.add(item["label"])
     geometry = spatial.get("geometry")
     if isinstance(geometry, dict):
-        def coordinate_tokens(value: object) -> Iterable[str]:
-            if isinstance(value, (int, float)) and not isinstance(value, bool):
-                yield str(value)
-            elif isinstance(value, list):
-                for nested in value:
-                    yield from coordinate_tokens(nested)
-
-        spatial_tokens.update(coordinate_tokens(geometry.get("coordinates")))
+        spatial_expressions.add(
+            json.dumps(geometry, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        )
     if spatial.get("kind") == "unknown":
-        spatial_tokens.add("unknown")
+        spatial_expressions.add("unknown")
     _require(
-        spatial_tokens
-        and all(token in statement for token in spatial_tokens)
-        and any(all(token in passage for token in spatial_tokens) for passage in supporting_passages),
+        spatial_expressions
+        and all(expression in statement for expression in spatial_expressions)
+        and any(
+            all(expression in passage for expression in spatial_expressions)
+            for passage in supporting_passages
+        ),
         f"{relation_id} spatial extent is not stated by its Claim and supporting locator",
     )
 
@@ -784,8 +884,12 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
     canonical_path = root / str(source_dataset.get("path"))
     _require(canonical_path.is_file(), "pinned Architecture Atlas source file is missing")
     source_bytes = canonical_path.read_bytes()
-    if require_ready:
+    pinned_source_available = _git_commit_exists(root, str(commit))
+    if pinned_source_available:
         source_bytes = _git_output(root, "show", f"{commit}:{source_dataset.get('path')}")
+    elif require_ready:
+        _git_output(root, "cat-file", "-e", f"{commit}^{{commit}}")
+    if pinned_source_available:
         source_file_digest = hashlib.sha256(source_bytes).hexdigest()
         _require(
             source_dataset.get("source_file_sha256") == source_file_digest,
@@ -813,18 +917,25 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
     snapshot = projection.get("input_snapshot")
     _require(isinstance(fields, dict) and isinstance(snapshot, dict), "compatibility input is malformed")
     _require(
+        all(key in fields for key in COMPATIBILITY_SNAPSHOT_FIELDS),
+        "pinned Architecture Atlas record is missing a required compatibility field",
+    )
+    expected_snapshot = {key: fields[key] for key in COMPATIBILITY_SNAPSHOT_FIELDS}
+    _require(
+        snapshot == expected_snapshot,
+        "compatibility input_snapshot must exactly mirror the pinned record fields",
+    )
+    _require(
         fields.get("id") == source_dataset.get("canonical_feature_id") == entity.get("id"),
         "compatibility canonical Entity identity drift",
     )
-    for key, expected in snapshot.items():
-        _require(fields.get(key) == expected, f"compatibility input drift for {key}")
     canonical_entity_id = str(source_dataset.get("canonical_feature_id"))
     expected_claims = {
         "compat-claim-villa-savoye-date": (
-            f"The legacy record gives the interval {snapshot.get('date_start')}–{snapshot.get('date_end')}."
+            f"The legacy record gives the interval {fields['date_start']}–{fields['date_end']}."
         ),
         "compat-claim-villa-savoye-location": (
-            f"The legacy record gives the point [{snapshot.get('longitude')}, {snapshot.get('latitude')}]."
+            f"The legacy record gives the point [{fields['longitude']}, {fields['latitude']}]."
         ),
     }
     expected_target = {
@@ -832,11 +943,11 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
             "id": canonical_entity_id,
             "type": "Entity",
             "entity_kind": "Object",
-            "label": snapshot.get("name_en"),
+            "label": fields["name_en"],
             "temporal_extent": {
                 "kind": "closed_interval",
-                "start": snapshot.get("date_start"),
-                "end": snapshot.get("date_end"),
+                "start": fields["date_start"],
+                "end": fields["date_end"],
                 "precision": "year",
                 "certainty": "legacy_unverified",
                 "basis_claim_refs": ["compat-claim-villa-savoye-date"],
@@ -845,10 +956,10 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
                 "kind": "point",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [snapshot.get("longitude"), snapshot.get("latitude")],
+                    "coordinates": [fields["longitude"], fields["latitude"]],
                 },
                 "precision": "unknown",
-                "legacy_precision_value": snapshot.get("coordinates_confidence"),
+                "legacy_precision_value": fields["coordinates_confidence"],
                 "basis_claim_refs": ["compat-claim-villa-savoye-location"],
             },
             "claim_refs": list(expected_claims),

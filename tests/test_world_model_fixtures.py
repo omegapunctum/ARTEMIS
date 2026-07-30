@@ -721,6 +721,36 @@ def test_validator_rejects_relation_endpoint_not_bound_by_claim(tmp_path: Path) 
         validate_package(root)
 
 
+def test_validator_rejects_reversed_directed_relation_roles(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    relation["subject_ref"], relation["object_ref"] = relation["object_ref"], relation["subject_ref"]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="directed endpoint roles"):
+        validate_package(root)
+
+
+def test_validator_rejects_symmetric_influence_relation(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    relation["directionality"] = "symmetric"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="requires directed directionality"):
+        validate_package(root)
+
+
 def test_validator_rejects_relation_missing_from_claim_targets(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -752,6 +782,40 @@ def test_validator_rejects_unstated_relation_point_geometry(tmp_path: Path) -> N
         validate_package(root)
 
 
+def test_validator_rejects_relation_geometry_hidden_in_temporal_digits(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    relation["spatial_extent"] = {
+        "kind": "point",
+        "geometry": {"type": "Point", "coordinates": [15, 4]},
+        "precision": "fixture_defined",
+        "basis_claim_refs": ["claim-influence-ren-council"],
+    }
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="spatial extent is not stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_invalid_geojson_shape_and_range(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    event = next(item for item in package["events"] if item["id"] == "event-north-harbor-charter")
+    event["spatial_extent"]["geometry"] = {
+        "type": "LineString",
+        "coordinates": [[181, 95]],
+    }
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must use GeoJSON Point|invalid GeoJSON"):
+        validate_package(root)
+
+
 def test_validator_rejects_narrowed_relation_interval(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -764,6 +828,62 @@ def test_validator_rejects_narrowed_relation_interval(tmp_path: Path) -> None:
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="temporal extent is not stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_relation_interval_narrowed_to_instant(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    relation["temporal_extent"].update(
+        {
+            "kind": "instant",
+            "start": "1504",
+            "end": "1504",
+        }
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="temporal extent is not stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_snapshot_field_erasure(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["input_snapshot"].pop("date_start")
+    projection["input_snapshot"].pop("date_end")
+    entity = projection["target_projection"]["entity"]
+    entity["temporal_extent"]["start"] = None
+    entity["temporal_extent"]["end"] = None
+    projection["target_projection"]["claims"][0]["statement"] = (
+        "The legacy record gives the interval None–None."
+    )
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="must exactly mirror the pinned record fields"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_snapshot_coordinate_erasure(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["input_snapshot"].pop("latitude")
+    projection["input_snapshot"].pop("longitude")
+    entity = projection["target_projection"]["entity"]
+    entity["spatial_extent"]["geometry"]["coordinates"] = [None, None]
+    projection["target_projection"]["claims"][1]["statement"] = (
+        "The legacy record gives the point [None, None]."
+    )
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="must exactly mirror the pinned record fields"):
         validate_package(root)
 
 
