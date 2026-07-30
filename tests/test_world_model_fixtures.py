@@ -361,7 +361,8 @@ def test_ready_gate_rejects_semantic_content_drift_after_review(tmp_path: Path) 
     root = _copy_fixture(tmp_path)
     _make_ready_reviews(root)
     package = _read_package(root)
-    package["entities"][0]["label"] = "Changed after review"
+    entity = next(item for item in package["entities"] if item["id"] == "place-far-observatory")
+    entity["label"] = "Changed after review"
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="does not match current reviewed content"):
@@ -666,7 +667,7 @@ def test_validator_rejects_invented_compatibility_claim(tmp_path: Path) -> None:
     entity["claim_refs"].append(claim["id"])
     _write_json(path, projection)
 
-    with pytest.raises(FixtureValidationError, match="invented or omitted a mapped Claim"):
+    with pytest.raises(FixtureValidationError, match="deterministic pinned mapping"):
         validate_package(root)
 
 
@@ -677,7 +678,7 @@ def test_validator_rejects_unmapped_compatibility_entity_field(tmp_path: Path) -
     projection["target_projection"]["entity"]["color"] = "blue"
     _write_json(path, projection)
 
-    with pytest.raises(FixtureValidationError, match="Entity contains an unmapped field"):
+    with pytest.raises(FixtureValidationError, match="deterministic pinned mapping"):
         validate_package(root)
 
 
@@ -704,6 +705,93 @@ def test_validator_rejects_relation_time_missing_from_supporting_locator(tmp_pat
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="temporal extent is not stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_relation_endpoint_not_bound_by_claim(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item for item in package["relations"] if item["id"] == "relation-mara-ren-encounter"
+    )
+    relation["object_ref"] = "entity-traveler-sol"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="target the Relation and both endpoints"):
+        validate_package(root)
+
+
+def test_validator_rejects_relation_missing_from_claim_targets(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(
+        item for item in package["claims"] if item["id"] == "claim-documented-encounter"
+    )
+    claim["target_refs"].remove("relation-mara-ren-encounter")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="target the Relation and both endpoints"):
+        validate_package(root)
+
+
+def test_validator_rejects_unstated_relation_point_geometry(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item for item in package["relations"] if item["id"] == "relation-mara-ren-encounter"
+    )
+    relation["spatial_extent"] = {
+        "kind": "point",
+        "geometry": {"type": "Point", "coordinates": [1.0, 2.0]},
+        "precision": "fixture_defined",
+        "basis_claim_refs": ["claim-documented-encounter"],
+    }
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="spatial extent is not stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_narrowed_relation_interval(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    relation["temporal_extent"]["end"] = "1504"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="temporal extent is not stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_epistemic_promotion(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    claim = projection["target_projection"]["claims"][0]
+    claim["review_state"] = "reviewed"
+    claim["confidence"] = "high"
+    claim["uncertainty_refs"] = []
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="deterministic pinned mapping"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_uncertainty_rewrite(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    uncertainty = projection["target_projection"]["uncertainties"][0]
+    uncertainty["dimension"] = "none"
+    uncertainty["description"] = "No uncertainty remains."
+    uncertainty["effect"] = "Promote the record automatically."
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="deterministic pinned mapping"):
         validate_package(root)
 
 

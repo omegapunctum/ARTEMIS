@@ -572,6 +572,7 @@ def _validate_relation_extent_evidence(
     evidence_links: dict[str, dict[str, Any]],
     sources: dict[str, dict[str, Any]],
     entities: dict[str, dict[str, Any]],
+    regions: dict[str, dict[str, Any]],
     package_root: Path,
 ) -> None:
     supporting_passages = []
@@ -587,28 +588,73 @@ def _validate_relation_extent_evidence(
             )
     _require(supporting_passages, f"{relation_id} needs source-bound supporting evidence")
     statement = str(claim.get("statement", ""))
-
-    temporal = relation.get("temporal_extent", {})
-    temporal_tokens = {
-        token for token in (temporal.get("start"), temporal.get("end")) if isinstance(token, str)
+    subject = entities.get(str(relation.get("subject_ref")))
+    object_ = entities.get(str(relation.get("object_ref")))
+    endpoint_refs = {str(relation.get("subject_ref")), str(relation.get("object_ref"))}
+    target_refs = set(claim.get("target_refs", []))
+    _require(
+        {relation_id} | endpoint_refs <= target_refs,
+        f"{relation_id} Claim must target the Relation and both endpoints",
+    )
+    endpoint_labels = {
+        str(item.get("label"))
+        for item in (subject, object_)
+        if isinstance(item, dict) and isinstance(item.get("label"), str)
     }
     _require(
-        temporal_tokens
-        and all(token in statement for token in temporal_tokens)
-        and any(all(token in passage for token in temporal_tokens) for passage in supporting_passages),
+        len(endpoint_labels) == 2
+        and all(label in statement for label in endpoint_labels)
+        and any(all(label in passage for label in endpoint_labels) for passage in supporting_passages),
+        f"{relation_id} endpoints are not stated by its Claim and supporting locator",
+    )
+
+    temporal = relation.get("temporal_extent", {})
+    start = temporal.get("start")
+    end = temporal.get("end")
+    temporal_expression = (
+        str(start)
+        if temporal.get("kind") == "instant"
+        else f"{start}–{end}"
+        if isinstance(start, str) and isinstance(end, str)
+        else ""
+    )
+    _require(
+        temporal_expression
+        and temporal_expression in statement
+        and any(temporal_expression in passage for passage in supporting_passages),
         f"{relation_id} temporal extent is not stated by its Claim and supporting locator",
     )
 
     spatial = relation.get("spatial_extent", {})
-    if spatial.get("kind") == "named_place":
-        place = entities.get(str(spatial.get("place_ref")))
-        place_label = str(place.get("label")) if isinstance(place, dict) else ""
-        _require(
-            place_label
-            and place_label in statement
-            and any(place_label in passage for passage in supporting_passages),
-            f"{relation_id} spatial extent is not stated by its Claim and supporting locator",
-        )
+    spatial_tokens: set[str] = set()
+    for key, registry in (("place_ref", entities), ("region_ref", regions)):
+        ref = spatial.get(key)
+        item = registry.get(str(ref)) if isinstance(ref, str) else None
+        if isinstance(item, dict) and isinstance(item.get("label"), str):
+            spatial_tokens.add(item["label"])
+    for key, registry in (("place_refs", entities), ("region_refs", regions)):
+        for ref in spatial.get(key, []):
+            item = registry.get(str(ref))
+            if isinstance(item, dict) and isinstance(item.get("label"), str):
+                spatial_tokens.add(item["label"])
+    geometry = spatial.get("geometry")
+    if isinstance(geometry, dict):
+        def coordinate_tokens(value: object) -> Iterable[str]:
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                yield str(value)
+            elif isinstance(value, list):
+                for nested in value:
+                    yield from coordinate_tokens(nested)
+
+        spatial_tokens.update(coordinate_tokens(geometry.get("coordinates")))
+    if spatial.get("kind") == "unknown":
+        spatial_tokens.add("unknown")
+    _require(
+        spatial_tokens
+        and all(token in statement for token in spatial_tokens)
+        and any(all(token in passage for token in spatial_tokens) for passage in supporting_passages),
+        f"{relation_id} spatial extent is not stated by its Claim and supporting locator",
+    )
 
 
 def _validate_references(
@@ -781,6 +827,73 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
             f"The legacy record gives the point [{snapshot.get('longitude')}, {snapshot.get('latitude')}]."
         ),
     }
+    expected_target = {
+        "entity": {
+            "id": canonical_entity_id,
+            "type": "Entity",
+            "entity_kind": "Object",
+            "label": snapshot.get("name_en"),
+            "temporal_extent": {
+                "kind": "closed_interval",
+                "start": snapshot.get("date_start"),
+                "end": snapshot.get("date_end"),
+                "precision": "year",
+                "certainty": "legacy_unverified",
+                "basis_claim_refs": ["compat-claim-villa-savoye-date"],
+            },
+            "spatial_extent": {
+                "kind": "point",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [snapshot.get("longitude"), snapshot.get("latitude")],
+                },
+                "precision": "unknown",
+                "legacy_precision_value": snapshot.get("coordinates_confidence"),
+                "basis_claim_refs": ["compat-claim-villa-savoye-location"],
+            },
+            "claim_refs": list(expected_claims),
+            "uncertainty_refs": ["compat-uncertainty-villa-savoye-provenance"],
+            "layer_refs": ["compat-layer-architecture"],
+        },
+        "claims": [
+            {
+                "id": claim_id,
+                "type": "Claim",
+                "statement": statement,
+                "target_refs": [canonical_entity_id],
+                "claim_kind": "factual",
+                "origin": "imported",
+                "review_state": "draft",
+                "confidence": "unknown",
+                "evidence_state": "missing",
+                "evidence_link_refs": [],
+                "uncertainty_refs": ["compat-uncertainty-villa-savoye-provenance"],
+            }
+            for claim_id, statement in expected_claims.items()
+        ],
+        "layers": [
+            {
+                "id": "compat-layer-architecture",
+                "type": "Layer",
+                "label": "Architecture Atlas compatibility layer",
+            }
+        ],
+        "uncertainties": [
+            {
+                "id": "compat-uncertainty-villa-savoye-provenance",
+                "type": "Uncertainty",
+                "subject_or_claim_ref": canonical_entity_id,
+                "dimension": "missing_evidence",
+                "description": "The legacy record has source-like fields but no claim-level locator.",
+                "effect": "Target Claims remain draft with missing evidence and unknown spatial precision.",
+            }
+        ],
+        "invented_fields": [],
+    }
+    _require(
+        target == expected_target,
+        "compatibility target projection drifted from the deterministic pinned mapping",
+    )
     _require(
         {str(claim.get("id")) for claim in claims} == set(expected_claims),
         "compatibility projection invented or omitted a mapped Claim",
@@ -1365,6 +1478,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             evidence_links=indexes["evidence_links"],
             sources=indexes["sources"],
             entities=indexes["entities"],
+            regions=indexes["regions"],
             package_root=package_root,
         )
         if predicate == "influence":

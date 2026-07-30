@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `9fed7d5c3c2f009b20b2a39082a5e7a408eff051`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`1/3/1`).
+- Previous reviewed head: `2d6203656ca95ba2598ba9d791df32e19876628a`.
+- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/2/1`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -62,6 +62,13 @@ The second repeated review cycle on `9fed7d5…` additionally found:
 - camera bounds accepted under a non-geographic CRS.
 
 The next correction makes these cases executable failures and remains `REVIEW_REQUIRED` until another fresh pair of reviews.
+
+The third repeated review cycle on `2d620365…` confirmed semantic readiness but found two remaining validator-integrity gaps:
+
+- Relation Claim/evidence did not fully bind both endpoints, the Relation target, non-place geometry and the exact interval expression;
+- compatibility mapping fixed IDs/statements/coordinates but still allowed confidence/review promotion or uncertainty rewriting.
+
+The next correction binds Relation endpoints and canonical extent expressions, compares the full compatibility target to one deterministic pinned mapping, and adds adversarial regressions for each bypass.
 
 ## Finalization rule
 

@@ -1323,6 +1323,7 @@
       "target_refs": [
         "event-documented-workshop-meeting",
         "relation-mara-ren-encounter",
+        "entity-mara-vale",
         "entity-keeper-ren"
       ],
       "claim_kind": "factual",

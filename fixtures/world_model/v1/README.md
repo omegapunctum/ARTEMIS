@@ -55,10 +55,10 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - An alternative date needs its own atomic, evidence-bound Claim.
 - An `inferred_gap` has no route geometry.
 - `co_present` requires both spatial and temporal overlap and never creates a historical Relation.
-- Relation time/place precision must be stated by both its basis Claim and a reviewed supporting locator.
+- Relation endpoints, Relation target and canonical time/space expressions must be stated by both its basis Claim and a reviewed supporting locator.
 - A multi-region analytical Process does not imply diffusion, direction or mechanism.
 - `evidence_state` is derived exactly from reviewed EvidenceLinks.
-- A compatibility adapter resolves the pinned source commit/file in READY mode, binds the source-record checksum, closes every target reference and preserves missing evidence as missing.
+- A compatibility adapter resolves the pinned source commit/file in READY mode and compares the complete target object, including epistemic fields, to one deterministic mapping; missing evidence and uncertainty cannot be promoted away.
 - `known_exclusions` describe corpus coverage, never historical absence.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.
