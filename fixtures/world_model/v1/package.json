@@ -182,10 +182,7 @@
       "type": "Entity",
       "entity_kind": "Place",
       "label": "Fixture Basin",
-      "claim_refs": [
-        "claim-region-v1",
-        "claim-region-v2"
-      ],
+      "claim_refs": [],
       "uncertainty_refs": [
         "uncertainty-region-alternative"
       ],
@@ -229,9 +226,7 @@
       "type": "Entity",
       "entity_kind": "Place",
       "label": "South Port",
-      "claim_refs": [
-        "claim-process-south-stage"
-      ],
+      "claim_refs": [],
       "uncertainty_refs": [],
       "layer_refs": [
         "layer-exchange"

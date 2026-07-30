@@ -639,6 +639,49 @@ def _validate_claims(
             _require(not links, f"{claim_id} says not_applicable but has EvidenceLinks")
 
 
+def _validate_claim_dependency_graph(claims: dict[str, dict[str, Any]]) -> None:
+    graph = {
+        claim_id: [str(ref) for ref in claim.get("input_claim_refs", [])]
+        for claim_id, claim in claims.items()
+    }
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(claim_id: str) -> None:
+        _require(claim_id not in visiting, f"Claim input dependency cycle includes {claim_id}")
+        if claim_id in visited:
+            return
+        visiting.add(claim_id)
+        for input_claim_id in graph[claim_id]:
+            visit(input_claim_id)
+        visiting.remove(claim_id)
+        visited.add(claim_id)
+
+    for claim_id in graph:
+        visit(claim_id)
+
+
+def _validate_claim_ownership(
+    indexes: dict[str, dict[str, dict[str, Any]]],
+    claims: dict[str, dict[str, Any]],
+) -> None:
+    for collection in (
+        "entities",
+        "events",
+        "states",
+        "processes",
+        "trajectories",
+        "regions",
+        "relations",
+    ):
+        for owner_id, item in indexes[collection].items():
+            for claim_id in item.get("claim_refs", []):
+                _require(
+                    owner_id in claims[str(claim_id)].get("target_refs", []),
+                    f"{owner_id} claim_ref {claim_id} must target its owner",
+                )
+
+
 def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) -> None:
     for source_id, source in sources.items():
         _require(source.get("source_type") == "fixture_document", f"{source_id} must be a fixture document")
@@ -803,9 +846,20 @@ def _validate_context_bound_extents(
                     claim.get("origin") == "system"
                     and claim.get("evidence_state") == "not_applicable"
                 ):
+                    expected_inputs: set[str] | None = None
+                    if context_kind == "Process" and context_mode == "analytical_model":
+                        expected_inputs = {
+                            str(input_claim_id)
+                            for stage in context.get("stages", [])
+                            for extent_key in ("temporal_extent", "spatial_extent")
+                            for input_claim_id in stage.get(extent_key, {}).get(
+                                "basis_claim_refs", []
+                            )
+                        }
                     _require(
-                        claim.get("input_claim_refs"),
-                        f"{claim_id} derived extent needs an explicit input Claim trace",
+                        expected_inputs is not None
+                        and set(claim.get("input_claim_refs", [])) == expected_inputs,
+                        f"{claim_id} derived extent inputs must exactly match context premises",
                     )
                 else:
                     passages = _supporting_passages(
@@ -1706,6 +1760,8 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     _validate_sources(indexes["sources"], package_root)
     _validate_claims(claims, indexes["evidence_links"], indexes["sources"], package_root)
     _validate_references(package, type_registry, entity_kinds)
+    _validate_claim_dependency_graph(claims)
+    _validate_claim_ownership(indexes, claims)
 
     for collection in ("events", "states", "processes", "relations"):
         for item_id, item in indexes[collection].items():
@@ -1832,20 +1888,27 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             f"{process_id} multiple_regions extent must match its stage Regions",
         )
         if process.get("process_mode") == "analytical_model":
-            process_claims = [claims[claim_id] for claim_id in process.get("claim_refs", [])]
             stage_marker_claims = {
                 claim_id
                 for stage in stages
                 for claim_id in stage["temporal_extent"]["basis_claim_refs"]
             }
+            direct_basis = set(process.get("temporal_extent", {}).get("basis_claim_refs", [])) | set(
+                process.get("spatial_extent", {}).get("basis_claim_refs", [])
+            )
             _require(
-                any(
-                    claim.get("claim_kind") == "observation"
-                    and claim.get("origin") == "system"
-                    and set(claim.get("input_claim_refs", [])) == stage_marker_claims
-                    for claim in process_claims
-                ),
-                f"{process_id} analytical model needs an explicit system observation bound to every stage",
+                len(direct_basis) == 1,
+                f"{process_id} direct extents need one system derivation Claim",
+            )
+            derived_claim_id = next(iter(direct_basis))
+            derived_claim = claims[derived_claim_id]
+            _require(
+                derived_claim_id in process.get("claim_refs", [])
+                and derived_claim.get("claim_kind") == "observation"
+                and derived_claim.get("origin") == "system"
+                and derived_claim.get("evidence_state") == "not_applicable"
+                and set(derived_claim.get("input_claim_refs", [])) == stage_marker_claims,
+                f"{process_id} direct extent basis must be the system observation bound to every stage",
             )
 
     for trajectory_id, trajectory in indexes["trajectories"].items():
