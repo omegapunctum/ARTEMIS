@@ -30,7 +30,7 @@
     "challenged_influence_claim": "relation-ren-influences-council-protocol",
     "compatibility_projection": "compatibility/architecture_atlas_projection.json"
   },
-  "spatial_bounds": "Only the fictional Fixture Basin places plus one distant fictional observatory are represented.",
+  "spatial_bounds": "Composite fixture scope: Fixture Basin and South Coast Regions, their named Places, and Far Observatory as explicit distant comparison context.",
   "temporal_bounds": "1498 through 1510, with one event on 1504-03-01.",
   "included_layers": [
     "layer-biography",

@@ -2,12 +2,14 @@ import copy
 import hashlib
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
 
 from scripts.validate_world_model_fixtures import (
     FixtureValidationError,
+    REQUIRED_REVIEW_SCOPE,
     compute_review_scope_digest,
     validate_package,
 )
@@ -20,8 +22,7 @@ PACKAGE = Path("fixtures/world_model/v1")
 def _copy_fixture(tmp_path: Path) -> Path:
     root = tmp_path / "repo"
     shutil.copytree(ROOT / PACKAGE, root / PACKAGE)
-    registry = json.loads((ROOT / PACKAGE / "review_registry.json").read_text(encoding="utf-8"))
-    for relative_path in registry["review_scope"]:
+    for relative_path in REQUIRED_REVIEW_SCOPE:
         source = ROOT / relative_path
         target = root / relative_path
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -45,7 +46,34 @@ def _write_json(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _git(root: Path, *args: str) -> str:
+    return subprocess.run(
+        ("git", "-C", str(root), *args),
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ).stdout.strip()
+
+
 def _make_ready_reviews(root: Path) -> None:
+    _git(root, "init")
+    _git(root, "config", "user.email", "fixture-tests@example.invalid")
+    _git(root, "config", "user.name", "Fixture test")
+    _git(root, "add", "data/features.json")
+    _git(root, "commit", "-m", "test: pin compatibility source")
+    compatibility_commit = _git(root, "rev-parse", "HEAD")
+    compatibility_path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    compatibility = json.loads(compatibility_path.read_text(encoding="utf-8"))
+    compatibility["source_dataset"]["commit"] = compatibility_commit
+    compatibility["source_dataset"]["source_file_sha256"] = hashlib.sha256(
+        (root / "data/features.json").read_bytes()
+    ).hexdigest()
+    _write_json(compatibility_path, compatibility)
+    _git(root, "add", *REQUIRED_REVIEW_SCOPE)
+    _git(root, "commit", "-m", "test: freeze semantic review scope")
+    frozen_commit = _git(root, "rev-parse", "HEAD")
+
     package = _read_package(root)
     package["status"] = "READY"
     package["record_time"]["reviewed_at"] = "2026-07-30T00:00:00Z"
@@ -53,7 +81,6 @@ def _make_ready_reviews(root: Path) -> None:
 
     registry_path = root / PACKAGE / "review_registry.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
-    frozen_commit = "a" * 40
     content_digest = compute_review_scope_digest(root, registry)
     reviews = []
     review_specs = (
@@ -71,12 +98,14 @@ def _make_ready_reviews(root: Path) -> None:
                     f"reviewer_id: {reviewer_id}",
                     f"reviewer_instance_id: {reviewer_instance_id}",
                     f"review_track: {review_track}",
+                    "independence_method: separate_agent_task",
                     f"frozen_commit: {frozen_commit}",
                     f"reviewed_content_sha256: {content_digest}",
                     "decision: READY",
                     "critical_findings: 0",
                     "unresolved_material_findings: 0",
                     "independence_attestation: true",
+                    "artifact_format: artemis-review-attestation-v1",
                     "",
                 )
             ),
@@ -88,6 +117,7 @@ def _make_ready_reviews(root: Path) -> None:
                 "reviewer_id": reviewer_id,
                 "reviewer_instance_id": reviewer_instance_id,
                 "review_track": review_track,
+                "independence_method": "separate_agent_task",
                 "artifact": str(artifact_path),
                 "artifact_sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
                 "frozen_commit": frozen_commit,
@@ -260,7 +290,7 @@ def test_validator_rejects_process_that_does_not_span_regions(tmp_path: Path) ->
     process["stages"][1]["spatial_extent"]["region_ref"] = "region-fixture-basin"
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must span more than one Region"):
+    with pytest.raises(FixtureValidationError, match="must target its Region|must span more than one Region"):
         validate_package(root)
 
 
@@ -335,6 +365,188 @@ def test_ready_gate_rejects_semantic_content_drift_after_review(tmp_path: Path) 
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="does not match current reviewed content"):
+        validate_package(root, require_ready=True)
+
+
+def test_validator_rejects_world_slice_that_omits_modeled_region(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["world_slice"]["spatial_bounds"]["region_refs"].remove("region-south-coast")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="spatial bounds omit modeled Place or Region context"):
+        validate_package(root)
+
+
+def test_validator_rejects_incomplete_alternative_date_uncertainty_basis(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item for item in package["uncertainties"] if item["id"] == "uncertainty-arrival-date"
+    )
+    uncertainty["basis_claim_refs"].remove("claim-arrival-event-1504")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must bind every alternative-date Claim"):
+        validate_package(root)
+
+
+def test_validator_rejects_co_presence_claim_without_bound_premises(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(item for item in package["claims"] if item["id"] == "claim-workshop-co-presence")
+    claim["target_refs"] = ["event-far-observation"]
+    claim["input_claim_refs"] = []
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="target the observation and bind every input premise"):
+        validate_package(root)
+
+
+def test_validator_rejects_process_stage_outside_process_time(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["processes"][0]["stages"][1]["temporal_extent"]["end"] = "1511"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must remain within"):
+        validate_package(root)
+
+
+def test_validator_rejects_process_stage_claim_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["processes"][0]["stages"][1]["claim_refs"] = ["claim-process-south-stage"]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="exactly bind its temporal and spatial premises"):
+        validate_package(root)
+
+
+def test_validator_rejects_view_context_outside_view_time(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    view = package["synchronized_views"][0]
+    view["local_context_refs"][0] = "event-north-harbor-charter"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="does not intersect view time"):
+        validate_package(root)
+
+
+def test_validator_rejects_empty_local_global_comparison(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["synchronized_views"][0]["comparison_scope"]["reference_refs"] = []
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="local_global comparison needs references"):
+        validate_package(root)
+
+
+def test_validator_rejects_unordered_camera_bounds(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["synchronized_views"][0]["camera_state"]["bbox"] = [20.0, -10.0, 10.0, 10.0]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="camera bounds must be ordered"):
+        validate_package(root)
+
+
+def test_schema_rejects_open_source_shape(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["sources"][0]["untyped_extra"] = {"anything": True}
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
+        validate_package(root)
+
+
+def test_schema_rejects_open_entity_and_process_stage_shapes(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["entities"][0]["untyped_extra"] = True
+    package["processes"][0]["stages"][0]["untyped_extra"] = True
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
+        validate_package(root)
+
+
+def test_validator_rejects_dangling_compatibility_extent_basis(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["target_projection"]["entity"]["spatial_extent"]["basis_claim_refs"] = [
+        "compat-claim-does-not-exist"
+    ]
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="dangling reference"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_mutable_review_scope(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    registry["review_scope"] = ["fixtures/world_model/v1/package.json"]
+    _write_json(path, registry)
+
+    with pytest.raises(FixtureValidationError, match="immutable review scope"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_artifact_registry_finding_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    artifact = root / registry["reviews"][0]["artifact"]
+    artifact.write_text(
+        artifact.read_text(encoding="utf-8").replace("critical_findings: 0", "critical_findings: 1"),
+        encoding="utf-8",
+    )
+    registry["reviews"][0]["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    _write_json(path, registry)
+
+    with pytest.raises(FixtureValidationError, match="artifact/registry drift"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_unresolvable_frozen_commit(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    fake_commit = "b" * 40
+    registry["frozen_commit"] = fake_commit
+    for review in registry["reviews"]:
+        old_commit = review["frozen_commit"]
+        review["frozen_commit"] = fake_commit
+        artifact = root / review["artifact"]
+        artifact.write_text(
+            artifact.read_text(encoding="utf-8").replace(old_commit, fake_commit),
+            encoding="utf-8",
+        )
+        review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    _write_json(path, registry)
+
+    with pytest.raises(FixtureValidationError, match="git verification failed"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_null_reviewed_at(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    package = _read_package(root)
+    package["record_time"]["reviewed_at"] = None
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="needs record_time.reviewed_at"):
         validate_package(root, require_ready=True)
 
 

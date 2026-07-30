@@ -26,12 +26,24 @@
       ]
     },
     "spatial_bounds": {
-      "kind": "named_place",
-      "place_ref": "entity-fixture-basin",
+      "kind": "composite_scope",
+      "region_refs": [
+        "region-fixture-basin",
+        "region-south-coast"
+      ],
+      "place_refs": [
+        "entity-fixture-basin",
+        "place-north-harbor",
+        "place-inland-workshop",
+        "place-south-port",
+        "place-far-observatory"
+      ],
       "precision": "fixture_defined",
       "basis_claim_refs": [
         "claim-region-v1",
-        "claim-region-v2"
+        "claim-region-v2",
+        "claim-region-south",
+        "claim-global-event"
       ]
     },
     "included_layer_refs": [
@@ -257,6 +269,7 @@
       },
       "spatial_extent": {
         "kind": "point",
+        "place_ref": "place-north-harbor",
         "geometry": {
           "type": "Point",
           "coordinates": [
@@ -380,6 +393,7 @@
       },
       "spatial_extent": {
         "kind": "point",
+        "place_ref": "place-far-observatory",
         "geometry": {
           "type": "Point",
           "coordinates": [
@@ -585,7 +599,8 @@
             ]
           },
           "claim_refs": [
-            "claim-process-south-stage"
+            "claim-process-south-stage",
+            "claim-region-south"
           ]
         }
       ],
@@ -1362,6 +1377,10 @@
       "review_state": "reviewed",
       "confidence": "high",
       "evidence_state": "not_applicable",
+      "input_claim_refs": [
+        "claim-trajectory-workshop",
+        "claim-traveler-workshop-presence"
+      ],
       "uncertainty_refs": []
     }
   ],
@@ -1611,7 +1630,8 @@
         "1504"
       ],
       "basis_claim_refs": [
-        "claim-arrival-event"
+        "claim-arrival-event",
+        "claim-arrival-event-1504"
       ],
       "review_state": "contested"
     },

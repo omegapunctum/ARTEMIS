@@ -26,7 +26,7 @@ The Architecture Atlas compatibility projection is real and commit-pinned. It de
 | `coverage_manifest.json` | Object/scenario coverage and corpus exclusions |
 | `sources/*.md` | Immutable synthetic evidence documents with reproducible locators |
 | `compatibility/architecture_atlas_projection.json` | Non-inventive legacy projection |
-| `review_registry.json` | Frozen-content, distinct-artifact independent-review gate |
+| `review_registry.json` | Review attestations and one immutable validator-owned scope identifier |
 
 ## Validate
 
@@ -57,10 +57,12 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - `co_present` requires both spatial and temporal overlap and never creates a historical Relation.
 - A multi-region analytical Process does not imply diffusion, direction or mechanism.
 - `evidence_state` is derived exactly from reviewed EvidenceLinks.
-- A compatibility adapter is bound to the pinned source-record checksum, resolves every target reference and preserves missing evidence as missing.
+- A compatibility adapter resolves the pinned source commit/file in READY mode, binds the source-record checksum, closes every target reference and preserves missing evidence as missing.
 - `known_exclusions` describe corpus coverage, never historical absence.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity.
-- Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed artifacts, inspect one frozen commit, report zero unresolved critical/material findings and bind the current review-scope digest.
+- The review scope is an immutable validator constant; registry metadata cannot shrink it.
+- Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed structured attestations, inspect one resolvable ancestor commit, report zero unresolved critical/material findings and bind both that commit tree and the current review-scope digest.
+- `independence_attestation` records the operational fact of separate agent tasks. The validator verifies the two distinct attestations and their content bindings; merge authority remains responsible for authenticating reviewer identity outside the repository.
 
 ## Current boundary
 
@@ -70,4 +72,3 @@ Passing this package proves only that the contract is representable and executab
 - that the current database/API supports these objects;
 - that the Leonardo World Slice is curated;
 - that user value is validated.
-

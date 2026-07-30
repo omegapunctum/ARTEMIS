@@ -260,6 +260,7 @@
             "region_ref",
             "multiple_places",
             "multiple_regions",
+            "composite_scope",
             "unknown"
           ]
         },
@@ -324,6 +325,7 @@
     },
     "worldSlice": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -335,10 +337,47 @@
         "included_layer_refs",
         "dataset_identity",
         "coverage_manifest_ref"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "WorldSlice"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "selection_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "temporal_bounds": {
+          "$ref": "#/$defs/temporalExtent"
+        },
+        "spatial_bounds": {
+          "$ref": "#/$defs/spatialExtent"
+        },
+        "included_layer_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "dataset_identity": {
+          "$ref": "#/$defs/datasetIdentity"
+        },
+        "coverage_manifest_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "source": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -348,10 +387,66 @@
         "sha256",
         "review_state",
         "provenance"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Source"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "review_state": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "contested",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "origin",
+            "created_for",
+            "historical_authority"
+          ],
+          "properties": {
+            "origin": {
+              "type": "string",
+              "minLength": 1
+            },
+            "created_for": {
+              "type": "string",
+              "minLength": 1
+            },
+            "historical_authority": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
     },
     "layer": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -359,9 +454,50 @@
         "coverage_rule",
         "claim_refs",
         "uncertainty_refs"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Layer"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coverage_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "uncertainty_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
+    },
+    "datasetIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "entity": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/baseKnowledgeObject"
@@ -403,6 +539,7 @@
       ]
     },
     "event": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/changeObject"
@@ -421,6 +558,7 @@
       ]
     },
     "state": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/changeObject"
@@ -444,6 +582,7 @@
       ]
     },
     "process": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/changeObject"
@@ -468,12 +607,27 @@
               "minItems": 2,
               "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "required": [
                   "id",
                   "temporal_extent",
                   "spatial_extent",
                   "claim_refs"
-                ]
+                ],
+                "properties": {
+                  "id": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "temporal_extent": {
+                    "$ref": "#/$defs/temporalExtent"
+                  },
+                  "spatial_extent": {
+                    "$ref": "#/$defs/spatialExtent"
+                  },
+                  "claim_refs": {
+                    "$ref": "#/$defs/referenceList"
+                  }
+                }
               }
             }
           }
@@ -481,6 +635,7 @@
       ]
     },
     "trajectory": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/baseKnowledgeObject"
@@ -493,11 +648,19 @@
             "segments"
           ],
           "properties": {
+            "subject_ref": {
+              "$ref": "#/$defs/id"
+            },
+            "coverage": {
+              "type": "string",
+              "minLength": 1
+            },
             "segments": {
               "type": "array",
               "minItems": 2,
               "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "required": [
                   "id",
                   "segment_kind",
@@ -505,7 +668,31 @@
                   "spatial_extent",
                   "claim_refs",
                   "uncertainty_refs"
-                ]
+                ],
+                "properties": {
+                  "id": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "segment_kind": {
+                    "enum": [
+                      "presence",
+                      "movement",
+                      "inferred_gap"
+                    ]
+                  },
+                  "temporal_extent": {
+                    "$ref": "#/$defs/temporalExtent"
+                  },
+                  "spatial_extent": {
+                    "$ref": "#/$defs/spatialExtent"
+                  },
+                  "claim_refs": {
+                    "$ref": "#/$defs/referenceList"
+                  },
+                  "uncertainty_refs": {
+                    "$ref": "#/$defs/referenceList"
+                  }
+                }
               }
             }
           }
@@ -513,6 +700,7 @@
       ]
     },
     "region": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/baseKnowledgeObject"
@@ -524,11 +712,16 @@
             "geometry_versions"
           ],
           "properties": {
+            "region_kind": {
+              "type": "string",
+              "minLength": 1
+            },
             "geometry_versions": {
               "type": "array",
               "minItems": 1,
               "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "required": [
                   "id",
                   "reconstruction_mode",
@@ -537,7 +730,37 @@
                   "spatial_extent",
                   "claim_refs",
                   "uncertainty_refs"
-                ]
+                ],
+                "properties": {
+                  "id": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "reconstruction_mode": {
+                    "enum": [
+                      "historical_assertion",
+                      "scholarly_reconstruction",
+                      "alternative_reconstruction",
+                      "analytical_model",
+                      "hypothesis",
+                      "counterfactual"
+                    ]
+                  },
+                  "is_primary": {
+                    "type": "boolean"
+                  },
+                  "temporal_extent": {
+                    "$ref": "#/$defs/temporalExtent"
+                  },
+                  "spatial_extent": {
+                    "$ref": "#/$defs/spatialExtent"
+                  },
+                  "claim_refs": {
+                    "$ref": "#/$defs/referenceList"
+                  },
+                  "uncertainty_refs": {
+                    "$ref": "#/$defs/referenceList"
+                  }
+                }
               }
             }
           }
@@ -545,6 +768,7 @@
       ]
     },
     "relation": {
+      "unevaluatedProperties": false,
       "allOf": [
         {
           "$ref": "#/$defs/changeObject"
@@ -556,7 +780,31 @@
             "predicate",
             "object_ref",
             "directionality"
-          ]
+          ],
+          "properties": {
+            "subject_ref": {
+              "$ref": "#/$defs/id"
+            },
+            "predicate": {
+              "type": "string",
+              "minLength": 1
+            },
+            "object_ref": {
+              "$ref": "#/$defs/id"
+            },
+            "directionality": {
+              "type": "string",
+              "minLength": 1
+            },
+            "mechanism": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
         }
       ]
     },
@@ -744,6 +992,7 @@
     },
     "uncertainty": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -754,7 +1003,45 @@
         "alternatives",
         "basis_claim_refs",
         "review_state"
-      ]
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Uncertainty"
+        },
+        "subject_or_claim_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "dimension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternatives": {
+          "type": "array"
+        },
+        "basis_claim_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "review_state": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "contested",
+            "rejected",
+            "superseded"
+          ]
+        }
+      }
     },
     "synchronizedView": {
       "type": "object",
@@ -880,7 +1167,7 @@
           }
         },
         "dataset_identity": {
-          "type": "object"
+          "$ref": "#/$defs/datasetIdentity"
         }
       }
     }
