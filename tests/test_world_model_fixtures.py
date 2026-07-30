@@ -751,6 +751,75 @@ def test_validator_rejects_symmetric_influence_relation(tmp_path: Path) -> None:
         validate_package(root)
 
 
+def test_validator_rejects_coordinated_label_role_bypass(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    relation["subject_ref"], relation["object_ref"] = relation["object_ref"], relation["subject_ref"]
+    council = next(
+        item for item in package["entities"] if item["id"] == "entity-north-harbor-council"
+    )
+    council["label"] = "1504–1505"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="relation_binding must exactly match"):
+        validate_package(root)
+
+
+@pytest.mark.parametrize(
+    ("relation_path", "replacement"),
+    (
+        (("temporal_extent", "precision"), "day"),
+        (("temporal_extent", "certainty"), "certain"),
+        (("mechanism",), "Telepathy determined the protocol."),
+        (("scope",), "All council decisions worldwide"),
+    ),
+)
+def test_validator_rejects_unbound_relation_semantic_drift(
+    tmp_path: Path,
+    relation_path: tuple[str, ...],
+    replacement: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    target = relation
+    for key in relation_path[:-1]:
+        target = target[key]
+    target[relation_path[-1]] = replacement
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="relation_binding must exactly match"):
+        validate_package(root)
+
+
+def test_validator_rejects_relation_binding_not_stated_by_locator(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-ren-influences-council-protocol"
+    )
+    claim = next(
+        item for item in package["claims"] if item["id"] == "claim-influence-ren-council"
+    )
+    relation["scope"] = "North Harbor protocol title only"
+    claim["relation_binding"]["scope"] = relation["scope"]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="supporting locator must state"):
+        validate_package(root)
+
+
 def test_validator_rejects_relation_missing_from_claim_targets(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -778,7 +847,7 @@ def test_validator_rejects_unstated_relation_point_geometry(tmp_path: Path) -> N
     }
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="spatial extent is not stated"):
+    with pytest.raises(FixtureValidationError, match="exact geometry must be stated"):
         validate_package(root)
 
 
@@ -798,7 +867,7 @@ def test_validator_rejects_relation_geometry_hidden_in_temporal_digits(tmp_path:
     }
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="spatial extent is not stated"):
+    with pytest.raises(FixtureValidationError, match="exact geometry must be stated"):
         validate_package(root)
 
 
@@ -852,6 +921,44 @@ def test_validator_rejects_relation_interval_narrowed_to_instant(tmp_path: Path)
         validate_package(root)
 
 
+def test_validator_rejects_unsupported_event_participant(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(item for item in package["claims"] if item["id"] == "claim-charter-event")
+    claim["target_refs"].remove("entity-mara-vale")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="participant entity-mara-vale must be bound"):
+        validate_package(root)
+
+
+def test_validator_rejects_event_geometry_not_stated_by_source(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    event = next(item for item in package["events"] if item["id"] == "event-north-harbor-charter")
+    event["spatial_extent"]["geometry"]["coordinates"] = [15, 4]
+    claim = next(item for item in package["claims"] if item["id"] == "claim-charter-event")
+    claim["statement"] = claim["statement"].replace(
+        'GEOMETRY_ASSERTION[{"coordinates":[10.0,50.0],"type":"Point"}]',
+        'GEOMETRY_ASSERTION[{"coordinates":[15,4],"type":"Point"}]',
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="exact geometry must be stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_geometry_basis_claim_not_targeting_owner(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(item for item in package["claims"] if item["id"] == "claim-global-event")
+    claim["target_refs"].remove("event-far-observation")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="exact geometry must be stated"):
+        validate_package(root)
+
+
 def test_validator_rejects_compatibility_snapshot_field_erasure(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
@@ -884,6 +991,61 @@ def test_validator_rejects_compatibility_snapshot_coordinate_erasure(tmp_path: P
     _write_json(path, projection)
 
     with pytest.raises(FixtureValidationError, match="must exactly mirror the pinned record fields"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_repository_spoof(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["source_dataset"]["repository"] = "attacker/forged-source"
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="source provenance drift"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_record_identity_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["source_dataset"]["record_id"] = "rec-forged"
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="Villa Savoye source identity drift"):
+        validate_package(root)
+
+
+def test_validator_rejects_blank_compatibility_losses(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["losses_and_unknowns"] = ["", "", "", ""]
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="preserve the exact material losses"):
+        validate_package(root)
+
+
+def test_validator_rejects_compatibility_determinism_rule_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["determinism_rule"] = "Trust the projection."
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="determinism rule drift"):
+        validate_package(root)
+
+
+def test_validator_rejects_extra_compatibility_envelope_field(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["provenance_override"] = True
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="envelope must be closed"):
         validate_package(root)
 
 

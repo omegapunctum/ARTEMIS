@@ -881,6 +881,60 @@
         }
       }
     },
+    "relationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_ref",
+        "subject_ref",
+        "predicate",
+        "object_ref",
+        "directionality",
+        "temporal_extent",
+        "spatial_extent",
+        "mechanism",
+        "scope"
+      ],
+      "properties": {
+        "relation_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "predicate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "object_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "directionality": {
+          "enum": [
+            "directed",
+            "symmetric"
+          ]
+        },
+        "temporal_extent": {
+          "$ref": "#/$defs/temporalExtent"
+        },
+        "spatial_extent": {
+          "$ref": "#/$defs/spatialExtent"
+        },
+        "mechanism": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
     "claim": {
       "type": "object",
       "additionalProperties": false,
@@ -912,6 +966,9 @@
         },
         "input_claim_refs": {
           "$ref": "#/$defs/referenceList"
+        },
+        "relation_binding": {
+          "$ref": "#/$defs/relationBinding"
         },
         "claim_kind": {
           "enum": [

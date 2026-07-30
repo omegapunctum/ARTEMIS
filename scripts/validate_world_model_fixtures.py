@@ -115,6 +115,26 @@ COMPATIBILITY_SNAPSHOT_FIELDS = (
     "layer_type",
     "validated",
 )
+COMPATIBILITY_SOURCE_DATASET_FIELDS = {
+    "repository",
+    "commit",
+    "path",
+    "source_file_sha256",
+    "record_id",
+    "canonical_feature_id",
+    "record_sha256",
+}
+COMPATIBILITY_LOSSES = [
+    "The current reviewed Source has no bibliographic locator, so no target EvidenceLink is created.",
+    "The legacy coordinates_source value does not identify a source record with a reproducible locator.",
+    "The legacy exact coordinate confidence is preserved only as legacy metadata; target spatial precision is unknown.",
+    "The date strings provide year precision but no claim-level supporting locator.",
+    "The current point feature does not encode construction Events, use States, Processes, temporal geometry or uncertainty.",
+]
+COMPATIBILITY_DETERMINISM_RULE = (
+    "The same pinned input snapshot must produce this exact projection; "
+    "missing target semantics remain missing."
+)
 REFERENCE_KEYS = {
     "claim_refs",
     "uncertainty_refs",
@@ -644,6 +664,130 @@ def _locator_passage(source_path: Path, locator: str) -> str:
     return text[passage_start:] if next_locator < 0 else text[passage_start:next_locator]
 
 
+def _supporting_passages(
+    claim_id: str,
+    *,
+    evidence_links: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+    package_root: Path,
+) -> list[str]:
+    passages = []
+    for link in evidence_links.values():
+        if (
+            link.get("claim_id") == claim_id
+            and link.get("relation_to_claim") == "supports"
+            and link.get("review_state") == "reviewed"
+        ):
+            source = sources[str(link["source_id"])]
+            passages.append(
+                _locator_passage(package_root / str(source["uri"]), str(link["locator"]))
+            )
+    return passages
+
+
+def _geometry_assertion_expression(geometry: object) -> str:
+    return (
+        "GEOMETRY_ASSERTION["
+        + json.dumps(geometry, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        + "]"
+    )
+
+
+def _validate_source_bound_geometries(
+    package: dict[str, Any],
+    *,
+    claims: dict[str, dict[str, Any]],
+    evidence_links: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+    package_root: Path,
+) -> None:
+    geometry_extents: list[tuple[str, dict[str, Any]]] = []
+    for collection in ("events", "states", "processes", "trajectories", "regions", "relations"):
+        for item in package.get(collection, []):
+            if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+                continue
+            owner_id = item["id"]
+            direct = item.get("spatial_extent")
+            if isinstance(direct, dict) and isinstance(direct.get("geometry"), dict):
+                geometry_extents.append((owner_id, direct))
+            for key in ("segments", "stages", "geometry_versions"):
+                for nested in item.get(key, []):
+                    extent = nested.get("spatial_extent") if isinstance(nested, dict) else None
+                    if isinstance(extent, dict) and isinstance(extent.get("geometry"), dict):
+                        geometry_extents.append((owner_id, extent))
+
+    for owner_id, node in geometry_extents:
+        geometry = node["geometry"]
+        basis = node.get("basis_claim_refs", [])
+        expression = _geometry_assertion_expression(geometry)
+        supported = False
+        for claim_id in basis:
+            claim = claims.get(str(claim_id))
+            if (
+                not isinstance(claim, dict)
+                or owner_id not in claim.get("target_refs", [])
+                or expression not in str(claim.get("statement", ""))
+            ):
+                continue
+            passages = _supporting_passages(
+                str(claim_id),
+                evidence_links=evidence_links,
+                sources=sources,
+                package_root=package_root,
+            )
+            if any(expression in passage for passage in passages):
+                supported = True
+                break
+        _require(supported, "exact geometry must be stated by a basis Claim and reviewed supporting locator")
+    _require(
+        len(geometry_extents) >= 6,
+        "fixture package must exercise source-bound Event and Region geometries",
+    )
+
+
+def _validate_event_participants(
+    events: dict[str, dict[str, Any]],
+    *,
+    claims: dict[str, dict[str, Any]],
+    evidence_links: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+    entities: dict[str, dict[str, Any]],
+    package_root: Path,
+) -> None:
+    for event_id, event in events.items():
+        for participant_ref in event.get("participant_refs", []):
+            _require(
+                str(participant_ref) in entities,
+                f"{event_id} participant {participant_ref} must resolve to an Entity",
+            )
+            assertion = (
+                f"PARTICIPANT_ASSERTION[event={event_id};participant={participant_ref}]"
+            )
+            supported = False
+            for claim_id in event.get("claim_refs", []):
+                claim = claims.get(str(claim_id))
+                if not isinstance(claim, dict):
+                    continue
+                targets = set(claim.get("target_refs", []))
+                if (
+                    {event_id, participant_ref} <= targets
+                    and assertion in str(claim.get("statement", ""))
+                ):
+                    passages = _supporting_passages(
+                        str(claim_id),
+                        evidence_links=evidence_links,
+                        sources=sources,
+                        package_root=package_root,
+                    )
+                    if any(assertion in passage for passage in passages):
+                        supported = True
+                        break
+            _require(
+                supported,
+                f"{event_id} participant {participant_ref} must be bound by a reviewed Claim and locator",
+            )
+
+
 def _validate_relation_extent_evidence(
     relation_id: str,
     relation: dict[str, Any],
@@ -655,17 +799,12 @@ def _validate_relation_extent_evidence(
     regions: dict[str, dict[str, Any]],
     package_root: Path,
 ) -> None:
-    supporting_passages = []
-    for link in evidence_links.values():
-        if (
-            link.get("claim_id") == claim.get("id")
-            and link.get("relation_to_claim") == "supports"
-            and link.get("review_state") == "reviewed"
-        ):
-            source = sources[str(link["source_id"])]
-            supporting_passages.append(
-                _locator_passage(package_root / str(source["uri"]), str(link["locator"]))
-            )
+    supporting_passages = _supporting_passages(
+        str(claim.get("id")),
+        evidence_links=evidence_links,
+        sources=sources,
+        package_root=package_root,
+    )
     _require(supporting_passages, f"{relation_id} needs source-bound supporting evidence")
     statement = str(claim.get("statement", ""))
     subject = entities.get(str(relation.get("subject_ref")))
@@ -755,6 +894,35 @@ def _validate_relation_extent_evidence(
         ),
         f"{relation_id} spatial extent is not stated by its Claim and supporting locator",
     )
+    expected_binding = {
+        "relation_ref": relation_id,
+        "subject_ref": relation.get("subject_ref"),
+        "predicate": relation.get("predicate"),
+        "object_ref": relation.get("object_ref"),
+        "directionality": relation.get("directionality"),
+        "temporal_extent": relation.get("temporal_extent"),
+        "spatial_extent": relation.get("spatial_extent"),
+        "mechanism": relation.get("mechanism"),
+        "scope": relation.get("scope"),
+    }
+    _require(
+        claim.get("relation_binding") == expected_binding,
+        f"{relation_id} Claim relation_binding must exactly match Relation semantics",
+    )
+    binding_expression = (
+        "RELATION_ASSERTION["
+        + json.dumps(
+            expected_binding,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "]"
+    )
+    _require(
+        any(binding_expression in passage for passage in supporting_passages),
+        f"{relation_id} supporting locator must state the exact relation_binding",
+    )
 
 
 def _validate_references(
@@ -798,9 +966,41 @@ def _validate_references(
 def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
     path = root / PACKAGE_RELATIVE / "compatibility" / "architecture_atlas_projection.json"
     projection = _read_json(path)
+    _require(
+        set(projection)
+        == {
+            "schema_version",
+            "projection_id",
+            "source_dataset",
+            "input_snapshot",
+            "target_projection",
+            "losses_and_unknowns",
+            "determinism_rule",
+        },
+        "compatibility projection envelope must be closed",
+    )
     _require(projection.get("schema_version") == SCHEMA_VERSION, "compatibility projection version drift")
+    _require(
+        projection.get("projection_id") == "architecture-atlas-villa-savoye-to-world-model-v1",
+        "compatibility projection identity drift",
+    )
     source_dataset = projection.get("source_dataset")
     _require(isinstance(source_dataset, dict), "compatibility projection needs source_dataset")
+    _require(
+        set(source_dataset) == COMPATIBILITY_SOURCE_DATASET_FIELDS,
+        "compatibility source_dataset envelope must be closed",
+    )
+    _require(
+        source_dataset.get("repository") == "omegapunctum/ARTEMIS"
+        and source_dataset.get("path") == "data/features.json",
+        "compatibility source provenance drift",
+    )
+    _require(
+        source_dataset.get("record_id") == "rec1GDGqssFGehzEx"
+        and source_dataset.get("canonical_feature_id")
+        == "1f49bb51-07a2-4c86-8101-edb6e525503e",
+        "compatibility Villa Savoye source identity drift",
+    )
     commit = source_dataset.get("commit")
     _require(
         isinstance(commit, str) and re.fullmatch(r"[0-9a-f]{40}", commit) is not None,
@@ -879,7 +1079,14 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
                         f"compatibility {item_id}.{key} has dangling reference {value}",
                     )
     losses = projection.get("losses_and_unknowns")
-    _require(isinstance(losses, list) and len(losses) >= 4, "compatibility projection must expose material losses")
+    _require(
+        losses == COMPATIBILITY_LOSSES,
+        "compatibility projection must preserve the exact material losses",
+    )
+    _require(
+        projection.get("determinism_rule") == COMPATIBILITY_DETERMINISM_RULE,
+        "compatibility determinism rule drift",
+    )
 
     canonical_path = root / str(source_dataset.get("path"))
     _require(canonical_path.is_file(), "pinned Architecture Atlas source file is missing")
@@ -1363,6 +1570,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
 
     _validate_sources(indexes["sources"], package_root)
     _validate_claims(claims, indexes["evidence_links"], indexes["sources"], package_root)
+    _validate_references(package, type_registry, entity_kinds)
 
     for collection in ("events", "states", "processes", "relations"):
         for item_id, item in indexes[collection].items():
@@ -1414,6 +1622,14 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
                 ),
                 f"{event_id} temporal uncertainty must bind every alternative-date Claim",
             )
+    _validate_event_participants(
+        indexes["events"],
+        claims=claims,
+        evidence_links=indexes["evidence_links"],
+        sources=indexes["sources"],
+        entities=indexes["entities"],
+        package_root=package_root,
+    )
 
     for process_id, process in indexes["processes"].items():
         _require(
@@ -1567,6 +1783,13 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             alternative_regions.append(region_id)
     _require(changing_regions, "fixture package needs a Region whose geometry changes")
     _require(alternative_regions, "fixture package needs an alternative Region reconstruction")
+    _validate_source_bound_geometries(
+        package,
+        claims=claims,
+        evidence_links=indexes["evidence_links"],
+        sources=indexes["sources"],
+        package_root=package_root,
+    )
 
     challenged_influence_relations: list[str] = []
     for relation_id, relation in indexes["relations"].items():
@@ -1788,7 +2011,6 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             f"{view_id} time state must remain within WorldSlice bounds",
         )
 
-    _validate_references(package, type_registry, entity_kinds)
     _validate_coverage(package, indexes, registry, root)
     _validate_reviews(root, package, require_ready=require_ready)
     _validate_compatibility(root, require_ready=require_ready)

@@ -65,7 +65,7 @@
       "title": "Synthetic field notebook alpha",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-alpha.md",
-      "sha256": "27051d3cd016a12e938a984ee421e17310fe2fae62f6cbb71b22fc48d06e2c59",
+      "sha256": "ddbfbde90619e4740ebacc1fc2ecf9e7b7570704a566be54476ab3649365eb2c",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -79,7 +79,7 @@
       "title": "Synthetic field notebook beta",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-beta.md",
-      "sha256": "feb0f8626ca2a776d14c97736d88a626be405cc2833c7a5cec161ce79dc00261",
+      "sha256": "139ae98715f9959309c990340ca41f1dd98b7d2bc233bfd393e65ddb054f29ce",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -1082,10 +1082,11 @@
     {
       "id": "claim-charter-event",
       "type": "Claim",
-      "statement": "The synthetic charter ceremony occurred at North Harbor on 1500-06-15.",
+      "statement": "The synthetic charter ceremony occurred at North Harbor on 1500-06-15 with Mara Vale participating. PARTICIPANT_ASSERTION[event=event-north-harbor-charter;participant=entity-mara-vale] GEOMETRY_ASSERTION[{\"coordinates\":[10.0,50.0],\"type\":\"Point\"}]",
       "target_refs": [
         "event-north-harbor-charter",
-        "place-north-harbor"
+        "place-north-harbor",
+        "entity-mara-vale"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1097,10 +1098,11 @@
     {
       "id": "claim-arrival-event",
       "type": "Claim",
-      "statement": "Mara Vale arrived at Inland Workshop in approximately 1503.",
+      "statement": "Mara Vale arrived at Inland Workshop in approximately 1503. PARTICIPANT_ASSERTION[event=event-workshop-arrival;participant=entity-mara-vale]",
       "target_refs": [
         "event-workshop-arrival",
-        "place-inland-workshop"
+        "place-inland-workshop",
+        "entity-mara-vale"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1114,10 +1116,11 @@
     {
       "id": "claim-arrival-event-1504",
       "type": "Claim",
-      "statement": "A second synthetic notebook places Mara Vale's arrival at Inland Workshop in approximately 1504.",
+      "statement": "A second synthetic notebook places Mara Vale's arrival at Inland Workshop in approximately 1504. PARTICIPANT_ASSERTION[event=event-workshop-arrival;participant=entity-mara-vale]",
       "target_refs": [
         "event-workshop-arrival",
-        "place-inland-workshop"
+        "place-inland-workshop",
+        "entity-mara-vale"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1259,7 +1262,7 @@
     {
       "id": "claim-region-v1",
       "type": "Claim",
-      "statement": "Boundary version A is the primary fixture reconstruction for 1498 through 1503.",
+      "statement": "Boundary version A is the primary fixture reconstruction for 1498 through 1503. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[11.0,49.0],[11.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
         "region-fixture-basin"
       ],
@@ -1273,7 +1276,7 @@
     {
       "id": "claim-region-v2",
       "type": "Claim",
-      "statement": "Expanded boundary version B is the primary fixture reconstruction for 1504 through 1510.",
+      "statement": "Expanded boundary version B is the primary fixture reconstruction for 1504 through 1510. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[12.0,49.0],[12.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
         "region-fixture-basin"
       ],
@@ -1289,7 +1292,7 @@
     {
       "id": "claim-region-v2-alternative",
       "type": "Claim",
-      "statement": "An alternative fixture reconstruction excludes the eastern inlet from the 1504 boundary.",
+      "statement": "An alternative fixture reconstruction excludes the eastern inlet from the 1504 boundary. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[11.4,49.0],[11.4,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
         "region-fixture-basin"
       ],
@@ -1305,7 +1308,7 @@
     {
       "id": "claim-region-south",
       "type": "Claim",
-      "statement": "The fixture defines the South Coast analytical region for the 1504–1510 marker observations.",
+      "statement": "The fixture defines the South Coast analytical region for the 1504–1510 marker observations. GEOMETRY_ASSERTION[{\"coordinates\":[[[19.0,39.0],[22.0,39.0],[22.0,42.0],[19.0,42.0],[19.0,39.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
         "region-south-coast"
       ],
@@ -1319,13 +1322,41 @@
     {
       "id": "claim-documented-encounter",
       "type": "Claim",
-      "statement": "The synthetic register records Mara Vale and Keeper Ren in the same meeting at Inland Workshop on 1504-03-01.",
+      "statement": "The synthetic register records Mara Vale and Keeper Ren in the same meeting at Inland Workshop on 1504-03-01. PARTICIPANT_ASSERTION[event=event-documented-workshop-meeting;participant=entity-mara-vale] PARTICIPANT_ASSERTION[event=event-documented-workshop-meeting;participant=entity-keeper-ren]",
       "target_refs": [
         "event-documented-workshop-meeting",
         "relation-mara-ren-encounter",
         "entity-mara-vale",
         "entity-keeper-ren"
       ],
+      "relation_binding": {
+        "relation_ref": "relation-mara-ren-encounter",
+        "subject_ref": "entity-mara-vale",
+        "predicate": "documented_encounter",
+        "object_ref": "entity-keeper-ren",
+        "directionality": "symmetric",
+        "temporal_extent": {
+          "kind": "instant",
+          "start": "1504-03-01",
+          "end": "1504-03-01",
+          "precision": "day",
+          "calendar": "proleptic_gregorian",
+          "certainty": "fixture_defined",
+          "basis_claim_refs": [
+            "claim-documented-encounter"
+          ]
+        },
+        "spatial_extent": {
+          "kind": "named_place",
+          "place_ref": "place-inland-workshop",
+          "precision": "fixture_defined",
+          "basis_claim_refs": [
+            "claim-documented-encounter"
+          ]
+        },
+        "mechanism": null,
+        "scope": null
+      },
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1342,6 +1373,34 @@
         "entity-north-harbor-council",
         "relation-ren-influences-council-protocol"
       ],
+      "relation_binding": {
+        "relation_ref": "relation-ren-influences-council-protocol",
+        "subject_ref": "entity-keeper-ren",
+        "predicate": "influence",
+        "object_ref": "entity-north-harbor-council",
+        "directionality": "directed",
+        "temporal_extent": {
+          "kind": "closed_interval",
+          "start": "1504",
+          "end": "1505",
+          "precision": "year",
+          "calendar": "proleptic_gregorian",
+          "certainty": "contested",
+          "basis_claim_refs": [
+            "claim-influence-ren-council"
+          ]
+        },
+        "spatial_extent": {
+          "kind": "named_place",
+          "place_ref": "place-north-harbor",
+          "precision": "fixture_defined",
+          "basis_claim_refs": [
+            "claim-influence-ren-council"
+          ]
+        },
+        "mechanism": "A proposed protocol phrase is asserted to have affected the council text, but the attribution is challenged by a second fixture source.",
+        "scope": "North Harbor council protocol wording only"
+      },
       "claim_kind": "interpretation",
       "origin": "curator",
       "review_state": "contested",
@@ -1354,7 +1413,7 @@
     {
       "id": "claim-global-event",
       "type": "Claim",
-      "statement": "A distant synthetic observation was logged at Far Observatory on 1504-03-01.",
+      "statement": "A distant synthetic observation was logged at Far Observatory on 1504-03-01. GEOMETRY_ASSERTION[{\"coordinates\":[100.0,-20.0],\"type\":\"Point\"}]",
       "target_refs": [
         "event-far-observation",
         "place-far-observatory"
