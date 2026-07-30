@@ -255,7 +255,10 @@ def test_validator_rejects_temporal_only_overlap_as_co_presence(tmp_path: Path) 
     traveler_state["spatial_extent"]["place_ref"] = "place-far-observatory"
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="do not overlap in space"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="lacks exact EXTENT_ASSERTION|do not overlap in space",
+    ):
         validate_package(root)
 
 
@@ -417,7 +420,7 @@ def test_validator_rejects_process_stage_outside_process_time(tmp_path: Path) ->
 def test_validator_rejects_process_stage_claim_drift(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
-    package["processes"][0]["stages"][1]["claim_refs"] = ["claim-process-south-stage"]
+    package["processes"][0]["stages"][1]["claim_refs"] = ["claim-region-south"]
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="exactly bind its temporal and spatial premises"):
@@ -641,7 +644,10 @@ def test_validator_rejects_context_outside_world_slice_time(tmp_path: Path) -> N
     event["temporal_extent"]["end"] = "1511"
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="temporal bounds omit modeled context"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="lacks exact EXTENT_ASSERTION|temporal bounds omit modeled context",
+    ):
         validate_package(root)
 
 
@@ -956,6 +962,90 @@ def test_validator_rejects_geometry_basis_claim_not_targeting_owner(tmp_path: Pa
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="exact geometry must be stated"):
+        validate_package(root)
+
+
+def test_validator_rejects_geometry_transfer_between_region_versions(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    version_a = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v1"
+    )
+    version_b = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v2"
+    )
+    version_a["spatial_extent"] = copy.deepcopy(version_b["spatial_extent"])
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="lacks exact EXTENT_ASSERTION"):
+        validate_package(root)
+
+
+def test_validator_rejects_geometry_transfer_between_events(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    charter = next(
+        item for item in package["events"] if item["id"] == "event-north-harbor-charter"
+    )
+    distant = next(
+        item for item in package["events"] if item["id"] == "event-far-observation"
+    )
+    charter["spatial_extent"] = copy.deepcopy(distant["spatial_extent"])
+    claim = next(item for item in package["claims"] if item["id"] == "claim-global-event")
+    claim["target_refs"].append("event-north-harbor-charter")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="lacks exact EXTENT_ASSERTION"):
+        validate_package(root)
+
+
+def test_validator_rejects_state_spatial_basis_from_region_claims(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    state = next(
+        item
+        for item in package["states"]
+        if item["id"] == "state-north-harbor-administration"
+    )
+    state["spatial_extent"]["basis_claim_refs"] = ["claim-region-v1", "claim-region-v2"]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must target owner"):
+        validate_package(root)
+
+
+def test_validator_rejects_hidden_trajectory_gap_interval(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    trajectory = next(
+        item for item in package["trajectories"] if item["id"] == "trajectory-mara-vale"
+    )
+    gap = next(
+        item for item in trajectory["segments"] if item["id"] == "trajectory-segment-gap"
+    )
+    gap["temporal_extent"]["start"] = "1502"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="lacks exact EXTENT_ASSERTION"):
+        validate_package(root)
+
+
+def test_validator_rejects_context_mode_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    version = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v1"
+    )
+    version["reconstruction_mode"] = "analytical_model"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="lacks exact EXTENT_ASSERTION"):
         validate_package(root)
 
 

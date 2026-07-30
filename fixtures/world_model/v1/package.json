@@ -65,7 +65,7 @@
       "title": "Synthetic field notebook alpha",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-alpha.md",
-      "sha256": "ddbfbde90619e4740ebacc1fc2ecf9e7b7570704a566be54476ab3649365eb2c",
+      "sha256": "6d1f131dd62355eb3370e22bc9040b8448d7ed204feb65b8acb5eeccff4c53a4",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -79,7 +79,7 @@
       "title": "Synthetic field notebook beta",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-beta.md",
-      "sha256": "139ae98715f9959309c990340ca41f1dd98b7d2bc233bfd393e65ddb054f29ce",
+      "sha256": "21a386d07bb77fab6bbdc9eb4abe64087d55668a518a2e45295a6b89e7912df9",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -439,8 +439,7 @@
         "region_ref": "region-fixture-basin",
         "precision": "versioned_reconstruction",
         "basis_claim_refs": [
-          "claim-region-v1",
-          "claim-region-v2"
+          "claim-administration-state"
         ]
       },
       "claim_refs": [
@@ -534,8 +533,7 @@
         "calendar": "proleptic_gregorian",
         "certainty": "fixture_defined",
         "basis_claim_refs": [
-          "claim-process-north-stage",
-          "claim-process-south-stage"
+          "claim-process-analytical-grouping"
         ]
       },
       "spatial_extent": {
@@ -546,8 +544,7 @@
         ],
         "precision": "fixture_defined",
         "basis_claim_refs": [
-          "claim-process-north-stage",
-          "claim-process-south-stage"
+          "claim-process-analytical-grouping"
         ]
       },
       "stages": [
@@ -594,13 +591,11 @@
             "region_ref": "region-south-coast",
             "precision": "versioned_reconstruction",
             "basis_claim_refs": [
-              "claim-process-south-stage",
-              "claim-region-south"
+              "claim-process-south-stage"
             ]
           },
           "claim_refs": [
-            "claim-process-south-stage",
-            "claim-region-south"
+            "claim-process-south-stage"
           ]
         }
       ],
@@ -1088,6 +1083,10 @@
         "place-north-harbor",
         "entity-mara-vale"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-north-harbor-charter;context=event-north-harbor-charter;kind=Event;mode=none;dimension=temporal;sha256=d12dd97406d97505eed11906f3510715d2231d6a0a2ea03b7dd30d304687592c]",
+        "EXTENT_ASSERTION[owner=event-north-harbor-charter;context=event-north-harbor-charter;kind=Event;mode=none;dimension=spatial;sha256=43055dfc3356f4b515e9a347d037453c7ca2ada941a4884301fb92e20d6dda97]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1103,6 +1102,10 @@
         "event-workshop-arrival",
         "place-inland-workshop",
         "entity-mara-vale"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kind=Event;mode=none;dimension=temporal;sha256=38b413198a90773460768d4917e682eef776137e94514ab785e35082969262e8]",
+        "EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kind=Event;mode=none;dimension=spatial;sha256=eaa94122c72b16a6a91305a3603f8ab308c30585d449254433c65e06ee2fcb31]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1122,6 +1125,9 @@
         "place-inland-workshop",
         "entity-mara-vale"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kind=Event;mode=none;dimension=temporal-alternative-0;sha256=8aad0dcda8bff11d4e55cb027a7807b6549e9ff1ca67bc1121f767a07e5d0329]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "contested",
@@ -1137,6 +1143,10 @@
       "statement": "The North Harbor council administered the Fixture Basin from 1500 through 1508.",
       "target_refs": [
         "state-north-harbor-administration"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=temporal;sha256=a74aee96364b0dcff1039c01e7a249fb7c993cf83c797e7867b72045490d5272]",
+        "EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=spatial;sha256=f3c1621752fd8360a4efc4058f633a4c686b5175c1ff094b7b0b826f5341f2ca]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1158,6 +1168,10 @@
         "claim-process-north-stage",
         "claim-process-south-stage"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-coastal-exchange;kind=Process;mode=analytical_model;dimension=temporal;sha256=5ee5a142bed3820ddf1f0fd2d6017f0e845986b8ef0a4a9e5234625b60d43d83]",
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-coastal-exchange;kind=Process;mode=analytical_model;dimension=spatial;sha256=2c6b09859c600ed45515e3f3afd8508e1f974db55249b5be040b7afdd6f6ff3b]"
+      ],
       "claim_kind": "observation",
       "origin": "system",
       "review_state": "reviewed",
@@ -1175,6 +1189,10 @@
         "process-coastal-exchange",
         "region-fixture-basin"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=temporal;sha256=bdc3a7a8f72190886324fe2e796be57231a52024735e7fac3e3c70f4737b44b6]",
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=spatial;sha256=7cf250952bf7faad2e635606c7f8ed1b97654eeee95436a201ac10b8606ae039]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1189,6 +1207,10 @@
       "target_refs": [
         "process-coastal-exchange",
         "region-south-coast"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=temporal;sha256=016c7e8c033f0afa7a214776b1500a232b4881ba785689faee35a8a0fb1dd217]",
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=spatial;sha256=ef81fddc2d67b7912340468602be86c1bcca6048198994bcc6b20b54556ce788]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1205,6 +1227,10 @@
         "trajectory-mara-vale",
         "place-north-harbor"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-north;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=b6084998268a18b9c069c89b7857130d5a138727bf5396ede7d20d046cf5181e]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-north;kind=TrajectorySegment;mode=presence;dimension=spatial;sha256=f80c291948659cba3c0026e63b2179920a96a4ea4307721b259ab7d1c98e6ba4]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1215,9 +1241,17 @@
     {
       "id": "claim-trajectory-gap",
       "type": "Claim",
-      "statement": "Only the trajectory endpoints are recorded; the route between North Harbor and Inland Workshop is unknown.",
+      "statement": "The unobserved trajectory gap runs from 1501 through 1504 between the recorded North Harbor and Inland Workshop endpoints; its route is unknown.",
       "target_refs": [
         "trajectory-mara-vale"
+      ],
+      "input_claim_refs": [
+        "claim-trajectory-north",
+        "claim-trajectory-workshop"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=TrajectorySegment;mode=inferred_gap;dimension=temporal;sha256=f852de326c6709dcf51203ca04cec7c947097070b5d07344c1af59fd64cd3755]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=TrajectorySegment;mode=inferred_gap;dimension=spatial;sha256=0b79f0612dcc1ecc64332120696fbf11f6cc56e31e718f84b489801cd2f8ef4a]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1236,6 +1270,12 @@
         "trajectory-mara-vale",
         "state-mara-workshop-presence"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=9e96d8d52918be21c6a16271a01484237ecb9222209f679af68d43cc9438bb35]",
+        "EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=56a7e92d7e87e31f08879a5f1fb9b89e00ed2ac5f0e5311659f70f65eebd5adf]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=5cc26bdc59ad4d7e2cf77ed0e1d7fa6db0a1e5a7d1d22ec27b42dcea54d3c3a4]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;kind=TrajectorySegment;mode=presence;dimension=spatial;sha256=2e4540c6676b955bd1fb15c10d94b3a8f43c2b44cda271311bc5dd82a079bb27]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1252,6 +1292,10 @@
         "state-traveler-workshop-presence",
         "place-inland-workshop"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=e4264d84dfebe005b6385475abaf670274bbc470c266e70c4598f1db2214854b]",
+        "EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=02a7dffa092c32c2ee44da88b17524c923bb2716c0458d69baba554d9021aabb]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1266,6 +1310,10 @@
       "target_refs": [
         "region-fixture-basin"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=cbe37594ea36e26df2658c67626248f4d3c35d692ab3f1a0e779037e5e3d0820]",
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=15e48c745179e273d94f6b492252a9b142557bc196137c5ce917f8abb04a6cd6]"
+      ],
       "claim_kind": "interpretation",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1279,6 +1327,10 @@
       "statement": "Expanded boundary version B is the primary fixture reconstruction for 1504 through 1510. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[12.0,49.0],[12.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
         "region-fixture-basin"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=b9994974b1c010eea46645d310dd5132ac6d61e3e9a135f342dc68f0a605a980]",
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=44b5bc2d6410417a4f8c023da66b224f7310b24dfd298b94b7ebae2aa9af88ed]"
       ],
       "claim_kind": "interpretation",
       "origin": "curator",
@@ -1296,6 +1348,10 @@
       "target_refs": [
         "region-fixture-basin"
       ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2-alternative;kind=RegionGeometryVersion;mode=alternative_reconstruction;dimension=temporal;sha256=613c04fd983d11ba2bd8835288fc387897aaf42f831a4544eb99bc8c7a862374]",
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2-alternative;kind=RegionGeometryVersion;mode=alternative_reconstruction;dimension=spatial;sha256=37c81472b1ac398e362ff4253b2987ccb9bc8b25cd59ed62066a1d923f32ccb7]"
+      ],
       "claim_kind": "interpretation",
       "origin": "curator",
       "review_state": "contested",
@@ -1311,6 +1367,10 @@
       "statement": "The fixture defines the South Coast analytical region for the 1504–1510 marker observations. GEOMETRY_ASSERTION[{\"coordinates\":[[[19.0,39.0],[22.0,39.0],[22.0,42.0],[19.0,42.0],[19.0,39.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
         "region-south-coast"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=temporal;sha256=f8a0b7e18784f33f8e6c3104a0b2eb1885e53422088d08e30aecb02028ffddc7]",
+        "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=spatial;sha256=410d9514730a0ed9f23e477af55d34b1efba2e6cf794e32370bcecab0de7b90e]"
       ],
       "claim_kind": "interpretation",
       "origin": "curator",
@@ -1357,6 +1417,10 @@
         "mechanism": null,
         "scope": null
       },
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-documented-workshop-meeting;context=event-documented-workshop-meeting;kind=Event;mode=none;dimension=temporal;sha256=d78bdc5593004596f129d5e4bcbcdc4f183ec417ed6f8587f25dccbb16d4b759]",
+        "EXTENT_ASSERTION[owner=event-documented-workshop-meeting;context=event-documented-workshop-meeting;kind=Event;mode=none;dimension=spatial;sha256=d74d8082fcd8b304c7b813958e1382e99dd2807503ffdbab7fbfc7fee680e2e1]"
+      ],
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "reviewed",
@@ -1417,6 +1481,10 @@
       "target_refs": [
         "event-far-observation",
         "place-far-observatory"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=temporal;sha256=4a706d59db4f108a88f9fada30fd9bf4458381dff0dfdb694b39b2096c249474]",
+        "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=spatial;sha256=91a0199853ad826335838f7701b642af8f15dbf5e3ac86f30ba7743b74844a1a]"
       ],
       "claim_kind": "factual",
       "origin": "curator",

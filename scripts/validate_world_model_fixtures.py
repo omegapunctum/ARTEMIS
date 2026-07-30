@@ -693,6 +693,141 @@ def _geometry_assertion_expression(geometry: object) -> str:
     )
 
 
+def _extent_assertion_expression(
+    *,
+    owner_ref: str,
+    context_ref: str,
+    context_kind: str,
+    context_mode: str,
+    dimension: str,
+    extent: dict[str, Any],
+) -> str:
+    binding = {
+        "owner_ref": owner_ref,
+        "context_ref": context_ref,
+        "context_kind": context_kind,
+        "context_mode": context_mode,
+        "dimension": dimension,
+        "extent": extent,
+    }
+    digest = hashlib.sha256(_canonical_json_bytes(binding)).hexdigest()
+    return (
+        f"EXTENT_ASSERTION[owner={owner_ref};context={context_ref};kind={context_kind};"
+        f"mode={context_mode};dimension={dimension};sha256={digest}]"
+    )
+
+
+def _extent_contexts(
+    package: dict[str, Any],
+) -> Iterable[tuple[str, str, str, str, dict[str, Any]]]:
+    for event in package.get("events", []):
+        yield event["id"], event["id"], "Event", "none", event
+    for state in package.get("states", []):
+        yield state["id"], state["id"], "State", "none", state
+    for process in package.get("processes", []):
+        yield (
+            process["id"],
+            process["id"],
+            "Process",
+            str(process.get("process_mode", "none")),
+            process,
+        )
+        for stage in process.get("stages", []):
+            yield process["id"], stage["id"], "ProcessStage", "none", stage
+    for trajectory in package.get("trajectories", []):
+        for segment in trajectory.get("segments", []):
+            yield (
+                trajectory["id"],
+                segment["id"],
+                "TrajectorySegment",
+                str(segment.get("segment_kind", "none")),
+                segment,
+            )
+    for region in package.get("regions", []):
+        for version in region.get("geometry_versions", []):
+            yield (
+                region["id"],
+                version["id"],
+                "RegionGeometryVersion",
+                str(version.get("reconstruction_mode", "none")),
+                version,
+            )
+
+
+def _validate_context_bound_extents(
+    package: dict[str, Any],
+    *,
+    claims: dict[str, dict[str, Any]],
+    evidence_links: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+    package_root: Path,
+) -> None:
+    expected_by_claim: dict[str, set[str]] = defaultdict(set)
+    checked = 0
+    for owner_ref, context_ref, context_kind, context_mode, context in _extent_contexts(package):
+        dimensions: list[tuple[str, dict[str, Any]]] = []
+        temporal = context.get("temporal_extent")
+        if isinstance(temporal, dict):
+            dimensions.append(("temporal", temporal))
+            for index, alternative in enumerate(temporal.get("alternatives", [])):
+                dimensions.append((f"temporal-alternative-{index}", alternative))
+        spatial = context.get("spatial_extent")
+        if isinstance(spatial, dict):
+            dimensions.append(("spatial", spatial))
+        for dimension, extent in dimensions:
+            basis = extent.get("basis_claim_refs")
+            _require(
+                isinstance(basis, list) and basis,
+                f"{context_ref} {dimension} needs source- or inference-bound basis Claims",
+            )
+            expression = _extent_assertion_expression(
+                owner_ref=owner_ref,
+                context_ref=context_ref,
+                context_kind=context_kind,
+                context_mode=context_mode,
+                dimension=dimension,
+                extent=extent,
+            )
+            for claim_id in basis:
+                claim = claims[str(claim_id)]
+                expected_by_claim[str(claim_id)].add(expression)
+                _require(
+                    owner_ref in claim.get("target_refs", []),
+                    f"{context_ref} {dimension} basis Claim {claim_id} must target owner {owner_ref}",
+                )
+                _require(
+                    expression in claim.get("extent_assertions", []),
+                    f"{context_ref} {dimension} basis Claim {claim_id} lacks exact EXTENT_ASSERTION",
+                )
+                if (
+                    claim.get("origin") == "system"
+                    and claim.get("evidence_state") == "not_applicable"
+                ):
+                    _require(
+                        claim.get("input_claim_refs"),
+                        f"{claim_id} derived extent needs an explicit input Claim trace",
+                    )
+                else:
+                    passages = _supporting_passages(
+                        str(claim_id),
+                        evidence_links=evidence_links,
+                        sources=sources,
+                        package_root=package_root,
+                    )
+                    _require(
+                        any(expression in passage for passage in passages),
+                        f"{context_ref} {dimension} EXTENT_ASSERTION is absent from reviewed locator",
+                    )
+            checked += 1
+    for claim_id, claim in claims.items():
+        declared = set(claim.get("extent_assertions", []))
+        _require(
+            declared == expected_by_claim.get(claim_id, set()),
+            f"{claim_id} extent_assertions must exactly match its basis roles",
+        )
+    _require(checked >= 35, "fixture package must exercise context-bound temporal and spatial extents")
+
+
 def _validate_source_bound_geometries(
     package: dict[str, Any],
     *,
@@ -1784,6 +1919,13 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     _require(changing_regions, "fixture package needs a Region whose geometry changes")
     _require(alternative_regions, "fixture package needs an alternative Region reconstruction")
     _validate_source_bound_geometries(
+        package,
+        claims=claims,
+        evidence_links=indexes["evidence_links"],
+        sources=indexes["sources"],
+        package_root=package_root,
+    )
+    _validate_context_bound_extents(
         package,
         claims=claims,
         evidence_links=indexes["evidence_links"],

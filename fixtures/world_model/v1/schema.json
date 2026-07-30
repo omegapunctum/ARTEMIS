@@ -970,6 +970,14 @@
         "relation_binding": {
           "$ref": "#/$defs/relationBinding"
         },
+        "extent_assertions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^EXTENT_ASSERTION\\[owner=[a-z0-9-]+;context=[a-z0-9-]+;kind=[A-Za-z]+;mode=[A-Za-z0-9_-]+;dimension=(temporal|temporal-alternative-[0-9]+|spatial);sha256=[0-9a-f]{64}\\]$"
+          }
+        },
         "claim_kind": {
           "enum": [
             "factual",
