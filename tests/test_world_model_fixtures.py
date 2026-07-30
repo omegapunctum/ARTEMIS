@@ -228,6 +228,64 @@ def test_validator_rejects_historical_absence_semantics(tmp_path: Path) -> None:
         validate_package(root)
 
 
+def test_validator_rejects_empty_required_scenario_registry(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "coverage_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest["required_scenarios"] = {}
+    _write_json(path, manifest)
+
+    with pytest.raises(FixtureValidationError, match="closed v1 scenario registry"):
+        validate_package(root)
+
+
+def test_validator_rejects_required_scenario_wrong_type(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "coverage_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest["required_scenarios"]["point_event"] = "entity-mara-vale"
+    _write_json(path, manifest)
+
+    with pytest.raises(FixtureValidationError, match="closed v1 scenario registry"):
+        validate_package(root)
+
+
+def test_validator_rejects_documented_encounter_semantic_erasure(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    relation = next(
+        item
+        for item in package["relations"]
+        if item["id"] == "relation-mara-ren-encounter"
+    )
+    relation["predicate"] = "interaction"
+    claim = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-documented-encounter"
+    )
+    claim["relation_binding"]["predicate"] = "interaction"
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8").replace(
+            '"predicate":"documented_encounter"',
+            '"predicate":"interaction"',
+        ),
+        encoding="utf-8",
+    )
+    source = next(
+        item for item in package["sources"] if item["id"] == "source-field-alpha"
+    )
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="documented_encounter must preserve its Relation predicate",
+    ):
+        validate_package(root)
+
+
 def test_package_is_validated_against_json_schema(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -398,7 +456,7 @@ def test_validator_rejects_incomplete_alternative_date_uncertainty_basis(tmp_pat
 
     with pytest.raises(
         FixtureValidationError,
-        match="basis_claim_refs must exactly match|must bind every alternative-date Claim",
+        match="does not correspond|basis_claim_refs must exactly match|must bind every alternative-date Claim",
     ):
         validate_package(root)
 
@@ -416,7 +474,7 @@ def test_validator_rejects_uncertainty_subject_retarget(tmp_path: Path) -> None:
 
     with pytest.raises(
         FixtureValidationError,
-        match="must link back|basis_claim_refs must exactly match",
+        match="does not correspond|must link back|basis_claim_refs must exactly match",
     ):
         validate_package(root)
 
@@ -443,6 +501,89 @@ def test_validator_rejects_missing_uncertainty_subject_backlink(tmp_path: Path) 
         if item["id"] == "claim-process-analytical-grouping"
     )
     claim["uncertainty_refs"] = []
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must link back to the Uncertainty"):
+        validate_package(root)
+
+
+@pytest.mark.parametrize(
+    ("claim_id", "uncertainty_id"),
+    [
+        ("claim-charter-event", "uncertainty-arrival-date"),
+        ("claim-documented-encounter", "uncertainty-arrival-date"),
+        ("claim-documented-encounter", "uncertainty-influence-ren-council"),
+        ("claim-region-v1", "uncertainty-process-mechanism"),
+        ("claim-process-north-stage", "uncertainty-region-alternative"),
+        ("claim-trajectory-north", "uncertainty-trajectory-route"),
+    ],
+)
+def test_validator_rejects_foreign_claim_uncertainty_backlink(
+    tmp_path: Path,
+    claim_id: str,
+    uncertainty_id: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(item for item in package["claims"] if item["id"] == claim_id)
+    claim["uncertainty_refs"].append(uncertainty_id)
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="does not correspond to its declared subject"):
+        validate_package(root)
+
+
+def test_validator_rejects_temporal_uncertainty_subject_swap(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-arrival-date"
+    )
+    uncertainty["subject_or_claim_ref"] = "claim-mara-identity"
+    identity_claim = next(
+        item for item in package["claims"] if item["id"] == "claim-mara-identity"
+    )
+    identity_claim["uncertainty_refs"].append("uncertainty-arrival-date")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="primary Event Claim"):
+        validate_package(root)
+
+
+def test_validator_rejects_process_uncertainty_stage_subject(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-process-mechanism"
+    )
+    uncertainty["subject_or_claim_ref"] = "claim-process-north-stage"
+    uncertainty["basis_claim_refs"] = []
+    grouping = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-process-analytical-grouping"
+    )
+    grouping["uncertainty_refs"] = []
+    north = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-process-north-stage"
+    )
+    north["uncertainty_refs"].append("uncertainty-process-mechanism")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="system derivation Claim"):
+        validate_package(root)
+
+
+def test_validator_rejects_missing_world_slice_uncertainty_backlink(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["world_slice"]["uncertainty_refs"] = []
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="must link back to the Uncertainty"):
@@ -763,7 +904,18 @@ def test_ready_gate_rejects_null_reviewed_at(tmp_path: Path) -> None:
     package["record_time"]["reviewed_at"] = None
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="needs record_time.reviewed_at"):
+    with pytest.raises(FixtureValidationError, match="needs UTC ISO-8601 record_time.reviewed_at"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_invalid_reviewed_at(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    package = _read_package(root)
+    package["record_time"]["reviewed_at"] = "not-a-date"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="needs UTC ISO-8601 record_time.reviewed_at"):
         validate_package(root, require_ready=True)
 
 

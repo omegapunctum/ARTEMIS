@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 from collections import Counter, defaultdict
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -67,6 +67,20 @@ COLLECTION_TYPES = {
     "synchronized_views": "SynchronizedView",
     "sources": "Source",
     "layers": "Layer",
+}
+REQUIRED_COVERAGE_SCENARIOS = {
+    "point_event": "event-north-harbor-charter",
+    "approximate_event_with_alternative_date": "event-workshop-arrival",
+    "interval_state": "state-north-harbor-administration",
+    "multi_stage_multi_region_process": "process-coastal-exchange",
+    "trajectory_with_segment_uncertainty": "trajectory-mara-vale",
+    "changing_region_geometry": "region-fixture-basin",
+    "local_global_synchronized_context": "view-1504-local-global",
+    "challenged_or_alternative_reconstruction": "region-geometry-v2-alternative",
+    "co_presence_without_relation": "observation-mara-traveler-co-presence",
+    "documented_encounter": "relation-mara-ren-encounter",
+    "challenged_influence_claim": "relation-ren-influences-council-protocol",
+    "compatibility_projection": "compatibility/architecture_atlas_projection.json",
 }
 
 ALLOWED_CLAIM_KINDS = {
@@ -212,6 +226,19 @@ class FixtureValidationError(ValueError):
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise FixtureValidationError(message)
+
+
+def _is_utc_second_timestamp(value: object) -> bool:
+    if not isinstance(value, str) or re.fullmatch(
+        r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+        value,
+    ) is None:
+        return False
+    try:
+        datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return False
+    return True
 
 
 def _read_json(path: Path) -> Any:
@@ -724,6 +751,8 @@ def _validate_uncertainty_ownership(
     ):
         for owner_id, item in indexes[collection].items():
             owner_records[owner_id] = (owner_id, item)
+    world_slice = package["world_slice"]
+    owner_records[str(world_slice["id"])] = (str(world_slice["id"]), world_slice)
     for process_id, process in indexes["processes"].items():
         for stage in process.get("stages", []):
             owner_records[str(stage.get("id"))] = (process_id, stage)
@@ -737,21 +766,22 @@ def _validate_uncertainty_ownership(
     for uncertainty_id, uncertainty in indexes["uncertainties"].items():
         subject_ref = str(uncertainty.get("subject_or_claim_ref"))
         basis_claim_refs = {str(ref) for ref in uncertainty.get("basis_claim_refs", [])}
-        eligible_owners = {subject_ref} | basis_claim_refs
-
         premise_claim_ids = set(basis_claim_refs)
         if subject_ref in claims:
             premise_claim_ids.add(subject_ref)
+        eligible_object_owners = {subject_ref}
         for claim_id in premise_claim_ids:
-            eligible_owners.update(str(ref) for ref in claims[claim_id].get("target_refs", []))
+            eligible_object_owners.update(
+                str(ref) for ref in claims[claim_id].get("target_refs", [])
+            )
 
         if subject_ref in indexes["trajectories"]:
-            eligible_owners.update(
+            eligible_object_owners.update(
                 str(segment.get("id"))
                 for segment in indexes["trajectories"][subject_ref].get("segments", [])
             )
         if subject_ref in indexes["regions"]:
-            eligible_owners.update(
+            eligible_object_owners.update(
                 str(version.get("id"))
                 for version in indexes["regions"][subject_ref].get("geometry_versions", [])
             )
@@ -766,17 +796,20 @@ def _validate_uncertainty_ownership(
         ):
             for owner_id, item in indexes[collection].items():
                 if subject_ref in _object_spatial_anchor_refs(item):
-                    eligible_owners.add(owner_id)
-
-        for claim_id, claim in claims.items():
-            if set(claim.get("target_refs", [])) & eligible_owners:
-                eligible_owners.add(claim_id)
+                    eligible_object_owners.add(owner_id)
 
         for owner_id, (canonical_owner_id, item) in owner_records.items():
             if uncertainty_id not in item.get("uncertainty_refs", []):
                 continue
+            if item.get("type") == "Claim":
+                is_eligible = owner_id in premise_claim_ids
+            else:
+                is_eligible = (
+                    owner_id in eligible_object_owners
+                    or canonical_owner_id in eligible_object_owners
+                )
             _require(
-                owner_id in eligible_owners or canonical_owner_id in eligible_owners,
+                is_eligible,
                 f"{owner_id} uncertainty_ref {uncertainty_id} does not correspond to its declared subject",
             )
 
@@ -791,17 +824,24 @@ def _validate_uncertainty_ownership(
         expected_basis: set[str]
         if dimension == "temporal_value":
             expected_basis = set()
+            expected_subjects: set[str] = set()
             for event in indexes["events"].values():
                 if uncertainty_id not in event.get("uncertainty_refs", []):
                     continue
                 temporal_extent = event.get("temporal_extent", {})
-                expected_basis.update(
+                primary_basis = {
                     str(ref) for ref in temporal_extent.get("basis_claim_refs", [])
-                )
+                }
+                expected_subjects.update(primary_basis)
+                expected_basis.update(primary_basis)
                 for alternative in temporal_extent.get("alternatives", []):
                     expected_basis.update(
                         str(ref) for ref in alternative.get("basis_claim_refs", [])
                     )
+            _require(
+                expected_subjects == {subject_ref},
+                f"{uncertainty_id} temporal subject must be the primary Event Claim",
+            )
         elif dimension == "geometry_reconstruction":
             _require(
                 subject_ref in indexes["regions"],
@@ -814,16 +854,34 @@ def _validate_uncertainty_ownership(
                 for claim_id in version.get("claim_refs", [])
             }
         elif dimension == "process":
+            expected_subjects = {
+                str(claim_id)
+                for process in indexes["processes"].values()
+                if uncertainty_id in process.get("uncertainty_refs", [])
+                for extent_key in ("temporal_extent", "spatial_extent")
+                for claim_id in process.get(extent_key, {}).get("basis_claim_refs", [])
+            }
             _require(
-                subject_ref in claims,
-                f"{uncertainty_id} process uncertainty must target its derivation Claim",
+                expected_subjects == {subject_ref}
+                and subject_ref in claims
+                and claims[subject_ref].get("claim_kind") == "observation"
+                and claims[subject_ref].get("origin") == "system"
+                and claims[subject_ref].get("evidence_state") == "not_applicable",
+                f"{uncertainty_id} process subject must be its system derivation Claim",
             )
             expected_basis = {
                 str(ref) for ref in claims[subject_ref].get("input_claim_refs", [])
             }
         elif dimension == "relation":
+            relation_subjects = {
+                str(claim_id)
+                for relation in indexes["relations"].values()
+                if uncertainty_id in relation.get("uncertainty_refs", [])
+                for claim_id in relation.get("claim_refs", [])
+            }
             _require(
-                subject_ref in claims
+                relation_subjects == {subject_ref}
+                and subject_ref in claims
                 and any(
                     ref in indexes["relations"]
                     for ref in claims[subject_ref].get("target_refs", [])
@@ -1679,15 +1737,130 @@ def _validate_coverage(
     _require(dict(counts) == required, f"coverage counts drift: expected {required}, got {dict(counts)}")
 
     scenarios = manifest.get("required_scenarios")
-    _require(isinstance(scenarios, dict), "coverage manifest needs scenarios")
-    for scenario, ref in scenarios.items():
-        if scenario == "compatibility_projection":
-            _require(
-                (root / PACKAGE_RELATIVE / str(ref)).is_file(),
-                "coverage manifest compatibility projection is missing",
-            )
-        else:
-            _require(ref in registry, f"coverage scenario {scenario} has orphan reference {ref}")
+    _require(
+        scenarios == REQUIRED_COVERAGE_SCENARIOS,
+        "coverage manifest required_scenarios must match the closed v1 scenario registry",
+    )
+    _require(
+        set(REQUIRED_COVERAGE_SCENARIOS.values()) - {
+            REQUIRED_COVERAGE_SCENARIOS["compatibility_projection"]
+        }
+        <= registry,
+        "coverage manifest has an orphan required scenario",
+    )
+    _require(
+        (root / PACKAGE_RELATIVE / REQUIRED_COVERAGE_SCENARIOS["compatibility_projection"]).is_file(),
+        "coverage manifest compatibility projection is missing",
+    )
+
+    point_event = indexes["events"].get(REQUIRED_COVERAGE_SCENARIOS["point_event"])
+    _require(
+        isinstance(point_event, dict)
+        and point_event.get("temporal_extent", {}).get("kind") == "instant",
+        "coverage point_event must reference an instant Event",
+    )
+    approximate_event = indexes["events"].get(
+        REQUIRED_COVERAGE_SCENARIOS["approximate_event_with_alternative_date"]
+    )
+    _require(
+        isinstance(approximate_event, dict)
+        and approximate_event.get("temporal_extent", {}).get("precision") != "exact"
+        and bool(approximate_event.get("temporal_extent", {}).get("alternatives")),
+        "coverage approximate event must preserve an alternative date",
+    )
+    interval_state = indexes["states"].get(REQUIRED_COVERAGE_SCENARIOS["interval_state"])
+    _require(
+        isinstance(interval_state, dict)
+        and interval_state.get("temporal_extent", {}).get("kind") == "closed_interval",
+        "coverage interval_state must reference an interval State",
+    )
+    process = indexes["processes"].get(
+        REQUIRED_COVERAGE_SCENARIOS["multi_stage_multi_region_process"]
+    )
+    _require(
+        isinstance(process, dict)
+        and len(process.get("stages", [])) >= 2
+        and process.get("spatial_extent", {}).get("kind") == "multiple_regions",
+        "coverage process must preserve multiple stages and Regions",
+    )
+    trajectory = indexes["trajectories"].get(
+        REQUIRED_COVERAGE_SCENARIOS["trajectory_with_segment_uncertainty"]
+    )
+    _require(
+        isinstance(trajectory, dict)
+        and bool(trajectory.get("uncertainty_refs"))
+        and any(segment.get("uncertainty_refs") for segment in trajectory.get("segments", [])),
+        "coverage trajectory must preserve segment uncertainty",
+    )
+    region = indexes["regions"].get(REQUIRED_COVERAGE_SCENARIOS["changing_region_geometry"])
+    _require(
+        isinstance(region, dict)
+        and len(region.get("geometry_versions", [])) >= 2
+        and len(
+            {
+                version.get("reconstruction_mode")
+                for version in region.get("geometry_versions", [])
+            }
+        )
+        >= 2,
+        "coverage Region must preserve changing reconstruction versions",
+    )
+    view = indexes["synchronized_views"].get(
+        REQUIRED_COVERAGE_SCENARIOS["local_global_synchronized_context"]
+    )
+    _require(
+        isinstance(view, dict)
+        and view.get("comparison_scope", {}).get("mode") == "local_global"
+        and bool(view.get("local_context_refs"))
+        and bool(view.get("global_context_refs")),
+        "coverage synchronized context must preserve local/global comparison",
+    )
+    alternative_version = next(
+        (
+            version
+            for candidate_region in indexes["regions"].values()
+            for version in candidate_region.get("geometry_versions", [])
+            if version.get("id")
+            == REQUIRED_COVERAGE_SCENARIOS["challenged_or_alternative_reconstruction"]
+        ),
+        None,
+    )
+    _require(
+        isinstance(alternative_version, dict)
+        and alternative_version.get("reconstruction_mode") == "alternative_reconstruction"
+        and alternative_version.get("is_primary") is False
+        and bool(alternative_version.get("uncertainty_refs")),
+        "coverage alternative reconstruction must remain explicit and uncertain",
+    )
+    observation = indexes["derived_observations"].get(
+        REQUIRED_COVERAGE_SCENARIOS["co_presence_without_relation"]
+    )
+    _require(
+        isinstance(observation, dict)
+        and observation.get("observation_kind") == "co_presence"
+        and observation.get("relation_created") is False,
+        "coverage co-presence must remain a DerivedObservation without Relation",
+    )
+    encounter = indexes["relations"].get(REQUIRED_COVERAGE_SCENARIOS["documented_encounter"])
+    _require(
+        isinstance(encounter, dict) and encounter.get("predicate") == "documented_encounter",
+        "coverage documented_encounter must preserve its Relation predicate",
+    )
+    influence = indexes["relations"].get(
+        REQUIRED_COVERAGE_SCENARIOS["challenged_influence_claim"]
+    )
+    influence_claims = (
+        [indexes["claims"][str(ref)] for ref in influence.get("claim_refs", [])]
+        if isinstance(influence, dict)
+        else []
+    )
+    _require(
+        isinstance(influence, dict)
+        and influence.get("predicate") == "influence"
+        and bool(influence_claims)
+        and all(claim.get("evidence_state") == "mixed" for claim in influence_claims),
+        "coverage challenged influence must preserve mixed reviewed evidence",
+    )
 
     exclusions = manifest.get("known_exclusions")
     _require(isinstance(exclusions, list) and exclusions, "coverage manifest needs known exclusions")
@@ -1872,9 +2045,10 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             "frozen commit does not contain the reviewed semantic content",
         )
         _require(
-            isinstance(package.get("record_time", {}).get("reviewed_at"), str)
-            and package["record_time"]["reviewed_at"],
-            "READY package needs record_time.reviewed_at",
+            _is_utc_second_timestamp(
+                package.get("record_time", {}).get("reviewed_at")
+            ),
+            "READY package needs UTC ISO-8601 record_time.reviewed_at",
         )
         for review in reviews:
             _require(review.get("frozen_commit") == frozen, "reviews must inspect the same frozen commit")

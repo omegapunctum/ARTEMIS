@@ -56,13 +56,15 @@
       ],
       "properties": {
         "created_at": {
-          "type": "string"
+          "type": "string",
+          "format": "date-time"
         },
         "reviewed_at": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "format": "date-time"
         }
       }
     },
@@ -366,6 +368,7 @@
         "temporal_bounds",
         "spatial_bounds",
         "included_layer_refs",
+        "uncertainty_refs",
         "dataset_identity",
         "coverage_manifest_ref"
       ],
@@ -395,6 +398,9 @@
           "$ref": "#/$defs/spatialExtent"
         },
         "included_layer_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "uncertainty_refs": {
           "$ref": "#/$defs/referenceList"
         },
         "dataset_identity": {

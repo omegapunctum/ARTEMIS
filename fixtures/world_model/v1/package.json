@@ -52,6 +52,9 @@
       "layer-exchange",
       "layer-distant-context"
     ],
+    "uncertainty_refs": [
+      "uncertainty-corpus-coverage"
+    ],
     "dataset_identity": {
       "kind": "fixture_package",
       "value": "artemis-world-model-contract-fixture-v1@1.0.0"
@@ -1146,9 +1149,7 @@
       "review_state": "reviewed",
       "confidence": "high",
       "evidence_state": "supported",
-      "uncertainty_refs": [
-        "uncertainty-region-alternative"
-      ]
+      "uncertainty_refs": []
     },
     {
       "id": "claim-process-analytical-grouping",
