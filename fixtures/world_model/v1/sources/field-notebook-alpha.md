@@ -32,6 +32,7 @@ EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kin
 LOCATOR[alpha-administration]
 
 The North Harbor council administered the basin from 1500 through 1508.
+STATE_ASSERTION[{"state_ref":"state-north-harbor-administration","subject_ref":"entity-fixture-basin","value":"administered_by_north_harbor_council"}]
 EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=temporal;sha256=a74aee96364b0dcff1039c01e7a249fb7c993cf83c797e7867b72045490d5272]
 EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=spatial;sha256=f3c1621752fd8360a4efc4058f633a4c686b5175c1ff094b7b0b826f5341f2ca]
 
@@ -73,6 +74,7 @@ EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=
 LOCATOR[alpha-trajectory-workshop]
 
 Mara Vale was recorded at Inland Workshop from 1504 through 1508.
+STATE_ASSERTION[{"state_ref":"state-mara-workshop-presence","subject_ref":"entity-mara-vale","value":"present"}]
 EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=9e96d8d52918be21c6a16271a01484237ecb9222209f679af68d43cc9438bb35]
 EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=56a7e92d7e87e31f08879a5f1fb9b89e00ed2ac5f0e5311659f70f65eebd5adf]
 EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=5cc26bdc59ad4d7e2cf77ed0e1d7fa6db0a1e5a7d1d22ec27b42dcea54d3c3a4]
@@ -83,6 +85,7 @@ EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;
 LOCATOR[alpha-traveler-workshop]
 
 Traveler Sol was recorded at Inland Workshop during 1505. The notebook records no meeting, exchange or relationship between Traveler Sol and Mara Vale.
+STATE_ASSERTION[{"state_ref":"state-traveler-workshop-presence","subject_ref":"entity-traveler-sol","value":"present"}]
 EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=e4264d84dfebe005b6385475abaf670274bbc470c266e70c4598f1db2214854b]
 EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=02a7dffa092c32c2ee44da88b17524c923bb2716c0458d69baba554d9021aabb]
 

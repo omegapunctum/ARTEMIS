@@ -68,7 +68,7 @@
       "title": "Synthetic field notebook alpha",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-alpha.md",
-      "sha256": "6d1f131dd62355eb3370e22bc9040b8448d7ed204feb65b8acb5eeccff4c53a4",
+      "sha256": "69eb82ffd5df3aadd3884baf9dcb203ab8e50fd4992be46ba2cdb31a91928dd9",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -1140,6 +1140,13 @@
       "target_refs": [
         "state-north-harbor-administration"
       ],
+      "state_bindings": [
+        {
+          "state_ref": "state-north-harbor-administration",
+          "subject_ref": "entity-fixture-basin",
+          "value": "administered_by_north_harbor_council"
+        }
+      ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=temporal;sha256=a74aee96364b0dcff1039c01e7a249fb7c993cf83c797e7867b72045490d5272]",
         "EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=spatial;sha256=f3c1621752fd8360a4efc4058f633a4c686b5175c1ff094b7b0b826f5341f2ca]"
@@ -1264,6 +1271,13 @@
         "trajectory-mara-vale",
         "state-mara-workshop-presence"
       ],
+      "state_bindings": [
+        {
+          "state_ref": "state-mara-workshop-presence",
+          "subject_ref": "entity-mara-vale",
+          "value": "present"
+        }
+      ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=9e96d8d52918be21c6a16271a01484237ecb9222209f679af68d43cc9438bb35]",
         "EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=56a7e92d7e87e31f08879a5f1fb9b89e00ed2ac5f0e5311659f70f65eebd5adf]",
@@ -1285,6 +1299,13 @@
         "entity-traveler-sol",
         "state-traveler-workshop-presence",
         "place-inland-workshop"
+      ],
+      "state_bindings": [
+        {
+          "state_ref": "state-traveler-workshop-presence",
+          "subject_ref": "entity-traveler-sol",
+          "value": "present"
+        }
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=e4264d84dfebe005b6385475abaf670274bbc470c266e70c4598f1db2214854b]",

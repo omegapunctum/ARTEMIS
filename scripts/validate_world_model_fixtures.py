@@ -766,103 +766,94 @@ def _validate_uncertainty_ownership(
     for uncertainty_id, uncertainty in indexes["uncertainties"].items():
         subject_ref = str(uncertainty.get("subject_or_claim_ref"))
         basis_claim_refs = {str(ref) for ref in uncertainty.get("basis_claim_refs", [])}
-        premise_claim_ids = set(basis_claim_refs)
-        if subject_ref in claims:
-            premise_claim_ids.add(subject_ref)
-        eligible_object_owners = {subject_ref}
-        for claim_id in premise_claim_ids:
-            eligible_object_owners.update(
-                str(ref) for ref in claims[claim_id].get("target_refs", [])
-            )
-
-        if subject_ref in indexes["trajectories"]:
-            eligible_object_owners.update(
-                str(segment.get("id"))
-                for segment in indexes["trajectories"][subject_ref].get("segments", [])
-            )
-        if subject_ref in indexes["regions"]:
-            eligible_object_owners.update(
-                str(version.get("id"))
-                for version in indexes["regions"][subject_ref].get("geometry_versions", [])
-            )
-
-        for collection in (
-            "events",
-            "states",
-            "processes",
-            "trajectories",
-            "regions",
-            "relations",
-        ):
-            for owner_id, item in indexes[collection].items():
-                if subject_ref in _object_spatial_anchor_refs(item):
-                    eligible_object_owners.add(owner_id)
-
-        for owner_id, (canonical_owner_id, item) in owner_records.items():
-            if uncertainty_id not in item.get("uncertainty_refs", []):
-                continue
-            if item.get("type") == "Claim":
-                is_eligible = owner_id in premise_claim_ids
-            else:
-                is_eligible = (
-                    owner_id in eligible_object_owners
-                    or canonical_owner_id in eligible_object_owners
-                )
-            _require(
-                is_eligible,
-                f"{owner_id} uncertainty_ref {uncertainty_id} does not correspond to its declared subject",
-            )
-
-        if subject_ref in owner_records:
-            _canonical_owner_id, subject = owner_records[subject_ref]
-            _require(
-                uncertainty_id in subject.get("uncertainty_refs", []),
-                f"{uncertainty_id} subject {subject_ref} must link back to the Uncertainty",
-            )
-
         dimension = uncertainty.get("dimension")
         expected_basis: set[str]
+        expected_backlink_owners: set[str]
         if dimension == "temporal_value":
-            expected_basis = set()
-            expected_subjects: set[str] = set()
-            for event in indexes["events"].values():
-                if uncertainty_id not in event.get("uncertainty_refs", []):
-                    continue
-                temporal_extent = event.get("temporal_extent", {})
-                primary_basis = {
-                    str(ref) for ref in temporal_extent.get("basis_claim_refs", [])
-                }
-                expected_subjects.update(primary_basis)
-                expected_basis.update(primary_basis)
-                for alternative in temporal_extent.get("alternatives", []):
-                    expected_basis.update(
-                        str(ref) for ref in alternative.get("basis_claim_refs", [])
+            matching_events = [
+                event
+                for event in indexes["events"].values()
+                if {
+                    str(ref)
+                    for ref in event.get("temporal_extent", {}).get(
+                        "basis_claim_refs", []
                     )
+                }
+                == {subject_ref}
+                and event.get("temporal_extent", {}).get("alternatives")
+            ]
             _require(
-                expected_subjects == {subject_ref},
+                len(matching_events) == 1,
                 f"{uncertainty_id} temporal subject must be the primary Event Claim",
+            )
+            event = matching_events[0]
+            expected_basis = {subject_ref}
+            for alternative in event["temporal_extent"]["alternatives"]:
+                expected_basis.update(
+                    str(ref) for ref in alternative.get("basis_claim_refs", [])
+                )
+            place_targets = {
+                str(ref)
+                for ref in claims[subject_ref].get("target_refs", [])
+                if indexes["entities"].get(str(ref), {}).get("entity_kind") == "Place"
+            }
+            expected_backlink_owners = (
+                set(expected_basis) | {str(event["id"])} | place_targets
             )
         elif dimension == "geometry_reconstruction":
             _require(
                 subject_ref in indexes["regions"],
                 f"{uncertainty_id} geometry reconstruction must target a Region",
             )
-            expected_basis = {
-                str(claim_id)
-                for version in indexes["regions"][subject_ref].get("geometry_versions", [])
-                if uncertainty_id in version.get("uncertainty_refs", [])
-                for claim_id in version.get("claim_refs", [])
+            region = indexes["regions"][subject_ref]
+            versions_by_id = {
+                str(version["id"]): version
+                for version in region.get("geometry_versions", [])
             }
-        elif dimension == "process":
-            expected_subjects = {
-                str(claim_id)
-                for process in indexes["processes"].values()
-                if uncertainty_id in process.get("uncertainty_refs", [])
-                for extent_key in ("temporal_extent", "spatial_extent")
-                for claim_id in process.get(extent_key, {}).get("basis_claim_refs", [])
+            alternative_ids = {
+                str(ref) for ref in uncertainty.get("alternatives", [])
             }
             _require(
-                expected_subjects == {subject_ref}
+                alternative_ids
+                and alternative_ids <= set(versions_by_id),
+                f"{uncertainty_id} alternatives must identify versions of its Region",
+            )
+            expected_basis = {
+                str(claim_id)
+                for version_id, version in versions_by_id.items()
+                if version_id in alternative_ids
+                for claim_id in version.get("claim_refs", [])
+            }
+            affected_states = {
+                state_id
+                for state_id, state in indexes["states"].items()
+                if state.get("spatial_extent", {}).get("region_ref") == subject_ref
+                and any(
+                    _temporal_overlaps(
+                        state.get("temporal_extent", {}),
+                        versions_by_id[version_id].get("temporal_extent", {}),
+                    )
+                    for version_id in alternative_ids
+                )
+            }
+            expected_backlink_owners = (
+                {subject_ref} | alternative_ids | expected_basis | affected_states
+            )
+        elif dimension == "process":
+            matching_processes = [
+                process
+                for process in indexes["processes"].values()
+                if {
+                    str(claim_id)
+                    for extent_key in ("temporal_extent", "spatial_extent")
+                    for claim_id in process.get(extent_key, {}).get(
+                        "basis_claim_refs", []
+                    )
+                }
+                == {subject_ref}
+            ]
+            _require(
+                len(matching_processes) == 1
                 and subject_ref in claims
                 and claims[subject_ref].get("claim_kind") == "observation"
                 and claims[subject_ref].get("origin") == "system"
@@ -872,15 +863,18 @@ def _validate_uncertainty_ownership(
             expected_basis = {
                 str(ref) for ref in claims[subject_ref].get("input_claim_refs", [])
             }
-        elif dimension == "relation":
-            relation_subjects = {
-                str(claim_id)
-                for relation in indexes["relations"].values()
-                if uncertainty_id in relation.get("uncertainty_refs", [])
-                for claim_id in relation.get("claim_refs", [])
+            expected_backlink_owners = {
+                subject_ref,
+                str(matching_processes[0]["id"]),
             }
+        elif dimension == "relation":
+            matching_relations = [
+                relation
+                for relation in indexes["relations"].values()
+                if set(relation.get("claim_refs", [])) == {subject_ref}
+            ]
             _require(
-                relation_subjects == {subject_ref}
+                len(matching_relations) == 1
                 and subject_ref in claims
                 and any(
                     ref in indexes["relations"]
@@ -889,23 +883,43 @@ def _validate_uncertainty_ownership(
                 f"{uncertainty_id} relation uncertainty must target a Relation Claim",
             )
             expected_basis = {subject_ref}
+            relation = matching_relations[0]
+            expected_backlink_owners = {
+                subject_ref,
+                str(relation["id"]),
+                str(relation["object_ref"]),
+            }
         elif dimension == "trajectory_gap":
             _require(
                 subject_ref in indexes["trajectories"],
                 f"{uncertainty_id} trajectory gap must target a Trajectory",
             )
+            gap_segments = [
+                segment
+                for segment in indexes["trajectories"][subject_ref].get("segments", [])
+                if segment.get("segment_kind") == "inferred_gap"
+            ]
+            _require(
+                gap_segments,
+                f"{uncertainty_id} trajectory gap needs an inferred_gap segment",
+            )
             expected_basis = {
                 str(claim_id)
-                for segment in indexes["trajectories"][subject_ref].get("segments", [])
-                if uncertainty_id in segment.get("uncertainty_refs", [])
+                for segment in gap_segments
                 for claim_id in segment.get("claim_refs", [])
             }
+            expected_backlink_owners = (
+                {subject_ref}
+                | {str(segment["id"]) for segment in gap_segments}
+                | expected_basis
+            )
         elif dimension == "corpus_coverage":
             _require(
                 subject_ref == str(package.get("world_slice", {}).get("id")),
                 f"{uncertainty_id} corpus coverage must target the WorldSlice",
             )
             expected_basis = set()
+            expected_backlink_owners = {subject_ref}
         else:
             raise FixtureValidationError(
                 f"{uncertainty_id} has unsupported uncertainty dimension {dimension}"
@@ -913,6 +927,15 @@ def _validate_uncertainty_ownership(
         _require(
             basis_claim_refs == expected_basis,
             f"{uncertainty_id} basis_claim_refs must exactly match its uncertainty scenario",
+        )
+        actual_backlink_owners = {
+            owner_id
+            for owner_id, (_canonical_owner_id, item) in owner_records.items()
+            if uncertainty_id in item.get("uncertainty_refs", [])
+        }
+        _require(
+            actual_backlink_owners == expected_backlink_owners,
+            f"{uncertainty_id} backlinks must exactly match its dimension-owned records",
         )
 
 
@@ -1350,6 +1373,73 @@ def _validate_relation_extent_evidence(
     )
 
 
+def _validate_state_bindings(
+    states: dict[str, dict[str, Any]],
+    *,
+    claims: dict[str, dict[str, Any]],
+    evidence_links: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+    package_root: Path,
+) -> None:
+    expected_by_claim: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for state_id, state in states.items():
+        binding = {
+            "state_ref": state_id,
+            "subject_ref": str(state.get("subject_ref")),
+            "value": str(state.get("value")),
+        }
+        expression = (
+            "STATE_ASSERTION["
+            + json.dumps(
+                binding,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "]"
+        )
+        state_claim_refs = {str(ref) for ref in state.get("claim_refs", [])}
+        extent_basis = {
+            str(ref)
+            for extent_key in ("temporal_extent", "spatial_extent")
+            for ref in state.get(extent_key, {}).get("basis_claim_refs", [])
+        }
+        _require(
+            state_claim_refs == extent_basis and state_claim_refs,
+            f"{state_id} Claim refs must exactly bind State extents and value",
+        )
+        for claim_id in state_claim_refs:
+            expected_by_claim[claim_id].append(binding)
+            claim = claims[claim_id]
+            _require(
+                binding in claim.get("state_bindings", []),
+                f"{state_id} Claim {claim_id} lacks exact state_binding",
+            )
+            passages = _supporting_passages(
+                claim_id,
+                evidence_links=evidence_links,
+                sources=sources,
+                package_root=package_root,
+            )
+            _require(
+                any(expression in passage for passage in passages),
+                f"{state_id} supporting locator lacks exact STATE_ASSERTION",
+            )
+
+    for claim_id, claim in claims.items():
+        actual = claim.get("state_bindings", [])
+        expected = expected_by_claim.get(claim_id, [])
+        _require(
+            sorted(
+                (_canonical_json_bytes(binding) for binding in actual),
+            )
+            == sorted(
+                (_canonical_json_bytes(binding) for binding in expected),
+            ),
+            f"{claim_id} state_bindings drift from owned State semantics",
+        )
+
+
 def _validate_references(
     package: dict[str, Any],
     type_registry: dict[str, str | None],
@@ -1727,8 +1817,25 @@ def _validate_coverage(
     root: Path,
 ) -> None:
     manifest = _read_json(root / PACKAGE_RELATIVE / "coverage_manifest.json")
+    _require(
+        set(manifest)
+        == {
+            "schema_version",
+            "package_id",
+            "required_object_kinds",
+            "required_scenarios",
+            "included_layers",
+            "known_exclusions",
+        },
+        "coverage manifest envelope must be closed",
+    )
     _require(manifest.get("schema_version") == SCHEMA_VERSION, "coverage manifest version drift")
     _require(manifest.get("package_id") == package.get("package_id"), "coverage package id drift")
+    _require(
+        manifest.get("included_layers")
+        == package.get("world_slice", {}).get("included_layer_refs"),
+        "coverage included_layers must exactly match WorldSlice",
+    )
     counts = Counter()
     for collection, expected_type in COLLECTION_TYPES.items():
         counts[expected_type] = len(indexes[collection])
@@ -1815,21 +1922,34 @@ def _validate_coverage(
         and bool(view.get("global_context_refs")),
         "coverage synchronized context must preserve local/global comparison",
     )
-    alternative_version = next(
+    alternative_record = next(
         (
-            version
-            for candidate_region in indexes["regions"].values()
+            (candidate_region_id, version)
+            for candidate_region_id, candidate_region in indexes["regions"].items()
             for version in candidate_region.get("geometry_versions", [])
             if version.get("id")
             == REQUIRED_COVERAGE_SCENARIOS["challenged_or_alternative_reconstruction"]
         ),
         None,
     )
+    alternative_region_id, alternative_version = (
+        alternative_record if alternative_record is not None else (None, None)
+    )
+    geometry_uncertainties = [
+        indexes["uncertainties"][str(ref)]
+        for ref in alternative_version.get("uncertainty_refs", [])
+        if str(ref) in indexes["uncertainties"]
+    ] if isinstance(alternative_version, dict) else []
     _require(
         isinstance(alternative_version, dict)
         and alternative_version.get("reconstruction_mode") == "alternative_reconstruction"
         and alternative_version.get("is_primary") is False
-        and bool(alternative_version.get("uncertainty_refs")),
+        and any(
+            uncertainty.get("dimension") == "geometry_reconstruction"
+            and uncertainty.get("subject_or_claim_ref") == alternative_region_id
+            and alternative_version.get("id") in uncertainty.get("alternatives", [])
+            for uncertainty in geometry_uncertainties
+        ),
         "coverage alternative reconstruction must remain explicit and uncertain",
     )
     observation = indexes["derived_observations"].get(
@@ -1864,16 +1984,20 @@ def _validate_coverage(
 
     exclusions = manifest.get("known_exclusions")
     _require(isinstance(exclusions, list) and exclusions, "coverage manifest needs known exclusions")
+    descriptions: list[str] = []
     for exclusion in exclusions:
         _require(
-            isinstance(exclusion, dict) and exclusion.get("assertion_kind") == "corpus_exclusion",
+            isinstance(exclusion, dict)
+            and set(exclusion) == {"assertion_kind", "description"}
+            and exclusion.get("assertion_kind") == "corpus_exclusion"
+            and isinstance(exclusion.get("description"), str)
+            and bool(exclusion["description"].strip()),
             "fixture absence must be represented only as corpus exclusion",
         )
-    spatial_summary = manifest.get("spatial_bounds")
+        descriptions.append(exclusion["description"].strip())
     _require(
-        isinstance(spatial_summary, str)
-        and all(label in spatial_summary for label in ("Fixture Basin", "South Coast", "Far Observatory")),
-        "coverage manifest must name every WorldSlice spatial scope component",
+        len(descriptions) == len(set(descriptions)),
+        "coverage manifest corpus exclusions must be unique",
     )
 
 
@@ -2113,6 +2237,13 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     _validate_claim_dependency_graph(claims)
     _validate_claim_ownership(indexes, claims)
     _validate_uncertainty_ownership(package, indexes)
+    _validate_state_bindings(
+        indexes["states"],
+        claims=claims,
+        evidence_links=indexes["evidence_links"],
+        sources=indexes["sources"],
+        package_root=package_root,
+    )
 
     for collection in ("events", "states", "processes", "relations"):
         for item_id, item in indexes[collection].items():
@@ -2322,6 +2453,29 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             if version.get("reconstruction_mode") == "alternative_reconstruction":
                 alternatives.append(version)
                 _require(version.get("uncertainty_refs"), f"{version_id} alternative needs uncertainty")
+                alternative_geometry = _canonical_json_bytes(
+                    version.get("spatial_extent", {}).get("geometry")
+                )
+                overlapping_primary_versions = [
+                    candidate
+                    for candidate in versions
+                    if candidate.get("is_primary") is True
+                    and _temporal_overlaps(
+                        version.get("temporal_extent", {}),
+                        candidate.get("temporal_extent", {}),
+                    )
+                ]
+                _require(
+                    overlapping_primary_versions
+                    and all(
+                        _canonical_json_bytes(
+                            candidate.get("spatial_extent", {}).get("geometry")
+                        )
+                        != alternative_geometry
+                        for candidate in overlapping_primary_versions
+                    ),
+                    f"{version_id} alternative geometry must differ from overlapping primary reconstruction",
+                )
         if len(geometries) >= 2:
             changing_regions.append(region_id)
         if alternatives:

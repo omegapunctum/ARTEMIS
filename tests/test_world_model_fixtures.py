@@ -166,6 +166,25 @@ def test_validator_rejects_semantic_collapse(tmp_path: Path) -> None:
         validate_package(root)
 
 
+def test_validator_rejects_state_subject_and_value_substitution(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    state = next(
+        item
+        for item in package["states"]
+        if item["id"] == "state-north-harbor-administration"
+    )
+    state["subject_ref"] = "entity-mara-vale"
+    state["value"] = "administered_by_unattested_authority"
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="lacks exact state_binding|lacks exact STATE_ASSERTION",
+    ):
+        validate_package(root)
+
+
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -247,6 +266,28 @@ def test_validator_rejects_required_scenario_wrong_type(tmp_path: Path) -> None:
     _write_json(path, manifest)
 
     with pytest.raises(FixtureValidationError, match="closed v1 scenario registry"):
+        validate_package(root)
+
+
+def test_validator_rejects_unexpected_coverage_manifest_field(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "coverage_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest["temporal_bounds"] = "arbitrary prose outside the closed contract"
+    _write_json(path, manifest)
+
+    with pytest.raises(FixtureValidationError, match="envelope must be closed"):
+        validate_package(root)
+
+
+def test_validator_rejects_coverage_layer_erasure(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "coverage_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest["included_layers"] = []
+    _write_json(path, manifest)
+
+    with pytest.raises(FixtureValidationError, match="must exactly match WorldSlice"):
         validate_package(root)
 
 
@@ -474,7 +515,10 @@ def test_validator_rejects_uncertainty_subject_retarget(tmp_path: Path) -> None:
 
     with pytest.raises(
         FixtureValidationError,
-        match="does not correspond|must link back|basis_claim_refs must exactly match",
+        match=(
+            "does not correspond|must link back|basis_claim_refs must exactly match|"
+            "must be its system derivation Claim"
+        ),
     ):
         validate_package(root)
 
@@ -488,7 +532,10 @@ def test_validator_rejects_foreign_uncertainty_backlink(tmp_path: Path) -> None:
     event["uncertainty_refs"].append("uncertainty-process-mechanism")
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="does not correspond to its declared subject"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="does not correspond|backlinks must exactly match",
+    ):
         validate_package(root)
 
 
@@ -503,7 +550,10 @@ def test_validator_rejects_missing_uncertainty_subject_backlink(tmp_path: Path) 
     claim["uncertainty_refs"] = []
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must link back to the Uncertainty"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="must link back|backlinks must exactly match",
+    ):
         validate_package(root)
 
 
@@ -529,7 +579,10 @@ def test_validator_rejects_foreign_claim_uncertainty_backlink(
     claim["uncertainty_refs"].append(uncertainty_id)
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="does not correspond to its declared subject"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="does not correspond|backlinks must exactly match",
+    ):
         validate_package(root)
 
 
@@ -586,7 +639,82 @@ def test_validator_rejects_missing_world_slice_uncertainty_backlink(tmp_path: Pa
     package["world_slice"]["uncertainty_refs"] = []
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must link back to the Uncertainty"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="must link back|backlinks must exactly match",
+    ):
+        validate_package(root)
+
+
+def test_validator_rejects_process_uncertainty_on_region_version(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    version = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v1"
+    )
+    version["uncertainty_refs"].append("uncertainty-process-mechanism")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="backlinks must exactly match"):
+        validate_package(root)
+
+
+def test_validator_rejects_trajectory_gap_uncertainty_on_documented_segment(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-trajectory-route"
+    )
+    uncertainty["basis_claim_refs"].append("claim-trajectory-north")
+    trajectory = next(
+        item for item in package["trajectories"] if item["id"] == "trajectory-mara-vale"
+    )
+    segment = next(
+        item
+        for item in trajectory["segments"]
+        if item["id"] == "trajectory-segment-north"
+    )
+    segment["uncertainty_refs"].append("uncertainty-trajectory-route")
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="basis_claim_refs must exactly match|backlinks must exactly match",
+    ):
+        validate_package(root)
+
+
+def test_validator_rejects_geometry_uncertainty_propagated_to_old_version(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-region-alternative"
+    )
+    uncertainty["basis_claim_refs"].append("claim-region-v1")
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    version = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v1"
+    )
+    version["uncertainty_refs"].append("uncertainty-region-alternative")
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="basis_claim_refs must exactly match|backlinks must exactly match",
+    ):
         validate_package(root)
 
 
@@ -1106,7 +1234,10 @@ def test_validator_rejects_reversed_directed_relation_roles(tmp_path: Path) -> N
     relation["subject_ref"], relation["object_ref"] = relation["object_ref"], relation["subject_ref"]
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="directed endpoint roles"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="directed endpoint roles|backlinks must exactly match",
+    ):
         validate_package(root)
 
 
@@ -1140,7 +1271,10 @@ def test_validator_rejects_coordinated_label_role_bypass(tmp_path: Path) -> None
     council["label"] = "1504–1505"
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="relation_binding must exactly match"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="relation_binding must exactly match|backlinks must exactly match",
+    ):
         validate_package(root)
 
 
@@ -1393,7 +1527,10 @@ def test_validator_rejects_state_spatial_basis_from_region_claims(tmp_path: Path
     state["spatial_extent"]["basis_claim_refs"] = ["claim-region-v1", "claim-region-v2"]
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must target owner"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="must target owner|Claim refs must exactly bind State extents and value",
+    ):
         validate_package(root)
 
 
@@ -1426,6 +1563,32 @@ def test_validator_rejects_context_mode_drift(tmp_path: Path) -> None:
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="lacks exact EXTENT_ASSERTION"):
+        validate_package(root)
+
+
+def test_validator_rejects_geometry_identical_alternative(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    primary = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v2"
+    )
+    alternative = next(
+        item
+        for item in region["geometry_versions"]
+        if item["id"] == "region-geometry-v2-alternative"
+    )
+    alternative["spatial_extent"]["geometry"] = copy.deepcopy(
+        primary["spatial_extent"]["geometry"]
+    )
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="alternative geometry must differ from overlapping primary reconstruction",
+    ):
         validate_package(root)
 
 

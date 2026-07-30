@@ -935,6 +935,27 @@
         }
       }
     },
+    "stateBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state_ref",
+        "subject_ref",
+        "value"
+      ],
+      "properties": {
+        "state_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
     "claim": {
       "type": "object",
       "additionalProperties": false,
@@ -969,6 +990,13 @@
         },
         "relation_binding": {
           "$ref": "#/$defs/relationBinding"
+        },
+        "state_bindings": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stateBinding"
+          }
         },
         "extent_assertions": {
           "type": "array",
