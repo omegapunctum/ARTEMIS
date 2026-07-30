@@ -419,14 +419,33 @@ def _validate_extent(
 
     if dimension == "temporal":
         _require("certainty" in extent, f"{context} temporal extent needs certainty")
+        start = extent.get("start")
+        end = extent.get("end")
         if kind == "instant":
-            _require(extent.get("start") == extent.get("end"), f"{context} instant must have equal start/end")
+            _require(start == end, f"{context} instant must have equal start/end")
         if kind == "closed_interval":
-            _require(extent.get("start") is not None and extent.get("end") is not None, f"{context} interval is open")
+            _require(start is not None and end is not None, f"{context} interval is open")
+        if isinstance(start, str) and isinstance(end, str):
+            _require(
+                _parse_temporal_bound(start, upper=False) <= _parse_temporal_bound(end, upper=True),
+                f"{context} temporal extent start must not follow end",
+            )
         alternatives = extent.get("alternatives", [])
         _require(isinstance(alternatives, list), f"{context} alternatives must be an array")
         for alternative in alternatives:
             _require(isinstance(alternative, dict), f"{context} temporal alternative must be an object")
+            _require(
+                all(
+                    isinstance(alternative.get(field), str) and alternative[field]
+                    for field in ("start", "end", "precision")
+                ),
+                f"{context} temporal alternative needs start, end and precision",
+            )
+            _require(
+                _parse_temporal_bound(alternative["start"], upper=False)
+                <= _parse_temporal_bound(alternative["end"], upper=True),
+                f"{context} temporal alternative start must not follow end",
+            )
             alt_basis = alternative.get("basis_claim_refs")
             _require(isinstance(alt_basis, list) and alt_basis, f"{context} temporal alternative needs basis Claims")
             for claim_id in alt_basis:
@@ -534,6 +553,62 @@ def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) ->
         _require(source_path.is_file(), f"{source_id} file is missing")
         digest = hashlib.sha256(source_path.read_bytes()).hexdigest()
         _require(source.get("sha256") == digest, f"{source_id} checksum drift")
+
+
+def _locator_passage(source_path: Path, locator: str) -> str:
+    text = source_path.read_text(encoding="utf-8")
+    start = text.find(locator)
+    _require(start >= 0, f"locator is not reproducible: {locator}")
+    passage_start = start + len(locator)
+    next_locator = text.find("LOCATOR[", passage_start)
+    return text[passage_start:] if next_locator < 0 else text[passage_start:next_locator]
+
+
+def _validate_relation_extent_evidence(
+    relation_id: str,
+    relation: dict[str, Any],
+    claim: dict[str, Any],
+    *,
+    evidence_links: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+    entities: dict[str, dict[str, Any]],
+    package_root: Path,
+) -> None:
+    supporting_passages = []
+    for link in evidence_links.values():
+        if (
+            link.get("claim_id") == claim.get("id")
+            and link.get("relation_to_claim") == "supports"
+            and link.get("review_state") == "reviewed"
+        ):
+            source = sources[str(link["source_id"])]
+            supporting_passages.append(
+                _locator_passage(package_root / str(source["uri"]), str(link["locator"]))
+            )
+    _require(supporting_passages, f"{relation_id} needs source-bound supporting evidence")
+    statement = str(claim.get("statement", ""))
+
+    temporal = relation.get("temporal_extent", {})
+    temporal_tokens = {
+        token for token in (temporal.get("start"), temporal.get("end")) if isinstance(token, str)
+    }
+    _require(
+        temporal_tokens
+        and all(token in statement for token in temporal_tokens)
+        and any(all(token in passage for token in temporal_tokens) for passage in supporting_passages),
+        f"{relation_id} temporal extent is not stated by its Claim and supporting locator",
+    )
+
+    spatial = relation.get("spatial_extent", {})
+    if spatial.get("kind") == "named_place":
+        place = entities.get(str(spatial.get("place_ref")))
+        place_label = str(place.get("label")) if isinstance(place, dict) else ""
+        _require(
+            place_label
+            and place_label in statement
+            and any(place_label in passage for passage in supporting_passages),
+            f"{relation_id} spatial extent is not stated by its Claim and supporting locator",
+        )
 
 
 def _validate_references(
@@ -697,6 +772,96 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
     )
     for key, expected in snapshot.items():
         _require(fields.get(key) == expected, f"compatibility input drift for {key}")
+    canonical_entity_id = str(source_dataset.get("canonical_feature_id"))
+    expected_claims = {
+        "compat-claim-villa-savoye-date": (
+            f"The legacy record gives the interval {snapshot.get('date_start')}–{snapshot.get('date_end')}."
+        ),
+        "compat-claim-villa-savoye-location": (
+            f"The legacy record gives the point [{snapshot.get('longitude')}, {snapshot.get('latitude')}]."
+        ),
+    }
+    _require(
+        {str(claim.get("id")) for claim in claims} == set(expected_claims),
+        "compatibility projection invented or omitted a mapped Claim",
+    )
+    _require(
+        set(target) == {"entity", "claims", "layers", "uncertainties", "invented_fields"},
+        "compatibility target projection contains an unmapped field",
+    )
+    _require(
+        set(entity)
+        == {
+            "id",
+            "type",
+            "entity_kind",
+            "label",
+            "temporal_extent",
+            "spatial_extent",
+            "claim_refs",
+            "uncertainty_refs",
+            "layer_refs",
+        },
+        "compatibility Entity contains an unmapped field",
+    )
+    _require(
+        entity.get("label") == snapshot.get("name_en")
+        and entity.get("temporal_extent", {}).get("start") == snapshot.get("date_start")
+        and entity.get("temporal_extent", {}).get("end") == snapshot.get("date_end")
+        and entity.get("spatial_extent", {}).get("geometry", {}).get("coordinates")
+        == [snapshot.get("longitude"), snapshot.get("latitude")]
+        and entity.get("spatial_extent", {}).get("legacy_precision_value")
+        == snapshot.get("coordinates_confidence"),
+        "compatibility Entity drifted from deterministic source mapping",
+    )
+    for claim in claims:
+        claim_id = str(claim["id"])
+        _require(
+            set(claim)
+            == {
+                "id",
+                "type",
+                "statement",
+                "target_refs",
+                "claim_kind",
+                "origin",
+                "review_state",
+                "confidence",
+                "evidence_state",
+                "evidence_link_refs",
+                "uncertainty_refs",
+            },
+            f"compatibility Claim {claim_id} contains an unmapped field",
+        )
+        _require(
+            claim.get("statement") == expected_claims[claim_id]
+            and claim.get("target_refs") == [canonical_entity_id],
+            f"compatibility Claim {claim_id} drifted from deterministic source mapping",
+        )
+    _require(
+        entity.get("claim_refs") == list(expected_claims),
+        "compatibility Entity Claim mapping drift",
+    )
+    _require(
+        [layer.get("id") for layer in layers] == ["compat-layer-architecture"]
+        and snapshot.get("layer_type") == "architecture",
+        "compatibility Layer mapping drift",
+    )
+    _require(
+        set(layers[0]) == {"id", "type", "label"}
+        and layers[0].get("label") == "Architecture Atlas compatibility layer",
+        "compatibility Layer contains an unmapped field",
+    )
+    _require(
+        [uncertainty.get("id") for uncertainty in uncertainties]
+        == ["compat-uncertainty-villa-savoye-provenance"],
+        "compatibility Uncertainty mapping drift",
+    )
+    _require(
+        set(uncertainties[0])
+        == {"id", "type", "subject_or_claim_ref", "dimension", "description", "effect"},
+        "compatibility Uncertainty contains an unmapped field",
+    )
 
 
 def _validate_coverage(
@@ -800,6 +965,50 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             "independence_attestation",
         ):
             _require(field in review, f"fixture review is missing {field}")
+        for field in ("review_id", "reviewer_id", "reviewer_instance_id"):
+            value = review[field]
+            _require(
+                isinstance(value, str)
+                and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:/-]{2,}", value) is not None,
+                f"fixture review {field} must be a non-empty stable identifier",
+            )
+        for field in ("critical_findings", "unresolved_material_findings"):
+            value = review[field]
+            _require(
+                type(value) is int and value >= 0,
+                f"fixture review {field} must be a non-negative integer",
+            )
+        _require(
+            review["review_track"] in {"semantic-model", "validator-integrity"},
+            "fixture review has invalid review_track",
+        )
+        _require(
+            review["decision"] in {"READY", "CHANGES_REQUIRED"},
+            "fixture review has invalid decision",
+        )
+        _require(
+            type(review["independence_attestation"]) is bool,
+            "fixture review independence_attestation must be boolean",
+        )
+        _require(
+            review["independence_method"] == "separate_agent_task",
+            "fixture review needs separate_agent_task independence_method",
+        )
+        _require(
+            isinstance(review["artifact_sha256"], str)
+            and re.fullmatch(r"[0-9a-f]{64}", review["artifact_sha256"]) is not None,
+            "fixture review artifact_sha256 must be a SHA-256 digest",
+        )
+        _require(
+            isinstance(review["frozen_commit"], str)
+            and re.fullmatch(r"[0-9a-f]{40}", review["frozen_commit"]) is not None,
+            "fixture review frozen_commit must be a full Git SHA",
+        )
+        _require(
+            isinstance(review["reviewed_content_sha256"], str)
+            and re.fullmatch(r"[0-9a-f]{64}", review["reviewed_content_sha256"]) is not None,
+            "fixture review reviewed_content_sha256 must be a SHA-256 digest",
+        )
         reviewer_ids.append(str(review["reviewer_id"]))
         reviewer_instance_ids.append(str(review["reviewer_instance_id"]))
         review_ids.append(str(review["review_id"]))
@@ -1149,6 +1358,15 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             claim.get("evidence_state") in {"supported", "mixed"},
             f"{relation_id} needs reviewed claim-level evidence",
         )
+        _validate_relation_extent_evidence(
+            relation_id,
+            relation,
+            claim,
+            evidence_links=indexes["evidence_links"],
+            sources=indexes["sources"],
+            entities=indexes["entities"],
+            package_root=package_root,
+        )
         if predicate == "influence":
             _require(
                 isinstance(relation.get("mechanism"), str) and relation["mechanism"].strip(),
@@ -1188,6 +1406,18 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
         modeled_place_refs | modeled_anchor_refs <= declared_slice_refs,
         "WorldSlice spatial bounds omit modeled Place or Region context",
     )
+    slice_time = world_slice["temporal_bounds"]
+    for item in context_objects.values():
+        for extent in _object_temporal_extents(item):
+            _require(
+                _temporal_contains(slice_time, extent),
+                f"WorldSlice temporal bounds omit modeled context {item.get('id')}",
+            )
+            for alternative in extent.get("alternatives", []):
+                _require(
+                    _temporal_contains(slice_time, alternative),
+                    f"WorldSlice temporal bounds omit alternative context {item.get('id')}",
+                )
     co_presence_observations: list[str] = []
     for observation_id, observation in indexes["derived_observations"].items():
         _require(observation.get("relation_created") is False, f"{observation_id} must not create Relation")
@@ -1264,7 +1494,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             and isinstance(camera.get("bbox"), list)
             and len(camera["bbox"]) == 4
             and all(isinstance(value, (int, float)) for value in camera["bbox"])
-            and isinstance(camera.get("coordinate_reference"), str),
+            and camera.get("coordinate_reference") == "EPSG:4326",
             f"{view_id} needs a complete camera extent",
         )
         west, south, east, north = camera["bbox"]

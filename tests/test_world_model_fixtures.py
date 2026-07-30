@@ -550,6 +550,163 @@ def test_ready_gate_rejects_null_reviewed_at(tmp_path: Path) -> None:
         validate_package(root, require_ready=True)
 
 
+def test_ready_gate_rejects_null_and_empty_reviewer_identities(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    registry["reviews"][0]["review_id"] = None
+    registry["reviews"][0]["reviewer_id"] = None
+    registry["reviews"][0]["reviewer_instance_id"] = None
+    registry["reviews"][1]["review_id"] = ""
+    registry["reviews"][1]["reviewer_id"] = ""
+    registry["reviews"][1]["reviewer_instance_id"] = ""
+    _write_json(path, registry)
+
+    with pytest.raises(FixtureValidationError, match="must be a non-empty stable identifier"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_boolean_finding_counts(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    for review in registry["reviews"]:
+        review["critical_findings"] = False
+        review["unresolved_material_findings"] = False
+        artifact = root / review["artifact"]
+        artifact.write_text(
+            artifact.read_text(encoding="utf-8")
+            .replace("critical_findings: 0", "critical_findings: false")
+            .replace("unresolved_material_findings: 0", "unresolved_material_findings: false"),
+            encoding="utf-8",
+        )
+        review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    _write_json(path, registry)
+
+    with pytest.raises(FixtureValidationError, match="must be a non-negative integer"):
+        validate_package(root, require_ready=True)
+
+
+def test_schema_rejects_incomplete_temporal_alternative(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    arrival = next(event for event in package["events"] if event["id"] == "event-workshop-arrival")
+    arrival["temporal_extent"]["alternatives"][0].pop("precision")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
+        validate_package(root)
+
+
+def test_schema_rejects_open_synchronized_view_shape(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["synchronized_views"][0]["untyped_extra"] = True
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
+        validate_package(root)
+
+
+def test_schema_rejects_open_spatial_extent_shape(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["events"][0]["spatial_extent"]["untyped_extra"] = True
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
+        validate_package(root)
+
+
+def test_validator_rejects_reversed_process_stage_interval(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    stage = package["processes"][0]["stages"][1]
+    stage["temporal_extent"]["start"] = "1505"
+    stage["temporal_extent"]["end"] = "1504"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="start must not follow end"):
+        validate_package(root)
+
+
+def test_validator_rejects_context_outside_world_slice_time(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    event = next(item for item in package["events"] if item["id"] == "event-north-harbor-charter")
+    event["temporal_extent"]["start"] = "1511"
+    event["temporal_extent"]["end"] = "1511"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="temporal bounds omit modeled context"):
+        validate_package(root)
+
+
+def test_validator_rejects_invented_compatibility_claim(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    entity = projection["target_projection"]["entity"]
+    claim = {
+        "id": "compat-claim-villa-savoye-color",
+        "type": "Claim",
+        "statement": "Villa Savoye is blue.",
+        "target_refs": [entity["id"]],
+        "claim_kind": "factual",
+        "origin": "imported",
+        "review_state": "draft",
+        "confidence": "unknown",
+        "evidence_state": "missing",
+        "evidence_link_refs": [],
+        "uncertainty_refs": ["compat-uncertainty-villa-savoye-provenance"],
+    }
+    projection["target_projection"]["claims"].append(claim)
+    entity["claim_refs"].append(claim["id"])
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="invented or omitted a mapped Claim"):
+        validate_package(root)
+
+
+def test_validator_rejects_unmapped_compatibility_entity_field(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
+    projection = json.loads(path.read_text(encoding="utf-8"))
+    projection["target_projection"]["entity"]["color"] = "blue"
+    _write_json(path, projection)
+
+    with pytest.raises(FixtureValidationError, match="Entity contains an unmapped field"):
+        validate_package(root)
+
+
+def test_schema_rejects_non_epsg4326_camera_reference(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["synchronized_views"][0]["camera_state"]["coordinate_reference"] = "EPSG:3857"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
+        validate_package(root)
+
+
+def test_validator_rejects_relation_time_missing_from_supporting_locator(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8").replace("during 1504–1505 ", ""),
+        encoding="utf-8",
+    )
+    package = _read_package(root)
+    source = next(item for item in package["sources"] if item["id"] == "source-field-alpha")
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="temporal extent is not stated"):
+        validate_package(root)
+
+
 def test_package_is_deterministic_under_deep_copy(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)

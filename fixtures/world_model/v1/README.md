@@ -55,6 +55,7 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - An alternative date needs its own atomic, evidence-bound Claim.
 - An `inferred_gap` has no route geometry.
 - `co_present` requires both spatial and temporal overlap and never creates a historical Relation.
+- Relation time/place precision must be stated by both its basis Claim and a reviewed supporting locator.
 - A multi-region analytical Process does not imply diffusion, direction or mechanism.
 - `evidence_state` is derived exactly from reviewed EvidenceLinks.
 - A compatibility adapter resolves the pinned source commit/file in READY mode, binds the source-record checksum, closes every target reference and preserves missing evidence as missing.
@@ -62,6 +63,7 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.
 - Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed structured attestations, inspect one resolvable ancestor commit, report zero unresolved critical/material findings and bind both that commit tree and the current review-scope digest.
+- Review identifiers are non-empty stable strings; finding counts are non-negative integers and booleans are rejected.
 - `independence_attestation` records the operational fact of separate agent tasks. The validator verifies the two distinct attestations and their content bindings; merge authority remains responsible for authenticating reviewer identity outside the repository.
 
 ## Current boundary

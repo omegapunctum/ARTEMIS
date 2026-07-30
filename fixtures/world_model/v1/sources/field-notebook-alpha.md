@@ -74,10 +74,10 @@ For the fixture, the reviewed reconstruction uses the expanded boundary version 
 
 LOCATOR[alpha-encounter]
 
-The register records Mara Vale and Keeper Ren in the same workshop meeting on 1504-03-01.
+The register records Mara Vale and Keeper Ren in the same meeting at Inland Workshop on 1504-03-01.
 
 ## Contested protocol influence
 
 LOCATOR[alpha-influence-ren]
 
-The register states that Keeper Ren proposed the phrase later adopted in the North Harbor council protocol.
+The register states that during 1504–1505 Keeper Ren proposed the phrase later adopted in the North Harbor council protocol.

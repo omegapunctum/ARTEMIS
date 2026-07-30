@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `4e2c6ac335b6cf8a3f57bd95a3aa37e4b7619894`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED`; validator-integrity `CHANGES_REQUIRED`.
+- Previous reviewed head: `9fed7d5c3c2f009b20b2a39082a5e7a408eff051`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`1/3/1`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -51,6 +51,17 @@ The first repeated review cycle on `4e2c6ac…` found:
 - under-constrained portable schema fields.
 
 Those findings are correction inputs, not READY evidence. Both reviewers must inspect the next frozen head independently; earlier conclusions cannot be reused.
+
+The second repeated review cycle on `9fed7d5…` additionally found:
+
+- Relation time/place precision not stated by the basis Claim and supporting locator;
+- empty/null reviewer identities and boolean finding counts accepted by READY;
+- open temporal/spatial/view shapes and incomplete temporal alternatives;
+- reversed temporal intervals and modeled contexts outside WorldSlice time;
+- compatibility Claims accepted from self-declared rather than deterministic mappings;
+- camera bounds accepted under a non-geographic CRS.
+
+The next correction makes these cases executable failures and remains `REVIEW_REQUIRED` until another fresh pair of reviews.
 
 ## Finalization rule
 

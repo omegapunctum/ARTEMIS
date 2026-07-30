@@ -65,7 +65,7 @@
       "title": "Synthetic field notebook alpha",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-alpha.md",
-      "sha256": "8f756c1d42559ea0ec3c68617e00a3a27fb45b9468dc91d2e48346cb5b5baae5",
+      "sha256": "27051d3cd016a12e938a984ee421e17310fe2fae62f6cbb71b22fc48d06e2c59",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -1319,7 +1319,7 @@
     {
       "id": "claim-documented-encounter",
       "type": "Claim",
-      "statement": "The synthetic register records Mara Vale and Keeper Ren in the same workshop meeting on 1504-03-01.",
+      "statement": "The synthetic register records Mara Vale and Keeper Ren in the same meeting at Inland Workshop on 1504-03-01.",
       "target_refs": [
         "event-documented-workshop-meeting",
         "relation-mara-ren-encounter",
@@ -1335,7 +1335,7 @@
     {
       "id": "claim-influence-ren-council",
       "type": "Claim",
-      "statement": "Keeper Ren's proposed phrase influenced the wording adopted in the North Harbor council protocol.",
+      "statement": "During 1504–1505, Keeper Ren's proposed phrase influenced the wording adopted in the North Harbor council protocol.",
       "target_refs": [
         "entity-keeper-ren",
         "entity-north-harbor-council",

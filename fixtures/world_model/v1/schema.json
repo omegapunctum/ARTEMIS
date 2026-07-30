@@ -182,6 +182,7 @@
     },
     "temporalExtent": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "kind",
         "start",
@@ -237,13 +238,43 @@
         "alternatives": {
           "type": "array",
           "items": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start",
+              "end",
+              "precision",
+              "basis_claim_refs"
+            ],
+            "properties": {
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
+              },
+              "precision": {
+                "enum": [
+                  "day",
+                  "month",
+                  "year",
+                  "decade",
+                  "century",
+                  "range",
+                  "unknown"
+                ]
+              },
+              "basis_claim_refs": {
+                "$ref": "#/$defs/referenceList"
+              }
+            }
           }
         }
       }
     },
     "spatialExtent": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "kind",
         "precision",
@@ -1045,6 +1076,7 @@
     },
     "synchronizedView": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "id",
         "type",
@@ -1099,8 +1131,7 @@
               }
             },
             "coordinate_reference": {
-              "type": "string",
-              "minLength": 1
+              "const": "EPSG:4326"
             }
           }
         },
