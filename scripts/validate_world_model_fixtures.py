@@ -82,6 +82,23 @@ REQUIRED_COVERAGE_SCENARIOS = {
     "challenged_influence_claim": "relation-ren-influences-council-protocol",
     "compatibility_projection": "compatibility/architecture_atlas_projection.json",
 }
+REQUIRED_COVERAGE_EXCLUSIONS = [
+    {
+        "id": "unlisted-context-is-corpus-absence-only",
+        "assertion_kind": "corpus_exclusion",
+        "description": "No unlisted people, events, states, processes or regions are represented.",
+    },
+    {
+        "id": "inferred-route-geometry-is-missing",
+        "assertion_kind": "corpus_exclusion",
+        "description": "No route geometry is provided for the inferred trajectory gap.",
+    },
+    {
+        "id": "no-historical-completeness-or-absence-claim",
+        "assertion_kind": "corpus_exclusion",
+        "description": "The package does not claim historical completeness or historical absence.",
+    },
+]
 
 ALLOWED_CLAIM_KINDS = {
     "factual",
@@ -810,13 +827,31 @@ def _validate_uncertainty_ownership(
                 str(version["id"]): version
                 for version in region.get("geometry_versions", [])
             }
+            alternative_versions = [
+                version
+                for version in versions_by_id.values()
+                if version.get("reconstruction_mode") == "alternative_reconstruction"
+            ]
+            expected_alternative_ids = {
+                str(version["id"]) for version in alternative_versions
+            }
+            expected_alternative_ids.update(
+                str(primary["id"])
+                for alternative in alternative_versions
+                for primary in versions_by_id.values()
+                if primary.get("is_primary") is True
+                and _temporal_overlaps(
+                    alternative.get("temporal_extent", {}),
+                    primary.get("temporal_extent", {}),
+                )
+            )
             alternative_ids = {
                 str(ref) for ref in uncertainty.get("alternatives", [])
             }
             _require(
-                alternative_ids
-                and alternative_ids <= set(versions_by_id),
-                f"{uncertainty_id} alternatives must identify versions of its Region",
+                alternative_versions
+                and alternative_ids == expected_alternative_ids,
+                f"{uncertainty_id} alternatives must exactly match its Region's disputed version set",
             )
             expected_basis = {
                 str(claim_id)
@@ -951,14 +986,24 @@ def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) ->
         )
         source_path = package_root / str(source.get("uri"))
         _require(source_path.is_file(), f"{source_id} file is missing")
-        digest = hashlib.sha256(source_path.read_bytes()).hexdigest()
+        source_bytes = source_path.read_bytes()
+        digest = hashlib.sha256(source_bytes).hexdigest()
         _require(source.get("sha256") == digest, f"{source_id} checksum drift")
+        source_text = source_bytes.decode("utf-8")
+        locators = re.findall(r"LOCATOR\[[^\]\r\n]+\]", source_text)
+        _require(
+            len(locators) == len(set(locators)),
+            f"{source_id} contains duplicate locator tokens",
+        )
 
 
 def _locator_passage(source_path: Path, locator: str) -> str:
     text = source_path.read_text(encoding="utf-8")
+    _require(
+        text.count(locator) == 1,
+        f"locator must occur exactly once: {locator}",
+    )
     start = text.find(locator)
-    _require(start >= 0, f"locator is not reproducible: {locator}")
     passage_start = start + len(locator)
     next_locator = text.find("LOCATOR[", passage_start)
     return text[passage_start:] if next_locator < 0 else text[passage_start:next_locator]
@@ -1982,22 +2027,9 @@ def _validate_coverage(
         "coverage challenged influence must preserve mixed reviewed evidence",
     )
 
-    exclusions = manifest.get("known_exclusions")
-    _require(isinstance(exclusions, list) and exclusions, "coverage manifest needs known exclusions")
-    descriptions: list[str] = []
-    for exclusion in exclusions:
-        _require(
-            isinstance(exclusion, dict)
-            and set(exclusion) == {"assertion_kind", "description"}
-            and exclusion.get("assertion_kind") == "corpus_exclusion"
-            and isinstance(exclusion.get("description"), str)
-            and bool(exclusion["description"].strip()),
-            "fixture absence must be represented only as corpus exclusion",
-        )
-        descriptions.append(exclusion["description"].strip())
     _require(
-        len(descriptions) == len(set(descriptions)),
-        "coverage manifest corpus exclusions must be unique",
+        manifest.get("known_exclusions") == REQUIRED_COVERAGE_EXCLUSIONS,
+        "coverage manifest known_exclusions must match the closed v1 exclusion registry",
     )
 
 
@@ -2194,6 +2226,16 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     _require(package.get("schema_version") == SCHEMA_VERSION, "package schema version drift")
     _require(package.get("fixture_mode") == "synthetic_contract_fixture", "v1 package must be synthetic")
     _require(package.get("world_slice", {}).get("type") == "WorldSlice", "package needs WorldSlice")
+    record_time = package.get("record_time", {})
+    _require(
+        _is_utc_second_timestamp(record_time.get("created_at")),
+        "package needs UTC ISO-8601 record_time.created_at",
+    )
+    _require(
+        record_time.get("reviewed_at") is None
+        or _is_utc_second_timestamp(record_time.get("reviewed_at")),
+        "package record_time.reviewed_at must be null or a UTC ISO-8601 timestamp",
+    )
 
     indexes = {
         collection: _index(package.get(collection), expected_type, collection)

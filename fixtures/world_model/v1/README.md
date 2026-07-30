@@ -62,7 +62,9 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - A multi-region analytical Process does not imply diffusion, direction or mechanism.
 - `evidence_state` is derived exactly from reviewed EvidenceLinks.
 - A compatibility adapter resolves the pinned source commit/file in READY mode and compares the complete target object, including epistemic fields, to one deterministic mapping; missing evidence and uncertainty cannot be promoted away.
-- The coverage manifest has a closed v1 envelope, exactly mirrors the WorldSlice layer set and uses `known_exclusions` only for corpus coverage, never historical absence.
+- The coverage manifest has a closed v1 envelope, exactly mirrors the WorldSlice layer set and requires a stable-ID exclusion registry for sparse context, missing route geometry and the corpus-absence/historical-absence boundary.
+- Every evidence locator token occurs exactly once inside its Source; duplicate markers cannot shadow a canonical passage.
+- Package record timestamps use strict second-precision UTC ISO-8601; `reviewed_at` remains null until READY.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.
 - Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed structured attestations, inspect one resolvable ancestor commit, report zero unresolved critical/material findings and bind both that commit tree and the current review-scope digest.

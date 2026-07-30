@@ -185,6 +185,55 @@ def test_validator_rejects_state_subject_and_value_substitution(tmp_path: Path) 
         validate_package(root)
 
 
+def test_validator_rejects_duplicate_locator_state_rebinding(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    state = next(
+        item
+        for item in package["states"]
+        if item["id"] == "state-north-harbor-administration"
+    )
+    state["subject_ref"] = "entity-mara-vale"
+    state["value"] = "present"
+    claim = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-administration-state"
+    )
+    claim["statement"] = "Mara Vale was present in Fixture Basin during 1498–1510."
+    claim["state_bindings"] = [
+        {
+            "state_ref": state["id"],
+            "subject_ref": state["subject_ref"],
+            "value": state["value"],
+        }
+    ]
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_text = source_path.read_text(encoding="utf-8")
+    locator = "LOCATOR[alpha-administration]"
+    passage_start = source_text.index(locator)
+    passage_end = source_text.index("LOCATOR[", passage_start + len(locator))
+    injected = source_text[passage_start:passage_end].replace(
+        'STATE_ASSERTION[{"state_ref":"state-north-harbor-administration",'
+        '"subject_ref":"entity-fixture-basin",'
+        '"value":"administered_by_north_harbor_council"}]',
+        'STATE_ASSERTION[{"state_ref":"state-north-harbor-administration",'
+        '"subject_ref":"entity-mara-vale","value":"present"}]',
+    )
+    source_path.write_text(injected + "\n" + source_text, encoding="utf-8")
+    source = next(
+        item for item in package["sources"] if item["id"] == "source-field-alpha"
+    )
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="duplicate locator tokens|locator must occur exactly once",
+    ):
+        validate_package(root)
+
+
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -243,7 +292,39 @@ def test_validator_rejects_historical_absence_semantics(tmp_path: Path) -> None:
     manifest["known_exclusions"][0]["assertion_kind"] = "historical_absence"
     path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    with pytest.raises(FixtureValidationError, match="corpus exclusion"):
+    with pytest.raises(FixtureValidationError, match="closed v1 exclusion registry"):
+        validate_package(root)
+
+
+def test_validator_rejects_placeholder_coverage_exclusions(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "coverage_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest["known_exclusions"] = [
+        {
+            "id": "placeholder",
+            "assertion_kind": "corpus_exclusion",
+            "description": "Placeholder",
+        }
+    ]
+    _write_json(path, manifest)
+
+    with pytest.raises(FixtureValidationError, match="closed v1 exclusion registry"):
+        validate_package(root)
+
+
+def test_validator_rejects_erased_corpus_history_boundary(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "coverage_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifest["known_exclusions"] = [
+        exclusion
+        for exclusion in manifest["known_exclusions"]
+        if exclusion["id"] != "no-historical-completeness-or-absence-claim"
+    ]
+    _write_json(path, manifest)
+
+    with pytest.raises(FixtureValidationError, match="closed v1 exclusion registry"):
         validate_package(root)
 
 
@@ -718,6 +799,64 @@ def test_validator_rejects_geometry_uncertainty_propagated_to_old_version(
         validate_package(root)
 
 
+def test_validator_rejects_self_certified_geometry_uncertainty_version_set(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-region-alternative"
+    )
+    uncertainty["alternatives"].append("region-geometry-v1")
+    uncertainty["basis_claim_refs"].append("claim-region-v1")
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    version = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v1"
+    )
+    version["uncertainty_refs"].append("uncertainty-region-alternative")
+    claim = next(
+        item for item in package["claims"] if item["id"] == "claim-region-v1"
+    )
+    claim["uncertainty_refs"].append("uncertainty-region-alternative")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="disputed version set"):
+        validate_package(root)
+
+
+def test_validator_rejects_erased_overlapping_primary_from_geometry_uncertainty(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-region-alternative"
+    )
+    uncertainty["alternatives"].remove("region-geometry-v2")
+    uncertainty["basis_claim_refs"].remove("claim-region-v2")
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    version = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v2"
+    )
+    version["uncertainty_refs"].remove("uncertainty-region-alternative")
+    claim = next(
+        item for item in package["claims"] if item["id"] == "claim-region-v2"
+    )
+    claim["uncertainty_refs"].remove("uncertainty-region-alternative")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="disputed version set"):
+        validate_package(root)
+
+
 def test_validator_rejects_co_presence_claim_without_bound_premises(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
@@ -1036,6 +1175,19 @@ def test_ready_gate_rejects_null_reviewed_at(tmp_path: Path) -> None:
         validate_package(root, require_ready=True)
 
 
+def test_validator_rejects_invalid_created_at(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["record_time"]["created_at"] = "not-a-date"
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="needs UTC ISO-8601 record_time.created_at",
+    ):
+        validate_package(root)
+
+
 def test_ready_gate_rejects_invalid_reviewed_at(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     _make_ready_reviews(root)
@@ -1043,7 +1195,13 @@ def test_ready_gate_rejects_invalid_reviewed_at(tmp_path: Path) -> None:
     package["record_time"]["reviewed_at"] = "not-a-date"
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="needs UTC ISO-8601 record_time.reviewed_at"):
+    with pytest.raises(
+        FixtureValidationError,
+        match=(
+            "needs UTC ISO-8601 record_time.reviewed_at|"
+            "record_time.reviewed_at must be null or a UTC ISO-8601 timestamp"
+        ),
+    ):
         validate_package(root, require_ready=True)
 
 

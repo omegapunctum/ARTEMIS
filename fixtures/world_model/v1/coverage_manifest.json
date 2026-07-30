@@ -39,14 +39,17 @@
   ],
   "known_exclusions": [
     {
+      "id": "unlisted-context-is-corpus-absence-only",
       "assertion_kind": "corpus_exclusion",
       "description": "No unlisted people, events, states, processes or regions are represented."
     },
     {
+      "id": "inferred-route-geometry-is-missing",
       "assertion_kind": "corpus_exclusion",
       "description": "No route geometry is provided for the inferred trajectory gap."
     },
     {
+      "id": "no-historical-completeness-or-absence-claim",
       "assertion_kind": "corpus_exclusion",
       "description": "The package does not claim historical completeness or historical absence."
     }
