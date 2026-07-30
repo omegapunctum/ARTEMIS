@@ -190,7 +190,7 @@ REFERENCE_TYPE_RULES = {
     "global_context_refs": CONTEXT_OBJECT_TYPES,
     "selected_object_refs": CONTEXT_OBJECT_TYPES,
     "reference_refs": CONTEXT_OBJECT_TYPES,
-    "target_refs": CONTEXT_OBJECT_TYPES,
+    "target_refs": CONTEXT_OBJECT_TYPES | {"Layer"},
     "derived_observation_refs": {"DerivedObservation"},
 }
 SINGLE_REFERENCE_TYPE_RULES = {
@@ -665,6 +665,13 @@ def _validate_claim_ownership(
     indexes: dict[str, dict[str, dict[str, Any]]],
     claims: dict[str, dict[str, Any]],
 ) -> None:
+    def require_claim_refs(owner_id: str, item: dict[str, Any]) -> None:
+        for claim_id in item.get("claim_refs", []):
+            _require(
+                owner_id in claims[str(claim_id)].get("target_refs", []),
+                f"{item.get('id', owner_id)} claim_ref {claim_id} must target canonical owner {owner_id}",
+            )
+
     for collection in (
         "entities",
         "events",
@@ -673,13 +680,182 @@ def _validate_claim_ownership(
         "trajectories",
         "regions",
         "relations",
+        "layers",
     ):
         for owner_id, item in indexes[collection].items():
-            for claim_id in item.get("claim_refs", []):
-                _require(
-                    owner_id in claims[str(claim_id)].get("target_refs", []),
-                    f"{owner_id} claim_ref {claim_id} must target its owner",
+            require_claim_refs(owner_id, item)
+
+    for process_id, process in indexes["processes"].items():
+        for stage in process.get("stages", []):
+            require_claim_refs(process_id, stage)
+
+    for trajectory_id, trajectory in indexes["trajectories"].items():
+        for segment in trajectory.get("segments", []):
+            require_claim_refs(trajectory_id, segment)
+
+    for region_id, region in indexes["regions"].items():
+        for geometry_version in region.get("geometry_versions", []):
+            require_claim_refs(region_id, geometry_version)
+
+    for observation_id, observation in indexes["derived_observations"].items():
+        claim_id = str(observation.get("claim_ref"))
+        _require(
+            claims[claim_id].get("target_refs") == [observation_id],
+            f"{observation_id} claim_ref {claim_id} must exclusively target its owner",
+        )
+
+
+def _validate_uncertainty_ownership(
+    package: dict[str, Any],
+    indexes: dict[str, dict[str, dict[str, Any]]],
+) -> None:
+    claims = indexes["claims"]
+    owner_records: dict[str, tuple[str, dict[str, Any]]] = {}
+    for collection in (
+        "entities",
+        "events",
+        "states",
+        "processes",
+        "trajectories",
+        "regions",
+        "relations",
+        "layers",
+        "claims",
+    ):
+        for owner_id, item in indexes[collection].items():
+            owner_records[owner_id] = (owner_id, item)
+    for process_id, process in indexes["processes"].items():
+        for stage in process.get("stages", []):
+            owner_records[str(stage.get("id"))] = (process_id, stage)
+    for trajectory_id, trajectory in indexes["trajectories"].items():
+        for segment in trajectory.get("segments", []):
+            owner_records[str(segment.get("id"))] = (trajectory_id, segment)
+    for region_id, region in indexes["regions"].items():
+        for version in region.get("geometry_versions", []):
+            owner_records[str(version.get("id"))] = (region_id, version)
+
+    for uncertainty_id, uncertainty in indexes["uncertainties"].items():
+        subject_ref = str(uncertainty.get("subject_or_claim_ref"))
+        basis_claim_refs = {str(ref) for ref in uncertainty.get("basis_claim_refs", [])}
+        eligible_owners = {subject_ref} | basis_claim_refs
+
+        premise_claim_ids = set(basis_claim_refs)
+        if subject_ref in claims:
+            premise_claim_ids.add(subject_ref)
+        for claim_id in premise_claim_ids:
+            eligible_owners.update(str(ref) for ref in claims[claim_id].get("target_refs", []))
+
+        if subject_ref in indexes["trajectories"]:
+            eligible_owners.update(
+                str(segment.get("id"))
+                for segment in indexes["trajectories"][subject_ref].get("segments", [])
+            )
+        if subject_ref in indexes["regions"]:
+            eligible_owners.update(
+                str(version.get("id"))
+                for version in indexes["regions"][subject_ref].get("geometry_versions", [])
+            )
+
+        for collection in (
+            "events",
+            "states",
+            "processes",
+            "trajectories",
+            "regions",
+            "relations",
+        ):
+            for owner_id, item in indexes[collection].items():
+                if subject_ref in _object_spatial_anchor_refs(item):
+                    eligible_owners.add(owner_id)
+
+        for claim_id, claim in claims.items():
+            if set(claim.get("target_refs", [])) & eligible_owners:
+                eligible_owners.add(claim_id)
+
+        for owner_id, (canonical_owner_id, item) in owner_records.items():
+            if uncertainty_id not in item.get("uncertainty_refs", []):
+                continue
+            _require(
+                owner_id in eligible_owners or canonical_owner_id in eligible_owners,
+                f"{owner_id} uncertainty_ref {uncertainty_id} does not correspond to its declared subject",
+            )
+
+        if subject_ref in owner_records:
+            _canonical_owner_id, subject = owner_records[subject_ref]
+            _require(
+                uncertainty_id in subject.get("uncertainty_refs", []),
+                f"{uncertainty_id} subject {subject_ref} must link back to the Uncertainty",
+            )
+
+        dimension = uncertainty.get("dimension")
+        expected_basis: set[str]
+        if dimension == "temporal_value":
+            expected_basis = set()
+            for event in indexes["events"].values():
+                if uncertainty_id not in event.get("uncertainty_refs", []):
+                    continue
+                temporal_extent = event.get("temporal_extent", {})
+                expected_basis.update(
+                    str(ref) for ref in temporal_extent.get("basis_claim_refs", [])
                 )
+                for alternative in temporal_extent.get("alternatives", []):
+                    expected_basis.update(
+                        str(ref) for ref in alternative.get("basis_claim_refs", [])
+                    )
+        elif dimension == "geometry_reconstruction":
+            _require(
+                subject_ref in indexes["regions"],
+                f"{uncertainty_id} geometry reconstruction must target a Region",
+            )
+            expected_basis = {
+                str(claim_id)
+                for version in indexes["regions"][subject_ref].get("geometry_versions", [])
+                if uncertainty_id in version.get("uncertainty_refs", [])
+                for claim_id in version.get("claim_refs", [])
+            }
+        elif dimension == "process":
+            _require(
+                subject_ref in claims,
+                f"{uncertainty_id} process uncertainty must target its derivation Claim",
+            )
+            expected_basis = {
+                str(ref) for ref in claims[subject_ref].get("input_claim_refs", [])
+            }
+        elif dimension == "relation":
+            _require(
+                subject_ref in claims
+                and any(
+                    ref in indexes["relations"]
+                    for ref in claims[subject_ref].get("target_refs", [])
+                ),
+                f"{uncertainty_id} relation uncertainty must target a Relation Claim",
+            )
+            expected_basis = {subject_ref}
+        elif dimension == "trajectory_gap":
+            _require(
+                subject_ref in indexes["trajectories"],
+                f"{uncertainty_id} trajectory gap must target a Trajectory",
+            )
+            expected_basis = {
+                str(claim_id)
+                for segment in indexes["trajectories"][subject_ref].get("segments", [])
+                if uncertainty_id in segment.get("uncertainty_refs", [])
+                for claim_id in segment.get("claim_refs", [])
+            }
+        elif dimension == "corpus_coverage":
+            _require(
+                subject_ref == str(package.get("world_slice", {}).get("id")),
+                f"{uncertainty_id} corpus coverage must target the WorldSlice",
+            )
+            expected_basis = set()
+        else:
+            raise FixtureValidationError(
+                f"{uncertainty_id} has unsupported uncertainty dimension {dimension}"
+            )
+        _require(
+            basis_claim_refs == expected_basis,
+            f"{uncertainty_id} basis_claim_refs must exactly match its uncertainty scenario",
+        )
 
 
 def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) -> None:
@@ -797,6 +973,15 @@ def _extent_contexts(
             )
 
 
+def _process_stage_premise_claims(process: dict[str, Any]) -> set[str]:
+    return {
+        str(claim_id)
+        for stage in process.get("stages", [])
+        for extent_key in ("temporal_extent", "spatial_extent")
+        for claim_id in stage.get(extent_key, {}).get("basis_claim_refs", [])
+    }
+
+
 def _validate_context_bound_extents(
     package: dict[str, Any],
     *,
@@ -848,14 +1033,7 @@ def _validate_context_bound_extents(
                 ):
                     expected_inputs: set[str] | None = None
                     if context_kind == "Process" and context_mode == "analytical_model":
-                        expected_inputs = {
-                            str(input_claim_id)
-                            for stage in context.get("stages", [])
-                            for extent_key in ("temporal_extent", "spatial_extent")
-                            for input_claim_id in stage.get(extent_key, {}).get(
-                                "basis_claim_refs", []
-                            )
-                        }
+                        expected_inputs = _process_stage_premise_claims(context)
                     _require(
                         expected_inputs is not None
                         and set(claim.get("input_claim_refs", [])) == expected_inputs,
@@ -1495,8 +1673,6 @@ def _validate_coverage(
     _require(manifest.get("package_id") == package.get("package_id"), "coverage package id drift")
     counts = Counter()
     for collection, expected_type in COLLECTION_TYPES.items():
-        if collection == "derived_observations":
-            continue
         counts[expected_type] = len(indexes[collection])
     required = manifest.get("required_object_kinds")
     _require(isinstance(required, dict), "coverage manifest needs required_object_kinds")
@@ -1762,6 +1938,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     _validate_references(package, type_registry, entity_kinds)
     _validate_claim_dependency_graph(claims)
     _validate_claim_ownership(indexes, claims)
+    _validate_uncertainty_ownership(package, indexes)
 
     for collection in ("events", "states", "processes", "relations"):
         for item_id, item in indexes[collection].items():
@@ -1888,11 +2065,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             f"{process_id} multiple_regions extent must match its stage Regions",
         )
         if process.get("process_mode") == "analytical_model":
-            stage_marker_claims = {
-                claim_id
-                for stage in stages
-                for claim_id in stage["temporal_extent"]["basis_claim_refs"]
-            }
+            stage_marker_claims = _process_stage_premise_claims(process)
             direct_basis = set(process.get("temporal_extent", {}).get("basis_claim_refs", [])) | set(
                 process.get("spatial_extent", {}).get("basis_claim_refs", [])
             )
@@ -2074,6 +2247,10 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     co_presence_observations: list[str] = []
     for observation_id, observation in indexes["derived_observations"].items():
         _require(observation.get("relation_created") is False, f"{observation_id} must not create Relation")
+        _require(
+            observation.get("observation_kind") == "co_presence",
+            f"{observation_id} observation_kind is not executable in the v1 fixture",
+        )
         claim = claims.get(observation.get("claim_ref"))
         _require(isinstance(claim, dict), f"{observation_id} needs observation Claim")
         _require(
@@ -2082,49 +2259,51 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             and claim.get("evidence_state") == "not_applicable",
             f"{observation_id} epistemic dimensions are collapsed",
         )
-        if observation.get("observation_kind") == "co_presence":
-            input_refs = observation.get("input_refs")
-            _require(
-                isinstance(input_refs, list) and len(input_refs) == 2,
-                f"{observation_id} co-presence needs exactly two inputs",
-            )
-            inputs = [context_objects.get(ref) for ref in input_refs]
-            _require(all(isinstance(item, dict) for item in inputs), f"{observation_id} has invalid inputs")
-            left, right = inputs
-            input_claim_refs = {
-                claim_id
-                for item in inputs
-                for extent_key in ("temporal_extent", "spatial_extent")
-                for claim_id in item.get(extent_key, {}).get("basis_claim_refs", [])
-            }
-            _require(
-                claim.get("target_refs") == [observation_id]
-                and set(claim.get("input_claim_refs", [])) == input_claim_refs,
-                f"{observation_id} Claim must target the observation and bind every input premise",
-            )
-            _require(
-                _temporal_overlaps(left.get("temporal_extent", {}), right.get("temporal_extent", {})),
-                f"{observation_id} co-presence inputs do not overlap in time",
-            )
-            left_space = _spatial_signature(left.get("spatial_extent"))
-            right_space = _spatial_signature(right.get("spatial_extent"))
-            _require(
-                left_space is not None and left_space == right_space,
-                f"{observation_id} co-presence inputs do not overlap in space",
-            )
-            subjects = {left.get("subject_ref"), right.get("subject_ref")}
-            _require(
-                None not in subjects and len(subjects) == 2,
-                f"{observation_id} co-presence inputs need two distinct subjects",
-            )
-            _require(
-                not any(
-                    {relation.get("subject_ref"), relation.get("object_ref")} == subjects
-                    for relation in indexes["relations"].values()
-                ),
-                f"{observation_id} must demonstrate co-presence without a stored Relation",
-            )
-            co_presence_observations.append(observation_id)
+        input_refs = observation.get("input_refs")
+        _require(
+            isinstance(input_refs, list)
+            and len(input_refs) == 2
+            and len(set(input_refs)) == 2,
+            f"{observation_id} co-presence needs exactly two distinct inputs",
+        )
+        inputs = [context_objects.get(ref) for ref in input_refs]
+        _require(all(isinstance(item, dict) for item in inputs), f"{observation_id} has invalid inputs")
+        left, right = inputs
+        input_claim_refs = {
+            claim_id
+            for item in inputs
+            for extent_key in ("temporal_extent", "spatial_extent")
+            for claim_id in item.get(extent_key, {}).get("basis_claim_refs", [])
+        }
+        _require(
+            input_claim_refs
+            and claim.get("target_refs") == [observation_id]
+            and set(claim.get("input_claim_refs", [])) == input_claim_refs,
+            f"{observation_id} Claim must target the observation and bind every input premise",
+        )
+        _require(
+            _temporal_overlaps(left.get("temporal_extent", {}), right.get("temporal_extent", {})),
+            f"{observation_id} co-presence inputs do not overlap in time",
+        )
+        left_space = _spatial_signature(left.get("spatial_extent"))
+        right_space = _spatial_signature(right.get("spatial_extent"))
+        _require(
+            left_space is not None and left_space == right_space,
+            f"{observation_id} co-presence inputs do not overlap in space",
+        )
+        subjects = {left.get("subject_ref"), right.get("subject_ref")}
+        _require(
+            None not in subjects and len(subjects) == 2,
+            f"{observation_id} co-presence inputs need two distinct subjects",
+        )
+        _require(
+            not any(
+                {relation.get("subject_ref"), relation.get("object_ref")} == subjects
+                for relation in indexes["relations"].values()
+            ),
+            f"{observation_id} must demonstrate co-presence without a stored Relation",
+        )
+        co_presence_observations.append(observation_id)
     _require(co_presence_observations, "fixture package needs spatial-temporal co-presence without Relation")
 
     for view_id, view in indexes["synchronized_views"].items():
@@ -2223,7 +2402,6 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     return {
         expected_type: len(indexes[collection])
         for collection, expected_type in COLLECTION_TYPES.items()
-        if collection != "derived_observations"
     }
 
 

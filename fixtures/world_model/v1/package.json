@@ -183,9 +183,7 @@
       "entity_kind": "Place",
       "label": "Fixture Basin",
       "claim_refs": [],
-      "uncertainty_refs": [
-        "uncertainty-region-alternative"
-      ],
+      "uncertainty_refs": [],
       "layer_refs": [
         "layer-politics"
       ]

@@ -861,13 +861,7 @@
         },
         "observation_kind": {
           "enum": [
-            "temporal_overlap",
-            "spatial_overlap",
-            "co_presence",
-            "before",
-            "after",
-            "route_intersection",
-            "similarity"
+            "co_presence"
           ]
         },
         "input_refs": {

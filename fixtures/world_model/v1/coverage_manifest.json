@@ -10,6 +10,7 @@
     "Region": 2,
     "Layer": 4,
     "Relation": 2,
+    "DerivedObservation": 1,
     "Claim": 20,
     "EvidenceLink": 21,
     "Uncertainty": 6,

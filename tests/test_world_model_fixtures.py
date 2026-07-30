@@ -10,6 +10,7 @@ import pytest
 from scripts.validate_world_model_fixtures import (
     FixtureValidationError,
     REQUIRED_REVIEW_SCOPE,
+    _process_stage_premise_claims,
     compute_review_scope_digest,
     validate_package,
 )
@@ -145,6 +146,7 @@ def test_world_model_fixture_package_passes_structural_validation() -> None:
     assert counts["Trajectory"] == 1
     assert counts["Region"] == 2
     assert counts["Relation"] == 2
+    assert counts["DerivedObservation"] == 1
     assert counts["Claim"] == 20
     assert counts["EvidenceLink"] == 21
 
@@ -269,7 +271,10 @@ def test_validator_rejects_alternative_date_without_distinct_claim(tmp_path: Pat
     arrival["temporal_extent"]["alternatives"][0]["basis_claim_refs"] = ["claim-arrival-event"]
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="alternative date needs a distinct supporting Claim"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="basis_claim_refs must exactly match|alternative date needs a distinct supporting Claim",
+    ):
         validate_package(root)
 
 
@@ -391,7 +396,56 @@ def test_validator_rejects_incomplete_alternative_date_uncertainty_basis(tmp_pat
     uncertainty["basis_claim_refs"].remove("claim-arrival-event-1504")
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must bind every alternative-date Claim"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="basis_claim_refs must exactly match|must bind every alternative-date Claim",
+    ):
+        validate_package(root)
+
+
+def test_validator_rejects_uncertainty_subject_retarget(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-process-mechanism"
+    )
+    uncertainty["subject_or_claim_ref"] = "claim-mara-identity"
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="must link back|basis_claim_refs must exactly match",
+    ):
+        validate_package(root)
+
+
+def test_validator_rejects_foreign_uncertainty_backlink(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    event = next(
+        item for item in package["events"] if item["id"] == "event-far-observation"
+    )
+    event["uncertainty_refs"].append("uncertainty-process-mechanism")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="does not correspond to its declared subject"):
+        validate_package(root)
+
+
+def test_validator_rejects_missing_uncertainty_subject_backlink(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-process-analytical-grouping"
+    )
+    claim["uncertainty_refs"] = []
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must link back to the Uncertainty"):
         validate_package(root)
 
 
@@ -403,7 +457,38 @@ def test_validator_rejects_co_presence_claim_without_bound_premises(tmp_path: Pa
     claim["input_claim_refs"] = []
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="target the observation and bind every input premise"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="must exclusively target its owner|target the observation and bind every input premise",
+    ):
+        validate_package(root)
+
+
+def test_validator_rejects_unexecutable_similarity_observation(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["derived_observations"].append(
+        {
+            "id": "observation-unbound-similarity",
+            "type": "DerivedObservation",
+            "observation_kind": "similarity",
+            "input_refs": [
+                "event-north-harbor-charter",
+                "event-far-observation",
+            ],
+            "claim_ref": "claim-process-analytical-grouping",
+            "relation_created": False,
+        }
+    )
+    grouping = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-process-analytical-grouping"
+    )
+    grouping["target_refs"].append("observation-unbound-similarity")
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="fails schema.json"):
         validate_package(root)
 
 
@@ -423,7 +508,10 @@ def test_validator_rejects_process_stage_claim_drift(tmp_path: Path) -> None:
     package["processes"][0]["stages"][1]["claim_refs"] = ["claim-region-south"]
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="exactly bind its temporal and spatial premises"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="must target canonical owner|exactly bind its temporal and spatial premises",
+    ):
         validate_package(root)
 
 
@@ -440,9 +528,25 @@ def test_validator_rejects_analytical_process_input_drift(tmp_path: Path) -> Non
 
     with pytest.raises(
         FixtureValidationError,
-        match="direct extent basis must be the system observation bound to every stage",
+        match="basis_claim_refs must exactly match|direct extent basis must be the system observation bound to every stage",
     ):
         validate_package(root)
+
+
+def test_analytical_process_premises_include_spatial_only_claims() -> None:
+    process = {
+        "stages": [
+            {
+                "temporal_extent": {"basis_claim_refs": ["claim-temporal"]},
+                "spatial_extent": {"basis_claim_refs": ["claim-spatial"]},
+            }
+        ]
+    }
+
+    assert _process_stage_premise_claims(process) == {
+        "claim-temporal",
+        "claim-spatial",
+    }
 
 
 def test_validator_rejects_claim_input_dependency_cycle(tmp_path: Path) -> None:
@@ -498,7 +602,41 @@ def test_validator_rejects_misbound_top_level_claim_ref(tmp_path: Path) -> None:
     place["claim_refs"] = ["claim-process-south-stage"]
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="claim_ref .* must target its owner"):
+    with pytest.raises(FixtureValidationError, match="claim_ref .* must target canonical owner"):
+        validate_package(root)
+
+
+def test_validator_rejects_misbound_layer_claim_ref(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["layers"][0]["claim_refs"] = ["claim-global-event"]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="claim_ref .* must target canonical owner"):
+        validate_package(root)
+
+
+def test_validator_rejects_misbound_trajectory_segment_claim_ref(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["trajectories"][0]["segments"][0]["claim_refs"].append(
+        "claim-mara-identity"
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="claim_ref .* must target canonical owner"):
+        validate_package(root)
+
+
+def test_validator_rejects_misbound_region_version_claim_ref(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["regions"][0]["geometry_versions"][0]["claim_refs"].append(
+        "claim-mara-identity"
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="claim_ref .* must target canonical owner"):
         validate_package(root)
 
 
@@ -800,7 +938,7 @@ def test_validator_rejects_relation_endpoint_not_bound_by_claim(tmp_path: Path) 
 
     with pytest.raises(
         FixtureValidationError,
-        match="must target its owner|target the Relation and both endpoints",
+        match="must target (?:its|canonical) owner|target the Relation and both endpoints",
     ):
         validate_package(root)
 
@@ -915,7 +1053,7 @@ def test_validator_rejects_relation_missing_from_claim_targets(tmp_path: Path) -
 
     with pytest.raises(
         FixtureValidationError,
-        match="must target its owner|target the Relation and both endpoints",
+        match="must target (?:its|canonical) owner|target the Relation and both endpoints",
     ):
         validate_package(root)
 
@@ -936,7 +1074,7 @@ def test_validator_rejects_unstated_relation_point_geometry(tmp_path: Path) -> N
 
     with pytest.raises(
         FixtureValidationError,
-        match="must target its owner|exact geometry must be stated",
+        match="must target (?:its|canonical) owner|exact geometry must be stated",
     ):
         validate_package(root)
 
@@ -959,7 +1097,7 @@ def test_validator_rejects_relation_geometry_hidden_in_temporal_digits(tmp_path:
 
     with pytest.raises(
         FixtureValidationError,
-        match="must target its owner|exact geometry must be stated",
+        match="must target (?:its|canonical) owner|exact geometry must be stated",
     ):
         validate_package(root)
 
@@ -1050,7 +1188,7 @@ def test_validator_rejects_geometry_basis_claim_not_targeting_owner(tmp_path: Pa
 
     with pytest.raises(
         FixtureValidationError,
-        match="must target its owner|exact geometry must be stated",
+        match="must target (?:its|canonical) owner|exact geometry must be stated",
     ):
         validate_package(root)
 
