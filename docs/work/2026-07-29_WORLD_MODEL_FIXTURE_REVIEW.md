@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `fe1893bbe3f8cf9f2c2f6ec2cd9b02c70248e9d3`.
-- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
+- Previous reviewed head: `70069c76d4b28c7a97fea65dccfcf79b65d45ed2`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -18,7 +18,7 @@ The validator owns the immutable `world-model-v1-canonical` scope. Registry meta
 - `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
 - `docs/ENTITY_MODEL.md`;
 - `docs/EPISTEMIC_CONTRACT.md`;
-- schema, package, coverage, compatibility and both synthetic source artifacts;
+- fixture README, schema, package, coverage, compatibility and both synthetic source artifacts;
 - validator and regression tests;
 - dependency lock input in `requirements.txt`.
 
@@ -117,6 +117,8 @@ The review cycle on `a5af4b97…` confirmed the precision, underflow and signed-
 The validator-integrity review also noted that second-precision review completion equal to the frozen commit timestamp is accepted. The contract intentionally defines that boundary as “not before,” matching the executable comparison and avoiding an unverifiable sub-second ordering claim. The pending correction requires one exact lexical spelling for every accepted JSON number and exactly two coordinates for every v1 EPSG:4326 position. It remains `REVIEW_REQUIRED` until publication, CI and two new independent reviews of the resulting exact SHA.
 
 The semantic-model review on `fe1893b…` found no unresolved finding and confirmed every accumulated model/provenance contour. Validator-integrity review confirmed numeric aliases and Z-only geometry are closed, then found one representation-level footprint alias: a one-component `MultiPolygon` could wrap a primary `Polygon` unchanged and be counted as a different alternative. The pending correction closes v1 Region geometry to one `polygon`/`Polygon` representation and adds the coordinated wrapper regression. The semantic READY verdict applies only to `fe1893b…`; both tracks must review the next exact SHA afresh.
+
+Both independent reviews on `70069c7…` confirmed the complete numeric, geometry, provenance and READY contours, then found the same material scope omission: the fixture README states normative v1 semantic/corpus/runtime boundaries but was not included in the immutable digest. A post-freeze README could therefore contradict the reviewed model while READY still passed. The pending correction adds the exact README path to validator-owned scope, normalizes only its transition-status line and adds a full-READY overclaim regression. The package remains `REVIEW_REQUIRED` until another exact SHA passes CI and two fresh reviews.
 
 ## Finalization rule
 

@@ -29,6 +29,7 @@ REQUIRED_REVIEW_SCOPE = (
     "docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md",
     "docs/ENTITY_MODEL.md",
     "docs/EPISTEMIC_CONTRACT.md",
+    "fixtures/world_model/v1/README.md",
     "fixtures/world_model/v1/schema.json",
     "fixtures/world_model/v1/package.json",
     "fixtures/world_model/v1/coverage_manifest.json",
@@ -474,6 +475,18 @@ def _validate_v1_semantic_envelope(package: dict[str, Any]) -> None:
 
 
 def _normalize_review_scope_bytes(relative_path: str, raw: bytes) -> bytes:
+    if relative_path == str(PACKAGE_RELATIVE / "README.md"):
+        normalized, replacements = re.subn(
+            r"^Status: `(?:REVIEW_REQUIRED|READY)`\.$",
+            "Status: `REVIEW_REQUIRED`.",
+            raw.decode("utf-8"),
+            flags=re.MULTILINE,
+        )
+        _require(
+            replacements == 1,
+            "fixture README needs one canonical transition status",
+        )
+        return normalized.encode("utf-8")
     if relative_path == str(PACKAGE_RELATIVE / "package.json"):
         package = _loads_json(raw.decode("utf-8"), context=relative_path)
         package.pop("status", None)

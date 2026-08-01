@@ -570,6 +570,26 @@ def test_ready_gate_rejects_semantic_content_drift_after_review(tmp_path: Path) 
         validate_package(root, require_ready=True)
 
 
+def test_ready_gate_rejects_readme_overclaim_after_review(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8").replace(
+            "An `inferred_gap` has no route geometry.",
+            "An `inferred_gap` may be rendered with invented route geometry.",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="does not match current reviewed content",
+    ):
+        validate_package(root, require_ready=True)
+
+
 def test_validator_rejects_world_slice_that_omits_modeled_region(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)
