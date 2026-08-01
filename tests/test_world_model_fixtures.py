@@ -2151,3 +2151,251 @@ def test_package_is_deterministic_under_deep_copy(tmp_path: Path) -> None:
     _write_package(root, copy.deepcopy(package))
 
     assert validate_package(root) == validate_package(ROOT)
+
+
+def test_validator_rejects_coordinated_claim_epistemic_self_certification(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(item for item in package["claims"] if item["id"] == "claim-charter-event")
+    old_assertion = _claim_assertion_expression(claim)
+    claim.update(
+        {
+            "claim_kind": "counterfactual",
+            "origin": "ai",
+            "review_state": "rejected",
+            "confidence": "low",
+        }
+    )
+    new_assertion = _claim_assertion_expression(claim)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8").replace(old_assertion, new_assertion),
+        encoding="utf-8",
+    )
+    source = next(item for item in package["sources"] if item["id"] == "source-field-alpha")
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 envelope"):
+        validate_package(root)
+
+
+def test_validator_rejects_coordinated_claim_target_and_backlink_expansion(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(item for item in package["claims"] if item["id"] == "claim-charter-event")
+    old_assertion = _claim_assertion_expression(claim)
+    claim["target_refs"].append("entity-keeper-ren")
+    keeper = next(
+        item for item in package["entities"] if item["id"] == "entity-keeper-ren"
+    )
+    keeper["claim_refs"].append(claim["id"])
+    new_assertion = _claim_assertion_expression(claim)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8").replace(old_assertion, new_assertion),
+        encoding="utf-8",
+    )
+    source = next(item for item in package["sources"] if item["id"] == "source-field-alpha")
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 envelope"):
+        validate_package(root)
+
+
+def test_validator_rejects_coordinated_state_semantic_self_certification(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    state = next(
+        item
+        for item in package["states"]
+        if item["id"] == "state-north-harbor-administration"
+    )
+    claim = next(
+        item for item in package["claims"] if item["id"] == "claim-administration-state"
+    )
+    old_binding = copy.deepcopy(claim["state_bindings"][0])
+    old_state_assertion = "STATE_ASSERTION[" + json.dumps(
+        old_binding, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ) + "]"
+    old_claim_assertion = _claim_assertion_expression(claim)
+    state["state_kind"] = "presence"
+    state["value"] = "present"
+    new_binding = {
+        "state_ref": state["id"],
+        "subject_ref": state["subject_ref"],
+        "state_kind": state["state_kind"],
+        "value": state["value"],
+    }
+    claim["state_bindings"] = [new_binding]
+    new_state_assertion = "STATE_ASSERTION[" + json.dumps(
+        new_binding, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ) + "]"
+    new_claim_assertion = _claim_assertion_expression(claim)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8")
+        .replace(old_state_assertion, new_state_assertion)
+        .replace(old_claim_assertion, new_claim_assertion),
+        encoding="utf-8",
+    )
+    source = next(item for item in package["sources"] if item["id"] == "source-field-alpha")
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 envelope"):
+        validate_package(root)
+
+
+@pytest.mark.parametrize(
+    ("collection", "item_id", "field", "replacement"),
+    (
+        ("events", "event-north-harbor-charter", "label", "Mara assassinated Keeper Ren"),
+        ("layers", "layer-biography", "coverage_rule", "The layer proves complete historical absence."),
+        ("regions", "region-fixture-basin", "region_kind", "imaginary_world_empire"),
+    ),
+)
+def test_validator_rejects_unbound_closed_v1_display_semantics(
+    tmp_path: Path,
+    collection: str,
+    item_id: str,
+    field: str,
+    replacement: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    item = next(record for record in package[collection] if record["id"] == item_id)
+    item[field] = replacement
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 envelope"):
+        validate_package(root)
+
+
+def test_validator_rejects_missing_event_participant_from_closed_graph(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    event = next(
+        item
+        for item in package["events"]
+        if item["id"] == "event-documented-workshop-meeting"
+    )
+    event["participant_refs"] = []
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 envelope"):
+        validate_package(root)
+
+
+def test_validator_rejects_local_global_context_role_swap(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    view = package["synchronized_views"][0]
+    view["local_context_refs"], view["global_context_refs"] = (
+        view["global_context_refs"],
+        view["local_context_refs"],
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 envelope"):
+        validate_package(root)
+
+
+def test_validator_rejects_selected_object_outside_visible_context(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["synchronized_views"][0]["selected_object_refs"] = [
+        "event-north-harbor-charter"
+    ]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="belong to or participate"):
+        validate_package(root)
+
+
+def test_validator_rejects_unclosed_source_locator_delimiter(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8")
+        + "\nLOCATOR[unclosed\nContradictory trailing fixture text.\n",
+        encoding="utf-8",
+    )
+    source = next(item for item in package["sources"] if item["id"] == "source-field-alpha")
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="malformed or nested locator"):
+        validate_package(root)
+
+
+def test_validator_rejects_collinear_backtracking_polygon_ring(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    version = next(
+        version
+        for region in package["regions"]
+        for version in region["geometry_versions"]
+        if version["id"] == "region-geometry-v2"
+    )
+    version["spatial_extent"]["geometry"]["coordinates"][0] = [
+        [9.0, 49.0],
+        [12.0, 49.0],
+        [11.0, 49.0],
+        [12.0, 51.0],
+        [9.0, 51.0],
+        [9.0, 49.0],
+    ]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="collinear backtracking"):
+        validate_package(root)
+
+
+def test_validator_rejects_polygon_hole_outside_exterior(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    version = next(
+        version
+        for region in package["regions"]
+        for version in region["geometry_versions"]
+        if version["id"] == "region-geometry-v2"
+    )
+    version["spatial_extent"]["geometry"]["coordinates"].append(
+        [[20.0, 20.0], [21.0, 20.0], [21.0, 21.0], [20.0, 21.0], [20.0, 20.0]]
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="strictly contained"):
+        validate_package(root)
+
+
+def test_validator_rejects_duplicate_semantic_evidence_link(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    duplicate = copy.deepcopy(package["evidence_links"][0])
+    duplicate["id"] = "evidence-duplicate-reviewed-tuple"
+    package["evidence_links"].append(duplicate)
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="duplicates an existing semantic EvidenceLink"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_future_reviewed_at(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    package = _read_package(root)
+    package["record_time"]["reviewed_at"] = "2999-01-01T00:00:00Z"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="reviewed_at must not be in the future"):
+        validate_package(root, require_ready=True)

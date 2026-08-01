@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `6ed30e67e6ef41b3aa89afc1f55c5f532f407274`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/6/1`); validator-integrity `CHANGES_REQUIRED` (`0/4/1`).
+- Previous reviewed head: `fdcec3f48d2d83d55d47d814216fc9b8083983ad`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/5/0`); validator-integrity `CHANGES_REQUIRED` (`0/5/1`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -82,6 +82,17 @@ The review cycle on `6ed30e67…` confirmed the previous geometry-set, exclusion
 - a truncated locator token and premature `reviewed_at` metadata.
 
 The pending correction makes these executable failures through typed State/coverage/uncertainty policies, exact Claim/identity/Trajectory and WorldSlice assertions, normalized polygon topology, evidence-strength derivation and closed structured review findings. These changes remain `REVIEW_REQUIRED` until a new frozen head passes CI and two fresh independent reviews.
+
+The review cycle on `fdcec3f4…` confirmed those corrections and then found:
+
+- complete Claim epistemic fields and exact target/backlink roles could be rewritten together with their source assertion;
+- structured State, Relation, Trajectory and extent payload could contradict the fixed Claim statement after coordinated assertion/checksum updates;
+- Event participant sets, change-object labels, Layer coverage and object-to-layer membership were outside one closed scenario envelope;
+- SynchronizedView local/global roles, camera, reconstruction mode and selection were not one executable spatial configuration;
+- an unclosed locator delimiter could truncate the reviewed passage, semantically duplicate EvidenceLinks could inflate evidence, and invalid polygon backtracking or exterior holes were accepted;
+- an otherwise READY package could use a future `reviewed_at` timestamp.
+
+The next correction pins the complete normalized v1 semantic payload to a validator-owned digest while preserving specialized structural checks. It also uses one strict locator tokenizer, rejects duplicate EvidenceLink tuples, validates polygon ring/hole/component topology, binds View selection to temporally visible context and bounds READY review time. The package remains `REVIEW_REQUIRED` until publication, CI and another fresh pair of independent reviews.
 
 ## Finalization rule
 

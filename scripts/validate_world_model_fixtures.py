@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 from collections import Counter, defaultdict
-from datetime import date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -193,6 +193,10 @@ REQUIRED_IDENTITY_CLAIMS = {"entity-mara-vale": "claim-mara-identity"}
 REQUIRED_TRAJECTORY_SUBJECTS = {
     "trajectory-mara-vale": ("entity-mara-vale", "Mara Vale fixture trajectory"),
 }
+REQUIRED_V1_SEMANTIC_PAYLOAD_SHA256 = (
+    "3f932550bad478c3caf8d0f999abe2ef6c26a0de14f01d156c443f95cbe5d10b"
+)
+LOCATOR_TOKEN_PATTERN = re.compile(r"LOCATOR\[[^\]\r\n]+\]")
 
 ALLOWED_CLAIM_KINDS = {
     "factual",
@@ -383,6 +387,25 @@ def _canonical_json_bytes(value: Any) -> bytes:
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
+
+
+def _normalized_semantic_package(package: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(package)
+    normalized.pop("status", None)
+    record_time = dict(package.get("record_time", {}))
+    record_time["reviewed_at"] = None
+    normalized["record_time"] = record_time
+    return normalized
+
+
+def _validate_v1_semantic_envelope(package: dict[str, Any]) -> None:
+    digest = hashlib.sha256(
+        _canonical_json_bytes(_normalized_semantic_package(package))
+    ).hexdigest()
+    _require(
+        digest == REQUIRED_V1_SEMANTIC_PAYLOAD_SHA256,
+        "fixture semantic payload drift from the closed reviewed v1 envelope",
+    )
 
 
 def _normalize_review_scope_bytes(relative_path: str, raw: bytes) -> bytes:
@@ -728,6 +751,10 @@ def _segments_intersect(
 def _normalize_ring(value: list[Any], *, context: str) -> tuple[tuple[float, ...], ...]:
     core = [tuple(float(number) for number in position) for position in value[:-1]]
     _require(len(set(core)) >= 3, f"{context} has degenerate polygon ring")
+    _require(
+        all(core[index] != core[(index + 1) % len(core)] for index in range(len(core))),
+        f"{context} has duplicate consecutive polygon positions",
+    )
     changed = True
     while changed and len(core) > 3:
         changed = False
@@ -736,6 +763,11 @@ def _normalize_ring(value: list[Any], *, context: str) -> tuple[tuple[float, ...
             middle = core[index][:2]
             right = core[(index + 1) % len(core)][:2]
             if abs(_cross_product(left, middle, right)) < 1e-12:
+                _require(
+                    min(left[0], right[0]) <= middle[0] <= max(left[0], right[0])
+                    and min(left[1], right[1]) <= middle[1] <= max(left[1], right[1]),
+                    f"{context} has a collinear backtracking polygon edge",
+                )
                 core.pop(index)
                 changed = True
                 break
@@ -772,6 +804,73 @@ def _normalize_ring(value: list[Any], *, context: str) -> tuple[tuple[float, ...
     return min(rotations)
 
 
+def _ring_edges(
+    ring: tuple[tuple[float, ...], ...],
+) -> Iterable[tuple[tuple[float, float], tuple[float, float]]]:
+    for index, position in enumerate(ring):
+        yield position[:2], ring[(index + 1) % len(ring)][:2]
+
+
+def _rings_intersect(
+    left: tuple[tuple[float, ...], ...],
+    right: tuple[tuple[float, ...], ...],
+) -> bool:
+    return any(
+        _segments_intersect(left_start, left_end, right_start, right_end)
+        for left_start, left_end in _ring_edges(left)
+        for right_start, right_end in _ring_edges(right)
+    )
+
+
+def _point_in_ring(
+    point: tuple[float, float],
+    ring: tuple[tuple[float, ...], ...],
+) -> bool:
+    inside = False
+    x, y = point
+    for start, end in _ring_edges(ring):
+        if abs(_cross_product(start, point, end)) < 1e-12 and (
+            min(start[0], end[0]) <= x <= max(start[0], end[0])
+            and min(start[1], end[1]) <= y <= max(start[1], end[1])
+        ):
+            return False
+        if (start[1] > y) != (end[1] > y):
+            crossing_x = start[0] + (y - start[1]) * (end[0] - start[0]) / (
+                end[1] - start[1]
+            )
+            if crossing_x > x:
+                inside = not inside
+    return inside
+
+
+def _normalize_polygon(
+    coordinates: list[Any],
+    *,
+    context: str,
+) -> tuple[tuple[float, ...], tuple[tuple[tuple[float, ...], ...], ...]]:
+    rings = [
+        _normalize_ring(ring, context=f"{context} ring {ring_index}")
+        for ring_index, ring in enumerate(coordinates)
+    ]
+    exterior = rings[0]
+    holes = rings[1:]
+    for hole_index, hole in enumerate(holes):
+        _require(
+            not _rings_intersect(exterior, hole)
+            and all(_point_in_ring(position[:2], exterior) for position in hole),
+            f"{context} hole {hole_index} must be strictly contained by its exterior ring",
+        )
+    for left_index, left in enumerate(holes):
+        for right_index, right in enumerate(holes[left_index + 1 :], left_index + 1):
+            _require(
+                not _rings_intersect(left, right)
+                and not _point_in_ring(left[0][:2], right)
+                and not _point_in_ring(right[0][:2], left),
+                f"{context} holes {left_index} and {right_index} overlap or nest",
+            )
+    return exterior, tuple(sorted(holes))
+
+
 def _normalize_geometry(geometry: dict[str, Any], *, context: str) -> tuple[Any, ...]:
     geometry_type = str(geometry.get("type"))
     coordinates = geometry.get("coordinates")
@@ -781,19 +880,27 @@ def _normalize_geometry(geometry: dict[str, Any], *, context: str) -> tuple[Any,
         line = tuple(tuple(float(number) for number in position) for position in coordinates)
         return (geometry_type, min(line, tuple(reversed(line))))
     if geometry_type == "Polygon":
-        rings = [_normalize_ring(ring, context=context) for ring in coordinates]
-        return (geometry_type, rings[0], tuple(sorted(rings[1:])))
+        exterior, holes = _normalize_polygon(coordinates, context=context)
+        return (geometry_type, exterior, holes)
     if geometry_type == "MultiPolygon":
         polygons = []
         for polygon_index, polygon in enumerate(coordinates):
-            rings = [
-                _normalize_ring(
-                    ring,
+            polygons.append(
+                _normalize_polygon(
+                    polygon,
                     context=f"{context} polygon {polygon_index}",
                 )
-                for ring in polygon
-            ]
-            polygons.append((rings[0], tuple(sorted(rings[1:]))))
+            )
+        for left_index, (left, _left_holes) in enumerate(polygons):
+            for right_index, (right, _right_holes) in enumerate(
+                polygons[left_index + 1 :], left_index + 1
+            ):
+                _require(
+                    not _rings_intersect(left, right)
+                    and not _point_in_ring(left[0][:2], right)
+                    and not _point_in_ring(right[0][:2], left),
+                    f"{context} polygons {left_index} and {right_index} overlap",
+                )
         return (geometry_type, tuple(sorted(polygons)))
     raise FixtureValidationError(f"{context} has unsupported geometry type {geometry_type}")
 
@@ -859,6 +966,7 @@ def _validate_claims(
     package_root: Path,
 ) -> None:
     links_by_claim: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    evidence_tuples: set[tuple[str, ...]] = set()
     for link_id, link in evidence_links.items():
         claim_id = link.get("claim_id")
         source_id = link.get("source_id")
@@ -867,17 +975,31 @@ def _validate_claims(
         _require(link.get("relation_to_claim") in ALLOWED_EVIDENCE_RELATIONS, f"{link_id} has invalid relation")
         _require(link.get("evidence_strength") in ALLOWED_EVIDENCE_STRENGTH, f"{link_id} has invalid strength")
         _require(link.get("review_state") in ALLOWED_REVIEW_STATES, f"{link_id} has invalid review state")
+        evidence_tuple = tuple(
+            str(link.get(field))
+            for field in (
+                "claim_id",
+                "source_id",
+                "locator",
+                "relation_to_claim",
+                "evidence_strength",
+                "review_state",
+            )
+        )
+        _require(
+            evidence_tuple not in evidence_tuples,
+            f"{link_id} duplicates an existing semantic EvidenceLink tuple",
+        )
+        evidence_tuples.add(evidence_tuple)
         locator = link.get("locator")
         _require(
             isinstance(locator, str)
-            and re.fullmatch(r"LOCATOR\[[^\]\r\n]+\]", locator) is not None,
+            and LOCATOR_TOKEN_PATTERN.fullmatch(locator) is not None,
             f"{link_id} needs one exact LOCATOR token",
         )
         source_path = package_root / str(sources[source_id].get("uri"))
         _require(source_path.is_file(), f"{link_id} source artifact is missing: {source_path}")
-        locator_tokens = set(
-            re.findall(r"LOCATOR\[[^\]\r\n]+\]", source_path.read_text(encoding="utf-8"))
-        )
+        locator_tokens = set(_parse_source_locators(source_path.read_text(encoding="utf-8"), source_id))
         _require(locator in locator_tokens, f"{link_id} locator is not reproducible")
         links_by_claim[claim_id].append(link)
 
@@ -1230,6 +1352,27 @@ def _validate_uncertainty_ownership(
         )
 
 
+def _parse_source_locators(source_text: str, source_id: str) -> dict[str, tuple[int, int]]:
+    matches = list(LOCATOR_TOKEN_PATTERN.finditer(source_text))
+    raw_prefixes = [match.start() for match in re.finditer(r"LOCATOR\[", source_text)]
+    _require(
+        raw_prefixes == [match.start() for match in matches],
+        f"{source_id} contains malformed or nested locator delimiters",
+    )
+    locators = [match.group(0) for match in matches]
+    _require(
+        len(locators) == len(set(locators)),
+        f"{source_id} contains duplicate locator tokens",
+    )
+    return {
+        locator: (
+            match.end(),
+            matches[index + 1].start() if index + 1 < len(matches) else len(source_text),
+        )
+        for index, (locator, match) in enumerate(zip(locators, matches, strict=True))
+    }
+
+
 def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) -> None:
     for source_id, source in sources.items():
         _require(source.get("source_type") == "fixture_document", f"{source_id} must be a fixture document")
@@ -1246,23 +1389,15 @@ def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) ->
         digest = hashlib.sha256(source_bytes).hexdigest()
         _require(source.get("sha256") == digest, f"{source_id} checksum drift")
         source_text = source_bytes.decode("utf-8")
-        locators = re.findall(r"LOCATOR\[[^\]\r\n]+\]", source_text)
-        _require(
-            len(locators) == len(set(locators)),
-            f"{source_id} contains duplicate locator tokens",
-        )
+        _parse_source_locators(source_text, source_id)
 
 
 def _locator_passage(source_path: Path, locator: str) -> str:
     text = source_path.read_text(encoding="utf-8")
-    _require(
-        text.count(locator) == 1,
-        f"locator must occur exactly once: {locator}",
-    )
-    start = text.find(locator)
-    passage_start = start + len(locator)
-    next_locator = text.find("LOCATOR[", passage_start)
-    return text[passage_start:] if next_locator < 0 else text[passage_start:next_locator]
+    passages = _parse_source_locators(text, source_path.name)
+    _require(locator in passages, f"locator must occur exactly once: {locator}")
+    passage_start, passage_end = passages[locator]
+    return text[passage_start:passage_end]
 
 
 def _supporting_passages(
@@ -2738,6 +2873,13 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             <= datetime.strptime(str(reviewed_at), "%Y-%m-%dT%H:%M:%SZ"),
             "READY package reviewed_at must not precede created_at",
         )
+        _require(
+            datetime.strptime(str(reviewed_at), "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=UTC
+            )
+            <= datetime.now(UTC) + timedelta(minutes=5),
+            "READY package reviewed_at must not be in the future",
+        )
         for review in reviews:
             _require(review.get("frozen_commit") == frozen, "reviews must inspect the same frozen commit")
             _require(
@@ -3315,6 +3457,49 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             set(view["local_context_refs"]).isdisjoint(view["global_context_refs"]),
             f"{view_id} local and global context must remain distinct",
         )
+        visible_context_refs = set(view["local_context_refs"]) | set(
+            view["global_context_refs"]
+        )
+        temporally_visible_objects = [
+            item
+            for item in (*context_by_scope["local"], *context_by_scope["global"])
+            if any(
+                _temporal_overlaps(view_time, extent)
+                for extent in _object_temporal_extents(item)
+            )
+        ]
+        visible_related_refs = visible_context_refs | {
+            str(ref)
+            for item in temporally_visible_objects
+            for key in ("participant_refs", "subject_ref", "object_ref")
+            for ref in (
+                item.get(key, [])
+                if isinstance(item.get(key), list)
+                else [item.get(key)]
+            )
+            if isinstance(ref, str)
+        }
+        _require(
+            set(view["selected_object_refs"]) <= visible_related_refs,
+            f"{view_id} selected objects must belong to or participate in visible context",
+        )
+        for selected_ref in view["selected_object_refs"]:
+            selected = context_objects[selected_ref]
+            _require(
+                any(
+                    _temporal_overlaps(view_time, extent)
+                    for extent in _object_temporal_extents(selected)
+                )
+                or any(
+                    selected_ref
+                    in (
+                        set(item.get("participant_refs", []))
+                        | {item.get("subject_ref"), item.get("object_ref")}
+                    )
+                    for item in temporally_visible_objects
+                ),
+                f"{view_id} selected object {selected_ref} must intersect view time",
+            )
         _require(
             view.get("reconstruction_mode") in ALLOWED_RECONSTRUCTION_MODES,
             f"{view_id} has invalid reconstruction mode",
@@ -3330,6 +3515,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
 
     _validate_semantic_payloads(package, indexes, package_root=package_root)
     _validate_coverage(package, indexes, registry, root)
+    _validate_v1_semantic_envelope(package)
     _validate_reviews(root, package, require_ready=require_ready)
     _validate_compatibility(root, require_ready=require_ready)
 
