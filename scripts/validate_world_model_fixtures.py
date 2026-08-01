@@ -3252,6 +3252,12 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
                 version.get("reconstruction_mode") in ALLOWED_RECONSTRUCTION_MODES,
                 f"{version_id} has invalid reconstruction mode",
             )
+            _require(
+                version.get("spatial_extent", {}).get("kind") == "polygon"
+                and version.get("spatial_extent", {}).get("geometry", {}).get("type")
+                == "Polygon",
+                f"{version_id} Region geometry must use the canonical v1 Polygon representation",
+            )
             _validate_extent(
                 version.get("temporal_extent"),
                 context=version_id,

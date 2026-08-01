@@ -1793,6 +1793,34 @@ def test_validator_rejects_z_only_alternative_geometry_difference(tmp_path: Path
         validate_package(root)
 
 
+def test_validator_rejects_multipolygon_alias_of_primary_region(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    primary = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v2"
+    )
+    alternative = next(
+        item
+        for item in region["geometry_versions"]
+        if item["id"] == "region-geometry-v2-alternative"
+    )
+    primary_coordinates = copy.deepcopy(
+        primary["spatial_extent"]["geometry"]["coordinates"]
+    )
+    alternative["spatial_extent"]["kind"] = "multipolygon"
+    alternative["spatial_extent"]["geometry"] = {
+        "type": "MultiPolygon",
+        "coordinates": [primary_coordinates],
+    }
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="canonical v1 Polygon representation"):
+        validate_package(root)
+
+
 def test_validator_rejects_compatibility_snapshot_field_erasure(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"

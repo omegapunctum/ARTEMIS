@@ -60,7 +60,7 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - WorldSlice time/space bounds participate in the same context-bound extent gate as Events, States, Processes, Trajectories and Region versions.
 - An `inferred_gap` has no route geometry.
 - Every `Uncertainty` dimension has an exhaustive owner/basis rule; adding a plausible but dimension-ineligible backlink is invalid.
-- An alternative Region reconstruction names its Region/version set and must differ geometrically from every temporally overlapping primary reconstruction; v1 EPSG:4326 boundaries are strictly two-dimensional, so altitude cannot manufacture a competing footprint.
+- An alternative Region reconstruction names its Region/version set and must differ geometrically from every temporally overlapping primary reconstruction; v1 Region boundaries use one canonical `polygon`/`Polygon`, exact-two-dimensional EPSG:4326 representation, so a wrapper or altitude cannot manufacture a competing footprint.
 - Polygon comparison normalizes ring rotation/orientation and rejects degenerate, self-intersecting or backtracking rings, exterior holes and overlapping/nested components, so byte-different but topologically identical alternatives do not count as competing geometry.
 - `co_present` requires both spatial and temporal overlap and never creates a historical Relation.
 - Relation endpoints, Relation target and canonical time/space expressions must be stated by both its basis Claim and a reviewed supporting locator.

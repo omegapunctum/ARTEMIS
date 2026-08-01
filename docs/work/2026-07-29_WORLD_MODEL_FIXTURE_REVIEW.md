@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `a5af4b9760a79c91d6682f22d98e93ad20d852ce`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/2/1`).
+- Previous reviewed head: `fe1893bbe3f8cf9f2c2f6ec2cd9b02c70248e9d3`.
+- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -115,6 +115,8 @@ The review cycle on `a5af4b97…` confirmed the precision, underflow and signed-
 - an alternative Region boundary could reuse the primary XY footprint and differ only by an unmodeled Z coordinate.
 
 The validator-integrity review also noted that second-precision review completion equal to the frozen commit timestamp is accepted. The contract intentionally defines that boundary as “not before,” matching the executable comparison and avoiding an unverifiable sub-second ordering claim. The pending correction requires one exact lexical spelling for every accepted JSON number and exactly two coordinates for every v1 EPSG:4326 position. It remains `REVIEW_REQUIRED` until publication, CI and two new independent reviews of the resulting exact SHA.
+
+The semantic-model review on `fe1893b…` found no unresolved finding and confirmed every accumulated model/provenance contour. Validator-integrity review confirmed numeric aliases and Z-only geometry are closed, then found one representation-level footprint alias: a one-component `MultiPolygon` could wrap a primary `Polygon` unchanged and be counted as a different alternative. The pending correction closes v1 Region geometry to one `polygon`/`Polygon` representation and adds the coordinated wrapper regression. The semantic READY verdict applies only to `fe1893b…`; both tracks must review the next exact SHA afresh.
 
 ## Finalization rule
 
