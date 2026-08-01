@@ -2735,7 +2735,11 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
     )
     _require(registry.get("schema_version") == SCHEMA_VERSION, "review registry version drift")
     _require(registry.get("package_id") == package.get("package_id"), "review registry package drift")
-    _require(registry.get("required_review_count") == 2, "fixture package requires two reviews")
+    _require(
+        type(registry.get("required_review_count")) is int
+        and registry["required_review_count"] == 2,
+        "fixture package requires exactly two reviews as an integer",
+    )
     _require(
         registry.get("review_scope_id") == REVIEW_SCOPE_ID and "review_scope" not in registry,
         "fixture reviews must use the canonical immutable review scope",
@@ -2932,6 +2936,15 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
     expected_status = "READY" if ready_records else "REVIEW_REQUIRED"
     _require(registry.get("status") == expected_status, "review registry status drift")
     _require(package.get("status") == expected_status, "fixture package status drift")
+    readme_statuses = re.findall(
+        r"^Status: `(REVIEW_REQUIRED|READY)`\.$",
+        (root / PACKAGE_RELATIVE / "README.md").read_text(encoding="utf-8"),
+        flags=re.MULTILINE,
+    )
+    _require(
+        readme_statuses == [expected_status],
+        "fixture README status must match package and review registry status",
+    )
     created_at = package.get("record_time", {}).get("created_at")
     reviewed_at = package.get("record_time", {}).get("reviewed_at")
     if expected_status == "READY":

@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `70069c76d4b28c7a97fea65dccfcf79b65d45ed2`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
+- Previous reviewed head: `afb7e787dd9aed3b8b5a1158b89aaef196067216`.
+- Previous verdicts: semantic-model `READY` (`0/0/1`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -119,6 +119,8 @@ The validator-integrity review also noted that second-precision review completio
 The semantic-model review on `fe1893b…` found no unresolved finding and confirmed every accumulated model/provenance contour. Validator-integrity review confirmed numeric aliases and Z-only geometry are closed, then found one representation-level footprint alias: a one-component `MultiPolygon` could wrap a primary `Polygon` unchanged and be counted as a different alternative. The pending correction closes v1 Region geometry to one `polygon`/`Polygon` representation and adds the coordinated wrapper regression. The semantic READY verdict applies only to `fe1893b…`; both tracks must review the next exact SHA afresh.
 
 Both independent reviews on `70069c7…` confirmed the complete numeric, geometry, provenance and READY contours, then found the same material scope omission: the fixture README states normative v1 semantic/corpus/runtime boundaries but was not included in the immutable digest. A post-freeze README could therefore contradict the reviewed model while READY still passed. The pending correction adds the exact README path to validator-owned scope, normalizes only its transition-status line and adds a full-READY overclaim regression. The package remains `REVIEW_REQUIRED` until another exact SHA passes CI and two fresh reviews.
+
+The reviews on `afb7e78…` confirmed README content is frozen and found no other unresolved model contour. Validator-integrity review classified one remaining readiness-truth mismatch as material: the normalized README status was not compared with package/registry status, so premature `READY` or stale `REVIEW_REQUIRED` display text passed. It also found integer/float type confusion in `required_review_count`. The pending correction synchronizes all three statuses and requires exact integer review cardinality, with regressions in structural and full-READY modes. It remains `REVIEW_REQUIRED` pending a new exact SHA, CI and fresh reviews.
 
 ## Finalization rule
 

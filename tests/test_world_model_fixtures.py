@@ -82,6 +82,15 @@ def _make_ready_reviews(root: Path) -> None:
     package["status"] = "READY"
     package["record_time"]["reviewed_at"] = reviewed_at
     _write_package(root, package)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8").replace(
+            "Status: `REVIEW_REQUIRED`.",
+            "Status: `READY`.",
+            1,
+        ),
+        encoding="utf-8",
+    )
 
     registry_path = root / PACKAGE / "review_registry.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
@@ -588,6 +597,55 @@ def test_ready_gate_rejects_readme_overclaim_after_review(tmp_path: Path) -> Non
         match="does not match current reviewed content",
     ):
         validate_package(root, require_ready=True)
+
+
+def test_validator_rejects_premature_readme_ready_status(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8").replace(
+            "Status: `REVIEW_REQUIRED`.",
+            "Status: `READY`.",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="README status must match"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_stale_readme_review_required_status(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8").replace(
+            "Status: `READY`.",
+            "Status: `REVIEW_REQUIRED`.",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="README status must match"):
+        validate_package(root, require_ready=True)
+
+
+def test_validator_rejects_float_required_review_count(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    registry_path = root / PACKAGE / "review_registry.json"
+    registry_path.write_text(
+        registry_path.read_text(encoding="utf-8").replace(
+            '"required_review_count": 2,',
+            '"required_review_count": 2.0,',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="exactly two reviews as an integer"):
+        validate_package(root)
 
 
 def test_validator_rejects_world_slice_that_omits_modeled_region(tmp_path: Path) -> None:
