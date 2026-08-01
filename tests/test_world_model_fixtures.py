@@ -2504,3 +2504,63 @@ def test_ready_gate_rejects_json_exponent_overflow(
 
     with pytest.raises(FixtureValidationError, match=f"non-finite number {overflow}"):
         validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_post_freeze_decimal_precision_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    package_path = root / PACKAGE / "package.json"
+    package_path.write_text(
+        package_path.read_text(encoding="utf-8").replace(
+            "11.4",
+            "11.4000000000000001",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="loses precision"):
+        validate_package(root, require_ready=True)
+
+
+@pytest.mark.parametrize("value", ("1e-999", "-1e-999"))
+def test_ready_gate_rejects_json_underflow_to_zero(
+    tmp_path: Path,
+    value: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    schema_path = root / PACKAGE / "schema.json"
+    schema_path.write_text(
+        schema_path.read_text(encoding="utf-8").replace(
+            '"$schema": "https://json-schema.org/draft/2020-12/schema",',
+            '"$schema": "https://json-schema.org/draft/2020-12/schema",\n'
+            f'  "x-underflow-probe": {value},',
+            1,
+        ),
+        encoding="utf-8",
+    )
+    _make_ready_reviews(root)
+
+    with pytest.raises(FixtureValidationError, match="loses precision"):
+        validate_package(root, require_ready=True)
+
+
+@pytest.mark.parametrize("value", ("-0", "-0.0"))
+def test_validator_rejects_ambiguous_signed_zero(
+    tmp_path: Path,
+    value: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    schema_path = root / PACKAGE / "schema.json"
+    schema_path.write_text(
+        schema_path.read_text(encoding="utf-8").replace(
+            '"$schema": "https://json-schema.org/draft/2020-12/schema",',
+            '"$schema": "https://json-schema.org/draft/2020-12/schema",\n'
+            f'  "x-signed-zero-probe": {value},',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="ambiguous signed zero"):
+        validate_package(root)

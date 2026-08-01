@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `7a1c92b0eae8ce0012e81974821dfa9af8144aea`.
-- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
+- Previous reviewed head: `2da475092223a839f029f9a69334524fd205537a`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -104,6 +104,10 @@ The pending correction applies one duplicate-key/non-finite rejecting loader to 
 The review cycle on `7a1c92b…` confirmed the full semantic, duplicate-key and chronology contours. Validator-integrity review found one remaining parser-divergence case: valid JSON exponent syntax such as `1e999` overflowed Python's default float conversion to infinity without invoking the lexical non-finite hook.
 
 The pending correction adds strict finite float parsing, a recursive finiteness assertion and non-finite-rejecting canonical serialization. Full-READY regressions cover positive and negative exponent overflow. The package remains `REVIEW_REQUIRED` until the resulting SHA passes CI and another fresh review pair.
+
+The review cycle on `2da47509…` confirmed overflow rejection but found one shared finite-number class: precision-rich decimal tokens and nonzero underflow could round to the same binary64 value before semantic and review-scope hashing, allowing post-freeze raw package drift.
+
+The pending correction defines an explicit canonical binary64 lexical contract. A JSON decimal must be numerically equal to the shortest round-trip representation of its parsed float; precision loss, nonzero underflow and signed zero are rejected. Full-READY regressions cover coordinate precision drift, positive/negative underflow and integer/decimal signed zero. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
 
 ## Finalization rule
 

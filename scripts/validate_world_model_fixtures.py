@@ -13,6 +13,7 @@ import subprocess
 import sys
 from collections import Counter, defaultdict
 from datetime import UTC, date, datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -373,7 +374,20 @@ def _reject_json_constant(value: str) -> None:
 def _strict_json_float(value: str) -> float:
     parsed = float(value)
     _require(math.isfinite(parsed), f"JSON contains non-finite number {value}")
+    _require(
+        Decimal(value) == Decimal(str(parsed)),
+        f"JSON number loses precision under the canonical binary64 contract: {value}",
+    )
+    _require(
+        not (parsed == 0.0 and value.lstrip().startswith("-")),
+        f"JSON number uses ambiguous signed zero: {value}",
+    )
     return parsed
+
+
+def _strict_json_int(value: str) -> int:
+    _require(value != "-0", "JSON number uses ambiguous signed zero: -0")
+    return int(value)
 
 
 def _assert_finite_json(value: Any) -> None:
@@ -394,6 +408,7 @@ def _loads_json(raw: str, *, context: str) -> Any:
             object_pairs_hook=_strict_json_object,
             parse_constant=_reject_json_constant,
             parse_float=_strict_json_float,
+            parse_int=_strict_json_int,
         )
         _assert_finite_json(value)
         return value
