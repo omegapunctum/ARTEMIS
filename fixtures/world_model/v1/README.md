@@ -71,10 +71,11 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - WorldSlice coverage policy and Uncertainty effects are typed and fixed to the sparse synthetic scope; the contract view must expose material, alternative and corpus uncertainty and activate every local/global context layer.
 - Every Source is parsed by one closed locator tokenizer; malformed, nested, truncated or duplicate markers cannot shadow or truncate a canonical passage.
 - Semantically duplicate EvidenceLink tuples are rejected before evidence state is derived.
-- Package record timestamps use strict second-precision UTC ISO-8601; `reviewed_at` remains null until READY and cannot be future-dated.
+- Every JSON artifact is read with one strict parser that rejects duplicate keys and non-finite numbers before schema, semantic or review-digest processing.
+- Package and review completion timestamps use strict second-precision UTC ISO-8601; reviews cannot predate their frozen commit or be future-dated, and package `reviewed_at` must follow both reviews.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity; selected objects must belong to or participate in temporally visible context.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.
-- Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed structured attestations, inspect one resolvable ancestor commit, report zero unresolved critical/material findings and bind both that commit tree and the current review-scope digest.
+- Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed structured attestations with bound completion times, inspect one resolvable ancestor commit, report zero unresolved critical/material findings and bind both that commit tree and the current review-scope digest.
 - Review artifacts are closed machine-readable attestations: structured findings derive the decision and counts, while unknown narrative/verdict fields fail closed.
 - Review identifiers are non-empty stable strings; finding counts are non-negative integers and booleans are rejected.
 - `independence_attestation` records the operational fact of separate agent tasks. The validator verifies the two distinct attestations and their content bindings; merge authority remains responsible for authenticating reviewer identity outside the repository.

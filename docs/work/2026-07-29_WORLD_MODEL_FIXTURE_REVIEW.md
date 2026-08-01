@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `fdcec3f48d2d83d55d47d814216fc9b8083983ad`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/5/0`); validator-integrity `CHANGES_REQUIRED` (`0/5/1`).
+- Previous reviewed head: `7c0062112d5e242e6849cedc1a385d6fa34908f8`.
+- Previous verdicts: semantic-model `READY` (`0/0/1`); validator-integrity `CHANGES_REQUIRED` (`0/2/0`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -94,6 +94,13 @@ The review cycle on `fdcec3f4…` confirmed those corrections and then found:
 
 The next correction pins the complete normalized v1 semantic payload to a validator-owned digest while preserving specialized structural checks. It also uses one strict locator tokenizer, rejects duplicate EvidenceLink tuples, validates polygon ring/hole/component topology, binds View selection to temporally visible context and bounds READY review time. The package remains `REVIEW_REQUIRED` until publication, CI and another fresh pair of independent reviews.
 
+The review cycle on `7c006211…` found no unresolved semantic-model blocker and confirmed that the normalized digest permits only the intended status/reviewed-at transition. Validator-integrity review found two remaining READY-envelope gaps:
+
+- duplicate JSON keys could be interpreted differently by first-wins consumers and Python's last-wins parser while the canonical review digest hid the ambiguity;
+- review/package timestamps could predate the frozen commit because attestations had no independently bound completion time.
+
+The pending correction applies one duplicate-key/non-finite rejecting loader to every JSON artifact. Each review and its closed artifact gains a strict UTC completion timestamp; every completion must follow the frozen commit and precede validation, while package `reviewed_at` must follow both reviews. These changes remain `REVIEW_REQUIRED` until a new exact SHA passes CI and two fresh independent reviews.
+
 ## Finalization rule
 
 The package can become `READY` only when:
@@ -104,6 +111,7 @@ The package can become `READY` only when:
 - critical findings and unresolved material findings are zero;
 - the frozen commit tree and current immutable review scope have the same digest;
 - `record_time.reviewed_at`, `review_registry.json` and `package.json` are synchronized;
+- every review completion time is after the frozen commit, no review/package time is future-dated, and package `reviewed_at` is not earlier than either review;
 - `python scripts/validate_world_model_fixtures.py --require-ready` passes;
 - repository release/governance checks pass.
 

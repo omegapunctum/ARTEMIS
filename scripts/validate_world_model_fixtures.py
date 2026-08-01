@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 from collections import Counter, defaultdict
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -46,6 +46,7 @@ REVIEW_ARTIFACT_FIELDS = (
     "independence_method",
     "frozen_commit",
     "reviewed_content_sha256",
+    "reviewed_at",
     "decision",
     "critical_findings",
     "unresolved_material_findings",
@@ -356,13 +357,34 @@ def _is_utc_second_timestamp(value: object) -> bool:
     return True
 
 
+def _strict_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        _require(key not in result, f"JSON object contains duplicate key {key}")
+        result[key] = value
+    return result
+
+
+def _reject_json_constant(value: str) -> None:
+    raise FixtureValidationError(f"JSON contains non-finite number {value}")
+
+
+def _loads_json(raw: str, *, context: str) -> Any:
+    try:
+        return json.loads(
+            raw,
+            object_pairs_hook=_strict_json_object,
+            parse_constant=_reject_json_constant,
+        )
+    except json.JSONDecodeError as exc:
+        raise FixtureValidationError(f"invalid JSON in {context}: {exc}") from exc
+
+
 def _read_json(path: Path) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return _loads_json(path.read_text(encoding="utf-8"), context=str(path))
     except FileNotFoundError as exc:
         raise FixtureValidationError(f"missing artifact: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise FixtureValidationError(f"invalid JSON in {path}: {exc}") from exc
 
 
 def _validate_json_schema(instance: dict[str, Any], schema: dict[str, Any]) -> None:
@@ -410,7 +432,7 @@ def _validate_v1_semantic_envelope(package: dict[str, Any]) -> None:
 
 def _normalize_review_scope_bytes(relative_path: str, raw: bytes) -> bytes:
     if relative_path == str(PACKAGE_RELATIVE / "package.json"):
-        package = json.loads(raw.decode("utf-8"))
+        package = _loads_json(raw.decode("utf-8"), context=relative_path)
         package.pop("status", None)
         record_time = package.get("record_time")
         if isinstance(record_time, dict):
@@ -2217,7 +2239,10 @@ def _validate_compatibility(root: Path, *, require_ready: bool) -> None:
             "pinned Architecture Atlas source commit/file checksum drift",
         )
     try:
-        records = json.loads(source_bytes.decode("utf-8"))
+        records = _loads_json(
+            source_bytes.decode("utf-8"),
+            context=str(canonical_path),
+        )
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise FixtureValidationError("pinned Architecture Atlas source file is invalid JSON") from exc
     record = next(
@@ -2679,6 +2704,7 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             "artifact_sha256",
             "frozen_commit",
             "reviewed_content_sha256",
+            "reviewed_at",
             "decision",
             "critical_findings",
             "unresolved_material_findings",
@@ -2698,6 +2724,7 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
                 "artifact_sha256",
                 "frozen_commit",
                 "reviewed_content_sha256",
+                "reviewed_at",
                 "decision",
                 "critical_findings",
                 "unresolved_material_findings",
@@ -2794,6 +2821,10 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             and re.fullmatch(r"[0-9a-f]{64}", review["reviewed_content_sha256"]) is not None,
             "fixture review reviewed_content_sha256 must be a SHA-256 digest",
         )
+        _require(
+            _is_utc_second_timestamp(review["reviewed_at"]),
+            "fixture review reviewed_at must be a UTC ISO-8601 timestamp",
+        )
         reviewer_ids.append(str(review["reviewer_id"]))
         reviewer_instance_ids.append(str(review["reviewer_instance_id"]))
         review_ids.append(str(review["review_id"]))
@@ -2862,6 +2893,11 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             frozen_content_digest == computed_content_digest,
             "frozen commit does not contain the reviewed semantic content",
         )
+        frozen_commit_time = datetime.fromisoformat(
+            _git_output(root, "show", "-s", "--format=%cI", frozen)
+            .decode("utf-8")
+            .strip()
+        ).astimezone(UTC)
         _require(
             _is_utc_second_timestamp(
                 reviewed_at
@@ -2877,8 +2913,25 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             datetime.strptime(str(reviewed_at), "%Y-%m-%dT%H:%M:%SZ").replace(
                 tzinfo=UTC
             )
-            <= datetime.now(UTC) + timedelta(minutes=5),
+            <= datetime.now(UTC),
             "READY package reviewed_at must not be in the future",
+        )
+        review_times = [
+            datetime.strptime(str(review["reviewed_at"]), "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=UTC
+            )
+            for review in reviews
+        ]
+        _require(
+            all(frozen_commit_time <= review_time <= datetime.now(UTC) for review_time in review_times),
+            "READY reviews must be completed after the frozen commit and not in the future",
+        )
+        _require(
+            datetime.strptime(str(reviewed_at), "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=UTC
+            )
+            >= max(review_times),
+            "READY package reviewed_at must not precede either review completion",
         )
         for review in reviews:
             _require(review.get("frozen_commit") == frozen, "reviews must inspect the same frozen commit")

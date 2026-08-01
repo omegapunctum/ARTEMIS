@@ -3,6 +3,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -75,10 +76,11 @@ def _make_ready_reviews(root: Path) -> None:
     _git(root, "add", *REQUIRED_REVIEW_SCOPE)
     _git(root, "commit", "-m", "test: freeze semantic review scope")
     frozen_commit = _git(root, "rev-parse", "HEAD")
+    reviewed_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     package = _read_package(root)
     package["status"] = "READY"
-    package["record_time"]["reviewed_at"] = "2026-07-30T00:00:00Z"
+    package["record_time"]["reviewed_at"] = reviewed_at
     _write_package(root, package)
 
     registry_path = root / PACKAGE / "review_registry.json"
@@ -103,6 +105,7 @@ def _make_ready_reviews(root: Path) -> None:
                     "independence_method: separate_agent_task",
                     f"frozen_commit: {frozen_commit}",
                     f"reviewed_content_sha256: {content_digest}",
+                    f"reviewed_at: {reviewed_at}",
                     "decision: READY",
                     "critical_findings: 0",
                     "unresolved_material_findings: 0",
@@ -125,6 +128,7 @@ def _make_ready_reviews(root: Path) -> None:
                 "artifact_sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
                 "frozen_commit": frozen_commit,
                 "reviewed_content_sha256": content_digest,
+                "reviewed_at": reviewed_at,
                 "decision": "READY",
                 "critical_findings": 0,
                 "unresolved_material_findings": 0,
@@ -2398,4 +2402,83 @@ def test_ready_gate_rejects_future_reviewed_at(tmp_path: Path) -> None:
     _write_package(root, package)
 
     with pytest.raises(FixtureValidationError, match="reviewed_at must not be in the future"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_duplicate_semantic_package_key(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "package.json"
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(
+            '"selection_rationale": "A deliberately fictional',
+            '"selection_rationale": "The slice proves exhaustive historical completeness.",\n'
+            '    "selection_rationale": "A deliberately fictional',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="duplicate key selection_rationale"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_duplicate_registry_status_key(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    path = root / PACKAGE / "review_registry.json"
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(
+            '"status": "READY",',
+            '"status": "REVIEW_REQUIRED",\n  "status": "READY",',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="duplicate key status"):
+        validate_package(root, require_ready=True)
+
+
+def test_validator_rejects_non_finite_json_number(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    path = root / PACKAGE / "package.json"
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(
+            '"schema_version": "1.0.0",',
+            '"schema_version": "1.0.0",\n  "nonfinite_probe": NaN,',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="non-finite number NaN"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_reviews_predating_frozen_commit(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    retroactive_time = "2026-07-30T00:00:00Z"
+    package = _read_package(root)
+    package["record_time"]["reviewed_at"] = retroactive_time
+    _write_package(root, package)
+
+    registry_path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    for review in registry["reviews"]:
+        previous_time = review["reviewed_at"]
+        review["reviewed_at"] = retroactive_time
+        artifact = root / review["artifact"]
+        artifact.write_text(
+            artifact.read_text(encoding="utf-8").replace(
+                f"reviewed_at: {previous_time}",
+                f"reviewed_at: {retroactive_time}",
+            ),
+            encoding="utf-8",
+        )
+        review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    _write_json(registry_path, registry)
+
+    with pytest.raises(FixtureValidationError, match="after the frozen commit"):
         validate_package(root, require_ready=True)
