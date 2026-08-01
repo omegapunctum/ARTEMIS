@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `2da475092223a839f029f9a69334524fd205537a`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
+- Previous reviewed head: `a5af4b9760a79c91d6682f22d98e93ad20d852ce`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/2/1`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -109,6 +109,13 @@ The review cycle on `2da47509…` confirmed overflow rejection but found one sha
 
 The pending correction defines an explicit canonical binary64 lexical contract. A JSON decimal must be numerically equal to the shortest round-trip representation of its parsed float; precision loss, nonzero underflow and signed zero are rejected. Full-READY regressions cover coordinate precision drift, positive/negative underflow and integer/decimal signed zero. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
 
+The review cycle on `a5af4b97…` confirmed the precision, underflow and signed-zero guards but found two remaining material equivalence classes:
+
+- numerically identical spellings such as `11.40`, `1.14e1` and `114e-1` normalized to the same reviewed content, allowing post-freeze raw-token drift;
+- an alternative Region boundary could reuse the primary XY footprint and differ only by an unmodeled Z coordinate.
+
+The validator-integrity review also noted that second-precision review completion equal to the frozen commit timestamp is accepted. The contract intentionally defines that boundary as “not before,” matching the executable comparison and avoiding an unverifiable sub-second ordering claim. The pending correction requires one exact lexical spelling for every accepted JSON number and exactly two coordinates for every v1 EPSG:4326 position. It remains `REVIEW_REQUIRED` until publication, CI and two new independent reviews of the resulting exact SHA.
+
 ## Finalization rule
 
 The package can become `READY` only when:
@@ -119,7 +126,7 @@ The package can become `READY` only when:
 - critical findings and unresolved material findings are zero;
 - the frozen commit tree and current immutable review scope have the same digest;
 - `record_time.reviewed_at`, `review_registry.json` and `package.json` are synchronized;
-- every review completion time is after the frozen commit, no review/package time is future-dated, and package `reviewed_at` is not earlier than either review;
+- every review completion time is not before the frozen commit, no review/package time is future-dated, and package `reviewed_at` is not earlier than either review;
 - `python scripts/validate_world_model_fixtures.py --require-ready` passes;
 - repository release/governance checks pass.
 

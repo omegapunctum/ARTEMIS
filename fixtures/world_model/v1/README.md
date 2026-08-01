@@ -60,7 +60,7 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - WorldSlice time/space bounds participate in the same context-bound extent gate as Events, States, Processes, Trajectories and Region versions.
 - An `inferred_gap` has no route geometry.
 - Every `Uncertainty` dimension has an exhaustive owner/basis rule; adding a plausible but dimension-ineligible backlink is invalid.
-- An alternative Region reconstruction names its Region/version set and must differ geometrically from every temporally overlapping primary reconstruction.
+- An alternative Region reconstruction names its Region/version set and must differ geometrically from every temporally overlapping primary reconstruction; v1 EPSG:4326 boundaries are strictly two-dimensional, so altitude cannot manufacture a competing footprint.
 - Polygon comparison normalizes ring rotation/orientation and rejects degenerate, self-intersecting or backtracking rings, exterior holes and overlapping/nested components, so byte-different but topologically identical alternatives do not count as competing geometry.
 - `co_present` requires both spatial and temporal overlap and never creates a historical Relation.
 - Relation endpoints, Relation target and canonical time/space expressions must be stated by both its basis Claim and a reviewed supporting locator.
@@ -71,7 +71,7 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - WorldSlice coverage policy and Uncertainty effects are typed and fixed to the sparse synthetic scope; the contract view must expose material, alternative and corpus uncertainty and activate every local/global context layer.
 - Every Source is parsed by one closed locator tokenizer; malformed, nested, truncated or duplicate markers cannot shadow or truncate a canonical passage.
 - Semantically duplicate EvidenceLink tuples are rejected before evidence state is derived.
-- Every JSON artifact is read with one strict parser that rejects duplicate keys, lexical non-finite constants, exponent overflow, nonzero underflow, precision-losing decimals and signed zero before schema, semantic or review-digest processing; accepted decimals obey one canonical binary64 round-trip contract and canonical serialization refuses non-finite values.
+- Every JSON artifact is read with one strict parser that rejects duplicate keys, lexical non-finite constants, exponent overflow, nonzero underflow, precision-losing decimals, signed zero and numerically equivalent lexical aliases before schema, semantic or review-digest processing; every accepted integer and decimal has one exact canonical spelling, and canonical serialization refuses non-finite values.
 - Package and review completion timestamps use strict second-precision UTC ISO-8601; reviews cannot predate their frozen commit or be future-dated, and package `reviewed_at` must follow both reviews.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity; selected objects must belong to or participate in temporally visible context.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.

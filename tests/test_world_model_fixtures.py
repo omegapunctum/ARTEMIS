@@ -1769,6 +1769,30 @@ def test_validator_rejects_geometry_identical_alternative(tmp_path: Path) -> Non
         validate_package(root)
 
 
+def test_validator_rejects_z_only_alternative_geometry_difference(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    primary = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v2"
+    )
+    alternative = next(
+        item
+        for item in region["geometry_versions"]
+        if item["id"] == "region-geometry-v2-alternative"
+    )
+    primary_ring = primary["spatial_extent"]["geometry"]["coordinates"][0]
+    alternative["spatial_extent"]["geometry"]["coordinates"] = [
+        [[*position, 7.0] for position in primary_ring]
+    ]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="invalid GeoJSON Polygon coordinates"):
+        validate_package(root)
+
+
 def test_validator_rejects_compatibility_snapshot_field_erasure(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     path = root / PACKAGE / "compatibility" / "architecture_atlas_projection.json"
@@ -2480,7 +2504,7 @@ def test_ready_gate_rejects_reviews_predating_frozen_commit(tmp_path: Path) -> N
         review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
     _write_json(registry_path, registry)
 
-    with pytest.raises(FixtureValidationError, match="after the frozen commit"):
+    with pytest.raises(FixtureValidationError, match="must not predate the frozen commit"):
         validate_package(root, require_ready=True)
 
 
@@ -2520,6 +2544,40 @@ def test_ready_gate_rejects_post_freeze_decimal_precision_drift(tmp_path: Path) 
     )
 
     with pytest.raises(FixtureValidationError, match="loses precision"):
+        validate_package(root, require_ready=True)
+
+
+@pytest.mark.parametrize("alias", ("11.40", "1.14e1", "114e-1"))
+def test_ready_gate_rejects_post_freeze_decimal_lexical_alias(
+    tmp_path: Path,
+    alias: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    package_path = root / PACKAGE / "package.json"
+    package_path.write_text(
+        package_path.read_text(encoding="utf-8").replace("11.4", alias, 1),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="canonical binary64 spelling"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_review_registry_numeric_lexical_alias(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    registry_path = root / PACKAGE / "review_registry.json"
+    registry_path.write_text(
+        registry_path.read_text(encoding="utf-8").replace(
+            '"required_review_count": 2,',
+            '"required_review_count": 2e0,',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="canonical binary64 spelling"):
         validate_package(root, require_ready=True)
 
 

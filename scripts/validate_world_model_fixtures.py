@@ -382,12 +382,18 @@ def _strict_json_float(value: str) -> float:
         not (parsed == 0.0 and value.lstrip().startswith("-")),
         f"JSON number uses ambiguous signed zero: {value}",
     )
+    _require(
+        value == str(parsed),
+        f"JSON number is not in canonical binary64 spelling: {value}",
+    )
     return parsed
 
 
 def _strict_json_int(value: str) -> int:
     _require(value != "-0", "JSON number uses ambiguous signed zero: -0")
-    return int(value)
+    parsed = int(value)
+    _require(value == str(parsed), f"JSON integer is not in canonical spelling: {value}")
+    return parsed
 
 
 def _assert_finite_json(value: Any) -> None:
@@ -984,7 +990,7 @@ def _validate_geometry(geometry: dict[str, Any], *, kind: str, context: str) -> 
     def position(value: object) -> bool:
         return (
             isinstance(value, list)
-            and 2 <= len(value) <= 3
+            and len(value) == 2
             and all(isinstance(item, (int, float)) and not isinstance(item, bool) for item in value)
             and -180 <= value[0] <= 180
             and -90 <= value[1] <= 90
@@ -2961,7 +2967,7 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
         ]
         _require(
             all(frozen_commit_time <= review_time <= datetime.now(UTC) for review_time in review_times),
-            "READY reviews must be completed after the frozen commit and not in the future",
+            "READY reviews must not predate the frozen commit or be in the future",
         )
         _require(
             datetime.strptime(str(reviewed_at), "%Y-%m-%dT%H:%M:%SZ").replace(
