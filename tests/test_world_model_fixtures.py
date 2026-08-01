@@ -2482,3 +2482,25 @@ def test_ready_gate_rejects_reviews_predating_frozen_commit(tmp_path: Path) -> N
 
     with pytest.raises(FixtureValidationError, match="after the frozen commit"):
         validate_package(root, require_ready=True)
+
+
+@pytest.mark.parametrize("overflow", ("1e999", "-1e999"))
+def test_ready_gate_rejects_json_exponent_overflow(
+    tmp_path: Path,
+    overflow: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    schema_path = root / PACKAGE / "schema.json"
+    schema_path.write_text(
+        schema_path.read_text(encoding="utf-8").replace(
+            '"$schema": "https://json-schema.org/draft/2020-12/schema",',
+            '"$schema": "https://json-schema.org/draft/2020-12/schema",\n'
+            f'  "x-nonfinite-probe": {overflow},',
+            1,
+        ),
+        encoding="utf-8",
+    )
+    _make_ready_reviews(root)
+
+    with pytest.raises(FixtureValidationError, match=f"non-finite number {overflow}"):
+        validate_package(root, require_ready=True)

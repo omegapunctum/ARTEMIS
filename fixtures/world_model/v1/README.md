@@ -71,7 +71,7 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - WorldSlice coverage policy and Uncertainty effects are typed and fixed to the sparse synthetic scope; the contract view must expose material, alternative and corpus uncertainty and activate every local/global context layer.
 - Every Source is parsed by one closed locator tokenizer; malformed, nested, truncated or duplicate markers cannot shadow or truncate a canonical passage.
 - Semantically duplicate EvidenceLink tuples are rejected before evidence state is derived.
-- Every JSON artifact is read with one strict parser that rejects duplicate keys and non-finite numbers before schema, semantic or review-digest processing.
+- Every JSON artifact is read with one strict parser that rejects duplicate keys, lexical non-finite constants and exponent overflow before schema, semantic or review-digest processing; canonical serialization also refuses non-finite values.
 - Package and review completion timestamps use strict second-precision UTC ISO-8601; reviews cannot predate their frozen commit or be future-dated, and package `reviewed_at` must follow both reviews.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity; selected objects must belong to or participate in temporally visible context.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.

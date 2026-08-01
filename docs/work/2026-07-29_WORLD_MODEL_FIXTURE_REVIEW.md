@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `7c0062112d5e242e6849cedc1a385d6fa34908f8`.
-- Previous verdicts: semantic-model `READY` (`0/0/1`); validator-integrity `CHANGES_REQUIRED` (`0/2/0`).
+- Previous reviewed head: `7a1c92b0eae8ce0012e81974821dfa9af8144aea`.
+- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -100,6 +100,10 @@ The review cycle on `7c006211…` found no unresolved semantic-model blocker and
 - review/package timestamps could predate the frozen commit because attestations had no independently bound completion time.
 
 The pending correction applies one duplicate-key/non-finite rejecting loader to every JSON artifact. Each review and its closed artifact gains a strict UTC completion timestamp; every completion must follow the frozen commit and precede validation, while package `reviewed_at` must follow both reviews. These changes remain `REVIEW_REQUIRED` until a new exact SHA passes CI and two fresh independent reviews.
+
+The review cycle on `7a1c92b…` confirmed the full semantic, duplicate-key and chronology contours. Validator-integrity review found one remaining parser-divergence case: valid JSON exponent syntax such as `1e999` overflowed Python's default float conversion to infinity without invoking the lexical non-finite hook.
+
+The pending correction adds strict finite float parsing, a recursive finiteness assertion and non-finite-rejecting canonical serialization. Full-READY regressions cover positive and negative exponent overflow. The package remains `REVIEW_REQUIRED` until the resulting SHA passes CI and another fresh review pair.
 
 ## Finalization rule
 

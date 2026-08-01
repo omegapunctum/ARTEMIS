@@ -7,6 +7,7 @@ import argparse
 import calendar
 import hashlib
 import json
+import math
 import re
 import subprocess
 import sys
@@ -369,13 +370,33 @@ def _reject_json_constant(value: str) -> None:
     raise FixtureValidationError(f"JSON contains non-finite number {value}")
 
 
+def _strict_json_float(value: str) -> float:
+    parsed = float(value)
+    _require(math.isfinite(parsed), f"JSON contains non-finite number {value}")
+    return parsed
+
+
+def _assert_finite_json(value: Any) -> None:
+    if isinstance(value, float):
+        _require(math.isfinite(value), "JSON contains a non-finite numeric value")
+    elif isinstance(value, dict):
+        for nested in value.values():
+            _assert_finite_json(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            _assert_finite_json(nested)
+
+
 def _loads_json(raw: str, *, context: str) -> Any:
     try:
-        return json.loads(
+        value = json.loads(
             raw,
             object_pairs_hook=_strict_json_object,
             parse_constant=_reject_json_constant,
+            parse_float=_strict_json_float,
         )
+        _assert_finite_json(value)
+        return value
     except json.JSONDecodeError as exc:
         raise FixtureValidationError(f"invalid JSON in {context}: {exc}") from exc
 
@@ -408,6 +429,7 @@ def _canonical_json_bytes(value: Any) -> bytes:
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
+        allow_nan=False,
     ).encode("utf-8")
 
 
