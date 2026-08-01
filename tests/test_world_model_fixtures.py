@@ -632,6 +632,33 @@ def test_ready_gate_rejects_stale_readme_review_required_status(tmp_path: Path) 
         validate_package(root, require_ready=True)
 
 
+def test_validator_rejects_premature_markdown_readme_status_alias(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8") + "\nStatus: **READY**.\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="one closed status declaration"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_frozen_stale_markdown_readme_status_alias(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8")
+        + "\nStatus: **REVIEW_REQUIRED**.\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="one closed status declaration"):
+        _make_ready_reviews(root)
+
+
 def test_validator_rejects_float_required_review_count(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     registry_path = root / PACKAGE / "review_registry.json"

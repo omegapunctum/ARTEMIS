@@ -474,12 +474,28 @@ def _validate_v1_semantic_envelope(package: dict[str, Any]) -> None:
     )
 
 
+def _fixture_readme_status(raw: str) -> str:
+    declarations = re.findall(r"(?im)^.*\bstatus\s*:.*$", raw)
+    _require(
+        len(declarations) == 1,
+        "fixture README must contain one closed status declaration",
+    )
+    match = re.fullmatch(r"Status: `(REVIEW_REQUIRED|READY)`\.", declarations[0])
+    _require(
+        match is not None,
+        "fixture README status declaration must use canonical form",
+    )
+    return match.group(1)
+
+
 def _normalize_review_scope_bytes(relative_path: str, raw: bytes) -> bytes:
     if relative_path == str(PACKAGE_RELATIVE / "README.md"):
+        readme = raw.decode("utf-8")
+        _fixture_readme_status(readme)
         normalized, replacements = re.subn(
-            r"^Status: `(?:REVIEW_REQUIRED|READY)`\.$",
+            r"^Status: `(REVIEW_REQUIRED|READY)`\.$",
             "Status: `REVIEW_REQUIRED`.",
-            raw.decode("utf-8"),
+            readme,
             flags=re.MULTILINE,
         )
         _require(
@@ -2936,13 +2952,11 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
     expected_status = "READY" if ready_records else "REVIEW_REQUIRED"
     _require(registry.get("status") == expected_status, "review registry status drift")
     _require(package.get("status") == expected_status, "fixture package status drift")
-    readme_statuses = re.findall(
-        r"^Status: `(REVIEW_REQUIRED|READY)`\.$",
-        (root / PACKAGE_RELATIVE / "README.md").read_text(encoding="utf-8"),
-        flags=re.MULTILINE,
+    readme_status = _fixture_readme_status(
+        (root / PACKAGE_RELATIVE / "README.md").read_text(encoding="utf-8")
     )
     _require(
-        readme_statuses == [expected_status],
+        readme_status == expected_status,
         "fixture README status must match package and review registry status",
     )
     created_at = package.get("record_time", {}).get("created_at")
