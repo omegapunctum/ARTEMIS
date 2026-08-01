@@ -370,7 +370,8 @@
         "included_layer_refs",
         "uncertainty_refs",
         "dataset_identity",
-        "coverage_manifest_ref"
+        "coverage_manifest_ref",
+        "coverage_policy"
       ],
       "properties": {
         "id": {
@@ -408,7 +409,36 @@
         },
         "coverage_manifest_ref": {
           "type": "string",
-          "minLength": 1
+          "const": "coverage_manifest.json"
+        },
+        "coverage_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "corpus_completeness",
+            "absence_semantics",
+            "source_scope",
+            "known_exclusion_ids"
+          ],
+          "properties": {
+            "corpus_completeness": {
+              "const": "explicitly_incomplete"
+            },
+            "absence_semantics": {
+              "const": "not_historical_absence"
+            },
+            "source_scope": {
+              "const": "synthetic_fixture_only"
+            },
+            "known_exclusion_ids": {
+              "type": "array",
+              "minItems": 3,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/id"
+              }
+            }
+          }
         }
       }
     },
@@ -604,11 +634,18 @@
           "type": "object",
           "required": [
             "subject_ref",
+            "state_kind",
             "value"
           ],
           "properties": {
             "subject_ref": {
               "$ref": "#/$defs/id"
+            },
+            "state_kind": {
+              "enum": [
+                "administration",
+                "presence"
+              ]
             },
             "value": {
               "type": "string",
@@ -941,6 +978,7 @@
       "required": [
         "state_ref",
         "subject_ref",
+        "state_kind",
         "value"
       ],
       "properties": {
@@ -949,6 +987,12 @@
         },
         "subject_ref": {
           "$ref": "#/$defs/id"
+        },
+        "state_kind": {
+          "enum": [
+            "administration",
+            "presence"
+          ]
         },
         "value": {
           "type": "string",
@@ -1085,7 +1129,7 @@
         },
         "locator": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^LOCATOR\\[[^\\]\\r\\n]+\\]$"
         },
         "relation_to_claim": {
           "enum": [
@@ -1126,6 +1170,7 @@
         "dimension",
         "description",
         "effect",
+        "effect_policy",
         "alternatives",
         "basis_claim_refs",
         "review_state"
@@ -1151,6 +1196,16 @@
         "effect": {
           "type": "string",
           "minLength": 1
+        },
+        "effect_policy": {
+          "enum": [
+            "preserve_temporal_alternatives",
+            "prohibit_invented_route_geometry",
+            "preserve_selectable_geometry_alternatives",
+            "prohibit_direction_or_mechanism_inference",
+            "preserve_conflicting_relation_evidence",
+            "prohibit_historical_absence_inference"
+          ]
         },
         "alternatives": {
           "type": "array"

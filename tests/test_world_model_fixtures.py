@@ -10,6 +10,7 @@ import pytest
 from scripts.validate_world_model_fixtures import (
     FixtureValidationError,
     REQUIRED_REVIEW_SCOPE,
+    _claim_assertion_expression,
     _process_stage_premise_claims,
     compute_review_scope_digest,
     validate_package,
@@ -105,6 +106,7 @@ def _make_ready_reviews(root: Path) -> None:
                     "decision: READY",
                     "critical_findings: 0",
                     "unresolved_material_findings: 0",
+                    "findings: []",
                     "independence_attestation: true",
                     "artifact_format: artemis-review-attestation-v1",
                     "",
@@ -126,6 +128,7 @@ def _make_ready_reviews(root: Path) -> None:
                 "decision": "READY",
                 "critical_findings": 0,
                 "unresolved_material_findings": 0,
+                "findings": [],
                 "independence_attestation": True,
             }
         )
@@ -205,6 +208,7 @@ def test_validator_rejects_duplicate_locator_state_rebinding(tmp_path: Path) -> 
         {
             "state_ref": state["id"],
             "subject_ref": state["subject_ref"],
+            "state_kind": state["state_kind"],
             "value": state["value"],
         }
     ]
@@ -214,10 +218,12 @@ def test_validator_rejects_duplicate_locator_state_rebinding(tmp_path: Path) -> 
     passage_start = source_text.index(locator)
     passage_end = source_text.index("LOCATOR[", passage_start + len(locator))
     injected = source_text[passage_start:passage_end].replace(
-        'STATE_ASSERTION[{"state_ref":"state-north-harbor-administration",'
+        'STATE_ASSERTION[{"state_kind":"administration",'
+        '"state_ref":"state-north-harbor-administration",'
         '"subject_ref":"entity-fixture-basin",'
         '"value":"administered_by_north_harbor_council"}]',
-        'STATE_ASSERTION[{"state_ref":"state-north-harbor-administration",'
+        'STATE_ASSERTION[{"state_kind":"administration",'
+        '"state_ref":"state-north-harbor-administration",'
         '"subject_ref":"entity-mara-vale","value":"present"}]',
     )
     source_path.write_text(injected + "\n" + source_text, encoding="utf-8")
@@ -403,7 +409,7 @@ def test_validator_rejects_documented_encounter_semantic_erasure(tmp_path: Path)
 
     with pytest.raises(
         FixtureValidationError,
-        match="documented_encounter must preserve its Relation predicate",
+        match="documented_encounter must preserve its Relation predicate|lacks exact CLAIM_ASSERTION",
     ):
         validate_package(root)
 
@@ -553,7 +559,10 @@ def test_ready_gate_rejects_semantic_content_drift_after_review(tmp_path: Path) 
     entity["label"] = "Changed after review"
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="does not match current reviewed content"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="does not match current reviewed content|identity registry drift",
+    ):
         validate_package(root, require_ready=True)
 
 
@@ -563,7 +572,10 @@ def test_validator_rejects_world_slice_that_omits_modeled_region(tmp_path: Path)
     package["world_slice"]["spatial_bounds"]["region_refs"].remove("region-south-coast")
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="spatial bounds omit modeled Place or Region context"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="spatial bounds omit modeled Place or Region context|lacks exact EXTENT_ASSERTION",
+    ):
         validate_package(root)
 
 
@@ -1121,7 +1133,10 @@ def test_ready_gate_rejects_mutable_review_scope(tmp_path: Path) -> None:
     registry["review_scope"] = ["fixtures/world_model/v1/package.json"]
     _write_json(path, registry)
 
-    with pytest.raises(FixtureValidationError, match="immutable review scope"):
+    with pytest.raises(
+        FixtureValidationError,
+        match="immutable review scope|review registry envelope must be closed",
+    ):
         validate_package(root, require_ready=True)
 
 
@@ -1866,6 +1881,268 @@ def test_validator_rejects_compatibility_uncertainty_rewrite(tmp_path: Path) -> 
 
     with pytest.raises(FixtureValidationError, match="deterministic pinned mapping"):
         validate_package(root)
+
+
+def test_validator_rejects_trajectory_subject_swap(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    trajectory = package["trajectories"][0]
+    trajectory["subject_ref"] = "entity-keeper-ren"
+    trajectory["label"] = "Keeper Ren fixture trajectory"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="subject/label drift|must bind trajectory"):
+        validate_package(root)
+
+
+def test_validator_rejects_absent_state_as_co_presence_input(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    state = next(
+        item
+        for item in package["states"]
+        if item["id"] == "state-traveler-workshop-presence"
+    )
+    claim = next(
+        item
+        for item in package["claims"]
+        if item["id"] == "claim-traveler-workshop-presence"
+    )
+    old_assertion = _claim_assertion_expression(copy.deepcopy(claim))
+    state["value"] = "absent"
+    claim["state_bindings"][0]["value"] = "absent"
+    new_assertion = _claim_assertion_expression(claim)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    source_text = source_path.read_text(encoding="utf-8")
+    source_text = source_text.replace(old_assertion, new_assertion).replace(
+        'STATE_ASSERTION[{"state_kind":"presence",'
+        '"state_ref":"state-traveler-workshop-presence",'
+        '"subject_ref":"entity-traveler-sol","value":"present"}]',
+        'STATE_ASSERTION[{"state_kind":"presence",'
+        '"state_ref":"state-traveler-workshop-presence",'
+        '"subject_ref":"entity-traveler-sol","value":"absent"}]',
+    )
+    source_path.write_text(source_text, encoding="utf-8")
+    source = next(
+        item for item in package["sources"] if item["id"] == "source-field-alpha"
+    )
+    source["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="positive presence States"):
+        validate_package(root)
+
+
+def test_validator_rejects_unbound_world_slice_bounds(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    bounds = package["world_slice"]["temporal_bounds"]
+    bounds["start"] = "1000"
+    bounds["end"] = "2000"
+    bounds["basis_claim_refs"] = ["claim-mara-identity"]
+    package["world_slice"]["spatial_bounds"]["basis_claim_refs"] = [
+        "claim-mara-identity"
+    ]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must target owner|lacks exact EXTENT_ASSERTION"):
+        validate_package(root)
+
+
+def test_validator_rejects_historical_completeness_rationale(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["world_slice"]["selection_rationale"] = (
+        "This corpus is historically complete; missing people and events did not exist."
+    )
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="selection rationale contradicts"):
+        validate_package(root)
+
+
+def test_validator_rejects_background_only_supported_claim(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    evidence = next(
+        item
+        for item in package["evidence_links"]
+        if item["id"] == "evidence-mara-identity"
+    )
+    evidence["evidence_strength"] = "background"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="evidence_state must be derived as missing"):
+        validate_package(root)
+
+
+def test_validator_rejects_uncertainty_semantic_inversion(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    uncertainty = next(
+        item
+        for item in package["uncertainties"]
+        if item["id"] == "uncertainty-region-alternative"
+    )
+    uncertainty["description"] = "The primary reconstruction is exact."
+    uncertainty["effect"] = "Hide the alternative geometry."
+    uncertainty["effect_policy"] = "preserve_temporal_alternatives"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="semantic effect drift"):
+        validate_package(root)
+
+
+def test_validator_rejects_hidden_uncertainty_and_context_layers(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    view = package["synchronized_views"][0]
+    view["uncertainty_display"] = {
+        "show_material": False,
+        "show_alternatives": False,
+        "show_corpus_limits": False,
+    }
+    view["active_layer_refs"] = ["layer-biography"]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must display material"):
+        validate_package(root)
+
+
+def test_validator_rejects_reviewed_claim_statement_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    claim = next(
+        item for item in package["claims"] if item["id"] == "claim-mara-identity"
+    )
+    claim["statement"] = "An unrelated ruler caused a distant war."
+    _write_package(root, package)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="statement drift|lacks exact CLAIM_ASSERTION",
+    ):
+        validate_package(root)
+
+
+def test_validator_rejects_entity_subtype_drift(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["entities"][0]["entity_kind"] = "Institution"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="identity registry drift"):
+        validate_package(root)
+
+
+def test_validator_rejects_topologically_identical_alternative_geometry(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    region = next(
+        item for item in package["regions"] if item["id"] == "region-fixture-basin"
+    )
+    primary = next(
+        item for item in region["geometry_versions"] if item["id"] == "region-geometry-v2"
+    )
+    alternative = next(
+        item
+        for item in region["geometry_versions"]
+        if item["id"] == "region-geometry-v2-alternative"
+    )
+    ring = copy.deepcopy(primary["spatial_extent"]["geometry"]["coordinates"][0])
+    core = ring[:-1]
+    rotated = core[2:] + core[:2]
+    rotated.append(rotated[0])
+    alternative["spatial_extent"]["geometry"]["coordinates"] = [rotated]
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must differ from overlapping primary"):
+        validate_package(root)
+
+
+def test_validator_rejects_noncanonical_coverage_manifest_ref(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["world_slice"]["coverage_manifest_ref"] = "attacker/empty.json"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="coverage_manifest.json|schema.json"):
+        validate_package(root)
+
+
+def test_validator_rejects_reviewed_at_before_ready(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["record_time"]["reviewed_at"] = "2999-01-01T00:00:00Z"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must remain null"):
+        validate_package(root)
+
+
+def test_validator_rejects_truncated_locator_token(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    package["evidence_links"][0]["locator"] = "LOCATOR[alpha-ident"
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="exact LOCATOR token|schema.json"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_contradictory_artifact_narrative(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    registry_path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    artifact = root / registry["reviews"][0]["artifact"]
+    artifact.write_text(
+        artifact.read_text(encoding="utf-8")
+        + "Finding: CRITICAL unresolved blocker\nCHANGES_REQUIRED\n",
+        encoding="utf-8",
+    )
+    registry["reviews"][0]["artifact_sha256"] = hashlib.sha256(
+        artifact.read_bytes()
+    ).hexdigest()
+    _write_json(registry_path, registry)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="unknown field Finding|unstructured content",
+    ):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_derives_decision_from_structured_findings(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    registry_path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    review = registry["reviews"][0]
+    review["findings"] = [
+        {
+            "finding_id": "semantic-blocker",
+            "severity": "critical",
+            "status": "unresolved",
+            "summary": "A material semantic blocker remains.",
+        }
+    ]
+    artifact = root / review["artifact"]
+    artifact.write_text(
+        artifact.read_text(encoding="utf-8").replace(
+            "findings: []",
+            'findings: [{"finding_id":"semantic-blocker","severity":"critical",'
+            '"status":"unresolved","summary":"A material semantic blocker remains."}]',
+        ),
+        encoding="utf-8",
+    )
+    review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    _write_json(registry_path, registry)
+
+    with pytest.raises(FixtureValidationError, match="derived from structured findings"):
+        validate_package(root, require_ready=True)
 
 
 def test_package_is_deterministic_under_deep_copy(tmp_path: Path) -> None:

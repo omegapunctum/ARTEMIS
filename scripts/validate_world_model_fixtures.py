@@ -49,6 +49,7 @@ REVIEW_ARTIFACT_FIELDS = (
     "decision",
     "critical_findings",
     "unresolved_material_findings",
+    "findings",
     "independence_attestation",
 )
 
@@ -99,6 +100,99 @@ REQUIRED_COVERAGE_EXCLUSIONS = [
         "description": "The package does not claim historical completeness or historical absence.",
     },
 ]
+REQUIRED_WORLD_SLICE_SELECTION_RATIONALE = (
+    "A deliberately fictional micro-world isolates model semantics from historical curation, "
+    "which belongs to issue #332."
+)
+REQUIRED_WORLD_SLICE_COVERAGE_POLICY = {
+    "corpus_completeness": "explicitly_incomplete",
+    "absence_semantics": "not_historical_absence",
+    "source_scope": "synthetic_fixture_only",
+    "known_exclusion_ids": [item["id"] for item in REQUIRED_COVERAGE_EXCLUSIONS],
+}
+REQUIRED_UNCERTAINTY_SEMANTICS = {
+    "uncertainty-arrival-date": {
+        "description": "The two synthetic sources give different approximate arrival years.",
+        "effect": "The UI must show 1503 and 1504 as alternatives and must not interpolate a day.",
+        "effect_policy": "preserve_temporal_alternatives",
+    },
+    "uncertainty-trajectory-route": {
+        "description": "The route between documented endpoints is unknown.",
+        "effect": "No path geometry may be drawn as a documented movement.",
+        "effect_policy": "prohibit_invented_route_geometry",
+    },
+    "uncertainty-region-alternative": {
+        "description": "The primary and alternative 1504 boundary reconstructions disagree about the eastern inlet.",
+        "effect": "Both geometries must remain selectable; neither may silently overwrite the other.",
+        "effect_policy": "preserve_selectable_geometry_alternatives",
+    },
+    "uncertainty-process-mechanism": {
+        "description": "The sources document marker intervals in two regions but do not establish diffusion, direction or mechanism.",
+        "effect": "The Process remains an analytical grouping and must not be rendered as a directional historical flow.",
+        "effect_policy": "prohibit_direction_or_mechanism_inference",
+    },
+    "uncertainty-influence-ren-council": {
+        "description": "One source attributes the adopted phrase to Ren's proposal while another attributes it to prior guild rules.",
+        "effect": "The influence Relation remains contested and both EvidenceLinks must stay visible.",
+        "effect_policy": "preserve_conflicting_relation_evidence",
+    },
+    "uncertainty-corpus-coverage": {
+        "description": "The fixture is intentionally sparse and synthetic.",
+        "effect": "Missing objects cannot be interpreted as historical absence.",
+        "effect_policy": "prohibit_historical_absence_inference",
+    },
+}
+REQUIRED_SYSTEM_CLAIM_STATEMENTS = {
+    "claim-process-analytical-grouping": (
+        "The fixture groups two source-bound regional marker intervals as stages of one analytical "
+        "Process without asserting diffusion, direction or mechanism."
+    ),
+    "claim-workshop-co-presence": (
+        "The modeled presence intervals for Mara Vale and Traveler Sol overlap at Inland Workshop "
+        "during 1505."
+    ),
+}
+REQUIRED_CLAIM_STATEMENT_SHA256 = {
+    "claim-mara-identity": "8ea453476992f89c748e606b437658eeb1229b4d56c95d5f78043aa9d31c9e3f",
+    "claim-charter-event": "a8b89d022d86c2932468c2ed39c1bf24a0dc66ae0e1f04bc6e13761b4ae7e8a9",
+    "claim-arrival-event": "840116a96c8e3bf0afff84768cf024430b5ec23167977e980b6a79b28b527d2c",
+    "claim-arrival-event-1504": "cadcc918d5f698bcb8b11954fdff0f79967c11f18c87a860bb41b491ac0ac4bd",
+    "claim-administration-state": "ec45c2e466ba10759cc6e760592282ae4098390090ef181da130e1ae85abc5f7",
+    "claim-process-analytical-grouping": "43e2dbba84b7c8c2d71cf2dc2d6ddf7f596fea335c0ca02de2a5c65d49348958",
+    "claim-process-north-stage": "6ec7131ddef23ac0dece3ae9fa6c32d0d4b274d7859ef64e97751a20cb32fb9a",
+    "claim-process-south-stage": "3eafd5ca39783c32f6d04f4009bb254a590c71b72f53e71c21fe9645cb37041d",
+    "claim-trajectory-north": "5606b9bf6870f80cfe2b49ea2c1e8b4dfb864a236cb984e34577f3860f697586",
+    "claim-trajectory-gap": "34697859c77736d77fa8b15e5006db194b892f0ed96d909767b3c9947ed131e4",
+    "claim-trajectory-workshop": "6507aa21467785caba0a3b9e37df3cc6b5e151f14febccd326c36a36b4135fb3",
+    "claim-traveler-workshop-presence": "fe0f7ef45ef99f8559e86826473866fbe05cad353b6417ac8b358b7768cc43d8",
+    "claim-region-v1": "56abb63c0b6ac88ae0bd13bc064327abbf3aae0a4d71cb802b5d370d435c40cb",
+    "claim-region-v2": "995b8039f5a379bfb509c7fd3138f4e8c9ac0fc0028e2ab1803f58408e66dce6",
+    "claim-region-v2-alternative": "57efb3e5694fe46dbc4954fd9c9e66e238182267e6c27b0e47a2622101e1eec9",
+    "claim-region-south": "7a54416758f5d6a721f30bd33e99989269beae2ad55d9ae79a8b40260af3046c",
+    "claim-documented-encounter": "cfac05a50778109940e7c6f474a7af58fde9f1e64b6db668e19b764dbe45bb2b",
+    "claim-influence-ren-council": "3cfb7233c284cea05d3a20b0e78169d15c9a086a7593aa1f0850f61fef5015bc",
+    "claim-global-event": "5c5a458f47ccb55e4d80d99facc5db62d66d23d8bf78235597bee662d755a581",
+    "claim-workshop-co-presence": "edeb646c7499261f3f1e8eed5d9f9df9aa8b47e95deb641db24e53c2229fa1f9",
+}
+REQUIRED_IDENTITY_REGISTRY = {
+    "entity-mara-vale": ("Mara Vale", "Person"),
+    "entity-keeper-ren": ("Keeper Ren", "Person"),
+    "entity-traveler-sol": ("Traveler Sol", "Person"),
+    "entity-north-harbor-council": ("North Harbor council", "Institution"),
+    "entity-fixture-basin": ("Fixture Basin", "Place"),
+    "place-north-harbor": ("North Harbor", "Place"),
+    "place-inland-workshop": ("Inland Workshop", "Place"),
+    "place-south-port": ("South Port", "Place"),
+    "place-far-observatory": ("Far Observatory", "Place"),
+    "layer-biography": ("Biography and mobility", "Layer"),
+    "layer-politics": ("Political state", "Layer"),
+    "layer-exchange": ("Coastal exchange", "Layer"),
+    "layer-distant-context": ("Distant synchronous context", "Layer"),
+}
+REQUIRED_IDENTITY_CLAIMS = {"entity-mara-vale": "claim-mara-identity"}
+REQUIRED_TRAJECTORY_SUBJECTS = {
+    "trajectory-mara-vale": ("entity-mara-vale", "Mara Vale fixture trajectory"),
+}
 
 ALLOWED_CLAIM_KINDS = {
     "factual",
@@ -221,7 +315,7 @@ REFERENCE_TYPE_RULES = {
     "global_context_refs": CONTEXT_OBJECT_TYPES,
     "selected_object_refs": CONTEXT_OBJECT_TYPES,
     "reference_refs": CONTEXT_OBJECT_TYPES,
-    "target_refs": CONTEXT_OBJECT_TYPES | {"Layer"},
+    "target_refs": CONTEXT_OBJECT_TYPES | {"Layer", "WorldSlice"},
     "derived_observation_refs": {"DerivedObservation"},
 }
 SINGLE_REFERENCE_TYPE_RULES = {
@@ -576,6 +670,134 @@ def _validate_extent(
             _require("geometry" not in extent, f"{context} unknown space must not invent geometry")
 
 
+def _cross_product(
+    left: tuple[float, float],
+    middle: tuple[float, float],
+    right: tuple[float, float],
+) -> float:
+    return (middle[0] - left[0]) * (right[1] - left[1]) - (
+        middle[1] - left[1]
+    ) * (right[0] - left[0])
+
+
+def _segments_intersect(
+    first_start: tuple[float, float],
+    first_end: tuple[float, float],
+    second_start: tuple[float, float],
+    second_end: tuple[float, float],
+) -> bool:
+    def orientation(
+        left: tuple[float, float],
+        middle: tuple[float, float],
+        right: tuple[float, float],
+    ) -> int:
+        value = _cross_product(left, middle, right)
+        if abs(value) < 1e-12:
+            return 0
+        return 1 if value > 0 else -1
+
+    def on_segment(
+        left: tuple[float, float],
+        candidate: tuple[float, float],
+        right: tuple[float, float],
+    ) -> bool:
+        return (
+            min(left[0], right[0]) <= candidate[0] <= max(left[0], right[0])
+            and min(left[1], right[1]) <= candidate[1] <= max(left[1], right[1])
+        )
+
+    orientations = (
+        orientation(first_start, first_end, second_start),
+        orientation(first_start, first_end, second_end),
+        orientation(second_start, second_end, first_start),
+        orientation(second_start, second_end, first_end),
+    )
+    if orientations[0] != orientations[1] and orientations[2] != orientations[3]:
+        return True
+    return any(
+        orientation_value == 0 and on_segment(segment_start, point, segment_end)
+        for orientation_value, segment_start, point, segment_end in (
+            (orientations[0], first_start, second_start, first_end),
+            (orientations[1], first_start, second_end, first_end),
+            (orientations[2], second_start, first_start, second_end),
+            (orientations[3], second_start, first_end, second_end),
+        )
+    )
+
+
+def _normalize_ring(value: list[Any], *, context: str) -> tuple[tuple[float, ...], ...]:
+    core = [tuple(float(number) for number in position) for position in value[:-1]]
+    _require(len(set(core)) >= 3, f"{context} has degenerate polygon ring")
+    changed = True
+    while changed and len(core) > 3:
+        changed = False
+        for index in range(len(core)):
+            left = core[index - 1][:2]
+            middle = core[index][:2]
+            right = core[(index + 1) % len(core)][:2]
+            if abs(_cross_product(left, middle, right)) < 1e-12:
+                core.pop(index)
+                changed = True
+                break
+    area = sum(
+        core[index][0] * core[(index + 1) % len(core)][1]
+        - core[(index + 1) % len(core)][0] * core[index][1]
+        for index in range(len(core))
+    )
+    _require(abs(area) > 1e-12, f"{context} has zero-area polygon ring")
+    for first_index in range(len(core)):
+        first_next = (first_index + 1) % len(core)
+        for second_index in range(first_index + 1, len(core)):
+            second_next = (second_index + 1) % len(core)
+            if first_index in {second_index, second_next} or first_next in {
+                second_index,
+                second_next,
+            }:
+                continue
+            _require(
+                not _segments_intersect(
+                    core[first_index][:2],
+                    core[first_next][:2],
+                    core[second_index][:2],
+                    core[second_next][:2],
+                ),
+                f"{context} has self-intersecting polygon ring",
+            )
+    rotations: list[tuple[tuple[float, ...], ...]] = []
+    for orientation in (core, list(reversed(core))):
+        rotations.extend(
+            tuple(orientation[index:] + orientation[:index])
+            for index in range(len(orientation))
+        )
+    return min(rotations)
+
+
+def _normalize_geometry(geometry: dict[str, Any], *, context: str) -> tuple[Any, ...]:
+    geometry_type = str(geometry.get("type"))
+    coordinates = geometry.get("coordinates")
+    if geometry_type == "Point":
+        return (geometry_type, tuple(float(value) for value in coordinates))
+    if geometry_type == "LineString":
+        line = tuple(tuple(float(number) for number in position) for position in coordinates)
+        return (geometry_type, min(line, tuple(reversed(line))))
+    if geometry_type == "Polygon":
+        rings = [_normalize_ring(ring, context=context) for ring in coordinates]
+        return (geometry_type, rings[0], tuple(sorted(rings[1:])))
+    if geometry_type == "MultiPolygon":
+        polygons = []
+        for polygon_index, polygon in enumerate(coordinates):
+            rings = [
+                _normalize_ring(
+                    ring,
+                    context=f"{context} polygon {polygon_index}",
+                )
+                for ring in polygon
+            ]
+            polygons.append((rings[0], tuple(sorted(rings[1:]))))
+        return (geometry_type, tuple(sorted(polygons)))
+    raise FixtureValidationError(f"{context} has unsupported geometry type {geometry_type}")
+
+
 def _validate_geometry(geometry: dict[str, Any], *, kind: str, context: str) -> None:
     expected_types = {
         "point": "Point",
@@ -627,6 +849,7 @@ def _validate_geometry(geometry: dict[str, Any], *, kind: str, context: str) -> 
         ),
     }[kind](coordinates)
     _require(valid, f"{context} has invalid GeoJSON {expected_types[kind]} coordinates")
+    _normalize_geometry(geometry, context=context)
 
 
 def _validate_claims(
@@ -645,10 +868,17 @@ def _validate_claims(
         _require(link.get("evidence_strength") in ALLOWED_EVIDENCE_STRENGTH, f"{link_id} has invalid strength")
         _require(link.get("review_state") in ALLOWED_REVIEW_STATES, f"{link_id} has invalid review state")
         locator = link.get("locator")
-        _require(isinstance(locator, str) and locator, f"{link_id} needs a locator")
+        _require(
+            isinstance(locator, str)
+            and re.fullmatch(r"LOCATOR\[[^\]\r\n]+\]", locator) is not None,
+            f"{link_id} needs one exact LOCATOR token",
+        )
         source_path = package_root / str(sources[source_id].get("uri"))
         _require(source_path.is_file(), f"{link_id} source artifact is missing: {source_path}")
-        _require(locator in source_path.read_text(encoding="utf-8"), f"{link_id} locator is not reproducible")
+        locator_tokens = set(
+            re.findall(r"LOCATOR\[[^\]\r\n]+\]", source_path.read_text(encoding="utf-8"))
+        )
+        _require(locator in locator_tokens, f"{link_id} locator is not reproducible")
         links_by_claim[claim_id].append(link)
 
     for claim_id, claim in claims.items():
@@ -663,7 +893,12 @@ def _validate_claims(
         state = claim.get("evidence_state")
         _require(state in ALLOWED_EVIDENCE_STATES, f"{claim_id} has invalid evidence state")
         links = links_by_claim.get(claim_id, [])
-        reviewed = [link for link in links if link.get("review_state") == "reviewed"]
+        reviewed = [
+            link
+            for link in links
+            if link.get("review_state") == "reviewed"
+            and link.get("evidence_strength") in {"direct", "indirect"}
+        ]
         relations = {link.get("relation_to_claim") for link in reviewed}
         if {"supports", "challenges"}.issubset(relations):
             derived_state = "mixed"
@@ -679,6 +914,15 @@ def _validate_claims(
             state == derived_state,
             f"{claim_id} evidence_state must be derived as {derived_state}, got {state}",
         )
+        if state in {"supported", "mixed"} and claim.get("confidence") == "high":
+            _require(
+                any(
+                    link.get("relation_to_claim") == "supports"
+                    and link.get("evidence_strength") == "direct"
+                    for link in reviewed
+                ),
+                f"{claim_id} high confidence needs reviewed direct supporting evidence",
+            )
         if state == "not_applicable":
             _require(not links, f"{claim_id} says not_applicable but has EvidenceLinks")
 
@@ -754,6 +998,10 @@ def _validate_uncertainty_ownership(
     indexes: dict[str, dict[str, dict[str, Any]]],
 ) -> None:
     claims = indexes["claims"]
+    _require(
+        set(indexes["uncertainties"]) == set(REQUIRED_UNCERTAINTY_SEMANTICS),
+        "fixture uncertainty registry drift",
+    )
     owner_records: dict[str, tuple[str, dict[str, Any]]] = {}
     for collection in (
         "entities",
@@ -781,6 +1029,14 @@ def _validate_uncertainty_ownership(
             owner_records[str(version.get("id"))] = (region_id, version)
 
     for uncertainty_id, uncertainty in indexes["uncertainties"].items():
+        expected_semantics = REQUIRED_UNCERTAINTY_SEMANTICS[uncertainty_id]
+        _require(
+            all(
+                uncertainty.get(field) == value
+                for field, value in expected_semantics.items()
+            ),
+            f"{uncertainty_id} semantic effect drift",
+        )
         subject_ref = str(uncertainty.get("subject_or_claim_ref"))
         basis_claim_refs = {str(ref) for ref in uncertainty.get("basis_claim_refs", [])}
         dimension = uncertainty.get("dimension")
@@ -1038,6 +1294,157 @@ def _geometry_assertion_expression(geometry: object) -> str:
     )
 
 
+def _claim_assertion_expression(claim: dict[str, Any]) -> str:
+    digest = hashlib.sha256(_canonical_json_bytes(claim)).hexdigest()
+    return f"CLAIM_ASSERTION[claim={claim['id']};sha256={digest}]"
+
+
+def _identity_assertion_expression(
+    entity: dict[str, Any],
+    *,
+    claim_id: str,
+) -> str:
+    binding = {
+        "entity_ref": entity["id"],
+        "entity_kind": entity["entity_kind"],
+        "label": entity["label"],
+        "claim_ref": claim_id,
+    }
+    digest = hashlib.sha256(_canonical_json_bytes(binding)).hexdigest()
+    return f"IDENTITY_ASSERTION[entity={entity['id']};sha256={digest}]"
+
+
+def _trajectory_assertion_expression(
+    trajectory: dict[str, Any],
+    segment: dict[str, Any],
+) -> str:
+    binding = {
+        "trajectory_ref": trajectory["id"],
+        "subject_ref": trajectory["subject_ref"],
+        "coverage": trajectory["coverage"],
+        "segment": segment,
+    }
+    digest = hashlib.sha256(_canonical_json_bytes(binding)).hexdigest()
+    return (
+        f"TRAJECTORY_ASSERTION[trajectory={trajectory['id']};"
+        f"segment={segment['id']};sha256={digest}]"
+    )
+
+
+def _validate_semantic_payloads(
+    package: dict[str, Any],
+    indexes: dict[str, dict[str, dict[str, Any]]],
+    *,
+    package_root: Path,
+) -> None:
+    claims = indexes["claims"]
+    sources = indexes["sources"]
+    evidence_links = indexes["evidence_links"]
+    _require(
+        set(claims) == set(REQUIRED_CLAIM_STATEMENT_SHA256),
+        "fixture Claim statement registry drift",
+    )
+    for claim_id, expected_digest in REQUIRED_CLAIM_STATEMENT_SHA256.items():
+        statement = str(claims[claim_id].get("statement"))
+        _require(
+            hashlib.sha256(statement.encode("utf-8")).hexdigest() == expected_digest,
+            f"{claim_id} statement drift from the reviewed v1 semantic registry",
+        )
+    actual_identity_registry = {
+        entity_id: (str(entity.get("label")), str(entity.get("entity_kind")))
+        for entity_id, entity in indexes["entities"].items()
+    }
+    actual_identity_registry.update(
+        {
+            layer_id: (str(layer.get("label")), "Layer")
+            for layer_id, layer in indexes["layers"].items()
+        }
+    )
+    _require(
+        actual_identity_registry == REQUIRED_IDENTITY_REGISTRY,
+        "fixture identity registry drift",
+    )
+
+    for link_id, link in evidence_links.items():
+        if link.get("review_state") != "reviewed":
+            continue
+        claim = claims[str(link["claim_id"])]
+        source = sources[str(link["source_id"])]
+        passage = _locator_passage(
+            package_root / str(source["uri"]),
+            str(link["locator"]),
+        )
+        _require(
+            _claim_assertion_expression(claim) in passage,
+            f"{link_id} reviewed locator lacks exact CLAIM_ASSERTION",
+        )
+
+    for claim_id, expected_statement in REQUIRED_SYSTEM_CLAIM_STATEMENTS.items():
+        claim = claims.get(claim_id)
+        _require(
+            isinstance(claim, dict)
+            and claim.get("origin") == "system"
+            and claim.get("statement") == expected_statement,
+            f"{claim_id} system statement must be deterministic",
+        )
+
+    for entity_id, claim_id in REQUIRED_IDENTITY_CLAIMS.items():
+        entity = indexes["entities"][entity_id]
+        claim = claims[claim_id]
+        _require(
+            claim.get("target_refs") == [entity_id],
+            f"{claim_id} must exclusively target identity owner {entity_id}",
+        )
+        expression = _identity_assertion_expression(entity, claim_id=claim_id)
+        passages = _supporting_passages(
+            claim_id,
+            evidence_links=evidence_links,
+            sources=sources,
+            package_root=package_root,
+        )
+        _require(
+            passages and all(expression in passage for passage in passages),
+            f"{entity_id} identity is not bound by an exact reviewed IDENTITY_ASSERTION",
+        )
+
+    for trajectory_id, trajectory in indexes["trajectories"].items():
+        subject_ref = str(trajectory.get("subject_ref"))
+        _require(
+            REQUIRED_TRAJECTORY_SUBJECTS.get(trajectory_id)
+            == (subject_ref, str(trajectory.get("label"))),
+            f"{trajectory_id} subject/label drift from the v1 trajectory scenario",
+        )
+        _require(
+            subject_ref in indexes["entities"],
+            f"{trajectory_id} subject must resolve to one Entity",
+        )
+        expected_claim_refs: set[str] = set()
+        for segment in trajectory.get("segments", []):
+            segment_claim_refs = {str(ref) for ref in segment.get("claim_refs", [])}
+            expected_claim_refs.update(segment_claim_refs)
+            expression = _trajectory_assertion_expression(trajectory, segment)
+            for claim_id in segment_claim_refs:
+                claim = claims[claim_id]
+                _require(
+                    {trajectory_id, subject_ref} <= set(claim.get("target_refs", [])),
+                    f"{claim_id} must bind trajectory {trajectory_id} and subject {subject_ref}",
+                )
+                passages = _supporting_passages(
+                    claim_id,
+                    evidence_links=evidence_links,
+                    sources=sources,
+                    package_root=package_root,
+                )
+                _require(
+                    passages and all(expression in passage for passage in passages),
+                    f"{claim_id} lacks exact TRAJECTORY_ASSERTION for {segment['id']}",
+                )
+        _require(
+            set(trajectory.get("claim_refs", [])) == expected_claim_refs,
+            f"{trajectory_id} Claim refs must exactly match all segment Claims",
+        )
+
+
 def _extent_assertion_expression(
     *,
     owner_ref: str,
@@ -1065,6 +1472,17 @@ def _extent_assertion_expression(
 def _extent_contexts(
     package: dict[str, Any],
 ) -> Iterable[tuple[str, str, str, str, dict[str, Any]]]:
+    world_slice = package["world_slice"]
+    yield (
+        world_slice["id"],
+        world_slice["id"],
+        "WorldSlice",
+        "coverage",
+        {
+            "temporal_extent": world_slice["temporal_bounds"],
+            "spatial_extent": world_slice["spatial_bounds"],
+        },
+    )
     for event in package.get("events", []):
         yield event["id"], event["id"], "Event", "none", event
     for state in package.get("states", []):
@@ -1183,7 +1601,7 @@ def _validate_context_bound_extents(
             declared == expected_by_claim.get(claim_id, set()),
             f"{claim_id} extent_assertions must exactly match its basis roles",
         )
-    _require(checked >= 35, "fixture package must exercise context-bound temporal and spatial extents")
+    _require(checked >= 37, "fixture package must exercise context-bound temporal and spatial extents")
 
 
 def _validate_source_bound_geometries(
@@ -1431,6 +1849,7 @@ def _validate_state_bindings(
         binding = {
             "state_ref": state_id,
             "subject_ref": str(state.get("subject_ref")),
+            "state_kind": str(state.get("state_kind")),
             "value": str(state.get("value")),
         }
         expression = (
@@ -1861,7 +2280,26 @@ def _validate_coverage(
     registry: set[str],
     root: Path,
 ) -> None:
-    manifest = _read_json(root / PACKAGE_RELATIVE / "coverage_manifest.json")
+    world_slice = package["world_slice"]
+    manifest_ref = world_slice.get("coverage_manifest_ref")
+    _require(
+        manifest_ref == "coverage_manifest.json",
+        "WorldSlice must reference the canonical coverage_manifest.json",
+    )
+    manifest_path = Path(str(manifest_ref))
+    _require(
+        not manifest_path.is_absolute() and ".." not in manifest_path.parts,
+        "WorldSlice coverage manifest path must be safe and relative",
+    )
+    manifest = _read_json(root / PACKAGE_RELATIVE / manifest_path)
+    _require(
+        world_slice.get("selection_rationale") == REQUIRED_WORLD_SLICE_SELECTION_RATIONALE,
+        "WorldSlice selection rationale contradicts the fixed sparse synthetic scope",
+    )
+    _require(
+        world_slice.get("coverage_policy") == REQUIRED_WORLD_SLICE_COVERAGE_POLICY,
+        "WorldSlice coverage policy must preserve corpus/historical-absence semantics",
+    )
     _require(
         set(manifest)
         == {
@@ -2036,12 +2474,18 @@ def _validate_coverage(
 def _parse_review_artifact(path: Path) -> dict[str, str]:
     parsed: dict[str, str] = {}
     for raw_line in path.read_text(encoding="utf-8").splitlines():
-        if ":" not in raw_line:
+        if not raw_line.strip():
             continue
+        if ":" not in raw_line:
+            raise FixtureValidationError(
+                f"fixture review artifact contains unstructured content: {raw_line}"
+            )
         key, value = raw_line.split(":", 1)
         key = key.strip()
-        if key not in REVIEW_ARTIFACT_FIELDS:
-            continue
+        _require(
+            key in REVIEW_ARTIFACT_FIELDS,
+            f"fixture review artifact contains unknown field {key}",
+        )
         _require(key not in parsed, f"fixture review artifact duplicates {key}")
         parsed[key] = value.strip()
     missing = set(REVIEW_ARTIFACT_FIELDS) - set(parsed)
@@ -2052,11 +2496,27 @@ def _parse_review_artifact(path: Path) -> dict[str, str]:
 def _artifact_value(value: object) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
+    if isinstance(value, (dict, list)):
+        return _canonical_json_bytes(value).decode("utf-8")
     return str(value)
 
 
 def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: bool) -> None:
     registry = _read_json(root / PACKAGE_RELATIVE / "review_registry.json")
+    _require(
+        set(registry)
+        == {
+            "schema_version",
+            "package_id",
+            "status",
+            "frozen_commit",
+            "reviewed_content_sha256",
+            "required_review_count",
+            "review_scope_id",
+            "reviews",
+        },
+        "review registry envelope must be closed",
+    )
     _require(registry.get("schema_version") == SCHEMA_VERSION, "review registry version drift")
     _require(registry.get("package_id") == package.get("package_id"), "review registry package drift")
     _require(registry.get("required_review_count") == 2, "fixture package requires two reviews")
@@ -2087,9 +2547,30 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             "decision",
             "critical_findings",
             "unresolved_material_findings",
+            "findings",
             "independence_attestation",
         ):
             _require(field in review, f"fixture review is missing {field}")
+        _require(
+            set(review)
+            == {
+                "review_id",
+                "reviewer_id",
+                "reviewer_instance_id",
+                "review_track",
+                "independence_method",
+                "artifact",
+                "artifact_sha256",
+                "frozen_commit",
+                "reviewed_content_sha256",
+                "decision",
+                "critical_findings",
+                "unresolved_material_findings",
+                "findings",
+                "independence_attestation",
+            },
+            "fixture review envelope must be closed",
+        )
         for field in ("review_id", "reviewer_id", "reviewer_instance_id"):
             value = review[field]
             _require(
@@ -2103,6 +2584,50 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
                 type(value) is int and value >= 0,
                 f"fixture review {field} must be a non-negative integer",
             )
+        findings = review["findings"]
+        _require(isinstance(findings, list), "fixture review findings must be an array")
+        finding_ids: list[str] = []
+        for finding in findings:
+            _require(
+                isinstance(finding, dict)
+                and set(finding) == {"finding_id", "severity", "status", "summary"},
+                "fixture review finding envelope must be closed",
+            )
+            _require(
+                isinstance(finding.get("finding_id"), str)
+                and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{2,}", finding["finding_id"])
+                is not None,
+                "fixture review finding needs a stable identifier",
+            )
+            _require(
+                finding.get("severity") in {"critical", "material", "minor"}
+                and finding.get("status") in {"unresolved", "resolved"}
+                and isinstance(finding.get("summary"), str)
+                and finding["summary"].strip(),
+                "fixture review finding has invalid severity/status/summary",
+            )
+            finding_ids.append(str(finding["finding_id"]))
+        _require(
+            len(finding_ids) == len(set(finding_ids)),
+            "fixture review finding ids must be distinct",
+        )
+        derived_critical = sum(
+            finding["severity"] == "critical" and finding["status"] == "unresolved"
+            for finding in findings
+        )
+        derived_material = sum(
+            finding["severity"] == "material" and finding["status"] == "unresolved"
+            for finding in findings
+        )
+        derived_decision = (
+            "READY" if derived_critical == 0 and derived_material == 0 else "CHANGES_REQUIRED"
+        )
+        _require(
+            review["critical_findings"] == derived_critical
+            and review["unresolved_material_findings"] == derived_material
+            and review["decision"] == derived_decision,
+            "fixture review decision/counts must be derived from structured findings",
+        )
         _require(
             review["review_track"] in {"semantic-model", "validator-integrity"},
             "fixture review has invalid review_track",
@@ -2185,6 +2710,8 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
     expected_status = "READY" if ready_records else "REVIEW_REQUIRED"
     _require(registry.get("status") == expected_status, "review registry status drift")
     _require(package.get("status") == expected_status, "fixture package status drift")
+    created_at = package.get("record_time", {}).get("created_at")
+    reviewed_at = package.get("record_time", {}).get("reviewed_at")
     if expected_status == "READY":
         frozen = registry.get("frozen_commit")
         _require(
@@ -2202,9 +2729,14 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
         )
         _require(
             _is_utc_second_timestamp(
-                package.get("record_time", {}).get("reviewed_at")
+                reviewed_at
             ),
             "READY package needs UTC ISO-8601 record_time.reviewed_at",
+        )
+        _require(
+            datetime.strptime(str(created_at), "%Y-%m-%dT%H:%M:%SZ")
+            <= datetime.strptime(str(reviewed_at), "%Y-%m-%dT%H:%M:%SZ"),
+            "READY package reviewed_at must not precede created_at",
         )
         for review in reviews:
             _require(review.get("frozen_commit") == frozen, "reviews must inspect the same frozen commit")
@@ -2212,6 +2744,11 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
                 review.get("reviewed_content_sha256") == computed_content_digest,
                 "review does not bind the current semantic content",
             )
+    else:
+        _require(
+            reviewed_at is None,
+            "REVIEW_REQUIRED package record_time.reviewed_at must remain null",
+        )
     if require_ready:
         _require(expected_status == "READY", "two independent READY reviews are required")
 
@@ -2469,7 +3006,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
     for region_id, region in indexes["regions"].items():
         versions = region.get("geometry_versions")
         _require(isinstance(versions, list) and versions, f"{region_id} needs geometry versions")
-        geometries: set[str] = set()
+        geometries: set[tuple[Any, ...]] = set()
         alternatives = []
         for version in versions:
             version_id = str(version.get("id"))
@@ -2491,13 +3028,16 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
                 claim_ids=claim_ids,
                 fixture_mode=fixture_mode,
             )
-            geometries.add(json.dumps(version.get("spatial_extent", {}).get("geometry"), sort_keys=True))
+            geometry = version.get("spatial_extent", {}).get("geometry")
+            normalized_geometry = _normalize_geometry(
+                geometry,
+                context=f"{version_id} geometry",
+            )
+            geometries.add(normalized_geometry)
             if version.get("reconstruction_mode") == "alternative_reconstruction":
                 alternatives.append(version)
                 _require(version.get("uncertainty_refs"), f"{version_id} alternative needs uncertainty")
-                alternative_geometry = _canonical_json_bytes(
-                    version.get("spatial_extent", {}).get("geometry")
-                )
+                alternative_geometry = normalized_geometry
                 overlapping_primary_versions = [
                     candidate
                     for candidate in versions
@@ -2510,8 +3050,9 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
                 _require(
                     overlapping_primary_versions
                     and all(
-                        _canonical_json_bytes(
-                            candidate.get("spatial_extent", {}).get("geometry")
+                        _normalize_geometry(
+                            candidate.get("spatial_extent", {}).get("geometry"),
+                            context=f"{candidate.get('id')} geometry",
                         )
                         != alternative_geometry
                         for candidate in overlapping_primary_versions
@@ -2639,6 +3180,15 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
         inputs = [context_objects.get(ref) for ref in input_refs]
         _require(all(isinstance(item, dict) for item in inputs), f"{observation_id} has invalid inputs")
         left, right = inputs
+        _require(
+            all(
+                item.get("type") == "State"
+                and item.get("state_kind") == "presence"
+                and item.get("value") == "present"
+                for item in inputs
+            ),
+            f"{observation_id} co-presence inputs must be positive presence States",
+        )
         input_claim_refs = {
             claim_id
             for item in inputs
@@ -2749,6 +3299,19 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             f"{view_id} needs explicit uncertainty display settings",
         )
         _require(
+            all(uncertainty_display.values()),
+            f"{view_id} contract scenario must display material, alternative and corpus uncertainty",
+        )
+        context_layer_refs = {
+            str(layer_ref)
+            for item in (*context_by_scope["local"], *context_by_scope["global"])
+            for layer_ref in item.get("layer_refs", [])
+        }
+        _require(
+            context_layer_refs <= set(view.get("active_layer_refs", [])),
+            f"{view_id} active layers must cover every local/global context object",
+        )
+        _require(
             set(view["local_context_refs"]).isdisjoint(view["global_context_refs"]),
             f"{view_id} local and global context must remain distinct",
         )
@@ -2765,6 +3328,7 @@ def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> 
             f"{view_id} time state must remain within WorldSlice bounds",
         )
 
+    _validate_semantic_payloads(package, indexes, package_root=package_root)
     _validate_coverage(package, indexes, registry, root)
     _validate_reviews(root, package, require_ready=require_ready)
     _validate_compatibility(root, require_ready=require_ready)

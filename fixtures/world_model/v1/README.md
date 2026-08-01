@@ -54,20 +54,27 @@ python -m pytest -q tests/test_world_model_fixtures.py
 - A non-unknown extent needs one or more basis Claims.
 - An alternative date needs its own atomic, evidence-bound Claim.
 - Every `State` subject/value pair is reproduced as an exact structured binding in each basis Claim and in a reviewed supporting locator.
+- `State.state_kind` is typed; computed co-presence accepts only two distinct positive `presence/present` States.
+- Every reviewed EvidenceLink locator carries an exact digest of the complete Claim payload; the v1 Claim statement and identity registries are closed.
+- Every Trajectory segment binds the Trajectory, its exact subject, coverage, segment payload, Claim and reviewed locator.
+- WorldSlice time/space bounds participate in the same context-bound extent gate as Events, States, Processes, Trajectories and Region versions.
 - An `inferred_gap` has no route geometry.
 - Every `Uncertainty` dimension has an exhaustive owner/basis rule; adding a plausible but dimension-ineligible backlink is invalid.
 - An alternative Region reconstruction names its Region/version set and must differ geometrically from every temporally overlapping primary reconstruction.
+- Polygon comparison normalizes ring rotation/orientation and rejects degenerate or self-intersecting rings, so byte-different but topologically identical alternatives do not count as competing geometry.
 - `co_present` requires both spatial and temporal overlap and never creates a historical Relation.
 - Relation endpoints, Relation target and canonical time/space expressions must be stated by both its basis Claim and a reviewed supporting locator.
 - A multi-region analytical Process does not imply diffusion, direction or mechanism.
 - `evidence_state` is derived exactly from reviewed EvidenceLinks.
 - A compatibility adapter resolves the pinned source commit/file in READY mode and compares the complete target object, including epistemic fields, to one deterministic mapping; missing evidence and uncertainty cannot be promoted away.
 - The coverage manifest has a closed v1 envelope, exactly mirrors the WorldSlice layer set and requires a stable-ID exclusion registry for sparse context, missing route geometry and the corpus-absence/historical-absence boundary.
+- WorldSlice coverage policy and Uncertainty effects are typed and fixed to the sparse synthetic scope; the contract view must expose material, alternative and corpus uncertainty and activate every local/global context layer.
 - Every evidence locator token occurs exactly once inside its Source; duplicate markers cannot shadow a canonical passage.
 - Package record timestamps use strict second-precision UTC ISO-8601; `reviewed_at` remains null until READY.
 - `SynchronizedView` carries time, camera, layers, selection, comparison scope, reconstruction, uncertainty display and dataset identity.
 - The review scope is an immutable validator constant; registry metadata cannot shrink it.
 - Two READY reviews must use different reviewer identities, invocation identities, tracks and checksummed structured attestations, inspect one resolvable ancestor commit, report zero unresolved critical/material findings and bind both that commit tree and the current review-scope digest.
+- Review artifacts are closed machine-readable attestations: structured findings derive the decision and counts, while unknown narrative/verdict fields fail closed.
 - Review identifiers are non-empty stable strings; finding counts are non-negative integers and booleans are rejected.
 - `independence_attestation` records the operational fact of separate agent tasks. The validator verifies the two distinct attestations and their content bindings; merge authority remains responsible for authenticating reviewer identity outside the repository.
 

@@ -5,12 +5,15 @@ Status: contract fixture only. The people, places and events below are fictional
 ## Identity record
 
 LOCATOR[alpha-identity]
+CLAIM_ASSERTION[claim=claim-mara-identity;sha256=3a13130686be65dd93dd687208a31c123919bbde22dc846fe56e8376ac0f394d]
+IDENTITY_ASSERTION[entity=entity-mara-vale;sha256=5ffb0d292bd29c3982ce717dd49de79a2184f30a4394559521005e933f9cfc97]
 
 The notebook identifies Mara Vale as the surveyor whose movements are recorded in the remaining entries.
 
 ## North Harbor charter
 
 LOCATOR[alpha-charter]
+CLAIM_ASSERTION[claim=claim-charter-event;sha256=6db54ccaed8eb4b1f2e4e4528ab93119b8fb1e61f8750df670c3d27e0a0997c3]
 
 The charter ceremony occurred at North Harbor on 1500-06-15 with Mara Vale participating.
 PARTICIPANT_ASSERTION[event=event-north-harbor-charter;participant=entity-mara-vale]
@@ -21,6 +24,7 @@ EXTENT_ASSERTION[owner=event-north-harbor-charter;context=event-north-harbor-cha
 ## Workshop arrival
 
 LOCATOR[alpha-arrival]
+CLAIM_ASSERTION[claim=claim-arrival-event;sha256=a98bf56adaf2d0187a8df1c131f28c17f52921e40d79dfaffff5b549ab9f9d14]
 
 The compiler dates Mara Vale's arrival at Inland Workshop to approximately 1503.
 PARTICIPANT_ASSERTION[event=event-workshop-arrival;participant=entity-mara-vale]
@@ -30,51 +34,64 @@ EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kin
 ## Administration state
 
 LOCATOR[alpha-administration]
+CLAIM_ASSERTION[claim=claim-administration-state;sha256=d8406ee01728693a8221bc5550cd964d0379c78df1f061edf6002115535bd485]
 
 The North Harbor council administered the basin from 1500 through 1508.
-STATE_ASSERTION[{"state_ref":"state-north-harbor-administration","subject_ref":"entity-fixture-basin","value":"administered_by_north_harbor_council"}]
+STATE_ASSERTION[{"state_kind":"administration","state_ref":"state-north-harbor-administration","subject_ref":"entity-fixture-basin","value":"administered_by_north_harbor_council"}]
 EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=temporal;sha256=a74aee96364b0dcff1039c01e7a249fb7c993cf83c797e7867b72045490d5272]
 EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=spatial;sha256=f3c1621752fd8360a4efc4058f633a4c686b5175c1ff094b7b0b826f5341f2ca]
 
 ## Coastal exchange stages
 
 LOCATOR[alpha-process-north]
+CLAIM_ASSERTION[claim=claim-process-north-stage;sha256=f0e0b11e89a65f7cf42772587180e65226ee9ac88debfe9f09146e4cb8965cfd]
 
 Exchange markers were recorded across the Fixture Basin region around North Harbor from 1498 through 1503.
 EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=temporal;sha256=bdc3a7a8f72190886324fe2e796be57231a52024735e7fac3e3c70f4737b44b6]
 EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=spatial;sha256=7cf250952bf7faad2e635606c7f8ed1b97654eeee95436a201ac10b8606ae039]
+EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=temporal;sha256=8619367240e9359d506b2e8f2781e2c919e8e7d8f5404bb761c4ef5961aa38ee]
 
 LOCATOR[alpha-process-south]
+CLAIM_ASSERTION[claim=claim-process-south-stage;sha256=50332f31597322860e52b746231bc16a2ceba9e29f1096c6b5eb09b3326ab0f5]
 
 Comparable markers were recorded within the South Coast analytical region around South Port from 1504 through 1510.
 EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=temporal;sha256=016c7e8c033f0afa7a214776b1500a232b4881ba785689faee35a8a0fb1dd217]
 EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=spatial;sha256=ef81fddc2d67b7912340468602be86c1bcca6048198994bcc6b20b54556ce788]
+EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=temporal;sha256=8619367240e9359d506b2e8f2781e2c919e8e7d8f5404bb761c4ef5961aa38ee]
 
 LOCATOR[alpha-region-south]
+CLAIM_ASSERTION[claim=claim-region-south;sha256=b7f931b0e56717e988f25d5a9bf92acbe0f7a43d5fbbd836c5de5201b8b54a56]
 
 For this analytical fixture, the reviewed South Coast region encloses the South Port marker observations from 1504 through 1510.
 GEOMETRY_ASSERTION[{"coordinates":[[[19.0,39.0],[22.0,39.0],[22.0,42.0],[19.0,42.0],[19.0,39.0]]],"type":"Polygon"}]
 EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=temporal;sha256=f8a0b7e18784f33f8e6c3104a0b2eb1885e53422088d08e30aecb02028ffddc7]
 EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=spatial;sha256=410d9514730a0ed9f23e477af55d34b1efba2e6cf794e32370bcecab0de7b90e]
+EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]
 
 ## Trajectory endpoints
 
 LOCATOR[alpha-trajectory-north]
+CLAIM_ASSERTION[claim=claim-trajectory-north;sha256=1e3217ee6787dcdfec4a3afba8221eb5d6092adae7d47d3ccbf157cbb31d4d37]
+TRAJECTORY_ASSERTION[trajectory=trajectory-mara-vale;segment=trajectory-segment-north;sha256=7eec59c591df5ce691bcb1b78337df2a4ef48668d1f7aac1ace7f9991ff58367]
 
 Mara Vale was recorded at North Harbor from 1499 through 1501.
 EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-north;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=b6084998268a18b9c069c89b7857130d5a138727bf5396ede7d20d046cf5181e]
 EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-north;kind=TrajectorySegment;mode=presence;dimension=spatial;sha256=f80c291948659cba3c0026e63b2179920a96a4ea4307721b259ab7d1c98e6ba4]
 
 LOCATOR[alpha-trajectory-gap]
+CLAIM_ASSERTION[claim=claim-trajectory-gap;sha256=1a3164b928ec189846220417d50af8cdc7592cb374a1dbf2ce93921fc5fbf14b]
+TRAJECTORY_ASSERTION[trajectory=trajectory-mara-vale;segment=trajectory-segment-gap;sha256=521949534cae615804e5d65d43226f72b7ac53e373795612efb1bebf3ca3f1f8]
 
 The unobserved trajectory gap runs from 1501 through 1504 between the recorded North Harbor and Inland Workshop endpoints; its route is unknown.
 EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=TrajectorySegment;mode=inferred_gap;dimension=temporal;sha256=f852de326c6709dcf51203ca04cec7c947097070b5d07344c1af59fd64cd3755]
 EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=TrajectorySegment;mode=inferred_gap;dimension=spatial;sha256=0b79f0612dcc1ecc64332120696fbf11f6cc56e31e718f84b489801cd2f8ef4a]
 
 LOCATOR[alpha-trajectory-workshop]
+CLAIM_ASSERTION[claim=claim-trajectory-workshop;sha256=94f0b576b2100142758c2088e9d4efb2ee4f0820d1a5e961ab217a6453ecf347]
+TRAJECTORY_ASSERTION[trajectory=trajectory-mara-vale;segment=trajectory-segment-workshop;sha256=0c5afabdd64d6279fca51684c150cff95f6846ada3f6b1c552d705c309f069d0]
 
 Mara Vale was recorded at Inland Workshop from 1504 through 1508.
-STATE_ASSERTION[{"state_ref":"state-mara-workshop-presence","subject_ref":"entity-mara-vale","value":"present"}]
+STATE_ASSERTION[{"state_kind":"presence","state_ref":"state-mara-workshop-presence","subject_ref":"entity-mara-vale","value":"present"}]
 EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=9e96d8d52918be21c6a16271a01484237ecb9222209f679af68d43cc9438bb35]
 EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=56a7e92d7e87e31f08879a5f1fb9b89e00ed2ac5f0e5311659f70f65eebd5adf]
 EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=5cc26bdc59ad4d7e2cf77ed0e1d7fa6db0a1e5a7d1d22ec27b42dcea54d3c3a4]
@@ -83,31 +100,37 @@ EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;
 ## Independent workshop presence
 
 LOCATOR[alpha-traveler-workshop]
+CLAIM_ASSERTION[claim=claim-traveler-workshop-presence;sha256=62d2016b23fa609646dcfd8e8912948d731e70781485826224cca415bf9e11cf]
 
 Traveler Sol was recorded at Inland Workshop during 1505. The notebook records no meeting, exchange or relationship between Traveler Sol and Mara Vale.
-STATE_ASSERTION[{"state_ref":"state-traveler-workshop-presence","subject_ref":"entity-traveler-sol","value":"present"}]
+STATE_ASSERTION[{"state_kind":"presence","state_ref":"state-traveler-workshop-presence","subject_ref":"entity-traveler-sol","value":"present"}]
 EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=e4264d84dfebe005b6385475abaf670274bbc470c266e70c4598f1db2214854b]
 EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=02a7dffa092c32c2ee44da88b17524c923bb2716c0458d69baba554d9021aabb]
 
 ## Basin boundary versions
 
 LOCATOR[alpha-region-v1]
+CLAIM_ASSERTION[claim=claim-region-v1;sha256=bf5e1b78d7fb3f1e94a83d3de05224a8e18a4b5fb4aff831fffd7456b2b80e72]
 
 For the fixture, the reviewed reconstruction uses boundary version A from 1498 through 1503.
 GEOMETRY_ASSERTION[{"coordinates":[[[9.0,49.0],[11.0,49.0],[11.0,51.0],[9.0,51.0],[9.0,49.0]]],"type":"Polygon"}]
 EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=cbe37594ea36e26df2658c67626248f4d3c35d692ab3f1a0e779037e5e3d0820]
 EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=15e48c745179e273d94f6b492252a9b142557bc196137c5ce917f8abb04a6cd6]
+EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]
 
 LOCATOR[alpha-region-v2]
+CLAIM_ASSERTION[claim=claim-region-v2;sha256=f3665bf24488c68da7ada2896d19feda2590c0eb641361fc3d36efe085d11634]
 
 For the fixture, the reviewed reconstruction uses the expanded boundary version B from 1504 through 1510.
 GEOMETRY_ASSERTION[{"coordinates":[[[9.0,49.0],[12.0,49.0],[12.0,51.0],[9.0,51.0],[9.0,49.0]]],"type":"Polygon"}]
 EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=b9994974b1c010eea46645d310dd5132ac6d61e3e9a135f342dc68f0a605a980]
 EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=44b5bc2d6410417a4f8c023da66b224f7310b24dfd298b94b7ebae2aa9af88ed]
+EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]
 
 ## Documented encounter
 
 LOCATOR[alpha-encounter]
+CLAIM_ASSERTION[claim=claim-documented-encounter;sha256=e2ec3373f48cc295642a9fe7b35a9089b4867269e84c5cb548a99899db080ef7]
 
 The register records Mara Vale and Keeper Ren in the same meeting at Inland Workshop on 1504-03-01.
 PARTICIPANT_ASSERTION[event=event-documented-workshop-meeting;participant=entity-mara-vale]
@@ -119,6 +142,7 @@ EXTENT_ASSERTION[owner=event-documented-workshop-meeting;context=event-documente
 ## Contested protocol influence
 
 LOCATOR[alpha-influence-ren]
+CLAIM_ASSERTION[claim=claim-influence-ren-council;sha256=c443dce8b5961236348e2de17ee5c77f7109a9dc9003b9d111863278820dbb11]
 
 The register states that during 1504–1505 Keeper Ren proposed the phrase later adopted in the North Harbor council protocol.
 RELATION_ASSERTION[{"directionality":"directed","mechanism":"A proposed protocol phrase is asserted to have affected the council text, but the attribution is challenged by a second fixture source.","object_ref":"entity-north-harbor-council","predicate":"influence","relation_ref":"relation-ren-influences-council-protocol","scope":"North Harbor council protocol wording only","spatial_extent":{"basis_claim_refs":["claim-influence-ren-council"],"kind":"named_place","place_ref":"place-north-harbor","precision":"fixture_defined"},"subject_ref":"entity-keeper-ren","temporal_extent":{"basis_claim_refs":["claim-influence-ren-council"],"calendar":"proleptic_gregorian","certainty":"contested","end":"1505","kind":"closed_interval","precision":"year","start":"1504"}}]

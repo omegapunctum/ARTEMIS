@@ -5,8 +5,8 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `2d6203656ca95ba2598ba9d791df32e19876628a`.
-- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/2/1`).
+- Previous reviewed head: `6ed30e67e6ef41b3aa89afc1f55c5f532f407274`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/6/1`); validator-integrity `CHANGES_REQUIRED` (`0/4/1`).
 - Next frozen commit: pending publication of the complete correction set.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
@@ -69,6 +69,19 @@ The third repeated review cycle on `2d620365…` confirmed semantic readiness bu
 - compatibility mapping fixed IDs/statements/coordinates but still allowed confidence/review promotion or uncertainty rewriting.
 
 The next correction binds Relation endpoints and canonical extent expressions, compares the full compatibility target to one deterministic pinned mapping, and adds adversarial regressions for each bypass.
+
+The review cycle on `6ed30e67…` confirmed the previous geometry-set, exclusion-ID, locator-uniqueness and timestamp fixes, then found:
+
+- unbound Trajectory subject and generic Claim/identity payload;
+- co-presence accepted from an `absent` State;
+- WorldSlice bounds, manifest reference and corpus meaning outside the exact semantic gate;
+- background evidence accepted as sufficient for a strong supported Claim;
+- mutable uncertainty effect/visibility and hidden local/global layers;
+- topologically identical alternative polygons with rotated rings;
+- READY artifacts whose free narrative could contradict self-declared decision/count fields;
+- a truncated locator token and premature `reviewed_at` metadata.
+
+The pending correction makes these executable failures through typed State/coverage/uncertainty policies, exact Claim/identity/Trajectory and WorldSlice assertions, normalized polygon topology, evidence-strength derivation and closed structured review findings. These changes remain `REVIEW_REQUIRED` until a new frozen head passes CI and two fresh independent reviews.
 
 ## Finalization rule
 

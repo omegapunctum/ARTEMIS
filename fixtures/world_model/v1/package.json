@@ -59,7 +59,17 @@
       "kind": "fixture_package",
       "value": "artemis-world-model-contract-fixture-v1@1.0.0"
     },
-    "coverage_manifest_ref": "coverage_manifest.json"
+    "coverage_manifest_ref": "coverage_manifest.json",
+    "coverage_policy": {
+      "corpus_completeness": "explicitly_incomplete",
+      "absence_semantics": "not_historical_absence",
+      "source_scope": "synthetic_fixture_only",
+      "known_exclusion_ids": [
+        "unlisted-context-is-corpus-absence-only",
+        "inferred-route-geometry-is-missing",
+        "no-historical-completeness-or-absence-claim"
+      ]
+    }
   },
   "sources": [
     {
@@ -68,7 +78,7 @@
       "title": "Synthetic field notebook alpha",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-alpha.md",
-      "sha256": "69eb82ffd5df3aadd3884baf9dcb203ab8e50fd4992be46ba2cdb31a91928dd9",
+      "sha256": "f505443da396bc35251c1cf4641513bfab86a85cb178b14decec68166c563515",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -82,7 +92,7 @@
       "title": "Synthetic field notebook beta",
       "source_type": "fixture_document",
       "uri": "sources/field-notebook-beta.md",
-      "sha256": "21a386d07bb77fab6bbdc9eb4abe64087d55668a518a2e45295a6b89e7912df9",
+      "sha256": "bca28333ddfd9d59c578022437bcb55730704a91751bdb692ff8c7cab83a57fa",
       "review_state": "reviewed",
       "provenance": {
         "origin": "curator",
@@ -418,6 +428,7 @@
       "type": "State",
       "label": "North Harbor council administration",
       "subject_ref": "entity-fixture-basin",
+      "state_kind": "administration",
       "value": "administered_by_north_harbor_council",
       "temporal_extent": {
         "kind": "closed_interval",
@@ -453,6 +464,7 @@
       "type": "State",
       "label": "Mara Vale present at Inland Workshop",
       "subject_ref": "entity-mara-vale",
+      "state_kind": "presence",
       "value": "present",
       "temporal_extent": {
         "kind": "closed_interval",
@@ -486,6 +498,7 @@
       "type": "State",
       "label": "Traveler Sol present at Inland Workshop",
       "subject_ref": "entity-traveler-sol",
+      "state_kind": "presence",
       "value": "present",
       "temporal_extent": {
         "kind": "closed_interval",
@@ -1144,6 +1157,7 @@
         {
           "state_ref": "state-north-harbor-administration",
           "subject_ref": "entity-fixture-basin",
+          "state_kind": "administration",
           "value": "administered_by_north_harbor_council"
         }
       ],
@@ -1188,11 +1202,13 @@
       "statement": "Exchange markers were recorded in the Fixture Basin region from 1498 through 1503.",
       "target_refs": [
         "process-coastal-exchange",
-        "region-fixture-basin"
+        "region-fixture-basin",
+        "world-slice-fixture-basin-v1"
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=temporal;sha256=bdc3a7a8f72190886324fe2e796be57231a52024735e7fac3e3c70f4737b44b6]",
-        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=spatial;sha256=7cf250952bf7faad2e635606c7f8ed1b97654eeee95436a201ac10b8606ae039]"
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=spatial;sha256=7cf250952bf7faad2e635606c7f8ed1b97654eeee95436a201ac10b8606ae039]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=temporal;sha256=8619367240e9359d506b2e8f2781e2c919e8e7d8f5404bb761c4ef5961aa38ee]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1207,11 +1223,13 @@
       "statement": "Comparable exchange markers were recorded in the South Coast region from 1504 through 1510.",
       "target_refs": [
         "process-coastal-exchange",
-        "region-south-coast"
+        "region-south-coast",
+        "world-slice-fixture-basin-v1"
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=temporal;sha256=016c7e8c033f0afa7a214776b1500a232b4881ba785689faee35a8a0fb1dd217]",
-        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=spatial;sha256=ef81fddc2d67b7912340468602be86c1bcca6048198994bcc6b20b54556ce788]"
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=spatial;sha256=ef81fddc2d67b7912340468602be86c1bcca6048198994bcc6b20b54556ce788]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=temporal;sha256=8619367240e9359d506b2e8f2781e2c919e8e7d8f5404bb761c4ef5961aa38ee]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1226,6 +1244,7 @@
       "statement": "Mara Vale was present at North Harbor from 1499 through 1501.",
       "target_refs": [
         "trajectory-mara-vale",
+        "entity-mara-vale",
         "place-north-harbor"
       ],
       "extent_assertions": [
@@ -1244,7 +1263,8 @@
       "type": "Claim",
       "statement": "The unobserved trajectory gap runs from 1501 through 1504 between the recorded North Harbor and Inland Workshop endpoints; its route is unknown.",
       "target_refs": [
-        "trajectory-mara-vale"
+        "trajectory-mara-vale",
+        "entity-mara-vale"
       ],
       "input_claim_refs": [
         "claim-trajectory-north",
@@ -1269,12 +1289,14 @@
       "statement": "Mara Vale was present at Inland Workshop from 1504 through 1508.",
       "target_refs": [
         "trajectory-mara-vale",
+        "entity-mara-vale",
         "state-mara-workshop-presence"
       ],
       "state_bindings": [
         {
           "state_ref": "state-mara-workshop-presence",
           "subject_ref": "entity-mara-vale",
+          "state_kind": "presence",
           "value": "present"
         }
       ],
@@ -1304,6 +1326,7 @@
         {
           "state_ref": "state-traveler-workshop-presence",
           "subject_ref": "entity-traveler-sol",
+          "state_kind": "presence",
           "value": "present"
         }
       ],
@@ -1323,11 +1346,13 @@
       "type": "Claim",
       "statement": "Boundary version A is the primary fixture reconstruction for 1498 through 1503. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[11.0,49.0],[11.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
-        "region-fixture-basin"
+        "region-fixture-basin",
+        "world-slice-fixture-basin-v1"
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=cbe37594ea36e26df2658c67626248f4d3c35d692ab3f1a0e779037e5e3d0820]",
-        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=15e48c745179e273d94f6b492252a9b142557bc196137c5ce917f8abb04a6cd6]"
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=15e48c745179e273d94f6b492252a9b142557bc196137c5ce917f8abb04a6cd6]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
       ],
       "claim_kind": "interpretation",
       "origin": "curator",
@@ -1341,11 +1366,13 @@
       "type": "Claim",
       "statement": "Expanded boundary version B is the primary fixture reconstruction for 1504 through 1510. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[12.0,49.0],[12.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
-        "region-fixture-basin"
+        "region-fixture-basin",
+        "world-slice-fixture-basin-v1"
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=b9994974b1c010eea46645d310dd5132ac6d61e3e9a135f342dc68f0a605a980]",
-        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=44b5bc2d6410417a4f8c023da66b224f7310b24dfd298b94b7ebae2aa9af88ed]"
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=44b5bc2d6410417a4f8c023da66b224f7310b24dfd298b94b7ebae2aa9af88ed]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
       ],
       "claim_kind": "interpretation",
       "origin": "curator",
@@ -1381,11 +1408,13 @@
       "type": "Claim",
       "statement": "The fixture defines the South Coast analytical region for the 1504–1510 marker observations. GEOMETRY_ASSERTION[{\"coordinates\":[[[19.0,39.0],[22.0,39.0],[22.0,42.0],[19.0,42.0],[19.0,39.0]]],\"type\":\"Polygon\"}]",
       "target_refs": [
-        "region-south-coast"
+        "region-south-coast",
+        "world-slice-fixture-basin-v1"
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=temporal;sha256=f8a0b7e18784f33f8e6c3104a0b2eb1885e53422088d08e30aecb02028ffddc7]",
-        "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=spatial;sha256=410d9514730a0ed9f23e477af55d34b1efba2e6cf794e32370bcecab0de7b90e]"
+        "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=spatial;sha256=410d9514730a0ed9f23e477af55d34b1efba2e6cf794e32370bcecab0de7b90e]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
       ],
       "claim_kind": "interpretation",
       "origin": "curator",
@@ -1495,11 +1524,13 @@
       "statement": "A distant synthetic observation was logged at Far Observatory on 1504-03-01. GEOMETRY_ASSERTION[{\"coordinates\":[100.0,-20.0],\"type\":\"Point\"}]",
       "target_refs": [
         "event-far-observation",
-        "place-far-observatory"
+        "place-far-observatory",
+        "world-slice-fixture-basin-v1"
       ],
       "extent_assertions": [
         "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=temporal;sha256=4a706d59db4f108a88f9fada30fd9bf4458381dff0dfdb694b39b2096c249474]",
-        "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=spatial;sha256=91a0199853ad826335838f7701b642af8f15dbf5e3ac86f30ba7743b74844a1a]"
+        "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=spatial;sha256=91a0199853ad826335838f7701b642af8f15dbf5e3ac86f30ba7743b74844a1a]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
       ],
       "claim_kind": "factual",
       "origin": "curator",
@@ -1768,6 +1799,7 @@
       "dimension": "temporal_value",
       "description": "The two synthetic sources give different approximate arrival years.",
       "effect": "The UI must show 1503 and 1504 as alternatives and must not interpolate a day.",
+      "effect_policy": "preserve_temporal_alternatives",
       "alternatives": [
         "1503",
         "1504"
@@ -1785,6 +1817,7 @@
       "dimension": "trajectory_gap",
       "description": "The route between documented endpoints is unknown.",
       "effect": "No path geometry may be drawn as a documented movement.",
+      "effect_policy": "prohibit_invented_route_geometry",
       "alternatives": [],
       "basis_claim_refs": [
         "claim-trajectory-gap"
@@ -1798,6 +1831,7 @@
       "dimension": "geometry_reconstruction",
       "description": "The primary and alternative 1504 boundary reconstructions disagree about the eastern inlet.",
       "effect": "Both geometries must remain selectable; neither may silently overwrite the other.",
+      "effect_policy": "preserve_selectable_geometry_alternatives",
       "alternatives": [
         "region-geometry-v2",
         "region-geometry-v2-alternative"
@@ -1815,6 +1849,7 @@
       "dimension": "process",
       "description": "The sources document marker intervals in two regions but do not establish diffusion, direction or mechanism.",
       "effect": "The Process remains an analytical grouping and must not be rendered as a directional historical flow.",
+      "effect_policy": "prohibit_direction_or_mechanism_inference",
       "alternatives": [],
       "basis_claim_refs": [
         "claim-process-north-stage",
@@ -1829,6 +1864,7 @@
       "dimension": "relation",
       "description": "One source attributes the adopted phrase to Ren's proposal while another attributes it to prior guild rules.",
       "effect": "The influence Relation remains contested and both EvidenceLinks must stay visible.",
+      "effect_policy": "preserve_conflicting_relation_evidence",
       "alternatives": [
         "ren_proposal_influenced_wording",
         "prior_guild_rule_explains_wording"
@@ -1845,6 +1881,7 @@
       "dimension": "corpus_coverage",
       "description": "The fixture is intentionally sparse and synthetic.",
       "effect": "Missing objects cannot be interpreted as historical absence.",
+      "effect_policy": "prohibit_historical_absence_inference",
       "alternatives": [],
       "basis_claim_refs": [],
       "review_state": "reviewed"
