@@ -28,7 +28,7 @@ The Architecture Atlas compatibility projection is real and commit-pinned. It de
 | `compatibility/architecture_atlas_projection.json` | Non-inventive legacy projection |
 | `review_registry.json` | Review attestations and one immutable validator-owned scope identifier |
 
-This README is part of that immutable review scope. It has one closed readiness declaration: only the exact canonical transition between `REVIEW_REQUIRED` and `READY` is normalized for the final attestation commit; the displayed status must still equal package/registry truth, decorated or duplicate aliases are invalid, and every semantic, corpus and runtime-boundary statement remains frozen.
+This README is part of that immutable review scope and is pinned by a validator-owned digest of its complete normalized bytes. It has one closed readiness declaration: only the exact canonical transition between `REVIEW_REQUIRED` and `READY` is normalized for the final attestation commit; the displayed status must still equal package/registry truth, any extra byte or rendered alias is invalid, and every semantic, corpus and runtime-boundary statement remains frozen.
 
 ## Validate
 

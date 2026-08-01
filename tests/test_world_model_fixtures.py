@@ -594,7 +594,7 @@ def test_ready_gate_rejects_readme_overclaim_after_review(tmp_path: Path) -> Non
 
     with pytest.raises(
         FixtureValidationError,
-        match="does not match current reviewed content",
+        match="closed reviewed v1 document|does not match current reviewed content",
     ):
         validate_package(root, require_ready=True)
 
@@ -657,6 +657,46 @@ def test_ready_gate_rejects_frozen_stale_markdown_readme_status_alias(
 
     with pytest.raises(FixtureValidationError, match="one closed status declaration"):
         _make_ready_reviews(root)
+
+
+@pytest.mark.parametrize(
+    "alias",
+    (
+        "<strong>Status</strong>: <code>READY</code>.",
+        "Status&#58; READY.",
+        "Status： READY.",
+        "Stаtus: READY.",
+    ),
+)
+def test_validator_rejects_rendered_readme_status_alias(
+    tmp_path: Path,
+    alias: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8") + f"\n{alias}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 document"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_prefrozen_rendered_readme_status_alias(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8")
+        + "\n<strong>Status</strong>: <code>REVIEW_REQUIRED</code>.\n",
+        encoding="utf-8",
+    )
+    _make_ready_reviews(root)
+
+    with pytest.raises(FixtureValidationError, match="closed reviewed v1 document"):
+        validate_package(root, require_ready=True)
 
 
 def test_validator_rejects_float_required_review_count(tmp_path: Path) -> None:

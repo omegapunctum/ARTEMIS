@@ -200,6 +200,7 @@ REQUIRED_TRAJECTORY_SUBJECTS = {
 REQUIRED_V1_SEMANTIC_PAYLOAD_SHA256 = (
     "3f932550bad478c3caf8d0f999abe2ef6c26a0de14f01d156c443f95cbe5d10b"
 )
+REQUIRED_V1_README_SHA256 = "d70b9a047b7f103dc8d69e5df059aa0ba4feae2bbbaa75a73c6cdc896f7801fc"
 LOCATOR_TOKEN_PATTERN = re.compile(r"LOCATOR\[[^\]\r\n]+\]")
 
 ALLOWED_CLAIM_KINDS = {
@@ -517,6 +518,18 @@ def _normalize_review_scope_bytes(relative_path: str, raw: bytes) -> bytes:
 
 def _review_scope_bytes(relative_path: str, path: Path) -> bytes:
     return _normalize_review_scope_bytes(relative_path, path.read_bytes())
+
+
+def _validate_v1_readme(root: Path) -> None:
+    relative_path = str(PACKAGE_RELATIVE / "README.md")
+    normalized = _normalize_review_scope_bytes(
+        relative_path,
+        (root / relative_path).read_bytes(),
+    )
+    _require(
+        hashlib.sha256(normalized).hexdigest() == REQUIRED_V1_README_SHA256,
+        "fixture README drift from the closed reviewed v1 document",
+    )
 
 
 def compute_review_scope_digest(
@@ -3033,6 +3046,7 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
 
 def validate_package(root: Path = REPO_ROOT, *, require_ready: bool = False) -> dict[str, int]:
     package_root = root / PACKAGE_RELATIVE
+    _validate_v1_readme(root)
     schema = _read_json(package_root / "schema.json")
     package = _read_json(package_root / "package.json")
     _require(schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema", "schema draft drift")
