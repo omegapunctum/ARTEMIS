@@ -581,7 +581,6 @@ def compute_review_scope_digest(
     root: Path = REPO_ROOT,
     registry: dict[str, Any] | None = None,
 ) -> str:
-    _require_git_toplevel(root)
     registry = registry or _read_json(root / PACKAGE_RELATIVE / "review_registry.json")
     _require(
         registry.get("review_scope_id") == REVIEW_SCOPE_ID,
