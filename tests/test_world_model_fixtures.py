@@ -3,6 +3,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -395,6 +396,79 @@ def test_frozen_scope_rejects_symlink_blob(tmp_path: Path) -> None:
 
     with pytest.raises(FixtureValidationError, match="regular Git blob"):
         compute_review_scope_digest_at_commit(root, frozen_commit)
+
+
+def test_ready_gate_rejects_plain_directory_root_relocation(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    snapshot = tmp_path / "snapshot"
+    shutil.copytree(root, snapshot, ignore=shutil.ignore_patterns(".git"))
+    relocated = root / "relocated"
+    shutil.move(str(snapshot), relocated)
+
+    with pytest.raises(FixtureValidationError, match="Git toplevel"):
+        validate_package(relocated, require_ready=True)
+
+
+@pytest.mark.parametrize("mode", ("120000", "160000"))
+def test_ready_gate_rejects_current_head_nonregular_scope_mode(
+    tmp_path: Path,
+    mode: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    if mode == "120000":
+        payload = tmp_path / "symlink-payload"
+        payload.write_text("../external-requirements.txt", encoding="utf-8")
+        object_sha = _git(root, "hash-object", "-w", str(payload))
+    else:
+        object_sha = _git(root, "rev-parse", "HEAD")
+    _git(
+        root,
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        f"{mode},{object_sha},requirements.txt",
+    )
+    _git(root, "commit", "-m", f"test: commit mode {mode}")
+
+    with pytest.raises(FixtureValidationError, match="regular Git blob"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_current_head_missing_scope_entry(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    _git(root, "rm", "--cached", "requirements.txt")
+    _git(root, "commit", "-m", "test: omit scope entry from HEAD")
+
+    with pytest.raises(FixtureValidationError, match="regular Git blob"):
+        validate_package(root, require_ready=True)
+
+
+def test_cli_rejects_symlinked_validator_entrypoint(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    script_path = root / "scripts" / "validate_world_model_fixtures.py"
+    script_path.unlink()
+    script_path.symlink_to(ROOT / "scripts" / "validate_world_model_fixtures.py")
+
+    result = subprocess.run(
+        (
+            sys.executable,
+            str(script_path),
+            "--root",
+            str(root),
+            "--require-ready",
+        ),
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    assert result.returncode == 1
+    assert "must not contain symlinks" in result.stdout
 
 
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:

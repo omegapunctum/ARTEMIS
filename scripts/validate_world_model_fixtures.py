@@ -21,7 +21,7 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).absolute().parents[1]
 PACKAGE_RELATIVE = Path("fixtures/world_model/v1")
 SCHEMA_VERSION = "1.0.0"
 REVIEW_SCOPE_ID = "world-model-v1-canonical"
@@ -581,6 +581,7 @@ def compute_review_scope_digest(
     root: Path = REPO_ROOT,
     registry: dict[str, Any] | None = None,
 ) -> str:
+    _require_git_toplevel(root)
     registry = registry or _read_json(root / PACKAGE_RELATIVE / "review_registry.json")
     _require(
         registry.get("review_scope_id") == REVIEW_SCOPE_ID,
@@ -610,6 +611,29 @@ def _git_output(root: Path, *args: str) -> bytes:
             detail = exc.stderr.decode("utf-8", errors="replace").strip()
         raise FixtureValidationError(f"git verification failed: {detail or args[0]}") from exc
     return result.stdout
+
+
+def _require_git_toplevel(root: Path) -> Path:
+    inside = _git_output(root, "rev-parse", "--is-inside-work-tree").decode(
+        "utf-8",
+        errors="replace",
+    ).strip()
+    _require(inside == "true", "review root must be inside one Git working tree")
+    top_level = Path(
+        _git_output(root, "rev-parse", "--show-toplevel")
+        .decode("utf-8", errors="replace")
+        .strip()
+    )
+    try:
+        root_resolved = root.absolute().resolve(strict=True)
+        top_level_resolved = top_level.resolve(strict=True)
+    except OSError as exc:
+        raise FixtureValidationError("review root or Git toplevel cannot be resolved") from exc
+    _require(
+        root_resolved == top_level_resolved,
+        "review root must exactly match the Git toplevel",
+    )
+    return top_level_resolved
 
 
 def _git_commit_exists(root: Path, commit: str) -> bool:
@@ -642,6 +666,7 @@ def _frozen_regular_blob(root: Path, commit: str, relative_path: str) -> bytes:
 
 
 def compute_review_scope_digest_at_commit(root: Path, commit: str) -> str:
+    _require_git_toplevel(root)
     _git_output(root, "cat-file", "-e", f"{commit}^{{commit}}")
     _git_output(root, "merge-base", "--is-ancestor", commit, "HEAD")
     digest = hashlib.sha256()
@@ -3089,6 +3114,11 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             registry.get("reviewed_content_sha256") == computed_content_digest,
             "READY review registry does not match current reviewed content",
         )
+        head_content_digest = compute_review_scope_digest_at_commit(root, "HEAD")
+        _require(
+            head_content_digest == computed_content_digest,
+            "current Git HEAD does not contain the reviewed semantic content",
+        )
         frozen_content_digest = compute_review_scope_digest_at_commit(root, frozen)
         _require(
             frozen_content_digest == computed_content_digest,
@@ -3792,6 +3822,15 @@ def main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     args = parser.parse_args()
     try:
+        invoked_script = Path(__file__).absolute()
+        canonical_script = _regular_repo_file(
+            args.root,
+            "scripts/validate_world_model_fixtures.py",
+        ).absolute()
+        _require(
+            invoked_script == canonical_script,
+            "validator CLI entrypoint must be the canonical non-symlink repository script",
+        )
         counts = validate_package(args.root, require_ready=args.require_ready)
     except FixtureValidationError as exc:
         print(f"[FAIL] World-model fixtures: {exc}")

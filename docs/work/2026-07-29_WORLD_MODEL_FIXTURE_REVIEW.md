@@ -5,9 +5,9 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `a99aa1d3b3009e9a3429b30ab379db3196202e95`.
-- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
-- Next frozen candidate: this complete repository-anchored scope correction after publication and CI.
+- Previous reviewed head: `8ec8100809156b9cf51b8d5772acfa6dfc695fc6`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
+- Next frozen candidate: this complete Git-root/current-HEAD binding correction after publication and CI.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
 
@@ -129,6 +129,8 @@ Both reviews on `534b580…` confirmed every prior contour and found the same re
 Semantic review on `6d5ba0b…` returned `READY` with no critical or material findings and one minor stale working-record line. Validator-integrity review found one material scope bypass: Source URIs were not closed to the two canonical reviewed notebook paths, so traversal, absolute or symlink resolution could consume evidence outside the frozen commit scope. This correction binds each Source ID to one canonical URI, rejects path escapes and symlinks, requires the referenced artifact to be in the validator-owned scope and adds structural plus full-READY regressions. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews of the resulting exact SHA.
 
 Semantic review on `a99aa1d…` returned `READY` with no findings. Validator-integrity review confirmed the Source registry correction, then reproduced one material ancestor-path bypass: replacing `fixtures/world_model/v1/` or a higher scope parent with a symlink to identical bytes allowed current and frozen digests to agree while canonical Git paths no longer contained regular files. This correction anchors every current scope path to the repository root, rejects symlinks in every component, requires regular in-repository files and verifies every frozen entry is a regular Git blob before hashing. Full-READY regressions cover package and parent relocation, external and relative targets, missing current files and frozen symlink blobs. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews.
+
+Both reviews on `8ec8100…` confirmed ancestor-symlink and frozen-mode rejection, then found one remaining root/tree identity class. A plain relocated directory could borrow its parent repository through `git -C`, the CLI bootstrap could follow a symlinked validator into another checkout, and current working bytes were not compared with regular blobs in current `HEAD`. This correction binds the resolved validation root to Git toplevel, binds the lexical CLI entrypoint to the canonical non-symlink validator, computes a normalized regular-blob digest for `HEAD` and requires `working tree == HEAD == frozen`. Regressions cover plain relocation, validator bootstrap symlink, current `120000`/`160000` modes and a missing HEAD entry. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
 
 ## Finalization rule
 
