@@ -253,6 +253,85 @@ def test_validator_rejects_duplicate_locator_state_rebinding(tmp_path: Path) -> 
         validate_package(root)
 
 
+@pytest.mark.parametrize(
+    "uri",
+    (
+        "../unscoped-evidence.md",
+        "sources/field-notebook-beta.md",
+    ),
+)
+def test_validator_rejects_noncanonical_source_uri(
+    tmp_path: Path,
+    uri: str,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    source = next(
+        item for item in package["sources"] if item["id"] == "source-field-alpha"
+    )
+    source["uri"] = uri
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must use canonical URI"):
+        validate_package(root)
+
+
+def test_validator_rejects_absolute_source_uri(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    package = _read_package(root)
+    source = next(
+        item for item in package["sources"] if item["id"] == "source-field-alpha"
+    )
+    source["uri"] = str((tmp_path / "external-evidence.md").resolve())
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must use canonical URI"):
+        validate_package(root)
+
+
+def test_validator_rejects_source_symlink_escape(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    external_path = tmp_path / "external-evidence.md"
+    external_path.write_bytes(source_path.read_bytes())
+    source_path.unlink()
+    source_path.symlink_to(external_path)
+
+    with pytest.raises(FixtureValidationError, match="must not contain symlinks"):
+        validate_package(root)
+
+
+def test_ready_gate_rejects_postfreeze_unscoped_source_uri(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    package = _read_package(root)
+    source = next(
+        item for item in package["sources"] if item["id"] == "source-field-alpha"
+    )
+    source_bytes = (root / PACKAGE / str(source["uri"])).read_bytes()
+    unscoped_path = root / PACKAGE.parent / "unscoped-evidence.md"
+    unscoped_path.write_bytes(source_bytes)
+    source["uri"] = "../unscoped-evidence.md"
+    source["sha256"] = hashlib.sha256(source_bytes).hexdigest()
+    _write_package(root, package)
+
+    with pytest.raises(FixtureValidationError, match="must use canonical URI"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_postfreeze_source_symlink(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    source_path = root / PACKAGE / "sources" / "field-notebook-alpha.md"
+    external_path = tmp_path / "reviewed-bytes-outside-scope.md"
+    external_path.write_bytes(source_path.read_bytes())
+    source_path.unlink()
+    source_path.symlink_to(external_path)
+
+    with pytest.raises(FixtureValidationError, match="must not contain symlinks"):
+        validate_package(root, require_ready=True)
+
+
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)

@@ -471,8 +471,10 @@
           "minLength": 1
         },
         "uri": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "sources/field-notebook-alpha.md",
+            "sources/field-notebook-beta.md"
+          ]
         },
         "sha256": {
           "type": "string",

@@ -40,6 +40,10 @@ REQUIRED_REVIEW_SCOPE = (
     "tests/test_world_model_fixtures.py",
     "requirements.txt",
 )
+CANONICAL_SOURCE_URIS = {
+    "source-field-alpha": "sources/field-notebook-alpha.md",
+    "source-field-beta": "sources/field-notebook-beta.md",
+}
 REVIEW_ARTIFACT_FIELDS = (
     "artifact_format",
     "review_id",
@@ -1104,8 +1108,11 @@ def _validate_claims(
             and LOCATOR_TOKEN_PATTERN.fullmatch(locator) is not None,
             f"{link_id} needs one exact LOCATOR token",
         )
-        source_path = package_root / str(sources[source_id].get("uri"))
-        _require(source_path.is_file(), f"{link_id} source artifact is missing: {source_path}")
+        source_path = _canonical_source_path(
+            str(source_id),
+            sources[str(source_id)],
+            package_root,
+        )
         locator_tokens = set(_parse_source_locators(source_path.read_text(encoding="utf-8"), source_id))
         _require(locator in locator_tokens, f"{link_id} locator is not reproducible")
         links_by_claim[claim_id].append(link)
@@ -1480,7 +1487,56 @@ def _parse_source_locators(source_text: str, source_id: str) -> dict[str, tuple[
     }
 
 
+def _canonical_source_path(
+    source_id: str,
+    source: dict[str, Any],
+    package_root: Path,
+) -> Path:
+    expected_uri = CANONICAL_SOURCE_URIS.get(source_id)
+    _require(expected_uri is not None, f"{source_id} is not a canonical v1 Source")
+    uri = source.get("uri")
+    _require(
+        isinstance(uri, str) and uri == expected_uri,
+        f"{source_id} must use canonical URI {expected_uri}",
+    )
+    relative_path = Path(expected_uri)
+    _require(
+        not relative_path.is_absolute() and ".." not in relative_path.parts,
+        f"{source_id} source URI must be a canonical relative path",
+    )
+    source_path = package_root / relative_path
+    cursor = source_path
+    while cursor != package_root:
+        _require(
+            not cursor.is_symlink(),
+            f"{source_id} source artifact path must not contain symlinks",
+        )
+        cursor = cursor.parent
+    _require(source_path.is_file(), f"{source_id} file is missing")
+    try:
+        package_root_resolved = package_root.resolve(strict=True)
+        source_path_resolved = source_path.resolve(strict=True)
+    except OSError as exc:
+        raise FixtureValidationError(
+            f"{source_id} source artifact cannot be resolved"
+        ) from exc
+    _require(
+        source_path_resolved.is_relative_to(package_root_resolved),
+        f"{source_id} source artifact must resolve inside the fixture package",
+    )
+    review_scope_path = str(PACKAGE_RELATIVE / relative_path)
+    _require(
+        review_scope_path in REQUIRED_REVIEW_SCOPE,
+        f"{source_id} source artifact must belong to the immutable review scope",
+    )
+    return source_path
+
+
 def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) -> None:
+    _require(
+        set(sources) == set(CANONICAL_SOURCE_URIS),
+        "fixture Sources must exactly match the canonical v1 source registry",
+    )
     for source_id, source in sources.items():
         _require(source.get("source_type") == "fixture_document", f"{source_id} must be a fixture document")
         _require(source.get("review_state") == "reviewed", f"{source_id} must be reviewed")
@@ -1490,8 +1546,7 @@ def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) ->
             provenance.get("historical_authority") is False,
             f"{source_id} must not masquerade as historical authority",
         )
-        source_path = package_root / str(source.get("uri"))
-        _require(source_path.is_file(), f"{source_id} file is missing")
+        source_path = _canonical_source_path(source_id, source, package_root)
         source_bytes = source_path.read_bytes()
         digest = hashlib.sha256(source_bytes).hexdigest()
         _require(source.get("sha256") == digest, f"{source_id} checksum drift")
@@ -1521,9 +1576,13 @@ def _supporting_passages(
             and link.get("relation_to_claim") == "supports"
             and link.get("review_state") == "reviewed"
         ):
-            source = sources[str(link["source_id"])]
+            source_id = str(link["source_id"])
+            source = sources[source_id]
             passages.append(
-                _locator_passage(package_root / str(source["uri"]), str(link["locator"]))
+                _locator_passage(
+                    _canonical_source_path(source_id, source, package_root),
+                    str(link["locator"]),
+                )
             )
     return passages
 
@@ -1611,9 +1670,10 @@ def _validate_semantic_payloads(
         if link.get("review_state") != "reviewed":
             continue
         claim = claims[str(link["claim_id"])]
-        source = sources[str(link["source_id"])]
+        source_id = str(link["source_id"])
+        source = sources[source_id]
         passage = _locator_passage(
-            package_root / str(source["uri"]),
+            _canonical_source_path(source_id, source, package_root),
             str(link["locator"]),
         )
         _require(

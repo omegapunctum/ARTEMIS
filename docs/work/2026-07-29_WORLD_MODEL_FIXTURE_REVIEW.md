@@ -5,9 +5,9 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `534b58067b1049f813c9d8eac1be6de311850b66`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
-- Next frozen commit: pending publication of the complete correction set.
+- Previous reviewed head: `6d5ba0bef8fe24643211ff2eebfa3e474eb6f49f`.
+- Previous verdicts: semantic-model `READY` (`0/0/1`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
+- Next frozen candidate: this complete Source URI scope correction after publication and CI.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
 
@@ -125,6 +125,8 @@ The reviews on `afb7e78…` confirmed README content is frozen and found no othe
 Semantic review on `fb6ffce…` found no unresolved semantic issue. Validator-integrity review confirmed synchronized canonical statuses, then found one material presentation alias: an additional Markdown/HTML-decorated `Status` declaration was outside the exact-line parser and could contradict readiness truth. The pending correction closes the README declaration envelope to exactly one canonical line and rejects any additional line containing a status declaration before digest normalization. Structural premature and frozen stale-alias regressions are included; another exact-SHA CI and review pair remain required.
 
 Both reviews on `534b580…` confirmed every prior contour and found the same remaining material class: visually rendered HTML/entity/fullwidth/confusable status declarations could evade lexical discovery when committed before freeze. The pending correction removes dependence on exhaustive confusable recognition by pinning the complete normalized README to a validator-owned digest. Only the exact canonical transition line normalizes; every other byte must match the closed v1 document. Structural and pre-freeze/full-READY regressions cover HTML, entity, fullwidth and confusable variants. The package remains `REVIEW_REQUIRED` until another exact-SHA CI and fresh review pair.
+
+Semantic review on `6d5ba0b…` returned `READY` with no critical or material findings and one minor stale working-record line. Validator-integrity review found one material scope bypass: Source URIs were not closed to the two canonical reviewed notebook paths, so traversal, absolute or symlink resolution could consume evidence outside the frozen commit scope. This correction binds each Source ID to one canonical URI, rejects path escapes and symlinks, requires the referenced artifact to be in the validator-owned scope and adds structural plus full-READY regressions. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews of the resulting exact SHA.
 
 ## Finalization rule
 
