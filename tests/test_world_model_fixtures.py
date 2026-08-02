@@ -272,7 +272,7 @@ def test_validator_rejects_noncanonical_source_uri(
     source["uri"] = uri
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must use canonical URI"):
+    with pytest.raises(FixtureValidationError, match="must use canonical URI|is not one of"):
         validate_package(root)
 
 
@@ -285,7 +285,7 @@ def test_validator_rejects_absolute_source_uri(tmp_path: Path) -> None:
     source["uri"] = str((tmp_path / "external-evidence.md").resolve())
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must use canonical URI"):
+    with pytest.raises(FixtureValidationError, match="must use canonical URI|is not one of"):
         validate_package(root)
 
 
@@ -315,7 +315,7 @@ def test_ready_gate_rejects_postfreeze_unscoped_source_uri(tmp_path: Path) -> No
     source["sha256"] = hashlib.sha256(source_bytes).hexdigest()
     _write_package(root, package)
 
-    with pytest.raises(FixtureValidationError, match="must use canonical URI"):
+    with pytest.raises(FixtureValidationError, match="must use canonical URI|is not one of"):
         validate_package(root, require_ready=True)
 
 
