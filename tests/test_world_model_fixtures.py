@@ -14,6 +14,7 @@ from scripts.validate_world_model_fixtures import (
     _claim_assertion_expression,
     _process_stage_premise_claims,
     compute_review_scope_digest,
+    compute_review_scope_digest_at_commit,
     validate_package,
 )
 
@@ -330,6 +331,70 @@ def test_ready_gate_rejects_postfreeze_source_symlink(tmp_path: Path) -> None:
 
     with pytest.raises(FixtureValidationError, match="must not contain symlinks"):
         validate_package(root, require_ready=True)
+
+
+@pytest.mark.parametrize(
+    "ancestor",
+    (
+        PACKAGE,
+        PACKAGE.parent,
+        Path("fixtures"),
+    ),
+)
+def test_ready_gate_rejects_symlinked_scope_ancestor(
+    tmp_path: Path,
+    ancestor: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    canonical = root / ancestor
+    external = tmp_path / ("external-" + "-".join(ancestor.parts))
+    shutil.copytree(canonical, external)
+    shutil.rmtree(canonical)
+    canonical.symlink_to(external, target_is_directory=True)
+
+    with pytest.raises(FixtureValidationError, match="must not contain symlinks"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_relative_in_repo_package_relocation(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    canonical = root / PACKAGE
+    relocated = root / "relocated-v1"
+    shutil.copytree(canonical, relocated)
+    shutil.rmtree(canonical)
+    canonical.symlink_to(Path("../../relocated-v1"), target_is_directory=True)
+
+    with pytest.raises(FixtureValidationError, match="must not contain symlinks"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_missing_current_scope_file(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    (root / "requirements.txt").unlink()
+
+    with pytest.raises(FixtureValidationError, match="not a regular file"):
+        validate_package(root, require_ready=True)
+
+
+def test_frozen_scope_rejects_symlink_blob(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _git(root, "init")
+    _git(root, "config", "user.email", "fixture-tests@example.invalid")
+    _git(root, "config", "user.name", "Fixture test")
+    requirements = root / "requirements.txt"
+    target = tmp_path / "external-requirements.txt"
+    target.write_bytes(requirements.read_bytes())
+    requirements.unlink()
+    requirements.symlink_to(target)
+    _git(root, "add", *REQUIRED_REVIEW_SCOPE)
+    _git(root, "commit", "-m", "test: freeze symlink scope entry")
+    frozen_commit = _git(root, "rev-parse", "HEAD")
+
+    with pytest.raises(FixtureValidationError, match="regular Git blob"):
+        compute_review_scope_digest_at_commit(root, frozen_commit)
 
 
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:

@@ -520,16 +520,57 @@ def _normalize_review_scope_bytes(relative_path: str, raw: bytes) -> bytes:
     return raw
 
 
-def _review_scope_bytes(relative_path: str, path: Path) -> bytes:
-    return _normalize_review_scope_bytes(relative_path, path.read_bytes())
+def _regular_repo_file(root: Path, relative_path: str) -> Path:
+    relative = Path(relative_path)
+    _require(
+        not relative.is_absolute() and ".." not in relative.parts,
+        f"review_scope path must be canonical and relative: {relative_path}",
+    )
+    root_path = root.absolute()
+    _require(
+        root_path.is_dir() and not root_path.is_symlink(),
+        "repository root must be a regular directory, not a symlink",
+    )
+    current = root_path
+    for index, part in enumerate(relative.parts):
+        current = current / part
+        _require(
+            not current.is_symlink(),
+            f"review_scope path must not contain symlinks: {relative_path}",
+        )
+        if index < len(relative.parts) - 1:
+            _require(
+                current.is_dir(),
+                f"review_scope parent is not a regular directory: {relative_path}",
+            )
+    _require(
+        current.is_file(),
+        f"review_scope artifact is not a regular file: {relative_path}",
+    )
+    try:
+        root_resolved = root_path.resolve(strict=True)
+        current_resolved = current.resolve(strict=True)
+    except OSError as exc:
+        raise FixtureValidationError(
+            f"review_scope artifact cannot be resolved: {relative_path}"
+        ) from exc
+    _require(
+        current_resolved.is_relative_to(root_resolved),
+        f"review_scope artifact must resolve inside repository root: {relative_path}",
+    )
+    return current
+
+
+def _review_scope_bytes(root: Path, relative_path: str) -> bytes:
+    return _normalize_review_scope_bytes(
+        relative_path,
+        _regular_repo_file(root, relative_path).read_bytes(),
+    )
 
 
 def _validate_v1_readme(root: Path) -> None:
     relative_path = str(PACKAGE_RELATIVE / "README.md")
-    normalized = _normalize_review_scope_bytes(
-        relative_path,
-        (root / relative_path).read_bytes(),
-    )
+    normalized = _review_scope_bytes(root, relative_path)
     _require(
         hashlib.sha256(normalized).hexdigest() == REQUIRED_V1_README_SHA256,
         "fixture README drift from the closed reviewed v1 document",
@@ -548,11 +589,9 @@ def compute_review_scope_digest(
     _require("review_scope" not in registry, "review registry must not define a mutable review_scope")
     digest = hashlib.sha256()
     for relative_path in REQUIRED_REVIEW_SCOPE:
-        path = root / relative_path
-        _require(path.is_file(), f"review_scope artifact is missing: {relative_path}")
         digest.update(relative_path.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(_review_scope_bytes(relative_path, path))
+        digest.update(_review_scope_bytes(root, relative_path))
         digest.update(b"\0")
     return digest.hexdigest()
 
@@ -586,12 +625,28 @@ def _git_commit_exists(root: Path, commit: str) -> bool:
     return result.returncode == 0
 
 
+def _frozen_regular_blob(root: Path, commit: str, relative_path: str) -> bytes:
+    entry = _git_output(root, "ls-tree", commit, "--", relative_path).decode(
+        "utf-8",
+        errors="replace",
+    ).strip()
+    match = re.fullmatch(
+        rf"(100644|100755) blob ([0-9a-f]{{40}})\t{re.escape(relative_path)}",
+        entry,
+    )
+    _require(
+        match is not None,
+        f"frozen review_scope artifact must be one regular Git blob: {relative_path}",
+    )
+    return _git_output(root, "cat-file", "blob", str(match.group(2)))
+
+
 def compute_review_scope_digest_at_commit(root: Path, commit: str) -> str:
     _git_output(root, "cat-file", "-e", f"{commit}^{{commit}}")
     _git_output(root, "merge-base", "--is-ancestor", commit, "HEAD")
     digest = hashlib.sha256()
     for relative_path in REQUIRED_REVIEW_SCOPE:
-        raw = _git_output(root, "show", f"{commit}:{relative_path}")
+        raw = _frozen_regular_blob(root, commit, relative_path)
         digest.update(relative_path.encode("utf-8"))
         digest.update(b"\0")
         digest.update(_normalize_review_scope_bytes(relative_path, raw))
@@ -1504,32 +1559,22 @@ def _canonical_source_path(
         not relative_path.is_absolute() and ".." not in relative_path.parts,
         f"{source_id} source URI must be a canonical relative path",
     )
-    source_path = package_root / relative_path
-    cursor = source_path
-    while cursor != package_root:
-        _require(
-            not cursor.is_symlink(),
-            f"{source_id} source artifact path must not contain symlinks",
-        )
-        cursor = cursor.parent
-    _require(source_path.is_file(), f"{source_id} file is missing")
-    try:
-        package_root_resolved = package_root.resolve(strict=True)
-        source_path_resolved = source_path.resolve(strict=True)
-    except OSError as exc:
-        raise FixtureValidationError(
-            f"{source_id} source artifact cannot be resolved"
-        ) from exc
-    _require(
-        source_path_resolved.is_relative_to(package_root_resolved),
-        f"{source_id} source artifact must resolve inside the fixture package",
-    )
     review_scope_path = str(PACKAGE_RELATIVE / relative_path)
     _require(
         review_scope_path in REQUIRED_REVIEW_SCOPE,
         f"{source_id} source artifact must belong to the immutable review scope",
     )
-    return source_path
+    try:
+        repo_root = package_root.parents[2]
+    except IndexError as exc:
+        raise FixtureValidationError(
+            f"{source_id} fixture package is not anchored to repository root"
+        ) from exc
+    _require(
+        package_root.absolute() == (repo_root / PACKAGE_RELATIVE).absolute(),
+        f"{source_id} fixture package path must be canonical",
+    )
+    return _regular_repo_file(repo_root, review_scope_path)
 
 
 def _validate_sources(sources: dict[str, dict[str, Any]], package_root: Path) -> None:

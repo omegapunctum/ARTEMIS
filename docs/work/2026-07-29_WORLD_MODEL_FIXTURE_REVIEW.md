@@ -5,9 +5,9 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `6d5ba0bef8fe24643211ff2eebfa3e474eb6f49f`.
-- Previous verdicts: semantic-model `READY` (`0/0/1`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
-- Next frozen candidate: this complete Source URI scope correction after publication and CI.
+- Previous reviewed head: `a99aa1d3b3009e9a3429b30ab379db3196202e95`.
+- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
+- Next frozen candidate: this complete repository-anchored scope correction after publication and CI.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
 
@@ -127,6 +127,8 @@ Semantic review on `fb6ffce…` found no unresolved semantic issue. Validator-in
 Both reviews on `534b580…` confirmed every prior contour and found the same remaining material class: visually rendered HTML/entity/fullwidth/confusable status declarations could evade lexical discovery when committed before freeze. The pending correction removes dependence on exhaustive confusable recognition by pinning the complete normalized README to a validator-owned digest. Only the exact canonical transition line normalizes; every other byte must match the closed v1 document. Structural and pre-freeze/full-READY regressions cover HTML, entity, fullwidth and confusable variants. The package remains `REVIEW_REQUIRED` until another exact-SHA CI and fresh review pair.
 
 Semantic review on `6d5ba0b…` returned `READY` with no critical or material findings and one minor stale working-record line. Validator-integrity review found one material scope bypass: Source URIs were not closed to the two canonical reviewed notebook paths, so traversal, absolute or symlink resolution could consume evidence outside the frozen commit scope. This correction binds each Source ID to one canonical URI, rejects path escapes and symlinks, requires the referenced artifact to be in the validator-owned scope and adds structural plus full-READY regressions. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews of the resulting exact SHA.
+
+Semantic review on `a99aa1d…` returned `READY` with no findings. Validator-integrity review confirmed the Source registry correction, then reproduced one material ancestor-path bypass: replacing `fixtures/world_model/v1/` or a higher scope parent with a symlink to identical bytes allowed current and frozen digests to agree while canonical Git paths no longer contained regular files. This correction anchors every current scope path to the repository root, rejects symlinks in every component, requires regular in-repository files and verifies every frozen entry is a regular Git blob before hashing. Full-READY regressions cover package and parent relocation, external and relative targets, missing current files and frozen symlink blobs. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews.
 
 ## Finalization rule
 
