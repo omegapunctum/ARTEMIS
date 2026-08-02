@@ -471,6 +471,39 @@ def test_cli_rejects_symlinked_validator_entrypoint(tmp_path: Path) -> None:
     assert "must not contain symlinks" in result.stdout
 
 
+def test_ready_gate_ignores_replacement_head_tree(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    requirements = root / "requirements.txt"
+    reviewed_bytes = requirements.read_bytes()
+    good_head = _git(root, "rev-parse", "HEAD")
+    requirements.write_text("tampered dependency\n", encoding="utf-8")
+    _git(root, "add", "requirements.txt")
+    _git(root, "commit", "-m", "test: bad actual HEAD tree")
+    bad_head = _git(root, "rev-parse", "HEAD")
+    requirements.write_bytes(reviewed_bytes)
+    _git(root, "replace", bad_head, good_head)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="current Git HEAD does not contain",
+    ):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_ignores_replacement_ancestry(tmp_path: Path) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    good_head = _git(root, "rev-parse", "HEAD")
+    tree = _git(root, "rev-parse", "HEAD^{tree}")
+    unrelated = _git(root, "commit-tree", tree, "-m", "test: unrelated HEAD")
+    _git(root, "update-ref", "HEAD", unrelated)
+    _git(root, "replace", unrelated, good_head)
+
+    with pytest.raises(FixtureValidationError, match="git verification failed"):
+        validate_package(root, require_ready=True)
+
+
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)

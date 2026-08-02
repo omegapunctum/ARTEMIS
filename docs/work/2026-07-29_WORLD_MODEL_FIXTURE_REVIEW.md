@@ -5,9 +5,9 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `8ec8100809156b9cf51b8d5772acfa6dfc695fc6`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
-- Next frozen candidate: this complete Git-root/current-HEAD binding correction after publication and CI.
+- Previous reviewed head: `682912e6d8be97ed44cc506a747d79ead5afa767`.
+- Previous verdicts: semantic-model `READY` (`0/0/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
+- Next frozen candidate: this replacement-object-resistant Git binding correction after publication and CI.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
 
@@ -132,6 +132,8 @@ Semantic review on `a99aa1d…` returned `READY` with no findings. Validator-int
 
 Both reviews on `8ec8100…` confirmed ancestor-symlink and frozen-mode rejection, then found one remaining root/tree identity class. A plain relocated directory could borrow its parent repository through `git -C`, the CLI bootstrap could follow a symlinked validator into another checkout, and current working bytes were not compared with regular blobs in current `HEAD`. This correction binds the resolved validation root to Git toplevel, binds the lexical CLI entrypoint to the canonical non-symlink validator, computes a normalized regular-blob digest for `HEAD` and requires `working tree == HEAD == frozen`. Regressions cover plain relocation, validator bootstrap symlink, current `120000`/`160000` modes and a missing HEAD entry. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
 
+Semantic review on `682912e…` returned `READY` with no findings. Validator-integrity review confirmed Git-root, CLI and HEAD/frozen equality, then reproduced one material local replacement-object bypass: ordinary Git commands could make exact SHA reads, ancestry and timestamps observe `refs/replace` or graft semantics rather than the real object graph. This correction runs every Git read with replacement objects disabled, including compatibility commit existence, and adds full-READY regressions for replacement HEAD content and ancestry. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
 ## Finalization rule
 
 The package can become `READY` only when:
@@ -140,7 +142,7 @@ The package can become `READY` only when:
 - both structured artifact fields exactly match the registry;
 - both decisions are `READY`;
 - critical findings and unresolved material findings are zero;
-- the frozen commit tree and current immutable review scope have the same digest;
+- normalized working tree, current `HEAD` regular blobs and frozen commit regular blobs have the same digest, with Git replacement objects disabled;
 - `record_time.reviewed_at`, `review_registry.json` and `package.json` are synchronized;
 - every review completion time is not before the frozen commit, no review/package time is future-dated, and package `reviewed_at` is not earlier than either review;
 - `python scripts/validate_world_model_fixtures.py --require-ready` passes;

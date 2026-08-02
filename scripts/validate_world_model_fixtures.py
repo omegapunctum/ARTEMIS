@@ -599,7 +599,7 @@ def compute_review_scope_digest(
 def _git_output(root: Path, *args: str) -> bytes:
     try:
         result = subprocess.run(
-            ("git", "-C", str(root), *args),
+            ("git", "--no-replace-objects", "-C", str(root), *args),
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -638,7 +638,7 @@ def _require_git_toplevel(root: Path) -> Path:
 def _git_commit_exists(root: Path, commit: str) -> bool:
     try:
         result = subprocess.run(
-            ("git", "-C", str(root), "cat-file", "-e", f"{commit}^{{commit}}"),
+            ("git", "--no-replace-objects", "-C", str(root), "cat-file", "-e", f"{commit}^{{commit}}"),
             check=False,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
