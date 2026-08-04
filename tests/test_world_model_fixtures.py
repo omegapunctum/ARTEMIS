@@ -504,6 +504,46 @@ def test_ready_gate_ignores_replacement_ancestry(tmp_path: Path) -> None:
         validate_package(root, require_ready=True)
 
 
+@pytest.mark.parametrize("as_symlink", (False, True))
+def test_ready_gate_rejects_legacy_git_grafts(
+    tmp_path: Path,
+    as_symlink: bool,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    head = _git(root, "rev-parse", "HEAD")
+    parent = _git(root, "rev-parse", "HEAD^")
+    graft_path = root / ".git" / "info" / "grafts"
+    graft_path.parent.mkdir(parents=True, exist_ok=True)
+    graft_payload = f"{head} {parent}\n"
+    if as_symlink:
+        external = tmp_path / "external-grafts"
+        external.write_text(graft_payload, encoding="utf-8")
+        graft_path.symlink_to(external)
+    else:
+        graft_path.write_text(graft_payload, encoding="utf-8")
+
+    with pytest.raises(FixtureValidationError, match="legacy Git grafts must be absent"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_sanitizes_inherited_git_repository_overrides(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    monkeypatch.setenv("GIT_DIR", str(tmp_path / "foreign.git"))
+    monkeypatch.setenv("GIT_WORK_TREE", str(tmp_path / "foreign-worktree"))
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.repositoryFormatVersion")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "999")
+
+    counts = validate_package(root, require_ready=True)
+
+    assert counts["Claim"] == 20
+
+
 def test_validator_rejects_orphan_references(tmp_path: Path) -> None:
     root = _copy_fixture(tmp_path)
     package = _read_package(root)

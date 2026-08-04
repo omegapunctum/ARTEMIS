@@ -8,6 +8,7 @@ import calendar
 import hashlib
 import json
 import math
+import os
 import re
 import subprocess
 import sys
@@ -43,6 +44,24 @@ REQUIRED_REVIEW_SCOPE = (
 CANONICAL_SOURCE_URIS = {
     "source-field-alpha": "sources/field-notebook-alpha.md",
     "source-field-beta": "sources/field-notebook-beta.md",
+}
+GIT_ENVIRONMENT_OVERRIDES = {
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_NOSYSTEM",
+    "GIT_CONFIG_PARAMETERS",
+    "GIT_CONFIG_SYSTEM",
+    "GIT_DIR",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_INDEX_FILE",
+    "GIT_NAMESPACE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_PREFIX",
+    "GIT_REPLACE_REF_BASE",
+    "GIT_WORK_TREE",
 }
 REVIEW_ARTIFACT_FIELDS = (
     "artifact_format",
@@ -596,6 +615,18 @@ def compute_review_scope_digest(
     return digest.hexdigest()
 
 
+def _git_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        if key in GIT_ENVIRONMENT_OVERRIDES or re.fullmatch(
+            r"GIT_CONFIG_(KEY|VALUE)_\\d+",
+            key,
+        ):
+            environment.pop(key)
+    environment["GIT_NO_REPLACE_OBJECTS"] = "1"
+    return environment
+
+
 def _git_output(root: Path, *args: str) -> bytes:
     try:
         result = subprocess.run(
@@ -603,6 +634,7 @@ def _git_output(root: Path, *args: str) -> bytes:
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            env=_git_environment(),
         )
     except (FileNotFoundError, subprocess.CalledProcessError) as exc:
         detail = ""
@@ -610,6 +642,25 @@ def _git_output(root: Path, *args: str) -> bytes:
             detail = exc.stderr.decode("utf-8", errors="replace").strip()
         raise FixtureValidationError(f"git verification failed: {detail or args[0]}") from exc
     return result.stdout
+
+
+def _require_no_legacy_git_grafts(root: Path) -> None:
+    graft_path_raw = (
+        _git_output(
+            root,
+            "rev-parse",
+            "--path-format=absolute",
+            "--git-path",
+            "info/grafts",
+        )
+        .decode("utf-8", errors="replace")
+        .strip()
+    )
+    graft_path = Path(graft_path_raw)
+    _require(
+        not graft_path.exists() and not graft_path.is_symlink(),
+        "legacy Git grafts must be absent during review verification",
+    )
 
 
 def _require_git_toplevel(root: Path) -> Path:
@@ -632,6 +683,7 @@ def _require_git_toplevel(root: Path) -> Path:
         root_resolved == top_level_resolved,
         "review root must exactly match the Git toplevel",
     )
+    _require_no_legacy_git_grafts(root)
     return top_level_resolved
 
 
@@ -642,6 +694,7 @@ def _git_commit_exists(root: Path, commit: str) -> bool:
             check=False,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
+            env=_git_environment(),
         )
     except FileNotFoundError:
         return False
