@@ -28,6 +28,14 @@ jobs:
         run: |
           python scripts/validate_world_model_fixtures.py --require-ready
 
+      - name: Validate active uncertainty contract
+        run: |
+          python scripts/validate_uncertainty_fixtures.py
+          pytest -q \
+            tests/test_uncertainty_fixtures.py \
+            tests/test_repository_governance_contract.py \
+            tests/test_concept_lock_contract.py
+
       - name: Run pytest on frozen reviewed commit
         run: |
           frozen_commit="$(python -c 'import json, pathlib; print(json.loads(pathlib.Path("fixtures/world_model/v1/review_registry.json").read_text(encoding="utf-8"))["frozen_commit"])')"
