@@ -619,7 +619,7 @@ def _git_environment() -> dict[str, str]:
     environment = os.environ.copy()
     for key in tuple(environment):
         if key in GIT_ENVIRONMENT_OVERRIDES or re.fullmatch(
-            r"GIT_CONFIG_(KEY|VALUE)_\\d+",
+            r"GIT_CONFIG_(KEY|VALUE)_\d+",
             key,
         ):
             environment.pop(key)
