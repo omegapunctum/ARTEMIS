@@ -1716,6 +1716,13 @@ def test_ready_gate_rejects_unresolvable_frozen_commit(tmp_path: Path) -> None:
         )
         review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
     _write_json(path, registry)
+    _git(
+        root,
+        "add",
+        str(path.relative_to(root)),
+        *(review["artifact"] for review in registry["reviews"]),
+    )
+    _git(root, "commit", "-m", "test: commit unresolvable frozen review metadata")
 
     with pytest.raises(FixtureValidationError, match="git verification failed"):
         validate_package(root, require_ready=True)
@@ -1727,6 +1734,8 @@ def test_ready_gate_rejects_null_reviewed_at(tmp_path: Path) -> None:
     package = _read_package(root)
     package["record_time"]["reviewed_at"] = None
     _write_package(root, package)
+    _git(root, "add", str(PACKAGE / "package.json"))
+    _git(root, "commit", "-m", "test: commit null package reviewed_at")
 
     with pytest.raises(FixtureValidationError, match="needs UTC ISO-8601 record_time.reviewed_at"):
         validate_package(root, require_ready=True)
@@ -2990,6 +2999,8 @@ def test_ready_gate_rejects_future_reviewed_at(tmp_path: Path) -> None:
     package = _read_package(root)
     package["record_time"]["reviewed_at"] = "2999-01-01T00:00:00Z"
     _write_package(root, package)
+    _git(root, "add", str(PACKAGE / "package.json"))
+    _git(root, "commit", "-m", "test: commit future package reviewed_at")
 
     with pytest.raises(FixtureValidationError, match="reviewed_at must not be in the future"):
         validate_package(root, require_ready=True)
@@ -3069,6 +3080,14 @@ def test_ready_gate_rejects_reviews_predating_frozen_commit(tmp_path: Path) -> N
         )
         review["artifact_sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
     _write_json(registry_path, registry)
+    _git(
+        root,
+        "add",
+        str(PACKAGE / "package.json"),
+        str(PACKAGE / "review_registry.json"),
+        *(review["artifact"] for review in registry["reviews"]),
+    )
+    _git(root, "commit", "-m", "test: commit retroactive review chronology")
 
     with pytest.raises(FixtureValidationError, match="must not predate the frozen commit"):
         validate_package(root, require_ready=True)
