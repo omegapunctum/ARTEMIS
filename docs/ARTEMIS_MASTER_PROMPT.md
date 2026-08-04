@@ -29,6 +29,7 @@ Architecture Atlas — thematic layer and technical baseline. `Life in Context` 
 - North Star: `docs/ARTEMIS_CONCEPT.md`;
 - active product: `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`;
 - world model: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- uncertainty profile: `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
 - epistemics: `docs/EPISTEMIC_CONTRACT.md`;
 - entities: `docs/ENTITY_MODEL.md`;
 - priorities/order: `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`;

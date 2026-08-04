@@ -83,6 +83,7 @@
 | Release check | `scripts/release_check.py` |
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
 | Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
+| Uncertainty-semantics owner | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` |
 | Public map data | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |

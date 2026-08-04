@@ -233,20 +233,6 @@ Uncertainty хранится отдельно и может включать:
 
 Uncertainty должна описывать, что именно неизвестно и как это влияет на Claim.
 
-For spatial-temporal uncertainty, a material record also declares:
-
-- the affected dimension;
-- explicit possible bound(s) or alternatives when known;
-- boundary inclusivity where relevant;
-- the projection effect (`show_possible`, `show_unknown`, `show_alternatives`, or
-  `prohibit_geometry`);
-- supporting Claim refs or an explicit missing-evidence state.
-
-Approximation without a declared range/tolerance is unresolved, not a license for the system to
-invent one. `not_before` and `not_after` constrain possible time; they do not assert an exact date.
-An unknown endpoint remains unknown. Query inclusion may be deterministic while the historical
-value remains uncertain.
-
 ### 3.7 Spatial-temporal and model assertions
 
 Claims применяются к:
@@ -483,10 +469,6 @@ Current checked-in artifacts implement only part of this contract:
 - current `same_movement` data remains compatibility content.
 
 Therefore schema/code sync of current models is not evidence that Epistemic Contract v2 is fully implemented.
-
-The #330 uncertainty extension is contract evidence only. It may define normalization, filtering
-and projection rules, but it does not migrate current Feature fields, publish a Leonardo corpus or
-claim that the public UI renders these states.
 
 ## 14. Change control
 

@@ -55,6 +55,7 @@ North Star не является release promise. Backend code не являет
 | Document | Owner role |
 |---|---|
 | `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` | Temporal/spatial/change/coverage/reconstruction semantics |
+| `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` | Scoped #330 normalization, filtering and projection profile |
 | `docs/ENTITY_MODEL.md` | Knowledge/research/runtime/context entity types |
 | `docs/EPISTEMIC_CONTRACT.md` | Claim/Evidence/uncertainty/inference semantics |
 | `docs/CONTENT_GOVERNANCE.md` | Candidate/review/correction/publish trust |
@@ -117,6 +118,10 @@ Primary: `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`.
 ### Spatial-temporal semantics
 
 Primary: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
+
+For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is
+`UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core
+object identity or runtime schemas.
 
 Examples:
 

@@ -23,6 +23,7 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "Полный canonical set" in structure
     assert "working-layer lifecycle registry" in work_registry
     assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in foundation
+    assert "UNCERTAINTY_SEMANTICS_CONTRACT.md" in foundation
     assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in structure
     assert "fixtures/" in structure
     assert "validate_world_model_fixtures.py" in structure

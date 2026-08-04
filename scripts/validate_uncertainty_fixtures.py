@@ -30,8 +30,7 @@ BASE_COMPATIBILITY_PATH = Path(
 )
 
 SEMANTIC_SCOPE = (
-    Path("docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md"),
-    Path("docs/EPISTEMIC_CONTRACT.md"),
+    Path("docs/UNCERTAINTY_SEMANTICS_CONTRACT.md"),
     README_PATH,
     SCHEMA_PATH,
     PACKAGE_PATH,
@@ -413,6 +412,16 @@ def _normalized_scope_bytes(path: Path, value: bytes) -> bytes:
             flags=re.MULTILINE,
         )
         return text.encode("utf-8")
+    if path == Path("docs/UNCERTAINTY_SEMANTICS_CONTRACT.md"):
+        text = value.decode("utf-8")
+        text = re.sub(
+            r"^- Status: `(REVIEW_REQUIRED|READY)`\.$",
+            "- Status: `REVIEW_REQUIRED`.",
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        return text.encode("utf-8")
     return value
 
 
@@ -515,6 +524,22 @@ def validate_repository(root: Path, require_ready: bool = False) -> list[str]:
     _validate_temporal(package, errors)
     _validate_spatial(package, errors)
     _validate_compatibility(root, compatibility, errors)
+
+    owner = (root / "docs/UNCERTAINTY_SEMANTICS_CONTRACT.md").read_text(encoding="utf-8")
+    owner_statuses = re.findall(
+        r"^- Status: `(REVIEW_REQUIRED|READY)`\.$", owner, flags=re.MULTILINE
+    )
+    if owner_statuses != [package["status"]]:
+        errors.append("uncertainty owner status must agree with package")
+    for required_term in (
+        "not_before",
+        "not_after",
+        "possible_overlap",
+        "unknown_route",
+        "unknown_precision",
+    ):
+        if required_term not in owner:
+            errors.append(f"uncertainty owner contract missing {required_term}")
 
     policy_ids = [policy["id"] for policy in package["projection_policies"]]
     if len(policy_ids) != len(set(policy_ids)):

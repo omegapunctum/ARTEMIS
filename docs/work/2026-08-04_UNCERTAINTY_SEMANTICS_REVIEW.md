@@ -8,6 +8,9 @@ Extend the reviewed `fixtures/world_model/v1` contract additively. The READY bas
 byte-for-byte unchanged. This work defines executable temporal/spatial uncertainty behavior; it
 does not migrate the database, API, public data or UI.
 
+Detailed #330 semantics are owned by `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`. The two base owner
+contracts remain byte-for-byte unchanged because they belong to the immutable #329 review scope.
+
 ## Required evidence
 
 - canonical `not_before` / `not_after`, open and unknown endpoint semantics;

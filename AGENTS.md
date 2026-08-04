@@ -10,9 +10,10 @@ Before changing the repository:
 2. Read `docs/PROJECT_TRUTH.md`.
 3. Read `docs/ARTEMIS_CONCEPT.md`.
 4. Read `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` for knowledge-model work.
-5. Read `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
-6. Read `docs/work/README.md` before using a working document.
-7. Read the task-specific owner documents.
+5. Read `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` for issue #330 temporal/spatial uncertainty work.
+6. Read `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
+7. Read `docs/work/README.md` before using a working document.
+8. Read the task-specific owner documents.
 
 Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 

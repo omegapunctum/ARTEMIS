@@ -109,43 +109,6 @@ UI не должен отображать `1452` как точный день и
 
 Версия данных не является историческим временем.
 
-### 4.4 Bounds, open values and window membership
-
-Temporal uncertainty is evaluated from explicit bounds, never from an implicit tolerance.
-
-- `not_before` is a lower bound;
-- `not_after` is an upper bound;
-- open-start and open-end extents keep the missing endpoint as unbounded;
-- an unknown extent has neither bound and is not silently placed on the timeline;
-- approximate values require an explicit possible range;
-- every boundary declares whether it is inclusive or exclusive;
-- alternatives remain separate bounded candidates and no candidate wins by array order.
-
-A selected closed time window returns one deterministic classification:
-
-| Result | Rule |
-|---|---|
-| `excluded` | every candidate is disjoint from the window after boundary inclusivity is applied |
-| `contained` | every candidate has finite bounds and is wholly contained in the window |
-| `possible_overlap` | at least one candidate overlaps, but the complete set is not wholly contained |
-| `unknown` | the extent has no temporal bounds; it appears only when unknown-time content is explicitly requested |
-
-Touching boundaries overlap only when both touching sides are inclusive. A filter may include
-`possible_overlap`, but the projection must preserve that label and must not present it as an exact
-placement.
-
-### 4.5 Calendar and lexical normalization
-
-The executable uncertainty contract uses proleptic Gregorian dates with one canonical lexical form:
-
-- `YYYY` for year precision;
-- `YYYY-MM` for month precision;
-- `YYYY-MM-DD` for day precision.
-
-Precision is not duration. A year-precision occurrence is known to fall within that year; it is not
-asserted to last for the full year. Unsupported calendars remain source text plus unresolved
-normalization state until a separately reviewed calendar policy exists.
-
 ## 5. Spatial model
 
 ### 5.1 Spatial extent
@@ -181,21 +144,6 @@ Region, route, coastline, habitat, political boundary или built object мог
 - прикреплять одну современную геометрию ко всем периодам без маркировки;
 - отображать спорную границу как точную;
 - интерполировать изменение границы как исторический факт без модели/evidence.
-
-### 5.3 Spatial precision and route modes
-
-Spatial projection distinguishes:
-
-- `exact` — only when the evidence supports the represented coordinate/geometry precision;
-- `approximate` — requires an explicit tolerance, area or bounded geometry;
-- `named_place` — place identity without invented point geometry;
-- `unknown` — no location is projected;
-- `documented_path` — source-bound route geometry;
-- `inferred_corridor` — analytical geometry with visible inference assumptions;
-- `unknown_route` — endpoints may be known, but no connecting path is drawn.
-
-Geometry coordinates alone do not prove `exact`. Current legacy coordinates without Claim-level
-precision evidence project as `unknown_precision`, not as target exact geometry.
 
 ## 6. Core knowledge objects
 
@@ -462,17 +410,6 @@ An executable contract fixture may be explicitly synthetic when its purpose is t
 8. influence Claim with challenge;
 9. disputed geometry/reconstruction;
 10. explicit corpus exclusion.
-
-The versioned uncertainty extension additionally covers:
-
-11. `not_before` and `not_after` bounds;
-12. inclusive and exclusive touching boundaries;
-13. open-start, open-end and wholly unknown time;
-14. approximate time with an explicit possible range;
-15. conflicting temporal alternatives with combined membership;
-16. approximate point, named place and unknown location;
-17. documented path, inferred corridor and unknown route;
-18. legacy year/coordinate projection with explicit semantic loss.
 
 Fixture validation must include negative cases for semantic collapse, orphan references, unsupported precision, derived proximity stored as Relation, invented compatibility evidence and corpus absence represented as historical absence.
 
