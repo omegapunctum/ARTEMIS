@@ -26,20 +26,24 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in structure
     assert "fixtures/" in structure
     assert "validate_world_model_fixtures.py" in structure
+    assert "validate_uncertainty_fixtures.py" in structure
+    assert "uncertainty/" in structure
 
 
-def test_world_model_contract_is_the_only_active_execution_order() -> None:
+def test_uncertainty_contract_is_the_only_active_execution_order() -> None:
     priorities = _read("docs/PRIORITIES.md")
     phases = _read("docs/PROJECT_PHASES.md")
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
     assert "Active cycle: World Model Contract" in priorities
-    assert "Complete #329 executable world-model fixtures" in priorities
+    assert "Complete #330 uncertainty semantics" in priorities
     assert "Активная фаза: **4.7 World Model Contract**" in phases
+    assert "Статус: **ACTIVE / ISSUE #330**" in phases
     assert "SUPERSEDED BEFORE GATES B–E" in phases
-    assert "complete #329 versioned world-model fixtures" in truth
-    assert "Active: World Model Contract / issue `#329`." in master_prompt
+    assert "preserve completed #329 / PR #336 world-model fixtures" in truth
+    assert "complete #330 uncertainty semantics" in truth
+    assert "Active: World Model Contract / issue `#330`." in master_prompt
     assert "superseded #323–#325 path and PR #314 are closed" in master_prompt
 
 

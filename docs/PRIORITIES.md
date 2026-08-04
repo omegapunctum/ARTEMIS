@@ -5,7 +5,7 @@
 - Тип: canonical active priorities.
 - Дата: 2026-07-28.
 - Active cycle: World Model Contract.
-- Active issue: GitHub issue `#329`.
+- Active issue: GitHub issue `#330`.
 - Accepted foundation: PR `#328` / issue `#327`.
 
 Работа получает приоритет, если она восстанавливает coherent spatial-temporal foundation, делает first World Slice проверяемым или предотвращает необратимую реализацию superseded Concept v2.
@@ -32,7 +32,7 @@ Exit: Foundation v3 PR reviewed and merged.
 - security/compatibility fixes only where necessary;
 - preserve completed Architecture Atlas assets.
 
-### P0.3 World-model contract and fixtures — ACTIVE
+### P0.3 World-model contract and fixtures — ACTIVE / #330
 
 - Entity/Event/State/Process/Trajectory/Region/Layer semantics;
 - temporal/spatial precision;
@@ -116,12 +116,13 @@ These are assets, not evidence that Foundation v3 is implemented.
 
 ## Execution order
 
-1. Complete #329 executable world-model fixtures and two independent reviews.
-2. Resolve #330 uncertainty and #331 relation-ladder semantics exposed by the fixtures.
-3. Freeze the #332 Leonardo World Slice.
-4. Implement the #333 synchronized explorer.
-5. Run #334 controlled validation.
-6. Record one decision and open at most one branch.
+1. Preserve completed #329 / PR #336 world-model fixtures as the reviewed READY base.
+2. Complete #330 uncertainty semantics and independent reviews.
+3. Resolve #331 relation-ladder semantics against the completed uncertainty contract.
+4. Freeze the #332 Leonardo World Slice.
+5. Implement the #333 synchronized explorer.
+6. Run #334 controlled validation.
+7. Record one decision and open at most one branch.
 
 ## Completion rule
 

@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-uncertainty-semantics-v1",
+  "status": "REVIEW_REQUIRED",
+  "record_time": "2026-08-04T16:21:47Z",
+  "base_package": {
+    "path": "fixtures/world_model/v1",
+    "status": "READY",
+    "merge_commit": "db60ffc89b93c8a3694b5f0b699e43e706786ba8"
+  },
+  "calendar_profile": {
+    "calendar": "proleptic_gregorian",
+    "supported_precisions": ["year", "month", "day"],
+    "window_results": ["excluded", "possible_overlap", "contained", "unknown"],
+    "unknown_policy": "exclude_unless_explicitly_requested"
+  },
+  "temporal_cases": [
+    {
+      "id": "exact-day",
+      "description": "An exact day instant is contained by the same inclusive day and excluded from the next day.",
+      "candidates": [
+        {
+          "id": "exact-day-primary",
+          "kind": "instant",
+          "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true},
+          "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true},
+          "basis_claim_refs": ["claim-exact-day"]
+        }
+      ],
+      "projection_policy": "show_exact",
+      "queries": [
+        {"id": "exact-day-hit", "start": "1504-03-01", "end": "1504-03-01", "start_inclusive": true, "end_inclusive": true, "expected": "contained"},
+        {"id": "exact-day-miss", "start": "1504-03-02", "end": "1504-03-02", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"}
+      ]
+    },
+    {
+      "id": "not-before-open-end",
+      "description": "A not-before constraint supplies only a lower bound and remains open toward the future.",
+      "candidates": [
+        {
+          "id": "not-before-open-end-primary",
+          "kind": "open_end_interval",
+          "lower": {"value": "1504", "precision": "year", "qualifier": "not_before", "inclusive": true},
+          "upper": null,
+          "basis_claim_refs": ["claim-not-before"]
+        }
+      ],
+      "projection_policy": "show_open_bound",
+      "queries": [
+        {"id": "not-before-prior", "start": "1503-01-01", "end": "1503-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"},
+        {"id": "not-before-current", "start": "1504-01-01", "end": "1504-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "possible_overlap"}
+      ]
+    },
+    {
+      "id": "not-after-open-start",
+      "description": "A not-after constraint supplies only an upper bound and remains open toward the past.",
+      "candidates": [
+        {
+          "id": "not-after-open-start-primary",
+          "kind": "open_start_interval",
+          "lower": null,
+          "upper": {"value": "1505", "precision": "year", "qualifier": "not_after", "inclusive": true},
+          "basis_claim_refs": ["claim-not-after"]
+        }
+      ],
+      "projection_policy": "show_open_bound",
+      "queries": [
+        {"id": "not-after-current", "start": "1505-01-01", "end": "1505-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "possible_overlap"},
+        {"id": "not-after-later", "start": "1506-01-01", "end": "1506-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"}
+      ]
+    },
+    {
+      "id": "bounded-not-before-not-after",
+      "description": "Explicit lower and upper constraints form a finite possible interval.",
+      "candidates": [
+        {
+          "id": "bounded-primary",
+          "kind": "bounded_interval",
+          "lower": {"value": "1503", "precision": "year", "qualifier": "not_before", "inclusive": true},
+          "upper": {"value": "1505", "precision": "year", "qualifier": "not_after", "inclusive": true},
+          "basis_claim_refs": ["claim-bounded"]
+        }
+      ],
+      "projection_policy": "show_possible",
+      "queries": [
+        {"id": "bounded-full", "start": "1503-01-01", "end": "1505-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "contained"},
+        {"id": "bounded-middle", "start": "1504-01-01", "end": "1504-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "possible_overlap"},
+        {"id": "bounded-miss", "start": "1506-01-01", "end": "1506-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"}
+      ]
+    },
+    {
+      "id": "exclusive-touch",
+      "description": "A query touching an exclusive lower boundary does not overlap.",
+      "candidates": [
+        {
+          "id": "exclusive-touch-primary",
+          "kind": "closed_interval",
+          "lower": {"value": "1504-03-02", "precision": "day", "qualifier": "exact", "inclusive": false},
+          "upper": {"value": "1504-03-05", "precision": "day", "qualifier": "exact", "inclusive": true},
+          "basis_claim_refs": ["claim-exclusive-boundary"]
+        }
+      ],
+      "projection_policy": "show_possible",
+      "queries": [
+        {"id": "exclusive-touch-only", "start": "1504-03-01", "end": "1504-03-02", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"},
+        {"id": "exclusive-touch-inside", "start": "1504-03-03", "end": "1504-03-03", "start_inclusive": true, "end_inclusive": true, "expected": "possible_overlap"}
+      ]
+    },
+    {
+      "id": "approximate-explicit-range",
+      "description": "Approximation has a source-declared possible range rather than a system-invented tolerance.",
+      "candidates": [
+        {
+          "id": "approximate-primary",
+          "kind": "approximate",
+          "lower": {"value": "1503", "precision": "year", "qualifier": "approximate_start", "inclusive": true},
+          "upper": {"value": "1504", "precision": "year", "qualifier": "approximate_end", "inclusive": true},
+          "basis_claim_refs": ["claim-approximate-range"]
+        }
+      ],
+      "projection_policy": "show_possible",
+      "queries": [
+        {"id": "approximate-full", "start": "1503-01-01", "end": "1504-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "contained"},
+        {"id": "approximate-partial", "start": "1503-01-01", "end": "1503-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "possible_overlap"},
+        {"id": "approximate-miss", "start": "1505-01-01", "end": "1505-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"}
+      ]
+    },
+    {
+      "id": "alternative-years",
+      "description": "Conflicting candidates are combined without selecting the first candidate.",
+      "candidates": [
+        {
+          "id": "alternative-1503",
+          "kind": "instant",
+          "lower": {"value": "1503", "precision": "year", "qualifier": "exact", "inclusive": true},
+          "upper": {"value": "1503", "precision": "year", "qualifier": "exact", "inclusive": true},
+          "basis_claim_refs": ["claim-alternative-1503"]
+        },
+        {
+          "id": "alternative-1504",
+          "kind": "instant",
+          "lower": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true},
+          "upper": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true},
+          "basis_claim_refs": ["claim-alternative-1504"]
+        }
+      ],
+      "projection_policy": "show_alternatives",
+      "queries": [
+        {"id": "alternative-one", "start": "1503-01-01", "end": "1503-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "possible_overlap"},
+        {"id": "alternative-all", "start": "1503-01-01", "end": "1504-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "contained"},
+        {"id": "alternative-none", "start": "1505-01-01", "end": "1505-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "excluded"}
+      ]
+    },
+    {
+      "id": "unknown-time",
+      "description": "Unknown time has no bounds and is excluded unless unknown-time content is explicitly requested.",
+      "candidates": [
+        {
+          "id": "unknown-time-primary",
+          "kind": "unknown",
+          "lower": null,
+          "upper": null,
+          "basis_claim_refs": ["claim-time-unknown"]
+        }
+      ],
+      "projection_policy": "show_unknown",
+      "queries": [
+        {"id": "unknown-window", "start": "1500-01-01", "end": "1510-12-31", "start_inclusive": true, "end_inclusive": true, "expected": "unknown"}
+      ]
+    }
+  ],
+  "spatial_cases": [
+    {
+      "id": "exact-point",
+      "mode": "exact_point",
+      "geometry": {"type": "Point", "coordinates": [10.0, 50.0]},
+      "basis_claim_refs": ["claim-exact-point"],
+      "uncertainty_refs": [],
+      "projection_policy": "show_exact"
+    },
+    {
+      "id": "approximate-point",
+      "mode": "approximate_point",
+      "geometry": {"type": "Point", "coordinates": [10.0, 50.0]},
+      "tolerance_m": 500,
+      "basis_claim_refs": ["claim-approximate-point"],
+      "uncertainty_refs": ["uncertainty-approximate-point"],
+      "projection_policy": "show_possible"
+    },
+    {
+      "id": "named-place",
+      "mode": "named_place",
+      "geometry": null,
+      "place_ref": "place-inland-workshop",
+      "basis_claim_refs": ["claim-named-place"],
+      "uncertainty_refs": [],
+      "projection_policy": "show_possible"
+    },
+    {
+      "id": "unknown-location",
+      "mode": "unknown",
+      "geometry": null,
+      "basis_claim_refs": ["claim-location-unknown"],
+      "uncertainty_refs": ["uncertainty-location-unknown"],
+      "projection_policy": "show_unknown"
+    },
+    {
+      "id": "documented-path",
+      "mode": "documented_path",
+      "geometry": {"type": "LineString", "coordinates": [[10.0, 50.0], [11.0, 50.5]]},
+      "basis_claim_refs": ["claim-documented-path"],
+      "uncertainty_refs": [],
+      "projection_policy": "show_exact"
+    },
+    {
+      "id": "inferred-corridor",
+      "mode": "inferred_corridor",
+      "geometry": {"type": "Polygon", "coordinates": [[[10.0, 50.0], [11.0, 50.0], [11.0, 51.0], [10.0, 51.0], [10.0, 50.0]]]},
+      "basis_claim_refs": ["claim-inferred-corridor-assumption"],
+      "uncertainty_refs": ["uncertainty-inferred-corridor"],
+      "projection_policy": "show_inferred_geometry"
+    },
+    {
+      "id": "unknown-route",
+      "mode": "unknown_route",
+      "geometry": null,
+      "endpoint_refs": ["place-north-harbor", "place-inland-workshop"],
+      "basis_claim_refs": ["claim-route-endpoints"],
+      "uncertainty_refs": ["uncertainty-route-unknown"],
+      "projection_policy": "prohibit_geometry"
+    }
+  ],
+  "projection_policies": [
+    {"id": "show_exact", "label": "Exact within declared precision", "required_disclosure": "Show the declared precision and supporting Claim."},
+    {"id": "show_possible", "label": "Possible extent", "required_disclosure": "Show the range or tolerance and do not center it as exact."},
+    {"id": "show_open_bound", "label": "Open temporal bound", "required_disclosure": "Show the known bound and keep the other side visibly open."},
+    {"id": "show_unknown", "label": "Unknown extent", "required_disclosure": "Keep the object discoverable without placing it at an invented time or coordinate."},
+    {"id": "show_alternatives", "label": "Competing alternatives", "required_disclosure": "Show all material candidates and their evidence without a default winner."},
+    {"id": "prohibit_geometry", "label": "No route geometry", "required_disclosure": "Show known endpoints and the gap; do not draw a connecting path."},
+    {"id": "show_inferred_geometry", "label": "Inferred analytical geometry", "required_disclosure": "Use a non-factual visual treatment and expose assumptions and uncertainty."}
+  ]
+}

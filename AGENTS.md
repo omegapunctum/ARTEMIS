@@ -46,10 +46,11 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Active work is issue `#329`: executable world-model fixtures and independent semantic review before schema/runtime migration.
+Issue `#329` is completed in PR `#336`. Active work is issue `#330`: executable temporal/spatial uncertainty semantics before relation-ladder or corpus work.
 
 - follow clean v3 child issues `#329`–`#335` rather than rewriting old issues;
-- no database/API/runtime migration before #329 and dependent uncertainty/relation decisions pass;
+- preserve `fixtures/world_model/v1` as the reviewed READY base;
+- no database/API/runtime migration before #330 and #331 pass;
 - the fixture package must not be described as public/runtime capability;
 - #332 Leonardo curation and #333 explorer remain gated;
 - security, compatibility and critical maintenance remain allowed.

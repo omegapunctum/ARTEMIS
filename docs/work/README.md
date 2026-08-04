@@ -13,7 +13,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-07-29_WORLD_MODEL_FIXTURE_REVIEW.md` | #329 fixture review scope, frozen-commit gate and finalization record | Two independent READY reviews and executable ready-mode pass |
+| `2026-08-04_UNCERTAINTY_SEMANTICS_REVIEW.md` | #330 scope, fixture review and finalization record | Two independent READY reviews and executable ready-mode pass |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
@@ -44,6 +44,7 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-07-29_WORLD_MODEL_FIXTURE_REVIEW.md` — #329 completed in PR `#336` with READY package and two independent reviews.
 - `2026-07-28_FOUNDATION_V3_DECISION.md` — accepted in PR `#328`.
 - `2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md` — backlog disposition completed.
 - `2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`

@@ -82,6 +82,7 @@
 | ETL | `scripts/export_airtable.py` |
 | Release check | `scripts/release_check.py` |
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
+| Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
 | Public map data | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
@@ -226,7 +227,8 @@ scripts/
 ├── import_features.py
 ├── release_check.py
 ├── semantic_data_gate.py
-└── validate_world_model_fixtures.py
+├── validate_world_model_fixtures.py
+└── validate_uncertainty_fixtures.py
 ```
 
 ```text
@@ -237,7 +239,7 @@ tests/
 ```text
 fixtures/
 └── world_model/
-    └── v1/
+    ├── v1/
         ├── compatibility/
         ├── sources/
         ├── README.md
@@ -245,12 +247,20 @@ fixtures/
         ├── package.json
         ├── review_registry.json
         └── schema.json
+    └── uncertainty/
+        └── v1/
+            ├── compatibility/
+            ├── README.md
+            ├── package.json
+            ├── review_registry.json
+            └── schema.json
 ```
 
 Правила:
 - `fixtures/` хранит versioned executable contract evidence, не public `data/*` и не runtime schema;
 - synthetic fixtures must be visibly marked and cannot support historical capability claims;
 - compatibility projections expose losses and never invent missing evidence/precision;
+- additive contract extensions reference the reviewed base and do not rewrite a READY package;
 - `scripts/` отвечают за ETL, import/export, checks, preparation;
 - `tests/` отвечают за автоматическую проверку контрактов и регрессий;
 - release discipline не должна жить только в Markdown без исполнимой проверки.

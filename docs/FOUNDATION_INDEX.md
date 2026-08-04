@@ -188,12 +188,11 @@ Foundation owner documents must be synchronized in one decision PR when identity
 
 Active:
 
-1. Issue `#329`: versioned executable world-model fixtures and two independent semantic reviews.
+1. Issue `#330`: executable temporal/spatial uncertainty semantics and independent review.
 
 Gated:
 
-2. Issue `#330`: temporal/spatial uncertainty semantics.
-3. Issue `#331`: coexistence/encounter/interaction/influence distinctions.
+2. Issue `#331`: coexistence/encounter/interaction/influence distinctions.
 4. Issue `#332`: Leonardo World Slice.
 5. Issue `#333`: synchronized explorer.
 6. Issue `#334`: contextual-learning pilot.
@@ -207,6 +206,10 @@ Frozen:
 - 3D/VR;
 - universal corpus;
 - product/platform expansion.
+
+Completed evidence:
+
+- issue `#329` / PR `#336`: READY world-model fixture package v1.
 
 ## 10. Change control
 
