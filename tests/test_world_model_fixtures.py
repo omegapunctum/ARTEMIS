@@ -152,6 +152,15 @@ def _make_ready_reviews(root: Path) -> None:
     registry["reviewed_content_sha256"] = content_digest
     registry["reviews"] = reviews
     _write_json(registry_path, registry)
+    _git(
+        root,
+        "add",
+        str(PACKAGE / "package.json"),
+        str(PACKAGE / "README.md"),
+        str(PACKAGE / "review_registry.json"),
+        *(review["artifact"] for review in reviews),
+    )
+    _git(root, "commit", "-m", "test: commit READY transition metadata")
 
 
 def test_world_model_fixture_package_passes_structural_validation() -> None:
@@ -832,6 +841,99 @@ def test_ready_gate_accepts_two_bound_distinct_review_artifacts(tmp_path: Path) 
     counts = validate_package(root, require_ready=True)
 
     assert counts["Claim"] == 20
+
+
+@pytest.mark.parametrize("symlink_parent", (False, True))
+def test_ready_gate_rejects_symlinked_review_artifact(
+    tmp_path: Path,
+    symlink_parent: bool,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    registry = json.loads(
+        (root / PACKAGE / "review_registry.json").read_text(encoding="utf-8")
+    )
+    artifact = root / registry["reviews"][0]["artifact"]
+    if symlink_parent:
+        canonical_parent = artifact.parent
+        external_parent = tmp_path / "external-review-artifacts"
+        shutil.copytree(canonical_parent, external_parent)
+        shutil.rmtree(canonical_parent)
+        canonical_parent.symlink_to(external_parent, target_is_directory=True)
+    else:
+        external = tmp_path / "external-review-artifact.md"
+        external.write_bytes(artifact.read_bytes())
+        artifact.unlink()
+        artifact.symlink_to(external)
+
+    with pytest.raises(FixtureValidationError, match="must not contain symlinks"):
+        validate_package(root, require_ready=True)
+
+
+@pytest.mark.parametrize(
+    "relative_path",
+    (
+        PACKAGE / "review_registry.json",
+        Path("docs/work/reviews/review-semantic.md"),
+    ),
+)
+def test_ready_gate_rejects_missing_ready_transition_head_entry(
+    tmp_path: Path,
+    relative_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    _git(root, "rm", "--cached", str(relative_path))
+    _git(root, "commit", "-m", "test: omit READY transition artifact from HEAD")
+
+    with pytest.raises(FixtureValidationError, match="regular Git blob"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_nonregular_review_artifact_head_mode(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    relative_path = Path("docs/work/reviews/review-semantic.md")
+    payload = tmp_path / "review-symlink-payload"
+    payload.write_text("review-validator.md", encoding="utf-8")
+    object_sha = _git(root, "hash-object", "-w", str(payload))
+    _git(
+        root,
+        "update-index",
+        "--add",
+        "--cacheinfo",
+        f"120000,{object_sha},{relative_path}",
+    )
+    _git(root, "commit", "-m", "test: nonregular review artifact mode")
+
+    with pytest.raises(FixtureValidationError, match="regular Git blob"):
+        validate_package(root, require_ready=True)
+
+
+def test_ready_gate_rejects_current_vs_head_review_artifact_drift(
+    tmp_path: Path,
+) -> None:
+    root = _copy_fixture(tmp_path)
+    _make_ready_reviews(root)
+    registry_path = root / PACKAGE / "review_registry.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    artifact = root / registry["reviews"][0]["artifact"]
+    artifact.write_text(
+        artifact.read_text(encoding="utf-8") + "\n",
+        encoding="utf-8",
+    )
+    registry["reviews"][0]["artifact_sha256"] = hashlib.sha256(
+        artifact.read_bytes()
+    ).hexdigest()
+    _write_json(registry_path, registry)
+
+    with pytest.raises(
+        FixtureValidationError,
+        match="READY transition artifact must exactly match current Git HEAD",
+    ):
+        validate_package(root, require_ready=True)
 
 
 def test_ready_gate_rejects_duplicate_reviewer_invocation(tmp_path: Path) -> None:

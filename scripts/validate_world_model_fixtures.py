@@ -45,6 +45,11 @@ CANONICAL_SOURCE_URIS = {
     "source-field-alpha": "sources/field-notebook-alpha.md",
     "source-field-beta": "sources/field-notebook-beta.md",
 }
+READY_TRANSITION_METADATA_PATHS = (
+    "fixtures/world_model/v1/package.json",
+    "fixtures/world_model/v1/README.md",
+    "fixtures/world_model/v1/review_registry.json",
+)
 GIT_ENVIRONMENT_OVERRIDES = {
     "GIT_ALTERNATE_OBJECT_DIRECTORIES",
     "GIT_CEILING_DIRECTORIES",
@@ -2929,7 +2934,11 @@ def _artifact_value(value: object) -> str:
 
 
 def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: bool) -> None:
-    registry = _read_json(root / PACKAGE_RELATIVE / "review_registry.json")
+    registry_path = _regular_repo_file(
+        root,
+        str(PACKAGE_RELATIVE / "review_registry.json"),
+    )
+    registry = _read_json(registry_path)
     _require(
         set(registry)
         == {
@@ -3107,8 +3116,7 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             not candidate.is_absolute() and ".." not in candidate.parts and candidate.suffix == ".md",
             "fixture review artifact path must be a safe Markdown path",
         )
-        artifact = root / candidate
-        _require(artifact.is_file(), f"fixture review artifact is missing: {artifact}")
+        artifact = _regular_repo_file(root, artifact_path)
         artifact_digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
         _require(review.get("artifact_sha256") == artifact_digest, "fixture review artifact checksum drift")
         artifact_fields = _parse_review_artifact(artifact)
@@ -3171,6 +3179,13 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             head_content_digest == computed_content_digest,
             "current Git HEAD does not contain the reviewed semantic content",
         )
+        for relative_path in (*READY_TRANSITION_METADATA_PATHS, *artifact_paths):
+            current_transition_bytes = _regular_repo_file(root, relative_path).read_bytes()
+            head_transition_bytes = _frozen_regular_blob(root, "HEAD", relative_path)
+            _require(
+                current_transition_bytes == head_transition_bytes,
+                f"READY transition artifact must exactly match current Git HEAD: {relative_path}",
+            )
         frozen_content_digest = compute_review_scope_digest_at_commit(root, frozen)
         _require(
             frozen_content_digest == computed_content_digest,

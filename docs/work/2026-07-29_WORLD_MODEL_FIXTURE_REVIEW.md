@@ -5,9 +5,9 @@
 - Issue: `#329`.
 - Package: `fixtures/world_model/v1/`.
 - Current decision: `REVIEW_REQUIRED`.
-- Previous reviewed head: `61a4e41472627d4cf9da3fc19c1ffbc565f16dbd`.
-- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/0`); validator-integrity `CHANGES_REQUIRED` (`0/1/0`).
-- Next frozen candidate: this legacy-graft-resistant Git binding correction after publication and CI.
+- Previous reviewed head: `817bfc28d6a18ebd1974355dd751721acaae6217`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/1`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
+- Current correction target: bind READY transition metadata and artifacts to canonical current paths and exact regular blobs in current `HEAD`; fresh reviews remain required after CI.
 - Required fresh independent reviews: `2`.
 - Runtime/data migration: none.
 
@@ -135,6 +135,8 @@ Both reviews on `8ec8100…` confirmed ancestor-symlink and frozen-mode rejectio
 Semantic review on `682912e…` returned `READY` with no findings. Validator-integrity review confirmed Git-root, CLI and HEAD/frozen equality, then reproduced one material local replacement-object bypass: ordinary Git commands could make exact SHA reads, ancestry and timestamps observe `refs/replace` or graft semantics rather than the real object graph. This correction runs every Git read with replacement objects disabled, including compatibility commit existence, and adds full-READY regressions for replacement HEAD content and ancestry. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
 
 Both independent reviews on `61a4e41…` confirmed the complete semantic package and replacement-ref resistance, then found one material legacy-history gap: `--no-replace-objects` does not disable `$GIT_DIR/info/grafts`, so local graft metadata could still fabricate frozen ancestry. The pending correction rejects any effective graft artifact, including a symlink, before READY Git reads and runs all Git subprocesses in a sanitized repository/config environment. Full-READY regressions cover regular and symlinked graft files plus inherited repository overrides. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
+Both reviews on `817bfc2…` confirmed the graft/environment correction and the complete semantic contour, then found one material release-tree identity gap: READY package/README transition bytes, `review_registry.json` and review artifacts could remain only in the working tree or use non-canonical/nonregular paths while `--require-ready` passed. The current correction keeps the frozen normalized semantic scope unchanged but requires every READY transition artifact to be a canonical regular current file whose exact bytes are a regular blob in current `HEAD`. The positive helper now commits a metadata-only READY transition; regressions cover file/parent symlinks, missing HEAD entries, nonregular modes and coordinated current-vs-HEAD drift. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
 
 ## Finalization rule
 
