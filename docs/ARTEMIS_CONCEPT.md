@@ -5,7 +5,7 @@
 - Тип: canonical foundational concept document.
 - Версия: 3.0.
 - Дата: 2026-07-28.
-- Статус: proposed by Foundation v3, pending merge.
+- Статус: active; accepted in PR `#328`.
 - Роль: фиксирует идентичность, миссию, инварианты и долгосрочное направление ARTEMIS.
 - Основание: Foundation v3 issue `#327` и `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md`.
 

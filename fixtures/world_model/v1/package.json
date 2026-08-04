@@ -1,0 +1,1956 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-world-model-contract-fixture-v1",
+  "fixture_mode": "synthetic_contract_fixture",
+  "status": "READY",
+  "record_time": {
+    "created_at": "2026-07-29T00:00:00Z",
+    "reviewed_at": "2026-08-04T14:50:24Z"
+  },
+  "world_slice": {
+    "id": "world-slice-fixture-basin-v1",
+    "type": "WorldSlice",
+    "label": "Fixture Basin, 1498–1510",
+    "version": 1,
+    "selection_rationale": "A deliberately fictional micro-world isolates model semantics from historical curation, which belongs to issue #332.",
+    "temporal_bounds": {
+      "kind": "closed_interval",
+      "start": "1498",
+      "end": "1510",
+      "precision": "year",
+      "calendar": "proleptic_gregorian",
+      "certainty": "fixture_defined",
+      "basis_claim_refs": [
+        "claim-process-north-stage",
+        "claim-process-south-stage"
+      ]
+    },
+    "spatial_bounds": {
+      "kind": "composite_scope",
+      "region_refs": [
+        "region-fixture-basin",
+        "region-south-coast"
+      ],
+      "place_refs": [
+        "entity-fixture-basin",
+        "place-north-harbor",
+        "place-inland-workshop",
+        "place-south-port",
+        "place-far-observatory"
+      ],
+      "precision": "fixture_defined",
+      "basis_claim_refs": [
+        "claim-region-v1",
+        "claim-region-v2",
+        "claim-region-south",
+        "claim-global-event"
+      ]
+    },
+    "included_layer_refs": [
+      "layer-biography",
+      "layer-politics",
+      "layer-exchange",
+      "layer-distant-context"
+    ],
+    "uncertainty_refs": [
+      "uncertainty-corpus-coverage"
+    ],
+    "dataset_identity": {
+      "kind": "fixture_package",
+      "value": "artemis-world-model-contract-fixture-v1@1.0.0"
+    },
+    "coverage_manifest_ref": "coverage_manifest.json",
+    "coverage_policy": {
+      "corpus_completeness": "explicitly_incomplete",
+      "absence_semantics": "not_historical_absence",
+      "source_scope": "synthetic_fixture_only",
+      "known_exclusion_ids": [
+        "unlisted-context-is-corpus-absence-only",
+        "inferred-route-geometry-is-missing",
+        "no-historical-completeness-or-absence-claim"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "source-field-alpha",
+      "type": "Source",
+      "title": "Synthetic field notebook alpha",
+      "source_type": "fixture_document",
+      "uri": "sources/field-notebook-alpha.md",
+      "sha256": "f505443da396bc35251c1cf4641513bfab86a85cb178b14decec68166c563515",
+      "review_state": "reviewed",
+      "provenance": {
+        "origin": "curator",
+        "created_for": "issue-329-contract-validation",
+        "historical_authority": false
+      }
+    },
+    {
+      "id": "source-field-beta",
+      "type": "Source",
+      "title": "Synthetic field notebook beta",
+      "source_type": "fixture_document",
+      "uri": "sources/field-notebook-beta.md",
+      "sha256": "bca28333ddfd9d59c578022437bcb55730704a91751bdb692ff8c7cab83a57fa",
+      "review_state": "reviewed",
+      "provenance": {
+        "origin": "curator",
+        "created_for": "issue-329-contract-validation",
+        "historical_authority": false
+      }
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer-biography",
+      "type": "Layer",
+      "label": "Biography and mobility",
+      "coverage_rule": "Only fixture records about Mara Vale and directly referenced participants are included.",
+      "claim_refs": [],
+      "uncertainty_refs": []
+    },
+    {
+      "id": "layer-politics",
+      "type": "Layer",
+      "label": "Political state",
+      "coverage_rule": "Only the council state and basin reconstructions needed by the fixture are included.",
+      "claim_refs": [],
+      "uncertainty_refs": []
+    },
+    {
+      "id": "layer-exchange",
+      "type": "Layer",
+      "label": "Coastal exchange",
+      "coverage_rule": "Only two synthetic process stages are included.",
+      "claim_refs": [],
+      "uncertainty_refs": []
+    },
+    {
+      "id": "layer-distant-context",
+      "type": "Layer",
+      "label": "Distant synchronous context",
+      "coverage_rule": "One distant event demonstrates local/global synchronization without implying interaction.",
+      "claim_refs": [],
+      "uncertainty_refs": []
+    }
+  ],
+  "entities": [
+    {
+      "id": "entity-mara-vale",
+      "type": "Entity",
+      "entity_kind": "Person",
+      "label": "Mara Vale",
+      "claim_refs": [
+        "claim-mara-identity"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "entity-keeper-ren",
+      "type": "Entity",
+      "entity_kind": "Person",
+      "label": "Keeper Ren",
+      "claim_refs": [
+        "claim-documented-encounter"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "entity-traveler-sol",
+      "type": "Entity",
+      "entity_kind": "Person",
+      "label": "Traveler Sol",
+      "claim_refs": [
+        "claim-traveler-workshop-presence"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "entity-north-harbor-council",
+      "type": "Entity",
+      "entity_kind": "Institution",
+      "label": "North Harbor council",
+      "claim_refs": [
+        "claim-influence-ren-council"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-influence-ren-council"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ]
+    },
+    {
+      "id": "entity-fixture-basin",
+      "type": "Entity",
+      "entity_kind": "Place",
+      "label": "Fixture Basin",
+      "claim_refs": [],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-politics"
+      ]
+    },
+    {
+      "id": "place-north-harbor",
+      "type": "Entity",
+      "entity_kind": "Place",
+      "label": "North Harbor",
+      "claim_refs": [
+        "claim-charter-event"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography",
+        "layer-politics",
+        "layer-exchange"
+      ]
+    },
+    {
+      "id": "place-inland-workshop",
+      "type": "Entity",
+      "entity_kind": "Place",
+      "label": "Inland Workshop",
+      "claim_refs": [
+        "claim-arrival-event",
+        "claim-arrival-event-1504"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-arrival-date"
+      ],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "place-south-port",
+      "type": "Entity",
+      "entity_kind": "Place",
+      "label": "South Port",
+      "claim_refs": [],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-exchange"
+      ]
+    },
+    {
+      "id": "place-far-observatory",
+      "type": "Entity",
+      "entity_kind": "Place",
+      "label": "Far Observatory",
+      "claim_refs": [
+        "claim-global-event"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-distant-context"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "event-north-harbor-charter",
+      "type": "Event",
+      "label": "North Harbor charter ceremony",
+      "temporal_extent": {
+        "kind": "instant",
+        "start": "1500-06-15",
+        "end": "1500-06-15",
+        "precision": "day",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-charter-event"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "point",
+        "place_ref": "place-north-harbor",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            10.0,
+            50.0
+          ]
+        },
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-charter-event"
+        ]
+      },
+      "participant_refs": [
+        "entity-mara-vale"
+      ],
+      "claim_refs": [
+        "claim-charter-event"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography",
+        "layer-politics"
+      ]
+    },
+    {
+      "id": "event-workshop-arrival",
+      "type": "Event",
+      "label": "Mara Vale arrives at Inland Workshop",
+      "temporal_extent": {
+        "kind": "approximate_instant",
+        "start": "1503",
+        "end": "1503",
+        "precision": "year",
+        "calendar": "proleptic_gregorian",
+        "certainty": "contested",
+        "basis_claim_refs": [
+          "claim-arrival-event"
+        ],
+        "alternatives": [
+          {
+            "start": "1504",
+            "end": "1504",
+            "precision": "year",
+            "basis_claim_refs": [
+              "claim-arrival-event-1504"
+            ]
+          }
+        ]
+      },
+      "spatial_extent": {
+        "kind": "named_place",
+        "place_ref": "place-inland-workshop",
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-arrival-event"
+        ]
+      },
+      "participant_refs": [
+        "entity-mara-vale"
+      ],
+      "claim_refs": [
+        "claim-arrival-event",
+        "claim-arrival-event-1504"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-arrival-date"
+      ],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "event-documented-workshop-meeting",
+      "type": "Event",
+      "label": "Workshop meeting",
+      "temporal_extent": {
+        "kind": "instant",
+        "start": "1504-03-01",
+        "end": "1504-03-01",
+        "precision": "day",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-documented-encounter"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "named_place",
+        "place_ref": "place-inland-workshop",
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-documented-encounter"
+        ]
+      },
+      "participant_refs": [
+        "entity-mara-vale",
+        "entity-keeper-ren"
+      ],
+      "claim_refs": [
+        "claim-documented-encounter"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "event-far-observation",
+      "type": "Event",
+      "label": "Far Observatory log entry",
+      "temporal_extent": {
+        "kind": "instant",
+        "start": "1504-03-01",
+        "end": "1504-03-01",
+        "precision": "day",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-global-event"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "point",
+        "place_ref": "place-far-observatory",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            100.0,
+            -20.0
+          ]
+        },
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-global-event"
+        ]
+      },
+      "participant_refs": [],
+      "claim_refs": [
+        "claim-global-event"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-distant-context"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "state-north-harbor-administration",
+      "type": "State",
+      "label": "North Harbor council administration",
+      "subject_ref": "entity-fixture-basin",
+      "state_kind": "administration",
+      "value": "administered_by_north_harbor_council",
+      "temporal_extent": {
+        "kind": "closed_interval",
+        "start": "1500",
+        "end": "1508",
+        "precision": "year",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-administration-state"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "region_ref",
+        "region_ref": "region-fixture-basin",
+        "precision": "versioned_reconstruction",
+        "basis_claim_refs": [
+          "claim-administration-state"
+        ]
+      },
+      "claim_refs": [
+        "claim-administration-state"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ]
+    },
+    {
+      "id": "state-mara-workshop-presence",
+      "type": "State",
+      "label": "Mara Vale present at Inland Workshop",
+      "subject_ref": "entity-mara-vale",
+      "state_kind": "presence",
+      "value": "present",
+      "temporal_extent": {
+        "kind": "closed_interval",
+        "start": "1504",
+        "end": "1508",
+        "precision": "year",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-trajectory-workshop"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "named_place",
+        "place_ref": "place-inland-workshop",
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-trajectory-workshop"
+        ]
+      },
+      "claim_refs": [
+        "claim-trajectory-workshop"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "state-traveler-workshop-presence",
+      "type": "State",
+      "label": "Traveler Sol present at Inland Workshop",
+      "subject_ref": "entity-traveler-sol",
+      "state_kind": "presence",
+      "value": "present",
+      "temporal_extent": {
+        "kind": "closed_interval",
+        "start": "1505",
+        "end": "1505",
+        "precision": "year",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-traveler-workshop-presence"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "named_place",
+        "place_ref": "place-inland-workshop",
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-traveler-workshop-presence"
+        ]
+      },
+      "claim_refs": [
+        "claim-traveler-workshop-presence"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    }
+  ],
+  "processes": [
+    {
+      "id": "process-coastal-exchange",
+      "type": "Process",
+      "label": "Analytical sequence of coastal exchange-marker observations",
+      "process_mode": "analytical_model",
+      "temporal_extent": {
+        "kind": "closed_interval",
+        "start": "1498",
+        "end": "1510",
+        "precision": "year",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-process-analytical-grouping"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "multiple_regions",
+        "region_refs": [
+          "region-fixture-basin",
+          "region-south-coast"
+        ],
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-process-analytical-grouping"
+        ]
+      },
+      "stages": [
+        {
+          "id": "process-stage-north",
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1498",
+            "end": "1503",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-process-north-stage"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "region_ref",
+            "region_ref": "region-fixture-basin",
+            "precision": "versioned_reconstruction",
+            "basis_claim_refs": [
+              "claim-process-north-stage"
+            ]
+          },
+          "claim_refs": [
+            "claim-process-north-stage"
+          ]
+        },
+        {
+          "id": "process-stage-south",
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1504",
+            "end": "1510",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-process-south-stage"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "region_ref",
+            "region_ref": "region-south-coast",
+            "precision": "versioned_reconstruction",
+            "basis_claim_refs": [
+              "claim-process-south-stage"
+            ]
+          },
+          "claim_refs": [
+            "claim-process-south-stage"
+          ]
+        }
+      ],
+      "claim_refs": [
+        "claim-process-analytical-grouping",
+        "claim-process-north-stage",
+        "claim-process-south-stage"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-process-mechanism"
+      ],
+      "layer_refs": [
+        "layer-exchange"
+      ]
+    }
+  ],
+  "trajectories": [
+    {
+      "id": "trajectory-mara-vale",
+      "type": "Trajectory",
+      "label": "Mara Vale fixture trajectory",
+      "subject_ref": "entity-mara-vale",
+      "coverage": "Endpoints are documented by the synthetic sources; the connecting route is deliberately unknown.",
+      "segments": [
+        {
+          "id": "trajectory-segment-north",
+          "segment_kind": "presence",
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1499",
+            "end": "1501",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-trajectory-north"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "named_place",
+            "place_ref": "place-north-harbor",
+            "precision": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-trajectory-north"
+            ]
+          },
+          "claim_refs": [
+            "claim-trajectory-north"
+          ],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "trajectory-segment-gap",
+          "segment_kind": "inferred_gap",
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1501",
+            "end": "1504",
+            "precision": "range",
+            "calendar": "proleptic_gregorian",
+            "certainty": "unknown_route",
+            "basis_claim_refs": [
+              "claim-trajectory-gap"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "unknown",
+            "precision": "unknown",
+            "basis_claim_refs": [
+              "claim-trajectory-gap"
+            ]
+          },
+          "claim_refs": [
+            "claim-trajectory-gap"
+          ],
+          "uncertainty_refs": [
+            "uncertainty-trajectory-route"
+          ]
+        },
+        {
+          "id": "trajectory-segment-workshop",
+          "segment_kind": "presence",
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1504",
+            "end": "1508",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-trajectory-workshop"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "named_place",
+            "place_ref": "place-inland-workshop",
+            "precision": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-trajectory-workshop"
+            ]
+          },
+          "claim_refs": [
+            "claim-trajectory-workshop"
+          ],
+          "uncertainty_refs": []
+        }
+      ],
+      "claim_refs": [
+        "claim-trajectory-north",
+        "claim-trajectory-gap",
+        "claim-trajectory-workshop"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-trajectory-route"
+      ],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    }
+  ],
+  "regions": [
+    {
+      "id": "region-fixture-basin",
+      "type": "Region",
+      "label": "Fixture Basin administration area",
+      "region_kind": "political_territory",
+      "geometry_versions": [
+        {
+          "id": "region-geometry-v1",
+          "reconstruction_mode": "scholarly_reconstruction",
+          "is_primary": true,
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1498",
+            "end": "1503",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-region-v1"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "polygon",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    9.0,
+                    49.0
+                  ],
+                  [
+                    11.0,
+                    49.0
+                  ],
+                  [
+                    11.0,
+                    51.0
+                  ],
+                  [
+                    9.0,
+                    51.0
+                  ],
+                  [
+                    9.0,
+                    49.0
+                  ]
+                ]
+              ]
+            },
+            "precision": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-region-v1"
+            ]
+          },
+          "claim_refs": [
+            "claim-region-v1"
+          ],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "region-geometry-v2",
+          "reconstruction_mode": "scholarly_reconstruction",
+          "is_primary": true,
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1504",
+            "end": "1510",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "contested",
+            "basis_claim_refs": [
+              "claim-region-v2"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "polygon",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    9.0,
+                    49.0
+                  ],
+                  [
+                    12.0,
+                    49.0
+                  ],
+                  [
+                    12.0,
+                    51.0
+                  ],
+                  [
+                    9.0,
+                    51.0
+                  ],
+                  [
+                    9.0,
+                    49.0
+                  ]
+                ]
+              ]
+            },
+            "precision": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-region-v2"
+            ]
+          },
+          "claim_refs": [
+            "claim-region-v2"
+          ],
+          "uncertainty_refs": [
+            "uncertainty-region-alternative"
+          ]
+        },
+        {
+          "id": "region-geometry-v2-alternative",
+          "reconstruction_mode": "alternative_reconstruction",
+          "is_primary": false,
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1504",
+            "end": "1510",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "contested",
+            "basis_claim_refs": [
+              "claim-region-v2-alternative"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "polygon",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    9.0,
+                    49.0
+                  ],
+                  [
+                    11.4,
+                    49.0
+                  ],
+                  [
+                    11.4,
+                    51.0
+                  ],
+                  [
+                    9.0,
+                    51.0
+                  ],
+                  [
+                    9.0,
+                    49.0
+                  ]
+                ]
+              ]
+            },
+            "precision": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-region-v2-alternative"
+            ]
+          },
+          "claim_refs": [
+            "claim-region-v2-alternative"
+          ],
+          "uncertainty_refs": [
+            "uncertainty-region-alternative"
+          ]
+        }
+      ],
+      "claim_refs": [
+        "claim-region-v1",
+        "claim-region-v2",
+        "claim-region-v2-alternative"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ]
+    },
+    {
+      "id": "region-south-coast",
+      "type": "Region",
+      "label": "South Coast exchange area",
+      "region_kind": "analytical_area",
+      "geometry_versions": [
+        {
+          "id": "region-south-coast-v1",
+          "reconstruction_mode": "analytical_model",
+          "is_primary": true,
+          "temporal_extent": {
+            "kind": "closed_interval",
+            "start": "1504",
+            "end": "1510",
+            "precision": "year",
+            "calendar": "proleptic_gregorian",
+            "certainty": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-region-south"
+            ]
+          },
+          "spatial_extent": {
+            "kind": "polygon",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    19.0,
+                    39.0
+                  ],
+                  [
+                    22.0,
+                    39.0
+                  ],
+                  [
+                    22.0,
+                    42.0
+                  ],
+                  [
+                    19.0,
+                    42.0
+                  ],
+                  [
+                    19.0,
+                    39.0
+                  ]
+                ]
+              ]
+            },
+            "precision": "fixture_defined",
+            "basis_claim_refs": [
+              "claim-region-south"
+            ]
+          },
+          "claim_refs": [
+            "claim-region-south"
+          ],
+          "uncertainty_refs": []
+        }
+      ],
+      "claim_refs": [
+        "claim-region-south"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-exchange"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "relation-mara-ren-encounter",
+      "type": "Relation",
+      "subject_ref": "entity-mara-vale",
+      "predicate": "documented_encounter",
+      "object_ref": "entity-keeper-ren",
+      "directionality": "symmetric",
+      "temporal_extent": {
+        "kind": "instant",
+        "start": "1504-03-01",
+        "end": "1504-03-01",
+        "precision": "day",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-documented-encounter"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "named_place",
+        "place_ref": "place-inland-workshop",
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-documented-encounter"
+        ]
+      },
+      "claim_refs": [
+        "claim-documented-encounter"
+      ],
+      "uncertainty_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ]
+    },
+    {
+      "id": "relation-ren-influences-council-protocol",
+      "type": "Relation",
+      "subject_ref": "entity-keeper-ren",
+      "predicate": "influence",
+      "object_ref": "entity-north-harbor-council",
+      "directionality": "directed",
+      "mechanism": "A proposed protocol phrase is asserted to have affected the council text, but the attribution is challenged by a second fixture source.",
+      "scope": "North Harbor council protocol wording only",
+      "temporal_extent": {
+        "kind": "closed_interval",
+        "start": "1504",
+        "end": "1505",
+        "precision": "year",
+        "calendar": "proleptic_gregorian",
+        "certainty": "contested",
+        "basis_claim_refs": [
+          "claim-influence-ren-council"
+        ]
+      },
+      "spatial_extent": {
+        "kind": "named_place",
+        "place_ref": "place-north-harbor",
+        "precision": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-influence-ren-council"
+        ]
+      },
+      "claim_refs": [
+        "claim-influence-ren-council"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-influence-ren-council"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ]
+    }
+  ],
+  "derived_observations": [
+    {
+      "id": "observation-mara-traveler-co-presence",
+      "type": "DerivedObservation",
+      "observation_kind": "co_presence",
+      "input_refs": [
+        "state-mara-workshop-presence",
+        "state-traveler-workshop-presence"
+      ],
+      "claim_ref": "claim-workshop-co-presence",
+      "relation_created": false
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim-mara-identity",
+      "type": "Claim",
+      "statement": "The synthetic notebook identifies Mara Vale as the recorded surveyor.",
+      "target_refs": [
+        "entity-mara-vale"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-charter-event",
+      "type": "Claim",
+      "statement": "The synthetic charter ceremony occurred at North Harbor on 1500-06-15 with Mara Vale participating. PARTICIPANT_ASSERTION[event=event-north-harbor-charter;participant=entity-mara-vale] GEOMETRY_ASSERTION[{\"coordinates\":[10.0,50.0],\"type\":\"Point\"}]",
+      "target_refs": [
+        "event-north-harbor-charter",
+        "place-north-harbor",
+        "entity-mara-vale"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-north-harbor-charter;context=event-north-harbor-charter;kind=Event;mode=none;dimension=temporal;sha256=d12dd97406d97505eed11906f3510715d2231d6a0a2ea03b7dd30d304687592c]",
+        "EXTENT_ASSERTION[owner=event-north-harbor-charter;context=event-north-harbor-charter;kind=Event;mode=none;dimension=spatial;sha256=43055dfc3356f4b515e9a347d037453c7ca2ada941a4884301fb92e20d6dda97]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-arrival-event",
+      "type": "Claim",
+      "statement": "Mara Vale arrived at Inland Workshop in approximately 1503. PARTICIPANT_ASSERTION[event=event-workshop-arrival;participant=entity-mara-vale]",
+      "target_refs": [
+        "event-workshop-arrival",
+        "place-inland-workshop",
+        "entity-mara-vale"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kind=Event;mode=none;dimension=temporal;sha256=38b413198a90773460768d4917e682eef776137e94514ab785e35082969262e8]",
+        "EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kind=Event;mode=none;dimension=spatial;sha256=eaa94122c72b16a6a91305a3603f8ab308c30585d449254433c65e06ee2fcb31]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "contested",
+      "confidence": "medium",
+      "evidence_state": "mixed",
+      "uncertainty_refs": [
+        "uncertainty-arrival-date"
+      ]
+    },
+    {
+      "id": "claim-arrival-event-1504",
+      "type": "Claim",
+      "statement": "A second synthetic notebook places Mara Vale's arrival at Inland Workshop in approximately 1504. PARTICIPANT_ASSERTION[event=event-workshop-arrival;participant=entity-mara-vale]",
+      "target_refs": [
+        "event-workshop-arrival",
+        "place-inland-workshop",
+        "entity-mara-vale"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-workshop-arrival;context=event-workshop-arrival;kind=Event;mode=none;dimension=temporal-alternative-0;sha256=8aad0dcda8bff11d4e55cb027a7807b6549e9ff1ca67bc1121f767a07e5d0329]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "contested",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty_refs": [
+        "uncertainty-arrival-date"
+      ]
+    },
+    {
+      "id": "claim-administration-state",
+      "type": "Claim",
+      "statement": "The North Harbor council administered the Fixture Basin from 1500 through 1508.",
+      "target_refs": [
+        "state-north-harbor-administration"
+      ],
+      "state_bindings": [
+        {
+          "state_ref": "state-north-harbor-administration",
+          "subject_ref": "entity-fixture-basin",
+          "state_kind": "administration",
+          "value": "administered_by_north_harbor_council"
+        }
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=temporal;sha256=a74aee96364b0dcff1039c01e7a249fb7c993cf83c797e7867b72045490d5272]",
+        "EXTENT_ASSERTION[owner=state-north-harbor-administration;context=state-north-harbor-administration;kind=State;mode=none;dimension=spatial;sha256=f3c1621752fd8360a4efc4058f633a4c686b5175c1ff094b7b0b826f5341f2ca]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-process-analytical-grouping",
+      "type": "Claim",
+      "statement": "The fixture groups two source-bound regional marker intervals as stages of one analytical Process without asserting diffusion, direction or mechanism.",
+      "target_refs": [
+        "process-coastal-exchange"
+      ],
+      "input_claim_refs": [
+        "claim-process-north-stage",
+        "claim-process-south-stage"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-coastal-exchange;kind=Process;mode=analytical_model;dimension=temporal;sha256=5ee5a142bed3820ddf1f0fd2d6017f0e845986b8ef0a4a9e5234625b60d43d83]",
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-coastal-exchange;kind=Process;mode=analytical_model;dimension=spatial;sha256=2c6b09859c600ed45515e3f3afd8508e1f974db55249b5be040b7afdd6f6ff3b]"
+      ],
+      "claim_kind": "observation",
+      "origin": "system",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "not_applicable",
+      "uncertainty_refs": [
+        "uncertainty-process-mechanism"
+      ]
+    },
+    {
+      "id": "claim-process-north-stage",
+      "type": "Claim",
+      "statement": "Exchange markers were recorded in the Fixture Basin region from 1498 through 1503.",
+      "target_refs": [
+        "process-coastal-exchange",
+        "region-fixture-basin",
+        "world-slice-fixture-basin-v1"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=temporal;sha256=bdc3a7a8f72190886324fe2e796be57231a52024735e7fac3e3c70f4737b44b6]",
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-north;kind=ProcessStage;mode=none;dimension=spatial;sha256=7cf250952bf7faad2e635606c7f8ed1b97654eeee95436a201ac10b8606ae039]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=temporal;sha256=8619367240e9359d506b2e8f2781e2c919e8e7d8f5404bb761c4ef5961aa38ee]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-process-south-stage",
+      "type": "Claim",
+      "statement": "Comparable exchange markers were recorded in the South Coast region from 1504 through 1510.",
+      "target_refs": [
+        "process-coastal-exchange",
+        "region-south-coast",
+        "world-slice-fixture-basin-v1"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=temporal;sha256=016c7e8c033f0afa7a214776b1500a232b4881ba785689faee35a8a0fb1dd217]",
+        "EXTENT_ASSERTION[owner=process-coastal-exchange;context=process-stage-south;kind=ProcessStage;mode=none;dimension=spatial;sha256=ef81fddc2d67b7912340468602be86c1bcca6048198994bcc6b20b54556ce788]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=temporal;sha256=8619367240e9359d506b2e8f2781e2c919e8e7d8f5404bb761c4ef5961aa38ee]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-trajectory-north",
+      "type": "Claim",
+      "statement": "Mara Vale was present at North Harbor from 1499 through 1501.",
+      "target_refs": [
+        "trajectory-mara-vale",
+        "entity-mara-vale",
+        "place-north-harbor"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-north;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=b6084998268a18b9c069c89b7857130d5a138727bf5396ede7d20d046cf5181e]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-north;kind=TrajectorySegment;mode=presence;dimension=spatial;sha256=f80c291948659cba3c0026e63b2179920a96a4ea4307721b259ab7d1c98e6ba4]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-trajectory-gap",
+      "type": "Claim",
+      "statement": "The unobserved trajectory gap runs from 1501 through 1504 between the recorded North Harbor and Inland Workshop endpoints; its route is unknown.",
+      "target_refs": [
+        "trajectory-mara-vale",
+        "entity-mara-vale"
+      ],
+      "input_claim_refs": [
+        "claim-trajectory-north",
+        "claim-trajectory-workshop"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=TrajectorySegment;mode=inferred_gap;dimension=temporal;sha256=f852de326c6709dcf51203ca04cec7c947097070b5d07344c1af59fd64cd3755]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-gap;kind=TrajectorySegment;mode=inferred_gap;dimension=spatial;sha256=0b79f0612dcc1ecc64332120696fbf11f6cc56e31e718f84b489801cd2f8ef4a]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": [
+        "uncertainty-trajectory-route"
+      ]
+    },
+    {
+      "id": "claim-trajectory-workshop",
+      "type": "Claim",
+      "statement": "Mara Vale was present at Inland Workshop from 1504 through 1508.",
+      "target_refs": [
+        "trajectory-mara-vale",
+        "entity-mara-vale",
+        "state-mara-workshop-presence"
+      ],
+      "state_bindings": [
+        {
+          "state_ref": "state-mara-workshop-presence",
+          "subject_ref": "entity-mara-vale",
+          "state_kind": "presence",
+          "value": "present"
+        }
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=9e96d8d52918be21c6a16271a01484237ecb9222209f679af68d43cc9438bb35]",
+        "EXTENT_ASSERTION[owner=state-mara-workshop-presence;context=state-mara-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=56a7e92d7e87e31f08879a5f1fb9b89e00ed2ac5f0e5311659f70f65eebd5adf]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;kind=TrajectorySegment;mode=presence;dimension=temporal;sha256=5cc26bdc59ad4d7e2cf77ed0e1d7fa6db0a1e5a7d1d22ec27b42dcea54d3c3a4]",
+        "EXTENT_ASSERTION[owner=trajectory-mara-vale;context=trajectory-segment-workshop;kind=TrajectorySegment;mode=presence;dimension=spatial;sha256=2e4540c6676b955bd1fb15c10d94b3a8f43c2b44cda271311bc5dd82a079bb27]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-traveler-workshop-presence",
+      "type": "Claim",
+      "statement": "Traveler Sol was recorded at Inland Workshop during 1505.",
+      "target_refs": [
+        "entity-traveler-sol",
+        "state-traveler-workshop-presence",
+        "place-inland-workshop"
+      ],
+      "state_bindings": [
+        {
+          "state_ref": "state-traveler-workshop-presence",
+          "subject_ref": "entity-traveler-sol",
+          "state_kind": "presence",
+          "value": "present"
+        }
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=temporal;sha256=e4264d84dfebe005b6385475abaf670274bbc470c266e70c4598f1db2214854b]",
+        "EXTENT_ASSERTION[owner=state-traveler-workshop-presence;context=state-traveler-workshop-presence;kind=State;mode=none;dimension=spatial;sha256=02a7dffa092c32c2ee44da88b17524c923bb2716c0458d69baba554d9021aabb]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-region-v1",
+      "type": "Claim",
+      "statement": "Boundary version A is the primary fixture reconstruction for 1498 through 1503. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[11.0,49.0],[11.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
+      "target_refs": [
+        "region-fixture-basin",
+        "world-slice-fixture-basin-v1"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=cbe37594ea36e26df2658c67626248f4d3c35d692ab3f1a0e779037e5e3d0820]",
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v1;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=15e48c745179e273d94f6b492252a9b142557bc196137c5ce917f8abb04a6cd6]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
+      ],
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-region-v2",
+      "type": "Claim",
+      "statement": "Expanded boundary version B is the primary fixture reconstruction for 1504 through 1510. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[12.0,49.0],[12.0,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
+      "target_refs": [
+        "region-fixture-basin",
+        "world-slice-fixture-basin-v1"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=temporal;sha256=b9994974b1c010eea46645d310dd5132ac6d61e3e9a135f342dc68f0a605a980]",
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2;kind=RegionGeometryVersion;mode=scholarly_reconstruction;dimension=spatial;sha256=44b5bc2d6410417a4f8c023da66b224f7310b24dfd298b94b7ebae2aa9af88ed]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
+      ],
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "contested",
+      "confidence": "medium",
+      "evidence_state": "mixed",
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ]
+    },
+    {
+      "id": "claim-region-v2-alternative",
+      "type": "Claim",
+      "statement": "An alternative fixture reconstruction excludes the eastern inlet from the 1504 boundary. GEOMETRY_ASSERTION[{\"coordinates\":[[[9.0,49.0],[11.4,49.0],[11.4,51.0],[9.0,51.0],[9.0,49.0]]],\"type\":\"Polygon\"}]",
+      "target_refs": [
+        "region-fixture-basin"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2-alternative;kind=RegionGeometryVersion;mode=alternative_reconstruction;dimension=temporal;sha256=613c04fd983d11ba2bd8835288fc387897aaf42f831a4544eb99bc8c7a862374]",
+        "EXTENT_ASSERTION[owner=region-fixture-basin;context=region-geometry-v2-alternative;kind=RegionGeometryVersion;mode=alternative_reconstruction;dimension=spatial;sha256=37c81472b1ac398e362ff4253b2987ccb9bc8b25cd59ed62066a1d923f32ccb7]"
+      ],
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "contested",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ]
+    },
+    {
+      "id": "claim-region-south",
+      "type": "Claim",
+      "statement": "The fixture defines the South Coast analytical region for the 1504–1510 marker observations. GEOMETRY_ASSERTION[{\"coordinates\":[[[19.0,39.0],[22.0,39.0],[22.0,42.0],[19.0,42.0],[19.0,39.0]]],\"type\":\"Polygon\"}]",
+      "target_refs": [
+        "region-south-coast",
+        "world-slice-fixture-basin-v1"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=temporal;sha256=f8a0b7e18784f33f8e6c3104a0b2eb1885e53422088d08e30aecb02028ffddc7]",
+        "EXTENT_ASSERTION[owner=region-south-coast;context=region-south-coast-v1;kind=RegionGeometryVersion;mode=analytical_model;dimension=spatial;sha256=410d9514730a0ed9f23e477af55d34b1efba2e6cf794e32370bcecab0de7b90e]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
+      ],
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-documented-encounter",
+      "type": "Claim",
+      "statement": "The synthetic register records Mara Vale and Keeper Ren in the same meeting at Inland Workshop on 1504-03-01. PARTICIPANT_ASSERTION[event=event-documented-workshop-meeting;participant=entity-mara-vale] PARTICIPANT_ASSERTION[event=event-documented-workshop-meeting;participant=entity-keeper-ren]",
+      "target_refs": [
+        "event-documented-workshop-meeting",
+        "relation-mara-ren-encounter",
+        "entity-mara-vale",
+        "entity-keeper-ren"
+      ],
+      "relation_binding": {
+        "relation_ref": "relation-mara-ren-encounter",
+        "subject_ref": "entity-mara-vale",
+        "predicate": "documented_encounter",
+        "object_ref": "entity-keeper-ren",
+        "directionality": "symmetric",
+        "temporal_extent": {
+          "kind": "instant",
+          "start": "1504-03-01",
+          "end": "1504-03-01",
+          "precision": "day",
+          "calendar": "proleptic_gregorian",
+          "certainty": "fixture_defined",
+          "basis_claim_refs": [
+            "claim-documented-encounter"
+          ]
+        },
+        "spatial_extent": {
+          "kind": "named_place",
+          "place_ref": "place-inland-workshop",
+          "precision": "fixture_defined",
+          "basis_claim_refs": [
+            "claim-documented-encounter"
+          ]
+        },
+        "mechanism": null,
+        "scope": null
+      },
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-documented-workshop-meeting;context=event-documented-workshop-meeting;kind=Event;mode=none;dimension=temporal;sha256=d78bdc5593004596f129d5e4bcbcdc4f183ec417ed6f8587f25dccbb16d4b759]",
+        "EXTENT_ASSERTION[owner=event-documented-workshop-meeting;context=event-documented-workshop-meeting;kind=Event;mode=none;dimension=spatial;sha256=d74d8082fcd8b304c7b813958e1382e99dd2807503ffdbab7fbfc7fee680e2e1]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-influence-ren-council",
+      "type": "Claim",
+      "statement": "During 1504–1505, Keeper Ren's proposed phrase influenced the wording adopted in the North Harbor council protocol.",
+      "target_refs": [
+        "entity-keeper-ren",
+        "entity-north-harbor-council",
+        "relation-ren-influences-council-protocol"
+      ],
+      "relation_binding": {
+        "relation_ref": "relation-ren-influences-council-protocol",
+        "subject_ref": "entity-keeper-ren",
+        "predicate": "influence",
+        "object_ref": "entity-north-harbor-council",
+        "directionality": "directed",
+        "temporal_extent": {
+          "kind": "closed_interval",
+          "start": "1504",
+          "end": "1505",
+          "precision": "year",
+          "calendar": "proleptic_gregorian",
+          "certainty": "contested",
+          "basis_claim_refs": [
+            "claim-influence-ren-council"
+          ]
+        },
+        "spatial_extent": {
+          "kind": "named_place",
+          "place_ref": "place-north-harbor",
+          "precision": "fixture_defined",
+          "basis_claim_refs": [
+            "claim-influence-ren-council"
+          ]
+        },
+        "mechanism": "A proposed protocol phrase is asserted to have affected the council text, but the attribution is challenged by a second fixture source.",
+        "scope": "North Harbor council protocol wording only"
+      },
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "contested",
+      "confidence": "medium",
+      "evidence_state": "mixed",
+      "uncertainty_refs": [
+        "uncertainty-influence-ren-council"
+      ]
+    },
+    {
+      "id": "claim-global-event",
+      "type": "Claim",
+      "statement": "A distant synthetic observation was logged at Far Observatory on 1504-03-01. GEOMETRY_ASSERTION[{\"coordinates\":[100.0,-20.0],\"type\":\"Point\"}]",
+      "target_refs": [
+        "event-far-observation",
+        "place-far-observatory",
+        "world-slice-fixture-basin-v1"
+      ],
+      "extent_assertions": [
+        "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=temporal;sha256=4a706d59db4f108a88f9fada30fd9bf4458381dff0dfdb694b39b2096c249474]",
+        "EXTENT_ASSERTION[owner=event-far-observation;context=event-far-observation;kind=Event;mode=none;dimension=spatial;sha256=91a0199853ad826335838f7701b642af8f15dbf5e3ac86f30ba7743b74844a1a]",
+        "EXTENT_ASSERTION[owner=world-slice-fixture-basin-v1;context=world-slice-fixture-basin-v1;kind=WorldSlice;mode=coverage;dimension=spatial;sha256=27e4914e4b65530117435e3b7573124e9aa2342487e2a86ffbeab35791266a15]"
+      ],
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "uncertainty_refs": []
+    },
+    {
+      "id": "claim-workshop-co-presence",
+      "type": "Claim",
+      "statement": "The modeled presence intervals for Mara Vale and Traveler Sol overlap at Inland Workshop during 1505.",
+      "target_refs": [
+        "observation-mara-traveler-co-presence"
+      ],
+      "claim_kind": "observation",
+      "origin": "system",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "not_applicable",
+      "input_claim_refs": [
+        "claim-trajectory-workshop",
+        "claim-traveler-workshop-presence"
+      ],
+      "uncertainty_refs": []
+    }
+  ],
+  "evidence_links": [
+    {
+      "id": "evidence-mara-identity",
+      "type": "EvidenceLink",
+      "claim_id": "claim-mara-identity",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-identity]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-charter",
+      "type": "EvidenceLink",
+      "claim_id": "claim-charter-event",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-charter]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-arrival-alpha",
+      "type": "EvidenceLink",
+      "claim_id": "claim-arrival-event",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-arrival]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-arrival-beta",
+      "type": "EvidenceLink",
+      "claim_id": "claim-arrival-event",
+      "source_id": "source-field-beta",
+      "locator": "LOCATOR[beta-arrival]",
+      "relation_to_claim": "challenges",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-arrival-1504-beta",
+      "type": "EvidenceLink",
+      "claim_id": "claim-arrival-event-1504",
+      "source_id": "source-field-beta",
+      "locator": "LOCATOR[beta-arrival]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-administration",
+      "type": "EvidenceLink",
+      "claim_id": "claim-administration-state",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-administration]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-process-north",
+      "type": "EvidenceLink",
+      "claim_id": "claim-process-north-stage",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-process-north]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-process-south",
+      "type": "EvidenceLink",
+      "claim_id": "claim-process-south-stage",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-process-south]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-trajectory-north",
+      "type": "EvidenceLink",
+      "claim_id": "claim-trajectory-north",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-trajectory-north]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-trajectory-gap",
+      "type": "EvidenceLink",
+      "claim_id": "claim-trajectory-gap",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-trajectory-gap]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-trajectory-workshop",
+      "type": "EvidenceLink",
+      "claim_id": "claim-trajectory-workshop",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-trajectory-workshop]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-traveler-workshop-presence",
+      "type": "EvidenceLink",
+      "claim_id": "claim-traveler-workshop-presence",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-traveler-workshop]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-region-v1",
+      "type": "EvidenceLink",
+      "claim_id": "claim-region-v1",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-region-v1]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-region-v2-alpha",
+      "type": "EvidenceLink",
+      "claim_id": "claim-region-v2",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-region-v2]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-region-v2-beta",
+      "type": "EvidenceLink",
+      "claim_id": "claim-region-v2",
+      "source_id": "source-field-beta",
+      "locator": "LOCATOR[beta-region-v2]",
+      "relation_to_claim": "challenges",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-region-v2-alternative",
+      "type": "EvidenceLink",
+      "claim_id": "claim-region-v2-alternative",
+      "source_id": "source-field-beta",
+      "locator": "LOCATOR[beta-region-v2]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-region-south",
+      "type": "EvidenceLink",
+      "claim_id": "claim-region-south",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-region-south]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-documented-encounter",
+      "type": "EvidenceLink",
+      "claim_id": "claim-documented-encounter",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-encounter]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-influence-ren-alpha",
+      "type": "EvidenceLink",
+      "claim_id": "claim-influence-ren-council",
+      "source_id": "source-field-alpha",
+      "locator": "LOCATOR[alpha-influence-ren]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-influence-ren-beta",
+      "type": "EvidenceLink",
+      "claim_id": "claim-influence-ren-council",
+      "source_id": "source-field-beta",
+      "locator": "LOCATOR[beta-influence-ren]",
+      "relation_to_claim": "challenges",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    },
+    {
+      "id": "evidence-global-event",
+      "type": "EvidenceLink",
+      "claim_id": "claim-global-event",
+      "source_id": "source-field-beta",
+      "locator": "LOCATOR[beta-global-event]",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "reviewer": "fixture-curator",
+      "review_state": "reviewed"
+    }
+  ],
+  "uncertainties": [
+    {
+      "id": "uncertainty-arrival-date",
+      "type": "Uncertainty",
+      "subject_or_claim_ref": "claim-arrival-event",
+      "dimension": "temporal_value",
+      "description": "The two synthetic sources give different approximate arrival years.",
+      "effect": "The UI must show 1503 and 1504 as alternatives and must not interpolate a day.",
+      "effect_policy": "preserve_temporal_alternatives",
+      "alternatives": [
+        "1503",
+        "1504"
+      ],
+      "basis_claim_refs": [
+        "claim-arrival-event",
+        "claim-arrival-event-1504"
+      ],
+      "review_state": "contested"
+    },
+    {
+      "id": "uncertainty-trajectory-route",
+      "type": "Uncertainty",
+      "subject_or_claim_ref": "trajectory-mara-vale",
+      "dimension": "trajectory_gap",
+      "description": "The route between documented endpoints is unknown.",
+      "effect": "No path geometry may be drawn as a documented movement.",
+      "effect_policy": "prohibit_invented_route_geometry",
+      "alternatives": [],
+      "basis_claim_refs": [
+        "claim-trajectory-gap"
+      ],
+      "review_state": "reviewed"
+    },
+    {
+      "id": "uncertainty-region-alternative",
+      "type": "Uncertainty",
+      "subject_or_claim_ref": "region-fixture-basin",
+      "dimension": "geometry_reconstruction",
+      "description": "The primary and alternative 1504 boundary reconstructions disagree about the eastern inlet.",
+      "effect": "Both geometries must remain selectable; neither may silently overwrite the other.",
+      "effect_policy": "preserve_selectable_geometry_alternatives",
+      "alternatives": [
+        "region-geometry-v2",
+        "region-geometry-v2-alternative"
+      ],
+      "basis_claim_refs": [
+        "claim-region-v2",
+        "claim-region-v2-alternative"
+      ],
+      "review_state": "contested"
+    },
+    {
+      "id": "uncertainty-process-mechanism",
+      "type": "Uncertainty",
+      "subject_or_claim_ref": "claim-process-analytical-grouping",
+      "dimension": "process",
+      "description": "The sources document marker intervals in two regions but do not establish diffusion, direction or mechanism.",
+      "effect": "The Process remains an analytical grouping and must not be rendered as a directional historical flow.",
+      "effect_policy": "prohibit_direction_or_mechanism_inference",
+      "alternatives": [],
+      "basis_claim_refs": [
+        "claim-process-north-stage",
+        "claim-process-south-stage"
+      ],
+      "review_state": "reviewed"
+    },
+    {
+      "id": "uncertainty-influence-ren-council",
+      "type": "Uncertainty",
+      "subject_or_claim_ref": "claim-influence-ren-council",
+      "dimension": "relation",
+      "description": "One source attributes the adopted phrase to Ren's proposal while another attributes it to prior guild rules.",
+      "effect": "The influence Relation remains contested and both EvidenceLinks must stay visible.",
+      "effect_policy": "preserve_conflicting_relation_evidence",
+      "alternatives": [
+        "ren_proposal_influenced_wording",
+        "prior_guild_rule_explains_wording"
+      ],
+      "basis_claim_refs": [
+        "claim-influence-ren-council"
+      ],
+      "review_state": "contested"
+    },
+    {
+      "id": "uncertainty-corpus-coverage",
+      "type": "Uncertainty",
+      "subject_or_claim_ref": "world-slice-fixture-basin-v1",
+      "dimension": "corpus_coverage",
+      "description": "The fixture is intentionally sparse and synthetic.",
+      "effect": "Missing objects cannot be interpreted as historical absence.",
+      "effect_policy": "prohibit_historical_absence_inference",
+      "alternatives": [],
+      "basis_claim_refs": [],
+      "review_state": "reviewed"
+    }
+  ],
+  "synchronized_views": [
+    {
+      "id": "view-1504-local-global",
+      "type": "SynchronizedView",
+      "label": "Local and distant context on 1504-03-01",
+      "time_state": {
+        "kind": "instant",
+        "start": "1504-03-01",
+        "end": "1504-03-01",
+        "precision": "day",
+        "calendar": "proleptic_gregorian",
+        "certainty": "fixture_defined",
+        "basis_claim_refs": [
+          "claim-documented-encounter",
+          "claim-global-event"
+        ]
+      },
+      "active_layer_refs": [
+        "layer-biography",
+        "layer-politics",
+        "layer-exchange",
+        "layer-distant-context"
+      ],
+      "camera_state": {
+        "kind": "bounds",
+        "bbox": [
+          8.5,
+          -21.0,
+          101.0,
+          52.0
+        ],
+        "coordinate_reference": "EPSG:4326"
+      },
+      "selected_object_refs": [
+        "entity-mara-vale",
+        "event-documented-workshop-meeting"
+      ],
+      "local_context_refs": [
+        "event-documented-workshop-meeting",
+        "state-mara-workshop-presence",
+        "region-fixture-basin",
+        "trajectory-mara-vale"
+      ],
+      "global_context_refs": [
+        "event-far-observation"
+      ],
+      "derived_observation_refs": [],
+      "comparison_scope": {
+        "mode": "local_global",
+        "reference_refs": [
+          "place-inland-workshop",
+          "place-far-observatory"
+        ]
+      },
+      "reconstruction_mode": "scholarly_reconstruction",
+      "uncertainty_display": {
+        "show_material": true,
+        "show_alternatives": true,
+        "show_corpus_limits": true
+      },
+      "dataset_identity": {
+        "kind": "fixture_package",
+        "value": "artemis-world-model-contract-fixture-v1@1.0.0"
+      }
+    }
+  ]
+}

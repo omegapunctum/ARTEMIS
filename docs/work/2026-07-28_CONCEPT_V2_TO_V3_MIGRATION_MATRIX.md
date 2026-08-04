@@ -83,18 +83,18 @@ Deep research may continue:
 - #322 and PR #326 as completed Architecture Layer fixtures/history;
 - PR #319 and PR #321 as foundation history/audit evidence.
 
-### Hold until Foundation merge
+### Held before Foundation merge — completed disposition
 
 - #286–#289;
 - #308–#313;
 - #323–#325;
 - PR #314.
 
-### After Foundation merge
+### Post-merge disposition — completed
 
-Close old Concept v2 implementation issues `not planned` with a link to #327. Do not rewrite titles/bodies into v3 tasks.
+Old Concept v2 implementation issues were closed `not planned` with a link to #327 without rewriting their titles or bodies.
 
-Create clean child issues for:
+Clean child issues were created for:
 
 1. universal world-model contract and fixtures;
 2. spatial-temporal uncertainty;

@@ -4,14 +4,15 @@
 
 - Тип: canonical active priorities.
 - Дата: 2026-07-28.
-- Active cycle: Foundation v3.
-- Parent: GitHub issue `#327`.
+- Active cycle: World Model Contract.
+- Active issue: GitHub issue `#329`.
+- Accepted foundation: PR `#328` / issue `#327`.
 
 Работа получает приоритет, если она восстанавливает coherent spatial-temporal foundation, делает first World Slice проверяемым или предотвращает необратимую реализацию superseded Concept v2.
 
 ## P0 — Foundation decision
 
-### P0.1 Canonical alignment
+### P0.1 Canonical alignment — COMPLETED
 
 - Concept v3;
 - product thesis/scope/truth;
@@ -23,7 +24,7 @@
 
 Exit: Foundation v3 PR reviewed and merged.
 
-### P0.2 Hold superseded execution
+### P0.2 Hold superseded execution — COMPLETED
 
 - no #323–#325 migration;
 - no #286–#289 / #308–#313 execution as active path;
@@ -31,7 +32,7 @@ Exit: Foundation v3 PR reviewed and merged.
 - security/compatibility fixes only where necessary;
 - preserve completed Architecture Atlas assets.
 
-### P0.3 World-model contract and fixtures
+### P0.3 World-model contract and fixtures — ACTIVE
 
 - Entity/Event/State/Process/Trajectory/Region/Layer semantics;
 - temporal/spatial precision;
@@ -115,13 +116,12 @@ These are assets, not evidence that Foundation v3 is implemented.
 
 ## Execution order
 
-1. Merge Foundation v3.
-2. Close superseded v2 execution issues and create clean v3 children.
-3. Review world-model fixtures and uncertainty semantics.
-4. Freeze Leonardo World Slice.
-5. Implement synchronized explorer.
-6. Run controlled validation.
-7. Record one decision and open at most one branch.
+1. Complete #329 executable world-model fixtures and two independent reviews.
+2. Resolve #330 uncertainty and #331 relation-ladder semantics exposed by the fixtures.
+3. Freeze the #332 Leonardo World Slice.
+4. Implement the #333 synchronized explorer.
+5. Run #334 controlled validation.
+6. Record one decision and open at most one branch.
 
 ## Completion rule
 

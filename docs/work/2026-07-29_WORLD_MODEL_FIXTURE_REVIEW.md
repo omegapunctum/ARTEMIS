@@ -1,0 +1,157 @@
+# World-model fixture package — review record
+
+## Status
+
+- Issue: `#329`.
+- Package: `fixtures/world_model/v1/`.
+- Current decision: `REVIEW_REQUIRED`.
+- Previous reviewed head: `817bfc28d6a18ebd1974355dd751721acaae6217`.
+- Previous verdicts: semantic-model `CHANGES_REQUIRED` (`0/1/1`); validator-integrity `CHANGES_REQUIRED` (`0/1/1`).
+- Current correction target: bind READY transition metadata and artifacts to canonical current paths and exact regular blobs in current `HEAD`; fresh reviews remain required after CI.
+- Required fresh independent reviews: `2`.
+- Runtime/data migration: none.
+
+## Canonical review scope
+
+The validator owns the immutable `world-model-v1-canonical` scope. Registry metadata can select that scope identifier but cannot remove paths from it. It contains:
+
+- `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- `docs/ENTITY_MODEL.md`;
+- `docs/EPISTEMIC_CONTRACT.md`;
+- fixture README, schema, package, coverage, compatibility and both synthetic source artifacts;
+- validator and regression tests;
+- dependency lock input in `requirements.txt`.
+
+The reviewed digest must match both the current normalized scope and the same files resolved from the frozen Git commit.
+
+## Required questions
+
+1. Are all core object kinds distinguishable?
+2. Are WorldSlice space/time bounds consistent with every included context?
+3. Does any geometry, date, route, Process or comparison imply evidence that does not exist?
+4. Are Claim dimensions independent and EvidenceLink locators reproducible?
+5. Is computed co-presence bound to its premises and kept outside historical Relations?
+6. Are Process stages temporally ordered, Region-bound and Claim-bound?
+7. Are alternative reconstructions visible and non-destructive?
+8. Does the compatibility projection resolve its pinned source commit and close every target reference without invented evidence?
+9. Does each SynchronizedView context intersect view time and bind local/global comparison references?
+10. Can review metadata, artifact drift or an unresolvable SHA bypass the READY gate?
+11. Is corpus absence kept separate from historical absence?
+12. Does any artifact overclaim current runtime capability?
+
+## Review cycle history
+
+The first repeated review cycle on `4e2c6ac…` found:
+
+- incomplete WorldSlice bounds and alternative-date uncertainty basis;
+- mutable review scope;
+- artifact/registry finding drift;
+- an unverified frozen SHA and compatibility source commit;
+- incomplete co-presence, Process and SynchronizedView semantic bindings;
+- under-constrained portable schema fields.
+
+Those findings are correction inputs, not READY evidence. Both reviewers must inspect the next frozen head independently; earlier conclusions cannot be reused.
+
+The second repeated review cycle on `9fed7d5…` additionally found:
+
+- Relation time/place precision not stated by the basis Claim and supporting locator;
+- empty/null reviewer identities and boolean finding counts accepted by READY;
+- open temporal/spatial/view shapes and incomplete temporal alternatives;
+- reversed temporal intervals and modeled contexts outside WorldSlice time;
+- compatibility Claims accepted from self-declared rather than deterministic mappings;
+- camera bounds accepted under a non-geographic CRS.
+
+The next correction makes these cases executable failures and remains `REVIEW_REQUIRED` until another fresh pair of reviews.
+
+The third repeated review cycle on `2d620365…` confirmed semantic readiness but found two remaining validator-integrity gaps:
+
+- Relation Claim/evidence did not fully bind both endpoints, the Relation target, non-place geometry and the exact interval expression;
+- compatibility mapping fixed IDs/statements/coordinates but still allowed confidence/review promotion or uncertainty rewriting.
+
+The next correction binds Relation endpoints and canonical extent expressions, compares the full compatibility target to one deterministic pinned mapping, and adds adversarial regressions for each bypass.
+
+The review cycle on `6ed30e67…` confirmed the previous geometry-set, exclusion-ID, locator-uniqueness and timestamp fixes, then found:
+
+- unbound Trajectory subject and generic Claim/identity payload;
+- co-presence accepted from an `absent` State;
+- WorldSlice bounds, manifest reference and corpus meaning outside the exact semantic gate;
+- background evidence accepted as sufficient for a strong supported Claim;
+- mutable uncertainty effect/visibility and hidden local/global layers;
+- topologically identical alternative polygons with rotated rings;
+- READY artifacts whose free narrative could contradict self-declared decision/count fields;
+- a truncated locator token and premature `reviewed_at` metadata.
+
+The pending correction makes these executable failures through typed State/coverage/uncertainty policies, exact Claim/identity/Trajectory and WorldSlice assertions, normalized polygon topology, evidence-strength derivation and closed structured review findings. These changes remain `REVIEW_REQUIRED` until a new frozen head passes CI and two fresh independent reviews.
+
+The review cycle on `fdcec3f4…` confirmed those corrections and then found:
+
+- complete Claim epistemic fields and exact target/backlink roles could be rewritten together with their source assertion;
+- structured State, Relation, Trajectory and extent payload could contradict the fixed Claim statement after coordinated assertion/checksum updates;
+- Event participant sets, change-object labels, Layer coverage and object-to-layer membership were outside one closed scenario envelope;
+- SynchronizedView local/global roles, camera, reconstruction mode and selection were not one executable spatial configuration;
+- an unclosed locator delimiter could truncate the reviewed passage, semantically duplicate EvidenceLinks could inflate evidence, and invalid polygon backtracking or exterior holes were accepted;
+- an otherwise READY package could use a future `reviewed_at` timestamp.
+
+The next correction pins the complete normalized v1 semantic payload to a validator-owned digest while preserving specialized structural checks. It also uses one strict locator tokenizer, rejects duplicate EvidenceLink tuples, validates polygon ring/hole/component topology, binds View selection to temporally visible context and bounds READY review time. The package remains `REVIEW_REQUIRED` until publication, CI and another fresh pair of independent reviews.
+
+The review cycle on `7c006211…` found no unresolved semantic-model blocker and confirmed that the normalized digest permits only the intended status/reviewed-at transition. Validator-integrity review found two remaining READY-envelope gaps:
+
+- duplicate JSON keys could be interpreted differently by first-wins consumers and Python's last-wins parser while the canonical review digest hid the ambiguity;
+- review/package timestamps could predate the frozen commit because attestations had no independently bound completion time.
+
+The pending correction applies one duplicate-key/non-finite rejecting loader to every JSON artifact. Each review and its closed artifact gains a strict UTC completion timestamp; every completion must follow the frozen commit and precede validation, while package `reviewed_at` must follow both reviews. These changes remain `REVIEW_REQUIRED` until a new exact SHA passes CI and two fresh independent reviews.
+
+The review cycle on `7a1c92b…` confirmed the full semantic, duplicate-key and chronology contours. Validator-integrity review found one remaining parser-divergence case: valid JSON exponent syntax such as `1e999` overflowed Python's default float conversion to infinity without invoking the lexical non-finite hook.
+
+The pending correction adds strict finite float parsing, a recursive finiteness assertion and non-finite-rejecting canonical serialization. Full-READY regressions cover positive and negative exponent overflow. The package remains `REVIEW_REQUIRED` until the resulting SHA passes CI and another fresh review pair.
+
+The review cycle on `2da47509…` confirmed overflow rejection but found one shared finite-number class: precision-rich decimal tokens and nonzero underflow could round to the same binary64 value before semantic and review-scope hashing, allowing post-freeze raw package drift.
+
+The pending correction defines an explicit canonical binary64 lexical contract. A JSON decimal must be numerically equal to the shortest round-trip representation of its parsed float; precision loss, nonzero underflow and signed zero are rejected. Full-READY regressions cover coordinate precision drift, positive/negative underflow and integer/decimal signed zero. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
+The review cycle on `a5af4b97…` confirmed the precision, underflow and signed-zero guards but found two remaining material equivalence classes:
+
+- numerically identical spellings such as `11.40`, `1.14e1` and `114e-1` normalized to the same reviewed content, allowing post-freeze raw-token drift;
+- an alternative Region boundary could reuse the primary XY footprint and differ only by an unmodeled Z coordinate.
+
+The validator-integrity review also noted that second-precision review completion equal to the frozen commit timestamp is accepted. The contract intentionally defines that boundary as “not before,” matching the executable comparison and avoiding an unverifiable sub-second ordering claim. The pending correction requires one exact lexical spelling for every accepted JSON number and exactly two coordinates for every v1 EPSG:4326 position. It remains `REVIEW_REQUIRED` until publication, CI and two new independent reviews of the resulting exact SHA.
+
+The semantic-model review on `fe1893b…` found no unresolved finding and confirmed every accumulated model/provenance contour. Validator-integrity review confirmed numeric aliases and Z-only geometry are closed, then found one representation-level footprint alias: a one-component `MultiPolygon` could wrap a primary `Polygon` unchanged and be counted as a different alternative. The pending correction closes v1 Region geometry to one `polygon`/`Polygon` representation and adds the coordinated wrapper regression. The semantic READY verdict applies only to `fe1893b…`; both tracks must review the next exact SHA afresh.
+
+Both independent reviews on `70069c7…` confirmed the complete numeric, geometry, provenance and READY contours, then found the same material scope omission: the fixture README states normative v1 semantic/corpus/runtime boundaries but was not included in the immutable digest. A post-freeze README could therefore contradict the reviewed model while READY still passed. The pending correction adds the exact README path to validator-owned scope, normalizes only its transition-status line and adds a full-READY overclaim regression. The package remains `REVIEW_REQUIRED` until another exact SHA passes CI and two fresh reviews.
+
+The reviews on `afb7e78…` confirmed README content is frozen and found no other unresolved model contour. Validator-integrity review classified one remaining readiness-truth mismatch as material: the normalized README status was not compared with package/registry status, so premature `READY` or stale `REVIEW_REQUIRED` display text passed. It also found integer/float type confusion in `required_review_count`. The pending correction synchronizes all three statuses and requires exact integer review cardinality, with regressions in structural and full-READY modes. It remains `REVIEW_REQUIRED` pending a new exact SHA, CI and fresh reviews.
+
+Semantic review on `fb6ffce…` found no unresolved semantic issue. Validator-integrity review confirmed synchronized canonical statuses, then found one material presentation alias: an additional Markdown/HTML-decorated `Status` declaration was outside the exact-line parser and could contradict readiness truth. The pending correction closes the README declaration envelope to exactly one canonical line and rejects any additional line containing a status declaration before digest normalization. Structural premature and frozen stale-alias regressions are included; another exact-SHA CI and review pair remain required.
+
+Both reviews on `534b580…` confirmed every prior contour and found the same remaining material class: visually rendered HTML/entity/fullwidth/confusable status declarations could evade lexical discovery when committed before freeze. The pending correction removes dependence on exhaustive confusable recognition by pinning the complete normalized README to a validator-owned digest. Only the exact canonical transition line normalizes; every other byte must match the closed v1 document. Structural and pre-freeze/full-READY regressions cover HTML, entity, fullwidth and confusable variants. The package remains `REVIEW_REQUIRED` until another exact-SHA CI and fresh review pair.
+
+Semantic review on `6d5ba0b…` returned `READY` with no critical or material findings and one minor stale working-record line. Validator-integrity review found one material scope bypass: Source URIs were not closed to the two canonical reviewed notebook paths, so traversal, absolute or symlink resolution could consume evidence outside the frozen commit scope. This correction binds each Source ID to one canonical URI, rejects path escapes and symlinks, requires the referenced artifact to be in the validator-owned scope and adds structural plus full-READY regressions. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews of the resulting exact SHA.
+
+Semantic review on `a99aa1d…` returned `READY` with no findings. Validator-integrity review confirmed the Source registry correction, then reproduced one material ancestor-path bypass: replacing `fixtures/world_model/v1/` or a higher scope parent with a symlink to identical bytes allowed current and frozen digests to agree while canonical Git paths no longer contained regular files. This correction anchors every current scope path to the repository root, rejects symlinks in every component, requires regular in-repository files and verifies every frozen entry is a regular Git blob before hashing. Full-READY regressions cover package and parent relocation, external and relative targets, missing current files and frozen symlink blobs. The package remains `REVIEW_REQUIRED` pending CI and two fresh reviews.
+
+Both reviews on `8ec8100…` confirmed ancestor-symlink and frozen-mode rejection, then found one remaining root/tree identity class. A plain relocated directory could borrow its parent repository through `git -C`, the CLI bootstrap could follow a symlinked validator into another checkout, and current working bytes were not compared with regular blobs in current `HEAD`. This correction binds the resolved validation root to Git toplevel, binds the lexical CLI entrypoint to the canonical non-symlink validator, computes a normalized regular-blob digest for `HEAD` and requires `working tree == HEAD == frozen`. Regressions cover plain relocation, validator bootstrap symlink, current `120000`/`160000` modes and a missing HEAD entry. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
+Semantic review on `682912e…` returned `READY` with no findings. Validator-integrity review confirmed Git-root, CLI and HEAD/frozen equality, then reproduced one material local replacement-object bypass: ordinary Git commands could make exact SHA reads, ancestry and timestamps observe `refs/replace` or graft semantics rather than the real object graph. This correction runs every Git read with replacement objects disabled, including compatibility commit existence, and adds full-READY regressions for replacement HEAD content and ancestry. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
+Both independent reviews on `61a4e41…` confirmed the complete semantic package and replacement-ref resistance, then found one material legacy-history gap: `--no-replace-objects` does not disable `$GIT_DIR/info/grafts`, so local graft metadata could still fabricate frozen ancestry. The pending correction rejects any effective graft artifact, including a symlink, before READY Git reads and runs all Git subprocesses in a sanitized repository/config environment. Full-READY regressions cover regular and symlinked graft files plus inherited repository overrides. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
+Both reviews on `817bfc2…` confirmed the graft/environment correction and the complete semantic contour, then found one material release-tree identity gap: READY package/README transition bytes, `review_registry.json` and review artifacts could remain only in the working tree or use non-canonical/nonregular paths while `--require-ready` passed. The current correction keeps the frozen normalized semantic scope unchanged but requires every READY transition artifact to be a canonical regular current file whose exact bytes are a regular blob in current `HEAD`. The positive helper now commits a metadata-only READY transition; regressions cover file/parent symlinks, missing HEAD entries, nonregular modes and coordinated current-vs-HEAD drift. The package remains `REVIEW_REQUIRED` pending CI and fresh reviews.
+
+## Finalization rule
+
+The package can become `READY` only when:
+
+- two fresh, separate agent-task review artifacts inspect the same resolvable frozen commit;
+- both structured artifact fields exactly match the registry;
+- both decisions are `READY`;
+- critical findings and unresolved material findings are zero;
+- normalized working tree, current `HEAD` regular blobs and frozen commit regular blobs have the same digest, with Git replacement objects disabled;
+- `record_time.reviewed_at`, `review_registry.json` and `package.json` are synchronized;
+- every review completion time is not before the frozen commit, no review/package time is future-dated, and package `reviewed_at` is not earlier than either review;
+- `python scripts/validate_world_model_fixtures.py --require-ready` passes;
+- repository release/governance checks pass.
+
+Reviewer identity is an external operational fact: the validator verifies distinct invocation attestations and content bindings, while merge authority verifies the actual separate executions.
+
+Until then #329 remains open and #332 remains gated.

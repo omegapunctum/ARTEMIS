@@ -5,7 +5,7 @@
 - Тип: canonical foundation entity model.
 - Версия: 3.0.
 - Дата: 2026-07-28.
-- Статус: proposed by Foundation v3.
+- Статус: active; accepted in PR `#328`.
 - Роль: фиксирует типы knowledge, research, runtime и context entities.
 - Пространственно-временная семантика: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
 - Эпистемическая семантика: `EPISTEMIC_CONTRACT.md`.

@@ -24,21 +24,23 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "working-layer lifecycle registry" in work_registry
     assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in foundation
     assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in structure
+    assert "fixtures/" in structure
+    assert "validate_world_model_fixtures.py" in structure
 
 
-def test_foundation_v3_is_the_only_active_execution_order() -> None:
+def test_world_model_contract_is_the_only_active_execution_order() -> None:
     priorities = _read("docs/PRIORITIES.md")
     phases = _read("docs/PROJECT_PHASES.md")
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: Foundation v3" in priorities
-    assert "1. Merge Foundation v3." in priorities
-    assert "Активная фаза: **4.6 Foundation v3**" in phases
+    assert "Active cycle: World Model Contract" in priorities
+    assert "Complete #329 executable world-model fixtures" in priorities
+    assert "Активная фаза: **4.7 World Model Contract**" in phases
     assert "SUPERSEDED BEFORE GATES B–E" in phases
-    assert "1. review and merge Foundation v3;" in truth
-    assert "Active: Foundation v3." in master_prompt
-    assert "No #323–#325 migration and no PR #314 merge" in master_prompt
+    assert "complete #329 versioned world-model fixtures" in truth
+    assert "Active: World Model Contract / issue `#329`." in master_prompt
+    assert "superseded #323–#325 path and PR #314 are closed" in master_prompt
 
 
 def test_obsolete_plans_are_archived_and_cannot_open_scope() -> None:
@@ -86,5 +88,16 @@ def test_superseded_migration_plan_cannot_open_v2_execution() -> None:
     assert "2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md" in work_registry
     assert "superseded execution plan" in work_registry
     assert "Must not authorize #323–#325" in work_registry
-    assert "Close old Concept v2 implementation issues `not planned`" in matrix
-    assert "Create clean child issues" in matrix
+    assert "Old Concept v2 implementation issues were closed `not planned`" in matrix
+    assert "Clean child issues were created for:" in matrix
+
+    for child_scope in (
+        "universal world-model contract and fixtures",
+        "spatial-temporal uncertainty",
+        "Leonardo World Slice",
+        "synchronized explorer",
+        "relation ladder",
+        "contextual-learning validation",
+        "source-bound AI reasoning contract",
+    ):
+        assert child_scope in matrix

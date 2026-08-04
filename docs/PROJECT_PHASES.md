@@ -4,7 +4,7 @@
 
 - Тип: canonical operational phases document.
 - Дата: 2026-07-28.
-- Активная фаза: **4.6 Foundation v3**.
+- Активная фаза: **4.7 World Model Contract**.
 
 Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`.
 
@@ -45,7 +45,7 @@
 
 Причина: architecture comparison vertical был ошибочно превращён в идентичность всего проекта.
 
-## Фаза 4.6 — Foundation v3 [активная]
+## Фаза 4.6 — Foundation v3 [завершена]
 
 ### Цель
 
@@ -78,7 +78,7 @@
 
 ## Фаза 4.7 — World Model Contract
 
-Статус: **GATED**.
+Статус: **ACTIVE / ISSUE #329**.
 
 Scope:
 
@@ -91,10 +91,12 @@ Scope:
 
 Exit:
 
-- reviewed fixtures;
-- schema proposal;
-- non-inventive legacy mapping;
-- implementation issue approved.
+- versioned fixtures represent every required object kind;
+- deterministic validator and negative semantic tests pass;
+- two independent reviews find no unresolved critical contradiction;
+- non-inventive legacy mapping is explicit;
+- current truth continues to deny runtime implementation;
+- uncertainty/relation follow-ups are explicitly routed before implementation.
 
 ## Фаза 4.8 — Life in Context Dataset
 

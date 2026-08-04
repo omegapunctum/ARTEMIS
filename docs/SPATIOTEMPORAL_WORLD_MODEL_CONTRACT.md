@@ -5,7 +5,7 @@
 - Тип: canonical foundation model contract.
 - Версия: 1.0.
 - Дата: 2026-07-28.
-- Статус: proposed by Foundation v3.
+- Статус: active; accepted in PR `#328`.
 - Владеет: пространственно-временной семантикой knowledge model.
 - Не владеет: текущими JSON/API schemas; их определяют runtime/data contracts.
 
@@ -392,6 +392,10 @@ Current GeoJSON point features and `year` fields — compatibility projection, �
 - legacy limitations are visible;
 - adapter does not become a second canonical ontology.
 
+Compatibility projection must preserve missing target semantics as missing. It must not invent Claims, EvidenceLinks, locators, temporal precision, spatial precision or geometry merely because a legacy field exists.
+
+An executable contract fixture may be explicitly synthetic when its purpose is to test semantics rather than curate history. A synthetic fixture must be visibly marked, source-bound to immutable fixture documents, excluded from historical capability claims and kept separate from the real World Slice corpus.
+
 ## 14. Validation fixtures
 
 Минимальный contract test set:
@@ -406,6 +410,10 @@ Current GeoJSON point features and `year` fields — compatibility projection, �
 8. influence Claim with challenge;
 9. disputed geometry/reconstruction;
 10. explicit corpus exclusion.
+
+Fixture validation must include negative cases for semantic collapse, orphan references, unsupported precision, derived proximity stored as Relation, invented compatibility evidence and corpus absence represented as historical absence.
+
+Passing fixtures proves contract representability only. It does not prove database/API/runtime implementation, historical corpus readiness or user value.
 
 ## 15. Change control
 

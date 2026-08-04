@@ -31,6 +31,7 @@
 ├── css/
 ├── data/
 ├── docs/
+├── fixtures/
 ├── icons/
 ├── js/
 ├── scripts/
@@ -54,6 +55,7 @@
 | `css/` | UI style system; current shared + override baseline pending owner-scoped migration | основной |
 | `data/` | canonical public data layer + export diagnostics | основной |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
+| `fixtures/` | versioned executable contract fixtures; not public/runtime data | validation |
 | `icons/` | PWA assets | основной |
 | `js/` | frontend modules | основной |
 | `scripts/` | ETL, import/export, audit, release checks | основной |
@@ -79,6 +81,7 @@
 | Backend | `app/main.py` |
 | ETL | `scripts/export_airtable.py` |
 | Release check | `scripts/release_check.py` |
+| World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
 | Public map data | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
@@ -222,7 +225,8 @@ scripts/
 ├── export_airtable.py
 ├── import_features.py
 ├── release_check.py
-└── semantic_data_gate.py
+├── semantic_data_gate.py
+└── validate_world_model_fixtures.py
 ```
 
 ```text
@@ -230,7 +234,23 @@ tests/
 └── ...
 ```
 
+```text
+fixtures/
+└── world_model/
+    └── v1/
+        ├── compatibility/
+        ├── sources/
+        ├── README.md
+        ├── coverage_manifest.json
+        ├── package.json
+        ├── review_registry.json
+        └── schema.json
+```
+
 Правила:
+- `fixtures/` хранит versioned executable contract evidence, не public `data/*` и не runtime schema;
+- synthetic fixtures must be visibly marked and cannot support historical capability claims;
+- compatibility projections expose losses and never invent missing evidence/precision;
 - `scripts/` отвечают за ETL, import/export, checks, preparation;
 - `tests/` отвечают за автоматическую проверку контрактов и регрессий;
 - release discipline не должна жить только в Markdown без исполнимой проверки.

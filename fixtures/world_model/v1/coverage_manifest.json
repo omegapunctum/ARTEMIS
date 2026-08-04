@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-world-model-contract-fixture-v1",
+  "required_object_kinds": {
+    "Entity": 9,
+    "Event": 4,
+    "State": 3,
+    "Process": 1,
+    "Trajectory": 1,
+    "Region": 2,
+    "Layer": 4,
+    "Relation": 2,
+    "DerivedObservation": 1,
+    "Claim": 20,
+    "EvidenceLink": 21,
+    "Uncertainty": 6,
+    "SynchronizedView": 1,
+    "Source": 2
+  },
+  "required_scenarios": {
+    "point_event": "event-north-harbor-charter",
+    "approximate_event_with_alternative_date": "event-workshop-arrival",
+    "interval_state": "state-north-harbor-administration",
+    "multi_stage_multi_region_process": "process-coastal-exchange",
+    "trajectory_with_segment_uncertainty": "trajectory-mara-vale",
+    "changing_region_geometry": "region-fixture-basin",
+    "local_global_synchronized_context": "view-1504-local-global",
+    "challenged_or_alternative_reconstruction": "region-geometry-v2-alternative",
+    "co_presence_without_relation": "observation-mara-traveler-co-presence",
+    "documented_encounter": "relation-mara-ren-encounter",
+    "challenged_influence_claim": "relation-ren-influences-council-protocol",
+    "compatibility_projection": "compatibility/architecture_atlas_projection.json"
+  },
+  "included_layers": [
+    "layer-biography",
+    "layer-politics",
+    "layer-exchange",
+    "layer-distant-context"
+  ],
+  "known_exclusions": [
+    {
+      "id": "unlisted-context-is-corpus-absence-only",
+      "assertion_kind": "corpus_exclusion",
+      "description": "No unlisted people, events, states, processes or regions are represented."
+    },
+    {
+      "id": "inferred-route-geometry-is-missing",
+      "assertion_kind": "corpus_exclusion",
+      "description": "No route geometry is provided for the inferred trajectory gap."
+    },
+    {
+      "id": "no-historical-completeness-or-absence-claim",
+      "assertion_kind": "corpus_exclusion",
+      "description": "The package does not claim historical completeness or historical absence."
+    }
+  ]
+}

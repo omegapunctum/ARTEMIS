@@ -13,9 +13,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-07-28_FOUNDATION_V3_DECISION.md` | Foundation rationale, decision boundary and supersession | Foundation v3 PR merged |
-| `2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md` | Decision/backlog/document disposition | Old backlog corrected after Foundation merge |
-| `2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` | Design Life in Context controlled validation | Protocol frozen after contract/content readiness |
+| `2026-07-29_WORLD_MODEL_FIXTURE_REVIEW.md` | #329 fixture review scope, frozen-commit gate and finalization record | Two independent READY reviews and executable ready-mode pass |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
@@ -23,6 +21,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document/group | Lifecycle | Rule |
 |---|---|---|
+| `2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` | gated Life in Context validation design | Freeze only after #329–#333 dependencies are ready |
 | `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md` | completed Architecture Layer preparation program | Modules/fixtures may be reused; no longer the active product-validation gate |
 | `validation_modules/` | completed Gate A executable package | Preserve as architecture fixtures and historical readiness evidence |
 | `2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md` | superseded execution plan | Must not authorize #323–#325 or v2 migration order |
@@ -45,6 +44,8 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-07-28_FOUNDATION_V3_DECISION.md` — accepted in PR `#328`.
+- `2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md` — backlog disposition completed.
 - `2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`
 - `2026-07-16_RELATIONS_SIMILARITY_MIGRATION_v1.md`
 - `2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`
