@@ -2,10 +2,10 @@
   "schema_version": "1.0.0",
   "package_id": "artemis-world-model-contract-fixture-v1",
   "fixture_mode": "synthetic_contract_fixture",
-  "status": "REVIEW_REQUIRED",
+  "status": "READY",
   "record_time": {
     "created_at": "2026-07-29T00:00:00Z",
-    "reviewed_at": null
+    "reviewed_at": "2026-08-04T14:50:24Z"
   },
   "world_slice": {
     "id": "world-slice-fixture-basin-v1",

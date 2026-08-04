@@ -1,6 +1,6 @@
 # ARTEMIS world-model contract fixtures v1
 
-Status: `REVIEW_REQUIRED`.
+Status: `READY`.
 
 Issue: [#329](https://github.com/omegapunctum/ARTEMIS/issues/329).
 
