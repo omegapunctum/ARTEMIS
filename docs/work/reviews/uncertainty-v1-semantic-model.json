@@ -1,0 +1,19 @@
+{
+  "artifact_format": "artemis-review-attestation-v1",
+  "review_id": "uncertainty-v1-semantic-model-805b0bf",
+  "reviewer_id": "planck-semantic-reviewer",
+  "reviewer_instance_id": "planck-pr337-805b0bf",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task",
+  "frozen_commit": "805b0bf30ddfecc9cd2bb8356ff2d807d950c87a",
+  "reviewed_content_sha256": "1208a82cb1f392bbe47afbba31fc735cb010cb45385780b0f7f7dd833e3aaa95",
+  "reviewed_at": "2026-08-05T04:25:30Z",
+  "decision": "READY",
+  "finding_counts": {
+    "critical": 0,
+    "material": 0,
+    "minor": 0
+  },
+  "findings": [],
+  "independence_attestation": true
+}

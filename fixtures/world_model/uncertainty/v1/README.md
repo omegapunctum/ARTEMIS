@@ -1,6 +1,6 @@
 # ARTEMIS uncertainty semantics fixtures v1
 
-Status: `REVIEW_REQUIRED`
+Status: `READY`
 
 This additive package makes issue #330 temporal/spatial uncertainty rules executable. It depends on
 the reviewed READY world-model package at `fixtures/world_model/v1` and does not modify that base.
