@@ -1,0 +1,36 @@
+name: Relation Contract
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  relation-contract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt pytest
+
+      - name: Validate active relation contract
+        run: |
+          python scripts/validate_relation_fixtures.py
+          if [[ "$(python -c 'import json, pathlib; print(json.loads(pathlib.Path("fixtures/world_model/relations/v1/package.json").read_text(encoding="utf-8"))["status"])')" == "READY" ]]; then
+            python scripts/validate_relation_fixtures.py --require-ready
+          fi
+          pytest -q \
+            tests/test_relation_fixtures.py \
+            tests/test_repository_governance_contract.py \
+            tests/test_concept_lock_contract.py
