@@ -24,7 +24,11 @@ COMPAT_REL = Path(
 
 def _copy_repo(tmp_path: Path) -> Path:
     target = tmp_path / "repo"
-    shutil.copytree(ROOT, target, ignore=shutil.ignore_patterns(".pytest_cache", "__pycache__"))
+    shutil.copytree(
+        ROOT,
+        target,
+        ignore=shutil.ignore_patterns(".git", ".pytest_cache", "__pycache__"),
+    )
     base_path = target / "fixtures/world_model/v1/package.json"
     base = json.loads(base_path.read_text(encoding="utf-8"))
     base["status"] = "READY"
