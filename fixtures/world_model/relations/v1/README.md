@@ -11,7 +11,10 @@ a different date, place or geometry. The relation schema preserves the reviewed 
 distinction executable.
 
 Fixtures cover nested places, approximate/open/alternative time, Polygon holes and antimeridian-safe corridor
-evaluation, distance interaction, intermediary action, posthumous influence and process causality. The synthetic
+evaluation, tolerance-aware approximate points and explicit place-disjointness. Missing hierarchy edges remain
+`unknown`, never invented disjointness. Distance interaction, intermediary action, posthumous influence and process
+causality are independent Relation fixtures. The single evidence Source is closed to the canonical review-scoped
+file. The synthetic
 causal policy is a checked, digest-bound package artifact and is not production causal approval. This package does
 not modify either base package or claim historical/runtime capability.
 
@@ -24,4 +27,5 @@ pytest -q tests/test_relation_fixtures.py tests/test_repository_governance_contr
 
 `--require-ready` is valid only after two independent reviews are recorded against one frozen commit and digest.
 The validator recomputes that digest from the frozen Git tree, parses both review artifacts and rejects untracked,
-symlinked, opaque or path-escaping evidence.
+symlinked, opaque or path-escaping evidence. Every normalized lifecycle field is also checked exactly against the
+package and registry, so digest normalization cannot hide stale or false READY metadata.

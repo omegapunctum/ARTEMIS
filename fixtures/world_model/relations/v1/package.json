@@ -82,6 +82,10 @@
     {"child_ref": "place-north-hall", "parent_ref": "place-north-city"},
     {"child_ref": "place-court-chamber", "parent_ref": "place-court"}
   ],
+  "place_disjointness": [
+    {"left_ref": "place-north-city", "right_ref": "place-south-city", "basis": "declared_disjoint_fixture_places"},
+    {"left_ref": "place-north-region", "right_ref": "place-south-region", "basis": "declared_disjoint_fixture_places"}
+  ],
   "causal_policies": [
     {
       "id": "causal-policy-explicit-basis-v1",

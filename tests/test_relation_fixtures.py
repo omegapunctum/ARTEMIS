@@ -107,6 +107,13 @@ def _presence(case: dict, entity_ref: str) -> dict:
     )
 
 
+def _disjoint(package: dict) -> set[frozenset[str]]:
+    return {
+        frozenset((item["left_ref"], item["right_ref"]))
+        for item in package["place_disjointness"]
+    }
+
+
 def _run_git(root: Path, *args: str, when: datetime | None = None) -> str:
     env = None
     if when is not None:
@@ -276,7 +283,7 @@ def test_co_presence_uses_reviewed_uncertainty_semantics(
     parents = {
         item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
     }
-    assert validator.co_presence_state(_case(package, case_id), parents) == expected
+    assert validator.co_presence_state(_case(package, case_id), parents, _disjoint(package)) == expected
 
 
 def test_nested_place_is_not_treated_as_a_different_place() -> None:
@@ -285,7 +292,7 @@ def test_nested_place_is_not_treated_as_a_different_place() -> None:
         item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
     }
     assert (
-        validator.co_presence_state(_case(package, "case-plausible-workshop"), parents)
+        validator.co_presence_state(_case(package, "case-plausible-workshop"), parents, _disjoint(package))
         == "confirmed"
     )
 
@@ -306,7 +313,7 @@ def test_year_precision_cannot_create_confirmed_co_presence() -> None:
     parents = {
         item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
     }
-    assert validator.co_presence_state(case, parents) == "possible"
+    assert validator.co_presence_state(case, parents, _disjoint(package)) == "possible"
 
 
 def test_documented_predicates_do_not_require_personal_co_presence() -> None:
@@ -566,9 +573,9 @@ def test_alternative_order_does_not_select_a_first_winner() -> None:
     parents = {
         item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
     }
-    assert validator.co_presence_state(case, parents) == "possible"
+    assert validator.co_presence_state(case, parents, _disjoint(package)) == "possible"
     _presence(case, "entity-ada")["temporal_candidates"].reverse()
-    assert validator.co_presence_state(case, parents) == "possible"
+    assert validator.co_presence_state(case, parents, _disjoint(package)) == "possible"
 
 
 def test_ui_language_rules_are_executable(tmp_path: Path) -> None:
@@ -773,7 +780,7 @@ def test_polygon_hole_excludes_point_from_corridor() -> None:
     parents = {
         item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
     }
-    assert validator.co_presence_state(case, parents) == "excluded"
+    assert validator.co_presence_state(case, parents, _disjoint(package)) == "excluded"
 
 
 def test_polygon_handles_antimeridian_and_boundaries() -> None:
@@ -823,10 +830,46 @@ def test_source_path_cannot_escape_repository(tmp_path: Path) -> None:
     package = _load(root, PACKAGE_REL)
     package["sources"][0]["path"] = "../../outside.md"
     _write(root, PACKAGE_REL, package)
-    assert any(
-        "source file load failed" in item and "canonical and relative" in item
-        for item in validator.validate_repository(root)
+    assert any("schema sources.0.path" in item for item in validator.validate_repository(root))
+
+
+def test_source_cannot_move_to_unreviewed_regular_repo_file(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    package["sources"][0]["path"] = "docs/work/rogue-relation-source.md"
+    _write(root, PACKAGE_REL, package)
+    assert any("schema sources.0.path" in item for item in validator.validate_repository(root))
+
+
+def test_missing_place_hierarchy_edge_is_unknown_not_disjoint() -> None:
+    package = _load(ROOT, PACKAGE_REL)
+    case = copy.deepcopy(_case(package, "case-disjoint-place"))
+    _presence(case, "entity-cira")["spatial_candidates"][0]["place_ref"] = "place-unresolved-alias"
+    parents = {
+        item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
+    }
+    assert validator.co_presence_state(case, parents, _disjoint(package)) == "unknown"
+
+
+def test_approximate_point_tolerance_can_intersect_inferred_corridor() -> None:
+    package = _load(ROOT, PACKAGE_REL)
+    case = copy.deepcopy(_case(package, "case-inferred-route-proximity"))
+    point = _presence(case, "entity-borin")["spatial_candidates"][0]
+    point.update(
+        mode="approximate_point",
+        geometry={"type": "Point", "coordinates": [11.0005, 50.5]},
+        tolerance_m=100,
+        semantic_profile_refs=["claim-approximate-point"],
+        uncertainty_refs=["uncertainty-approximate-location"],
+        projection_policy="show_possible",
     )
+    _presence(case, "entity-borin")["uncertainty_refs"] = [
+        "uncertainty-approximate-location"
+    ]
+    parents = {
+        item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
+    }
+    assert validator.co_presence_state(case, parents, _disjoint(package)) == "possible"
 
 
 def test_ready_rejects_opaque_review_artifact(tmp_path: Path) -> None:
@@ -845,6 +888,69 @@ def test_ready_rejects_opaque_review_artifact(tmp_path: Path) -> None:
         "review artifact/registry semantic drift" in item
         for item in validator.validate_repository(root, require_ready=True)
     )
+
+
+def test_ready_rejects_stale_pending_lifecycle_metadata(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    _prepare_ready(root)
+    readme = root / README_REL
+    readme.write_text(
+        readme.read_text(encoding="utf-8").replace(
+            "Status: `READY`", "Status: `REVIEW_REQUIRED`", 1
+        ),
+        encoding="utf-8",
+    )
+    work = root / WORK_REL
+    text = work.read_text(encoding="utf-8")
+    text = text.replace("- State: `READY`.", "- State: `REVIEW_REQUIRED`.", 1)
+    text = validator.re.sub(
+        r"- Frozen commit: `[^`]+`\.", "- Frozen commit: `PENDING`.", text, count=1
+    )
+    text = validator.re.sub(
+        r"- Reviewed digest: `[^`]+`\.",
+        "- Reviewed digest: `PENDING`.",
+        text,
+        count=1,
+    )
+    text = validator.re.sub(
+        r"- Reviews: .+", "- Reviews: `PENDING`.", text, count=1
+    )
+    work.write_text(text, encoding="utf-8")
+    _run_git(root, "add", "--all")
+    _run_git(root, "commit", "-m", "revert lifecycle metadata")
+    errors = validator.validate_repository(root, require_ready=True)
+    assert any("README lifecycle status" in item for item in errors)
+    assert any("working-record lifecycle state" in item for item in errors)
+    assert any("READY working-record frozen commit" in item for item in errors)
+    assert any("READY working-record digest" in item for item in errors)
+    assert any("truthfully name both completed review tracks" in item for item in errors)
+
+
+def test_ready_rejects_false_lifecycle_values_even_when_digest_is_stable(
+    tmp_path: Path,
+) -> None:
+    root = _copy_repo(tmp_path)
+    _prepare_ready(root)
+    before = validator.compute_review_digest(root)
+    work = root / WORK_REL
+    text = work.read_text(encoding="utf-8")
+    text = validator.re.sub(
+        r"- Frozen commit: `[^`]+`\.", "- Frozen commit: `" + "0" * 40 + "`.", text, count=1
+    )
+    text = validator.re.sub(
+        r"- Reviewed digest: `[^`]+`\.", "- Reviewed digest: `" + "0" * 64 + "`.", text, count=1
+    )
+    text = validator.re.sub(
+        r"- Reviews: .+", "- Reviews: no independent reviews were completed.", text, count=1
+    )
+    work.write_text(text, encoding="utf-8")
+    assert validator.compute_review_digest(root) == before
+    _run_git(root, "add", "--all")
+    _run_git(root, "commit", "-m", "forge lifecycle metadata")
+    errors = validator.validate_repository(root, require_ready=True)
+    assert any("READY working-record frozen commit" in item for item in errors)
+    assert any("READY working-record digest" in item for item in errors)
+    assert any("truthfully name both completed review tracks" in item for item in errors)
 
 
 def test_ready_digest_must_describe_frozen_commit_tree(tmp_path: Path) -> None:

@@ -64,6 +64,14 @@ EXPECTED_BASE_PACKAGES = {
     "artemis-world-model-contract-fixture-v1": "fixtures/world_model/v1/review_registry.json",
     "artemis-uncertainty-semantics-v1": "fixtures/world_model/uncertainty/v1/review_registry.json",
 }
+EXPECTED_SOURCE = {
+    "id": "source-relation-profile",
+    "path": SOURCE_PATH.as_posix(),
+    "title": "Synthetic independent relation predicate assertions",
+    "source_type": "synthetic_fixture",
+    "review_state": "reviewed",
+    "fixture_only": True,
+}
 PREDICATES = ("co_present", "possible_encounter", "documented_encounter", "interaction", "influence", "causal")
 DOCUMENTED = {"documented_encounter", "interaction", "influence", "causal"}
 OVERLAP_STATES = {"confirmed", "possible", "excluded", "unknown"}
@@ -498,7 +506,57 @@ def _point_in_polygon(point: tuple[float, float], polygon: list[list[list[float]
     return True
 
 
-def _spatial_pair_state(left: dict[str, Any], right: dict[str, Any], parents: dict[str, str]) -> str:
+def _point_to_segment_distance_m(
+    point: tuple[float, float], start: list[float], end: list[float]
+) -> float:
+    longitude, latitude = point
+    start_longitude = float(start[0])
+    point_longitude = _unwrap_longitude(longitude, start_longitude)
+    end_longitude = _unwrap_longitude(float(end[0]), start_longitude)
+    scale_x = 6_371_000 * math.cos(math.radians(latitude)) * math.pi / 180
+    scale_y = 6_371_000 * math.pi / 180
+    ax = (start_longitude - point_longitude) * scale_x
+    ay = (float(start[1]) - latitude) * scale_y
+    bx = (end_longitude - point_longitude) * scale_x
+    by = (float(end[1]) - latitude) * scale_y
+    dx = bx - ax
+    dy = by - ay
+    length_squared = dx * dx + dy * dy
+    if length_squared == 0:
+        return math.hypot(ax, ay)
+    projection = max(0.0, min(1.0, -(ax * dx + ay * dy) / length_squared))
+    return math.hypot(ax + projection * dx, ay + projection * dy)
+
+
+def _point_to_polygon_distance_m(
+    point: tuple[float, float], polygon: list[list[list[float]]]
+) -> float:
+    return min(
+        _point_to_segment_distance_m(point, ring[index - 1], ring[index])
+        for ring in polygon
+        for index in range(1, len(ring))
+    )
+
+
+def _places_explicitly_disjoint(
+    left_place: str,
+    right_place: str,
+    parents: dict[str, str],
+    disjoint_places: set[frozenset[str]],
+) -> bool:
+    return any(
+        frozenset((left_ancestor, right_ancestor)) in disjoint_places
+        for left_ancestor in _place_ancestors(left_place, parents)
+        for right_ancestor in _place_ancestors(right_place, parents)
+    )
+
+
+def _spatial_pair_state(
+    left: dict[str, Any],
+    right: dict[str, Any],
+    parents: dict[str, str],
+    disjoint_places: set[frozenset[str]],
+) -> str:
     left_mode = left["mode"]
     right_mode = right["mode"]
     if left_mode in {"unknown", "unknown_route"} or right_mode in {"unknown", "unknown_route"}:
@@ -510,7 +568,11 @@ def _spatial_pair_state(left: dict[str, Any], right: dict[str, Any], parents: di
             left_place in _place_ancestors(right_place, parents)
             or right_place in _place_ancestors(left_place, parents)
         )
-        return "confirmed" if related else "excluded"
+        if related:
+            return "confirmed"
+        if _places_explicitly_disjoint(left_place, right_place, parents, disjoint_places):
+            return "excluded"
+        return "unknown"
 
     left_point = _point(left)
     right_point = _point(right)
@@ -525,28 +587,42 @@ def _spatial_pair_state(left: dict[str, Any], right: dict[str, Any], parents: di
         geometry = area.get("geometry")
         point_value = _point(point_candidate)
         if area["mode"] == "inferred_corridor" and geometry and point_value is not None:
-            return "possible" if _point_in_polygon(point_value, geometry["coordinates"]) else "excluded"
+            polygon = geometry["coordinates"]
+            if _point_in_polygon(point_value, polygon):
+                return "possible"
+            if point_candidate["mode"] == "approximate_point" and _point_to_polygon_distance_m(point_value, polygon) <= float(point_candidate["tolerance_m"]):
+                return "possible"
+            return "excluded"
     return "unknown"
 
 
-def _spatial_overlap(left: dict[str, Any], right: dict[str, Any], parents: dict[str, str]) -> str:
+def _spatial_overlap(
+    left: dict[str, Any],
+    right: dict[str, Any],
+    parents: dict[str, str],
+    disjoint_places: set[frozenset[str]],
+) -> str:
     return _aggregate_states(
         [
-            _spatial_pair_state(a, b, parents)
+            _spatial_pair_state(a, b, parents, disjoint_places)
             for a in left["spatial_candidates"]
             for b in right["spatial_candidates"]
         ]
     )
 
 
-def co_presence_state(case: dict[str, Any], parents: dict[str, str]) -> str:
+def co_presence_state(
+    case: dict[str, Any],
+    parents: dict[str, str],
+    disjoint_places: set[frozenset[str]] | None = None,
+) -> str:
     indexed = {presence["entity_ref"]: presence for presence in case["presence_extents"]}
     if case["subject_ref"] not in indexed or case["object_ref"] not in indexed:
         raise ValueError("presence extents must bind both case endpoints")
     subject = indexed[case["subject_ref"]]
     obj = indexed[case["object_ref"]]
     temporal = _temporal_overlap(subject, obj)
-    spatial = _spatial_overlap(subject, obj, parents)
+    spatial = _spatial_overlap(subject, obj, parents, disjoint_places or set())
     if "excluded" in {temporal, spatial}:
         return "excluded"
     if "unknown" in {temporal, spatial}:
@@ -556,8 +632,12 @@ def co_presence_state(case: dict[str, Any], parents: dict[str, str]) -> str:
     return "possible"
 
 
-def is_co_present(case: dict[str, Any], parents: dict[str, str] | None = None) -> bool:
-    return co_presence_state(case, parents or {}) in {"confirmed", "possible"}
+def is_co_present(
+    case: dict[str, Any],
+    parents: dict[str, str] | None = None,
+    disjoint_places: set[frozenset[str]] | None = None,
+) -> bool:
+    return co_presence_state(case, parents or {}, disjoint_places) in {"confirmed", "possible"}
 
 
 def _validate_base_packages(root: Path, package: dict[str, Any], errors: list[str]) -> None:
@@ -626,7 +706,7 @@ def _validate_spatial_candidate(candidate: dict[str, Any], errors: list[str], co
 
 def _validate_extent_semantics(
     root: Path, schema: dict[str, Any], package: dict[str, Any], errors: list[str]
-) -> dict[str, str]:
+) -> tuple[dict[str, str], set[frozenset[str]]]:
     uncertainty_schema = load_json(
         root / "fixtures/world_model/uncertainty/v1/schema.json"
     )
@@ -682,6 +762,26 @@ def _validate_extent_semantics(
                 errors.append(f"place hierarchy cycle at {child}")
                 break
             seen.add(current)
+
+    disjoint_places = {
+        frozenset((item["left_ref"], item["right_ref"]))
+        for item in package["place_disjointness"]
+    }
+    _require(
+        len(disjoint_places) == len(package["place_disjointness"]),
+        "declared place-disjointness pairs must be unique and non-reflexive",
+        errors,
+    )
+    for item in package["place_disjointness"]:
+        left_ref = item["left_ref"]
+        right_ref = item["right_ref"]
+        _require(left_ref != right_ref, "declared place disjointness cannot be reflexive", errors)
+        _require(
+            left_ref not in _place_ancestors(right_ref, parents)
+            and right_ref not in _place_ancestors(left_ref, parents),
+            f"declared disjoint places {left_ref}/{right_ref} cannot be ancestor-related",
+            errors,
+        )
 
     presence_ids: list[str] = []
     for case in package["cases"]:
@@ -750,7 +850,7 @@ def _validate_extent_semantics(
         "presence extent IDs must be globally unique",
         errors,
     )
-    return parents
+    return parents, disjoint_places
 
 
 def _validate_predicate_profile(package: dict[str, Any], errors: list[str]) -> None:
@@ -882,6 +982,7 @@ def _validate_provenance(root: Path, package: dict[str, Any], errors: list[str])
     evidence = package["evidence_links"]
     _require(len(claims) == len(package["claims"]), "claim IDs must be unique", errors)
     _require(len(sources) == len(package["sources"]), "source IDs must be unique", errors)
+    _require(package["sources"] == [EXPECTED_SOURCE], "relation Source set must remain the canonical reviewed source", errors)
     _require(len(_ids(evidence)) == len(set(_ids(evidence))), "EvidenceLink IDs must be unique", errors)
 
     for claim in claims.values():
@@ -923,10 +1024,11 @@ def _validate_case(
     uncertainties: dict[str, dict[str, Any]],
     causal_policies: dict[str, dict[str, Any]],
     parents: dict[str, str],
+    disjoint_places: set[frozenset[str]],
     errors: list[str],
 ) -> None:
     predicate = case["asserted_predicate"]
-    observed = co_presence_state(case, parents)
+    observed = co_presence_state(case, parents, disjoint_places)
     _require(
         observed == case["co_presence_result"],
         f"case {case['id']} co-presence result mismatch: expected {case['co_presence_result']}, got {observed}",
@@ -1041,7 +1143,11 @@ def _validate_case(
 
 
 def _validate_cases(
-    package: dict[str, Any], parents: dict[str, str], causal_policies: dict[str, dict[str, Any]], errors: list[str]
+    package: dict[str, Any],
+    parents: dict[str, str],
+    disjoint_places: set[frozenset[str]],
+    causal_policies: dict[str, dict[str, Any]],
+    errors: list[str],
 ) -> None:
     claims = {item["id"]: item for item in package["claims"]}
     uncertainties = {item["id"]: item for item in package["uncertainties"]}
@@ -1106,6 +1212,7 @@ def _validate_cases(
                 uncertainties,
                 causal_policies,
                 parents,
+                disjoint_places,
                 errors,
             )
         except (ValueError, KeyError, StopIteration) as exc:
@@ -1179,6 +1286,40 @@ def _validate_owner(root: Path, package: dict[str, Any], errors: list[str]) -> N
         "not a total order",
     ):
         _require(term in owner or term in (root / WORK_PATH).read_text(encoding="utf-8"), f"relation owner/record missing {term}", errors)
+
+
+def _validate_lifecycle_metadata(
+    root: Path,
+    package: dict[str, Any],
+    registry: dict[str, Any],
+    expected_status: str,
+    errors: list[str],
+) -> None:
+    try:
+        readme = _regular_repo_file(root, README_PATH).read_text(encoding="utf-8")
+        work = _regular_repo_file(root, WORK_PATH).read_text(encoding="utf-8")
+    except (OSError, ValueError) as exc:
+        errors.append(f"lifecycle metadata load failed: {exc}")
+        return
+    readme_status = re.findall(r"^Status: `(REVIEW_REQUIRED|READY)`$", readme, flags=re.MULTILINE)
+    work_state = re.findall(r"^- State: `(REVIEW_REQUIRED|READY)`\.$", work, flags=re.MULTILINE)
+    work_frozen = re.findall(r"^- Frozen commit: `([^`]+)`\.$", work, flags=re.MULTILINE)
+    work_digest = re.findall(r"^- Reviewed digest: `([^`]+)`\.$", work, flags=re.MULTILINE)
+    review_lines = re.findall(r"^- Reviews: .+$", work, flags=re.MULTILINE)
+    _require(readme_status == [expected_status], "README lifecycle status must match package/registry", errors)
+    _require(work_state == [expected_status], "working-record lifecycle state must match package/registry", errors)
+    if expected_status == "REVIEW_REQUIRED":
+        _require(work_frozen == ["PENDING"], "REVIEW_REQUIRED working record requires PENDING frozen commit", errors)
+        _require(work_digest == ["PENDING"], "REVIEW_REQUIRED working record requires PENDING reviewed digest", errors)
+        _require(review_lines == ["- Reviews: `PENDING`."], "REVIEW_REQUIRED working record requires PENDING reviews", errors)
+    else:
+        _require(work_frozen == [registry.get("frozen_commit")], "READY working-record frozen commit must match registry", errors)
+        _require(work_digest == [registry.get("reviewed_content_sha256")], "READY working-record digest must match registry", errors)
+        _require(
+            review_lines == ["- Reviews: `semantic-model` and `validator-integrity` READY."],
+            "READY working record must truthfully name both completed review tracks",
+            errors,
+        )
 
 
 def _validate_ready(root: Path, package: dict[str, Any], registry: dict[str, Any], require_ready: bool, errors: list[str]) -> None:
@@ -1280,6 +1421,7 @@ def _validate_ready(root: Path, package: dict[str, Any], registry: dict[str, Any
     ready_records = len(parsed_reviews) == 2 and set(identities["tracks"]) == {"semantic-model", "validator-integrity"} and all(item["decision"] == "READY" for item in parsed_reviews)
     expected_status = "READY" if ready_records else "REVIEW_REQUIRED"
     _require(package["status"] == registry.get("status") == expected_status, "relation package/registry status drift", errors)
+    _validate_lifecycle_metadata(root, package, registry, expected_status, errors)
 
     if expected_status != "READY":
         _require(registry.get("frozen_commit") is None and registry.get("reviewed_content_sha256") is None, "REVIEW_REQUIRED registry cannot carry frozen READY metadata", errors)
@@ -1331,10 +1473,10 @@ def validate_repository(root: Path, require_ready: bool = False) -> list[str]:
     _validate_base_packages(root, package, errors)
     _validate_predicate_profile(package, errors)
     _validate_ui_language(package, errors)
-    parents = _validate_extent_semantics(root, schema, package, errors)
+    parents, disjoint_places = _validate_extent_semantics(root, schema, package, errors)
     _validate_provenance(root, package, errors)
     causal_policies = _validate_causal_policy(root, package, errors)
-    _validate_cases(package, parents, causal_policies, errors)
+    _validate_cases(package, parents, disjoint_places, causal_policies, errors)
     _validate_separation(root, package, errors)
     _validate_owner(root, package, errors)
     _validate_ready(root, package, registry, require_ready, errors)

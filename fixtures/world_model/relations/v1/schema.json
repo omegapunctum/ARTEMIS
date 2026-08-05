@@ -12,6 +12,7 @@
     "base_packages",
     "relation_predicates",
     "place_hierarchy",
+    "place_disjointness",
     "causal_policies",
     "sources",
     "claims",
@@ -39,8 +40,9 @@
     "base_packages": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/basePackage"}},
     "relation_predicates": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/predicate"}},
     "place_hierarchy": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/placeParent"}},
+    "place_disjointness": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/placeDisjoint"}},
     "causal_policies": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/causalPolicy"}},
-    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "sources": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/source"}},
     "claims": {"type": "array", "minItems": 9, "items": {"$ref": "#/$defs/claim"}},
     "evidence_links": {"type": "array", "minItems": 7, "items": {"$ref": "#/$defs/evidence"}},
     "uncertainties": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/uncertainty"}},
@@ -84,6 +86,16 @@
       "required": ["child_ref", "parent_ref"],
       "properties": {"child_ref": {"$ref": "#/$defs/id"}, "parent_ref": {"$ref": "#/$defs/id"}}
     },
+    "placeDisjoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["left_ref", "right_ref", "basis"],
+      "properties": {
+        "left_ref": {"$ref": "#/$defs/id"},
+        "right_ref": {"$ref": "#/$defs/id"},
+        "basis": {"const": "declared_disjoint_fixture_places"}
+      }
+    },
     "causalPolicy": {
       "type": "object",
       "additionalProperties": false,
@@ -104,7 +116,7 @@
       "required": ["id", "path", "title", "source_type", "review_state", "fixture_only"],
       "properties": {
         "id": {"$ref": "#/$defs/id"},
-        "path": {"type": "string"},
+        "path": {"const": "fixtures/world_model/relations/v1/sources/relation-profile.md"},
         "title": {"type": "string"},
         "source_type": {"const": "synthetic_fixture"},
         "review_state": {"const": "reviewed"},

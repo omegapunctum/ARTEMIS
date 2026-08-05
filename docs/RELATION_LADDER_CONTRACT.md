@@ -41,6 +41,8 @@ interaction does not imply influence. Influence does not imply causality.
 8. Direction, mechanism, transmission mode, scope and causal basis are explicit where required.
 9. `no_relation_asserted` means only that the fixture creates no Relation; it never asserts historical absence.
 10. Background evidence cannot support a documented Relation predicate.
+11. Absence of a place-hierarchy edge is `unknown`; `excluded` requires explicit disjointness or non-overlapping geometry.
+12. Every evidence Source is a canonical regular file inside the frozen semantic review scope.
 
 ## 3. Predicate profile
 
@@ -79,7 +81,13 @@ Supported inputs include:
 - inferred route corridors and unknown extents.
 
 Polygon corridor evaluation includes interior rings, treats boundaries conservatively as included and unwraps
-longitude edges across the antimeridian. Non-finite coordinates or tolerances are rejected at JSON load/validation.
+longitude edges across the antimeridian. An approximate point overlaps an inferred corridor when its declared
+tolerance reaches the corridor boundary, even if the point centre lies outside. Non-finite coordinates or
+tolerances are rejected at JSON load/validation.
+
+Named places overlap when they are identical or ancestor-related. A closed `place_disjointness` set provides the
+only fixture basis for excluding otherwise un-geometrized named places. Missing hierarchy or alias information
+produces `unknown`, not a false negative.
 
 The deterministic result is one of:
 
@@ -111,6 +119,9 @@ For `documented_encounter`, `interaction`, `influence` and `causal`, the Relatio
 fixture case subject, predicate and object. Every supporting EvidenceLink binds that Claim to a checked-in Source
 through a reproducible locator. Only reviewed `direct` or `indirect` evidence can satisfy a documented predicate;
 `background` evidence remains contextual and cannot do so.
+
+The package selects exactly one canonical synthetic Source, and its path is part of the fixed review scope. A safe
+repository path outside that scope is still invalid: evidence content cannot move outside the frozen digest.
 
 Additional requirements:
 
@@ -190,3 +201,6 @@ closed canonical review artifacts, one reviewed digest recomputed from both the 
 regular tracked blobs, sanitized Git configuration, transition artifacts identical to HEAD and a current-HEAD
 `--require-ready` CI gate. Only the declared READY metadata fields—package/owner status, reviewed timestamp,
 working-record state, frozen SHA, digest and review summary—are normalized across that transition.
+Normalization is not trust: the validator independently requires README status and every working-record lifecycle
+field to equal the package/registry values, with exact `PENDING` values before review and exact two-track READY
+wording after review.

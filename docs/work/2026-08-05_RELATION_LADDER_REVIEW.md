@@ -58,3 +58,10 @@ Candidate `18bd8304176a0873464a7e7bf3d824f440dbf628` passed CI but was supersede
 verdict. Its working record did not normalize the final review-summary line, so a truthful READY transition would
 have changed the reviewed digest. The replacement candidate normalizes and mutation-tests that explicitly declared
 metadata field; no attestation from the interrupted review attempt transfers.
+
+Candidate `bf99f01a3c823c24d8c9953ea04f92ce5b101b44` passed 5/5 CI but both independent tracks returned
+`CHANGES_REQUIRED`. They agreed that normalized lifecycle values were not checked against the registry. The
+validator-integrity track also found that the package could select a regular Source outside the review scope and
+that spatial exclusion ignored approximate-point tolerance while treating missing place hierarchy as disjointness.
+The replacement closes the Source set, adds explicit place-disjointness, preserves `unknown` for incomplete place
+knowledge, evaluates corridor/tolerance intersection and mutation-tests exact lifecycle truth. No verdict transfers.
