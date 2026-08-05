@@ -1,6 +1,6 @@
 # ARTEMIS #330 uncertainty semantics review
 
-Status: `COMPLETE / READY`
+Status: `IN_PROGRESS / REVIEW_REQUIRED`
 
 ## Decision
 
@@ -73,6 +73,13 @@ reviews are required on the next exact candidate SHA.
 Both independent reviews bind the same frozen commit and reviewed semantic digest. The final
 transition is metadata-only: semantic cases, schema, source, compatibility projection, validator,
 tests and workflow remain byte-for-byte identical to the frozen candidate.
+
+The first READY transition commit proved the published `--require-ready` gate, but its current-head
+pytest copied READY metadata without the source repository's `.git` directory. Three tests that
+model REVIEW_REQUIRED fixture mutations therefore failed before reaching their intended assertions.
+Because the test file belongs to the reviewed semantic scope, the package returns to
+`REVIEW_REQUIRED`; the copy helper now normalizes its isolated fixture to the intended initial
+review state, and a fresh exact-SHA review is required.
 
 ## Out of scope
 

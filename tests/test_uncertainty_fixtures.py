@@ -41,6 +41,25 @@ def _copy_repo(tmp_path: Path) -> Path:
     base_registry_path.write_text(
         json.dumps(base_registry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+
+    package = _load(target, PACKAGE_REL)
+    package["status"] = "REVIEW_REQUIRED"
+    package["record_time"]["reviewed_at"] = None
+    _write(target, PACKAGE_REL, package)
+    for relative, old, new in (
+        (README_REL, "Status: `READY`", "Status: `REVIEW_REQUIRED`"),
+        (Path("docs/UNCERTAINTY_SEMANTICS_CONTRACT.md"), "- Status: `READY`.", "- Status: `REVIEW_REQUIRED`."),
+    ):
+        path = target / relative
+        path.write_text(path.read_text(encoding="utf-8").replace(old, new, 1), encoding="utf-8")
+    registry = _load(target, REGISTRY_REL)
+    registry.update(
+        status="REVIEW_REQUIRED",
+        frozen_commit=None,
+        reviewed_content_sha256=None,
+        reviews=[],
+    )
+    _write(target, REGISTRY_REL, registry)
     return target
 
 

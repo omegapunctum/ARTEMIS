@@ -5,7 +5,7 @@
 - Type: scoped canonical extension.
 - Version: 1.0.
 - Date: 2026-08-04.
-- Status: `READY`.
+- Status: `REVIEW_REQUIRED`.
 - Active issue: `#330`.
 - Extends: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` and `EPISTEMIC_CONTRACT.md`.
 - Owns: deterministic temporal/spatial uncertainty normalization, filtering and projection rules.

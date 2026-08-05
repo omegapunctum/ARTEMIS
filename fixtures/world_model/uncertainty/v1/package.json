@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
   "package_id": "artemis-uncertainty-semantics-v1",
-  "status": "READY",
+  "status": "REVIEW_REQUIRED",
   "record_time": {
     "created_at": "2026-08-04T16:21:47Z",
-    "reviewed_at": "2026-08-05T04:14:50Z"
+    "reviewed_at": null
   },
   "base_package": {
     "path": "fixtures/world_model/v1",

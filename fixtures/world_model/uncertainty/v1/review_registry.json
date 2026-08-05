@@ -1,58 +1,10 @@
 {
   "schema_version": "1.0.0",
   "package_id": "artemis-uncertainty-semantics-v1",
-  "status": "READY",
-  "frozen_commit": "a6367bbaa17368b9285d7aecb963a07c70c6c50c",
-  "reviewed_content_sha256": "be00f54127f47a04d833e7e766deaf276f0703efb5fb48a8062f7af767715add",
+  "status": "REVIEW_REQUIRED",
+  "frozen_commit": null,
+  "reviewed_content_sha256": null,
   "required_review_count": 2,
   "review_scope_id": "uncertainty-semantics-v1-canonical",
-  "reviews": [
-    {
-      "review_id": "uncertainty-v1-semantic-model-a6367bb",
-      "reviewer_id": "planck-semantic-reviewer",
-      "reviewer_instance_id": "planck-pr337-a6367bb",
-      "track": "semantic-model",
-      "independence_method": "separate_agent_task",
-      "artifact": "docs/work/reviews/uncertainty-v1-semantic-model.json",
-      "artifact_sha256": "579faaedfba416e8d8ffe8995ea6c0f6b43b634fd6e184c123db8677a3341966",
-      "frozen_commit": "a6367bbaa17368b9285d7aecb963a07c70c6c50c",
-      "reviewed_content_sha256": "be00f54127f47a04d833e7e766deaf276f0703efb5fb48a8062f7af767715add",
-      "reviewed_at": "2026-08-05T04:14:10Z",
-      "decision": "READY",
-      "finding_counts": {
-        "critical": 0,
-        "material": 0,
-        "minor": 0
-      },
-      "findings": [],
-      "independence_attestation": true
-    },
-    {
-      "review_id": "uncertainty-v1-validator-integrity-a6367bb",
-      "reviewer_id": "huygens-validator-reviewer",
-      "reviewer_instance_id": "huygens-pr337-a6367bb",
-      "track": "validator-integrity",
-      "independence_method": "separate_agent_task",
-      "artifact": "docs/work/reviews/uncertainty-v1-validator-integrity.json",
-      "artifact_sha256": "0f6da46ac37244ced4d8d69abc46e0cc94b181afae3e6ada78000dc9ad8f4893",
-      "frozen_commit": "a6367bbaa17368b9285d7aecb963a07c70c6c50c",
-      "reviewed_content_sha256": "be00f54127f47a04d833e7e766deaf276f0703efb5fb48a8062f7af767715add",
-      "reviewed_at": "2026-08-05T04:14:35Z",
-      "decision": "READY",
-      "finding_counts": {
-        "critical": 0,
-        "material": 0,
-        "minor": 1
-      },
-      "findings": [
-        {
-          "finding_id": "validator-ready-regression-matrix",
-          "severity": "minor",
-          "status": "resolved",
-          "summary": "Known Git and release-tree defenses are fail-closed; remaining extension-specific negative-test breadth is tracked as nonblocking audit debt."
-        }
-      ],
-      "independence_attestation": true
-    }
-  ]
+  "reviews": []
 }
