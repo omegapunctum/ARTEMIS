@@ -5,10 +5,15 @@ Status: `REVIEW_REQUIRED`
 This synthetic package makes issue #331 executable. The historical “ladder” name is retained for traceability;
 the executable model is a set of independent typed predicates, not a total order or shared rank.
 
-It binds to the reviewed #329 world-model package and consumes the reviewed #330 temporal/spatial extent
-definitions exactly. Fixtures cover nested places, approximate/open/alternative time, uncertain route geometry,
-distance interaction, intermediary action, posthumous influence and process causality. It does not modify either
-base package or claim historical/runtime capability.
+It binds exactly once to each reviewed #329/#330 package. Relation extent values are synthetic test inputs;
+`semantic_profile_refs` select reviewed #330 kinds and modes but do not pretend that a #330 fixture Claim supports
+a different date, place or geometry. The relation schema preserves the reviewed extent shapes while making that
+distinction executable.
+
+Fixtures cover nested places, approximate/open/alternative time, Polygon holes and antimeridian-safe corridor
+evaluation, distance interaction, intermediary action, posthumous influence and process causality. The synthetic
+causal policy is a checked, digest-bound package artifact and is not production causal approval. This package does
+not modify either base package or claim historical/runtime capability.
 
 Validation:
 
@@ -18,3 +23,5 @@ pytest -q tests/test_relation_fixtures.py tests/test_repository_governance_contr
 ```
 
 `--require-ready` is valid only after two independent reviews are recorded against one frozen commit and digest.
+The validator recomputes that digest from the frozen Git tree, parses both review artifacts and rejects untracked,
+symlinked, opaque or path-escaping evidence.

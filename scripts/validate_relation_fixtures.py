@@ -9,6 +9,7 @@ import os
 import re
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -28,18 +29,41 @@ README_PATH = Path("fixtures/world_model/relations/v1/README.md")
 COMPATIBILITY_PATH = Path("fixtures/world_model/relations/v1/compatibility/architecture_atlas_projection.json")
 OWNER_PATH = Path("docs/RELATION_LADDER_CONTRACT.md")
 WORK_PATH = Path("docs/work/2026-08-05_RELATION_LADDER_REVIEW.md")
+SOURCE_PATH = Path("fixtures/world_model/relations/v1/sources/relation-profile.md")
+CAUSAL_POLICY_PATH = Path("fixtures/world_model/relations/v1/policies/causal-policy-explicit-basis-v1.md")
 REVIEW_SCOPE = (
     PACKAGE_PATH,
     SCHEMA_PATH,
     README_PATH,
     COMPATIBILITY_PATH,
-    Path("fixtures/world_model/relations/v1/sources/relation-profile.md"),
+    SOURCE_PATH,
+    CAUSAL_POLICY_PATH,
     OWNER_PATH,
     WORK_PATH,
     Path("scripts/validate_relation_fixtures.py"),
     Path("tests/test_relation_fixtures.py"),
     Path(".github/workflows/relation-contract.yml"),
 )
+READY_TRANSITION_PATHS = (PACKAGE_PATH, REGISTRY_PATH, README_PATH, OWNER_PATH, WORK_PATH)
+REVIEW_SCOPE_ID = "relation-ladder-v1-canonical"
+GIT_ENVIRONMENT_OVERRIDES = {
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_CEILING_DIRECTORIES", "GIT_COMMON_DIR",
+    "GIT_CONFIG_COUNT", "GIT_CONFIG_GLOBAL", "GIT_CONFIG_NOSYSTEM",
+    "GIT_CONFIG_PARAMETERS", "GIT_CONFIG_SYSTEM", "GIT_DIR",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_INDEX_FILE", "GIT_NAMESPACE",
+    "GIT_OBJECT_DIRECTORY", "GIT_PREFIX", "GIT_REPLACE_REF_BASE", "GIT_WORK_TREE",
+}
+REVIEW_FIELDS = {
+    "review_id", "reviewer_id", "reviewer_instance_id", "track",
+    "independence_method", "artifact", "artifact_sha256", "frozen_commit",
+    "reviewed_content_sha256", "reviewed_at", "decision", "finding_counts",
+    "findings", "independence_attestation",
+}
+ARTIFACT_FIELDS = {"artifact_format", *(REVIEW_FIELDS - {"artifact", "artifact_sha256"})}
+EXPECTED_BASE_PACKAGES = {
+    "artemis-world-model-contract-fixture-v1": "fixtures/world_model/v1/review_registry.json",
+    "artemis-uncertainty-semantics-v1": "fixtures/world_model/uncertainty/v1/review_registry.json",
+}
 PREDICATES = ("co_present", "possible_encounter", "documented_encounter", "interaction", "influence", "causal")
 DOCUMENTED = {"documented_encounter", "interaction", "influence", "causal"}
 OVERLAP_STATES = {"confirmed", "possible", "excluded", "unknown"}
@@ -154,32 +178,38 @@ EXPECTED_RULE_BASES = {
 }
 EXPECTED_UI_RULES = {
     "co_present": {
-        "required_label": "Present in overlapping declared extents",
-        "forbidden_phrases": ["met", "knew", "interacted", "influenced", "caused"],
+        "required_label_template": "Extent overlap: {co_presence_result}",
+        "required_disclosures": ["co_presence_result", "temporal_extent_precision", "spatial_extent_precision", "extent_uncertainty"],
+        "forbidden_phrases": ["met", "encountered", "contact", "knew", "interacted", "influenced", "caused"],
         "source_access_required": False,
     },
     "possible_encounter": {
-        "required_label": "May have encountered, if the listed assumptions hold",
-        "forbidden_phrases": ["met", "documented encounter", "interacted", "influenced", "caused"],
+        "required_label_template": "Possible encounter under declared assumptions",
+        "required_disclosures": ["co_presence_result", "assumptions", "relation_uncertainty"],
+        "forbidden_phrases": ["met", "documented encounter", "documented contact", "interacted", "influenced", "caused"],
         "source_access_required": False,
     },
     "documented_encounter": {
-        "required_label": "Documented meeting/contact",
+        "required_label_template": "Documented meeting/contact",
+        "required_disclosures": ["source_locator", "contact_kind", "extent_conflicts"],
         "forbidden_phrases": ["exchanged", "interacted", "influenced", "caused"],
         "source_access_required": True,
     },
     "interaction": {
-        "required_label": "Documented action or exchange",
+        "required_label_template": "Documented action or exchange",
+        "required_disclosures": ["source_locator", "action", "channel"],
         "forbidden_phrases": ["influenced", "caused"],
         "source_access_required": True,
     },
     "influence": {
-        "required_label": "Supported directional influence within the stated scope",
+        "required_label_template": "Supported directional influence within stated scope",
+        "required_disclosures": ["source_locator", "direction", "mechanism", "transmission_mode", "scope"],
         "forbidden_phrases": ["caused", "necessarily caused"],
         "source_access_required": True,
     },
     "causal": {
-        "required_label": "Separately justified causal claim",
+        "required_label_template": "Separately justified causal claim within stated scope",
+        "required_disclosures": ["source_locator", "direction", "mechanism", "scope", "counterfactual_basis", "causal_policy"],
         "forbidden_phrases": ["proven beyond the reviewed scope"],
         "source_access_required": True,
     },
@@ -204,7 +234,14 @@ def _strict_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_strict_object)
+    def reject_constant(value: str) -> None:
+        raise ValueError(f"non-finite JSON number is forbidden: {value}")
+
+    return json.loads(
+        path.read_text(encoding="utf-8"),
+        object_pairs_hook=_strict_object,
+        parse_constant=reject_constant,
+    )
 
 
 def _canonical(value: Any) -> bytes:
@@ -231,18 +268,96 @@ def _normalized_bytes(path: Path, data: bytes) -> bytes:
     return text.encode("utf-8")
 
 
+def _regular_repo_file(root: Path, relative: Path | str) -> Path:
+    relative_path = Path(relative)
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        raise ValueError(f"review path must be canonical and relative: {relative_path.as_posix()}")
+    root_path = root.absolute()
+    if not root_path.is_dir() or root_path.is_symlink():
+        raise ValueError("repository root must be a regular directory, not a symlink")
+    current = root_path
+    for index, part in enumerate(relative_path.parts):
+        current = current / part
+        if current.is_symlink():
+            raise ValueError(f"review path must not contain symlinks: {relative_path}")
+        if index < len(relative_path.parts) - 1 and not current.is_dir():
+            raise ValueError(f"review path parent must be a directory: {relative_path}")
+    if not current.is_file():
+        raise ValueError(f"review artifact must be a regular file: {relative_path}")
+    if not current.resolve(strict=True).is_relative_to(root_path.resolve(strict=True)):
+        raise ValueError(f"review artifact must resolve inside repository root: {relative_path}")
+    return current
+
+
 def compute_review_digest(root: Path) -> str:
     digest = hashlib.sha256()
     for relative in REVIEW_SCOPE:
-        path = root / relative
-        data = _normalized_bytes(relative, path.read_bytes())
+        data = _normalized_bytes(relative, _regular_repo_file(root, relative).read_bytes())
         digest.update(str(relative).encode("utf-8") + b"\0" + data + b"\0")
     return digest.hexdigest()
 
 
+def _git_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        if key in GIT_ENVIRONMENT_OVERRIDES or re.fullmatch(r"GIT_CONFIG_(KEY|VALUE)_\d+", key):
+            environment.pop(key)
+    environment["GIT_NO_REPLACE_OBJECTS"] = "1"
+    return environment
+
+
 def _git_output(root: Path, *args: str) -> bytes:
-    env = {key: value for key, value in os.environ.items() if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR", "GIT_REPLACE_REF_BASE"}}
-    return subprocess.run(("git", "-C", str(root), *args), check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env).stdout
+    return subprocess.run(
+        ("git", "--no-replace-objects", "-C", str(root), *args),
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=_git_environment(),
+    ).stdout
+
+
+def _require_git_toplevel(root: Path) -> None:
+    inside = _git_output(root, "rev-parse", "--is-inside-work-tree").decode().strip()
+    if inside != "true":
+        raise ValueError("review root must be inside a Git working tree")
+    top = Path(_git_output(root, "rev-parse", "--show-toplevel").decode().strip()).resolve(strict=True)
+    if root.absolute().resolve(strict=True) != top:
+        raise ValueError("review root must exactly match Git toplevel")
+    graft = Path(
+        _git_output(root, "rev-parse", "--path-format=absolute", "--git-path", "info/grafts")
+        .decode().strip()
+    )
+    if graft.exists() or graft.is_symlink():
+        raise ValueError("legacy Git grafts must be absent")
+
+
+def _frozen_regular_blob(root: Path, commit: str, relative: Path | str) -> bytes:
+    relative_path = Path(relative).as_posix()
+    entry = _git_output(root, "ls-tree", commit, "--", relative_path).decode().strip()
+    match = re.fullmatch(
+        rf"(100644|100755) blob ([0-9a-f]{{40}})\t{re.escape(relative_path)}",
+        entry,
+    )
+    if match is None:
+        raise ValueError(f"review artifact must be one regular Git blob: {relative_path}")
+    return _git_output(root, "cat-file", "blob", match.group(2))
+
+
+def compute_review_digest_at_commit(root: Path, commit: str) -> str:
+    _require_git_toplevel(root)
+    _git_output(root, "cat-file", "-e", f"{commit}^{{commit}}")
+    _git_output(root, "merge-base", "--is-ancestor", commit, "HEAD")
+    digest = hashlib.sha256()
+    for relative in REVIEW_SCOPE:
+        data = _normalized_bytes(relative, _frozen_regular_blob(root, commit, relative))
+        digest.update(str(relative).encode("utf-8") + b"\0" + data + b"\0")
+    return digest.hexdigest()
+
+
+def _utc_timestamp(value: Any) -> datetime:
+    if not isinstance(value, str) or re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", value) is None:
+        raise ValueError("review timestamp must be UTC ISO-8601 to seconds")
+    return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
 
 
 def _ids(items: list[dict[str, Any]]) -> list[str]:
@@ -322,7 +437,10 @@ def _point(candidate: dict[str, Any]) -> tuple[float, float] | None:
     geometry = candidate.get("geometry")
     if geometry and geometry.get("type") == "Point":
         longitude, latitude = geometry["coordinates"]
-        return float(longitude), float(latitude)
+        point = float(longitude), float(latitude)
+        if not all(math.isfinite(value) for value in point):
+            raise ValueError("point coordinates must be finite")
+        return point
     return None
 
 
@@ -335,20 +453,48 @@ def _distance_m(left: tuple[float, float], right: tuple[float, float]) -> float:
     return 6_371_000 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
-def _point_in_polygon(point: tuple[float, float], polygon: list[list[list[float]]]) -> bool:
-    x, y = point
-    ring = polygon[0]
+def _unwrap_longitude(longitude: float, reference: float) -> float:
+    while longitude - reference > 180:
+        longitude -= 360
+    while longitude - reference < -180:
+        longitude += 360
+    return longitude
+
+
+def _ring_location(point: tuple[float, float], ring: list[list[float]]) -> str:
+    raw_x, y = point
+    first_longitude = float(ring[0][0])
+    x = _unwrap_longitude(raw_x, first_longitude)
+    vertices: list[tuple[float, float]] = []
+    previous_longitude = first_longitude
+    for longitude, latitude in ring:
+        unwrapped = _unwrap_longitude(float(longitude), previous_longitude)
+        vertices.append((unwrapped, float(latitude)))
+        previous_longitude = unwrapped
     inside = False
-    previous = ring[-1]
-    for current in ring:
+    previous = vertices[-1]
+    for current in vertices:
         x1, y1 = previous
         x2, y2 = current
+        cross = (x - x1) * (y2 - y1) - (y - y1) * (x2 - x1)
+        if abs(cross) <= 1e-12 and min(x1, x2) - 1e-12 <= x <= max(x1, x2) + 1e-12 and min(y1, y2) - 1e-12 <= y <= max(y1, y2) + 1e-12:
+            return "boundary"
         if (y1 > y) != (y2 > y):
             boundary_x = (x2 - x1) * (y - y1) / (y2 - y1) + x1
             if x < boundary_x:
                 inside = not inside
         previous = current
-    return inside
+    return "inside" if inside else "outside"
+
+
+def _point_in_polygon(point: tuple[float, float], polygon: list[list[list[float]]]) -> bool:
+    outer = _ring_location(point, polygon[0])
+    if outer == "outside":
+        return False
+    for hole in polygon[1:]:
+        if _ring_location(point, hole) == "inside":
+            return False
+    return True
 
 
 def _spatial_pair_state(left: dict[str, Any], right: dict[str, Any], parents: dict[str, str]) -> str:
@@ -393,14 +539,11 @@ def _spatial_overlap(left: dict[str, Any], right: dict[str, Any], parents: dict[
 
 
 def co_presence_state(case: dict[str, Any], parents: dict[str, str]) -> str:
-    subject = next(
-        presence for presence in case["presence_extents"]
-        if presence["entity_ref"] == case["subject_ref"]
-    )
-    obj = next(
-        presence for presence in case["presence_extents"]
-        if presence["entity_ref"] == case["object_ref"]
-    )
+    indexed = {presence["entity_ref"]: presence for presence in case["presence_extents"]}
+    if case["subject_ref"] not in indexed or case["object_ref"] not in indexed:
+        raise ValueError("presence extents must bind both case endpoints")
+    subject = indexed[case["subject_ref"]]
+    obj = indexed[case["object_ref"]]
     temporal = _temporal_overlap(subject, obj)
     spatial = _spatial_overlap(subject, obj, parents)
     if "excluded" in {temporal, spatial}:
@@ -417,9 +560,16 @@ def is_co_present(case: dict[str, Any], parents: dict[str, str] | None = None) -
 
 
 def _validate_base_packages(root: Path, package: dict[str, Any], errors: list[str]) -> None:
+    declared_by_id = {item["package_id"]: item for item in package["base_packages"]}
+    _require(
+        len(declared_by_id) == len(package["base_packages"])
+        and {key: value["registry_path"] for key, value in declared_by_id.items()} == EXPECTED_BASE_PACKAGES,
+        "base package identities and registry paths must exactly bind reviewed #329 and #330",
+        errors,
+    )
     for declared in package["base_packages"]:
-        registry_path = root / declared["registry_path"]
         try:
+            registry_path = _regular_repo_file(root, declared["registry_path"])
             actual = load_json(registry_path)
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             errors.append(f"base registry load failed: {exc}")
@@ -431,8 +581,10 @@ def _validate_base_packages(root: Path, package: dict[str, Any], errors: list[st
 def _validate_spatial_candidate(candidate: dict[str, Any], errors: list[str], context: str) -> None:
     mode = candidate["mode"]
     geometry = candidate["geometry"]
-    if not candidate["basis_claim_refs"]:
-        errors.append(f"{context}: basis_claim_refs must not be empty")
+    if not candidate["semantic_profile_refs"]:
+        errors.append(f"{context}: semantic_profile_refs must not be empty")
+    if candidate.get("tolerance_m") is not None and not math.isfinite(float(candidate["tolerance_m"])):
+        errors.append(f"{context}: tolerance_m must be finite")
     if geometry is not None:
         uncertainty_validator._validate_geometry(geometry, errors, context)
     if mode in {"named_place", "unknown", "unknown_route"} and geometry is not None:
@@ -477,10 +629,21 @@ def _validate_extent_semantics(
     uncertainty_schema = load_json(
         root / "fixtures/world_model/uncertainty/v1/schema.json"
     )
-    for definition in ("bound", "candidate", "spatialCase"):
+    _require(
+        schema["$defs"]["bound"] == uncertainty_schema["$defs"]["bound"],
+        "relation extent schema must consume the reviewed #330 bound definition exactly",
+        errors,
+    )
+    for definition in ("candidate", "spatialCase"):
+        adapted = json.loads(json.dumps(schema["$defs"][definition]))
+        adapted["required"] = [
+            "basis_claim_refs" if item == "semantic_profile_refs" else item
+            for item in adapted["required"]
+        ]
+        adapted["properties"]["basis_claim_refs"] = adapted["properties"].pop("semantic_profile_refs")
         _require(
-            schema["$defs"][definition] == uncertainty_schema["$defs"][definition],
-            f"relation extent schema must consume the reviewed #330 {definition} definition exactly",
+            adapted == uncertainty_schema["$defs"][definition],
+            f"relation extent schema must preserve reviewed #330 {definition} semantics with an explicit semantic-profile field",
             errors,
         )
 
@@ -543,10 +706,12 @@ def _validate_extent_semantics(
                 errors,
             )
             for candidate in presence["temporal_candidates"]:
+                profile_candidate = dict(candidate)
+                profile_candidate["basis_claim_refs"] = profile_candidate.pop("semantic_profile_refs")
                 uncertainty_validator._validate_candidate(
-                    candidate, errors, f"{presence['id']}/{candidate['id']}"
+                    profile_candidate, errors, f"{presence['id']}/{candidate['id']}"
                 )
-                for ref in candidate["basis_claim_refs"]:
+                for ref in candidate["semantic_profile_refs"]:
                     _require(
                         temporal_target_kinds.get(claim_targets.get(ref))
                         == candidate["kind"],
@@ -557,7 +722,7 @@ def _validate_extent_semantics(
                 _validate_spatial_candidate(
                     candidate, errors, f"{presence['id']}/{candidate['id']}"
                 )
-                for ref in candidate["basis_claim_refs"]:
+                for ref in candidate["semantic_profile_refs"]:
                     _require(
                         spatial_target_modes.get(claim_targets.get(ref))
                         == candidate["mode"],
@@ -667,21 +832,47 @@ def _validate_ui_language(package: dict[str, Any], errors: list[str]) -> None:
         actual = indexed.get(predicate)
         if actual is None:
             continue
-        _require(
-            actual["required_label"] == expected["required_label"],
-            f"UI rule {predicate} required label drift",
-            errors,
-        )
-        _require(
-            actual["forbidden_phrases"] == expected["forbidden_phrases"],
-            f"UI rule {predicate} forbidden implication coverage drift",
-            errors,
-        )
-        _require(
-            actual["source_access_required"] is expected["source_access_required"],
-            f"UI rule {predicate} source-access requirement drift",
-            errors,
-        )
+        for field in ("required_label_template", "required_disclosures", "forbidden_phrases", "source_access_required"):
+            _require(
+                actual[field] == expected[field],
+                f"UI rule {predicate} {field} drift",
+                errors,
+            )
+
+
+def _validate_causal_policy(root: Path, package: dict[str, Any], errors: list[str]) -> dict[str, dict[str, Any]]:
+    policies = {item["id"]: item for item in package["causal_policies"]}
+    _require(len(policies) == len(package["causal_policies"]) == 1, "causal policy IDs must be unique and closed", errors)
+    policy = policies.get("causal-policy-explicit-basis-v1")
+    if policy is None:
+        return policies
+    _require(
+        policy["required_basis"] == [
+            "endpoint-bound causal Claim",
+            "distinct endpoint-bound causal basis Claim",
+            "reviewed non-background evidence for both Claims",
+            "direction, mechanism, bounded scope and counterfactual basis",
+        ],
+        "causal policy required basis drift",
+        errors,
+    )
+    _require(
+        policy["forbidden_shortcuts"] == [
+            "co-presence alone",
+            "encounter or interaction alone",
+            "influence alone",
+            "sequence, correlation, classification or similarity alone",
+        ],
+        "causal policy forbidden-shortcut coverage drift",
+        errors,
+    )
+    try:
+        policy_file = _regular_repo_file(root, policy["path"])
+        _require(policy_file.relative_to(root) == CAUSAL_POLICY_PATH, "causal policy path drift", errors)
+        _require(hashlib.sha256(policy_file.read_bytes()).hexdigest() == policy["sha256"], "causal policy checksum drift", errors)
+    except (OSError, ValueError) as exc:
+        errors.append(f"causal policy load failed: {exc}")
+    return policies
 
 
 def _validate_provenance(root: Path, package: dict[str, Any], errors: list[str]) -> None:
@@ -703,15 +894,21 @@ def _validate_provenance(root: Path, package: dict[str, Any], errors: list[str])
         if claim is None or source is None:
             continue
         try:
-            source_text = (root / source["path"]).read_text(encoding="utf-8")
-        except OSError as exc:
+            source_text = _regular_repo_file(root, source["path"]).read_text(encoding="utf-8")
+        except (OSError, ValueError) as exc:
             errors.append(f"source file load failed for {source['id']}: {exc}")
             continue
         expected = f"{link['locator']} SHA256[{claim['assertion_sha256']}]"
         _require(expected in source_text, f"EvidenceLink {link['id']} locator does not bind its exact Claim digest", errors)
 
     for claim in claims.values():
-        supporting = [link for link in evidence if link["claim_id"] == claim["id"] and link["relation_to_claim"] == "supports" and link["review_state"] == "reviewed"]
+        supporting = [
+            link for link in evidence
+            if link["claim_id"] == claim["id"]
+            and link["relation_to_claim"] == "supports"
+            and link["review_state"] == "reviewed"
+            and link["evidence_strength"] in {"direct", "indirect"}
+        ]
         if claim["evidence_state"] == "supported":
             _require(bool(supporting), f"supported Claim {claim['id']} requires reviewed supporting evidence", errors)
         else:
@@ -723,6 +920,7 @@ def _validate_case(
     claims: dict[str, dict[str, Any]],
     evidence: list[dict[str, Any]],
     uncertainties: dict[str, dict[str, Any]],
+    causal_policies: dict[str, dict[str, Any]],
     parents: dict[str, str],
     errors: list[str],
 ) -> None:
@@ -738,13 +936,8 @@ def _validate_case(
         if case["relation_claim_ref"]
         else None
     )
-    if predicate == "none":
-        _require(
-            observed == "excluded",
-            f"case {case['id']} none requires an excluded co-presence result",
-            errors,
-        )
-        _require(claim is None, f"case {case['id']} none must not create a Claim", errors)
+    if predicate == "no_relation_asserted":
+        _require(claim is None, f"case {case['id']} no_relation_asserted must not create a Claim", errors)
         return
     if predicate == "co_present":
         _require(
@@ -788,11 +981,19 @@ def _validate_case(
 
     _require(predicate in DOCUMENTED, f"case {case['id']} uses unknown documented predicate", errors)
     _require(claim["review_state"] == "reviewed" and claim["evidence_state"] == "supported", f"case {case['id']} documented predicate requires reviewed supported Claim", errors)
-    supporting = [link for link in evidence if link["claim_id"] == claim["id"] and link["relation_to_claim"] == "supports" and link["review_state"] == "reviewed"]
+    supporting = [
+        link for link in evidence
+        if link["claim_id"] == claim["id"]
+        and link["relation_to_claim"] == "supports"
+        and link["review_state"] == "reviewed"
+        and link["evidence_strength"] in {"direct", "indirect"}
+    ]
     _require(bool(supporting), f"case {case['id']} documented predicate requires a supporting locator", errors)
     qualifiers = claim["qualifiers"]
     if predicate == "documented_encounter":
         _require(bool(qualifiers.get("contact_kind")), f"case {case['id']} encounter evidence must name contact kind", errors)
+        if observed in {"excluded", "unknown"}:
+            _require(bool(case["uncertainty_refs"]), f"case {case['id']} encounter/extent conflict must remain explicit", errors)
     elif predicate == "interaction":
         _require(
             bool(qualifiers.get("action"))
@@ -816,13 +1017,30 @@ def _validate_case(
         basis = claims.get(case["causal_basis_claim_ref"])
         _require(case["causal_basis_claim_ref"] != claim["id"] and basis is not None, f"case {case['id']} causal basis must be a distinct Claim", errors)
         if basis is not None:
-            _require(basis["target_ref"] == case["id"] and basis["predicate"] == "causal_basis", f"case {case['id']} causal basis binding mismatch", errors)
-            _require(any(link["claim_id"] == basis["id"] and link["relation_to_claim"] == "supports" for link in evidence), f"case {case['id']} causal basis requires supporting evidence", errors)
-        _require(case["causal_policy_ref"] == "causal-policy-explicit-basis-v1", f"case {case['id']} causal policy reference is missing", errors)
+            _require(
+                basis["target_ref"] == case["id"]
+                and basis["subject_ref"] == case["subject_ref"]
+                and basis["object_ref"] == case["object_ref"]
+                and basis["predicate"] == "causal_basis",
+                f"case {case['id']} causal basis binding mismatch",
+                errors,
+            )
+            _require(
+                any(
+                    link["claim_id"] == basis["id"]
+                    and link["relation_to_claim"] == "supports"
+                    and link["review_state"] == "reviewed"
+                    and link["evidence_strength"] in {"direct", "indirect"}
+                    for link in evidence
+                ),
+                f"case {case['id']} causal basis requires non-background supporting evidence",
+                errors,
+            )
+        _require(case["causal_policy_ref"] in causal_policies, f"case {case['id']} causal policy reference is missing or unresolved", errors)
 
 
 def _validate_cases(
-    package: dict[str, Any], parents: dict[str, str], errors: list[str]
+    package: dict[str, Any], parents: dict[str, str], causal_policies: dict[str, dict[str, Any]], errors: list[str]
 ) -> None:
     claims = {item["id"]: item for item in package["claims"]}
     uncertainties = {item["id"]: item for item in package["uncertainties"]}
@@ -840,10 +1058,10 @@ def _validate_cases(
     _require(len(case_ids) == len(set(case_ids)), "case IDs must be unique", errors)
     roles = {item["fixture_role"] for item in package["cases"]}
     _require(roles == {"positive", "negative", "ambiguous"}, "fixtures must include positive, negative and ambiguous roles", errors)
-    expected = {"none", *PREDICATES}
+    expected = {"no_relation_asserted", *PREDICATES}
     _require(
         {item["asserted_predicate"] for item in package["cases"]} == expected,
-        "fixtures must cover none and every relation predicate",
+        "fixtures must cover no_relation_asserted and every relation predicate",
         errors,
     )
     _require(
@@ -885,10 +1103,11 @@ def _validate_cases(
                 claims,
                 package["evidence_links"],
                 uncertainties,
+                causal_policies,
                 parents,
                 errors,
             )
-        except (ValueError, KeyError) as exc:
+        except (ValueError, KeyError, StopIteration) as exc:
             errors.append(f"case {case.get('id', '<unknown>')} invalid: {exc}")
 
 
@@ -962,39 +1181,137 @@ def _validate_owner(root: Path, package: dict[str, Any], errors: list[str]) -> N
 
 
 def _validate_ready(root: Path, package: dict[str, Any], registry: dict[str, Any], require_ready: bool, errors: list[str]) -> None:
-    _require(registry.get("status") == package["status"], "relation package/registry status drift", errors)
-    if package["status"] != "READY":
+    expected_registry_fields = {
+        "schema_version", "package_id", "status", "frozen_commit",
+        "reviewed_content_sha256", "required_review_count", "review_scope_id", "reviews",
+    }
+    _require(set(registry) == expected_registry_fields, "review registry envelope must be closed", errors)
+    _require(registry.get("schema_version") == "1.0.0", "review registry schema version drift", errors)
+    _require(registry.get("package_id") == package["package_id"], "review registry package drift", errors)
+    _require(type(registry.get("required_review_count")) is int and registry.get("required_review_count") == 2, "exactly two reviews are required", errors)
+    _require(registry.get("review_scope_id") == REVIEW_SCOPE_ID, "review scope id drift", errors)
+    reviews = registry.get("reviews")
+    _require(isinstance(reviews, list), "review registry reviews must be an array", errors)
+    if not isinstance(reviews, list):
+        return
+
+    identities = {key: [] for key in ("review_ids", "reviewers", "instances", "tracks", "artifacts")}
+    parsed_reviews: list[dict[str, Any]] = []
+    for review in reviews:
+        if not isinstance(review, dict):
+            errors.append("review envelope must be an object")
+            continue
+        _require(set(review) == REVIEW_FIELDS, "review envelope must be closed", errors)
+        if set(review) != REVIEW_FIELDS:
+            continue
+        for field in ("review_id", "reviewer_id", "reviewer_instance_id"):
+            _require(isinstance(review[field], str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:/-]{2,}", review[field]) is not None, f"review {field} is invalid", errors)
+        _require(review["track"] in {"semantic-model", "validator-integrity"}, "review track is invalid", errors)
+        _require(review["independence_method"] == "separate_agent_task", "review independence method is invalid", errors)
+        _require(review["independence_attestation"] is True, "review independence must be attested", errors)
+        try:
+            _utc_timestamp(review["reviewed_at"])
+        except ValueError as exc:
+            errors.append(str(exc))
+        _require(isinstance(review["frozen_commit"], str) and re.fullmatch(r"[0-9a-f]{40}", review["frozen_commit"]) is not None, "review frozen_commit is invalid", errors)
+        _require(isinstance(review["reviewed_content_sha256"], str) and re.fullmatch(r"[0-9a-f]{64}", review["reviewed_content_sha256"]) is not None, "review content digest is invalid", errors)
+
+        counts = review["finding_counts"]
+        valid_counts = isinstance(counts, dict) and set(counts) == {"critical", "material", "minor"} and all(type(counts[key]) is int and counts[key] >= 0 for key in counts)
+        _require(valid_counts, "review finding_counts must be a closed non-negative integer map", errors)
+        findings = review["findings"]
+        _require(isinstance(findings, list), "review findings must be an array", errors)
+        if not valid_counts or not isinstance(findings, list):
+            continue
+        finding_ids: list[str] = []
+        valid_findings = True
+        for finding in findings:
+            valid = (
+                isinstance(finding, dict)
+                and set(finding) == {"finding_id", "severity", "status", "summary"}
+                and isinstance(finding.get("finding_id"), str)
+                and finding.get("severity") in {"critical", "material", "minor"}
+                and finding.get("status") in {"resolved", "unresolved"}
+                and isinstance(finding.get("summary"), str)
+                and bool(finding.get("summary", "").strip())
+            )
+            _require(valid, "review finding envelope is invalid", errors)
+            valid_findings &= valid
+            if valid:
+                finding_ids.append(finding["finding_id"])
+        _require(len(finding_ids) == len(set(finding_ids)), "review finding ids must be unique", errors)
+        if valid_findings:
+            derived_counts = {severity: sum(item["severity"] == severity for item in findings) for severity in ("critical", "material", "minor")}
+            unresolved_blockers = any(item["severity"] in {"critical", "material"} and item["status"] == "unresolved" for item in findings)
+            _require(counts == derived_counts, "review finding counts must be derived from findings", errors)
+            _require(review["decision"] == ("CHANGES_REQUIRED" if unresolved_blockers else "READY"), "review decision must be derived from findings", errors)
+
+        artifact_path = Path(review["artifact"])
+        _require(
+            not artifact_path.is_absolute()
+            and ".." not in artifact_path.parts
+            and artifact_path.parts[:3] == ("docs", "work", "reviews")
+            and artifact_path.suffix == ".json",
+            "review artifact path must be canonical JSON under docs/work/reviews",
+            errors,
+        )
+        try:
+            artifact_file = _regular_repo_file(root, artifact_path)
+            _require(re.fullmatch(r"[0-9a-f]{64}", review["artifact_sha256"]) is not None and hashlib.sha256(artifact_file.read_bytes()).hexdigest() == review["artifact_sha256"], "review artifact checksum drift", errors)
+            artifact = load_json(artifact_file)
+            expected_artifact = {
+                "artifact_format": "artemis-review-attestation-v1",
+                **{key: review[key] for key in REVIEW_FIELDS if key not in {"artifact", "artifact_sha256"}},
+            }
+            _require(isinstance(artifact, dict) and set(artifact) == ARTIFACT_FIELDS and artifact == expected_artifact, "review artifact/registry semantic drift", errors)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"review artifact load failed: {exc}")
+
+        identities["review_ids"].append(review["review_id"])
+        identities["reviewers"].append(review["reviewer_id"])
+        identities["instances"].append(review["reviewer_instance_id"])
+        identities["tracks"].append(review["track"])
+        identities["artifacts"].append(review["artifact"])
+        parsed_reviews.append(review)
+
+    for label, values in identities.items():
+        _require(len(values) == len(set(values)), f"review {label} must be distinct", errors)
+    ready_records = len(parsed_reviews) == 2 and set(identities["tracks"]) == {"semantic-model", "validator-integrity"} and all(item["decision"] == "READY" for item in parsed_reviews)
+    expected_status = "READY" if ready_records else "REVIEW_REQUIRED"
+    _require(package["status"] == registry.get("status") == expected_status, "relation package/registry status drift", errors)
+
+    if expected_status != "READY":
+        _require(registry.get("frozen_commit") is None and registry.get("reviewed_content_sha256") is None, "REVIEW_REQUIRED registry cannot carry frozen READY metadata", errors)
+        _require(parsed_reviews == [] and package["record_time"]["reviewed_at"] is None, "REVIEW_REQUIRED state cannot carry reviews or reviewed_at", errors)
         if require_ready:
             errors.append("relation package is not READY")
         return
+
     frozen = registry.get("frozen_commit")
     reviewed_digest = registry.get("reviewed_content_sha256")
-    reviews = registry.get("reviews", [])
-    _require(isinstance(frozen, str) and bool(re.fullmatch(r"[0-9a-f]{40}", frozen or "")), "READY registry requires frozen commit", errors)
-    _require(isinstance(reviewed_digest, str) and bool(re.fullmatch(r"[0-9a-f]{64}", reviewed_digest or "")), "READY registry requires reviewed digest", errors)
-    _require(len(reviews) == 2 and {item.get("track") for item in reviews} == {"semantic-model", "validator-integrity"}, "READY requires two distinct review tracks", errors)
-    _require(len({item.get("reviewer_instance_id") for item in reviews}) == 2, "READY review instances must be distinct", errors)
-    for review in reviews:
-        _require(review.get("decision") == "READY" and review.get("independence_attestation") is True, f"review {review.get('review_id')} is not independently READY", errors)
-        counts = review.get("finding_counts", {})
-        _require(counts.get("critical") == 0 and counts.get("material") == 0, f"review {review.get('review_id')} has unresolved blocker", errors)
-        _require(review.get("frozen_commit") == frozen and review.get("reviewed_content_sha256") == reviewed_digest, f"review {review.get('review_id')} frozen binding mismatch", errors)
-        artifact = root / review.get("artifact", "")
-        try:
-            _require(artifact.is_file() and not artifact.is_symlink(), f"review artifact {artifact} must be a regular non-symlink file", errors)
-            _require(hashlib.sha256(artifact.read_bytes()).hexdigest() == review.get("artifact_sha256"), f"review artifact {artifact} checksum mismatch", errors)
-        except OSError as exc:
-            errors.append(f"review artifact load failed: {exc}")
-    if not frozen or not reviewed_digest:
+    _require(isinstance(frozen, str) and re.fullmatch(r"[0-9a-f]{40}", frozen) is not None, "READY registry requires frozen commit", errors)
+    _require(isinstance(reviewed_digest, str) and re.fullmatch(r"[0-9a-f]{64}", reviewed_digest) is not None, "READY registry requires reviewed digest", errors)
+    if not isinstance(frozen, str) or not isinstance(reviewed_digest, str):
         return
     try:
-        head = _git_output(root, "rev-parse", "HEAD").decode().strip()
-        _git_output(root, "merge-base", "--is-ancestor", frozen, head)
-        _require(compute_review_digest(root) == reviewed_digest, "current normalized relation digest differs from reviewed digest", errors)
-        for relative in REVIEW_SCOPE:
-            _git_output(root, "cat-file", "-e", f"{frozen}:{relative}")
-    except (OSError, subprocess.CalledProcessError) as exc:
-        errors.append(f"review gate: Git ancestry/tree validation failed: {exc}")
+        current_digest = compute_review_digest(root)
+        _require(reviewed_digest == current_digest, "READY digest does not match current semantic scope", errors)
+        _require(compute_review_digest_at_commit(root, "HEAD") == current_digest, "current Git HEAD does not contain the reviewed semantic scope", errors)
+        _require(compute_review_digest_at_commit(root, frozen) == current_digest, "frozen commit does not contain the reviewed semantic scope", errors)
+        artifact_paths = [Path(review["artifact"]) for review in parsed_reviews]
+        for path in (*READY_TRANSITION_PATHS, *artifact_paths):
+            _require(_regular_repo_file(root, path).read_bytes() == _frozen_regular_blob(root, "HEAD", path), f"READY transition artifact must exactly match Git HEAD: {path}", errors)
+        for review in parsed_reviews:
+            _require(review["frozen_commit"] == frozen and review["reviewed_content_sha256"] == current_digest, f"review {review['review_id']} frozen binding mismatch", errors)
+        frozen_time = datetime.fromisoformat(_git_output(root, "show", "-s", "--format=%cI", frozen).decode().strip()).astimezone(UTC)
+        reviewed_at = _utc_timestamp(package["record_time"]["reviewed_at"])
+        review_times = [_utc_timestamp(review["reviewed_at"]) for review in parsed_reviews]
+        created_at = _utc_timestamp(package["record_time"]["created_at"])
+        now = datetime.now(UTC)
+        _require(created_at <= reviewed_at <= now, "package review chronology is invalid", errors)
+        _require(all(frozen_time <= value <= reviewed_at for value in review_times), "review chronology is invalid", errors)
+    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
+        errors.append(f"review gate: Git/tree validation failed: {exc}")
 
 
 def validate_repository(root: Path, require_ready: bool = False) -> list[str]:
@@ -1015,7 +1332,8 @@ def validate_repository(root: Path, require_ready: bool = False) -> list[str]:
     _validate_ui_language(package, errors)
     parents = _validate_extent_semantics(root, schema, package, errors)
     _validate_provenance(root, package, errors)
-    _validate_cases(package, parents, errors)
+    causal_policies = _validate_causal_policy(root, package, errors)
+    _validate_cases(package, parents, causal_policies, errors)
     _validate_separation(root, package, errors)
     _validate_owner(root, package, errors)
     _validate_ready(root, package, registry, require_ready, errors)

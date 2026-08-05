@@ -26,12 +26,14 @@ confidence with AI or introduce automated causal discovery.
 | Co-presence cannot create Relation | four-state #330 extent derivation and negative mutation |
 | Possible encounter assumptions | structured assumptions, uncertainty and inference Claim |
 | Independent documented predicates | distance/mediated/posthumous/process fixtures plus item-bound Claim → EvidenceLink → Source/locator checks |
-| Distinct causal basis | separate causal-basis Claim and policy reference |
+| Distinct causal basis | same-endpoint causal-basis Claim plus checked, digest-bound synthetic policy artifact |
 | Classification/Similarity separate | `non_relation_cases` and closed compatibility mapping |
 | Required scenarios | fourteen positive/negative/ambiguous cases |
 | Boundary overpromotion | five regression boundaries without logical inheritance |
-| #329/#330 consumption | exact reviewed base bindings, exact extent schema definitions and profile refs |
-| UI language | unique complete executable rules with exact labels and forbidden implications |
+| #329/#330 consumption | closed unique base bindings plus explicit semantic-profile refs that cannot masquerade as evidence |
+| UI language | unique complete rules with label templates, disclosures, source access and forbidden implications |
+| Validator integrity | strict finite JSON, safe repo paths, Polygon holes/antimeridian/boundaries and fail-closed endpoint binding |
+| Frozen review integrity | digest recomputed from frozen tree; closed parsed artifacts and transition blobs bound to HEAD |
 | Independent review | pending frozen semantic and validator tracks |
 
 ## Review protocol
@@ -39,3 +41,15 @@ confidence with AI or introduce automated causal discovery.
 Both reviewers must inspect the same frozen commit and reviewed digest. One track reviews predicate independence,
 extent interpretation and overclaim paths; the other reviews validator integrity, #330 binding, provenance,
 Git/tree binding and adversarial bypasses. No prior #329/#330 verdict transfers to this package.
+
+## Superseded candidate review
+
+Candidate `d2bfd14a617de0672e80174bb96e2c2868a23a96` with normalized digest
+`4fdc2f95cfa93a6d47ea5830ed73b7f24a36712c9e088cfeb2aacbf4d3be9528` was independently rejected by both
+tracks and is not eligible for READY. The new candidate must be reviewed from scratch.
+
+The semantic review found false evidence appearance in reused #330 basis references, an unresolved causal-policy
+literal and UI rules that could hide possible overlap. The validator-integrity review found the frozen-tree digest
+bypass, opaque review artifacts, Polygon hole/antimeridian errors, weak causal endpoints, background evidence
+promotion, duplicate dependency acceptance and non-finite JSON. Version 1.2 addresses every critical/material
+finding with executable negative tests; this statement is implementation evidence, not a replacement verdict.

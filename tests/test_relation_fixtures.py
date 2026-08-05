@@ -85,6 +85,19 @@ def _claim(package: dict, claim_id: str) -> dict:
     return next(item for item in package["claims"] if item["id"] == claim_id)
 
 
+def _refresh_claim_locator(root: Path, package: dict, claim_id: str) -> None:
+    claim = _claim(package, claim_id)
+    old_digest = claim["assertion_sha256"]
+    claim["assertion_sha256"] = validator.claim_digest(claim)
+    source = root / "fixtures/world_model/relations/v1/sources/relation-profile.md"
+    source.write_text(
+        source.read_text(encoding="utf-8").replace(
+            f"SHA256[{old_digest}]", f"SHA256[{claim['assertion_sha256']}]", 1
+        ),
+        encoding="utf-8",
+    )
+
+
 def _presence(case: dict, entity_ref: str) -> dict:
     return next(
         item for item in case["presence_extents"] if item["entity_ref"] == entity_ref
@@ -504,7 +517,7 @@ def test_extent_candidate_requires_reviewed_330_profile_ref(tmp_path: Path) -> N
     package = _load(root, PACKAGE_REL)
     case = _case(package, "case-same-city-no-contact")
     case["presence_extents"][0]["temporal_candidates"][0][
-        "basis_claim_refs"
+        "semantic_profile_refs"
     ] = ["claim-named-place"]
     _write(root, PACKAGE_REL, package)
     assert any(
@@ -553,10 +566,10 @@ def test_alternative_order_does_not_select_a_first_winner() -> None:
 def test_ui_language_rules_are_executable(tmp_path: Path) -> None:
     root = _copy_repo(tmp_path)
     package = _load(root, PACKAGE_REL)
-    package["ui_language_rules"][0]["required_label"] = "Same place and time"
+    package["ui_language_rules"][0]["required_label_template"] = "Same place and time"
     _write(root, PACKAGE_REL, package)
     assert any(
-        "UI rule co_present required label drift" in item
+        "UI rule co_present required_label_template drift" in item
         for item in validator.validate_repository(root)
     )
 
@@ -646,3 +659,184 @@ def test_strict_json_loader_rejects_duplicate_keys(tmp_path: Path) -> None:
     )
     with pytest.raises(validator.DuplicateKeyError):
         validator.load_json(path)
+
+
+@pytest.mark.parametrize("constant", ["NaN", "Infinity", "-Infinity"])
+def test_strict_json_loader_rejects_non_finite_numbers(
+    tmp_path: Path, constant: str
+) -> None:
+    path = tmp_path / "non-finite.json"
+    path.write_text(f'{{"value":{constant}}}', encoding="utf-8")
+    with pytest.raises(ValueError, match="non-finite"):
+        validator.load_json(path)
+
+
+def test_base_dependencies_cannot_duplicate_329_and_drop_330(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    package["base_packages"][1] = copy.deepcopy(package["base_packages"][0])
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "exactly bind reviewed #329 and #330" in item
+        for item in validator.validate_repository(root)
+    )
+
+
+def test_background_evidence_cannot_support_documented_predicate(
+    tmp_path: Path,
+) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    link = next(
+        item
+        for item in package["evidence_links"]
+        if item["id"] == "evidence-documented-encounter"
+    )
+    link["evidence_strength"] = "background"
+    _write(root, PACKAGE_REL, package)
+    errors = validator.validate_repository(root)
+    assert any("requires reviewed supporting evidence" in item for item in errors)
+    assert any("requires a supporting locator" in item for item in errors)
+
+
+def test_causal_basis_must_bind_the_same_endpoints(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    basis = _claim(package, "claim-causal-process-basis")
+    basis["subject_ref"] = "entity-unrelated-a"
+    basis["object_ref"] = "entity-unrelated-b"
+    _refresh_claim_locator(root, package, basis["id"])
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "causal basis binding mismatch" in item
+        for item in validator.validate_repository(root)
+    )
+
+
+def test_causal_policy_must_resolve_to_checked_artifact(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    package["causal_policies"][0]["sha256"] = "0" * 64
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "causal policy checksum drift" in item
+        for item in validator.validate_repository(root)
+    )
+
+
+def test_polygon_hole_excludes_point_from_corridor() -> None:
+    package = _load(ROOT, PACKAGE_REL)
+    case = copy.deepcopy(_case(package, "case-inferred-route-proximity"))
+    corridor = _presence(case, "entity-ada")["spatial_candidates"][0]
+    corridor["geometry"]["coordinates"].append(
+        [[10.4, 50.4], [10.6, 50.4], [10.6, 50.6], [10.4, 50.6], [10.4, 50.4]]
+    )
+    parents = {
+        item["child_ref"]: item["parent_ref"] for item in package["place_hierarchy"]
+    }
+    assert validator.co_presence_state(case, parents) == "excluded"
+
+
+def test_polygon_handles_antimeridian_and_boundaries() -> None:
+    polygon = [
+        [[170.0, -10.0], [-170.0, -10.0], [-170.0, 10.0], [170.0, 10.0], [170.0, -10.0]]
+    ]
+    assert validator._point_in_polygon((179.0, 0.0), polygon)
+    assert validator._point_in_polygon((-179.0, 0.0), polygon)
+    assert not validator._point_in_polygon((0.0, 0.0), polygon)
+    assert validator._point_in_polygon((170.0, 0.0), polygon)
+
+
+def test_missing_presence_endpoint_fails_closed_without_crash(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    case = _case(package, "case-same-city-no-contact")
+    case["presence_extents"][1]["entity_ref"] = "entity-unrelated"
+    _write(root, PACKAGE_REL, package)
+    errors = validator.validate_repository(root)
+    assert any("must bind exactly one extent to each endpoint" in item for item in errors)
+    assert any("presence extents must bind both case endpoints" in item for item in errors)
+
+
+def test_no_relation_asserted_does_not_claim_historical_absence(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    case = _case(package, "case-disjoint-place")
+    _presence(case, "entity-cira")["spatial_candidates"][0]["place_ref"] = "place-north-city"
+    case["co_presence_result"] = "confirmed"
+    _write(root, PACKAGE_REL, package)
+    assert validator.validate_repository(root) == []
+
+
+def test_ui_requires_overlap_status_and_uncertainty_disclosures(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    package["ui_language_rules"][0]["required_disclosures"] = ["extent_uncertainty"]
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "required_disclosures drift" in item
+        for item in validator.validate_repository(root)
+    )
+
+
+def test_source_path_cannot_escape_repository(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    package["sources"][0]["path"] = "../../outside.md"
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "source file load failed" in item and "canonical and relative" in item
+        for item in validator.validate_repository(root)
+    )
+
+
+def test_ready_rejects_opaque_review_artifact(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    _prepare_ready(root)
+    registry = _load(root, REGISTRY_REL)
+    artifact_relative = Path(registry["reviews"][0]["artifact"])
+    _write(root, artifact_relative, {})
+    registry["reviews"][0]["artifact_sha256"] = hashlib.sha256(
+        (root / artifact_relative).read_bytes()
+    ).hexdigest()
+    _write(root, REGISTRY_REL, registry)
+    _run_git(root, "add", "--all")
+    _run_git(root, "commit", "-m", "mutate review artifact")
+    assert any(
+        "review artifact/registry semantic drift" in item
+        for item in validator.validate_repository(root, require_ready=True)
+    )
+
+
+def test_ready_digest_must_describe_frozen_commit_tree(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    frozen, old_digest = _prepare_ready(root)
+    source = root / "fixtures/world_model/relations/v1/sources/relation-profile.md"
+    source.write_text(source.read_text(encoding="utf-8") + "\nReviewed-scope mutation.\n", encoding="utf-8")
+    new_digest = validator.compute_review_digest(root)
+    assert new_digest != old_digest
+
+    registry = _load(root, REGISTRY_REL)
+    registry["reviewed_content_sha256"] = new_digest
+    for review in registry["reviews"]:
+        review["reviewed_content_sha256"] = new_digest
+        artifact = {
+            "artifact_format": "artemis-review-attestation-v1",
+            **{
+                key: review[key]
+                for key in validator.REVIEW_FIELDS
+                if key not in {"artifact", "artifact_sha256"}
+            },
+        }
+        artifact_relative = Path(review["artifact"])
+        _write(root, artifact_relative, artifact)
+        review["artifact_sha256"] = hashlib.sha256(
+            (root / artifact_relative).read_bytes()
+        ).hexdigest()
+    _write(root, REGISTRY_REL, registry)
+    _run_git(root, "add", "--all")
+    _run_git(root, "commit", "-m", "retarget digest without moving frozen commit")
+
+    errors = validator.validate_repository(root, require_ready=True)
+    assert any("frozen commit does not contain" in item for item in errors)
+    assert registry["frozen_commit"] == frozen

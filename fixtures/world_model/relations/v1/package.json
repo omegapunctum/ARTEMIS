@@ -82,6 +82,27 @@
     {"child_ref": "place-north-hall", "parent_ref": "place-north-city"},
     {"child_ref": "place-court-chamber", "parent_ref": "place-court"}
   ],
+  "causal_policies": [
+    {
+      "id": "causal-policy-explicit-basis-v1",
+      "path": "fixtures/world_model/relations/v1/policies/causal-policy-explicit-basis-v1.md",
+      "scope": "synthetic_contract_fixture_only",
+      "status": "included_in_package_review",
+      "required_basis": [
+        "endpoint-bound causal Claim",
+        "distinct endpoint-bound causal basis Claim",
+        "reviewed non-background evidence for both Claims",
+        "direction, mechanism, bounded scope and counterfactual basis"
+      ],
+      "forbidden_shortcuts": [
+        "co-presence alone",
+        "encounter or interaction alone",
+        "influence alone",
+        "sequence, correlation, classification or similarity alone"
+      ],
+      "sha256": "1b3f80aa63b2b412d05f8281db0bba79716ddc3b2c026e636864fb7487e341f7"
+    }
+  ],
   "sources": [
     {
       "id": "source-relation-profile",
@@ -281,15 +302,15 @@
         {
           "id": "presence-same-city-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-same-city-ada", "kind": "closed_interval", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-05", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
-          "spatial_candidates": [{"id": "space-same-city-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-same-city-ada", "kind": "closed_interval", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-05", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-same-city-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-same-city-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-same-city-borin", "kind": "closed_interval", "lower": {"value": "1504-03-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-06", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
-          "spatial_candidates": [{"id": "space-same-city-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-same-city-borin", "kind": "closed_interval", "lower": {"value": "1504-03-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-06", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-same-city-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -310,20 +331,20 @@
         {
           "id": "presence-disjoint-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-disjoint-ada", "kind": "instant", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-disjoint-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-disjoint-ada", "kind": "instant", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-disjoint-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-disjoint-cira",
           "entity_ref": "entity-cira",
-          "temporal_candidates": [{"id": "time-disjoint-cira", "kind": "instant", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-disjoint-cira", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-disjoint-cira", "kind": "instant", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-disjoint-cira", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
       "co_presence_result": "excluded",
-      "asserted_predicate": "none",
+      "asserted_predicate": "no_relation_asserted",
       "relation_claim_ref": null,
       "assumptions": [],
       "uncertainty_refs": [],
@@ -339,15 +360,15 @@
         {
           "id": "presence-workshop-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-workshop-ada", "kind": "closed_interval", "lower": {"value": "1504-04-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-04-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
-          "spatial_candidates": [{"id": "space-workshop-ada", "mode": "named_place", "geometry": null, "place_ref": "place-workshop", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-workshop-ada", "kind": "closed_interval", "lower": {"value": "1504-04-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-04-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-workshop-ada", "mode": "named_place", "geometry": null, "place_ref": "place-workshop", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-workshop-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-workshop-borin", "kind": "closed_interval", "lower": {"value": "1504-04-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-04-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
-          "spatial_candidates": [{"id": "space-workshop-borin", "mode": "named_place", "geometry": null, "place_ref": "place-workshop-hall", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-workshop-borin", "kind": "closed_interval", "lower": {"value": "1504-04-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-04-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-workshop-borin", "mode": "named_place", "geometry": null, "place_ref": "place-workshop-hall", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -369,17 +390,17 @@
           "id": "presence-court-ada",
           "entity_ref": "entity-ada",
           "temporal_candidates": [
-            {"id": "time-court-ada-a", "kind": "instant", "lower": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-alternative-1503"]},
-            {"id": "time-court-ada-b", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-alternative-1504"]}
+            {"id": "time-court-ada-a", "kind": "instant", "lower": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-alternative-1503"]},
+            {"id": "time-court-ada-b", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-alternative-1504"]}
           ],
-          "spatial_candidates": [{"id": "space-court-ada", "mode": "named_place", "geometry": null, "place_ref": "place-court", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "spatial_candidates": [{"id": "space-court-ada", "mode": "named_place", "geometry": null, "place_ref": "place-court", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-court-cira",
           "entity_ref": "entity-cira",
-          "temporal_candidates": [{"id": "time-court-cira", "kind": "instant", "lower": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-court-cira", "mode": "named_place", "geometry": null, "place_ref": "place-court-chamber", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-court-cira", "kind": "instant", "lower": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-court-cira", "mode": "named_place", "geometry": null, "place_ref": "place-court-chamber", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -400,15 +421,15 @@
         {
           "id": "presence-encounter-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-encounter-ada", "kind": "instant", "lower": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-encounter-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-hall", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-encounter-ada", "kind": "instant", "lower": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-encounter-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-hall", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-encounter-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-encounter-borin", "kind": "instant", "lower": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-encounter-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-hall", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-encounter-borin", "kind": "instant", "lower": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-encounter-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-hall", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -429,15 +450,15 @@
         {
           "id": "presence-correspondence-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-correspondence-ada", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-correspondence-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-correspondence-ada", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-correspondence-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-correspondence-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-correspondence-borin", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-correspondence-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-correspondence-borin", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-correspondence-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -458,15 +479,15 @@
         {
           "id": "presence-intermediary-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-intermediary-ada", "kind": "instant", "lower": {"value": "1504-06-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-intermediary-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-intermediary-ada", "kind": "instant", "lower": {"value": "1504-06-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-intermediary-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-intermediary-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-intermediary-borin", "kind": "instant", "lower": {"value": "1504-06-04", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-04", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-intermediary-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-intermediary-borin", "kind": "instant", "lower": {"value": "1504-06-04", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-04", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-intermediary-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -487,15 +508,15 @@
         {
           "id": "presence-posthumous-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-posthumous-ada", "kind": "instant", "lower": {"value": "1490", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1490", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-posthumous-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-posthumous-ada", "kind": "instant", "lower": {"value": "1490", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1490", "precision": "year", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-posthumous-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-posthumous-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-posthumous-borin", "kind": "instant", "lower": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-posthumous-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-posthumous-borin", "kind": "instant", "lower": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-posthumous-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -516,15 +537,15 @@
         {
           "id": "presence-causal-printing",
           "entity_ref": "process-printing-expansion",
-          "temporal_candidates": [{"id": "time-causal-printing", "kind": "closed_interval", "lower": {"value": "1500", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1510", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
-          "spatial_candidates": [{"id": "space-causal-printing", "mode": "named_place", "geometry": null, "place_ref": "place-north-region", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-causal-printing", "kind": "closed_interval", "lower": {"value": "1500", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1510", "precision": "year", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-causal-printing", "mode": "named_place", "geometry": null, "place_ref": "place-north-region", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-causal-diffusion",
           "entity_ref": "process-workshop-diffusion",
-          "temporal_candidates": [{"id": "time-causal-diffusion", "kind": "closed_interval", "lower": {"value": "1510", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
-          "spatial_candidates": [{"id": "space-causal-diffusion", "mode": "named_place", "geometry": null, "place_ref": "place-south-region", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-causal-diffusion", "kind": "closed_interval", "lower": {"value": "1510", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-causal-diffusion", "mode": "named_place", "geometry": null, "place_ref": "place-south-region", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -545,15 +566,15 @@
         {
           "id": "presence-approximate-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-approximate-ada", "kind": "approximate", "lower": {"value": "1503", "precision": "year", "qualifier": "approximate_start", "inclusive": true}, "upper": {"value": "1504", "precision": "year", "qualifier": "approximate_end", "inclusive": true}, "basis_claim_refs": ["claim-approximate-range"]}],
-          "spatial_candidates": [{"id": "space-approximate-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-approximate-ada", "kind": "approximate", "lower": {"value": "1503", "precision": "year", "qualifier": "approximate_start", "inclusive": true}, "upper": {"value": "1504", "precision": "year", "qualifier": "approximate_end", "inclusive": true}, "semantic_profile_refs": ["claim-approximate-range"]}],
+          "spatial_candidates": [{"id": "space-approximate-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-approximate-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-approximate-borin", "kind": "instant", "lower": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-approximate-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-approximate-borin", "kind": "instant", "lower": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-approximate-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -574,15 +595,15 @@
         {
           "id": "presence-open-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-open-ada", "kind": "open_end_interval", "lower": {"value": "1504", "precision": "year", "qualifier": "not_before", "inclusive": true}, "upper": null, "basis_claim_refs": ["claim-not-before"]}],
-          "spatial_candidates": [{"id": "space-open-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-open-ada", "kind": "open_end_interval", "lower": {"value": "1504", "precision": "year", "qualifier": "not_before", "inclusive": true}, "upper": null, "semantic_profile_refs": ["claim-not-before"]}],
+          "spatial_candidates": [{"id": "space-open-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         },
         {
           "id": "presence-open-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-open-borin", "kind": "open_start_interval", "lower": null, "upper": {"value": "1505", "precision": "year", "qualifier": "not_after", "inclusive": true}, "basis_claim_refs": ["claim-not-after"]}],
-          "spatial_candidates": [{"id": "space-open-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-open-borin", "kind": "open_start_interval", "lower": null, "upper": {"value": "1505", "precision": "year", "qualifier": "not_after", "inclusive": true}, "semantic_profile_refs": ["claim-not-after"]}],
+          "spatial_candidates": [{"id": "space-open-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -603,18 +624,18 @@
         {
           "id": "presence-place-conflict-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-place-conflict-ada", "kind": "instant", "lower": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "temporal_candidates": [{"id": "time-place-conflict-ada", "kind": "instant", "lower": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
           "spatial_candidates": [
-            {"id": "space-place-conflict-ada-a", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"},
-            {"id": "space-place-conflict-ada-b", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}
+            {"id": "space-place-conflict-ada-a", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"},
+            {"id": "space-place-conflict-ada-b", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}
           ],
           "uncertainty_refs": []
         },
         {
           "id": "presence-place-conflict-cira",
           "entity_ref": "entity-cira",
-          "temporal_candidates": [{"id": "time-place-conflict-cira", "kind": "instant", "lower": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-place-conflict-cira", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "temporal_candidates": [{"id": "time-place-conflict-cira", "kind": "instant", "lower": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-place-conflict-cira", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "semantic_profile_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
           "uncertainty_refs": []
         }
       ],
@@ -635,15 +656,15 @@
         {
           "id": "presence-route-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-route-ada", "kind": "instant", "lower": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-route-ada", "mode": "inferred_corridor", "geometry": {"type": "Polygon", "coordinates": [[[10.0, 50.0], [11.0, 50.0], [11.0, 51.0], [10.0, 51.0], [10.0, 50.0]]]}, "basis_claim_refs": ["claim-inferred-corridor-assumption"], "uncertainty_refs": ["uncertainty-inferred-corridor"], "projection_policy": "show_inferred_geometry"}],
+          "temporal_candidates": [{"id": "time-route-ada", "kind": "instant", "lower": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-route-ada", "mode": "inferred_corridor", "geometry": {"type": "Polygon", "coordinates": [[[10.0, 50.0], [11.0, 50.0], [11.0, 51.0], [10.0, 51.0], [10.0, 50.0]]]}, "semantic_profile_refs": ["claim-inferred-corridor-assumption"], "uncertainty_refs": ["uncertainty-inferred-corridor"], "projection_policy": "show_inferred_geometry"}],
           "uncertainty_refs": ["uncertainty-inferred-corridor"]
         },
         {
           "id": "presence-route-borin",
           "entity_ref": "entity-borin",
-          "temporal_candidates": [{"id": "time-route-borin", "kind": "instant", "lower": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
-          "spatial_candidates": [{"id": "space-route-borin", "mode": "exact_point", "geometry": {"type": "Point", "coordinates": [10.5, 50.5]}, "basis_claim_refs": ["claim-exact-point"], "uncertainty_refs": [], "projection_policy": "show_exact"}],
+          "temporal_candidates": [{"id": "time-route-borin", "kind": "instant", "lower": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "semantic_profile_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-route-borin", "mode": "exact_point", "geometry": {"type": "Point", "coordinates": [10.5, 50.5]}, "semantic_profile_refs": ["claim-exact-point"], "uncertainty_refs": [], "projection_policy": "show_exact"}],
           "uncertainty_refs": []
         }
       ],
@@ -664,15 +685,15 @@
         {
           "id": "presence-unknown-ada",
           "entity_ref": "entity-ada",
-          "temporal_candidates": [{"id": "time-unknown-ada", "kind": "unknown", "lower": null, "upper": null, "basis_claim_refs": ["claim-time-unknown"]}],
-          "spatial_candidates": [{"id": "space-unknown-ada", "mode": "unknown", "geometry": null, "basis_claim_refs": ["claim-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"], "projection_policy": "show_unknown"}],
+          "temporal_candidates": [{"id": "time-unknown-ada", "kind": "unknown", "lower": null, "upper": null, "semantic_profile_refs": ["claim-time-unknown"]}],
+          "spatial_candidates": [{"id": "space-unknown-ada", "mode": "unknown", "geometry": null, "semantic_profile_refs": ["claim-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"], "projection_policy": "show_unknown"}],
           "uncertainty_refs": ["uncertainty-location-unknown"]
         },
         {
           "id": "presence-unknown-cira",
           "entity_ref": "entity-cira",
-          "temporal_candidates": [{"id": "time-unknown-cira", "kind": "unknown", "lower": null, "upper": null, "basis_claim_refs": ["claim-time-unknown"]}],
-          "spatial_candidates": [{"id": "space-unknown-cira", "mode": "unknown", "geometry": null, "basis_claim_refs": ["claim-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"], "projection_policy": "show_unknown"}],
+          "temporal_candidates": [{"id": "time-unknown-cira", "kind": "unknown", "lower": null, "upper": null, "semantic_profile_refs": ["claim-time-unknown"]}],
+          "spatial_candidates": [{"id": "space-unknown-cira", "mode": "unknown", "geometry": null, "semantic_profile_refs": ["claim-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"], "projection_policy": "show_unknown"}],
           "uncertainty_refs": ["uncertainty-location-unknown"]
         }
       ],
@@ -697,11 +718,11 @@
     {"from": "influence", "to": "causal", "rule_kind": "independent_predicate_evidence", "automatic": false, "required_basis": ["distinct causal basis Claim", "causal policy reference"]}
   ],
   "ui_language_rules": [
-    {"predicate": "co_present", "required_label": "Present in overlapping declared extents", "forbidden_phrases": ["met", "knew", "interacted", "influenced", "caused"], "source_access_required": false},
-    {"predicate": "possible_encounter", "required_label": "May have encountered, if the listed assumptions hold", "forbidden_phrases": ["met", "documented encounter", "interacted", "influenced", "caused"], "source_access_required": false},
-    {"predicate": "documented_encounter", "required_label": "Documented meeting/contact", "forbidden_phrases": ["exchanged", "interacted", "influenced", "caused"], "source_access_required": true},
-    {"predicate": "interaction", "required_label": "Documented action or exchange", "forbidden_phrases": ["influenced", "caused"], "source_access_required": true},
-    {"predicate": "influence", "required_label": "Supported directional influence within the stated scope", "forbidden_phrases": ["caused", "necessarily caused"], "source_access_required": true},
-    {"predicate": "causal", "required_label": "Separately justified causal claim", "forbidden_phrases": ["proven beyond the reviewed scope"], "source_access_required": true}
+    {"predicate": "co_present", "required_label_template": "Extent overlap: {co_presence_result}", "required_disclosures": ["co_presence_result", "temporal_extent_precision", "spatial_extent_precision", "extent_uncertainty"], "forbidden_phrases": ["met", "encountered", "contact", "knew", "interacted", "influenced", "caused"], "source_access_required": false},
+    {"predicate": "possible_encounter", "required_label_template": "Possible encounter under declared assumptions", "required_disclosures": ["co_presence_result", "assumptions", "relation_uncertainty"], "forbidden_phrases": ["met", "documented encounter", "documented contact", "interacted", "influenced", "caused"], "source_access_required": false},
+    {"predicate": "documented_encounter", "required_label_template": "Documented meeting/contact", "required_disclosures": ["source_locator", "contact_kind", "extent_conflicts"], "forbidden_phrases": ["exchanged", "interacted", "influenced", "caused"], "source_access_required": true},
+    {"predicate": "interaction", "required_label_template": "Documented action or exchange", "required_disclosures": ["source_locator", "action", "channel"], "forbidden_phrases": ["influenced", "caused"], "source_access_required": true},
+    {"predicate": "influence", "required_label_template": "Supported directional influence within stated scope", "required_disclosures": ["source_locator", "direction", "mechanism", "transmission_mode", "scope"], "forbidden_phrases": ["caused", "necessarily caused"], "source_access_required": true},
+    {"predicate": "causal", "required_label_template": "Separately justified causal claim within stated scope", "required_disclosures": ["source_locator", "direction", "mechanism", "scope", "counterfactual_basis", "causal_policy"], "forbidden_phrases": ["proven beyond the reviewed scope"], "source_access_required": true}
   ]
 }

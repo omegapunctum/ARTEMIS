@@ -12,6 +12,7 @@
     "base_packages",
     "relation_predicates",
     "place_hierarchy",
+    "causal_policies",
     "sources",
     "claims",
     "evidence_links",
@@ -38,6 +39,7 @@
     "base_packages": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/basePackage"}},
     "relation_predicates": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/predicate"}},
     "place_hierarchy": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/placeParent"}},
+    "causal_policies": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/causalPolicy"}},
     "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
     "claims": {"type": "array", "minItems": 9, "items": {"$ref": "#/$defs/claim"}},
     "evidence_links": {"type": "array", "minItems": 7, "items": {"$ref": "#/$defs/evidence"}},
@@ -81,6 +83,20 @@
       "additionalProperties": false,
       "required": ["child_ref", "parent_ref"],
       "properties": {"child_ref": {"$ref": "#/$defs/id"}, "parent_ref": {"$ref": "#/$defs/id"}}
+    },
+    "causalPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "scope", "status", "required_basis", "forbidden_shortcuts", "sha256"],
+      "properties": {
+        "id": {"const": "causal-policy-explicit-basis-v1"},
+        "path": {"const": "fixtures/world_model/relations/v1/policies/causal-policy-explicit-basis-v1.md"},
+        "scope": {"const": "synthetic_contract_fixture_only"},
+        "status": {"const": "included_in_package_review"},
+        "required_basis": {"type": "array", "minItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "forbidden_shortcuts": {"type": "array", "minItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
     },
     "source": {
       "type": "object",
@@ -155,19 +171,19 @@
     "candidate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "kind", "lower", "upper", "basis_claim_refs"],
+      "required": ["id", "kind", "lower", "upper", "semantic_profile_refs"],
       "properties": {
         "id": {"$ref": "#/$defs/id"},
         "kind": {"enum": ["instant", "closed_interval", "bounded_interval", "open_start_interval", "open_end_interval", "approximate", "unknown"]},
         "lower": {"oneOf": [{"$ref": "#/$defs/bound"}, {"type": "null"}]},
         "upper": {"oneOf": [{"$ref": "#/$defs/bound"}, {"type": "null"}]},
-        "basis_claim_refs": {"$ref": "#/$defs/refs"}
+        "semantic_profile_refs": {"$ref": "#/$defs/refs"}
       }
     },
     "spatialCase": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "mode", "geometry", "basis_claim_refs", "uncertainty_refs", "projection_policy"],
+      "required": ["id", "mode", "geometry", "semantic_profile_refs", "uncertainty_refs", "projection_policy"],
       "properties": {
         "id": {"$ref": "#/$defs/id"},
         "mode": {"enum": ["exact_point", "approximate_point", "named_place", "unknown", "documented_path", "inferred_corridor", "unknown_route"]},
@@ -175,7 +191,7 @@
         "place_ref": {"$ref": "#/$defs/id"},
         "endpoint_refs": {"$ref": "#/$defs/refs"},
         "tolerance_m": {"type": "number", "exclusiveMinimum": 0},
-        "basis_claim_refs": {"$ref": "#/$defs/refs"},
+        "semantic_profile_refs": {"$ref": "#/$defs/refs"},
         "uncertainty_refs": {"$ref": "#/$defs/refs"},
         "projection_policy": {"$ref": "#/$defs/id"}
       }
@@ -213,7 +229,7 @@
         "object_ref": {"$ref": "#/$defs/id"},
         "presence_extents": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/presence"}},
         "co_presence_result": {"enum": ["confirmed", "possible", "excluded", "unknown"]},
-        "asserted_predicate": {"enum": ["none", "co_present", "possible_encounter", "documented_encounter", "interaction", "influence", "causal"]},
+        "asserted_predicate": {"enum": ["no_relation_asserted", "co_present", "possible_encounter", "documented_encounter", "interaction", "influence", "causal"]},
         "relation_claim_ref": {"type": ["string", "null"]},
         "assumptions": {"type": "array", "items": {"$ref": "#/$defs/assumption"}},
         "uncertainty_refs": {"$ref": "#/$defs/refs"},
@@ -249,10 +265,11 @@
     "uiRule": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["predicate", "required_label", "forbidden_phrases", "source_access_required"],
+      "required": ["predicate", "required_label_template", "required_disclosures", "forbidden_phrases", "source_access_required"],
       "properties": {
         "predicate": {"enum": ["co_present", "possible_encounter", "documented_encounter", "interaction", "influence", "causal"]},
-        "required_label": {"type": "string", "minLength": 10},
+        "required_label_template": {"type": "string", "minLength": 10},
+        "required_disclosures": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
         "forbidden_phrases": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
         "source_access_required": {"type": "boolean"}
       }

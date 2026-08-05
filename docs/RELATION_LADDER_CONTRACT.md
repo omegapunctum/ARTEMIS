@@ -3,7 +3,7 @@
 ## Status
 
 - Type: scoped canonical extension.
-- Version: 1.1.
+- Version: 1.2.
 - Date: 2026-08-05.
 - Status: `REVIEW_REQUIRED`.
 - Active issue: `#331`.
@@ -39,6 +39,8 @@ interaction does not imply influence. Influence does not imply causality.
 6. `interaction`, `influence` and `causal` require evidence for their own predicate.
 7. Classification, Similarity, proximity and before/after remain structurally separate signals.
 8. Direction, mechanism, transmission mode, scope and causal basis are explicit where required.
+9. `no_relation_asserted` means only that the fixture creates no Relation; it never asserts historical absence.
+10. Background evidence cannot support a documented Relation predicate.
 
 ## 3. Predicate profile
 
@@ -49,15 +51,22 @@ interaction does not imply influence. Influence does not imply causality.
 | `documented_encounter` | RelationClaim | source-supported meeting/contact with locator | no |
 | `interaction` | RelationClaim | source-supported action plus channel | no |
 | `influence` | RelationClaim | direction, mechanism, transmission mode, bounded scope and evidence | no |
-| `causal` | RelationClaim | distinct causal basis and approved policy | no |
+| `causal` | RelationClaim | same-endpoint distinct causal basis and resolvable policy | no |
 
 Ordinary language may make some predicates sound stronger than others, but this does not create logical
 inheritance in storage or validation.
 
 ## 4. Extent and co-presence semantics
 
-The relation fixture consumes the reviewed #330 `bound`, temporal `candidate` and `spatialCase` schema
-definitions exactly. Candidate basis references must resolve to #330 semantic-profile Claims.
+The relation fixture consumes the reviewed #330 `bound` definition exactly and preserves the reviewed temporal
+`candidate` and `spatialCase` shapes with one deliberate field rename: `semantic_profile_refs`. These references
+select a reviewed #330 kind/mode profile. They are not evidence bindings and cannot imply that an immutable #330
+fixture Claim supports a different relation-fixture date, place, route or coordinate.
+
+All relation extents in this package are declared synthetic test inputs. Historical/runtime extents must instead
+bind their exact normalized assertion to corpus Claims, EvidenceLinks and source locators under the #329/#330
+contracts. Changing an arbitrary relation extent while retaining a semantic profile therefore changes a test
+vector, not historical evidence.
 
 Supported inputs include:
 
@@ -68,6 +77,9 @@ Supported inputs include:
 - named and nested places;
 - exact and approximate points;
 - inferred route corridors and unknown extents.
+
+Polygon corridor evaluation includes interior rings, treats boundaries conservatively as included and unwraps
+longitude edges across the antimeridian. Non-finite coordinates or tolerances are rejected at JSON load/validation.
 
 The deterministic result is one of:
 
@@ -97,15 +109,20 @@ an encounter.
 
 For `documented_encounter`, `interaction`, `influence` and `causal`, the RelationClaim binds exactly to the
 fixture case subject, predicate and object. Every supporting EvidenceLink binds that Claim to a checked-in Source
-through a reproducible locator.
+through a reproducible locator. Only reviewed `direct` or `indirect` evidence can satisfy a documented predicate;
+`background` evidence remains contextual and cannot do so.
 
 Additional requirements:
 
 - `documented_encounter`: the source names contact or meeting;
 - `interaction`: `action` and `channel` identify in-person, correspondence, intermediary or institutional exchange;
 - `influence`: direction is `subject_to_object`, with mechanism, transmission mode and bounded scope;
-- `causal`: a distinct Claim supplies `causal_basis_claim_ref`, and `causal_policy_ref` names the separately
-  reviewed policy used by the synthetic fixture.
+- `causal`: a distinct Claim supplies `causal_basis_claim_ref`; it has the same target, subject and object as the
+  causal Claim, carries non-background supporting evidence, and `causal_policy_ref` resolves to the checked,
+  digest-bound synthetic policy inside this package's review scope.
+
+The included causal policy is only an executable fixture policy. Production causal assertions require a separate
+governed and independently reviewed production policy; READY for this package cannot be presented as that approval.
 
 An encounter source cannot be reused to claim interaction, influence or causality unless the located passage
 supports the additional atomic predicate.
@@ -130,15 +147,16 @@ processes.
 
 | Predicate | Required wording | Forbidden implication |
 |---|---|---|
-| `co_present` | “Present in overlapping declared extents” plus overlap status | met, knew, interacted, influenced, caused |
-| `possible_encounter` | “May have encountered, if the listed assumptions hold” | documented meeting, interaction, influence or cause |
-| `documented_encounter` | “Documented meeting/contact” plus source access | exchange, interaction, influence or cause |
-| `interaction` | “Documented action or exchange” plus channel | influence or cause |
-| `influence` | “Supported directional influence within the stated scope” | cause or necessity |
-| `causal` | “Separately justified causal claim” plus basis/policy | certainty beyond the reviewed Claim |
+| `co_present` | `Extent overlap: {co_presence_result}` plus temporal/spatial precision and uncertainty | met, encountered, contact, knew, interacted, influenced, caused |
+| `possible_encounter` | “Possible encounter under declared assumptions” plus overlap result, assumptions and relation uncertainty | documented meeting/contact, interaction, influence or cause |
+| `documented_encounter` | “Documented meeting/contact” plus locator, contact kind and extent conflicts | exchange, interaction, influence or cause |
+| `interaction` | “Documented action or exchange” plus locator, action and channel | influence or cause |
+| `influence` | “Supported directional influence within stated scope” plus mechanism/transmission/scope | cause or necessity |
+| `causal` | “Separately justified causal claim within stated scope” plus counterfactual basis and policy | certainty beyond the reviewed Claim |
 
-The executable package fixes unique coverage, exact required labels, forbidden-phrase sets and source-access
-requirements. The public implementation under #333 must distinguish predicates without relying on colour alone.
+The executable package fixes unique coverage, exact label templates, required-disclosure sets, forbidden-phrase
+sets and source-access requirements. A possible extent overlap can never be rendered with an unqualified assertion
+of actual presence. The public implementation under #333 must distinguish predicates without relying on colour alone.
 
 ## 9. Architecture Atlas compatibility
 
@@ -166,6 +184,8 @@ relation graph, curate the Leonardo World Slice, migrate current Relations or pr
 
 ## 12. Change control
 
-Changes require synchronized contract, fixture schema/package, validator, adversarial tests, compatibility
+Changes require synchronized contract, fixture schema/package, policy, validator, adversarial tests, compatibility
 statement, working review record and two independent reviews on one frozen commit. READY additionally requires
-canonical review artifacts, one reviewed digest, Git/tree binding and a current-HEAD `--require-ready` CI gate.
+closed canonical review artifacts, one reviewed digest recomputed from both the worktree and frozen Git tree,
+regular tracked blobs, sanitized Git configuration, transition artifacts identical to HEAD and a current-HEAD
+`--require-ready` CI gate.
