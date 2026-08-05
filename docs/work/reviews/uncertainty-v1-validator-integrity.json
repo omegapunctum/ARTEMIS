@@ -1,0 +1,26 @@
+{
+  "artifact_format": "artemis-review-attestation-v1",
+  "review_id": "uncertainty-v1-validator-integrity-a6367bb",
+  "reviewer_id": "huygens-validator-reviewer",
+  "reviewer_instance_id": "huygens-pr337-a6367bb",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task",
+  "frozen_commit": "a6367bbaa17368b9285d7aecb963a07c70c6c50c",
+  "reviewed_content_sha256": "be00f54127f47a04d833e7e766deaf276f0703efb5fb48a8062f7af767715add",
+  "reviewed_at": "2026-08-05T04:14:35Z",
+  "decision": "READY",
+  "finding_counts": {
+    "critical": 0,
+    "material": 0,
+    "minor": 1
+  },
+  "findings": [
+    {
+      "finding_id": "validator-ready-regression-matrix",
+      "severity": "minor",
+      "status": "resolved",
+      "summary": "Known Git and release-tree defenses are fail-closed; remaining extension-specific negative-test breadth is tracked as nonblocking audit debt."
+    }
+  ],
+  "independence_attestation": true
+}

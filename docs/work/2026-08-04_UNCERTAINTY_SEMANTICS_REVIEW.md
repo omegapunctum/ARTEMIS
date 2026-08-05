@@ -1,6 +1,6 @@
 # ARTEMIS #330 uncertainty semantics review
 
-Status: `IN_PROGRESS / REVIEW_REQUIRED`
+Status: `COMPLETE / READY`
 
 ## Decision
 
@@ -60,6 +60,19 @@ The correction enforces exact item-to-target-Claim and item-to-subject-Uncertain
 global semantic target-ID uniqueness. Swap/collision regressions reproduce the material finding;
 direct graft-rejection and inherited-Git-environment regressions reduce the minor test debt. Fresh
 reviews are required on the next exact candidate SHA.
+
+### Final frozen candidate `a6367bbaa17368b9285d7aecb963a07c70c6c50c`
+
+- semantic-model: `READY` — `0 critical / 0 material / 0 minor`;
+- validator-integrity: `READY` — `0 critical / 0 material / 1 minor`;
+- exact CI: `4/4` green; current #330 contract/governance `51 passed`; frozen #329
+  `518 passed`; export validations green;
+- the validator minor records remaining extension-specific negative-test breadth for already
+  fail-closed Git defenses and is resolved/nonblocking under the completion rule.
+
+Both independent reviews bind the same frozen commit and reviewed semantic digest. The final
+transition is metadata-only: semantic cases, schema, source, compatibility projection, validator,
+tests and workflow remain byte-for-byte identical to the frozen candidate.
 
 ## Out of scope
 
