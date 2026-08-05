@@ -31,6 +31,9 @@ jobs:
       - name: Validate active uncertainty contract
         run: |
           python scripts/validate_uncertainty_fixtures.py
+          if [[ "$(python -c 'import json, pathlib; print(json.loads(pathlib.Path("fixtures/world_model/uncertainty/v1/package.json").read_text(encoding="utf-8"))["status"])')" == "READY" ]]; then
+            python scripts/validate_uncertainty_fixtures.py --require-ready
+          fi
           pytest -q \
             tests/test_uncertainty_fixtures.py \
             tests/test_repository_governance_contract.py \

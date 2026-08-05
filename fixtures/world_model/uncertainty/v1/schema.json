@@ -10,6 +10,10 @@
     "status",
     "record_time",
     "base_package",
+    "sources",
+    "claims",
+    "evidence_links",
+    "uncertainties",
     "calendar_profile",
     "temporal_cases",
     "spatial_cases",
@@ -19,16 +23,46 @@
     "schema_version": {"const": "1.0.0"},
     "package_id": {"const": "artemis-uncertainty-semantics-v1"},
     "status": {"enum": ["REVIEW_REQUIRED", "READY"]},
-    "record_time": {"type": "string", "format": "date-time"},
+    "record_time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_at", "reviewed_at"],
+      "properties": {
+        "created_at": {"type": "string", "format": "date-time"},
+        "reviewed_at": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]}
+      }
+    },
     "base_package": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "status", "merge_commit"],
+      "required": ["path", "status", "merge_commit", "frozen_commit", "reviewed_content_sha256"],
       "properties": {
         "path": {"const": "fixtures/world_model/v1"},
         "status": {"const": "READY"},
-        "merge_commit": {"const": "db60ffc89b93c8a3694b5f0b699e43e706786ba8"}
+        "merge_commit": {"const": "db60ffc89b93c8a3694b5f0b699e43e706786ba8"},
+        "frozen_commit": {"const": "2333a26ea48eb8a694354be625bcc2a5892d2fbb"},
+        "reviewed_content_sha256": {"const": "ebe6527ea8a41d8046918e37726d38b2a3898c1e496234630e718fa861632168"}
       }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 16,
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "evidence_links": {
+      "type": "array",
+      "minItems": 16,
+      "items": {"$ref": "#/$defs/evidenceLink"}
+    },
+    "uncertainties": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"$ref": "#/$defs/uncertainty"}
     },
     "calendar_profile": {
       "type": "object",
@@ -86,6 +120,65 @@
       "type": "array",
       "items": {"$ref": "#/$defs/id"},
       "uniqueItems": true
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "uri", "sha256", "source_type", "review_state", "historical_authority"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"const": "Source"},
+        "title": {"type": "string", "minLength": 1},
+        "uri": {"const": "sources/uncertainty-profile.md"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_type": {"const": "fixture_document"},
+        "review_state": {"const": "reviewed"},
+        "historical_authority": {"const": false}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "target_ref", "claim_kind", "origin", "review_state", "confidence", "evidence_state", "assertion_sha256", "evidence_link_refs", "uncertainty_refs"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "target_ref": {"$ref": "#/$defs/id"},
+        "claim_kind": {"enum": ["factual", "inference"]},
+        "origin": {"enum": ["curator", "system"]},
+        "review_state": {"const": "reviewed"},
+        "confidence": {"enum": ["high", "medium", "low", "unknown"]},
+        "evidence_state": {"const": "supported"},
+        "assertion_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "evidence_link_refs": {"$ref": "#/$defs/refs"},
+        "uncertainty_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "evidenceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "claim_id", "source_id", "locator", "relation_to_claim", "evidence_strength", "review_state"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "claim_id": {"$ref": "#/$defs/id"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "locator": {"type": "string", "pattern": "^LOCATOR\\[[a-z0-9._-]+\\]$"},
+        "relation_to_claim": {"const": "supports"},
+        "evidence_strength": {"enum": ["direct", "indirect"]},
+        "review_state": {"const": "reviewed"}
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "subject_claim_ref", "dimension", "description", "effect", "basis_claim_refs"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "subject_claim_ref": {"$ref": "#/$defs/id"},
+        "dimension": {"enum": ["spatial_precision", "spatial_value", "geometry_reconstruction", "trajectory_gap"]},
+        "description": {"type": "string", "minLength": 1},
+        "effect": {"type": "string", "minLength": 1},
+        "basis_claim_refs": {"$ref": "#/$defs/refs"}
+      }
     },
     "bound": {
       "type": "object",

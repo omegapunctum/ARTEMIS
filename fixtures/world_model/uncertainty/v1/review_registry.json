@@ -1,8 +1,10 @@
 {
+  "schema_version": "1.0.0",
   "package_id": "artemis-uncertainty-semantics-v1",
   "status": "REVIEW_REQUIRED",
   "frozen_commit": null,
-  "reviewed_digest": null,
-  "reviewed_at": null,
+  "reviewed_content_sha256": null,
+  "required_review_count": 2,
+  "review_scope_id": "uncertainty-semantics-v1-canonical",
   "reviews": []
 }

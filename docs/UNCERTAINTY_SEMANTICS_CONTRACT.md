@@ -80,8 +80,14 @@ A material spatial-temporal uncertainty record declares:
 - explicit possible bound(s), tolerance or alternatives when known;
 - boundary inclusivity where relevant;
 - projection effect (`show_possible`, `show_unknown`, `show_alternatives`,
-  `show_inferred_geometry` or `prohibit_geometry`);
+  `show_exact`, `show_open_bound`, `show_inferred_geometry` or `prohibit_geometry`);
 - supporting Claim refs or explicit missing-evidence state.
+
+Every executable `basis_claim_ref` resolves to a checked-in Claim. A supported Claim resolves through
+a reviewed EvidenceLink and reproducible locator to the synthetic fixture source; the locator binds
+the exact normalized temporal or spatial assertion digest. `exact_point` and `documented_path`
+require direct, reviewed, high-confidence support. Open, approximate, unknown and inferred modes
+cannot select an exact projection policy.
 
 Approximation without a declared range/tolerance is unresolved. `not_before` and `not_after`
 constrain possible time; they do not assert an exact date.
@@ -111,6 +117,10 @@ The versioned package covers:
 9. all seven spatial/route modes;
 10. non-inventive legacy compatibility projection.
 
+The package additionally closes all Claim, EvidenceLink, Source and Uncertainty references, validates
+type-specific GeoJSON cardinality/ring closure, and treats the compatibility projection as a closed
+value-bound envelope derived from the reviewed v1 input snapshot.
+
 ## 8. Capability boundary
 
 This contract and its fixtures do not migrate current Feature fields, implement runtime filtering,
@@ -119,4 +129,6 @@ publish a Leonardo corpus or prove that the public UI renders these states.
 ## 9. Change control
 
 Changes require synchronized fixture schema/package, validator, negative tests, compatibility
-statement, working review record and two independent reviews on one frozen commit.
+statement, working review record and two independent reviews on one frozen commit. READY additionally
+requires canonical non-symlink review files, regular current/frozen Git blobs, one reviewed digest,
+distinct structured review artifacts and a current-HEAD CI invocation of the READY gate.

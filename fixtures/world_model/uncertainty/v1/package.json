@@ -2,12 +2,71 @@
   "schema_version": "1.0.0",
   "package_id": "artemis-uncertainty-semantics-v1",
   "status": "REVIEW_REQUIRED",
-  "record_time": "2026-08-04T16:21:47Z",
+  "record_time": {
+    "created_at": "2026-08-04T16:21:47Z",
+    "reviewed_at": null
+  },
   "base_package": {
     "path": "fixtures/world_model/v1",
     "status": "READY",
-    "merge_commit": "db60ffc89b93c8a3694b5f0b699e43e706786ba8"
+    "merge_commit": "db60ffc89b93c8a3694b5f0b699e43e706786ba8",
+    "frozen_commit": "2333a26ea48eb8a694354be625bcc2a5892d2fbb",
+    "reviewed_content_sha256": "ebe6527ea8a41d8046918e37726d38b2a3898c1e496234630e718fa861632168"
   },
+  "sources": [
+    {
+      "id": "source-uncertainty-profile",
+      "type": "Source",
+      "title": "ARTEMIS synthetic uncertainty semantics assertions",
+      "uri": "sources/uncertainty-profile.md",
+      "sha256": "f26baf2e7db3baebca39a7b6a5e29f563731a13e6a9ace154d181c01f5931ab1",
+      "source_type": "fixture_document",
+      "review_state": "reviewed",
+      "historical_authority": false
+    }
+  ],
+  "claims": [
+    {"id": "claim-exact-day", "target_ref": "exact-day-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "assertion_sha256": "0a262a6199f8ae775a501283493fe56d0e8fe0404b4e3aac894c966f0e792a3f", "evidence_link_refs": ["evidence-exact-day"], "uncertainty_refs": []},
+    {"id": "claim-not-before", "target_ref": "not-before-open-end-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "a7ef61a4e0982c1beba8b83fec96638ff681175f75e1a341ad2e38924047dfa9", "evidence_link_refs": ["evidence-not-before"], "uncertainty_refs": []},
+    {"id": "claim-not-after", "target_ref": "not-after-open-start-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "6287d7bdac60b752c599ea5a07f18d307707760c81e7a161086eff9612d3a085", "evidence_link_refs": ["evidence-not-after"], "uncertainty_refs": []},
+    {"id": "claim-bounded", "target_ref": "bounded-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "f91b3d958038622549d2b7af69bd5f6391bae6f90a9cfacd16f48fe23ac705d8", "evidence_link_refs": ["evidence-bounded"], "uncertainty_refs": []},
+    {"id": "claim-exclusive-boundary", "target_ref": "exclusive-touch-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "assertion_sha256": "12c1ce104812dc688da372e9b86d2e102602203b71a3168a52320f354d93a4fc", "evidence_link_refs": ["evidence-exclusive-boundary"], "uncertainty_refs": []},
+    {"id": "claim-approximate-range", "target_ref": "approximate-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "274ddb95fa000cdc6e0a6ee05d8b5310cccb21c99d68503a8aef9cd75e88c63b", "evidence_link_refs": ["evidence-approximate-range"], "uncertainty_refs": []},
+    {"id": "claim-alternative-1503", "target_ref": "alternative-1503", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "95124f4fd90d04c7bcaa1d39e0f5f893c7c2728c5f034e82121eef0739edb551", "evidence_link_refs": ["evidence-alternative-1503"], "uncertainty_refs": []},
+    {"id": "claim-alternative-1504", "target_ref": "alternative-1504", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "c88939d7287dba596a1dae2106c789920e4e982721a93920462e86f75603288d", "evidence_link_refs": ["evidence-alternative-1504"], "uncertainty_refs": []},
+    {"id": "claim-time-unknown", "target_ref": "unknown-time-primary", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "unknown", "evidence_state": "supported", "assertion_sha256": "9acacefa8432b4fc4483607b67886f17c2e126a5f1fd38c42edc21406ff6cf84", "evidence_link_refs": ["evidence-time-unknown"], "uncertainty_refs": []},
+    {"id": "claim-exact-point", "target_ref": "exact-point", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "assertion_sha256": "22996599e22ea4d3662fb068b7a7812b5b8d6325ec9f4b8591cfb706ca5aadee", "evidence_link_refs": ["evidence-exact-point"], "uncertainty_refs": []},
+    {"id": "claim-approximate-point", "target_ref": "approximate-point", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "94e94fb575a49647f884e45767f77344bc59b5d3dbbc988da0504d2f17ada2c7", "evidence_link_refs": ["evidence-approximate-point"], "uncertainty_refs": ["uncertainty-approximate-point"]},
+    {"id": "claim-named-place", "target_ref": "named-place", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "ffa63195099fbcf825ba80bc2b606cb3e290f71b7354f987a40103de7e73f644", "evidence_link_refs": ["evidence-named-place"], "uncertainty_refs": []},
+    {"id": "claim-location-unknown", "target_ref": "unknown-location", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "unknown", "evidence_state": "supported", "assertion_sha256": "2e079b1b0305f23f0c4dd2e5df38f0abcdbb9165b2950857ddcd6606dd29d93f", "evidence_link_refs": ["evidence-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"]},
+    {"id": "claim-documented-path", "target_ref": "documented-path", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "assertion_sha256": "49ac31d458937590e817f90488a439c5579564934d227dcb91990409a3c7aaa9", "evidence_link_refs": ["evidence-documented-path"], "uncertainty_refs": []},
+    {"id": "claim-inferred-corridor-assumption", "target_ref": "inferred-corridor", "claim_kind": "inference", "origin": "system", "review_state": "reviewed", "confidence": "low", "evidence_state": "supported", "assertion_sha256": "0fcbafa3ad3cab92586e201cb4824b28bee77503cd2f949747953f7057951021", "evidence_link_refs": ["evidence-inferred-corridor-assumption"], "uncertainty_refs": ["uncertainty-inferred-corridor"]},
+    {"id": "claim-route-endpoints", "target_ref": "unknown-route", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "fcdf7f97c6e623b9b16a181718e3485ec9e13c44ed5a63550b63e7db12af3ec9", "evidence_link_refs": ["evidence-route-endpoints"], "uncertainty_refs": ["uncertainty-route-unknown"]}
+  ],
+  "evidence_links": [
+    {"id": "evidence-exact-day", "claim_id": "claim-exact-day", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-exact-day]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-not-before", "claim_id": "claim-not-before", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-not-before]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-not-after", "claim_id": "claim-not-after", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-not-after]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-bounded", "claim_id": "claim-bounded", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-bounded]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-exclusive-boundary", "claim_id": "claim-exclusive-boundary", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-exclusive-boundary]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-approximate-range", "claim_id": "claim-approximate-range", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-approximate-range]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-alternative-1503", "claim_id": "claim-alternative-1503", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-alternative-1503]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-alternative-1504", "claim_id": "claim-alternative-1504", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-alternative-1504]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-time-unknown", "claim_id": "claim-time-unknown", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-time-unknown]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-exact-point", "claim_id": "claim-exact-point", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-exact-point]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-approximate-point", "claim_id": "claim-approximate-point", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-approximate-point]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-named-place", "claim_id": "claim-named-place", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-named-place]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-location-unknown", "claim_id": "claim-location-unknown", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-location-unknown]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-documented-path", "claim_id": "claim-documented-path", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-documented-path]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-inferred-corridor-assumption", "claim_id": "claim-inferred-corridor-assumption", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-inferred-corridor-assumption]", "relation_to_claim": "supports", "evidence_strength": "indirect", "review_state": "reviewed"},
+    {"id": "evidence-route-endpoints", "claim_id": "claim-route-endpoints", "source_id": "source-uncertainty-profile", "locator": "LOCATOR[claim-route-endpoints]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"}
+  ],
+  "uncertainties": [
+    {"id": "uncertainty-approximate-point", "subject_claim_ref": "claim-approximate-point", "dimension": "spatial_precision", "description": "The center point is only meaningful with the declared 500 metre tolerance.", "effect": "Render a possible area, never an exact point.", "basis_claim_refs": ["claim-approximate-point"]},
+    {"id": "uncertainty-location-unknown", "subject_claim_ref": "claim-location-unknown", "dimension": "spatial_value", "description": "No location geometry is supported.", "effect": "Keep the item discoverable without map placement.", "basis_claim_refs": ["claim-location-unknown"]},
+    {"id": "uncertainty-inferred-corridor", "subject_claim_ref": "claim-inferred-corridor-assumption", "dimension": "geometry_reconstruction", "description": "The corridor is an analytical inference rather than an observed route.", "effect": "Use an inferred visual treatment and expose the assumption.", "basis_claim_refs": ["claim-inferred-corridor-assumption"]},
+    {"id": "uncertainty-route-unknown", "subject_claim_ref": "claim-route-endpoints", "dimension": "trajectory_gap", "description": "Only the endpoints are supported; the connecting route is unknown.", "effect": "Do not draw connecting geometry.", "basis_claim_refs": ["claim-route-endpoints"]}
+  ],
   "calendar_profile": {
     "calendar": "proleptic_gregorian",
     "supported_precisions": ["year", "month", "day"],

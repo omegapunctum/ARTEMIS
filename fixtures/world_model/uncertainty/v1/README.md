@@ -24,6 +24,10 @@ The package distinguishes exact and approximate points, named places, unknown lo
 documented paths, inferred analytical corridors and unknown routes. Unknown routes cannot contain
 geometry. Approximate and inferred geometry require explicit uncertainty and disclosure.
 
+Every case is bound to one checked-in Claim and a reviewed synthetic EvidenceLink/locator. The
+locator carries the digest of the exact normalized assertion; arbitrary reference strings, geometry
+precision promotion and projection-policy promotion are rejected.
+
 ## Compatibility
 
 The Villa Savoye companion projection consumes the reviewed v1 compatibility record. It preserves
@@ -39,6 +43,9 @@ pytest -q tests/test_uncertainty_fixtures.py
 
 `--require-ready` must fail until two independent review artifacts are committed and the transition
 metadata is finalized without changing the reviewed semantic files.
+
+READY also requires current bytes, `HEAD` and the frozen commit to agree on the normalized semantic
+scope, with canonical regular review artifacts and Git replacement/graft mechanisms disabled.
 
 ## Capability boundary
 
