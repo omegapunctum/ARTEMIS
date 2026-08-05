@@ -188,4 +188,5 @@ Changes require synchronized contract, fixture schema/package, policy, validator
 statement, working review record and two independent reviews on one frozen commit. READY additionally requires
 closed canonical review artifacts, one reviewed digest recomputed from both the worktree and frozen Git tree,
 regular tracked blobs, sanitized Git configuration, transition artifacts identical to HEAD and a current-HEAD
-`--require-ready` CI gate.
+`--require-ready` CI gate. Only the declared READY metadata fields—package/owner status, reviewed timestamp,
+working-record state, frozen SHA, digest and review summary—are normalized across that transition.

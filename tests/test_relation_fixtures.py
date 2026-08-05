@@ -73,6 +73,9 @@ def _copy_repo(tmp_path: Path) -> Path:
         text,
         count=1,
     )
+    text = validator.re.sub(
+        r"- Reviews: .+", "- Reviews: `PENDING`.", text, count=1
+    )
     work.write_text(text, encoding="utf-8")
     return target
 
@@ -196,6 +199,11 @@ def _prepare_ready(root: Path) -> tuple[str, str]:
     )
     text = text.replace(
         "- Reviewed digest: `PENDING`.", f"- Reviewed digest: `{digest}`.", 1
+    )
+    text = text.replace(
+        "- Reviews: `PENDING`.",
+        "- Reviews: `semantic-model` and `validator-integrity` READY.",
+        1,
     )
     work.write_text(text, encoding="utf-8")
     _write(
@@ -650,6 +658,37 @@ def test_ready_rejects_current_semantic_drift(tmp_path: Path) -> None:
         "digest" in item
         for item in validator.validate_repository(root, require_ready=True)
     )
+
+
+def test_review_digest_normalizes_only_ready_transition_metadata(
+    tmp_path: Path,
+) -> None:
+    root = _copy_repo(tmp_path)
+    before = validator.compute_review_digest(root)
+    package = _load(root, PACKAGE_REL)
+    package["status"] = "READY"
+    package["record_time"]["reviewed_at"] = "2026-08-05T14:00:00Z"
+    _write(root, PACKAGE_REL, package)
+    for relative in (README_REL, OWNER_REL):
+        path = root / relative
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "Status: `REVIEW_REQUIRED`", "Status: `READY`", 1
+            ),
+            encoding="utf-8",
+        )
+    work = root / WORK_REL
+    text = work.read_text(encoding="utf-8")
+    text = text.replace("- State: `REVIEW_REQUIRED`.", "- State: `READY`.", 1)
+    text = text.replace("- Frozen commit: `PENDING`.", "- Frozen commit: `1" + "0" * 39 + "`.", 1)
+    text = text.replace("- Reviewed digest: `PENDING`.", "- Reviewed digest: `" + "0" * 64 + "`.", 1)
+    text = text.replace(
+        "- Reviews: `PENDING`.",
+        "- Reviews: `semantic-model` and `validator-integrity` READY.",
+        1,
+    )
+    work.write_text(text, encoding="utf-8")
+    assert validator.compute_review_digest(root) == before
 
 
 def test_strict_json_loader_rejects_duplicate_keys(tmp_path: Path) -> None:

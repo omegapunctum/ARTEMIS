@@ -8,7 +8,7 @@
 - Base `main`: `94f559e8c836f1a2e4ba66b79635f8c606e18a6e`.
 - Frozen commit: `PENDING`.
 - Reviewed digest: `PENDING`.
-- Reviews: not yet frozen.
+- Reviews: `PENDING`.
 
 ## Scope lock
 
@@ -53,3 +53,8 @@ literal and UI rules that could hide possible overlap. The validator-integrity r
 bypass, opaque review artifacts, Polygon hole/antimeridian errors, weak causal endpoints, background evidence
 promotion, duplicate dependency acceptance and non-finite JSON. Version 1.2 addresses every critical/material
 finding with executable negative tests; this statement is implementation evidence, not a replacement verdict.
+
+Candidate `18bd8304176a0873464a7e7bf3d824f440dbf628` passed CI but was superseded before either rereview issued a
+verdict. Its working record did not normalize the final review-summary line, so a truthful READY transition would
+have changed the reviewed digest. The replacement candidate normalizes and mutation-tests that explicitly declared
+metadata field; no attestation from the interrupted review attempt transfers.

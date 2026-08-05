@@ -265,6 +265,7 @@ def _normalized_bytes(path: Path, data: bytes) -> bytes:
         text = re.sub(r"- State: `(?:REVIEW_REQUIRED|READY)`\.", "- State: `REVIEW_REQUIRED`.", text, count=1)
         text = re.sub(r"- Frozen commit: `[^`]+`\.", "- Frozen commit: `PENDING`.", text, count=1)
         text = re.sub(r"- Reviewed digest: `[^`]+`\.", "- Reviewed digest: `PENDING`.", text, count=1)
+        text = re.sub(r"- Reviews: .+", "- Reviews: `PENDING`.", text, count=1)
     return text.encode("utf-8")
 
 
