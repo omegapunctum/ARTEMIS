@@ -506,6 +506,17 @@ def _semantic_assertions(package: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return assertions
 
 
+def _semantic_items(package: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        *(
+            candidate
+            for case in package["temporal_cases"]
+            for candidate in case["candidates"]
+        ),
+        *package["spatial_cases"],
+    ]
+
+
 def _locator_passage(text: str, locator: str) -> str | None:
     start = text.find(locator)
     if start < 0:
@@ -536,6 +547,10 @@ def _validate_provenance(
         global_ids.update(ids)
         indexes[name] = {value["id"]: value for value in values}
 
+    semantic_items = _semantic_items(package)
+    semantic_target_ids = [item["id"] for item in semantic_items]
+    if len(semantic_target_ids) != len(set(semantic_target_ids)):
+        errors.append("semantic target IDs must be globally unique")
     assertions = _semantic_assertions(package)
     claims = indexes["claims"]
     links = indexes["evidence_links"]
@@ -597,6 +612,25 @@ def _validate_provenance(
         if len(target_claims) != 1:
             errors.append(f"{target_ref}: requires exactly one bound Claim")
 
+    for item in semantic_items:
+        target_ref = item["id"]
+        bound_claims = targets_to_claims.get(target_ref, [])
+        if item["basis_claim_refs"] != bound_claims:
+            errors.append(
+                f"{target_ref}: basis_claim_refs must exactly match its target-bound Claim"
+            )
+
+        if "uncertainty_refs" in item:
+            bound_uncertainties = [
+                uncertainty_id
+                for claim_id in bound_claims
+                for uncertainty_id in claims.get(claim_id, {}).get("uncertainty_refs", [])
+            ]
+            if item["uncertainty_refs"] != bound_uncertainties:
+                errors.append(
+                    f"{target_ref}: uncertainty_refs must exactly match its bound Claim"
+                )
+
     referenced_claims = {
         ref
         for family in (package["temporal_cases"], package["spatial_cases"])
@@ -624,6 +658,17 @@ def _validate_provenance(
             errors.append(f"{uncertainty_id}: basis must exactly match its subject Claim")
         if uncertainty_id not in claim["uncertainty_refs"]:
             errors.append(f"{uncertainty_id}: Claim must link back to the Uncertainty")
+
+    for claim_id, claim in claims.items():
+        subject_uncertainties = [
+            uncertainty_id
+            for uncertainty_id, uncertainty in uncertainties.items()
+            if uncertainty["subject_claim_ref"] == claim_id
+        ]
+        if claim["uncertainty_refs"] != subject_uncertainties:
+            errors.append(
+                f"{claim_id}: uncertainty_refs must exactly match subject-bound Uncertainties"
+            )
 
     referenced_uncertainties = {
         ref for case in package["spatial_cases"] for ref in case["uncertainty_refs"]

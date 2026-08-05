@@ -46,6 +46,21 @@ The correction keeps the immutable #329 package unchanged. It adds synthetic loc
 Claim/Evidence evidence, executable projection rules, strict geometry/compatibility validation and
 a release-tree-bound READY gate. Fresh reviews are required on the next exact candidate SHA.
 
+### Second frozen candidate `2fed830a0d44494993fff3499554b670451e4d32`
+
+- semantic-model: `READY` — `0 critical / 0 material / 0 minor`;
+- validator-integrity: `CHANGES_REQUIRED` — `0 critical / 1 material / 1 minor`;
+- material blocker: provenance references resolved globally but were not bound to the individual
+  semantic item that declared them, so claim and uncertainty references could be swapped between
+  cases while preserving the global sets;
+- minor: several hardened Git/READY paths were code-inspected but lacked direct extension-specific
+  regressions.
+
+The correction enforces exact item-to-target-Claim and item-to-subject-Uncertainty binding plus
+global semantic target-ID uniqueness. Swap/collision regressions reproduce the material finding;
+direct graft-rejection and inherited-Git-environment regressions reduce the minor test debt. Fresh
+reviews are required on the next exact candidate SHA.
+
 ## Out of scope
 
 Runtime/schema migration, probabilistic simulation, calendar conversion beyond the declared

@@ -325,6 +325,49 @@ def test_validator_rejects_dangling_claim_reference(tmp_path: Path) -> None:
     assert any("basis_claim_refs" in error for error in validator.validate_repository(root))
 
 
+def test_validator_rejects_swapped_item_claim_references(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    exact = _spatial(package, "exact-point")
+    documented = _spatial(package, "documented-path")
+    exact["basis_claim_refs"], documented["basis_claim_refs"] = (
+        documented["basis_claim_refs"],
+        exact["basis_claim_refs"],
+    )
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "basis_claim_refs must exactly match its target-bound Claim" in error
+        for error in validator.validate_repository(root)
+    )
+
+
+def test_validator_rejects_swapped_item_uncertainty_references(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    approximate = _spatial(package, "approximate-point")
+    inferred = _spatial(package, "inferred-corridor")
+    approximate["uncertainty_refs"], inferred["uncertainty_refs"] = (
+        inferred["uncertainty_refs"],
+        approximate["uncertainty_refs"],
+    )
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "uncertainty_refs must exactly match its bound Claim" in error
+        for error in validator.validate_repository(root)
+    )
+
+
+def test_validator_rejects_cross_family_semantic_target_collision(tmp_path: Path) -> None:
+    root = _copy_repo(tmp_path)
+    package = _load(root, PACKAGE_REL)
+    _spatial(package, "exact-point")["id"] = "exact-day-primary"
+    _write(root, PACKAGE_REL, package)
+    assert any(
+        "semantic target IDs must be globally unique" in error
+        for error in validator.validate_repository(root)
+    )
+
+
 def test_validator_rejects_claim_assertion_drift(tmp_path: Path) -> None:
     root = _copy_repo(tmp_path)
     package = _load(root, PACKAGE_REL)
@@ -414,6 +457,30 @@ def test_ready_rejects_symlinked_review_artifact(
     artifact_path.rename(target)
     artifact_path.symlink_to(target.name)
     assert any("symlink" in error for error in validator.validate_repository(root, require_ready=True))
+
+
+def test_ready_rejects_legacy_git_graft(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _copy_repo(tmp_path)
+    _prepare_ready(root)
+    _mock_external_base_history(monkeypatch)
+    graft = root / ".git/info/grafts"
+    graft.write_text("invalid graft\n", encoding="utf-8")
+    assert any(
+        "legacy Git grafts must be absent" in error
+        for error in validator.validate_repository(root, require_ready=True)
+    )
+
+
+def test_ready_sanitizes_inherited_git_dir_override(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _copy_repo(tmp_path)
+    _prepare_ready(root)
+    _mock_external_base_history(monkeypatch)
+    monkeypatch.setenv("GIT_DIR", str(tmp_path / "hostile-git-dir"))
+    assert validator.validate_repository(root, require_ready=True) == []
 
 
 def test_validator_rejects_base_projection_checksum_drift(tmp_path: Path) -> None:
