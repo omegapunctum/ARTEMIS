@@ -3,126 +3,169 @@
 ## Status
 
 - Type: scoped canonical extension.
-- Version: 1.0.
+- Version: 1.1.
 - Date: 2026-08-05.
 - Status: `REVIEW_REQUIRED`.
 - Active issue: `#331`.
 - Extends: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `EPISTEMIC_CONTRACT.md` and `UNCERTAINTY_SEMANTICS_CONTRACT.md`.
-- Owns: executable relation-ladder predicates, promotion barriers, evidence requirements and language rules.
+- Owns: executable relation predicates, inference barriers, evidence requirements and language rules.
 - Does not own: runtime/database schemas, historical corpus curation, public UI implementation or automated causal discovery.
 
-The reviewed #329 and #330 packages remain immutable dependencies. This contract adds a versioned
-relation profile without rewriting their semantic evidence.
+The reviewed #329 and #330 packages remain immutable dependencies. This contract adds a synthetic relation
+profile without rewriting their semantic evidence.
 
-## 1. Invariants
+## 1. Core decision
+
+The historical name “relation ladder” is retained for issue and artifact traceability, but the model is **not a total order** and does not contain a shared rank.
+
+- `co_present` is a computed spatial-temporal observation;
+- `possible_encounter` is an assumption-bound inference from a co-presence signal;
+- `documented_encounter`, `interaction`, `influence` and `causal` are independent typed Claims;
+- a source may support more than one predicate, but every predicate needs its own atomic assertion and basis;
+- no record is rewritten, promoted or inherited merely because another predicate is present.
+
+Therefore correspondence, mediated action, institutional effects and posthumous influence remain representable
+without inventing personal co-presence. A documented encounter does not imply exchange or influence. An
+interaction does not imply influence. Influence does not imply causality.
+
+## 2. Invariants
 
 1. Spatial-temporal overlap produces only a computed observation.
-2. No ladder level is promoted automatically to a stronger level.
-3. `possible_encounter` is an inference with explicit assumptions and uncertainty, not a documented Relation.
-4. Every documented level binds one atomic RelationClaim to reviewed EvidenceLinks and reproducible locators.
-5. `interaction`, `influence` and `causal` require evidence for their own predicate, not merely for a weaker level.
-6. Classification, Similarity, proximity and before/after remain structurally separate signals.
-7. Direction, mechanism, scope and causal basis are explicit where the predicate requires them.
+2. No predicate is promoted automatically to another predicate.
+3. `possible_encounter` requires a visible co-presence result, explicit assumptions and relation uncertainty.
+4. Every documented predicate binds one atomic RelationClaim to reviewed EvidenceLinks and reproducible locators.
+5. Documented predicates do not require a separately modeled co-presence record when their own source directly
+   establishes the assertion; missing extents remain missing.
+6. `interaction`, `influence` and `causal` require evidence for their own predicate.
+7. Classification, Similarity, proximity and before/after remain structurally separate signals.
+8. Direction, mechanism, transmission mode, scope and causal basis are explicit where required.
 
-## 2. Non-overlapping ladder
+## 3. Predicate profile
 
-| Level | Meaning | Storage form | Minimum basis |
+| Predicate | Storage form | Minimum basis | Co-presence prerequisite |
 |---|---|---|---|
-| `co_present` | extents overlap in the declared place and time | computed observation | deterministic extent calculation plus visible uncertainty |
-| `possible_encounter` | encounter is plausible under named assumptions | explicit inference | `co_present`, assumptions and relation uncertainty |
-| `documented_encounter` | meeting or contact is documented | RelationClaim | reviewed supporting EvidenceLink with locator |
-| `interaction` | exchange or action between entities is documented | RelationClaim | evidence of the specific exchange/action |
-| `influence` | a directional historical effect is asserted | RelationClaim | named mechanism, bounded scope and supporting evidence |
-| `causal` | a separately justified causal dependency is asserted | RelationClaim | distinct causal basis and approved policy reference |
+| `co_present` | computed observation | reviewed #330 extents, deterministic overlap, visible uncertainty | n/a |
+| `possible_encounter` | explicit inference | confirmed/possible co-presence, assumptions, relation uncertainty | yes |
+| `documented_encounter` | RelationClaim | source-supported meeting/contact with locator | no |
+| `interaction` | RelationClaim | source-supported action plus channel | no |
+| `influence` | RelationClaim | direction, mechanism, transmission mode, bounded scope and evidence | no |
+| `causal` | RelationClaim | distinct causal basis and approved policy | no |
 
-Evidence for a stronger predicate may also imply a weaker ordinary-language fact, but the stored Claim keeps
-the predicate actually supported. The system never rewrites or promotes a record merely because its rank is higher.
+Ordinary language may make some predicates sound stronger than others, but this does not create logical
+inheritance in storage or validation.
 
-## 3. Deterministic derived levels
+## 4. Extent and co-presence semantics
 
-`co_present` requires at least one shared `place_ref` and an overlap between closed normalized temporal
-intervals after uncertainty rules are applied. Different cities, disjoint intervals or unknown extents do not
-produce co-presence.
+The relation fixture consumes the reviewed #330 `bound`, temporal `candidate` and `spatialCase` schema
+definitions exactly. Candidate basis references must resolve to #330 semantic-profile Claims.
+
+Supported inputs include:
+
+- exact and closed temporal intervals;
+- bounded and approximate ranges;
+- open-start and open-end intervals;
+- competing temporal or place reconstructions;
+- named and nested places;
+- exact and approximate points;
+- inferred route corridors and unknown extents.
+
+The deterministic result is one of:
+
+- `confirmed` — every represented candidate combination overlaps without an uncertainty promotion;
+- `possible` — at least one reconstruction overlaps, or overlap depends on approximate/open/inferred extents;
+- `excluded` — all candidate combinations are disjoint in time or space;
+- `unknown` — the available extents cannot decide overlap.
+
+`confirmed` and `possible` may be displayed as qualified co-presence observations. Neither creates a historical
+Relation. `unknown` must not be converted to absence, and `excluded` does not invalidate an independently
+documented correspondence, mediated interaction, influence or causal process.
+
+## 5. Possible encounter
 
 `possible_encounter` additionally requires:
 
+- a `confirmed` or `possible` co-presence result;
 - a system-visible inference Claim;
-- all assumptions as structured text, never hidden defaults;
+- all assumptions as structured records, never hidden defaults;
 - at least one relation uncertainty record;
 - no representation as a documented historical Relation.
 
 Plausibility may be withdrawn when an assumption is contradicted. Missing evidence is not positive evidence of
 an encounter.
 
-## 4. Documented predicates
+## 6. Documented predicates
 
-For `documented_encounter`, `interaction`, `influence` and `causal`, the RelationClaim must bind exactly to the
-fixture case subject, predicate and object. Every supporting EvidenceLink must bind to that Claim and to a checked-in
-Source through a reproducible locator.
+For `documented_encounter`, `interaction`, `influence` and `causal`, the RelationClaim binds exactly to the
+fixture case subject, predicate and object. Every supporting EvidenceLink binds that Claim to a checked-in Source
+through a reproducible locator.
 
 Additional requirements:
 
-- `documented_encounter`: the source documents contact or meeting;
-- `interaction`: `action` describes the supported exchange;
-- `influence`: direction is `subject_to_object`, with explicit `mechanism` and `scope`;
-- `causal`: a different Claim supplies `causal_basis_claim_ref`, and `causal_policy_ref` names the separately
-  reviewed policy used by the synthetic contract fixture.
+- `documented_encounter`: the source names contact or meeting;
+- `interaction`: `action` and `channel` identify in-person, correspondence, intermediary or institutional exchange;
+- `influence`: direction is `subject_to_object`, with mechanism, transmission mode and bounded scope;
+- `causal`: a distinct Claim supplies `causal_basis_claim_ref`, and `causal_policy_ref` names the separately
+  reviewed policy used by the synthetic fixture.
 
 An encounter source cannot be reused to claim interaction, influence or causality unless the located passage
-supports that stronger assertion.
+supports the additional atomic predicate.
 
-## 5. Promotion barriers
+## 7. Promotion and implication barriers
 
-The executable profile rejects these boundary collapses:
+The five rules below are regression boundaries, not links in an ordered chain. These are five explicit negative regression classes:
 
-These are five explicit negative regression classes, one for every adjacent ladder boundary:
+1. `co_present` permits `possible_encounter` only with explicit assumptions, uncertainty and an inference Claim;
+2. `possible_encounter` does not imply `documented_encounter` without a source-bound encounter Claim;
+3. `documented_encounter` does not imply `interaction` without evidence of action and channel;
+4. `interaction` does not imply `influence` without direction, mechanism, transmission mode and scope;
+5. `influence` does not imply `causal` without a distinct causal basis and policy reference.
 
-1. proximity or overlap → `possible_encounter` without assumptions;
-2. `possible_encounter` → `documented_encounter` without a source-bound Claim;
-3. `documented_encounter` → `interaction` without evidence of exchange/action;
-4. `interaction` → `influence` without directional mechanism and scope;
-5. `influence` → `causal` without a distinct causal basis and policy reference.
+The validator must also accept the inverse independence cases: interaction across distance, interaction through an
+intermediary, posthumous influence, documented contact with unknown modeled extents and causality between
+processes.
 
-`same_movement`, shared Layer membership and Similarity never enter this ladder.
+`same_movement`, shared Layer membership and Similarity never enter this predicate profile.
 
-## 6. UI language
+## 8. UI language
 
-| Level | Required wording | Forbidden implication |
+| Predicate | Required wording | Forbidden implication |
 |---|---|---|
-| `co_present` | “present in the same declared place/time” | “met”, “knew”, “interacted” |
-| `possible_encounter` | “may have encountered, if …” plus assumptions | “met” without qualification |
-| `documented_encounter` | “documented meeting/contact” plus source access | exchange, influence or causality |
-| `interaction` | name the documented action/exchange | influence or causality |
-| `influence` | name direction, mechanism and bounded scope | general causality |
-| `causal` | name the causal basis and policy | certainty beyond the reviewed Claim |
+| `co_present` | “Present in overlapping declared extents” plus overlap status | met, knew, interacted, influenced, caused |
+| `possible_encounter` | “May have encountered, if the listed assumptions hold” | documented meeting, interaction, influence or cause |
+| `documented_encounter` | “Documented meeting/contact” plus source access | exchange, interaction, influence or cause |
+| `interaction` | “Documented action or exchange” plus channel | influence or cause |
+| `influence` | “Supported directional influence within the stated scope” | cause or necessity |
+| `causal` | “Separately justified causal claim” plus basis/policy | certainty beyond the reviewed Claim |
 
-The public implementation under #333 must distinguish these levels without relying on colour alone. This contract
-defines language semantics only; it does not implement the UI.
+The executable package fixes unique coverage, exact required labels, forbidden-phrase sets and source-access
+requirements. The public implementation under #333 must distinguish predicates without relying on colour alone.
 
-## 7. Architecture Atlas compatibility
+## 9. Architecture Atlas compatibility
 
-- `same_movement` projects to shared classification and never to a ladder Relation;
+- `same_movement` projects to shared classification and never to a Relation predicate;
 - Similarity remains a computed candidate signal without canonical Relation identity;
 - current `influenced` and `inspired_by` records remain unresolved candidates until a Claim, locator, direction,
-  mechanism and scope satisfy this contract;
-- structural `part_of` and `reconstructed_from` remain substantive predicates outside the encounter ladder;
-- compatibility adapters must expose missing semantics and cannot invent them.
+  mechanism, transmission mode and scope satisfy this contract;
+- structural `part_of` and `reconstructed_from` remain substantive predicates outside this profile;
+- compatibility adapters expose missing semantics and cannot invent them.
 
 No current Airtable/public Relation is migrated by this contract.
 
-## 8. Executable fixtures
+## 10. Executable fixtures
 
-The package includes same-city/no-contact, disjoint-place, plausible encounter, ambiguous assumption,
-documented encounter, interaction, influence, causal, shared-classification and Similarity cases. Synthetic sources
-exist only to test the contract and are not historical evidence or corpus capability.
+The package covers same-city/no-contact, disjoint-place, plausible and ambiguous encounter, documented encounter,
+contact with unknown extents, correspondence, intermediary action, posthumous influence, process causality,
+approximate/open temporal overlap, competing place reconstruction, nested places and inferred route proximity.
 
-## 9. Capability boundary
+Synthetic sources exist only to test the contract and are not historical evidence or corpus capability.
+
+## 11. Capability boundary
 
 Passing the package proves relation semantics are representable and fail closed. It does not create a mature
 relation graph, curate the Leonardo World Slice, migrate current Relations or prove public UI comprehension.
 
-## 10. Change control
+## 12. Change control
 
-Changes require synchronized contract, fixture schema/package, validator, negative boundary tests, compatibility
+Changes require synchronized contract, fixture schema/package, validator, adversarial tests, compatibility
 statement, working review record and two independent reviews on one frozen commit. READY additionally requires
 canonical review artifacts, one reviewed digest, Git/tree binding and a current-HEAD `--require-ready` CI gate.

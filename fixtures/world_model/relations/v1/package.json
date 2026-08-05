@@ -5,67 +5,703 @@
   "status": "REVIEW_REQUIRED",
   "record_time": {"created_at": "2026-08-05T05:00:00Z", "reviewed_at": null},
   "base_packages": [
-    {"package_id": "artemis-world-model-contract-fixture-v1", "registry_path": "fixtures/world_model/v1/review_registry.json", "status": "READY", "frozen_commit": "2333a26ea48eb8a694354be625bcc2a5892d2fbb", "reviewed_content_sha256": "ebe6527ea8a41d8046918e37726d38b2a3898c1e496234630e718fa861632168"},
-    {"package_id": "artemis-uncertainty-semantics-v1", "registry_path": "fixtures/world_model/uncertainty/v1/review_registry.json", "status": "READY", "frozen_commit": "805b0bf30ddfecc9cd2bb8356ff2d807d950c87a", "reviewed_content_sha256": "1208a82cb1f392bbe47afbba31fc735cb010cb45385780b0f7f7dd833e3aaa95"}
+    {
+      "package_id": "artemis-world-model-contract-fixture-v1",
+      "registry_path": "fixtures/world_model/v1/review_registry.json",
+      "status": "READY",
+      "frozen_commit": "2333a26ea48eb8a694354be625bcc2a5892d2fbb",
+      "reviewed_content_sha256": "ebe6527ea8a41d8046918e37726d38b2a3898c1e496234630e718fa861632168"
+    },
+    {
+      "package_id": "artemis-uncertainty-semantics-v1",
+      "registry_path": "fixtures/world_model/uncertainty/v1/review_registry.json",
+      "status": "READY",
+      "frozen_commit": "805b0bf30ddfecc9cd2bb8356ff2d807d950c87a",
+      "reviewed_content_sha256": "1208a82cb1f392bbe47afbba31fc735cb010cb45385780b0f7f7dd833e3aaa95"
+    }
   ],
-  "ladder_levels": [
-    {"id": "co_present", "rank": 1, "storage_kind": "computed_observation", "definition": "Declared presence extents overlap at one place and time.", "minimum_basis": ["deterministic extent overlap", "visible extent uncertainty"], "directionality": "symmetric"},
-    {"id": "possible_encounter", "rank": 2, "storage_kind": "explicit_inference", "definition": "An encounter is plausible only under named assumptions and uncertainty.", "minimum_basis": ["co_present", "explicit assumptions", "relation uncertainty"], "directionality": "symmetric"},
-    {"id": "documented_encounter", "rank": 3, "storage_kind": "relation_claim", "definition": "A reviewed source passage documents meeting or contact.", "minimum_basis": ["atomic RelationClaim", "supporting EvidenceLink", "reproducible locator"], "directionality": "directed_or_symmetric"},
-    {"id": "interaction", "rank": 4, "storage_kind": "relation_claim", "definition": "A reviewed source passage documents an exchange or action.", "minimum_basis": ["interaction Claim", "specific action", "supporting locator"], "directionality": "directed_or_symmetric"},
-    {"id": "influence", "rank": 5, "storage_kind": "relation_claim", "definition": "A directional historical effect is asserted with mechanism and bounded scope.", "minimum_basis": ["direction", "mechanism", "scope", "supporting evidence"], "directionality": "directed"},
-    {"id": "causal", "rank": 6, "storage_kind": "relation_claim", "definition": "A causal dependency is separately justified under an explicit policy.", "minimum_basis": ["causal RelationClaim", "distinct causal basis Claim", "policy reference"], "directionality": "directed"}
+  "relation_predicates": [
+    {
+      "id": "co_present",
+      "family": "derived_proximity",
+      "storage_kind": "computed_observation",
+      "definition": "Declared temporal and spatial extents overlap with a visible confirmed or possible result.",
+      "minimum_basis": ["reviewed #330 extent semantics", "deterministic overlap evaluation", "visible extent uncertainty"],
+      "directionality": "symmetric",
+      "requires_co_presence": false
+    },
+    {
+      "id": "possible_encounter",
+      "family": "encounter_inference",
+      "storage_kind": "explicit_inference",
+      "definition": "An encounter is plausible under named assumptions after a co-presence signal is computed.",
+      "minimum_basis": ["co-presence signal", "explicit assumptions", "relation uncertainty"],
+      "directionality": "symmetric",
+      "requires_co_presence": true
+    },
+    {
+      "id": "documented_encounter",
+      "family": "documented_contact",
+      "storage_kind": "relation_claim",
+      "definition": "A reviewed source passage independently documents a meeting or contact.",
+      "minimum_basis": ["atomic RelationClaim", "supporting EvidenceLink", "reproducible locator"],
+      "directionality": "directed_or_symmetric",
+      "requires_co_presence": false
+    },
+    {
+      "id": "interaction",
+      "family": "documented_action",
+      "storage_kind": "relation_claim",
+      "definition": "A reviewed source independently documents an action or exchange, including distance channels.",
+      "minimum_basis": ["interaction Claim", "specific action and channel", "supporting locator"],
+      "directionality": "directed_or_symmetric",
+      "requires_co_presence": false
+    },
+    {
+      "id": "influence",
+      "family": "historical_effect",
+      "storage_kind": "relation_claim",
+      "definition": "A directional historical effect is asserted with mechanism, transmission mode and bounded scope.",
+      "minimum_basis": ["direction", "mechanism", "transmission mode", "scope", "supporting evidence"],
+      "directionality": "directed",
+      "requires_co_presence": false
+    },
+    {
+      "id": "causal",
+      "family": "causal_explanation",
+      "storage_kind": "relation_claim",
+      "definition": "A causal dependency between entities or processes is separately justified under an explicit policy.",
+      "minimum_basis": ["causal RelationClaim", "distinct causal basis Claim", "policy reference"],
+      "directionality": "directed",
+      "requires_co_presence": false
+    }
+  ],
+  "place_hierarchy": [
+    {"child_ref": "place-workshop-hall", "parent_ref": "place-workshop"},
+    {"child_ref": "place-workshop", "parent_ref": "place-north-city"},
+    {"child_ref": "place-north-hall", "parent_ref": "place-north-city"},
+    {"child_ref": "place-court-chamber", "parent_ref": "place-court"}
   ],
   "sources": [
-    {"id": "source-relation-profile", "path": "fixtures/world_model/relations/v1/sources/relation-profile.md", "title": "Synthetic relation ladder assertions", "source_type": "synthetic_fixture", "review_state": "reviewed", "fixture_only": true}
+    {
+      "id": "source-relation-profile",
+      "path": "fixtures/world_model/relations/v1/sources/relation-profile.md",
+      "title": "Synthetic independent relation predicate assertions",
+      "source_type": "synthetic_fixture",
+      "review_state": "reviewed",
+      "fixture_only": true
+    }
   ],
   "claims": [
-    {"id": "claim-possible-workshop", "target_ref": "case-plausible-workshop", "subject_ref": "entity-ada", "predicate": "possible_encounter", "object_ref": "entity-borin", "statement": "Ada and Borin may have encountered one another in the workshop if both used the shared hall.", "qualifiers": {"assumption_refs": ["assumption-shared-hall"]}, "claim_kind": "inference", "origin": "curator", "review_state": "reviewed", "confidence": "low", "evidence_state": "missing", "assertion_sha256": "9f16eb156fb0988fbd0ede203566429d0b553a0ca142ae12f9c8b89e47c2c728"},
-    {"id": "claim-ambiguous-court", "target_ref": "case-ambiguous-court", "subject_ref": "entity-ada", "predicate": "possible_encounter", "object_ref": "entity-cira", "statement": "Ada and Cira may have encountered one another at court, but access to the same chamber is challenged.", "qualifiers": {"assumption_refs": ["assumption-court-access"]}, "claim_kind": "inference", "origin": "curator", "review_state": "contested", "confidence": "low", "evidence_state": "missing", "assertion_sha256": "b9b9ed0e8fc406039f545d40098b8baa01014b07e4b6796d4b40910d26488622"},
-    {"id": "claim-documented-encounter", "target_ref": "case-documented-encounter", "subject_ref": "entity-ada", "predicate": "documented_encounter", "object_ref": "entity-borin", "statement": "The synthetic register records direct contact between Ada and Borin at North Hall.", "qualifiers": {"contact_kind": "meeting"}, "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "assertion_sha256": "c2df6d510f9607e90ebdd3d014ba222fa4a92985ac59f79c9e2479ba9f0c2e59"},
-    {"id": "claim-interaction", "target_ref": "case-documented-interaction", "subject_ref": "entity-ada", "predicate": "interaction", "object_ref": "entity-borin", "statement": "Ada delivered a measured drawing to Borin during their documented exchange at North Hall.", "qualifiers": {"action": "delivered measured drawing"}, "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "assertion_sha256": "f0876204f1c2ca132a58ab71e4a6b5f85a210e2642cba4ec4384a525e4d900b8"},
-    {"id": "claim-influence", "target_ref": "case-supported-influence", "subject_ref": "entity-ada", "predicate": "influence", "object_ref": "entity-borin", "statement": "Ada's measured drawing influenced Borin's later facade composition in the synthetic fixture.", "qualifiers": {"direction": "subject_to_object", "mechanism": "the delivered drawing supplied the repeated bay scheme", "scope": "facade composition only"}, "claim_kind": "interpretation", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "2a123eeb7d4a499d737c0960ccca344281655201e2f19d7dcbd1cf431beffbc9"},
-    {"id": "claim-causal", "target_ref": "case-explicit-causal", "subject_ref": "entity-ada", "predicate": "causal", "object_ref": "entity-borin", "statement": "Within the synthetic policy exercise, access to Ada's drawing was a necessary cause of Borin's selected bay scheme.", "qualifiers": {"direction": "subject_to_object", "mechanism": "exclusive access to the measured drawing", "scope": "selected bay scheme", "counterfactual_basis": "without the drawing the recorded selection would not occur"}, "claim_kind": "interpretation", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "d47e4b7ef3e8ec9c6982b3b808258de204f77b02b3d8700eb4f8aa44b1a7a69e"},
-    {"id": "claim-causal-basis", "target_ref": "case-explicit-causal", "subject_ref": "entity-ada", "predicate": "causal_basis", "object_ref": "entity-borin", "statement": "The synthetic comparison records exclusive exposure and an explicit counterfactual contrast for the selected bay scheme.", "qualifiers": {"basis_kind": "counterfactual_contrast", "policy_scope": "synthetic fixture only"}, "claim_kind": "interpretation", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "assertion_sha256": "1ea5926e3ea8d62cde1d293460eb8c79b585469f9327164c1a9191fccb4ce1b3"}
+    {
+      "id": "claim-possible-workshop",
+      "target_ref": "case-plausible-workshop",
+      "subject_ref": "entity-ada",
+      "predicate": "possible_encounter",
+      "object_ref": "entity-borin",
+      "statement": "Ada and Borin may have encountered one another in the workshop if both used the shared hall.",
+      "qualifiers": {"assumption_refs": ["assumption-shared-hall"]},
+      "claim_kind": "inference",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "low",
+      "evidence_state": "missing",
+      "assertion_sha256": "9f16eb156fb0988fbd0ede203566429d0b553a0ca142ae12f9c8b89e47c2c728"
+    },
+    {
+      "id": "claim-ambiguous-court",
+      "target_ref": "case-ambiguous-court",
+      "subject_ref": "entity-ada",
+      "predicate": "possible_encounter",
+      "object_ref": "entity-cira",
+      "statement": "Ada and Cira may have encountered one another at court, but the time reconstruction and chamber access remain contested.",
+      "qualifiers": {"assumption_refs": ["assumption-court-access"]},
+      "claim_kind": "inference",
+      "origin": "curator",
+      "review_state": "contested",
+      "confidence": "low",
+      "evidence_state": "missing",
+      "assertion_sha256": "ed585e9fc8120b58d0a7641df907fcfab0c3e3e992d1626391676b486ea352cd"
+    },
+    {
+      "id": "claim-documented-encounter",
+      "target_ref": "case-documented-encounter",
+      "subject_ref": "entity-ada",
+      "predicate": "documented_encounter",
+      "object_ref": "entity-borin",
+      "statement": "The synthetic register records direct contact between Ada and Borin at North Hall.",
+      "qualifiers": {"contact_kind": "meeting"},
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "assertion_sha256": "c2df6d510f9607e90ebdd3d014ba222fa4a92985ac59f79c9e2479ba9f0c2e59"
+    },
+    {
+      "id": "claim-documented-unknown-extents",
+      "target_ref": "case-documented-encounter-unknown-extents",
+      "subject_ref": "entity-ada",
+      "predicate": "documented_encounter",
+      "object_ref": "entity-cira",
+      "statement": "The synthetic register documents contact between Ada and Cira while the modeled time and place extents remain unknown.",
+      "qualifiers": {"contact_kind": "documented contact with unresolved extent"},
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "assertion_sha256": "594e499c79abeebdf4c613181fc70e2644b4431c7661f70ff1b8f7ce2ff33c4e"
+    },
+    {
+      "id": "claim-interaction-correspondence",
+      "target_ref": "case-correspondence-without-co-presence",
+      "subject_ref": "entity-ada",
+      "predicate": "interaction",
+      "object_ref": "entity-borin",
+      "statement": "Ada sent Borin a measured drawing by letter while they were in different cities.",
+      "qualifiers": {"action": "sent a measured drawing by letter", "channel": "correspondence"},
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "assertion_sha256": "079886fdb83ac52eda18af78f015a02615d74f5daa162aeeb70a8c1609f41983"
+    },
+    {
+      "id": "claim-interaction-intermediary",
+      "target_ref": "case-interaction-via-intermediary",
+      "subject_ref": "entity-ada",
+      "predicate": "interaction",
+      "object_ref": "entity-borin",
+      "statement": "Ada delivered instructions to Borin through a named intermediary on the following day.",
+      "qualifiers": {"action": "delivered instructions through a named intermediary", "channel": "intermediary"},
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "high",
+      "evidence_state": "supported",
+      "assertion_sha256": "d38007cee41fb21090e78e50cb63280b49bc38fb8d7e0e138ff0d50cac470a60"
+    },
+    {
+      "id": "claim-influence-posthumous",
+      "target_ref": "case-posthumous-influence",
+      "subject_ref": "entity-ada",
+      "predicate": "influence",
+      "object_ref": "entity-borin",
+      "statement": "Ada's archived treatise influenced Borin's facade analysis three decades later in the synthetic fixture.",
+      "qualifiers": {
+        "direction": "subject_to_object",
+        "mechanism": "Borin adopted the bay-analysis method described in the archived treatise",
+        "scope": "facade analysis method only",
+        "transmission_mode": "text"
+      },
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "assertion_sha256": "3988a3c1d2a3efa498f466063b58643af5ff7d4a2580509b4bebc76cb41b47f1"
+    },
+    {
+      "id": "claim-causal-process",
+      "target_ref": "case-process-causal-dependency",
+      "subject_ref": "process-printing-expansion",
+      "predicate": "causal",
+      "object_ref": "process-workshop-diffusion",
+      "statement": "Within the synthetic policy exercise, printing expansion was a necessary cause of the recorded workshop-method diffusion.",
+      "qualifiers": {
+        "direction": "subject_to_object",
+        "mechanism": "printed manuals supplied the only recorded transmission channel",
+        "scope": "the selected workshop-method diffusion",
+        "counterfactual_basis": "without printed manuals the recorded diffusion does not occur"
+      },
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "assertion_sha256": "a69eb4734aa1060ba6aaee04173d3d4a35a5befeb7b7c254b80d4acdcfebf948"
+    },
+    {
+      "id": "claim-causal-process-basis",
+      "target_ref": "case-process-causal-dependency",
+      "subject_ref": "process-printing-expansion",
+      "predicate": "causal_basis",
+      "object_ref": "process-workshop-diffusion",
+      "statement": "The synthetic comparison records exclusive exposure to printed manuals and an explicit counterfactual contrast.",
+      "qualifiers": {"basis_kind": "counterfactual_contrast", "policy_scope": "synthetic fixture only"},
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "reviewed",
+      "confidence": "medium",
+      "evidence_state": "supported",
+      "assertion_sha256": "39f8abf5a6e304ee2dd897732972062077dc3db07eab41fa8a67ddf6fda1c148"
+    }
   ],
   "evidence_links": [
     {"id": "evidence-documented-encounter", "claim_id": "claim-documented-encounter", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-documented-encounter]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
-    {"id": "evidence-interaction", "claim_id": "claim-interaction", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-interaction]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
-    {"id": "evidence-influence", "claim_id": "claim-influence", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-influence]", "relation_to_claim": "supports", "evidence_strength": "indirect", "review_state": "reviewed"},
-    {"id": "evidence-causal", "claim_id": "claim-causal", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-causal]", "relation_to_claim": "supports", "evidence_strength": "indirect", "review_state": "reviewed"},
-    {"id": "evidence-causal-basis", "claim_id": "claim-causal-basis", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-causal-basis]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"}
+    {"id": "evidence-documented-unknown-extents", "claim_id": "claim-documented-unknown-extents", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-documented-unknown-extents]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-interaction-correspondence", "claim_id": "claim-interaction-correspondence", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-interaction-correspondence]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-interaction-intermediary", "claim_id": "claim-interaction-intermediary", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-interaction-intermediary]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"},
+    {"id": "evidence-influence-posthumous", "claim_id": "claim-influence-posthumous", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-influence-posthumous]", "relation_to_claim": "supports", "evidence_strength": "indirect", "review_state": "reviewed"},
+    {"id": "evidence-causal-process", "claim_id": "claim-causal-process", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-causal-process]", "relation_to_claim": "supports", "evidence_strength": "indirect", "review_state": "reviewed"},
+    {"id": "evidence-causal-process-basis", "claim_id": "claim-causal-process-basis", "source_id": "source-relation-profile", "locator": "LOCATOR[claim-causal-process-basis]", "relation_to_claim": "supports", "evidence_strength": "direct", "review_state": "reviewed"}
   ],
   "uncertainties": [
-    {"id": "uncertainty-plausible-workshop", "subject_claim_ref": "claim-possible-workshop", "dimension": "relation", "description": "Shared presence does not establish use of the same hall.", "effect": "Keep the encounter explicitly possible and assumption-bound."},
-    {"id": "uncertainty-ambiguous-court", "subject_claim_ref": "claim-ambiguous-court", "dimension": "relation", "description": "Court access records do not resolve whether both entered the same chamber.", "effect": "Expose the challenged assumption and do not document an encounter."}
+    {
+      "id": "uncertainty-plausible-workshop",
+      "subject_claim_ref": "claim-possible-workshop",
+      "dimension": "relation",
+      "description": "Nested-place overlap does not establish use of the same room.",
+      "effect": "Keep the encounter explicitly possible and assumption-bound."
+    },
+    {
+      "id": "uncertainty-ambiguous-court",
+      "subject_claim_ref": "claim-ambiguous-court",
+      "dimension": "relation",
+      "description": "Competing time reconstructions and court access do not establish a meeting.",
+      "effect": "Expose both the extent ambiguity and challenged assumption."
+    },
+    {
+      "id": "uncertainty-documented-contact-extent",
+      "subject_claim_ref": "claim-documented-unknown-extents",
+      "dimension": "relation",
+      "description": "The source documents contact but does not resolve a mappable time or place extent.",
+      "effect": "Preserve the documented predicate without inventing co-presence geometry."
+    }
   ],
   "cases": [
-    {"id": "case-same-city-no-contact", "fixture_role": "negative", "subject_ref": "entity-ada", "object_ref": "entity-borin", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-north-city", "start": "1504-03-01", "end": "1504-03-05"}, {"entity_ref": "entity-borin", "place_ref": "place-north-city", "start": "1504-03-03", "end": "1504-03-06"}], "asserted_level": "co_present", "level_claim_ref": null, "assumptions": [], "uncertainty_refs": [], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-disjoint-place", "fixture_role": "negative", "subject_ref": "entity-ada", "object_ref": "entity-cira", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-north-city", "start": "1504-03-01", "end": "1504-03-05"}, {"entity_ref": "entity-cira", "place_ref": "place-south-city", "start": "1504-03-01", "end": "1504-03-05"}], "asserted_level": "none", "level_claim_ref": null, "assumptions": [], "uncertainty_refs": [], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-plausible-workshop", "fixture_role": "positive", "subject_ref": "entity-ada", "object_ref": "entity-borin", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-workshop", "start": "1504-04-01", "end": "1504-04-02"}, {"entity_ref": "entity-borin", "place_ref": "place-workshop", "start": "1504-04-02", "end": "1504-04-03"}], "asserted_level": "possible_encounter", "level_claim_ref": "claim-possible-workshop", "assumptions": [{"id": "assumption-shared-hall", "statement": "Both presences used the same publicly accessible workshop hall.", "state": "declared"}], "uncertainty_refs": ["uncertainty-plausible-workshop"], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-ambiguous-court", "fixture_role": "ambiguous", "subject_ref": "entity-ada", "object_ref": "entity-cira", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-court", "start": "1504-05-01", "end": "1504-05-03"}, {"entity_ref": "entity-cira", "place_ref": "place-court", "start": "1504-05-02", "end": "1504-05-04"}], "asserted_level": "possible_encounter", "level_claim_ref": "claim-ambiguous-court", "assumptions": [{"id": "assumption-court-access", "statement": "Both persons could enter the same chamber during the overlap.", "state": "challenged"}], "uncertainty_refs": ["uncertainty-ambiguous-court"], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-documented-encounter", "fixture_role": "positive", "subject_ref": "entity-ada", "object_ref": "entity-borin", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-north-hall", "start": "1504-06-01", "end": "1504-06-01"}, {"entity_ref": "entity-borin", "place_ref": "place-north-hall", "start": "1504-06-01", "end": "1504-06-01"}], "asserted_level": "documented_encounter", "level_claim_ref": "claim-documented-encounter", "assumptions": [], "uncertainty_refs": [], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-documented-interaction", "fixture_role": "positive", "subject_ref": "entity-ada", "object_ref": "entity-borin", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-north-hall", "start": "1504-06-02", "end": "1504-06-02"}, {"entity_ref": "entity-borin", "place_ref": "place-north-hall", "start": "1504-06-02", "end": "1504-06-02"}], "asserted_level": "interaction", "level_claim_ref": "claim-interaction", "assumptions": [], "uncertainty_refs": [], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-supported-influence", "fixture_role": "positive", "subject_ref": "entity-ada", "object_ref": "entity-borin", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-north-hall", "start": "1504-06-02", "end": "1504-06-02"}, {"entity_ref": "entity-borin", "place_ref": "place-north-hall", "start": "1504-06-02", "end": "1504-06-02"}], "asserted_level": "influence", "level_claim_ref": "claim-influence", "assumptions": [], "uncertainty_refs": [], "causal_basis_claim_ref": null, "causal_policy_ref": null},
-    {"id": "case-explicit-causal", "fixture_role": "positive", "subject_ref": "entity-ada", "object_ref": "entity-borin", "presences": [{"entity_ref": "entity-ada", "place_ref": "place-north-hall", "start": "1504-06-02", "end": "1504-06-02"}, {"entity_ref": "entity-borin", "place_ref": "place-north-hall", "start": "1504-06-02", "end": "1504-06-02"}], "asserted_level": "causal", "level_claim_ref": "claim-causal", "assumptions": [], "uncertainty_refs": [], "causal_basis_claim_ref": "claim-causal-basis", "causal_policy_ref": "causal-policy-explicit-basis-v1"}
+    {
+      "id": "case-same-city-no-contact",
+      "fixture_role": "negative",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-same-city-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-same-city-ada", "kind": "closed_interval", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-05", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-same-city-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-same-city-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-same-city-borin", "kind": "closed_interval", "lower": {"value": "1504-03-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-06", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-same-city-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "confirmed",
+      "asserted_predicate": "co_present",
+      "relation_claim_ref": null,
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-disjoint-place",
+      "fixture_role": "negative",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-cira",
+      "presence_extents": [
+        {
+          "id": "presence-disjoint-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-disjoint-ada", "kind": "instant", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-disjoint-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-disjoint-cira",
+          "entity_ref": "entity-cira",
+          "temporal_candidates": [{"id": "time-disjoint-cira", "kind": "instant", "lower": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-03-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-disjoint-cira", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "excluded",
+      "asserted_predicate": "none",
+      "relation_claim_ref": null,
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-plausible-workshop",
+      "fixture_role": "positive",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-workshop-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-workshop-ada", "kind": "closed_interval", "lower": {"value": "1504-04-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-04-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-workshop-ada", "mode": "named_place", "geometry": null, "place_ref": "place-workshop", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-workshop-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-workshop-borin", "kind": "closed_interval", "lower": {"value": "1504-04-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-04-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-workshop-borin", "mode": "named_place", "geometry": null, "place_ref": "place-workshop-hall", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "confirmed",
+      "asserted_predicate": "possible_encounter",
+      "relation_claim_ref": "claim-possible-workshop",
+      "assumptions": [{"id": "assumption-shared-hall", "statement": "Both presences used the same publicly accessible workshop hall.", "state": "declared"}],
+      "uncertainty_refs": ["uncertainty-plausible-workshop"],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-ambiguous-court",
+      "fixture_role": "ambiguous",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-cira",
+      "presence_extents": [
+        {
+          "id": "presence-court-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [
+            {"id": "time-court-ada-a", "kind": "instant", "lower": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-alternative-1503"]},
+            {"id": "time-court-ada-b", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-alternative-1504"]}
+          ],
+          "spatial_candidates": [{"id": "space-court-ada", "mode": "named_place", "geometry": null, "place_ref": "place-court", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-court-cira",
+          "entity_ref": "entity-cira",
+          "temporal_candidates": [{"id": "time-court-cira", "kind": "instant", "lower": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-05-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-court-cira", "mode": "named_place", "geometry": null, "place_ref": "place-court-chamber", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "possible",
+      "asserted_predicate": "possible_encounter",
+      "relation_claim_ref": "claim-ambiguous-court",
+      "assumptions": [{"id": "assumption-court-access", "statement": "Both persons could enter the same chamber during the overlapping reconstruction.", "state": "challenged"}],
+      "uncertainty_refs": ["uncertainty-ambiguous-court"],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-documented-encounter",
+      "fixture_role": "positive",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-encounter-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-encounter-ada", "kind": "instant", "lower": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-encounter-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-hall", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-encounter-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-encounter-borin", "kind": "instant", "lower": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-encounter-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-hall", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "confirmed",
+      "asserted_predicate": "documented_encounter",
+      "relation_claim_ref": "claim-documented-encounter",
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-correspondence-without-co-presence",
+      "fixture_role": "positive",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-correspondence-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-correspondence-ada", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-correspondence-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-correspondence-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-correspondence-borin", "kind": "instant", "lower": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-02", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-correspondence-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "excluded",
+      "asserted_predicate": "interaction",
+      "relation_claim_ref": "claim-interaction-correspondence",
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-interaction-via-intermediary",
+      "fixture_role": "positive",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-intermediary-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-intermediary-ada", "kind": "instant", "lower": {"value": "1504-06-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-03", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-intermediary-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-intermediary-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-intermediary-borin", "kind": "instant", "lower": {"value": "1504-06-04", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-06-04", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-intermediary-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "excluded",
+      "asserted_predicate": "interaction",
+      "relation_claim_ref": "claim-interaction-intermediary",
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-posthumous-influence",
+      "fixture_role": "positive",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-posthumous-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-posthumous-ada", "kind": "instant", "lower": {"value": "1490", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1490", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-posthumous-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-posthumous-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-posthumous-borin", "kind": "instant", "lower": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-posthumous-borin", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "excluded",
+      "asserted_predicate": "influence",
+      "relation_claim_ref": "claim-influence-posthumous",
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-process-causal-dependency",
+      "fixture_role": "positive",
+      "subject_ref": "process-printing-expansion",
+      "object_ref": "process-workshop-diffusion",
+      "presence_extents": [
+        {
+          "id": "presence-causal-printing",
+          "entity_ref": "process-printing-expansion",
+          "temporal_candidates": [{"id": "time-causal-printing", "kind": "closed_interval", "lower": {"value": "1500", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1510", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-causal-printing", "mode": "named_place", "geometry": null, "place_ref": "place-north-region", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-causal-diffusion",
+          "entity_ref": "process-workshop-diffusion",
+          "temporal_candidates": [{"id": "time-causal-diffusion", "kind": "closed_interval", "lower": {"value": "1510", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1520", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exclusive-boundary"]}],
+          "spatial_candidates": [{"id": "space-causal-diffusion", "mode": "named_place", "geometry": null, "place_ref": "place-south-region", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "excluded",
+      "asserted_predicate": "causal",
+      "relation_claim_ref": "claim-causal-process",
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": "claim-causal-process-basis",
+      "causal_policy_ref": "causal-policy-explicit-basis-v1"
+    },
+    {
+      "id": "case-approximate-city-overlap",
+      "fixture_role": "ambiguous",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-approximate-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-approximate-ada", "kind": "approximate", "lower": {"value": "1503", "precision": "year", "qualifier": "approximate_start", "inclusive": true}, "upper": {"value": "1504", "precision": "year", "qualifier": "approximate_end", "inclusive": true}, "basis_claim_refs": ["claim-approximate-range"]}],
+          "spatial_candidates": [{"id": "space-approximate-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-approximate-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-approximate-borin", "kind": "instant", "lower": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504", "precision": "year", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-approximate-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "possible",
+      "asserted_predicate": "co_present",
+      "relation_claim_ref": null,
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-open-interval-overlap",
+      "fixture_role": "ambiguous",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-open-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-open-ada", "kind": "open_end_interval", "lower": {"value": "1504", "precision": "year", "qualifier": "not_before", "inclusive": true}, "upper": null, "basis_claim_refs": ["claim-not-before"]}],
+          "spatial_candidates": [{"id": "space-open-ada", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-open-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-open-borin", "kind": "open_start_interval", "lower": null, "upper": {"value": "1505", "precision": "year", "qualifier": "not_after", "inclusive": true}, "basis_claim_refs": ["claim-not-after"]}],
+          "spatial_candidates": [{"id": "space-open-borin", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "possible",
+      "asserted_predicate": "co_present",
+      "relation_claim_ref": null,
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-conflicting-place-reconstruction",
+      "fixture_role": "ambiguous",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-cira",
+      "presence_extents": [
+        {
+          "id": "presence-place-conflict-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-place-conflict-ada", "kind": "instant", "lower": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [
+            {"id": "space-place-conflict-ada-a", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"},
+            {"id": "space-place-conflict-ada-b", "mode": "named_place", "geometry": null, "place_ref": "place-south-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}
+          ],
+          "uncertainty_refs": []
+        },
+        {
+          "id": "presence-place-conflict-cira",
+          "entity_ref": "entity-cira",
+          "temporal_candidates": [{"id": "time-place-conflict-cira", "kind": "instant", "lower": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-07-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-place-conflict-cira", "mode": "named_place", "geometry": null, "place_ref": "place-north-city", "basis_claim_refs": ["claim-named-place"], "uncertainty_refs": [], "projection_policy": "show_possible"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "possible",
+      "asserted_predicate": "co_present",
+      "relation_claim_ref": null,
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-inferred-route-proximity",
+      "fixture_role": "ambiguous",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-borin",
+      "presence_extents": [
+        {
+          "id": "presence-route-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-route-ada", "kind": "instant", "lower": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-route-ada", "mode": "inferred_corridor", "geometry": {"type": "Polygon", "coordinates": [[[10.0, 50.0], [11.0, 50.0], [11.0, 51.0], [10.0, 51.0], [10.0, 50.0]]]}, "basis_claim_refs": ["claim-inferred-corridor-assumption"], "uncertainty_refs": ["uncertainty-inferred-corridor"], "projection_policy": "show_inferred_geometry"}],
+          "uncertainty_refs": ["uncertainty-inferred-corridor"]
+        },
+        {
+          "id": "presence-route-borin",
+          "entity_ref": "entity-borin",
+          "temporal_candidates": [{"id": "time-route-borin", "kind": "instant", "lower": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "upper": {"value": "1504-08-01", "precision": "day", "qualifier": "exact", "inclusive": true}, "basis_claim_refs": ["claim-exact-day"]}],
+          "spatial_candidates": [{"id": "space-route-borin", "mode": "exact_point", "geometry": {"type": "Point", "coordinates": [10.5, 50.5]}, "basis_claim_refs": ["claim-exact-point"], "uncertainty_refs": [], "projection_policy": "show_exact"}],
+          "uncertainty_refs": []
+        }
+      ],
+      "co_presence_result": "possible",
+      "asserted_predicate": "co_present",
+      "relation_claim_ref": null,
+      "assumptions": [],
+      "uncertainty_refs": [],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    },
+    {
+      "id": "case-documented-encounter-unknown-extents",
+      "fixture_role": "ambiguous",
+      "subject_ref": "entity-ada",
+      "object_ref": "entity-cira",
+      "presence_extents": [
+        {
+          "id": "presence-unknown-ada",
+          "entity_ref": "entity-ada",
+          "temporal_candidates": [{"id": "time-unknown-ada", "kind": "unknown", "lower": null, "upper": null, "basis_claim_refs": ["claim-time-unknown"]}],
+          "spatial_candidates": [{"id": "space-unknown-ada", "mode": "unknown", "geometry": null, "basis_claim_refs": ["claim-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"], "projection_policy": "show_unknown"}],
+          "uncertainty_refs": ["uncertainty-location-unknown"]
+        },
+        {
+          "id": "presence-unknown-cira",
+          "entity_ref": "entity-cira",
+          "temporal_candidates": [{"id": "time-unknown-cira", "kind": "unknown", "lower": null, "upper": null, "basis_claim_refs": ["claim-time-unknown"]}],
+          "spatial_candidates": [{"id": "space-unknown-cira", "mode": "unknown", "geometry": null, "basis_claim_refs": ["claim-location-unknown"], "uncertainty_refs": ["uncertainty-location-unknown"], "projection_policy": "show_unknown"}],
+          "uncertainty_refs": ["uncertainty-location-unknown"]
+        }
+      ],
+      "co_presence_result": "unknown",
+      "asserted_predicate": "documented_encounter",
+      "relation_claim_ref": "claim-documented-unknown-extents",
+      "assumptions": [],
+      "uncertainty_refs": ["uncertainty-documented-contact-extent"],
+      "causal_basis_claim_ref": null,
+      "causal_policy_ref": null
+    }
   ],
   "non_relation_cases": [
     {"id": "shared-classification", "signal_kind": "classification", "subject_ref": "entity-ada", "object_ref": "entity-borin", "projection": "two classified_as assertions to movement-fixture", "creates_relation": false},
     {"id": "computed-similarity", "signal_kind": "similarity", "subject_ref": "entity-ada", "object_ref": "entity-cira", "projection": "same_layer plus date_overlap score", "creates_relation": false}
   ],
   "promotion_rules": [
-    {"from": "co_present", "to": "possible_encounter", "automatic": false, "required_basis": ["explicit assumptions", "relation uncertainty", "inference Claim"]},
-    {"from": "possible_encounter", "to": "documented_encounter", "automatic": false, "required_basis": ["source-bound encounter Claim", "reviewed locator"]},
-    {"from": "documented_encounter", "to": "interaction", "automatic": false, "required_basis": ["specific action or exchange", "supporting locator"]},
-    {"from": "interaction", "to": "influence", "automatic": false, "required_basis": ["direction", "mechanism", "scope", "supporting evidence"]},
-    {"from": "influence", "to": "causal", "automatic": false, "required_basis": ["distinct causal basis Claim", "causal policy reference"]}
+    {"from": "co_present", "to": "possible_encounter", "rule_kind": "conditional_derivation", "automatic": false, "required_basis": ["explicit assumptions", "relation uncertainty", "inference Claim"]},
+    {"from": "possible_encounter", "to": "documented_encounter", "rule_kind": "independent_predicate_evidence", "automatic": false, "required_basis": ["source-bound encounter Claim", "reviewed locator"]},
+    {"from": "documented_encounter", "to": "interaction", "rule_kind": "independent_predicate_evidence", "automatic": false, "required_basis": ["specific action and channel", "supporting locator"]},
+    {"from": "interaction", "to": "influence", "rule_kind": "independent_predicate_evidence", "automatic": false, "required_basis": ["direction", "mechanism", "transmission mode", "scope", "supporting evidence"]},
+    {"from": "influence", "to": "causal", "rule_kind": "independent_predicate_evidence", "automatic": false, "required_basis": ["distinct causal basis Claim", "causal policy reference"]}
   ],
   "ui_language_rules": [
-    {"level": "co_present", "required_label": "Present in the same declared place/time", "forbidden_phrases": ["met", "interacted", "influenced"], "source_access_required": false},
-    {"level": "possible_encounter", "required_label": "May have encountered, if the listed assumptions hold", "forbidden_phrases": ["met", "documented encounter"], "source_access_required": false},
-    {"level": "documented_encounter", "required_label": "Documented meeting/contact", "forbidden_phrases": ["exchanged", "influenced", "caused"], "source_access_required": true},
-    {"level": "interaction", "required_label": "Documented interaction", "forbidden_phrases": ["influenced", "caused"], "source_access_required": true},
-    {"level": "influence", "required_label": "Supported directional influence", "forbidden_phrases": ["caused"], "source_access_required": true},
-    {"level": "causal", "required_label": "Separately justified causal claim", "forbidden_phrases": ["proven beyond the reviewed scope"], "source_access_required": true}
+    {"predicate": "co_present", "required_label": "Present in overlapping declared extents", "forbidden_phrases": ["met", "knew", "interacted", "influenced", "caused"], "source_access_required": false},
+    {"predicate": "possible_encounter", "required_label": "May have encountered, if the listed assumptions hold", "forbidden_phrases": ["met", "documented encounter", "interacted", "influenced", "caused"], "source_access_required": false},
+    {"predicate": "documented_encounter", "required_label": "Documented meeting/contact", "forbidden_phrases": ["exchanged", "interacted", "influenced", "caused"], "source_access_required": true},
+    {"predicate": "interaction", "required_label": "Documented action or exchange", "forbidden_phrases": ["influenced", "caused"], "source_access_required": true},
+    {"predicate": "influence", "required_label": "Supported directional influence within the stated scope", "forbidden_phrases": ["caused", "necessarily caused"], "source_access_required": true},
+    {"predicate": "causal", "required_label": "Separately justified causal claim", "forbidden_phrases": ["proven beyond the reviewed scope"], "source_access_required": true}
   ]
 }

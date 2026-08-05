@@ -1,11 +1,27 @@
 {
   "schema_version": "1.0.0",
   "source_artifact": "data/relations.json",
-  "same_movement": {"target_kind": "classification_projection", "ladder_level": null, "loss": ["pairwise legacy shape hides the shared classification target"]},
-  "similarity": {"target_kind": "computed_signal", "ladder_level": null, "creates_relation": false},
-  "influenced": {"target_kind": "unresolved_relation_candidate", "ladder_level": null, "required_before_promotion": ["atomic Claim", "locator", "direction", "mechanism", "scope"]},
-  "inspired_by": {"target_kind": "unresolved_relation_candidate", "ladder_level": null, "required_before_promotion": ["atomic Claim", "locator", "direction", "mechanism", "scope"]},
-  "part_of": {"target_kind": "structural_relation_outside_ladder", "ladder_level": null},
-  "reconstructed_from": {"target_kind": "reconstruction_relation_outside_ladder", "ladder_level": null},
+  "same_movement": {
+    "target_kind": "classification_projection",
+    "relation_predicate": null,
+    "loss": ["pairwise legacy shape hides the shared classification target"]
+  },
+  "similarity": {
+    "target_kind": "computed_signal",
+    "relation_predicate": null,
+    "creates_relation": false
+  },
+  "influenced": {
+    "target_kind": "unresolved_relation_candidate",
+    "relation_predicate": null,
+    "required_before_acceptance": ["atomic Claim", "locator", "direction", "mechanism", "transmission mode", "scope"]
+  },
+  "inspired_by": {
+    "target_kind": "unresolved_relation_candidate",
+    "relation_predicate": null,
+    "required_before_acceptance": ["atomic Claim", "locator", "direction", "mechanism", "transmission mode", "scope"]
+  },
+  "part_of": {"target_kind": "structural_relation_outside_profile", "relation_predicate": null},
+  "reconstructed_from": {"target_kind": "reconstruction_relation_outside_profile", "relation_predicate": null},
   "migration_performed": false
 }
