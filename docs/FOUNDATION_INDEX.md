@@ -56,6 +56,7 @@ North Star не является release promise. Backend code не являет
 |---|---|
 | `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` | Temporal/spatial/change/coverage/reconstruction semantics |
 | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` | Scoped #330 normalization, filtering and projection profile |
+| `docs/RELATION_LADDER_CONTRACT.md` | Scoped #331 predicates, promotion barriers and language rules |
 | `docs/ENTITY_MODEL.md` | Knowledge/research/runtime/context entity types |
 | `docs/EPISTEMIC_CONTRACT.md` | Claim/Evidence/uncertainty/inference semantics |
 | `docs/CONTENT_GOVERNANCE.md` | Candidate/review/correction/publish trust |
@@ -122,6 +123,9 @@ Primary: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
 For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is
 `UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core
 object identity or runtime schemas.
+
+For executable coexistence/encounter/interaction/influence/causal distinctions, the scoped owner is
+`RELATION_LADDER_CONTRACT.md`. It extends the reviewed #329/#330 bases without migrating runtime data.
 
 Examples:
 
@@ -193,12 +197,11 @@ Foundation owner documents must be synchronized in one decision PR when identity
 
 Active:
 
-1. Issue `#330`: executable temporal/spatial uncertainty semantics and independent review.
+1. Issue `#331`: executable relation-ladder semantics and independent review.
 
 Gated:
 
-2. Issue `#331`: coexistence/encounter/interaction/influence distinctions.
-4. Issue `#332`: Leonardo World Slice.
+2. Issue `#332`: Leonardo World Slice.
 5. Issue `#333`: synchronized explorer.
 6. Issue `#334`: contextual-learning pilot.
 7. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
@@ -215,6 +218,7 @@ Frozen:
 Completed evidence:
 
 - issue `#329` / PR `#336`: READY world-model fixture package v1.
+- issue `#330` / PR `#337`: READY temporal/spatial uncertainty package v1.
 
 ## 10. Change control
 

@@ -126,8 +126,8 @@ Current runtime and data remain the Architecture Atlas baseline. Foundation v3 i
 Следующий допустимый порядок:
 
 1. preserve completed #329 / PR #336 world-model fixtures as reviewed contract evidence;
-2. complete #330 uncertainty semantics and independent reviews;
-3. resolve #331 relation semantics against the completed uncertainty contract;
+2. preserve completed #330 / PR #337 uncertainty semantics;
+3. complete #331 relation semantics against the reviewed uncertainty contract;
 4. prepare one limited source-aware Leonardo World Slice under #332;
 5. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
 6. run #334 contextual-learning validation;

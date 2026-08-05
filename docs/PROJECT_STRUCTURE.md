@@ -84,6 +84,8 @@
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
 | Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
 | Uncertainty-semantics owner | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` |
+| Relation-ladder validation | `scripts/validate_relation_fixtures.py` |
+| Relation-ladder owner | `docs/RELATION_LADDER_CONTRACT.md` |
 | Public map data | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
@@ -229,7 +231,8 @@ scripts/
 ├── release_check.py
 ├── semantic_data_gate.py
 ├── validate_world_model_fixtures.py
-└── validate_uncertainty_fixtures.py
+├── validate_uncertainty_fixtures.py
+└── validate_relation_fixtures.py
 ```
 
 ```text
@@ -248,9 +251,17 @@ fixtures/
         ├── package.json
         ├── review_registry.json
         └── schema.json
-    └── uncertainty/
+    ├── uncertainty/
         └── v1/
             ├── compatibility/
+            ├── README.md
+            ├── package.json
+            ├── review_registry.json
+            └── schema.json
+    └── relations/
+        └── v1/
+            ├── compatibility/
+            ├── sources/
             ├── README.md
             ├── package.json
             ├── review_registry.json

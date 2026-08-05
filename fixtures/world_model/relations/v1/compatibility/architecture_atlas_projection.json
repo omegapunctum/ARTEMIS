@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "source_artifact": "data/relations.json",
+  "same_movement": {"target_kind": "classification_projection", "ladder_level": null, "loss": ["pairwise legacy shape hides the shared classification target"]},
+  "similarity": {"target_kind": "computed_signal", "ladder_level": null, "creates_relation": false},
+  "influenced": {"target_kind": "unresolved_relation_candidate", "ladder_level": null, "required_before_promotion": ["atomic Claim", "locator", "direction", "mechanism", "scope"]},
+  "inspired_by": {"target_kind": "unresolved_relation_candidate", "ladder_level": null, "required_before_promotion": ["atomic Claim", "locator", "direction", "mechanism", "scope"]},
+  "part_of": {"target_kind": "structural_relation_outside_ladder", "ladder_level": null},
+  "reconstructed_from": {"target_kind": "reconstruction_relation_outside_ladder", "ladder_level": null},
+  "migration_performed": false
+}

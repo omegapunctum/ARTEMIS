@@ -11,9 +11,10 @@ Before changing the repository:
 3. Read `docs/ARTEMIS_CONCEPT.md`.
 4. Read `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` for knowledge-model work.
 5. Read `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` for issue #330 temporal/spatial uncertainty work.
-6. Read `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
-7. Read `docs/work/README.md` before using a working document.
-8. Read the task-specific owner documents.
+6. Read `docs/RELATION_LADDER_CONTRACT.md` for issue #331 relation work.
+7. Read `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
+8. Read `docs/work/README.md` before using a working document.
+9. Read the task-specific owner documents.
 
 Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
@@ -47,11 +48,11 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Issue `#329` is completed in PR `#336`. Active work is issue `#330`: executable temporal/spatial uncertainty semantics before relation-ladder or corpus work.
+Issues `#329` and `#330` are completed in PRs `#336` and `#337`. Active work is issue `#331`: executable relation-ladder semantics before corpus work.
 
 - follow clean v3 child issues `#329`–`#335` rather than rewriting old issues;
-- preserve `fixtures/world_model/v1` as the reviewed READY base;
-- no database/API/runtime migration before #330 and #331 pass;
+- preserve `fixtures/world_model/v1` and `fixtures/world_model/uncertainty/v1` as reviewed READY bases;
+- no database/API/runtime migration before #331 passes;
 - the fixture package must not be described as public/runtime capability;
 - #332 Leonardo curation and #333 explorer remain gated;
 - security, compatibility and critical maintenance remain allowed.

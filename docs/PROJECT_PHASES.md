@@ -78,7 +78,7 @@
 
 ## Фаза 4.7 — World Model Contract
 
-Статус: **ACTIVE / ISSUE #330**.
+Статус: **ACTIVE / ISSUE #331**.
 
 Scope:
 
@@ -101,8 +101,8 @@ Exit:
 Progress:
 
 - #329 fixture package completed and merged in PR #336;
-- #330 uncertainty semantics are active;
-- #331 relation-ladder semantics remain gated on #330.
+- #330 uncertainty semantics completed in PR #337;
+- #331 relation-ladder semantics are active.
 
 ## Фаза 4.8 — Life in Context Dataset
 

@@ -80,6 +80,27 @@ def test_proximity_and_shared_classification_do_not_satisfy_relation_value() -> 
     assert "Система не повышает уровень автоматически" in model
 
 
+def test_relation_ladder_extension_closes_promotion_boundaries() -> None:
+    contract = _read("docs/RELATION_LADDER_CONTRACT.md")
+    package = _read("fixtures/world_model/relations/v1/package.json")
+
+    for level in (
+        "co_present",
+        "possible_encounter",
+        "documented_encounter",
+        "interaction",
+        "influence",
+        "causal",
+    ):
+        assert level in contract
+        assert level in package
+
+    assert "five explicit negative regression classes" in contract
+    assert "same_movement" in contract
+    assert "Similarity" in contract
+    assert '"automatic": false' in package
+
+
 def test_gate_a_is_preserved_as_ready_architecture_fixture_evidence() -> None:
     package = _read("docs/work/validation_modules/README.md")
     registry = _read("docs/work/validation_modules/review_registry.json")
