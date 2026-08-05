@@ -29,6 +29,7 @@ Architecture Atlas — thematic layer and technical baseline. `Life in Context` 
 - North Star: `docs/ARTEMIS_CONCEPT.md`;
 - active product: `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`;
 - world model: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- uncertainty profile: `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
 - epistemics: `docs/EPISTEMIC_CONTRACT.md`;
 - entities: `docs/ENTITY_MODEL.md`;
 - priorities/order: `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`;
@@ -67,11 +68,11 @@ Working/audit/archive files cannot override canonical owners.
 
 ## 5. Current order
 
-Active: World Model Contract / issue `#329`.
+Active: World Model Contract / issue `#330`.
 
-1. Build and validate versioned world-model fixtures.
-2. Obtain two independent semantic reviews on one frozen commit.
-3. Resolve uncertainty/relation gaps through #330/#331.
+1. Preserve the reviewed READY world-model base from #329 / PR #336.
+2. Complete and independently review #330 uncertainty semantics.
+3. Resolve #331 relation semantics against that completed contract.
 4. Freeze the first World Slice under #332.
 5. Implement the synchronized explorer under #333.
 6. Run contextual-learning validation under #334.

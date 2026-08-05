@@ -125,12 +125,13 @@ Current runtime and data remain the Architecture Atlas baseline. Foundation v3 i
 
 Следующий допустимый порядок:
 
-1. complete #329 versioned world-model fixtures and two independent semantic reviews;
-2. resolve #330 uncertainty and #331 relation semantics exposed by the fixtures;
-3. prepare one limited source-aware Leonardo World Slice under #332;
-4. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
-5. run #334 contextual-learning validation;
-6. open at most one evidence-backed branch.
+1. preserve completed #329 / PR #336 world-model fixtures as reviewed contract evidence;
+2. complete #330 uncertainty semantics and independent reviews;
+3. resolve #331 relation semantics against the completed uncertainty contract;
+4. prepare one limited source-aware Leonardo World Slice under #332;
+5. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
+6. run #334 contextual-learning validation;
+7. open at most one evidence-backed branch.
 
 The superseded #323–#325 path and PR #314 are closed. Passing fixtures proves contract representability only; it does not change `PUBLIC NOW`, `BACKEND-AVAILABLE` or user-value status.
 

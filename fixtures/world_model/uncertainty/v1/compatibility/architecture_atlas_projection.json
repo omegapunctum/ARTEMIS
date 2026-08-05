@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "projection_id": "architecture-atlas-villa-savoye-uncertainty-v1",
+  "base_projection": {
+    "path": "fixtures/world_model/v1/compatibility/architecture_atlas_projection.json",
+    "sha256": "a87f574f6d14036c3bde265bc55778bb8e8507a392973945e760a71276a28e71"
+  },
+  "temporal_projection": {
+    "input": {"date_start": "1929", "date_end": "1931"},
+    "kind": "bounded_interval",
+    "lower": {"value": "1929", "precision": "year", "qualifier": "not_before", "inclusive": true},
+    "upper": {"value": "1931", "precision": "year", "qualifier": "not_after", "inclusive": true},
+    "epistemic_state": "legacy_unverified",
+    "projection_policy": "show_possible"
+  },
+  "spatial_projection": {
+    "input": {"longitude": 2.0283, "latitude": 48.9244, "legacy_confidence": "exact"},
+    "geometry": {"type": "Point", "coordinates": [2.0283, 48.9244]},
+    "target_precision": "unknown_precision",
+    "epistemic_state": "missing_claim_level_locator",
+    "projection_policy": "show_possible"
+  },
+  "losses_and_unknowns": [
+    "Year fields do not establish day or month precision.",
+    "The interval is queryable as a bounded possible extent, not as exact construction duration.",
+    "Legacy coordinate confidence does not establish target exactness without Claim-level evidence.",
+    "No locator is invented and no EvidenceLink is created by this projection."
+  ],
+  "invented_fields": []
+}

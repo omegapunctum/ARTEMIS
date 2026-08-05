@@ -78,7 +78,7 @@
 
 ## Фаза 4.7 — World Model Contract
 
-Статус: **ACTIVE / ISSUE #329**.
+Статус: **ACTIVE / ISSUE #330**.
 
 Scope:
 
@@ -97,6 +97,12 @@ Exit:
 - non-inventive legacy mapping is explicit;
 - current truth continues to deny runtime implementation;
 - uncertainty/relation follow-ups are explicitly routed before implementation.
+
+Progress:
+
+- #329 fixture package completed and merged in PR #336;
+- #330 uncertainty semantics are active;
+- #331 relation-ladder semantics remain gated on #330.
 
 ## Фаза 4.8 — Life in Context Dataset
 
