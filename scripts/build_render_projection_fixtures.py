@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 """Build and validate deterministic ARTEMIS render-projection fixtures.
 
-This is an R&D contract tool for #341. It consumes the reviewed synthetic World
-Model package plus the renderer-neutral Explorer State and produces:
+R&D contract tool for issue #341.
 
-- a neutral Render Projection Package;
-- a future MapLibre/GeoJSON adapter artifact;
-- an engine-neutral Globe cartographic adapter artifact.
+Inputs:
+- reviewed Foundation v3 World Model fixture;
+- renderer-neutral Explorer State fixture;
+- neutral projection JSON Schema.
 
-It never geocodes named places, interpolates unknown trajectory routes, or adds
-altitude/terrain semantics.
+Outputs in memory:
+- neutral Render Projection Package;
+- future MapLibre/GeoJSON adapter payload;
+- engine-neutral Globe cartographic adapter payload.
+
+The builder intentionally never geocodes named places, interpolates unknown
+trajectory routes, chooses a silent winner between active Region alternatives,
+or adds altitude / terrain history.
 """
 
 from __future__ import annotations
@@ -31,6 +37,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.validate_explorer_state_fixtures import validate_state  # noqa: E402
 
+
 WORLD_PATH = ROOT / "fixtures" / "world_model" / "v1" / "package.json"
 STATE_PATH = ROOT / "fixtures" / "explorer_state" / "v1" / "state-1504-local-global.json"
 PACKAGE_DIR = ROOT / "fixtures" / "render_projection" / "v1"
@@ -43,13 +50,14 @@ SCHEMA_VERSION = "1.0.0"
 SUPPORTED_GEOMETRIES = {"Point", "LineString", "Polygon", "MultiPolygon"}
 INCLUDED_TYPES = ["Entity", "Event", "State", "Process", "Trajectory", "Region"]
 DEFERRED_TYPES = ["Relation"]
+
 YEAR_RE = re.compile(r"^-?\d{1,6}$")
 MONTH_RE = re.compile(r"^(?P<year>-?\d{1,6})-(?P<month>\d{2})$")
 DAY_RE = re.compile(r"^(?P<year>-?\d{1,6})-(?P<month>\d{2})-(?P<day>\d{2})$")
 
 
 class ProjectionError(ValueError):
-    pass
+    """Raised when projection would violate the executable contract."""
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -79,14 +87,16 @@ def _infer_precision(value: str, declared: str | None) -> str:
         return "month"
     if YEAR_RE.fullmatch(value):
         return "year"
-    raise ProjectionError(f"unsupported temporal lexical value/precision: {value!r} / {declared!r}")
+    raise ProjectionError(
+        f"unsupported temporal lexical value/precision: {value!r} / {declared!r}"
+    )
 
 
-def _value_bounds(value: str, precision: str | None) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
+def _value_bounds(
+    value: str, precision: str | None
+) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
     resolved = _infer_precision(value, precision)
     if resolved == "year":
-        if not YEAR_RE.fullmatch(value):
-            raise ProjectionError(f"invalid year value: {value!r}")
         year = int(value)
         return (year, 1, 1), (year, 12, 31)
     if resolved == "month":
@@ -110,14 +120,18 @@ def _value_bounds(value: str, precision: str | None) -> tuple[tuple[int, int, in
     return point, point
 
 
-def _selection_bounds(state: dict[str, Any]) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
+def _selection_bounds(
+    state: dict[str, Any],
+) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
     temporal = state["temporal_selection"]
     lower, _ = _value_bounds(str(temporal["start"]), str(temporal["precision"]))
     _, upper = _value_bounds(str(temporal["end"]), str(temporal["precision"]))
     return lower, upper
 
 
-def _candidate_bounds(candidate: dict[str, Any]) -> tuple[tuple[int, int, int] | None, tuple[int, int, int] | None]:
+def _candidate_bounds(
+    candidate: dict[str, Any],
+) -> tuple[tuple[int, int, int] | None, tuple[int, int, int] | None]:
     precision = candidate.get("precision")
     start = candidate.get("start")
     end = candidate.get("end")
@@ -139,32 +153,43 @@ def _overlaps(
     return True
 
 
-def temporal_membership(extent: dict[str, Any] | None, state: dict[str, Any]) -> str | None:
+def temporal_membership(
+    extent: dict[str, Any] | None, state: dict[str, Any]
+) -> str | None:
+    """Return active / possible_active / atemporal_context / None.
+
+    Alternatives and approximate extents are never promoted to exact active facts.
+    """
     if not extent:
         return "atemporal_context"
+
     query_lower, query_upper = _selection_bounds(state)
     candidates: list[tuple[dict[str, Any], bool]] = [(extent, False)]
-    for alternative in extent.get("alternatives") or []:
-        candidates.append((alternative, True))
+    candidates.extend((alternative, True) for alternative in extent.get("alternatives") or [])
 
-    matches: list[tuple[dict[str, Any], bool]] = []
+    matching: list[tuple[dict[str, Any], bool]] = []
     for candidate, is_alternative in candidates:
         lower, upper = _candidate_bounds(candidate)
         if lower is None and upper is None:
             continue
         if _overlaps(lower, upper, query_lower, query_upper):
-            matches.append((candidate, is_alternative))
+            matching.append((candidate, is_alternative))
 
-    if not matches:
+    if not matching:
         return None
 
-    kind = str(extent.get("kind") or "")
-    if kind.startswith("approximate") or extent.get("alternatives"):
+    if str(extent.get("kind") or "").startswith("approximate"):
+        return "possible_active"
+    if any(is_alternative for _, is_alternative in matching):
+        return "possible_active"
+    if extent.get("alternatives"):
         return "possible_active"
     return "active"
 
 
-def _claim_indexes(world: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], dict[str, list[dict[str, Any]]]]:
+def _claim_indexes(
+    world: dict[str, Any],
+) -> tuple[dict[str, dict[str, Any]], dict[str, list[dict[str, Any]]]]:
     claims = {str(item["id"]): item for item in world.get("claims", [])}
     evidence: dict[str, list[dict[str, Any]]] = {}
     for link in world.get("evidence_links", []):
@@ -182,6 +207,7 @@ def _epistemic_refs(
     uncertainty = set(_uniq(direct_uncertainty_refs))
     evidence_refs: set[str] = set()
     source_refs: set[str] = set()
+
     for claim_ref in normalized_claims:
         claim = claims.get(claim_ref)
         if claim:
@@ -191,23 +217,37 @@ def _epistemic_refs(
                 evidence_refs.add(str(link["id"]))
             if link.get("source_id"):
                 source_refs.add(str(link["source_id"]))
-    return normalized_claims, sorted(uncertainty), sorted(evidence_refs), sorted(source_refs)
+
+    return (
+        normalized_claims,
+        sorted(uncertainty),
+        sorted(evidence_refs),
+        sorted(source_refs),
+    )
 
 
 def _geometry_ref(owner_ref: str, owner_subobject_ref: str | None = None) -> str:
-    return f"geom:{owner_ref}" if owner_subobject_ref is None else f"geom:{owner_ref}:{owner_subobject_ref}"
+    if owner_subobject_ref is None:
+        return f"geom:{owner_ref}"
+    return f"geom:{owner_ref}:{owner_subobject_ref}"
 
 
 def _item_id(role: str, object_ref: str, subobject_ref: str | None = None) -> str:
-    return f"rp:{role}:{object_ref}" if subobject_ref is None else f"rp:{role}:{object_ref}:{subobject_ref}"
+    if subobject_ref is None:
+        return f"rp:{role}:{object_ref}"
+    return f"rp:{role}:{object_ref}:{subobject_ref}"
 
 
 def _validate_geometry(geometry: dict[str, Any]) -> None:
     geometry_type = geometry.get("type")
     if geometry_type not in SUPPORTED_GEOMETRIES:
-        raise ProjectionError(f"unsupported neutral geometry type in v1: {geometry_type!r}")
+        raise ProjectionError(
+            f"unsupported neutral geometry type in v1: {geometry_type!r}"
+        )
     if not isinstance(geometry.get("coordinates"), list):
-        raise ProjectionError(f"geometry {geometry_type!r} must contain coordinates array")
+        raise ProjectionError(
+            f"geometry {geometry_type!r} must contain coordinates array"
+        )
 
 
 def _region_index(world: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -228,8 +268,11 @@ def _ensure_geometry_record(
 ) -> str:
     geometry = spatial_extent.get("geometry")
     if not isinstance(geometry, dict):
-        raise ProjectionError(f"resolved spatial extent has no geometry for {owner_ref}/{owner_subobject_ref}")
+        raise ProjectionError(
+            f"resolved spatial extent has no geometry for {owner_ref}/{owner_subobject_ref}"
+        )
     _validate_geometry(geometry)
+
     ref = _geometry_ref(owner_ref, owner_subobject_ref)
     candidate = {
         "geometry_ref": ref,
@@ -243,6 +286,7 @@ def _ensure_geometry_record(
         "claim_refs": _uniq(claim_refs),
         "uncertainty_refs": _uniq(uncertainty_refs),
     }
+
     existing = geometry_records.get(ref)
     if existing is not None and existing != candidate:
         raise ProjectionError(f"geometry identity collision with different payload: {ref}")
@@ -257,34 +301,63 @@ def _active_region_geometry_refs(
     state: dict[str, Any],
     geometry_records: dict[str, dict[str, Any]],
 ) -> list[str]:
-    regions = _region_index(world)
-    region = regions.get(region_ref)
+    region = _region_index(world).get(region_ref)
     if region is None:
         raise ProjectionError(f"region_ref does not resolve: {region_ref}")
+
     show_alternatives = bool(state["epistemic_display"].get("show_alternatives"))
     selected_geometry_ref = state.get("active_focus", {}).get("region_geometry_ref")
     refs: list[str] = []
+
     for version in region.get("geometry_versions", []):
         membership = temporal_membership(version.get("temporal_extent"), state)
         if membership is None:
             continue
-        is_primary = bool(version.get("is_primary"))
-        if not is_primary and not show_alternatives and version.get("id") != selected_geometry_ref:
+
+        primary = bool(version.get("is_primary"))
+        if (
+            not primary
+            and not show_alternatives
+            and version.get("id") != selected_geometry_ref
+        ):
             continue
+
         refs.append(
             _ensure_geometry_record(
                 geometry_records,
                 owner_ref=region_ref,
-                owner_subobject_ref=str(version.get("id")),
+                owner_subobject_ref=str(version["id"]),
                 spatial_extent=version["spatial_extent"],
                 origin_kind="region_geometry_version",
-                claim_refs=version.get("claim_refs") or version["spatial_extent"].get("basis_claim_refs") or [],
-                uncertainty_refs=_uniq((region.get("uncertainty_refs") or []) + (version.get("uncertainty_refs") or [])),
-                reconstruction_mode=str(version.get("reconstruction_mode") or "unknown"),
-                is_primary=is_primary,
+                claim_refs=version.get("claim_refs")
+                or version["spatial_extent"].get("basis_claim_refs")
+                or [],
+                uncertainty_refs=_uniq(
+                    (region.get("uncertainty_refs") or [])
+                    + (version.get("uncertainty_refs") or [])
+                ),
+                reconstruction_mode=str(
+                    version.get("reconstruction_mode") or "unknown"
+                ),
+                is_primary=primary,
             )
         )
+
     return sorted(refs)
+
+
+def _unresolved_loss(
+    *, item_id: str, reason: str, place_ref: str | None
+) -> dict[str, Any]:
+    return {
+        "loss_id": f"loss:{item_id}",
+        "item_id": item_id,
+        "loss_kind": "geometry_unresolved",
+        "cause": "source_model_gap",
+        "severity": "material",
+        "reason": reason,
+        "place_ref": place_ref,
+    }
 
 
 def _resolve_spatial_extent(
@@ -301,8 +374,12 @@ def _resolve_spatial_extent(
 ) -> tuple[str, list[str], str | None, list[dict[str, Any]]]:
     if not spatial_extent:
         return "not_spatial", [], None, []
+
     kind = str(spatial_extent.get("kind") or "unknown")
-    place_ref = str(spatial_extent.get("place_ref")) if spatial_extent.get("place_ref") else None
+    place_ref = (
+        str(spatial_extent["place_ref"]) if spatial_extent.get("place_ref") else None
+    )
+
     if isinstance(spatial_extent.get("geometry"), dict):
         ref = _ensure_geometry_record(
             geometry_records,
@@ -314,9 +391,13 @@ def _resolve_spatial_extent(
             uncertainty_refs=uncertainty_refs,
         )
         return "resolved", [ref], place_ref, []
+
     if kind == "region_ref" and spatial_extent.get("region_ref"):
         refs = _active_region_geometry_refs(
-            str(spatial_extent["region_ref"]), world=world, state=state, geometry_records=geometry_records
+            str(spatial_extent["region_ref"]),
+            world=world,
+            state=state,
+            geometry_records=geometry_records,
         )
         if refs:
             return "resolved", refs, None, []
@@ -329,16 +410,13 @@ def _resolve_spatial_extent(
         reason = "composite_extent_requires_explicit_projection_rule"
     else:
         reason = f"unresolved_spatial_extent:{kind}"
-    loss = {
-        "loss_id": f"loss:{item_id}",
-        "item_id": item_id,
-        "loss_kind": "geometry_unresolved",
-        "cause": "source_model_gap",
-        "severity": "material",
-        "reason": reason,
-        "place_ref": place_ref,
-    }
-    return "unresolved", [], place_ref, [loss]
+
+    return (
+        "unresolved",
+        [],
+        place_ref,
+        [_unresolved_loss(item_id=item_id, reason=reason, place_ref=place_ref)],
+    )
 
 
 def _make_item(
@@ -374,6 +452,7 @@ def _make_item(
         claim_refs=normalized_claims,
         uncertainty_refs=normalized_uncertainty,
     )
+
     return {
         "item_id": item_id,
         "object_ref": object_ref,
@@ -398,6 +477,7 @@ def _referenced_entity_ids(state: dict[str, Any]) -> set[str]:
     selection = state.get("selection") or {}
     context = state.get("context") or {}
     comparison = state.get("comparison_scope") or {}
+
     for key in ("selected_object_refs", "comparison_object_refs"):
         refs.update(_uniq(selection.get(key) or []))
     if selection.get("primary_object_ref"):
@@ -408,7 +488,21 @@ def _referenced_entity_ids(state: dict[str, Any]) -> set[str]:
     return refs
 
 
-def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[str, Any]) -> dict[str, Any]:
+def _semantic_flags(**overrides: Any) -> dict[str, Any]:
+    flags: dict[str, Any] = {
+        "segment_kind": None,
+        "reconstruction_mode": None,
+        "is_primary": None,
+        "state_kind": None,
+        "process_mode": None,
+    }
+    flags.update(overrides)
+    return flags
+
+
+def build_projection(
+    world: dict[str, Any], state: dict[str, Any], schema: dict[str, Any]
+) -> dict[str, Any]:
     explorer_errors = validate_state(
         state,
         schema=_load(ROOT / "fixtures" / "explorer_state" / "v1" / "schema.json"),
@@ -418,7 +512,10 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
         raise ProjectionError("invalid Explorer State: " + "; ".join(explorer_errors))
 
     world_slice = world.get("world_slice") or {}
-    if state["world_slice_ref"] != world_slice.get("id") or state["dataset_identity"] != world_slice.get("dataset_identity"):
+    if (
+        state["world_slice_ref"] != world_slice.get("id")
+        or state["dataset_identity"] != world_slice.get("dataset_identity")
+    ):
         raise ProjectionError("World Slice / Explorer State identity mismatch")
 
     active_layers = set(_uniq(state.get("active_layer_refs") or []))
@@ -433,9 +530,10 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
     def add(item: dict[str, Any], item_losses: list[dict[str, Any]]) -> None:
         items.append(item)
         losses.extend(item_losses)
-        if item["temporal_membership"] == "active":
+        membership = item["temporal_membership"]
+        if membership == "active":
             active_refs.add(item["object_ref"])
-        elif item["temporal_membership"] == "possible_active":
+        elif membership == "possible_active":
             possible_refs.add(item["object_ref"])
         else:
             context_refs.add(item["object_ref"])
@@ -448,11 +546,9 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
         layers = set(_uniq(entity.get("layer_refs") or []))
         if layers and not layers.intersection(active_layers):
             continue
-        entity_type = str(entity.get("entity_type") or "")
-        spatial_extent = None
-        role = "entity_context"
+
         item, item_losses = _make_item(
-            role=role,
+            role="entity_context",
             object_ref=entity_id,
             object_type="Entity",
             subobject_ref=None,
@@ -460,32 +556,25 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
             layer_refs=entity.get("layer_refs") or [],
             claim_refs=entity.get("claim_refs") or [],
             uncertainty_refs=entity.get("uncertainty_refs") or [],
-            spatial_extent=spatial_extent,
-            semantic_flags={
-                "segment_kind": None,
-                "reconstruction_mode": None,
-                "is_primary": None,
-                "state_kind": None,
-                "process_mode": None,
-            },
+            spatial_extent=None,
+            semantic_flags=_semantic_flags(),
             world=world,
             state=state,
             geometry_records=geometry_records,
             claims=claims,
             evidence=evidence,
         )
-        if entity_type == "Place":
+
+        if str(entity.get("entity_kind") or "") == "Place":
             item["spatial_status"] = "unresolved"
             item["place_ref"] = entity_id
-            item_losses = [{
-                "loss_id": f"loss:{item['item_id']}",
-                "item_id": item["item_id"],
-                "loss_kind": "geometry_unresolved",
-                "cause": "source_model_gap",
-                "severity": "material",
-                "reason": "place_entity_without_resolved_geometry",
-                "place_ref": entity_id,
-            }]
+            item_losses = [
+                _unresolved_loss(
+                    item_id=item["item_id"],
+                    reason="place_entity_without_resolved_geometry",
+                    place_ref=entity_id,
+                )
+            ]
         add(item, item_losses)
 
     for event in world.get("events", []):
@@ -505,13 +594,7 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
             claim_refs=event.get("claim_refs") or [],
             uncertainty_refs=event.get("uncertainty_refs") or [],
             spatial_extent=event.get("spatial_extent"),
-            semantic_flags={
-                "segment_kind": None,
-                "reconstruction_mode": None,
-                "is_primary": None,
-                "state_kind": None,
-                "process_mode": None,
-            },
+            semantic_flags=_semantic_flags(),
             world=world,
             state=state,
             geometry_records=geometry_records,
@@ -537,13 +620,9 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
             claim_refs=state_obj.get("claim_refs") or [],
             uncertainty_refs=state_obj.get("uncertainty_refs") or [],
             spatial_extent=state_obj.get("spatial_extent"),
-            semantic_flags={
-                "segment_kind": None,
-                "reconstruction_mode": None,
-                "is_primary": None,
-                "state_kind": str(state_obj.get("state_kind") or "") or None,
-                "process_mode": None,
-            },
+            semantic_flags=_semantic_flags(
+                state_kind=str(state_obj.get("state_kind") or "") or None
+            ),
             world=world,
             state=state,
             geometry_records=geometry_records,
@@ -556,8 +635,7 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
         layers = set(_uniq(process.get("layer_refs") or []))
         if layers and not layers.intersection(active_layers):
             continue
-        process_membership = temporal_membership(process.get("temporal_extent"), state)
-        if process_membership is None:
+        if temporal_membership(process.get("temporal_extent"), state) is None:
             continue
         for stage in process.get("stages", []):
             membership = temporal_membership(stage.get("temporal_extent"), state)
@@ -573,13 +651,9 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
                 claim_refs=stage.get("claim_refs") or [],
                 uncertainty_refs=process.get("uncertainty_refs") or [],
                 spatial_extent=stage.get("spatial_extent"),
-                semantic_flags={
-                    "segment_kind": None,
-                    "reconstruction_mode": None,
-                    "is_primary": None,
-                    "state_kind": None,
-                    "process_mode": str(process.get("process_mode") or "") or None,
-                },
+                semantic_flags=_semantic_flags(
+                    process_mode=str(process.get("process_mode") or "") or None
+                ),
                 world=world,
                 state=state,
                 geometry_records=geometry_records,
@@ -604,15 +678,14 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
                 membership=membership,
                 layer_refs=trajectory.get("layer_refs") or [],
                 claim_refs=segment.get("claim_refs") or [],
-                uncertainty_refs=_uniq((trajectory.get("uncertainty_refs") or []) + (segment.get("uncertainty_refs") or [])),
+                uncertainty_refs=_uniq(
+                    (trajectory.get("uncertainty_refs") or [])
+                    + (segment.get("uncertainty_refs") or [])
+                ),
                 spatial_extent=segment.get("spatial_extent"),
-                semantic_flags={
-                    "segment_kind": str(segment.get("segment_kind") or "") or None,
-                    "reconstruction_mode": None,
-                    "is_primary": None,
-                    "state_kind": None,
-                    "process_mode": None,
-                },
+                semantic_flags=_semantic_flags(
+                    segment_kind=str(segment.get("segment_kind") or "") or None
+                ),
                 world=world,
                 state=state,
                 geometry_records=geometry_records,
@@ -629,9 +702,14 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
             membership = temporal_membership(version.get("temporal_extent"), state)
             if membership is None:
                 continue
-            if not version.get("is_primary") and not state["epistemic_display"].get("show_alternatives"):
-                if version.get("id") != state.get("active_focus", {}).get("region_geometry_ref"):
-                    continue
+            if (
+                not version.get("is_primary")
+                and not state["epistemic_display"].get("show_alternatives")
+                and version.get("id")
+                != state.get("active_focus", {}).get("region_geometry_ref")
+            ):
+                continue
+
             geometry_ref = _ensure_geometry_record(
                 geometry_records,
                 owner_ref=str(region["id"]),
@@ -639,18 +717,30 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
                 spatial_extent=version["spatial_extent"],
                 origin_kind="region_geometry_version",
                 claim_refs=version.get("claim_refs") or [],
-                uncertainty_refs=_uniq((region.get("uncertainty_refs") or []) + (version.get("uncertainty_refs") or [])),
-                reconstruction_mode=str(version.get("reconstruction_mode") or "unknown"),
+                uncertainty_refs=_uniq(
+                    (region.get("uncertainty_refs") or [])
+                    + (version.get("uncertainty_refs") or [])
+                ),
+                reconstruction_mode=str(
+                    version.get("reconstruction_mode") or "unknown"
+                ),
                 is_primary=bool(version.get("is_primary")),
             )
-            normalized_claims, normalized_uncertainty, evidence_refs, source_refs = _epistemic_refs(
-                version.get("claim_refs") or [],
-                _uniq((region.get("uncertainty_refs") or []) + (version.get("uncertainty_refs") or [])),
-                claims,
-                evidence,
+            normalized_claims, normalized_uncertainty, evidence_refs, source_refs = (
+                _epistemic_refs(
+                    version.get("claim_refs") or [],
+                    _uniq(
+                        (region.get("uncertainty_refs") or [])
+                        + (version.get("uncertainty_refs") or [])
+                    ),
+                    claims,
+                    evidence,
+                )
             )
             item = {
-                "item_id": _item_id("region_geometry", str(region["id"]), str(version["id"])),
+                "item_id": _item_id(
+                    "region_geometry", str(region["id"]), str(version["id"])
+                ),
                 "object_ref": str(region["id"]),
                 "object_type": "Region",
                 "subobject_ref": str(version["id"]),
@@ -664,13 +754,12 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
                 "uncertainty_refs": normalized_uncertainty,
                 "evidence_link_refs": evidence_refs,
                 "source_refs": source_refs,
-                "semantic_flags": {
-                    "segment_kind": None,
-                    "reconstruction_mode": str(version.get("reconstruction_mode") or "unknown"),
-                    "is_primary": bool(version.get("is_primary")),
-                    "state_kind": None,
-                    "process_mode": None,
-                },
+                "semantic_flags": _semantic_flags(
+                    reconstruction_mode=str(
+                        version.get("reconstruction_mode") or "unknown"
+                    ),
+                    is_primary=bool(version.get("is_primary")),
+                ),
             }
             add(item, [])
 
@@ -690,7 +779,9 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
         "active_object_refs": sorted(active_refs),
         "possible_active_object_refs": sorted(possible_refs - active_refs),
         "context_object_refs": sorted(context_refs),
-        "geometries": sorted(geometry_records.values(), key=lambda item: item["geometry_ref"]),
+        "geometries": sorted(
+            geometry_records.values(), key=lambda item: item["geometry_ref"]
+        ),
         "items": sorted(items, key=lambda item: item["item_id"]),
         "losses": sorted(losses, key=lambda item: item["loss_id"]),
         "coverage": {
@@ -709,34 +800,53 @@ def build_projection(world: dict[str, Any], state: dict[str, Any], schema: dict[
             for error in schema_errors
         )
         raise ProjectionError(f"projection schema validation failed: {details}")
+
     return projection
 
 
 def _geometry_lookup(projection: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    return {str(item["geometry_ref"]): item for item in projection.get("geometries", [])}
+    return {
+        str(item["geometry_ref"]): item for item in projection.get("geometries", [])
+    }
 
 
 def _adapter_instances(
     projection: dict[str, Any],
     *,
     supported_geometry_types: set[str],
-) -> tuple[list[tuple[dict[str, Any], dict[str, Any], str]], list[dict[str, Any]]]:
+) -> tuple[
+    list[tuple[dict[str, Any], dict[str, Any], str]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+]:
     geometries = _geometry_lookup(projection)
     instances: list[tuple[dict[str, Any], dict[str, Any], str]] = []
     unresolved: list[dict[str, Any]] = []
+    non_spatial: list[dict[str, Any]] = []
+
     for item in projection.get("items", []):
-        if item["spatial_status"] != "resolved":
-            unresolved.append({
+        status = item["spatial_status"]
+        if status != "resolved":
+            row = {
                 "item_id": item["item_id"],
                 "object_ref": item["object_ref"],
                 "subobject_ref": item["subobject_ref"],
-                "spatial_status": item["spatial_status"],
-            })
+                "spatial_status": status,
+            }
+            if status == "unresolved":
+                unresolved.append(row)
+            elif status == "not_spatial":
+                non_spatial.append(row)
+            else:
+                raise ProjectionError(f"unknown spatial_status: {status!r}")
             continue
+
         for geometry_ref in item.get("geometry_refs", []):
             geometry_record = geometries.get(geometry_ref)
             if geometry_record is None:
-                raise ProjectionError(f"item references missing projection geometry: {geometry_ref}")
+                raise ProjectionError(
+                    f"item references missing projection geometry: {geometry_ref}"
+                )
             geometry_type = geometry_record["geometry"].get("type")
             if geometry_type not in supported_geometry_types:
                 raise ProjectionError(
@@ -749,12 +859,16 @@ def _adapter_instances(
                 else f"{item['item_id']}:{geometry_ref}"
             )
             instances.append((item, geometry_record, instance_id))
+
     instances.sort(key=lambda value: value[2])
     unresolved.sort(key=lambda value: value["item_id"])
-    return instances, unresolved
+    non_spatial.sort(key=lambda value: value["item_id"])
+    return instances, unresolved, non_spatial
 
 
-def _adapter_semantics(item: dict[str, Any], geometry_record: dict[str, Any]) -> dict[str, Any]:
+def _adapter_semantics(
+    item: dict[str, Any], geometry_record: dict[str, Any]
+) -> dict[str, Any]:
     return {
         "item_id": item["item_id"],
         "object_ref": item["object_ref"],
@@ -782,15 +896,21 @@ def to_maplibre(
     supported_geometry_types: set[str] | None = None,
 ) -> dict[str, Any]:
     supported = supported_geometry_types or set(SUPPORTED_GEOMETRIES)
-    instances, unresolved = _adapter_instances(projection, supported_geometry_types=supported)
+    instances, unresolved, non_spatial = _adapter_instances(
+        projection, supported_geometry_types=supported
+    )
+
     features: list[dict[str, Any]] = []
     for item, geometry_record, instance_id in instances:
-        features.append({
-            "type": "Feature",
-            "id": instance_id,
-            "geometry": copy.deepcopy(geometry_record["geometry"]),
-            "properties": _adapter_semantics(item, geometry_record),
-        })
+        features.append(
+            {
+                "type": "Feature",
+                "id": instance_id,
+                "geometry": copy.deepcopy(geometry_record["geometry"]),
+                "properties": _adapter_semantics(item, geometry_record),
+            }
+        )
+
     return {
         "type": "FeatureCollection",
         "schema_version": SCHEMA_VERSION,
@@ -799,6 +919,7 @@ def to_maplibre(
         "source": copy.deepcopy(projection["source"]),
         "features": features,
         "unresolved_items": unresolved,
+        "non_spatial_items": non_spatial,
     }
 
 
@@ -808,23 +929,28 @@ def to_globe(
     supported_geometry_types: set[str] | None = None,
 ) -> dict[str, Any]:
     supported = supported_geometry_types or set(SUPPORTED_GEOMETRIES)
-    instances, unresolved = _adapter_instances(projection, supported_geometry_types=supported)
+    instances, unresolved, non_spatial = _adapter_instances(
+        projection, supported_geometry_types=supported
+    )
     kind_map = {
         "Point": "cartographic_point",
         "LineString": "cartographic_polyline",
         "Polygon": "cartographic_polygon",
         "MultiPolygon": "cartographic_multipolygon",
     }
+
     primitives: list[dict[str, Any]] = []
     for item, geometry_record, instance_id in instances:
         geometry = geometry_record["geometry"]
-        semantics = _adapter_semantics(item, geometry_record)
-        primitives.append({
-            "primitive_id": instance_id,
-            "primitive_kind": kind_map[geometry["type"]],
-            "coordinates": copy.deepcopy(geometry["coordinates"]),
-            **semantics,
-        })
+        primitives.append(
+            {
+                "primitive_id": instance_id,
+                "primitive_kind": kind_map[geometry["type"]],
+                "coordinates": copy.deepcopy(geometry["coordinates"]),
+                **_adapter_semantics(item, geometry_record),
+            }
+        )
+
     return {
         "schema_version": SCHEMA_VERSION,
         "adapter_kind": "globe_cartographic",
@@ -834,10 +960,13 @@ def to_globe(
         "vertical_semantics": projection["vertical_semantics"],
         "primitives": primitives,
         "unresolved_items": unresolved,
+        "non_spatial_items": non_spatial,
     }
 
 
-def assert_adapter_preservation(maplibre: dict[str, Any], globe: dict[str, Any]) -> None:
+def assert_adapter_preservation(
+    maplibre: dict[str, Any], globe: dict[str, Any]
+) -> None:
     map_rows = {
         str(feature["id"]): feature["properties"]
         for feature in maplibre.get("features", [])
@@ -848,6 +977,7 @@ def assert_adapter_preservation(maplibre: dict[str, Any], globe: dict[str, Any])
     }
     if set(map_rows) != set(globe_rows):
         raise ProjectionError("adapter identity drift: rendered instance IDs differ")
+
     fields = {
         "item_id",
         "object_ref",
@@ -873,11 +1003,16 @@ def assert_adapter_preservation(maplibre: dict[str, Any], globe: dict[str, Any])
                 raise ProjectionError(
                     f"adapter semantic drift for {instance_id}: field {field} differs"
                 )
+
     if maplibre.get("unresolved_items") != globe.get("unresolved_items"):
         raise ProjectionError("adapter semantic drift: unresolved item sets differ")
+    if maplibre.get("non_spatial_items") != globe.get("non_spatial_items"):
+        raise ProjectionError("adapter semantic drift: non-spatial item sets differ")
 
 
-def build_all(world: dict[str, Any], state: dict[str, Any], schema: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+def build_all(
+    world: dict[str, Any], state: dict[str, Any], schema: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     projection = build_projection(world, state, schema)
     maplibre = to_maplibre(projection)
     globe = to_globe(projection)
@@ -886,63 +1021,38 @@ def build_all(world: dict[str, Any], state: dict[str, Any], schema: dict[str, An
 
 
 def _write(path: Path, value: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(_canonical(value), encoding="utf-8")
 
 
-def _check(path: Path, value: Any) -> list[str]:
-    expected = _canonical(value)
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="write derived projection/adapters for local inspection only",
+    )
+    args = parser.parse_args()
+
     try:
-        actual = path.read_text(encoding="utf-8")
-    except OSError:
-        return [f"missing generated fixture: {path.relative_to(ROOT)}"]
-    if actual != expected:
-        return [f"generated fixture drift: {path.relative_to(ROOT)}"]
-    return []
-
-
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--write", action="store_true", help="write deterministic fixture artifacts")
-    parser.add_argument("--check", action="store_true", help="check deterministic fixture artifacts (default)")
-    parser.add_argument("--world", type=Path, default=WORLD_PATH)
-    parser.add_argument("--state", type=Path, default=STATE_PATH)
-    parser.add_argument("--schema", type=Path, default=SCHEMA_PATH)
-    args = parser.parse_args(argv)
-
-    world = _load(args.world)
-    state = _load(args.state)
-    schema = _load(args.schema)
-    try:
-        projection, maplibre, globe = build_all(world, state, schema)
-    except ProjectionError as exc:
+        projection, maplibre, globe = build_all(
+            _load(WORLD_PATH), _load(STATE_PATH), _load(SCHEMA_PATH)
+        )
+        if args.write:
+            _write(PROJECTION_PATH, projection)
+            _write(MAPLIBRE_PATH, maplibre)
+            _write(GLOBE_PATH, globe)
+        print(
+            "[PASS] Render Projection v1: "
+            f"items={len(projection['items'])}; "
+            f"geometries={len(projection['geometries'])}; "
+            f"losses={len(projection['losses'])}; "
+            f"map_features={len(maplibre['features'])}; "
+            f"globe_primitives={len(globe['primitives'])}"
+        )
+        return 0
+    except (ProjectionError, KeyError, TypeError, ValueError) as exc:
         print(f"[FAIL] {exc}", file=sys.stderr)
         return 1
-
-    outputs = (
-        (PROJECTION_PATH, projection),
-        (MAPLIBRE_PATH, maplibre),
-        (GLOBE_PATH, globe),
-    )
-    if args.write:
-        for path, value in outputs:
-            _write(path, value)
-        print("[PASS] wrote deterministic render-projection fixtures")
-        return 0
-
-    errors: list[str] = []
-    for path, value in outputs:
-        errors.extend(_check(path, value))
-    if errors:
-        for error in errors:
-            print(f"[FAIL] {error}", file=sys.stderr)
-        return 1
-    print(
-        "[PASS] render projection fixtures: "
-        f"items={len(projection['items'])}; geometries={len(projection['geometries'])}; "
-        f"losses={len(projection['losses'])}; adapters=2"
-    )
-    return 0
 
 
 if __name__ == "__main__":
