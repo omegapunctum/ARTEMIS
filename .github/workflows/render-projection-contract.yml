@@ -1,0 +1,51 @@
+name: Render Projection Contract Gate
+
+on:
+  push:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/build_render_projection_fixtures.py"
+      - "tests/test_render_projection_contract.py"
+      - "docs/work/2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md"
+      - ".github/workflows/render-projection-contract.yml"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/build_render_projection_fixtures.py"
+      - "tests/test_render_projection_contract.py"
+      - "docs/work/2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md"
+      - ".github/workflows/render-projection-contract.yml"
+      - "requirements.txt"
+
+jobs:
+  render-projection:
+    name: Neutral + 2D + Globe projection contract
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Validate Explorer State dependency
+        run: python scripts/validate_explorer_state_fixtures.py
+
+      - name: Build projection package and adapters in memory
+        run: python scripts/build_render_projection_fixtures.py
+
+      - name: Run render projection semantic tests
+        run: pytest -q tests/test_render_projection_contract.py
