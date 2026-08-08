@@ -144,6 +144,8 @@ When manually evaluating the spike, record at minimum:
 - whether globe rotate/zoom/pitch feels responsive;
 - any WebGL/MapLibre warnings.
 
+Hosted headless Chrome is used for runtime acceptance but its virtual-time scheduling is **not** treated as a performance baseline. `idle`/rAF values may remain `pending` there even after the MapLibre globe has loaded successfully.
+
 ## 9. Failure states
 
 The spike must fail visibly when:
@@ -167,9 +169,13 @@ It must not silently fall back to `data/features.geojson`, `/api/*`, or the curr
 4. static Globe artifact build;
 5. runtime contract tests;
 6. static HTTP serving smoke test;
-7. upload of the generated artifact `artemis-globe-runtime-spike` for inspection.
+7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL;
+8. assertions that the browser DOM contains the canonical World Slice/Explorer State, unresolved trajectory uncertainty, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
+9. upload of the generated artifact `artemis-globe-runtime-spike` for inspection.
 
-CI does not claim visual/browser acceptance by itself; it guarantees the artifact is generated, structurally served and semantically pinned. Manual browser inspection remains part of #343 evidence until browser automation is justified.
+The headless gate proves that the pinned MapLibre engine executes in a browser and reaches its map `load` path with the generated semantic data. It does not replace human visual/interaction review, and it intentionally does not fail on hosted-runner `idle`/rAF timing because those values are not a production SLO.
+
+Manual browser inspection remains useful for interaction feel, visual legibility and real-device performance evidence.
 
 ## 11. Exit decision
 
