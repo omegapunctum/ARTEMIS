@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-07-28.
+- Updated: 2026-08-08.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,9 +13,16 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-04_UNCERTAINTY_SEMANTICS_REVIEW.md` | #330 scope, fixture review and finalization record | Two independent READY reviews and executable ready-mode pass |
+| `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` | #339 bounded parallel 3D Globe / renderer architecture R&D record | #340–#345 contracts/spike/parity/repository decisions complete or explicit stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
+
+Active execution rule for the Globe record:
+
+- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
+- it authorizes only the bounded #339–#345 R&D contour;
+- it does not make 3D Globe a current public/product capability;
+- it does not block #331 → #332 → #333 → #334.
 
 ## Gated under Foundation v3
 
@@ -44,6 +51,7 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-08-04_UNCERTAINTY_SEMANTICS_REVIEW.md` — #330 completed in PR `#337` with READY uncertainty semantics and independent review evidence.
 - `2026-07-29_WORLD_MODEL_FIXTURE_REVIEW.md` — #329 completed in PR `#336` with READY package and two independent reviews.
 - `2026-07-28_FOUNDATION_V3_DECISION.md` — accepted in PR `#328`.
 - `2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md` — backlog disposition completed.
