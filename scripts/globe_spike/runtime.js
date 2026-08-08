@@ -174,7 +174,7 @@
       source: 'artemis-semantic',
       filter: [
         'all',
-        ['==', '$type', 'Polygon'],
+        ['==', ['geometry-type'], 'Polygon'],
         ['==', ['get', 'render_role'], 'region_geometry'],
         ['==', ['get', 'geometry_is_primary'], true]
       ],
@@ -189,7 +189,7 @@
       source: 'artemis-semantic',
       filter: [
         'all',
-        ['==', '$type', 'Polygon'],
+        ['==', ['geometry-type'], 'Polygon'],
         ['==', ['get', 'render_role'], 'region_geometry'],
         ['==', ['get', 'geometry_is_primary'], true]
       ],
@@ -206,7 +206,7 @@
       source: 'artemis-semantic',
       filter: [
         'all',
-        ['==', '$type', 'Polygon'],
+        ['==', ['geometry-type'], 'Polygon'],
         ['==', ['get', 'render_role'], 'region_geometry'],
         ['==', ['get', 'geometry_is_primary'], false]
       ],
@@ -221,7 +221,7 @@
       source: 'artemis-semantic',
       filter: [
         'all',
-        ['==', '$type', 'Polygon'],
+        ['==', ['geometry-type'], 'Polygon'],
         ['==', ['get', 'render_role'], 'region_geometry'],
         ['==', ['get', 'geometry_is_primary'], false]
       ],
@@ -237,7 +237,7 @@
       id: 'artemis-semantic-lines',
       type: 'line',
       source: 'artemis-semantic',
-      filter: ['==', '$type', 'LineString'],
+      filter: ['==', ['geometry-type'], 'LineString'],
       paint: {
         'line-color': '#8bc3ff',
         'line-width': 3,
@@ -249,7 +249,7 @@
       id: 'artemis-points',
       type: 'circle',
       source: 'artemis-semantic',
-      filter: ['==', '$type', 'Point'],
+      filter: ['==', ['geometry-type'], 'Point'],
       paint: {
         'circle-radius': 6,
         'circle-color': '#72c7ff',
