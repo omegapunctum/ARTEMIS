@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_id": "artemis-geospatial-assets-contract-fixture-v1",
+  "manifest_mode": "synthetic_contract_fixture",
+  "assets": [
+    {
+      "asset_id": "asset-synthetic-present-terrain",
+      "label": "Synthetic present-day terrain context",
+      "asset_kind": "terrain_elevation",
+      "semantic_role": "present_day_context",
+      "provider": {
+        "provider_id": "provider-synthetic-local-terrain",
+        "adapter_kind": "static_local",
+        "endpoint_template": "fixture://terrain/global",
+        "credential_mode": "none",
+        "credential_env": null
+      },
+      "spatial_reference": {
+        "horizontal_crs": "EPSG:4326",
+        "axis_order": "lon_lat",
+        "vertical_reference": {
+          "mode": "ellipsoidal_height",
+          "datum": "WGS84",
+          "unit": "meter",
+          "positive_direction": "up"
+        }
+      },
+      "coverage": {
+        "coverage_kind": "global",
+        "bbox_wgs84": [-180.0, -90.0, 180.0, 90.0],
+        "min_resolution_m": 30.0,
+        "max_resolution_m": 1000.0,
+        "min_lod": 0,
+        "max_lod": 12
+      },
+      "temporal_semantics": {
+        "mode": "current_context",
+        "reference_date": null,
+        "valid_from": null,
+        "valid_to": null,
+        "world_model_claim_refs": [],
+        "uncertainty_refs": [],
+        "reconstruction_method": null
+      },
+      "provenance": {
+        "provenance_kind": "synthetic_fixture",
+        "publisher": "ARTEMIS fixture suite",
+        "dataset_name": "Synthetic terrain context",
+        "dataset_version": "1.0.0",
+        "source_uri": "fixture://terrain/metadata",
+        "retrieved_at": "2026-08-08",
+        "data_date": null
+      },
+      "licensing": {
+        "license_id": "SYNTHETIC-FIXTURE",
+        "license_url": null,
+        "attribution_text": "Synthetic ARTEMIS contract fixture; not real terrain data.",
+        "attribution_required": true,
+        "redistribution": "allowed"
+      },
+      "cache_policy": {
+        "runtime_cache_allowed": true,
+        "offline_cache_allowed": true,
+        "cached_bytes_redistribution_allowed": true,
+        "max_age_seconds": 3600
+      },
+      "runtime_policy": {
+        "allowed_environments": ["development", "test"],
+        "network_required": false,
+        "secret_required": false,
+        "public_pages_allowed": true,
+        "fallback_asset_ref": null,
+        "failure_mode": "fail_closed"
+      }
+    },
+    {
+      "asset_id": "asset-synthetic-present-imagery",
+      "label": "Synthetic present-day imagery context",
+      "asset_kind": "raster_imagery",
+      "semantic_role": "present_day_context",
+      "provider": {
+        "provider_id": "provider-synthetic-local-imagery",
+        "adapter_kind": "static_local",
+        "endpoint_template": "fixture://imagery/global/{z}/{x}/{y}",
+        "credential_mode": "none",
+        "credential_env": null
+      },
+      "spatial_reference": {
+        "horizontal_crs": "EPSG:4326",
+        "axis_order": "lon_lat",
+        "vertical_reference": {
+          "mode": "not_applicable",
+          "datum": null,
+          "unit": null,
+          "positive_direction": null
+        }
+      },
+      "coverage": {
+        "coverage_kind": "global",
+        "bbox_wgs84": [-180.0, -90.0, 180.0, 90.0],
+        "min_resolution_m": 10.0,
+        "max_resolution_m": 1000.0,
+        "min_lod": 0,
+        "max_lod": 14
+      },
+      "temporal_semantics": {
+        "mode": "current_context",
+        "reference_date": null,
+        "valid_from": null,
+        "valid_to": null,
+        "world_model_claim_refs": [],
+        "uncertainty_refs": [],
+        "reconstruction_method": null
+      },
+      "provenance": {
+        "provenance_kind": "synthetic_fixture",
+        "publisher": "ARTEMIS fixture suite",
+        "dataset_name": "Synthetic imagery context",
+        "dataset_version": "1.0.0",
+        "source_uri": "fixture://imagery/metadata",
+        "retrieved_at": "2026-08-08",
+        "data_date": null
+      },
+      "licensing": {
+        "license_id": "SYNTHETIC-FIXTURE",
+        "license_url": null,
+        "attribution_text": "Synthetic ARTEMIS contract fixture; not real imagery.",
+        "attribution_required": true,
+        "redistribution": "allowed"
+      },
+      "cache_policy": {
+        "runtime_cache_allowed": true,
+        "offline_cache_allowed": true,
+        "cached_bytes_redistribution_allowed": true,
+        "max_age_seconds": 3600
+      },
+      "runtime_policy": {
+        "allowed_environments": ["development", "test"],
+        "network_required": false,
+        "secret_required": false,
+        "public_pages_allowed": true,
+        "fallback_asset_ref": null,
+        "failure_mode": "fail_closed"
+      }
+    }
+  ]
+}
