@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "artemis-relation-predicate-registry-v1",
+  "status": "CANDIDATE",
+  "base_world_model_ref": "artemis-world-model-contract-fixture-v1@1.0.0",
+  "predicates": [
+    {
+      "predicate": "documented_encounter",
+      "semantic_class": "documented_interaction",
+      "directionality": "symmetric",
+      "allow_self_relation": false,
+      "mechanism": "forbidden_as_semantic_requirement",
+      "scope": "optional",
+      "allowed_claim_kinds": ["factual"],
+      "minimum_supporting_evidence_strength": "direct",
+      "require_reviewed_support": true,
+      "contested_uncertainty_policy": "optional_unless_contested",
+      "inference_policy": "explicit_claim_evidence_only"
+    },
+    {
+      "predicate": "influence",
+      "semantic_class": "interpretive_influence",
+      "directionality": "directed",
+      "allow_self_relation": false,
+      "mechanism": "required",
+      "scope": "required",
+      "allowed_claim_kinds": ["interpretation"],
+      "minimum_supporting_evidence_strength": "any_reviewed",
+      "require_reviewed_support": true,
+      "contested_uncertainty_policy": "required_when_contested_or_challenged",
+      "inference_policy": "explicit_claim_evidence_only"
+    }
+  ],
+  "derived_observation_policy": {
+    "automatic_relation_creation": false,
+    "co_presence": "derived_observation_only",
+    "similarity": "analytical_result_only",
+    "temporal_order": "insufficient_for_relation",
+    "promotion_requirement": "new_registered_relation_claim_and_evidence"
+  }
+}
