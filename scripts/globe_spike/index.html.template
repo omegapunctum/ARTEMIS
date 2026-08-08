@@ -91,12 +91,12 @@
       const timer = window.setInterval(() => {
         attempts += 1;
         const map = window.__ARTEMIS_GLOBE_SPIKE?.map;
-        if (map && typeof map.loaded === 'function' && map.loaded()) {
+        if (map && typeof map.jumpTo === 'function') {
           window.clearInterval(timer);
           map.jumpTo({
             center: [10.6, 50.0],
-            zoom: 4.2,
-            pitch: 38,
+            zoom: 5.5,
+            pitch: 28,
             bearing: -12
           });
           document.documentElement.dataset.artemisCamera = 'fixture-basin';
