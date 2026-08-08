@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "artemis-cross-renderer-negative-cases-v1",
+  "cases": [
+    {
+      "case_id": "object-id-drift",
+      "target": "globe_adapter",
+      "mutation": "replace_rendered_field",
+      "instance_id": "rp:region_geometry:region-fixture-basin:region-geometry-v2",
+      "field": "object_ref",
+      "value": "region-south-coast"
+    },
+    {
+      "case_id": "drop-region-uncertainty",
+      "target": "maplibre_adapter",
+      "mutation": "replace_rendered_field",
+      "instance_id": "rp:region_geometry:region-fixture-basin:region-geometry-v2",
+      "field": "uncertainty_refs",
+      "value": []
+    },
+    {
+      "case_id": "wrong-temporal-membership",
+      "target": "globe_adapter",
+      "mutation": "replace_rendered_field",
+      "instance_id": "rp:event:event-far-observation",
+      "field": "temporal_membership",
+      "value": "possible_active"
+    },
+    {
+      "case_id": "drop-alternative-region",
+      "target": "globe_adapter",
+      "mutation": "remove_rendered_instance",
+      "instance_id": "rp:region_geometry:region-fixture-basin:region-geometry-v2-alternative"
+    },
+    {
+      "case_id": "drop-source-evidence-access",
+      "target": "maplibre_adapter",
+      "mutation": "replace_rendered_field",
+      "instance_id": "rp:event:event-far-observation",
+      "field": "source_refs",
+      "value": []
+    },
+    {
+      "case_id": "trajectory-segment-kind-drift",
+      "target": "globe_projection",
+      "mutation": "replace_item_semantic_flag",
+      "item_id": "rp:trajectory_segment:trajectory-mara-vale:trajectory-segment-gap",
+      "field": "segment_kind",
+      "value": "presence"
+    },
+    {
+      "case_id": "invent-trajectory-gap-geometry",
+      "target": "globe_projection",
+      "mutation": "replace_item_field",
+      "item_id": "rp:trajectory_segment:trajectory-mara-vale:trajectory-segment-gap",
+      "field": "spatial_status",
+      "value": "resolved"
+    }
+  ]
+}
