@@ -66,7 +66,7 @@ def test_globe_architecture_does_not_create_a_second_semantic_core() -> None:
     globe_record = _read("docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md")
 
     assert "canonical public **2D map projection**" in data_contract
-    assert "not the universal representation" in data_contract
+    assert "must not be promoted into the canonical representation" in data_contract
     assert "renderer-ready GeoJSON, engine primitives, meshes or tiles are derived projections" in data_contract
     assert "No competing semantic/world-model source of truth" in master_prompt
     assert "Renderer engines do not own domain semantics" in master_prompt
