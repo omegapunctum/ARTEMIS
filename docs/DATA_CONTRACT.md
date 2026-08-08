@@ -4,31 +4,34 @@
 
 - Тип: canonical data contract document
 - Статус: active
-- Роль: source of truth для ETL/data/public map contract, release artifact semantics и runtime data boundaries
-- Scope: Airtable curated source → ETL/export → checked-in `data/*` → public map runtime
+- Роль: source of truth для ETL/data/current public map contract, release artifact semantics и runtime data boundaries
+- Scope: Airtable curated source → ETL/export → checked-in `data/*` → current public 2D map runtime
+
+Этот документ описывает **текущий public export/runtime contract**. Он не переопределяет canonical semantics пространственно-временной модели из `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` и не утверждает, что Point-only GeoJSON является универсальным форматом всей будущей модели ARTEMIS.
 
 ---
 
 ## 1. Contract ownership
 
-ARTEMIS data contract is owned by the checked-in ETL/export pipeline and canonical documentation layer.
+ARTEMIS current public data contract is owned by the checked-in ETL/export pipeline and canonical documentation layer.
 
 Owner chain:
-1. Airtable is the curated editorial source.
+1. Airtable is the curated editorial source for the current Architecture Atlas compatibility corpus.
 2. `scripts/export_airtable.py` validates and exports curated source records.
-3. `data/*` stores checked-in release artifacts.
-4. `data/features.geojson` is the only canonical public map dataset.
+3. `data/*` stores checked-in current release artifacts.
+4. `data/features.geojson` is the canonical public **2D map projection** for the current runtime.
 5. frontend public map bootstrap reads `data/features.geojson` by default.
-6. runtime API routes must not replace the published public dataset.
+6. runtime API routes must not replace the published public dataset silently.
 
 Rule:
-- any change to source fields, validation semantics, release artifact structure, or public map payload must update this document and the relevant ETL/check code in the same change cycle.
+- any change to source fields, validation semantics, release artifact structure, or current public map payload must update this document and the relevant ETL/check code in the same change cycle.
+- World Model semantics belong to their foundation contracts and must not be inferred from limitations of the current Architecture Atlas export.
 
 ---
 
 ## 2. Canonical public map source
 
-Canonical public map dataset:
+Canonical current public 2D map dataset:
 - `data/features.geojson`
 
 Supporting release artifacts:
@@ -47,11 +50,39 @@ Release-evidence / diagnostic artifacts:
 - `data/export_errors.log`
 
 Rules:
-- `data/features.geojson` is the production-default public source for map rendering.
+- `data/features.geojson` is the production-default public source for the current 2D map rendering contour.
+- it is a current compatibility/render projection and must not be promoted into the canonical representation of all future `Event`, `State`, `Process`, `Trajectory` or temporal `Region` objects.
 - `data/features.json` is a supporting/raw validated artifact, not the public source of truth.
 - `export_meta.json`, `rejected.json`, `validation_report.json` and `content_profile.json` are release-quality evidence.
 - `validation_report.json` is not a competing content source, but release gate explicitly depends on its blocking-error/warning contract.
 - `content_profile.json` is a deterministic readiness snapshot derived from public artifacts; it does not create or override content.
+
+### 2.1 World Model and render-projection boundary
+
+Foundation v3 requires richer spatial-temporal objects than the current Point-only public export. The canonical semantic model supports, among other things, paths/trajectories, temporal regions, states, processes, alternative geometries and uncertainty.
+
+For future 2D/3D renderer integration, the intended boundary is:
+
+```text
+World Model / versioned World Slice
+        +
+renderer-neutral Explorer State
+        ↓
+explicit render projection
+        ↓
+2D Map payload | 3D Globe payload | future renderer payload
+```
+
+Rules:
+
+- renderer-ready GeoJSON, engine primitives, meshes or tiles are derived projections, not independent historical truth;
+- a 3D Globe renderer must not create a separate historical schema merely because it uses a different engine representation;
+- renderer projections must preserve canonical object identity and material temporal/uncertainty/evidence references;
+- projection loss must be explicit and must never invent precision, route detail, geometry or historical state;
+- terrain, elevation, basemap imagery and rendering tiles are geospatial assets and require their own provenance/licensing/coordinate metadata; they are not historical World Model objects by default;
+- a historical/reconstructed terrain, coastline or boundary that asserts past state must use temporal validity, provenance and uncertainty semantics from the World Model contracts.
+
+The working architecture record is `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` and parent work item is #339. Until executable contracts and runtime artifacts are accepted, this subsection changes architecture interpretation only; it does not change current `data/*` schemas or public runtime capability.
 
 ---
 
@@ -124,7 +155,8 @@ Current warning policy:
 ```
 
 Geometry rules:
-- only `Point` geometry is accepted in the current public map baseline;
+- only `Point` geometry is accepted in the **current public 2D map baseline**;
+- this Point-only restriction is a compatibility/runtime constraint, not the spatial limit of the Foundation v3 World Model;
 - coordinates order is `[longitude, latitude]`;
 - longitude and latitude must be numeric;
 - longitude must be within `[-180, 180]`;
@@ -257,97 +289,3 @@ Synchronization rule:
 - Otherwise records with the new value are rejected as `invalid_coordinates_source`.
 
 ---
-
-## 8. Validation and rejection semantics
-
-A source record may be exported only if it satisfies the current ETL validation contract.
-
-Exported public records must satisfy:
-- valid unique UUID v4 canonical identity;
-- valid `layer_id`;
-- valid coordinates;
-- valid geometry;
-- valid or accepted date payload;
-- accepted `coordinates_source`;
-- required display fields for public UI;
-- at least one reviewed Source and exactly one primary Source projection;
-- only reviewed direct Media assets with rights/attribution metadata;
-- only reviewed Relations whose endpoints, evidence and Feature projections agree;
-- a reference to a published enabled, non-empty Layer;
-- no release-blocking data-quality warnings.
-
-Rejected records:
-- must be written to `data/rejected.json`;
-- must include enough diagnostic information to identify the failed source record and reason;
-- must be counted by `records_rejected` when that field exists in `export_meta.json`.
-
-Release-quality warnings:
-- must be aggregated in `export_meta.json.warning_categories` when they affect release policy;
-- must be represented in `validation_report.json.warnings` and `export_meta.warning_stats` without count drift;
-- remain non-blocking only while their reason and count fit the explicit pilot budgets;
-- must not be inferred directly from raw Airtable-only fields unless ETL converts them into release warnings.
-
-`validation_report.json` schema version 2 owns:
-
-- `status`: `ready`, `ready_with_warnings` or `blocked`;
-- `blocking_errors_count` and `blocking_errors`;
-- `warnings_count` and `warnings`;
-- compatibility aliases `errors_count` and `errors`, which must exactly equal the blocking-error fields during migration.
-
----
-
-## 9. Raw/source diagnostics vs release-quality signals
-
-Clarification:
-- `data/features.json` is a raw/supporting source artifact and may include source-side diagnostic metadata from Airtable.
-- raw `fields.id` is release-gating and must be UUID v4; derived `fields.id_status` remains diagnostic because the ETL validates the source value directly.
-- release warnings/rejections are derived from ETL validation/export pipeline signals, especially `export_meta.json` and `rejected.json`.
-- documentation, release gate, and audits must not treat raw source metadata as final release truth unless the ETL pipeline has promoted it into release-quality signals.
-
----
-
-## 10. Runtime map feed boundary
-
-Boundary rules:
-- canonical public map dataset remains `data/features.geojson`;
-- `GET /api/map/feed` is an auxiliary, non-canonical runtime support/read-model endpoint for authenticated UI/runtime scenarios;
-- current baseline implementation of `/api/map/feed` must be treated as a temporary MVP adapter, not as a production-grade public read model over the published dataset;
-- `/api/map/feed` currently serves internal runtime feed semantics without transitional/mock-backed place payloads; any future entity expansion must remain internal/non-canonical and be introduced explicitly;
-- frontend main map bootstrap path must keep `data/features.geojson` as default source;
-- `/api/map/feed` may be used only as an explicit internal runtime toggle/path;
-- runtime consumers must not treat `/api/map/feed` as a replacement for published `/data/*` artifacts or as a stable public export contract.
-
----
-
-## 11. Upload runtime / file-serving boundary
-
-Boundary rules:
-- upload API surface is runtime-only and consists of `POST /api/uploads` and `POST /api/uploads/image`;
-- public serving of uploaded files is static via `/uploads/*` mount;
-- `/uploads/*` serving for user-uploaded files includes explicit baseline response-header policy at runtime;
-- baseline serving-policy headers for `/uploads/*` are `X-Content-Type-Options: nosniff`, `Content-Disposition: inline`, and `Cache-Control: no-store`;
-- upload acceptance validates declared upload metadata (`content_type`) and applies server-side magic-bytes signature checks for supported image types (`PNG`, `JPEG/JPG`, `WEBP`);
-- when declared type is allowlisted but the detected file signature does not match that declared type, the upload is rejected;
-- upload acceptance (runtime API) and uploaded-file delivery (static path) are separate contract surfaces and must not be conflated;
-- there is no contract route `GET /api/uploads/{filename}` in the current baseline;
-- frontend must treat backend-returned `url` from upload responses as source of truth for file access paths.
-
----
-
-## 12. Change-control rule
-
-Any change to this contract must define:
-- affected source fields;
-- affected ETL code;
-- affected checked-in `data/*` artifact shape;
-- affected frontend/runtime consumers;
-- release-check impact;
-- migration or compatibility behavior for existing records;
-- required documentation sync.
-
-A data-contract change is not complete until:
-- ETL/export behavior is updated;
-- release checks are updated if needed;
-- checked-in data artifacts match the new contract;
-- this document is updated;
-- relevant tests pass.
