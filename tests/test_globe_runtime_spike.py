@@ -143,6 +143,17 @@ def test_spike_source_does_not_read_public_compatibility_data_or_backend() -> No
     assert "setProjection({ type: 'globe' })" in runtime_source
 
 
+def test_maplibre_v5_semantic_layers_use_expression_geometry_type_filters() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+
+    assert "'$type'" not in runtime_source
+    assert '"$type"' not in runtime_source
+    assert runtime_source.count("['geometry-type']") >= 6
+    assert "['==', ['geometry-type'], 'Polygon']" in runtime_source
+    assert "['==', ['geometry-type'], 'LineString']" in runtime_source
+    assert "['==', ['geometry-type'], 'Point']" in runtime_source
+
+
 def test_spike_pins_maplibre_5_without_upgrading_public_runtime() -> None:
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
     public_index = (ROOT / "index.html").read_text(encoding="utf-8")
