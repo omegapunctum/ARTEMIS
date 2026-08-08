@@ -33,7 +33,9 @@ def _item(projection, item_id):
 
 
 def _geometry(projection, geometry_ref):
-    return next(item for item in projection["geometries"] if item["geometry_ref"] == geometry_ref)
+    return next(
+        item for item in projection["geometries"] if item["geometry_ref"] == geometry_ref
+    )
 
 
 def test_same_inputs_build_neutral_maplibre_and_globe_payloads() -> None:
@@ -60,11 +62,13 @@ def test_explicit_point_geometry_is_preserved_for_both_adapters() -> None:
     assert geometry["geometry"] == {"type": "Point", "coordinates": [100.0, -20.0]}
 
     map_feature = next(
-        feature for feature in maplibre["features"]
+        feature
+        for feature in maplibre["features"]
         if feature["properties"]["item_id"] == item["item_id"]
     )
     globe_primitive = next(
-        primitive for primitive in globe["primitives"]
+        primitive
+        for primitive in globe["primitives"]
         if primitive["item_id"] == item["item_id"]
     )
     assert map_feature["geometry"] == geometry["geometry"]
@@ -92,33 +96,90 @@ def test_named_place_without_canonical_geometry_stays_unresolved() -> None:
         primitive["item_id"] != meeting["item_id"]
         for primitive in globe["primitives"]
     )
-    assert any(row["item_id"] == meeting["item_id"] for row in maplibre["unresolved_items"])
-    assert any(row["item_id"] == meeting["item_id"] for row in globe["unresolved_items"])
+    assert any(
+        row["item_id"] == meeting["item_id"] for row in maplibre["unresolved_items"]
+    )
+    assert any(
+        row["item_id"] == meeting["item_id"] for row in globe["unresolved_items"]
+    )
+
+
+def test_place_entity_without_geometry_is_unresolved_not_non_spatial() -> None:
+    projection, maplibre, globe = _build()
+    place = _item(projection, "rp:entity_context:place-inland-workshop")
+
+    assert place["spatial_status"] == "unresolved"
+    assert place["place_ref"] == "place-inland-workshop"
+    assert any(
+        loss["item_id"] == place["item_id"]
+        and loss["reason"] == "place_entity_without_resolved_geometry"
+        for loss in projection["losses"]
+    )
+    assert any(
+        row["item_id"] == place["item_id"] for row in maplibre["unresolved_items"]
+    )
+    assert any(
+        row["item_id"] == place["item_id"] for row in globe["unresolved_items"]
+    )
+    assert all(
+        row["item_id"] != place["item_id"] for row in maplibre["non_spatial_items"]
+    )
+
+
+def test_non_spatial_person_context_is_not_misreported_as_geometry_failure() -> None:
+    projection, maplibre, globe = _build()
+    person = _item(projection, "rp:entity_context:entity-mara-vale")
+
+    assert person["spatial_status"] == "not_spatial"
+    assert person["geometry_refs"] == []
+    assert person["place_ref"] is None
+    assert all(loss["item_id"] != person["item_id"] for loss in projection["losses"])
+    assert any(
+        row["item_id"] == person["item_id"] for row in maplibre["non_spatial_items"]
+    )
+    assert any(
+        row["item_id"] == person["item_id"] for row in globe["non_spatial_items"]
+    )
+    assert all(
+        row["item_id"] != person["item_id"] for row in maplibre["unresolved_items"]
+    )
 
 
 def test_unknown_trajectory_gap_never_becomes_a_line() -> None:
     projection, maplibre, globe = _build()
-    gap = _item(projection, "rp:trajectory_segment:trajectory-mara-vale:trajectory-segment-gap")
+    gap = _item(
+        projection,
+        "rp:trajectory_segment:trajectory-mara-vale:trajectory-segment-gap",
+    )
 
     assert gap["semantic_flags"]["segment_kind"] == "inferred_gap"
     assert gap["spatial_status"] == "unresolved"
     assert gap["geometry_refs"] == []
     assert any(
-        loss["item_id"] == gap["item_id"] and loss["reason"] == "unknown_spatial_extent"
+        loss["item_id"] == gap["item_id"]
+        and loss["reason"] == "unknown_spatial_extent"
         for loss in projection["losses"]
     )
-    assert all(feature["properties"]["item_id"] != gap["item_id"] for feature in maplibre["features"])
-    assert all(primitive["item_id"] != gap["item_id"] for primitive in globe["primitives"])
+    assert all(
+        feature["properties"]["item_id"] != gap["item_id"]
+        for feature in maplibre["features"]
+    )
+    assert all(
+        primitive["item_id"] != gap["item_id"] for primitive in globe["primitives"]
+    )
 
 
 def test_region_primary_and_alternative_reconstructions_survive() -> None:
     projection, maplibre, globe = _build()
     primary = _geometry(projection, "geom:region-fixture-basin:region-geometry-v2")
-    alternative = _geometry(projection, "geom:region-fixture-basin:region-geometry-v2-alt")
+    alternative = _geometry(
+        projection,
+        "geom:region-fixture-basin:region-geometry-v2-alternative",
+    )
 
-    assert primary["reconstruction_mode"] == "documented_reconstruction"
+    assert primary["reconstruction_mode"] == "scholarly_reconstruction"
     assert primary["is_primary"] is True
-    assert alternative["reconstruction_mode"] == "documented_alternative"
+    assert alternative["reconstruction_mode"] == "alternative_reconstruction"
     assert alternative["is_primary"] is False
     assert primary["geometry"] != alternative["geometry"]
 
@@ -138,7 +199,7 @@ def test_region_primary_and_alternative_reconstructions_survive() -> None:
         for primitive in globe["primitives"]
         if primitive["item_id"] == state_item["item_id"]
     }
-    assert map_modes == {"documented_reconstruction", "documented_alternative"}
+    assert map_modes == {"scholarly_reconstruction", "alternative_reconstruction"}
     assert globe_modes == map_modes
 
 
@@ -146,22 +207,24 @@ def test_evidence_sources_and_uncertainty_survive_projection() -> None:
     projection, maplibre, globe = _build()
     event_item = _item(projection, "rp:event:event-far-observation")
 
-    assert event_item["claim_refs"] == ["claim-far-observation"]
-    assert event_item["evidence_link_refs"] == ["evidence-far-observation"]
-    assert event_item["source_refs"] == ["source-field-notebook-beta"]
+    assert event_item["claim_refs"] == ["claim-global-event"]
+    assert event_item["evidence_link_refs"] == ["evidence-global-event"]
+    assert event_item["source_refs"] == ["source-field-beta"]
 
     primary_region_item = _item(
         projection,
         "rp:region_geometry:region-fixture-basin:region-geometry-v2",
     )
-    assert "uncertainty-region-boundary" in primary_region_item["uncertainty_refs"]
+    assert "uncertainty-region-alternative" in primary_region_item["uncertainty_refs"]
 
     map_row = next(
-        feature["properties"] for feature in maplibre["features"]
+        feature["properties"]
+        for feature in maplibre["features"]
         if feature["properties"]["item_id"] == primary_region_item["item_id"]
     )
     globe_row = next(
-        primitive for primitive in globe["primitives"]
+        primitive
+        for primitive in globe["primitives"]
         if primitive["item_id"] == primary_region_item["item_id"]
     )
     assert map_row["source_refs"] == globe_row["source_refs"]
@@ -173,6 +236,8 @@ def test_approximate_temporal_alternative_is_not_promoted_to_active_fact() -> No
     projection, _, _ = _build()
     arrival = _item(projection, "rp:event:event-workshop-arrival")
     assert arrival["temporal_membership"] == "possible_active"
+    assert "event-workshop-arrival" in projection["possible_active_object_refs"]
+    assert "event-workshop-arrival" not in projection["active_object_refs"]
 
 
 def test_relation_objects_are_explicitly_deferred_from_projection_v1() -> None:
@@ -203,22 +268,23 @@ def test_explicit_path_is_supported_but_not_synthesized() -> None:
                 "start": "1504-03-01",
                 "end": "1504-03-01",
                 "precision": "day",
-                "certainty": "documented",
-                "basis_claim_refs": []
+                "calendar": "proleptic_gregorian",
+                "certainty": "fixture_defined",
+                "basis_claim_refs": [],
             },
             "spatial_extent": {
                 "kind": "path",
                 "geometry": {
                     "type": "LineString",
-                    "coordinates": [[10.0, 20.0], [11.0, 21.0]]
+                    "coordinates": [[10.0, 20.0], [11.0, 21.0]],
                 },
                 "precision": "fixture_defined",
-                "basis_claim_refs": []
+                "basis_claim_refs": [],
             },
             "participant_refs": [],
             "claim_refs": [],
             "uncertainty_refs": [],
-            "layer_refs": ["layer-exchange"]
+            "layer_refs": ["layer-exchange"],
         }
     )
 
@@ -230,11 +296,13 @@ def test_explicit_path_is_supported_but_not_synthesized() -> None:
     maplibre = to_maplibre(projection)
     globe = to_globe(projection)
     map_feature = next(
-        feature for feature in maplibre["features"]
+        feature
+        for feature in maplibre["features"]
         if feature["properties"]["item_id"] == item["item_id"]
     )
     globe_primitive = next(
-        primitive for primitive in globe["primitives"]
+        primitive
+        for primitive in globe["primitives"]
         if primitive["item_id"] == item["item_id"]
     )
     assert map_feature["geometry"]["type"] == "LineString"
