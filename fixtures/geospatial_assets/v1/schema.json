@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/geospatial-assets/1.0.0",
+  "title": "ARTEMIS Geospatial Asset Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "manifest_mode", "assets"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "manifest_id": {"$ref": "#/$defs/id"},
+    "manifest_mode": {
+      "enum": ["synthetic_contract_fixture", "runtime_configuration"]
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/asset"}
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "nullableString": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "null"}
+      ]
+    },
+    "referenceList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "label",
+        "asset_kind",
+        "semantic_role",
+        "provider",
+        "spatial_reference",
+        "coverage",
+        "temporal_semantics",
+        "provenance",
+        "licensing",
+        "cache_policy",
+        "runtime_policy"
+      ],
+      "properties": {
+        "asset_id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "asset_kind": {
+          "enum": [
+            "terrain_elevation",
+            "raster_imagery",
+            "raster_basemap",
+            "vector_basemap",
+            "raster_tiles",
+            "vector_tiles",
+            "three_d_tiles",
+            "analytical_surface"
+          ]
+        },
+        "semantic_role": {
+          "enum": [
+            "present_day_context",
+            "analytical_context",
+            "historical_reconstruction"
+          ]
+        },
+        "provider": {"$ref": "#/$defs/provider"},
+        "spatial_reference": {"$ref": "#/$defs/spatialReference"},
+        "coverage": {"$ref": "#/$defs/coverage"},
+        "temporal_semantics": {"$ref": "#/$defs/temporalSemantics"},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "licensing": {"$ref": "#/$defs/licensing"},
+        "cache_policy": {"$ref": "#/$defs/cachePolicy"},
+        "runtime_policy": {"$ref": "#/$defs/runtimePolicy"}
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider_id",
+        "adapter_kind",
+        "endpoint_template",
+        "credential_mode",
+        "credential_env"
+      ],
+      "properties": {
+        "provider_id": {"$ref": "#/$defs/id"},
+        "adapter_kind": {
+          "enum": [
+            "static_local",
+            "raster_url_template",
+            "vector_url_template",
+            "terrain_service",
+            "three_d_tiles_service",
+            "custom_adapter"
+          ]
+        },
+        "endpoint_template": {"$ref": "#/$defs/nullableString"},
+        "credential_mode": {"enum": ["none", "runtime_secret"]},
+        "credential_env": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "spatialReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["horizontal_crs", "axis_order", "vertical_reference"],
+      "properties": {
+        "horizontal_crs": {"type": "string", "minLength": 1},
+        "axis_order": {"enum": ["lon_lat", "lat_lon", "source_native"]},
+        "vertical_reference": {"$ref": "#/$defs/verticalReference"}
+      }
+    },
+    "verticalReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "datum", "unit", "positive_direction"],
+      "properties": {
+        "mode": {
+          "enum": [
+            "not_applicable",
+            "ellipsoidal_height",
+            "orthometric_height",
+            "unknown"
+          ]
+        },
+        "datum": {"$ref": "#/$defs/nullableString"},
+        "unit": {
+          "oneOf": [
+            {"enum": ["meter", "foot"]},
+            {"type": "null"}
+          ]
+        },
+        "positive_direction": {
+          "oneOf": [
+            {"enum": ["up", "down"]},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coverage_kind",
+        "bbox_wgs84",
+        "min_resolution_m",
+        "max_resolution_m",
+        "min_lod",
+        "max_lod"
+      ],
+      "properties": {
+        "coverage_kind": {"enum": ["global", "regional"]},
+        "bbox_wgs84": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {"type": "number"}
+        },
+        "min_resolution_m": {
+          "oneOf": [
+            {"type": "number", "exclusiveMinimum": 0},
+            {"type": "null"}
+          ]
+        },
+        "max_resolution_m": {
+          "oneOf": [
+            {"type": "number", "exclusiveMinimum": 0},
+            {"type": "null"}
+          ]
+        },
+        "min_lod": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "null"}
+          ]
+        },
+        "max_lod": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "temporalSemantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "reference_date",
+        "valid_from",
+        "valid_to",
+        "world_model_claim_refs",
+        "uncertainty_refs",
+        "reconstruction_method"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "current_context",
+            "dated_snapshot",
+            "not_applicable",
+            "historical_validity"
+          ]
+        },
+        "reference_date": {"$ref": "#/$defs/nullableString"},
+        "valid_from": {"$ref": "#/$defs/nullableString"},
+        "valid_to": {"$ref": "#/$defs/nullableString"},
+        "world_model_claim_refs": {"$ref": "#/$defs/referenceList"},
+        "uncertainty_refs": {"$ref": "#/$defs/referenceList"},
+        "reconstruction_method": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provenance_kind",
+        "publisher",
+        "dataset_name",
+        "dataset_version",
+        "source_uri",
+        "retrieved_at",
+        "data_date"
+      ],
+      "properties": {
+        "provenance_kind": {
+          "enum": [
+            "synthetic_fixture",
+            "official_dataset",
+            "open_dataset",
+            "commercial_provider",
+            "internal_asset"
+          ]
+        },
+        "publisher": {"type": "string", "minLength": 1},
+        "dataset_name": {"type": "string", "minLength": 1},
+        "dataset_version": {"type": "string", "minLength": 1},
+        "source_uri": {"$ref": "#/$defs/nullableString"},
+        "retrieved_at": {"type": "string", "minLength": 1},
+        "data_date": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "licensing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license_id",
+        "license_url",
+        "attribution_text",
+        "attribution_required",
+        "redistribution"
+      ],
+      "properties": {
+        "license_id": {"type": "string", "minLength": 1},
+        "license_url": {"$ref": "#/$defs/nullableString"},
+        "attribution_text": {"type": "string", "minLength": 1},
+        "attribution_required": {"type": "boolean"},
+        "redistribution": {"enum": ["allowed", "restricted", "prohibited"]}
+      }
+    },
+    "cachePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_cache_allowed",
+        "offline_cache_allowed",
+        "cached_bytes_redistribution_allowed",
+        "max_age_seconds"
+      ],
+      "properties": {
+        "runtime_cache_allowed": {"type": "boolean"},
+        "offline_cache_allowed": {"type": "boolean"},
+        "cached_bytes_redistribution_allowed": {"type": "boolean"},
+        "max_age_seconds": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "runtimePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_environments",
+        "network_required",
+        "secret_required",
+        "public_pages_allowed",
+        "fallback_asset_ref",
+        "failure_mode"
+      ],
+      "properties": {
+        "allowed_environments": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["development", "test", "staging", "production"]}
+        },
+        "network_required": {"type": "boolean"},
+        "secret_required": {"type": "boolean"},
+        "public_pages_allowed": {"type": "boolean"},
+        "fallback_asset_ref": {
+          "oneOf": [
+            {"$ref": "#/$defs/id"},
+            {"type": "null"}
+          ]
+        },
+        "failure_mode": {"enum": ["fail_closed", "fallback_allowed"]}
+      }
+    }
+  }
+}
