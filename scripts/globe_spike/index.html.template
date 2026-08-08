@@ -91,18 +91,23 @@
       const timer = window.setInterval(() => {
         attempts += 1;
         const map = window.__ARTEMIS_GLOBE_SPIKE?.map;
-        if (map && typeof map.jumpTo === 'function') {
+        if (
+          map
+          && typeof map.getLayer === 'function'
+          && map.getLayer('artemis-region-primary-fill')
+          && typeof map.fitBounds === 'function'
+        ) {
           window.clearInterval(timer);
-          map.jumpTo({
-            center: [10.6, 50.0],
-            zoom: 5.5,
-            pitch: 28,
-            bearing: -12
-          });
+          map.fitBounds(
+            [[8.5, 48.5], [12.5, 51.5]],
+            { padding: 140, maxZoom: 3.5, duration: 0 }
+          );
+          map.setPitch(18);
+          map.setBearing(-8);
           document.documentElement.dataset.artemisCamera = 'fixture-basin';
           return;
         }
-        if (attempts >= 100) window.clearInterval(timer);
+        if (attempts >= 150) window.clearInterval(timer);
       }, 100);
     })();
   </script>
