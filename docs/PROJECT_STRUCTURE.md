@@ -1,15 +1,16 @@
-# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.2
+# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.3
 
 Статус: updated canonical project structure document.
 Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
+Дата обновления: 2026-08-08.
 
 ---
 
 ## 1. ПРИНЦИП СТРУКТУРЫ
 
 Структура проекта должна отвечать на три вопроса:
-1. Где находится production/runtime код.
-2. Где находятся canonical публичные данные.
+1. Где находится production/runtime код и какие presentation runtimes зарегистрированы явно.
+2. Где находятся canonical публичные данные и где заканчивается текущая render projection.
 3. Где находится документация и какой у неё статус.
 
 К технической структуре добавляется жёсткая документационная иерархия:
@@ -19,6 +20,13 @@
 - historical reference layer (`docs/archive/*`, `docs/reference/*`).
 
 Это обязательная часть структуры проекта, а не вспомогательная заметка.
+
+Архитектурный инвариант для renderer expansion:
+
+- canonical domain/world-model semantics имеют одного владельца и не дублируются по renderer-веткам;
+- несколько явно зарегистрированных presentation runtimes допустимы, если они используют общий World Model / Explorer State / projection boundary;
+- новый renderer не может создавать скрытый backend, отдельную historical truth или competing data core;
+- до promotion experimental runtime не считается public entrypoint и не должен попадать в production artifact случайно.
 
 ---
 
@@ -53,17 +61,19 @@
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
 | `app/` | canonical backend runtime | основной |
 | `css/` | UI style system; current shared + override baseline pending owner-scoped migration | основной |
-| `data/` | canonical public data layer + export diagnostics | основной |
+| `data/` | canonical current public data layer + export diagnostics | основной |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
 | `fixtures/` | versioned executable contract fixtures; not public/runtime data | validation |
 | `icons/` | PWA assets | основной |
-| `js/` | frontend modules | основной |
+| `js/` | current public frontend modules | основной |
 | `scripts/` | ETL, import/export, audit, release checks | основной |
 | `tests/` | automated checks | основной |
 | `AGENTS.md` | единый repository entrypoint для агентов; маршрутизирует к canonical owners | operational |
 | `README.md` | корневой entrypoint документации | canonical |
 | `sw.js` | service worker | основной |
 | `manifest.json` | PWA manifest | основной |
+
+Текущий root tree описывает public MapLibre baseline. Он не резервирует навсегда один frontend renderer. Любая новая top-level runtime/package структура (`apps/`, shared renderer packages или эквивалент) требует отдельного решения #345 и не должна появляться ad hoc.
 
 Дополнение по release/workflow layer:
 - structural and semantic release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`), `scripts/release_check.py` и `scripts/semantic_data_gate.py`;
@@ -77,25 +87,31 @@
 
 | Слой | Entry point |
 |---|---|
-| Frontend | `index.html` |
+| Current public 2D frontend | `index.html` |
 | Backend | `app/main.py` |
 | ETL | `scripts/export_airtable.py` |
 | Release check | `scripts/release_check.py` |
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
 | Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
 | Uncertainty-semantics owner | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` |
-| Public map data | `data/features.geojson` |
+| Current public 2D map projection | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
 
 Правило:
-- canonical entrypoint всегда должен быть один;
-- competing entrypoints запрещены;
+- canonical semantic/domain owner для одной ответственности должен быть один;
+- backend, ETL, release-check и documentation registries не получают competing entrypoints;
+- presentation runtimes являются отдельным классом: несколько renderer entrypoints допустимы только после явной регистрации и при общей domain/state/projection семантике;
+- наличие второго renderer не разрешает второй World Model, второй historical source of truth или второй backend;
+- current `index.html` остаётся единственным public frontend entrypoint до отдельного promotion decision;
+- experimental Globe runtime under #339–#345 не считается public entrypoint до #345/promotion gate;
 - legacy-слои не могут становиться скрытым альтернативным runtime.
 
 ---
 
 ## 4. FRONTEND СЛОЙ
+
+Текущий public baseline:
 
 ```text
 index.html
@@ -127,9 +143,9 @@ js/
 └── ux.js
 ```
 
-Правила:
+Правила текущего public contour:
 - frontend остаётся vanilla JS без нового framework layer;
-- карта читает canonical public data только из `data/*`;
+- current 2D карта читает canonical public data только из `data/*`;
 - `/api/map/feed` не становится альтернативным public data source;
 - безопасный DOM-rendering обязателен для пользовательского контента;
 - PWA и UX-hardenings не должны подменять архитектурные boundaries;
@@ -137,8 +153,18 @@ js/
 - `css/style.css` временно владеет оставшимися layout/feature/legacy rules до следующих migration batches;
 - `css/main-screen.css` является текущим transitional override layer, а не целевой архитектурой;
 - в Architecture Atlas UX cycle актуальные правила должны быть перенесены к owner-scoped modules, после чего competing override удаляется;
-- owner-scoped split должен разделять tokens/base/layout/features и не создавать параллельные visual systems.
+- owner-scoped split должен разделять tokens/base/layout/features и не создавать параллельные visual systems;
 - measured baseline, selector-owner matrix, staged target tree and recovery rules зафиксированы в `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
+
+Renderer expansion rule:
+- Globe/future renderer code должен находиться за explicit experimental/runtime boundary до promotion;
+- renderer-neutral selected time/layers/object state не должен принадлежать MapLibre или Globe engine objects;
+- render adapters получают World Model / World Slice data через явную projection boundary;
+- engine-specific camera, GPU resources, tile caches, hover/picking buffers и visual transitions остаются renderer-local;
+- нельзя переписывать current frontend framework/layout только ради появления второго renderer без отдельного evidence-backed architecture decision;
+- target repository split (`apps/*`, shared packages или другой layout) определяется #345, а не предполагается этим документом заранее.
+
+Working renderer architecture record: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
 
 ---
 
@@ -165,12 +191,13 @@ app/
 Правила:
 - `app/` — единственный backend runtime;
 - legacy root package `api/` удалён; новый competing backend package запрещён;
+- 3D Globe/renderer expansion само по себе не является основанием для второго backend runtime;
 - env/runtime configuration закрепляется только за `app.main:app`;
 - session backend deployment policy: memory-backed refresh sessions допустимы только для development/testing/local baseline (включая short aliases `dev`/`test`); non-development/testing/local deployments обязаны использовать Redis-backed session store (`AUTH_SESSION_BACKEND=redis` + `REDIS_URL`) с fail-fast на misconfiguration;
 - Redis-backed refresh-session consume в текущем baseline трактуется как atomic one-time operation (`GETDEL` или atomic fallback path), а legacy non-atomic `get+delete` не должен считаться допустимым baseline-поведением;
 - rate limiting в текущем baseline остаётся process-local/in-memory; `X-Forwarded-For` для извлечения client IP в rate-limit key trusted только от configured trusted proxy peers (`ARTEMIS_TRUSTED_PROXIES` / `TRUSTED_PROXY_IPS`, exact IP + CIDR), иначе используется peer IP (`request.client.host`);
 - текущий persistence baseline использует shared SQLAlchemy scope: `app.auth.service` задаёт общий `engine`/`Base`, который переиспользуется в `drafts` / `research_slices` / `stories` / `courses`;
-- current mutable ResearchSlice sharing хранит только SHA-256 capability token в `research_slices.share_token_hash`; raw token существует только в owner response и URL fragment, public response является read-only/no-store и не раскрывает owner identity; share reads the mutable row and is not revision-pinned;
+- current mutable ResearchSlice sharing хранит только SHA-256 capability token в `research_slices.share_token_hash`; raw token существует только in owner response and URL fragment, public response является read-only/no-store и не раскрывает owner identity; share reads the mutable row and is not revision-pinned;
 - migration/bootstrap path текущего baseline выполняется при runtime startup через `init_db()` вызовы в `app.main.py`, а не через отдельный внешний migration orchestrator;
 - versioned migrations в backend опираются на общую `schema_version` discipline как baseline-механизм и не должны трактоваться как fully hardened production migration platform;
 - общая `schema_version` таблица рассматривается как shared baseline coordination mechanism для всех runtime-доменов, а не как изолированный per-service журнал;
@@ -181,7 +208,7 @@ app/
 - execution policy текущего baseline: migration/apply path выполняется в controlled single-writer режиме (явный owner запуска), а не как некоординированный конкурентный first-boot apply из нескольких инстансов одновременно;
 - рекомендуемый baseline порядок выполнения: preflight-only discipline check → migration/apply path (`init_db()` startup sequence) → обычный runtime boot;
 - concurrent first-boot apply считается нарушением baseline guardrail и не должен нормализоваться как допустимая operational практика;
-- ошибка preflight трактуется как stop-before-apply event; ошибка startup apply трактуется как fail-fast operational event, а не как silent retry semantics внутри текущего baseline.
+- ошибка preflight трактуется как stop-before-apply event; ошибка startup apply трактуется как fail-fast operational event, а не как silent retry semantics внутри текущего baseline;
 - moderation path не является direct publish path для public dataset;
 - текущий upload surface должен описываться как runtime split: API-приём файлов идёт через `/api/uploads` и `/api/uploads/image`, а публичная выдача загруженных файлов идёт через статический `/uploads/*` mount;
 - документация не должна описывать несуществующий отдельный runtime route `GET /api/uploads/{filename}`, если фактическая раздача файлов закреплена за static mount.
@@ -208,14 +235,19 @@ data/
 ```
 
 Правила:
-- `data/features.geojson` — canonical public map source;
+- `data/features.geojson` — canonical current public 2D map projection/source;
+- Point-only limitations of `data/features.geojson` do not define the Foundation v3 World Model spatial ontology;
 - `features.json` не является public source of truth;
 - `data/id_aliases.json` — versioned compatibility map from legacy/source IDs to canonical UUID v4;
 - raw / validated / rejected слои не смешиваются;
 - checked-in data artifacts должны использовать тот же contract, что и release gate;
+- renderer-specific payloads for future 2D/3D runtimes are derived projections and cannot become independent historical truth without an explicit contract change;
+- terrain/elevation/imagery/tile assets belong to a separate geospatial asset boundary and do not silently enter historical World Model semantics;
 - `content_profile.json` schema version 1 — детерминированный snapshot comparison-pilot readiness; генерируется из public artifacts и проверяется на drift;
 - `validation_report.json` schema version 2 — обязательное release evidence с разделёнными blocking errors и budgeted warnings; это не content source-of-truth, но semantic release gate опирается на него напрямую;
 - `export_errors.log` остаётся человекочитаемой JSONL-проекцией тех же diagnostics и не создаёт отдельную validation truth.
+
+Canonical details remain in `docs/DATA_CONTRACT.md`.
 
 ---
 
@@ -264,6 +296,7 @@ fixtures/
 - additive contract extensions reference the reviewed base and do not rewrite a READY package;
 - `scripts/` отвечают за ETL, import/export, checks, preparation;
 - `tests/` отвечают за автоматическую проверку контрактов и регрессий;
+- cross-renderer semantic parity, when a second renderer exists, belongs to executable tests and must be independent from screenshot/visual regression;
 - release discipline не должна жить только в Markdown без исполнимой проверки.
 
 ---
@@ -302,6 +335,7 @@ README.md
 - рабочие документы текущего цикла;
 - допускают быстрые изменения;
 - не считаются canonical по умолчанию;
+- active renderer architecture records must be registered here and cannot override canonical model/data/truth owners;
 - UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer;
 - historical AI/Courses/expansion plans live in `docs/archive/` and cannot open scope.
 
@@ -348,7 +382,11 @@ docs/reference/
 - прямой доступ frontend к Airtable;
 - implicit fallback public map на runtime API;
 - смешивание draft/runtime/public data contracts;
-- competing backend entrypoints.
+- competing backend entrypoints;
+- второй renderer, который владеет собственной historical/domain semantics вместо shared model/projection boundary;
+- renderer-specific historical data forks (`*_2d`, `*_3d` or equivalent) that can drift semantically;
+- experimental Globe assets/dependencies silently entering the public Pages artifact before promotion;
+- использование terrain/imagery provider metadata как substitute for historical provenance.
 
 Документационные нарушения:
 - несколько равноправных source-of-truth документов по одной теме;
@@ -361,7 +399,8 @@ docs/reference/
 - развитие Stories/Courses/AI вне independent branch decision;
 - описание current mutable ResearchSlice as immutable revision;
 - использование classification/Similarity as substantive Relation;
-- использование AI output как source-backed/canonical knowledge без governance.
+- использование AI output как source-backed/canonical knowledge без governance;
+- описание experimental 3D Globe R&D как current public/product capability.
 
 ---
 
@@ -369,23 +408,14 @@ docs/reference/
 
 Любое изменение в следующих областях обязано сопровождаться обновлением canonical docs:
 - architecture boundaries;
+- registered frontend/presentation runtime boundaries;
+- renderer-neutral state or render-projection contracts;
 - data contract;
 - release gate / workflow / readiness semantics;
-- canonical public map source;
+- canonical current public map source;
+- geospatial asset/terrain/imagery semantics when they affect runtime or historical interpretation;
 - auth/runtime deployment constraints;
 - mission, product scope, research-work semantics, Claim/Evidence model, entity model, content governance and AI policy;
 - documentation governance и правила размещения документов.
 
 Без этого change считается незавершённым.
-
----
-
-## 11. ПРАВИЛО ОБНОВЛЕНИЯ СТРУКТУРНОГО ДОКУМЕНТА
-
-Файл обновляется только если:
-1. меняется структура репозитория;
-2. меняется статус canonical entrypoints;
-3. меняется документационная система проекта;
-4. в canonical layer добавляется или из него исключается foundational document проекта.
-
-Детали реализации конкретных модулей не должны расползаться в этот документ.

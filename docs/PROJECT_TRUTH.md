@@ -3,9 +3,9 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-07-28.
-- Владелец смысла: фактическая доступность продукта и граница между public, backend и future scope.
-- Обновляется только при изменении фактической доступности runtime, данных или пользовательского сценария.
+- Дата фиксации: 2026-08-08.
+- Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
+- Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D status иначе создаёт прямое противоречие с capability wording.
 
 Этот документ отвечает на вопрос «что ARTEMIS действительно умеет сейчас». Он не заменяет продуктовую стратегию, data contract или release policy.
 
@@ -22,7 +22,8 @@ Foundation v3, accepted in PR `#328`, fixes the long-term direction of ARTEMIS: 
 - Life in Context, temporal Regions, full Trajectories and synchronized multi-layer change ещё не доступны;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
-- generative AI, causal/counterfactual runtime, 3D/VR and universal corpus остаются frozen/future.
+- generative AI, causal/counterfactual runtime, VR/AR and universal corpus remain frozen/future;
+- **bounded 3D Globe / renderer architecture R&D is active under #339–#345, but no 3D Globe runtime is currently PUBLIC NOW or product-validated; production-scale dynamic Earth remains gated.**
 
 ## 2. Что доступно публично
 
@@ -88,6 +89,7 @@ Migration preflight и release gate подтверждают current backend cap
 - текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
 - comparison-pilot profile имеет технический статус `comparison_ready`: 31 Feature, 6 cohorts, 12 legacy-counted Relations, 100% current link coverage и 90.32% primary Media;
 - Architecture Gate A package завершён со статусом `3/3 READY` и двумя independent review processes; он сохраняется как reviewed fixture/evidence package, но не является Foundation v3 user-value validation.
+- executable world-model fixtures #329 / PR #336 and uncertainty semantics #330 / PR #337 are reviewed READY contract evidence; they are fixtures/contracts, not public World Model data or a public Globe runtime.
 
 До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
 
@@ -95,8 +97,8 @@ Migration preflight и release gate подтверждают current backend cap
 
 - universal spatial-temporal world model runtime;
 - Life in Context World Slice and synchronized explorer;
-- first-class State, Process, Trajectory and temporal Region schemas;
-- dynamic terrain/3D/VR experience;
+- first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
+- public/product 3D Globe, dynamic terrain or VR experience; active #339–#345 architecture/R&D work does not change this capability status;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
 - полноценные guided Stories и Courses;
@@ -116,6 +118,7 @@ Migration preflight и release gate подтверждают current backend cap
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
 6. Backend-complete mutable Slice v2 может быть ошибочно принят за target immutable research model.
 7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
+8. Parallel Globe R&D может создать второй semantic/data core, если renderer projection и shared state boundaries не будут зафиксированы до масштабирования runtime.
 
 ## 7. Текущий operational verdict
 
@@ -123,15 +126,28 @@ ARTEMIS находится в состоянии **controlled engineering protot
 
 Current runtime and data remain the Architecture Atlas baseline. Foundation v3 is accepted, but its world-model objects are not implemented in the public runtime or database/API.
 
-Следующий допустимый порядок:
+Reviewed contract foundation now includes:
 
-1. preserve completed #329 / PR #336 world-model fixtures as reviewed contract evidence;
-2. complete #330 uncertainty semantics and independent reviews;
-3. resolve #331 relation semantics against the completed uncertainty contract;
-4. prepare one limited source-aware Leonardo World Slice under #332;
-5. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
-6. run #334 contextual-learning validation;
-7. open at most one evidence-backed branch.
+- #329 / PR #336 world-model fixtures — READY;
+- #330 / PR #337 uncertainty semantics — READY.
+
+Следующий допустимый primary validation order:
+
+1. preserve #329 / PR #336 and #330 / PR #337 as reviewed contract evidence;
+2. resolve #331 relation semantics against the completed uncertainty contract;
+3. prepare one limited source-aware Leonardo World Slice under #332;
+4. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
+5. run #334 contextual-learning validation;
+6. open at most one evidence-backed product branch.
+
+Parallel non-blocking R&D order:
+
+1. #339 establishes renderer-neutral 2D/3D architecture;
+2. #340–#342 define shared state, render projections and geospatial asset boundaries;
+3. #343 builds a bounded 3D Earth runtime spike;
+4. #344 proves cross-renderer semantic parity;
+5. #345 decides repository/runtime/CI integration;
+6. no product promotion occurs without separate executable evidence and owner-doc decision.
 
 The superseded #323–#325 path and PR #314 are closed. Passing fixtures proves contract representability only; it does not change `PUBLIC NOW`, `BACKEND-AVAILABLE` or user-value status.
 
@@ -142,6 +158,7 @@ README, UI, issues, release notes и публичные материалы об�
 - `PUBLIC NOW` — работает на опубликованном URL;
 - `BACKEND-AVAILABLE` — реализовано, но требует отдельного runtime/configuration;
 - `PILOT` — существует, но недостаточно подтверждено данными или пользователями;
+- `R&D` — bounded experimental architecture/runtime work that is not a product capability promise;
 - `CONCEPT TARGET` — утверждено концептуально, но не реализовано;
 - `FUTURE` — концепция или запланированный слой.
 

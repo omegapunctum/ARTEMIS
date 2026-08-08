@@ -4,31 +4,34 @@
 
 - Тип: canonical data contract document
 - Статус: active
-- Роль: source of truth для ETL/data/public map contract, release artifact semantics и runtime data boundaries
-- Scope: Airtable curated source → ETL/export → checked-in `data/*` → public map runtime
+- Роль: source of truth для ETL/data/current public map contract, release artifact semantics и runtime data boundaries
+- Scope: Airtable curated source → ETL/export → checked-in `data/*` → current public 2D map runtime
+
+Этот документ описывает **текущий public export/runtime contract**. Он не переопределяет canonical semantics пространственно-временной модели из `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` и не утверждает, что Point-only GeoJSON является универсальным форматом всей будущей модели ARTEMIS.
 
 ---
 
 ## 1. Contract ownership
 
-ARTEMIS data contract is owned by the checked-in ETL/export pipeline and canonical documentation layer.
+ARTEMIS current public data contract is owned by the checked-in ETL/export pipeline and canonical documentation layer.
 
 Owner chain:
-1. Airtable is the curated editorial source.
+1. Airtable is the curated editorial source for the current Architecture Atlas compatibility corpus.
 2. `scripts/export_airtable.py` validates and exports curated source records.
-3. `data/*` stores checked-in release artifacts.
-4. `data/features.geojson` is the only canonical public map dataset.
+3. `data/*` stores checked-in current release artifacts.
+4. `data/features.geojson` is the canonical public **2D map projection** for the current runtime.
 5. frontend public map bootstrap reads `data/features.geojson` by default.
-6. runtime API routes must not replace the published public dataset.
+6. runtime API routes must not replace the published public dataset silently.
 
 Rule:
-- any change to source fields, validation semantics, release artifact structure, or public map payload must update this document and the relevant ETL/check code in the same change cycle.
+- any change to source fields, validation semantics, release artifact structure, or current public map payload must update this document and the relevant ETL/check code in the same change cycle.
+- World Model semantics belong to their foundation contracts and must not be inferred from limitations of the current Architecture Atlas export.
 
 ---
 
 ## 2. Canonical public map source
 
-Canonical public map dataset:
+Canonical current public 2D map dataset:
 - `data/features.geojson`
 
 Supporting release artifacts:
@@ -47,11 +50,39 @@ Release-evidence / diagnostic artifacts:
 - `data/export_errors.log`
 
 Rules:
-- `data/features.geojson` is the production-default public source for map rendering.
+- `data/features.geojson` is the production-default public source for the current 2D map rendering contour.
+- it is a current compatibility/render projection and must not be promoted into the canonical representation of all future `Event`, `State`, `Process`, `Trajectory` or temporal `Region` objects.
 - `data/features.json` is a supporting/raw validated artifact, not the public source of truth.
 - `export_meta.json`, `rejected.json`, `validation_report.json` and `content_profile.json` are release-quality evidence.
 - `validation_report.json` is not a competing content source, but release gate explicitly depends on its blocking-error/warning contract.
 - `content_profile.json` is a deterministic readiness snapshot derived from public artifacts; it does not create or override content.
+
+### 2.1 World Model and render-projection boundary
+
+Foundation v3 requires richer spatial-temporal objects than the current Point-only public export. The canonical semantic model supports, among other things, paths/trajectories, temporal regions, states, processes, alternative geometries and uncertainty.
+
+For future 2D/3D renderer integration, the intended boundary is:
+
+```text
+World Model / versioned World Slice
+        +
+renderer-neutral Explorer State
+        ↓
+explicit render projection
+        ↓
+2D Map payload | 3D Globe payload | future renderer payload
+```
+
+Rules:
+
+- renderer-ready GeoJSON, engine primitives, meshes or tiles are derived projections, not independent historical truth;
+- a 3D Globe renderer must not create a separate historical schema merely because it uses a different engine representation;
+- renderer projections must preserve canonical object identity and material temporal/uncertainty/evidence references;
+- projection loss must be explicit and must never invent precision, route detail, geometry or historical state;
+- terrain, elevation, basemap imagery and rendering tiles are geospatial assets and require their own provenance/licensing/coordinate metadata; they are not historical World Model objects by default;
+- a historical/reconstructed terrain, coastline or boundary that asserts past state must use temporal validity, provenance and uncertainty semantics from the World Model contracts.
+
+The working architecture record is `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` and parent work item is #339. Until executable contracts and runtime artifacts are accepted, this subsection changes architecture interpretation only; it does not change current `data/*` schemas or public runtime capability.
 
 ---
 
@@ -124,7 +155,8 @@ Current warning policy:
 ```
 
 Geometry rules:
-- only `Point` geometry is accepted in the current public map baseline;
+- only `Point` geometry is accepted in the **current public 2D map baseline**;
+- this Point-only restriction is a compatibility/runtime constraint, not the spatial limit of the Foundation v3 World Model;
 - coordinates order is `[longitude, latitude]`;
 - longitude and latitude must be numeric;
 - longitude must be within `[-180, 180]`;
@@ -309,7 +341,7 @@ Clarification:
 ## 10. Runtime map feed boundary
 
 Boundary rules:
-- canonical public map dataset remains `data/features.geojson`;
+- canonical public map dataset remains `data/features.geojson` for the current 2D public runtime;
 - `GET /api/map/feed` is an auxiliary, non-canonical runtime support/read-model endpoint for authenticated UI/runtime scenarios;
 - current baseline implementation of `/api/map/feed` must be treated as a temporary MVP adapter, not as a production-grade public read model over the published dataset;
 - `/api/map/feed` currently serves internal runtime feed semantics without transitional/mock-backed place payloads; any future entity expansion must remain internal/non-canonical and be introduced explicitly;

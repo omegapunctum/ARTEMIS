@@ -1,16 +1,20 @@
-# ARTEMIS — PROJECT PHASES v6.0
+# ARTEMIS — PROJECT PHASES v6.1
 
 ## Статус
 
 - Тип: canonical operational phases document.
-- Дата: 2026-07-28.
+- Дата: 2026-08-08.
 - Активная фаза: **4.7 World Model Contract**.
+- Active primary issue: **#331**.
+- Parallel non-blocking R&D: **#339–#345 3D Globe / renderer architecture**.
 
 Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`.
 
 ## Принцип перехода
 
 Фаза закрывается только по exit evidence. Документ или schema сами по себе не подтверждают value, content quality или public capability.
+
+Parallel R&D may explore reversible presentation architecture, but it cannot silently change the exit order of the primary validation phases.
 
 ## Фазы 0–4 — Technical baseline [закрыты с ограничениями]
 
@@ -78,7 +82,7 @@
 
 ## Фаза 4.7 — World Model Contract
 
-Статус: **ACTIVE / ISSUE #330**.
+Статус: **ACTIVE / ISSUE #331**.
 
 Scope:
 
@@ -96,17 +100,45 @@ Exit:
 - two independent reviews find no unresolved critical contradiction;
 - non-inventive legacy mapping is explicit;
 - current truth continues to deny runtime implementation;
-- uncertainty/relation follow-ups are explicitly routed before implementation.
+- uncertainty and relation semantics are completed before first historical World Slice freeze.
 
 Progress:
 
 - #329 fixture package completed and merged in PR #336;
-- #330 uncertainty semantics are active;
-- #331 relation-ladder semantics remain gated on #330.
+- #330 uncertainty semantics completed and merged in PR #337;
+- #331 relation-ladder semantics are the active remaining P0 dependency.
+
+## Parallel R&D-G — 3D Globe / renderer architecture
+
+Статус: **ACTIVE PARALLEL R&D / NON-BLOCKING**.
+
+Parent: #339.
+
+This is not a replacement for phases 4.7–5. It exists to prevent the future Globe runtime from becoming a second semantic/data core while implementation is still cheap to change.
+
+Scope:
+
+- #340 renderer-neutral Explorer State;
+- #341 World Model → Render Projection contract;
+- #342 geospatial assets / terrain / imagery contract;
+- #343 minimal 3D Earth runtime spike;
+- #344 cross-renderer semantic parity tests;
+- #345 repository/runtime + CI boundary.
+
+Rules:
+
+- current 2D MapLibre runtime remains the public baseline;
+- #333 remains the controlled 2D validation implementation;
+- Globe R&D cannot redefine World Model, uncertainty or relation semantics;
+- renderer payloads are projections, not independent historical truth;
+- bounded Globe work does not change `PUBLIC NOW` status;
+- product-scale dynamic Earth remains gated on separate evidence and decision.
+
+Working architecture record: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
 
 ## Фаза 4.8 — Life in Context Dataset
 
-Статус: **GATED**.
+Статус: **GATED ON #331**.
 
 Scope:
 
@@ -125,7 +157,7 @@ Exit:
 
 ## Фаза 4.9 — Spatial-Temporal Explorer
 
-Статус: **GATED**.
+Статус: **GATED ON #332**.
 
 Scope:
 
@@ -142,9 +174,11 @@ Exit:
 - public/static pilot contour;
 - capability truth updated only after deploy evidence.
 
+The renderer-neutral work in #340/#341 may be reused where it reduces duplication, but it must not enlarge #333 scope or make the Globe a prerequisite.
+
 ## Фаза 5 — Contextual Learning Pilot
 
-Статус: **GATED**.
+Статус: **GATED ON #333**.
 
 Scope:
 
@@ -163,19 +197,19 @@ Possible outcomes:
 - `NARROW VERTICAL`;
 - `STOP/RETHINK`.
 
-## Independent future branches
+## Independent future/product branches
 
-Blocked until pilot decision:
+Blocked until pilot or separate explicit promotion decision:
 
-- richer temporal Regions/States;
-- 3D globe/dynamic Earth;
+- richer temporal Regions/States at product scale;
+- product-scale 3D globe/dynamic Earth beyond bounded #339–#345 R&D;
 - guided learning;
 - source-bound AI;
 - broader World Slices;
 - institutional work;
 - VR/AR.
 
-One decision opens one branch.
+One evidence-backed decision opens one product branch. Bounded R&D does not count as automatic product expansion.
 
 ## Scaling/Business
 
@@ -183,4 +217,4 @@ Security/reliability maintenance remains allowed. Scaling, platform distribution
 
 ## Rule
 
-Update this document whenever active phase, exit gate or dependency order changes.
+Update this document whenever active phase, exit gate, dependency order or explicitly allowed parallel R&D contour changes.
