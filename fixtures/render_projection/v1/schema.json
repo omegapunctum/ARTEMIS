@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/render-projection/1.0.0",
+  "title": "ARTEMIS neutral Render Projection Package v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "projection_id",
+    "source",
+    "temporal_selection",
+    "coordinate_reference",
+    "vertical_semantics",
+    "included_object_types",
+    "deferred_object_types",
+    "active_object_refs",
+    "possible_active_object_refs",
+    "geometries",
+    "items",
+    "losses",
+    "coverage"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "projection_id": {"$ref": "#/$defs/id"},
+    "source": {"$ref": "#/$defs/source"},
+    "temporal_selection": {"$ref": "#/$defs/temporalSelection"},
+    "coordinate_reference": {"const": "EPSG:4326"},
+    "vertical_semantics": {"const": "not_modeled"},
+    "included_object_types": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["Entity", "Event", "State", "Process", "Trajectory", "Region"]}
+    },
+    "deferred_object_types": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["Relation"]}
+    },
+    "active_object_refs": {"$ref": "#/$defs/referenceList"},
+    "possible_active_object_refs": {"$ref": "#/$defs/referenceList"},
+    "geometries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/geometryRecord"}
+    },
+    "items": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/item"}
+    },
+    "losses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/loss"}
+    },
+    "coverage": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "nullableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/id"},
+        {"type": "null"}
+      ]
+    },
+    "referenceList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "datasetIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "value": {"type": "string", "minLength": 1}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_slice_ref", "dataset_identity", "explorer_state_ref"],
+      "properties": {
+        "world_slice_ref": {"$ref": "#/$defs/id"},
+        "dataset_identity": {"$ref": "#/$defs/datasetIdentity"},
+        "explorer_state_ref": {"$ref": "#/$defs/id"}
+      }
+    },
+    "temporalSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "start", "end", "precision", "calendar"],
+      "properties": {
+        "mode": {"enum": ["instant", "interval"]},
+        "start": {"type": "string", "minLength": 1},
+        "end": {"type": "string", "minLength": 1},
+        "precision": {"enum": ["day", "month", "year", "decade", "century", "range"]},
+        "calendar": {"type": "string", "minLength": 1}
+      }
+    },
+    "geojsonGeometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "coordinates"],
+      "properties": {
+        "type": {"enum": ["Point", "LineString", "Polygon", "MultiPolygon"]},
+        "coordinates": {"type": "array"}
+      }
+    },
+    "geometryRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geometry_ref",
+        "geometry",
+        "owner_ref",
+        "owner_subobject_ref",
+        "origin_kind",
+        "spatial_precision",
+        "claim_refs",
+        "uncertainty_refs"
+      ],
+      "properties": {
+        "geometry_ref": {"$ref": "#/$defs/id"},
+        "geometry": {"$ref": "#/$defs/geojsonGeometry"},
+        "owner_ref": {"$ref": "#/$defs/id"},
+        "owner_subobject_ref": {"$ref": "#/$defs/nullableId"},
+        "origin_kind": {"enum": ["explicit_spatial_extent", "region_geometry_version"]},
+        "spatial_precision": {"type": "string", "minLength": 1},
+        "claim_refs": {"$ref": "#/$defs/referenceList"},
+        "uncertainty_refs": {"$ref": "#/$defs/referenceList"}
+      }
+    },
+    "semanticFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "segment_kind": {"type": ["string", "null"]},
+        "reconstruction_mode": {"type": ["string", "null"]},
+        "is_primary": {"type": ["boolean", "null"]},
+        "state_kind": {"type": ["string", "null"]},
+        "process_mode": {"type": ["string", "null"]}
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "object_ref",
+        "object_type",
+        "subobject_ref",
+        "render_role",
+        "temporal_membership",
+        "spatial_status",
+        "geometry_refs",
+        "place_ref",
+        "layer_refs",
+        "claim_refs",
+        "uncertainty_refs",
+        "evidence_link_refs",
+        "source_refs",
+        "semantic_flags"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/id"},
+        "object_ref": {"$ref": "#/$defs/id"},
+        "object_type": {"enum": ["Entity", "Event", "State", "Process", "Trajectory", "Region"]},
+        "subobject_ref": {"$ref": "#/$defs/nullableId"},
+        "render_role": {"enum": ["entity_context", "event", "state", "process_stage", "trajectory_segment", "region_geometry"]},
+        "temporal_membership": {"enum": ["active", "possible_active", "atemporal_context"]},
+        "spatial_status": {"enum": ["resolved", "unresolved", "not_spatial"]},
+        "geometry_refs": {"$ref": "#/$defs/referenceList"},
+        "place_ref": {"$ref": "#/$defs/nullableId"},
+        "layer_refs": {"$ref": "#/$defs/referenceList"},
+        "claim_refs": {"$ref": "#/$defs/referenceList"},
+        "uncertainty_refs": {"$ref": "#/$defs/referenceList"},
+        "evidence_link_refs": {"$ref": "#/$defs/referenceList"},
+        "source_refs": {"$ref": "#/$defs/referenceList"},
+        "semantic_flags": {"$ref": "#/$defs/semanticFlags"}
+      }
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loss_id", "item_id", "loss_kind", "cause", "severity", "reason", "place_ref"],
+      "properties": {
+        "loss_id": {"$ref": "#/$defs/id"},
+        "item_id": {"$ref": "#/$defs/id"},
+        "loss_kind": {"enum": ["geometry_unresolved", "adapter_capability_missing"]},
+        "cause": {"enum": ["source_model_gap", "renderer_capability"]},
+        "severity": {"enum": ["material", "non_material"]},
+        "reason": {"type": "string", "minLength": 1},
+        "place_ref": {"$ref": "#/$defs/nullableId"}
+      }
+    }
+  }
+}
