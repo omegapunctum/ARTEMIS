@@ -1,0 +1,44 @@
+name: Geospatial Assets Contract Gate
+
+on:
+  push:
+    paths:
+      - "fixtures/geospatial_assets/**"
+      - "scripts/validate_geospatial_assets.py"
+      - "tests/test_geospatial_assets_contract.py"
+      - "docs/work/2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md"
+      - "docs/work/README.md"
+      - ".github/workflows/geospatial-assets-contract.yml"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "fixtures/geospatial_assets/**"
+      - "scripts/validate_geospatial_assets.py"
+      - "tests/test_geospatial_assets_contract.py"
+      - "docs/work/2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md"
+      - "docs/work/README.md"
+      - ".github/workflows/geospatial-assets-contract.yml"
+      - "requirements.txt"
+
+jobs:
+  geospatial-assets:
+    name: Terrain + imagery asset contract
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Validate geospatial asset manifest
+        run: python scripts/validate_geospatial_assets.py
+
+      - name: Run geospatial asset semantic tests
+        run: pytest -q tests/test_geospatial_assets_contract.py
