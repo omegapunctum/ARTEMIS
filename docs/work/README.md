@@ -14,15 +14,17 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` | #339 bounded parallel 3D Globe / renderer architecture R&D record | #340–#345 contracts/spike/parity/repository decisions complete or explicit stop decision |
+| `2026-08-08_EXPLORER_STATE_CONTRACT_v1.md` | #340 executable renderer-neutral Explorer State proposal | schema/fixture/validator/repository gate accepted or explicit revision decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-Active execution rule for the Globe record:
+Active execution rule for the Globe / Explorer State records:
 
-- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
-- it authorizes only the bounded #339–#345 R&D contour;
-- it does not make 3D Globe a current public/product capability;
-- it does not block #331 → #332 → #333 → #334.
+- they cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
+- they authorize only the bounded #339–#345 R&D contour;
+- Explorer State owns synchronized user/query state, not World Model facts or renderer camera internals;
+- they do not make 3D Globe a current public/product capability;
+- they do not block #331 → #332 → #333 → #334.
 
 ## Gated under Foundation v3
 

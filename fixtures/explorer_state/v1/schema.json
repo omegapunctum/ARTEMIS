@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/explorer-state/1.0.0",
+  "title": "ARTEMIS renderer-neutral Explorer State v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "state_id",
+    "world_slice_ref",
+    "dataset_identity",
+    "temporal_selection",
+    "active_layer_refs",
+    "selection",
+    "context",
+    "active_focus",
+    "comparison_scope",
+    "epistemic_display",
+    "view_intent"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "state_id": {
+      "$ref": "#/$defs/id"
+    },
+    "world_slice_ref": {
+      "$ref": "#/$defs/id"
+    },
+    "dataset_identity": {
+      "$ref": "#/$defs/datasetIdentity"
+    },
+    "temporal_selection": {
+      "$ref": "#/$defs/temporalSelection"
+    },
+    "active_layer_refs": {
+      "$ref": "#/$defs/referenceList"
+    },
+    "selection": {
+      "$ref": "#/$defs/selection"
+    },
+    "context": {
+      "$ref": "#/$defs/context"
+    },
+    "active_focus": {
+      "$ref": "#/$defs/activeFocus"
+    },
+    "comparison_scope": {
+      "$ref": "#/$defs/comparisonScope"
+    },
+    "epistemic_display": {
+      "$ref": "#/$defs/epistemicDisplay"
+    },
+    "view_intent": {
+      "$ref": "#/$defs/viewIntent"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "minLength": 1
+    },
+    "nullableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "referenceList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "datasetIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "temporalSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "start",
+        "end",
+        "precision",
+        "calendar"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "instant",
+            "interval"
+          ]
+        },
+        "start": {
+          "type": "string",
+          "minLength": 1
+        },
+        "end": {
+          "type": "string",
+          "minLength": 1
+        },
+        "precision": {
+          "enum": [
+            "day",
+            "month",
+            "year",
+            "decade",
+            "century",
+            "range"
+          ]
+        },
+        "calendar": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_object_ref",
+        "selected_object_refs",
+        "comparison_object_refs"
+      ],
+      "properties": {
+        "primary_object_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "selected_object_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "comparison_object_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "local_context_refs",
+        "global_context_refs",
+        "derived_observation_refs"
+      ],
+      "properties": {
+        "local_context_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "global_context_refs": {
+          "$ref": "#/$defs/referenceList"
+        },
+        "derived_observation_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
+    },
+    "activeFocus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trajectory_ref",
+        "trajectory_segment_ref",
+        "region_ref",
+        "region_geometry_ref",
+        "reconstruction_ref"
+      ],
+      "properties": {
+        "trajectory_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "trajectory_segment_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "region_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "region_geometry_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "reconstruction_ref": {
+          "$ref": "#/$defs/nullableId"
+        }
+      }
+    },
+    "comparisonScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "reference_refs"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "local_global",
+            "comparison"
+          ]
+        },
+        "reference_refs": {
+          "$ref": "#/$defs/referenceList"
+        }
+      }
+    },
+    "epistemicDisplay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "show_material_uncertainty",
+        "show_alternatives",
+        "show_corpus_limits"
+      ],
+      "properties": {
+        "show_material_uncertainty": {
+          "const": true
+        },
+        "show_alternatives": {
+          "type": "boolean"
+        },
+        "show_corpus_limits": {
+          "const": true
+        }
+      }
+    },
+    "bbox": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "viewIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "coordinate_reference"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "bounds",
+            "focus_object",
+            "global"
+          ]
+        },
+        "bbox": {
+          "$ref": "#/$defs/bbox"
+        },
+        "target_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "coordinate_reference": {
+          "const": "EPSG:4326"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "bounds"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "bbox"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "focus_object"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "target_ref"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
