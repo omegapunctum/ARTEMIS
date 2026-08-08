@@ -289,3 +289,97 @@ Synchronization rule:
 - Otherwise records with the new value are rejected as `invalid_coordinates_source`.
 
 ---
+
+## 8. Validation and rejection semantics
+
+A source record may be exported only if it satisfies the current ETL validation contract.
+
+Exported public records must satisfy:
+- valid unique UUID v4 canonical identity;
+- valid `layer_id`;
+- valid coordinates;
+- valid geometry;
+- valid or accepted date payload;
+- accepted `coordinates_source`;
+- required display fields for public UI;
+- at least one reviewed Source and exactly one primary Source projection;
+- only reviewed direct Media assets with rights/attribution metadata;
+- only reviewed Relations whose endpoints, evidence and Feature projections agree;
+- a reference to a published enabled, non-empty Layer;
+- no release-blocking data-quality warnings.
+
+Rejected records:
+- must be written to `data/rejected.json`;
+- must include enough diagnostic information to identify the failed source record and reason;
+- must be counted by `records_rejected` when that field exists in `export_meta.json`.
+
+Release-quality warnings:
+- must be aggregated in `export_meta.json.warning_categories` when they affect release policy;
+- must be represented in `validation_report.json.warnings` and `export_meta.warning_stats` without count drift;
+- remain non-blocking only while their reason and count fit the explicit pilot budgets;
+- must not be inferred directly from raw Airtable-only fields unless ETL converts them into release warnings.
+
+`validation_report.json` schema version 2 owns:
+
+- `status`: `ready`, `ready_with_warnings` or `blocked`;
+- `blocking_errors_count` and `blocking_errors`;
+- `warnings_count` and `warnings`;
+- compatibility aliases `errors_count` and `errors`, which must exactly equal the blocking-error fields during migration.
+
+---
+
+## 9. Raw/source diagnostics vs release-quality signals
+
+Clarification:
+- `data/features.json` is a raw/supporting source artifact and may include source-side diagnostic metadata from Airtable.
+- raw `fields.id` is release-gating and must be UUID v4; derived `fields.id_status` remains diagnostic because the ETL validates the source value directly.
+- release warnings/rejections are derived from ETL validation/export pipeline signals, especially `export_meta.json` and `rejected.json`.
+- documentation, release gate, and audits must not treat raw source metadata as final release truth unless the ETL pipeline has promoted it into release-quality signals.
+
+---
+
+## 10. Runtime map feed boundary
+
+Boundary rules:
+- canonical public map dataset remains `data/features.geojson` for the current 2D public runtime;
+- `GET /api/map/feed` is an auxiliary, non-canonical runtime support/read-model endpoint for authenticated UI/runtime scenarios;
+- current baseline implementation of `/api/map/feed` must be treated as a temporary MVP adapter, not as a production-grade public read model over the published dataset;
+- `/api/map/feed` currently serves internal runtime feed semantics without transitional/mock-backed place payloads; any future entity expansion must remain internal/non-canonical and be introduced explicitly;
+- frontend main map bootstrap path must keep `data/features.geojson` as default source;
+- `/api/map/feed` may be used only as an explicit internal runtime toggle/path;
+- runtime consumers must not treat `/api/map/feed` as a replacement for published `/data/*` artifacts or as a stable public export contract.
+
+---
+
+## 11. Upload runtime / file-serving boundary
+
+Boundary rules:
+- upload API surface is runtime-only and consists of `POST /api/uploads` and `POST /api/uploads/image`;
+- public serving of uploaded files is static via `/uploads/*` mount;
+- `/uploads/*` serving for user-uploaded files includes explicit baseline response-header policy at runtime;
+- baseline serving-policy headers for `/uploads/*` are `X-Content-Type-Options: nosniff`, `Content-Disposition: inline`, and `Cache-Control: no-store`;
+- upload acceptance validates declared upload metadata (`content_type`) and applies server-side magic-bytes signature checks for supported image types (`PNG`, `JPEG/JPG`, `WEBP`);
+- when declared type is allowlisted but the detected file signature does not match that declared type, the upload is rejected;
+- upload acceptance (runtime API) and uploaded-file delivery (static path) are separate contract surfaces and must not be conflated;
+- there is no contract route `GET /api/uploads/{filename}` in the current baseline;
+- frontend must treat backend-returned `url` from upload responses as source of truth for file access paths.
+
+---
+
+## 12. Change-control rule
+
+Any change to this contract must define:
+- affected source fields;
+- affected ETL code;
+- affected checked-in `data/*` artifact shape;
+- affected frontend/runtime consumers;
+- release-check impact;
+- migration or compatibility behavior for existing records;
+- required documentation sync.
+
+A data-contract change is not complete until:
+- ETL/export behavior is updated;
+- release checks are updated if needed;
+- checked-in data artifacts match the new contract;
+- this document is updated;
+- relevant tests pass.
