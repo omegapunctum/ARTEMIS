@@ -15,6 +15,7 @@
     "deferred_object_types",
     "active_object_refs",
     "possible_active_object_refs",
+    "context_object_refs",
     "geometries",
     "items",
     "losses",
@@ -39,6 +40,7 @@
     },
     "active_object_refs": {"$ref": "#/$defs/referenceList"},
     "possible_active_object_refs": {"$ref": "#/$defs/referenceList"},
+    "context_object_refs": {"$ref": "#/$defs/referenceList"},
     "geometries": {
       "type": "array",
       "items": {"$ref": "#/$defs/geometryRecord"}
@@ -122,6 +124,8 @@
         "owner_subobject_ref",
         "origin_kind",
         "spatial_precision",
+        "reconstruction_mode",
+        "is_primary",
         "claim_refs",
         "uncertainty_refs"
       ],
@@ -132,6 +136,8 @@
         "owner_subobject_ref": {"$ref": "#/$defs/nullableId"},
         "origin_kind": {"enum": ["explicit_spatial_extent", "region_geometry_version"]},
         "spatial_precision": {"type": "string", "minLength": 1},
+        "reconstruction_mode": {"type": ["string", "null"]},
+        "is_primary": {"type": ["boolean", "null"]},
         "claim_refs": {"$ref": "#/$defs/referenceList"},
         "uncertainty_refs": {"$ref": "#/$defs/referenceList"}
       }
