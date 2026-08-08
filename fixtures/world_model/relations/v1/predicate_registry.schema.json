@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/relation-predicate-registry/1.0.0",
+  "title": "ARTEMIS Relation Predicate Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_id", "status", "base_world_model_ref", "predicates", "derived_observation_policy"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "registry_id": {"const": "artemis-relation-predicate-registry-v1"},
+    "status": {"enum": ["CANDIDATE", "READY"]},
+    "base_world_model_ref": {"const": "artemis-world-model-contract-fixture-v1@1.0.0"},
+    "predicates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/predicate"}
+    },
+    "derived_observation_policy": {"$ref": "#/$defs/derivedPolicy"}
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predicate",
+        "semantic_class",
+        "directionality",
+        "allow_self_relation",
+        "mechanism",
+        "scope",
+        "allowed_claim_kinds",
+        "minimum_supporting_evidence_strength",
+        "require_reviewed_support",
+        "contested_uncertainty_policy",
+        "inference_policy"
+      ],
+      "properties": {
+        "predicate": {"$ref": "#/$defs/id"},
+        "semantic_class": {"$ref": "#/$defs/id"},
+        "directionality": {"enum": ["symmetric", "directed"]},
+        "allow_self_relation": {"type": "boolean"},
+        "mechanism": {"enum": ["forbidden_as_semantic_requirement", "optional", "required"]},
+        "scope": {"enum": ["optional", "required"]},
+        "allowed_claim_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["factual", "interpretation", "observation"]}
+        },
+        "minimum_supporting_evidence_strength": {"enum": ["direct", "indirect", "any_reviewed"]},
+        "require_reviewed_support": {"const": true},
+        "contested_uncertainty_policy": {"enum": ["required_when_contested_or_challenged", "optional_unless_contested"]},
+        "inference_policy": {"enum": ["explicit_claim_evidence_only"]}
+      }
+    },
+    "derivedPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["automatic_relation_creation", "co_presence", "similarity", "temporal_order", "promotion_requirement"],
+      "properties": {
+        "automatic_relation_creation": {"const": false},
+        "co_presence": {"const": "derived_observation_only"},
+        "similarity": {"const": "analytical_result_only"},
+        "temporal_order": {"const": "insufficient_for_relation"},
+        "promotion_requirement": {"const": "new_registered_relation_claim_and_evidence"}
+      }
+    }
+  }
+}
