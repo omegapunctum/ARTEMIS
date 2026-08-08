@@ -13,21 +13,24 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` | #339 bounded parallel 3D Globe / renderer architecture R&D record | #342–#345 remaining contract/spike/parity/repository decisions complete or explicit stop decision |
-| `2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md` | #342 executable terrain/imagery/geospatial asset boundary | manifest/schema/validator contract accepted with provider-swap, vertical, licensing, cache and secret gates green |
+| `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` | #339 bounded parallel 3D Globe / renderer architecture R&D record | #343–#345 remaining spike/parity/repository decisions complete or explicit stop decision |
+| `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` | #343 engine choice + isolated 3D Earth runtime spike decision | generated static artifact, canonical picking, uncertainty display, terrain-capable path, performance baseline and engine evidence pass or explicit escalation decision |
+| `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | #343 local/static build, run and manual acceptance procedure | superseded after #343 closes or promoted/replaced by #345 runtime documentation |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-Active execution rule for the Globe / geospatial asset records:
+Active execution rule for the Globe runtime spike:
 
-- they cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
-- they authorize only the bounded #339–#345 R&D contour;
-- merged Explorer State and Render Projection contracts are dependencies/evidence, not active competing semantic owners;
-- geospatial assets are Earth-rendering infrastructure/context and cannot become a second historical data core or public source of truth;
-- provider/runtime configuration cannot invent geometry, route, temporal precision, vertical history or epistemic certainty absent from the World Model;
-- present-day terrain/imagery must remain distinguishable from historical reconstruction;
-- they do not make 3D Globe a current public/product capability;
-- they do not block #331 → #332 → #333 → #334.
+- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
+- it authorizes only the bounded #343 experimental runtime on top of completed #340–#342 contracts;
+- the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
+- it remains generated/non-public and must not create another root/Pages entrypoint before #345;
+- MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
+- the reviewed unknown Trajectory gap remains unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
+- synthetic Earth context/terrain fixtures cannot be described as real imagery, historical geography or production provider readiness;
+- live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
+- the spike does not make 3D Globe a current public/product capability;
+- it does not block #331 → #332 → #333 → #334.
 
 ## Gated under Foundation v3
 
@@ -56,6 +59,7 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md` — #342 completed in PR `#349`; provider/CRS/vertical/temporal/provenance/license/cache/runtime boundaries accepted with synthetic fixtures and dedicated CI.
 - `2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md` — #341 completed in PR `#348`; one World Slice + Explorer State deterministically produce semantically equivalent 2D/Globe adapter payloads with explicit projection loss.
 - `2026-08-08_EXPLORER_STATE_CONTRACT_v1.md` — #340 completed in PR `#347`; renderer-neutral state schema/fixture/validator accepted, with two-adapter proof completed by PR `#348`.
 - `2026-08-04_UNCERTAINTY_SEMANTICS_REVIEW.md` — #330 completed in PR `#337` with READY uncertainty semantics and independent review evidence.

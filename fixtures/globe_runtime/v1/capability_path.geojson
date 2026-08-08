@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "name": "ARTEMIS non-semantic polyline capability fixture",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "renderer-capability-path-1",
+      "properties": {
+        "capability_only": true,
+        "semantic_role": "renderer_capability_path",
+        "world_model_object_ref": null,
+        "pick_as_knowledge": false,
+        "label": "Renderer polyline capability — NOT historical knowledge"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[9.2,49.2],[10.0,49.7],[10.8,50.1],[11.6,50.6],[12.2,50.9]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+name: Globe Runtime Spike Gate
+
+on:
+  push:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "fixtures/geospatial_assets/**"
+      - "fixtures/globe_runtime/**"
+      - "scripts/build_render_projection_fixtures.py"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/validate_geospatial_assets.py"
+      - "scripts/build_globe_spike.py"
+      - "scripts/globe_spike/**"
+      - "tests/test_globe_runtime_spike.py"
+      - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
+      - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
+      - ".github/workflows/globe-runtime-spike.yml"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "fixtures/geospatial_assets/**"
+      - "fixtures/globe_runtime/**"
+      - "scripts/build_render_projection_fixtures.py"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/validate_geospatial_assets.py"
+      - "scripts/build_globe_spike.py"
+      - "scripts/globe_spike/**"
+      - "tests/test_globe_runtime_spike.py"
+      - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
+      - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
+      - ".github/workflows/globe-runtime-spike.yml"
+      - "requirements.txt"
+
+jobs:
+  globe-runtime-spike:
+    name: Build + validate isolated 3D globe spike
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Validate renderer-neutral dependencies
+        run: |
+          python scripts/validate_explorer_state_fixtures.py
+          python scripts/build_render_projection_fixtures.py
+          python scripts/validate_geospatial_assets.py
+
+      - name: Build isolated Globe artifact
+        run: python scripts/build_globe_spike.py --output /tmp/artemis-globe-spike
+
+      - name: Run Globe spike contract tests
+        run: pytest -q tests/test_globe_runtime_spike.py
+
+      - name: Smoke-test static artifact serving
+        run: |
+          python -m http.server 8123 --directory /tmp/artemis-globe-spike >/tmp/artemis-globe-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 1
+          curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS Globe R&D Spike"
+          curl -fsS http://127.0.0.1:8123/build-meta.json | python -m json.tool >/dev/null
+
+      - name: Execute Globe artifact in headless browser
+        run: |
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$BROWSER" ]; then
+            echo "No Chrome/Chromium executable available on the hosted runner" >&2
+            exit 1
+          fi
+          "$BROWSER" --version
+
+          python -m http.server 8124 --directory /tmp/artemis-globe-spike >/tmp/artemis-globe-browser-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 1
+
+          timeout 45s "$BROWSER" \
+            --headless=new \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader \
+            --run-all-compositor-stages-before-draw \
+            --virtual-time-budget=15000 \
+            --dump-dom \
+            http://127.0.0.1:8124/ \
+            > /tmp/artemis-globe-dom.html \
+            2> /tmp/artemis-globe-browser.log
+
+          if grep -Fq "ARTEMIS Globe spike failed:" /tmp/artemis-globe-dom.html; then
+            cat /tmp/artemis-globe-dom.html >&2
+            cat /tmp/artemis-globe-browser.log >&2 || true
+            exit 1
+          fi
+
+          # These values are injected dynamically by runtime.js. Terrain status is
+          # set only inside MapLibre's map `load` handler, so it proves the browser
+          # executed the pinned engine and loaded the globe style/layers.
+          grep -F "world-slice-fixture-basin-v1" /tmp/artemis-globe-dom.html
+          grep -F "explorer-state-1504-local-global" /tmp/artemis-globe-dom.html
+          grep -F "uncertainty-trajectory-route" /tmp/artemis-globe-dom.html
+          grep -F "Terrain: capability path ready" /tmp/artemis-globe-dom.html
+          grep -F "engine: MapLibre GL JS" /tmp/artemis-globe-dom.html
+          grep -F "maplibregl-canvas" /tmp/artemis-globe-dom.html
+
+          # `idle` and rAF timing are diagnostic values for a normal browser. Hosted
+          # headless virtual-time scheduling is not a production performance SLO and
+          # is intentionally not used as a pass/fail condition here.
+          grep -F 'id="startup-ms"' /tmp/artemis-globe-dom.html
+          grep -F 'id="frame-sample"' /tmp/artemis-globe-dom.html
+
+          # Capture renderer-local Basin camera evidence from a second browser run.
+          # Camera is deliberately outside Explorer State / World Model semantics.
+          timeout 45s "$BROWSER" \
+            --headless=new \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader \
+            --run-all-compositor-stages-before-draw \
+            --virtual-time-budget=10000 \
+            --window-size=1440,900 \
+            --screenshot=/tmp/artemis-globe-browser.png \
+            'http://127.0.0.1:8124/?view=basin' \
+            >/tmp/artemis-globe-screenshot.log \
+            2>&1
+          test -s /tmp/artemis-globe-browser.png
+
+      - name: Upload generated Globe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artemis-globe-runtime-spike
+          path: |
+            /tmp/artemis-globe-spike
+            /tmp/artemis-globe-browser.png
+          if-no-files-found: error
+          retention-days: 7

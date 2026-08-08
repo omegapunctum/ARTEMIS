@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>ARTEMIS Globe R&D Spike</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="globe-shell" aria-label="ARTEMIS experimental 3D globe">
+      <div id="globe"></div>
+      <header id="spike-banner">
+        <div>
+          <strong>ARTEMIS · 3D Globe R&D</strong>
+          <span>Experimental renderer — not a public capability</span>
+        </div>
+        <div id="engine-status" class="status-pill">engine: loading</div>
+      </header>
+
+      <div id="globe-controls" role="group" aria-label="Globe controls">
+        <button id="view-global" type="button">Global</button>
+        <button id="view-basin" type="button">Fixture Basin</button>
+        <button id="toggle-alternatives" type="button" aria-pressed="true">Alternatives: on</button>
+      </div>
+
+      <div id="terrain-status" class="map-note"></div>
+      <div id="attribution-status" class="map-note attribution-note"></div>
+    </section>
+
+    <aside id="inspector" aria-label="ARTEMIS globe spike inspector">
+      <section>
+        <h1>Shared state</h1>
+        <dl class="metrics">
+          <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
+          <div><dt>Explorer State</dt><dd id="explorer-state">—</dd></div>
+          <div><dt>Selected time</dt><dd id="selected-time">—</dd></div>
+          <div><dt>Projection</dt><dd id="projection-id">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Semantic render</h2>
+        <div id="semantic-summary" class="summary-grid"></div>
+        <p class="hint">Click an ARTEMIS point or Region. Picking must resolve canonical World Model IDs.</p>
+      </section>
+
+      <section>
+        <h2>Selection</h2>
+        <div id="selection-card" class="selection-card empty">No semantic object selected.</div>
+      </section>
+
+      <section>
+        <h2>Unresolved / uncertain</h2>
+        <div id="unresolved-list"></div>
+      </section>
+
+      <section>
+        <h2>Renderer capability path</h2>
+        <p class="warning">Dashed path is synthetic renderer-capability geometry only. It has no World Model object ID and is not historical knowledge.</p>
+      </section>
+
+      <section>
+        <h2>Runtime baseline</h2>
+        <dl class="metrics">
+          <div><dt>Startup → idle</dt><dd id="startup-ms">pending</dd></div>
+          <div><dt>Frame sample</dt><dd id="frame-sample">pending</dd></div>
+          <div><dt>Rendered semantic primitives</dt><dd id="primitive-count">—</dd></div>
+        </dl>
+      </section>
+
+      <section class="boundary-note">
+        <h2>Boundary</h2>
+        <p>Earth surface and graticule are synthetic context. No real terrain, satellite imagery, historical coastline or provider token is used by the default spike.</p>
+      </section>
+    </aside>
+  </main>
+
+  <div id="fatal-error" role="alert" hidden></div>
+
+  <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script src="./runtime.js"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') !== 'basin') return;
+
+      let attempts = 0;
+      const timer = window.setInterval(() => {
+        attempts += 1;
+        const map = window.__ARTEMIS_GLOBE_SPIKE?.map;
+        if (
+          map
+          && typeof map.getLayer === 'function'
+          && map.getLayer('artemis-region-primary-fill')
+          && typeof map.jumpTo === 'function'
+        ) {
+          window.clearInterval(timer);
+          map.jumpTo({
+            center: [10.5, 50.0],
+            zoom: 3.2,
+            pitch: 0,
+            bearing: 0
+          });
+          document.documentElement.dataset.artemisCamera = 'fixture-basin';
+          return;
+        }
+        if (attempts >= 150) window.clearInterval(timer);
+      }, 100);
+    })();
+  </script>
+</body>
+</html>
