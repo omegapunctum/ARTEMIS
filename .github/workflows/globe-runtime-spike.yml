@@ -1,0 +1,81 @@
+name: Globe Runtime Spike Gate
+
+on:
+  push:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "fixtures/geospatial_assets/**"
+      - "fixtures/globe_runtime/**"
+      - "scripts/build_render_projection_fixtures.py"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/validate_geospatial_assets.py"
+      - "scripts/build_globe_spike.py"
+      - "scripts/globe_spike/**"
+      - "tests/test_globe_runtime_spike.py"
+      - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
+      - ".github/workflows/globe-runtime-spike.yml"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "fixtures/geospatial_assets/**"
+      - "fixtures/globe_runtime/**"
+      - "scripts/build_render_projection_fixtures.py"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/validate_geospatial_assets.py"
+      - "scripts/build_globe_spike.py"
+      - "scripts/globe_spike/**"
+      - "tests/test_globe_runtime_spike.py"
+      - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
+      - ".github/workflows/globe-runtime-spike.yml"
+      - "requirements.txt"
+
+jobs:
+  globe-runtime-spike:
+    name: Build + validate isolated 3D globe spike
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Validate renderer-neutral dependencies
+        run: |
+          python scripts/validate_explorer_state_fixtures.py
+          python scripts/build_render_projection_fixtures.py
+          python scripts/validate_geospatial_assets.py
+
+      - name: Build isolated Globe artifact
+        run: python scripts/build_globe_spike.py --output /tmp/artemis-globe-spike
+
+      - name: Run Globe spike contract tests
+        run: pytest -q tests/test_globe_runtime_spike.py
+
+      - name: Smoke-test static artifact serving
+        run: |
+          python -m http.server 8123 --directory /tmp/artemis-globe-spike >/tmp/artemis-globe-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 1
+          curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS Globe R&D Spike"
+          curl -fsS http://127.0.0.1:8123/build-meta.json | python -m json.tool >/dev/null
+
+      - name: Upload generated Globe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artemis-globe-runtime-spike
+          path: /tmp/artemis-globe-spike
+          if-no-files-found: error
+          retention-days: 7
