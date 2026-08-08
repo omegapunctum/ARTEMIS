@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "evaluation_id": "artemis-globe-engine-spike-evaluation-v1",
+  "evaluated_at": "2026-08-08",
+  "selected_engine_id": "maplibre-gl-js-5.24.0",
+  "selection_scope": "issue-343-bounded-runtime-spike",
+  "criteria": [
+    {"id": "interactive_globe", "required": true},
+    {"id": "terrain_capable", "required": true},
+    {"id": "point_line_polygon", "required": true},
+    {"id": "feature_picking", "required": true},
+    {"id": "attribution_path", "required": true},
+    {"id": "static_browser_runtime", "required": true},
+    {"id": "renderer_projection_fit", "required": true},
+    {"id": "domain_semantics_external", "required": true},
+    {"id": "low_current_repo_integration_risk", "required": true},
+    {"id": "deep_3d_geospatial_extensibility", "required": false}
+  ],
+  "candidates": [
+    {
+      "engine_id": "maplibre-gl-js-5.24.0",
+      "engine_family": "MapLibre GL JS",
+      "decision": "selected_for_spike",
+      "license": "BSD-3-Clause",
+      "criteria": {
+        "interactive_globe": "pass",
+        "terrain_capable": "pass",
+        "point_line_polygon": "pass",
+        "feature_picking": "pass",
+        "attribution_path": "pass",
+        "static_browser_runtime": "pass",
+        "renderer_projection_fit": "pass",
+        "domain_semantics_external": "pass",
+        "low_current_repo_integration_risk": "pass",
+        "deep_3d_geospatial_extensibility": "conditional"
+      },
+      "evidence": [
+        "https://maplibre.org/maplibre-gl-js/docs",
+        "https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/",
+        "https://maplibre.org/maplibre-gl-js/docs/examples/create-a-heatmap-layer-on-a-globe-with-terrain-elevation/",
+        "https://maplibre.org/maplibre-gl-js/docs/examples/add-a-3d-model-to-globe-using-threejs/",
+        "https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/QueryRenderedFeaturesOptions/",
+        "https://github.com/maplibre/maplibre-gl-js/blob/main/LICENSE.txt"
+      ],
+      "notes": "Selected only for the first isolated spike. Current public ARTEMIS remains on MapLibre GL JS 4.7.1."
+    },
+    {
+      "engine_id": "cesiumjs-current-2026-08-08",
+      "engine_family": "CesiumJS",
+      "decision": "retained_escalation_candidate",
+      "license": "Apache-2.0",
+      "criteria": {
+        "interactive_globe": "pass",
+        "terrain_capable": "pass",
+        "point_line_polygon": "pass",
+        "feature_picking": "pass",
+        "attribution_path": "pass",
+        "static_browser_runtime": "pass",
+        "renderer_projection_fit": "pass",
+        "domain_semantics_external": "pass",
+        "low_current_repo_integration_risk": "conditional",
+        "deep_3d_geospatial_extensibility": "pass"
+      },
+      "evidence": [
+        "https://cesium.com/learn/cesiumjs-learn/cesiumjs-terrain/",
+        "https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html",
+        "https://cesium.com/learn/cesiumjs/ref-doc/CesiumTerrainProvider.html",
+        "https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html",
+        "https://cesium.com/learn/cesiumjs/ref-doc/Scene.html",
+        "https://github.com/CesiumGS/cesium/blob/main/LICENSE.md"
+      ],
+      "notes": "Strong dedicated geospatial 3D candidate; deferred to avoid introducing a second engine before the minimum renderer architecture is proven."
+    },
+    {
+      "engine_id": "threejs-current-2026-08-08",
+      "engine_family": "Three.js",
+      "decision": "rejected_as_primary_geospatial_engine",
+      "license": "MIT",
+      "criteria": {
+        "interactive_globe": "conditional",
+        "terrain_capable": "conditional",
+        "point_line_polygon": "conditional",
+        "feature_picking": "conditional",
+        "attribution_path": "conditional",
+        "static_browser_runtime": "pass",
+        "renderer_projection_fit": "conditional",
+        "domain_semantics_external": "pass",
+        "low_current_repo_integration_risk": "fail",
+        "deep_3d_geospatial_extensibility": "conditional"
+      },
+      "evidence": [
+        "https://threejs.org/docs/pages/WebGLRenderer.html"
+      ],
+      "notes": "General-purpose WebGL renderer; using it as the primary globe engine would make ARTEMIS own geospatial projection/terrain/tile infrastructure too early."
+    }
+  ]
+}
