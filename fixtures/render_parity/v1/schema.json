@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/render-parity/1.0.0",
+  "title": "ARTEMIS Cross-Renderer Expected Semantic State v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "fixture_id",
+    "source",
+    "selection",
+    "expected_semantic_state",
+    "anchors",
+    "relation_distinction",
+    "boundary_cases",
+    "renderer_only_differences"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "fixture_id": {"$ref": "#/$defs/id"},
+    "source": {"$ref": "#/$defs/source"},
+    "selection": {"$ref": "#/$defs/selection"},
+    "expected_semantic_state": {"$ref": "#/$defs/semanticState"},
+    "anchors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/anchor"}
+    },
+    "relation_distinction": {"$ref": "#/$defs/relationDistinction"},
+    "boundary_cases": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/boundaryCase"}
+    },
+    "renderer_only_differences": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "nullableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/id"},
+        {"type": "null"}
+      ]
+    },
+    "referenceList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "datasetIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "value": {"type": "string", "minLength": 1}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_slice_ref", "dataset_identity", "explorer_state_ref"],
+      "properties": {
+        "world_slice_ref": {"$ref": "#/$defs/id"},
+        "dataset_identity": {"$ref": "#/$defs/datasetIdentity"},
+        "explorer_state_ref": {"$ref": "#/$defs/id"}
+      }
+    },
+    "activeFocus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trajectory_ref",
+        "trajectory_segment_ref",
+        "region_ref",
+        "region_geometry_ref"
+      ],
+      "properties": {
+        "trajectory_ref": {"$ref": "#/$defs/nullableId"},
+        "trajectory_segment_ref": {"$ref": "#/$defs/nullableId"},
+        "region_ref": {"$ref": "#/$defs/nullableId"},
+        "region_geometry_ref": {"$ref": "#/$defs/nullableId"}
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_object_ref", "selected_object_refs", "active_focus"],
+      "properties": {
+        "primary_object_ref": {"$ref": "#/$defs/id"},
+        "selected_object_refs": {"$ref": "#/$defs/referenceList"},
+        "active_focus": {"$ref": "#/$defs/activeFocus"}
+      }
+    },
+    "semanticState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_object_refs",
+        "possible_active_object_refs",
+        "context_object_refs",
+        "deferred_object_types"
+      ],
+      "properties": {
+        "active_object_refs": {"$ref": "#/$defs/referenceList"},
+        "possible_active_object_refs": {"$ref": "#/$defs/referenceList"},
+        "context_object_refs": {"$ref": "#/$defs/referenceList"},
+        "deferred_object_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["Relation"]}
+        }
+      }
+    },
+    "semanticFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segment_kind",
+        "reconstruction_mode",
+        "is_primary",
+        "state_kind",
+        "process_mode"
+      ],
+      "properties": {
+        "segment_kind": {"type": ["string", "null"]},
+        "reconstruction_mode": {"type": ["string", "null"]},
+        "is_primary": {"type": ["boolean", "null"]},
+        "state_kind": {"type": ["string", "null"]},
+        "process_mode": {"type": ["string", "null"]}
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "object_ref",
+        "object_type",
+        "subobject_ref",
+        "render_role",
+        "temporal_membership",
+        "spatial_status",
+        "geometry_refs",
+        "layer_refs",
+        "claim_refs",
+        "uncertainty_refs",
+        "evidence_link_refs",
+        "source_refs",
+        "semantic_flags"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/id"},
+        "object_ref": {"$ref": "#/$defs/id"},
+        "object_type": {"enum": ["Entity", "Event", "State", "Process", "Trajectory", "Region"]},
+        "subobject_ref": {"$ref": "#/$defs/nullableId"},
+        "render_role": {"type": "string", "minLength": 1},
+        "temporal_membership": {"enum": ["active", "possible_active", "atemporal_context"]},
+        "spatial_status": {"enum": ["resolved", "unresolved", "not_spatial"]},
+        "geometry_refs": {"$ref": "#/$defs/referenceList"},
+        "layer_refs": {"$ref": "#/$defs/referenceList"},
+        "claim_refs": {"$ref": "#/$defs/referenceList"},
+        "uncertainty_refs": {"$ref": "#/$defs/referenceList"},
+        "evidence_link_refs": {"$ref": "#/$defs/referenceList"},
+        "source_refs": {"$ref": "#/$defs/referenceList"},
+        "semantic_flags": {"$ref": "#/$defs/semanticFlags"}
+      }
+    },
+    "relationDistinction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "derived_observation_ref",
+        "relation_created",
+        "documented_relation_refs",
+        "adapter_relation_policy"
+      ],
+      "properties": {
+        "derived_observation_ref": {"$ref": "#/$defs/id"},
+        "relation_created": {"const": false},
+        "documented_relation_refs": {"$ref": "#/$defs/referenceList"},
+        "adapter_relation_policy": {"const": "deferred"}
+      }
+    },
+    "temporalSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "start", "end", "precision", "calendar"],
+      "properties": {
+        "mode": {"const": "instant"},
+        "start": {"type": "string", "minLength": 1},
+        "end": {"type": "string", "minLength": 1},
+        "precision": {"enum": ["day", "month", "year"]},
+        "calendar": {"type": "string", "minLength": 1}
+      }
+    },
+    "boundaryCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "temporal_selection",
+        "active_focus",
+        "expected_present_subobject_refs",
+        "expected_absent_subobject_refs"
+      ],
+      "properties": {
+        "case_id": {"$ref": "#/$defs/id"},
+        "temporal_selection": {"$ref": "#/$defs/temporalSelection"},
+        "active_focus": {"$ref": "#/$defs/activeFocus"},
+        "expected_present_subobject_refs": {"$ref": "#/$defs/referenceList"},
+        "expected_absent_subobject_refs": {"$ref": "#/$defs/referenceList"}
+      }
+    }
+  }
+}
