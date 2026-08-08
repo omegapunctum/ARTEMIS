@@ -124,8 +124,8 @@ jobs:
           grep -F 'id="startup-ms"' /tmp/artemis-globe-dom.html
           grep -F 'id="frame-sample"' /tmp/artemis-globe-dom.html
 
-          # Capture visual evidence from a second browser execution. The PNG is a CI
-          # review artifact only; screenshot pixels are never semantic parity truth.
+          # Capture renderer-local Basin camera evidence from a second browser run.
+          # Camera is deliberately outside Explorer State / World Model semantics.
           timeout 45s "$BROWSER" \
             --headless=new \
             --no-sandbox \
@@ -137,7 +137,7 @@ jobs:
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
             --screenshot=/tmp/artemis-globe-browser.png \
-            http://127.0.0.1:8124/ \
+            'http://127.0.0.1:8124/?view=basin' \
             >/tmp/artemis-globe-screenshot.log \
             2>&1
           test -s /tmp/artemis-globe-browser.png
