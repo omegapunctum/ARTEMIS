@@ -95,15 +95,15 @@
           map
           && typeof map.getLayer === 'function'
           && map.getLayer('artemis-region-primary-fill')
-          && typeof map.fitBounds === 'function'
+          && typeof map.jumpTo === 'function'
         ) {
           window.clearInterval(timer);
-          map.fitBounds(
-            [[8.5, 48.5], [12.5, 51.5]],
-            { padding: 140, maxZoom: 3.5, duration: 0 }
-          );
-          map.setPitch(18);
-          map.setBearing(-8);
+          map.jumpTo({
+            center: [10.5, 50.0],
+            zoom: 3.2,
+            pitch: 0,
+            bearing: 0
+          });
           document.documentElement.dataset.artemisCamera = 'fixture-basin';
           return;
         }
