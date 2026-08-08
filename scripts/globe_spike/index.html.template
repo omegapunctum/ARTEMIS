@@ -82,5 +82,29 @@
 
   <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
   <script src="./runtime.js"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') !== 'basin') return;
+
+      let attempts = 0;
+      const timer = window.setInterval(() => {
+        attempts += 1;
+        const map = window.__ARTEMIS_GLOBE_SPIKE?.map;
+        if (map && typeof map.loaded === 'function' && map.loaded()) {
+          window.clearInterval(timer);
+          map.jumpTo({
+            center: [10.6, 50.0],
+            zoom: 4.2,
+            pitch: 38,
+            bearing: -12
+          });
+          document.documentElement.dataset.artemisCamera = 'fixture-basin';
+          return;
+        }
+        if (attempts >= 100) window.clearInterval(timer);
+      }, 100);
+    })();
+  </script>
 </body>
 </html>
