@@ -1,4 +1,4 @@
-# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.3
+# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.4
 
 Статус: updated canonical project structure document.
 Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
@@ -66,7 +66,7 @@
 | `fixtures/` | versioned executable contract fixtures; not public/runtime data | validation |
 | `icons/` | PWA assets | основной |
 | `js/` | current public frontend modules | основной |
-| `scripts/` | ETL, import/export, audit, release checks | основной |
+| `scripts/` | ETL, import/export, audit, release and contract checks | основной |
 | `tests/` | automated checks | основной |
 | `AGENTS.md` | единый repository entrypoint для агентов; маршрутизирует к canonical owners | operational |
 | `README.md` | корневой entrypoint документации | canonical |
@@ -77,6 +77,7 @@
 
 Дополнение по release/workflow layer:
 - structural and semantic release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`), `scripts/release_check.py` и `scripts/semantic_data_gate.py`;
+- renderer-neutral Explorer State contract under #340 has its own executable validator/test contour and remains validation/R&D evidence rather than public runtime data;
 - `scripts/release_check.py` остаётся canonical executable release/readiness entrypoint;
 - точные enforcement points должны определяться по текущим workflow files, а не по упрощённой формулировке в одном summary-документе;
 - workflow-слой не заменяет полный regression suite и не должен описываться как его эквивалент.
@@ -93,6 +94,7 @@
 | Release check | `scripts/release_check.py` |
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
 | Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
+| Explorer-state fixture validation | `scripts/validate_explorer_state_fixtures.py` |
 | Uncertainty-semantics owner | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` |
 | Current public 2D map projection | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
@@ -105,6 +107,8 @@
 - наличие второго renderer не разрешает второй World Model, второй historical source of truth или второй backend;
 - current `index.html` остаётся единственным public frontend entrypoint до отдельного promotion decision;
 - experimental Globe runtime under #339–#345 не считается public entrypoint до #345/promotion gate;
+- Explorer State validator is a validation entrypoint, not a frontend/backend runtime entrypoint;
+- working Explorer State ownership remains in `docs/work/README.md`; it is not promoted into the canonical owner registry by this structure document;
 - legacy-слои не могут становиться скрытым альтернативным runtime.
 
 ---
@@ -165,6 +169,7 @@ Renderer expansion rule:
 - target repository split (`apps/*`, shared packages или другой layout) определяется #345, а не предполагается этим документом заранее.
 
 Working renderer architecture record: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
+Working Explorer State contract: `docs/work/2026-08-08_EXPLORER_STATE_CONTRACT_v1.md`.
 
 ---
 
@@ -261,25 +266,32 @@ scripts/
 ├── release_check.py
 ├── semantic_data_gate.py
 ├── validate_world_model_fixtures.py
-└── validate_uncertainty_fixtures.py
+├── validate_uncertainty_fixtures.py
+└── validate_explorer_state_fixtures.py
 ```
 
 ```text
 tests/
+├── test_explorer_state_fixtures.py
 └── ...
 ```
 
 ```text
 fixtures/
+├── explorer_state/
+│   └── v1/
+│       ├── README.md
+│       ├── schema.json
+│       └── state-1504-local-global.json
 └── world_model/
     ├── v1/
-        ├── compatibility/
-        ├── sources/
-        ├── README.md
-        ├── coverage_manifest.json
-        ├── package.json
-        ├── review_registry.json
-        └── schema.json
+    │   ├── compatibility/
+    │   ├── sources/
+    │   ├── README.md
+    │   ├── coverage_manifest.json
+    │   ├── package.json
+    │   ├── review_registry.json
+    │   └── schema.json
     └── uncertainty/
         └── v1/
             ├── compatibility/
@@ -291,9 +303,11 @@ fixtures/
 
 Правила:
 - `fixtures/` хранит versioned executable contract evidence, не public `data/*` и не runtime schema;
+- `fixtures/explorer_state/v1` pins a renderer-neutral query/selection state to the reviewed synthetic World Model package and does not duplicate World Model facts;
 - synthetic fixtures must be visibly marked and cannot support historical capability claims;
 - compatibility projections expose losses and never invent missing evidence/precision;
 - additive contract extensions reference the reviewed base and do not rewrite a READY package;
+- `scripts/validate_explorer_state_fixtures.py` owns structural + cross-reference checks for #340 and must reject renderer-owned state such as engine zoom/pitch/camera objects;
 - `scripts/` отвечают за ETL, import/export, checks, preparation;
 - `tests/` отвечают за автоматическую проверку контрактов и регрессий;
 - cross-renderer semantic parity, when a second renderer exists, belongs to executable tests and must be independent from screenshot/visual regression;
@@ -335,7 +349,7 @@ README.md
 - рабочие документы текущего цикла;
 - допускают быстрые изменения;
 - не считаются canonical по умолчанию;
-- active renderer architecture records must be registered here and cannot override canonical model/data/truth owners;
+- active renderer architecture/Explorer State records must be registered here and cannot override canonical model/data/truth owners;
 - UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer;
 - historical AI/Courses/expansion plans live in `docs/archive/` and cannot open scope.
 
@@ -385,6 +399,8 @@ docs/reference/
 - competing backend entrypoints;
 - второй renderer, который владеет собственной historical/domain semantics вместо shared model/projection boundary;
 - renderer-specific historical data forks (`*_2d`, `*_3d` or equivalent) that can drift semantically;
+- renderer-owned `zoom/pitch/bearing/camera/viewer/scene` state promoted into the semantic Explorer State contract;
+- authoritative persisted `visible_object_ids` instead of deterministic derivation from World Slice + Explorer State;
 - experimental Globe assets/dependencies silently entering the public Pages artifact before promotion;
 - использование terrain/imagery provider metadata как substitute for historical provenance.
 

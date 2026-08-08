@@ -35,6 +35,11 @@ jobs:
         # Cross-artifact structural and semantic publish check; full regression remains separate.
         run: python scripts/release_check.py
 
+      - name: Validate renderer-neutral Explorer State contract
+        run: |
+          python scripts/validate_explorer_state_fixtures.py
+          pytest -q tests/test_explorer_state_fixtures.py
+
       - name: Run concept and repository governance guards
         run: |
           pytest -q \

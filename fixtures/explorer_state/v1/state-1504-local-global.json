@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "state_id": "explorer-state-1504-local-global",
+  "world_slice_ref": "world-slice-fixture-basin-v1",
+  "dataset_identity": {
+    "kind": "fixture_package",
+    "value": "artemis-world-model-contract-fixture-v1@1.0.0"
+  },
+  "temporal_selection": {
+    "mode": "instant",
+    "start": "1504-03-01",
+    "end": "1504-03-01",
+    "precision": "day",
+    "calendar": "proleptic_gregorian"
+  },
+  "active_layer_refs": [
+    "layer-biography",
+    "layer-politics",
+    "layer-exchange",
+    "layer-distant-context"
+  ],
+  "selection": {
+    "primary_object_ref": "event-documented-workshop-meeting",
+    "selected_object_refs": [
+      "entity-mara-vale",
+      "event-documented-workshop-meeting"
+    ],
+    "comparison_object_refs": []
+  },
+  "context": {
+    "local_context_refs": [
+      "event-documented-workshop-meeting",
+      "state-mara-workshop-presence",
+      "region-fixture-basin",
+      "trajectory-mara-vale"
+    ],
+    "global_context_refs": [
+      "event-far-observation"
+    ],
+    "derived_observation_refs": []
+  },
+  "active_focus": {
+    "trajectory_ref": "trajectory-mara-vale",
+    "trajectory_segment_ref": "trajectory-segment-workshop",
+    "region_ref": "region-fixture-basin",
+    "region_geometry_ref": "region-geometry-v2",
+    "reconstruction_ref": null
+  },
+  "comparison_scope": {
+    "mode": "local_global",
+    "reference_refs": [
+      "place-inland-workshop",
+      "place-far-observatory"
+    ]
+  },
+  "epistemic_display": {
+    "show_material_uncertainty": true,
+    "show_alternatives": true,
+    "show_corpus_limits": true
+  },
+  "view_intent": {
+    "kind": "bounds",
+    "bbox": [
+      8.5,
+      -21.0,
+      101.0,
+      52.0
+    ],
+    "target_ref": null,
+    "coordinate_reference": "EPSG:4326"
+  }
+}
