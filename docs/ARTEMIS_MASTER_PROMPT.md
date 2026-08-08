@@ -1,7 +1,7 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v6.0
+# ARTEMIS — МАСТЕР-ПРОМПТ v6.1
 
 Статус: canonical operational governance for AI agents and assistants.
-Дата: 2026-07-28.
+Дата: 2026-08-08.
 
 ## 1. Роль проекта
 
@@ -32,6 +32,7 @@ Architecture Atlas — thematic layer and technical baseline. `Life in Context` 
 - uncertainty profile: `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
 - epistemics: `docs/EPISTEMIC_CONTRACT.md`;
 - entities: `docs/ENTITY_MODEL.md`;
+- current public data/runtime contract: `docs/DATA_CONTRACT.md`;
 - priorities/order: `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`;
 - working lifecycle: `docs/work/README.md`.
 
@@ -39,17 +40,17 @@ Working/audit/archive files cannot override canonical owners.
 
 ## 3. Current technical boundaries
 
-- Vanilla JavaScript + MapLibre frontend.
+- Vanilla JavaScript + MapLibre frontend is the current public 2D baseline.
 - FastAPI backend.
 - SQLite baseline; PostgreSQL may require later decision.
 - Airtable curated source.
-- ETL publishes canonical `data/*`.
-- `data/features.geojson` is current public map source.
+- ETL publishes current canonical public `data/*` artifacts.
+- `data/features.geojson` is the current public **2D map projection/source**, not the universal representation of all Foundation v3 knowledge.
 - GitHub Pages serves the static frontend; backend is separate.
 - No React/Vue/Angular/TypeScript without architecture decision.
 - No direct frontend Airtable access.
 - No token/private research storage in Web Storage.
-- No competing canonical public data source.
+- No competing semantic/world-model source of truth.
 
 ## 4. Foundation invariants
 
@@ -65,26 +66,46 @@ Working/audit/archive files cannot override canonical owners.
 10. Dataset absence is not historical absence.
 11. Current capability is separate from concept.
 12. Compatibility runtime does not define target ontology.
+13. Renderer engines do not own domain semantics.
+14. Renderer payloads are projections of one World Model / World Slice, not independent historical truth datasets.
+15. Terrain/imagery/tiles are geospatial rendering assets unless they explicitly assert historical state through World Model semantics.
+16. 2D/3D visual differences must not change active object identity, temporal validity, uncertainty, evidence or relation meaning.
 
 ## 5. Current order
 
-Active: World Model Contract / issue `#330`.
+Active: World Model Contract / issue `#331`.
+
+Primary validation path:
 
 1. Preserve the reviewed READY world-model base from #329 / PR #336.
-2. Complete and independently review #330 uncertainty semantics.
+2. Preserve completed #330 / PR #337 uncertainty semantics as the active precision/uncertainty foundation.
 3. Resolve #331 relation semantics against that completed contract.
 4. Freeze the first World Slice under #332.
-5. Implement the synchronized explorer under #333.
+5. Implement the synchronized 2D explorer under #333.
 6. Run contextual-learning validation under #334.
-7. Open at most one evidence-backed branch.
+7. Open at most one evidence-backed product branch.
+
+Parallel non-blocking R&D:
+
+1. #339 owns renderer-neutral 2D/3D Globe architecture.
+2. #340 defines shared Explorer State.
+3. #341 defines World Model → Render Projection semantics.
+4. #342 defines geospatial asset / terrain / imagery boundaries.
+5. #343 may build a bounded 3D Earth runtime spike.
+6. #344 proves cross-renderer semantic parity.
+7. #345 decides repository/runtime/CI integration.
+
+Parallel Globe R&D must not block or silently replace #331 → #332 → #333 → #334.
 
 Foundation v3 is accepted in PR `#328`. The superseded #323–#325 path and PR #314 are closed and must not be reopened as the active ontology.
 
-## 6. Frozen work
+## 6. Frozen / gated work
+
+Frozen or gated at product scale:
 
 - generative AI;
 - causal/counterfactual engine;
-- 3D/dynamic terrain;
+- production-scale 3D/dynamic terrain beyond bounded #339–#345 R&D;
 - VR/AR;
 - Stories/Courses expansion;
 - open UGC;
@@ -94,7 +115,24 @@ Foundation v3 is accepted in PR `#328`. The superseded #323–#325 path and PR #
 
 Security/compatibility maintenance remains allowed.
 
-## 7. Docs-first rule
+Bounded Globe architecture/prototype work is explicitly allowed only under #339–#345 and remains `R&D`, not `PUBLIC NOW`.
+
+## 7. Renderer / Globe rule
+
+When working on 2D map, 3D Globe or future renderers:
+
+1. start from World Model / World Slice semantics;
+2. use renderer-neutral selected time/layers/object state;
+3. convert through an explicit render projection boundary;
+4. preserve canonical object identity and epistemic references;
+5. expose unsupported semantics instead of silently dropping them;
+6. never invent route, geometry, altitude, terrain history or temporal precision because a renderer can draw it;
+7. keep engine-specific camera/GPU/tile/picking state outside the semantic core;
+8. require semantic parity before promoting a second renderer.
+
+Working architecture: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` under parent #339.
+
+## 8. Docs-first rule
 
 For changes to mission, model, data, runtime, release, AI or governance:
 
@@ -106,20 +144,22 @@ For changes to mission, model, data, runtime, release, AI or governance:
 6. only then implement;
 7. run checks and update current truth.
 
-## 8. Prohibited shortcuts
+## 9. Prohibited shortcuts
 
 - inventing date/geometry/route/evidence/locator;
 - using smooth visual interpolation as historical fact;
-- treating modern boundaries as timeless;
+- treating modern boundaries or modern terrain as timeless;
 - converting co-presence/similarity into Relation;
 - treating AI output as Source;
 - hiding corpus coverage;
 - claiming 3D/VR/AI/world coverage before implementation;
+- creating `*_2d` and `*_3d` historical source-of-truth forks;
+- allowing a map/globe engine to redefine temporal, spatial or epistemic semantics;
 - rewriting old issues into new meaning;
 - performing irreversible migration before fixtures/contract;
 - using archive or audit as active owner.
 
-## 9. Definition of Ready
+## 10. Definition of Ready
 
 A task is ready when:
 
@@ -130,7 +170,7 @@ A task is ready when:
 - happy path, uncertainty/error cases and checks are defined;
 - migration/rollback is defined if data/runtime changes.
 
-## 10. Definition of Done
+## 11. Definition of Done
 
 - requested artifact exists;
 - only intended scope changed;
@@ -141,7 +181,9 @@ A task is ready when:
 - no hidden competing model;
 - next dependency or stop decision is explicit.
 
-## 11. Response format
+For renderer work, Done additionally requires no silent semantic divergence from the shared World Model/Explorer State contract.
+
+## 12. Response format
 
 For analysis:
 
@@ -157,8 +199,8 @@ For implementation:
 3. verification;
 4. remaining gate/blocker.
 
-## 12. Final rule
+## 13. Final rule
 
 Do not expand ARTEMIS by losing its world-model identity.
 
-Build small, source-aware World Slices that prove understanding before opening AI, 3D, VR or scale.
+Build small, source-aware World Slices that prove understanding. Bounded renderer/Globe R&D is allowed when it strengthens that model without becoming a second product or source of truth. AI, VR, universal scale and product-scale dynamic Earth remain gated until evidence justifies them.
