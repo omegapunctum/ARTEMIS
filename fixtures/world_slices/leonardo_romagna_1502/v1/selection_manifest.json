@@ -126,7 +126,7 @@
       "label": "Rimini",
       "layer_refs": ["layer-leonardo-trajectory", "layer-local-context"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": null,
         "precision": "pending",
@@ -142,7 +142,7 @@
       "label": "Cesena",
       "layer_refs": ["layer-leonardo-trajectory", "layer-local-context", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": null,
         "precision": "pending",
@@ -158,7 +158,7 @@
       "label": "Cesenatico",
       "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": null,
         "precision": "pending",
@@ -166,7 +166,7 @@
       },
       "spatial_mode": "named_place",
       "geometry": null,
-      "notes": "Named-place context linked to Manuscript L folio 68r candidate; geometry remains null."
+      "notes": "Named-place context linked to the dated Manuscript L folio 66v entry. A separate perspective at folio 68r is outside the atomic dated-presence Claim; geometry remains null."
     },
     {
       "object_id": "place-imola",
@@ -190,7 +190,7 @@
       "label": "Leonardo records the dated Rimini observation",
       "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-08-08",
         "precision": "day",
@@ -198,7 +198,7 @@
       },
       "spatial_mode": "named_place",
       "geometry": null,
-      "notes": "The exact day is a candidate from the institutional itinerary; a manuscript-level locator remains required for reviewed direct evidence."
+      "notes": "The exact day is bound to the published Manuscript L folio 78r locator. The Claim remains draft until independent evidence review."
     },
     {
       "object_id": "event-leonardo-cesena-survey",
@@ -206,7 +206,7 @@
       "label": "Leonardo documented in the Cesena survey context",
       "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-08-10",
         "precision": "day",
@@ -214,7 +214,7 @@
       },
       "spatial_mode": "named_place",
       "geometry": null,
-      "notes": "The itinerary gives day precision and identifies Manuscript L folios 9r–10r; exact facsimile/transcription binding remains pending."
+      "notes": "The 10 August presence is bound to Manuscript L folio 46v in the university chronology. The separate wall-survey association with folios 9r–10r remains an unreviewed secondary locator."
     },
     {
       "object_id": "event-leonardo-borgia-patent",
@@ -222,7 +222,7 @@
       "label": "Cesare Borgia issues Leonardo's letter patent",
       "layer_refs": ["layer-local-context", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-08-18",
         "precision": "day",
@@ -230,7 +230,7 @@
       },
       "spatial_mode": "named_place",
       "geometry": null,
-      "notes": "The day remains candidate evidence until an archival repository/call number or equivalent scholarly primary locator is verified."
+      "notes": "The date and commissioned title are bound to the full transcription at Volpe (2023), printed p. 16 n. 26. The original survives at Archivio Melzi d'Eril, but this package does not claim an archival call number or media rights."
     },
     {
       "object_id": "event-leonardo-cesenatico-port-note",
@@ -238,7 +238,7 @@
       "label": "Leonardo records the Cesenatico port",
       "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-09-06",
         "precision": "day",
@@ -246,7 +246,7 @@
       },
       "spatial_mode": "named_place",
       "geometry": null,
-      "notes": "The itinerary identifies Manuscript L folio 68r and day precision; exact facsimile/transcription binding remains pending."
+      "notes": "The dated port entry is bound to Manuscript L folio 66v in the university chronology. Folio 68r is not used as evidence for this exact date."
     },
     {
       "object_id": "event-leonardo-imola-map-context",
@@ -270,7 +270,7 @@
       "label": "Leonardo in commissioned engineering service for Cesare Borgia",
       "layer_refs": ["layer-local-context", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-museo-galileo-ms-l"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-08-18/1502-12-31",
         "precision": "range",
@@ -286,7 +286,7 @@
       "label": "Source-bound sequence of Leonardo's surveying and engineering observations in Romagna",
       "layer_refs": ["layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-museo-galileo-ms-l", "source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-rct-imola-street-sketches"],
+      "source_refs": ["source-museo-galileo-ms-l", "source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-rct-imola-street-sketches", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-08-08/1502-11",
         "precision": "range",
@@ -302,7 +302,7 @@
       "label": "Leonardo's selected Romagna presence sequence with unresolved routes",
       "layer_refs": ["layer-leonardo-trajectory"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-rct-imola-map", "source-imola-civic-museums-rocca"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-rct-imola-map", "source-imola-civic-museums-rocca", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502-08-08/1502-11",
         "precision": "range",
@@ -318,7 +318,7 @@
           "place_ref": "place-rimini",
           "spatial_mode": "named_place",
           "geometry": null,
-          "source_refs": ["source-visit-romagna-leonardo-borgia"]
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"]
         },
         {
           "segment_id": "segment-rimini-cesena-gap",
@@ -334,7 +334,7 @@
           "place_ref": "place-cesena",
           "spatial_mode": "named_place",
           "geometry": null,
-          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l"]
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"]
         },
         {
           "segment_id": "segment-cesena-cesenatico-gap",
@@ -350,7 +350,7 @@
           "place_ref": "place-cesenatico",
           "spatial_mode": "named_place",
           "geometry": null,
-          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l"]
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"]
         },
         {
           "segment_id": "segment-cesenatico-imola-gap",
@@ -445,7 +445,6 @@
   "known_gap_refs": [
     "gap-no-reviewed-romagna-region-geometry",
     "gap-unknown-inter-place-routes",
-    "gap-no-archival-patent-locator",
     "gap-no-manuscript-folio-artifacts",
     "gap-no-independent-content-reviews",
     "gap-sparse-global-context",

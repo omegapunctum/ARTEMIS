@@ -45,7 +45,7 @@ Required content:
 
 The initial candidate is the bounded Leonardo / Life in Context slice delivered through #332, while #355 owns the active cross-cutting vertical.
 
-Active Gate C delivery: #332/#360 freezes a non-public Leonardo-in-Romagna boundary for 8 August–31 December 1502 with institutional source candidates, folio/patent locator gaps, explicit unknown-route segments, geometry-withheld Region versions, known gaps and cost tracking. It is not READY historical data.
+Active Gate C delivery: #332/#360 freezes a non-public Leonardo-in-Romagna boundary for 8 August–31 December 1502 with institutional source candidates, pinned university-press locators for dated folios and the patent transcription, explicit unknown-route segments, geometry-withheld Region versions, known gaps and cost tracking. The Cesena wall-survey folio binding, independent review and measured review cost remain open; it is not READY historical data.
 
 Until #331 is accepted, the slice may expose derived proximity/co-presence only. It must not publish documented encounter, interaction, influence or causal predicates.
 

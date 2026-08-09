@@ -33,12 +33,12 @@ def test_scope_frozen_package_passes_fail_closed_validation() -> None:
         "slice_id": "world-slice-leonardo-romagna-1502-v1",
         "status": "SCOPE_FROZEN",
         "candidate_object_count": 16,
-        "source_count": 8,
-        "known_gap_count": 7,
+        "source_count": 9,
+        "known_gap_count": 6,
         "trajectory_gap_count": 3,
         "region_version_count": 2,
         "claim_count": 10,
-        "evidence_link_count": 17,
+        "evidence_link_count": 22,
         "uncertainty_count": 7,
         "promotion_allowed": False,
     }
@@ -206,6 +206,37 @@ def test_reviewed_evidence_requires_named_reviewer() -> None:
     claims["claims"][0]["evidence_state"] = "supported"
 
     with pytest.raises(WorldSliceScopeError, match="requires a reviewer"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_dated_cesenatico_locator_cannot_regress_to_separate_folio_68r() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    evidence = next(
+        row
+        for row in claims["evidence_links"]
+        if row["evidence_link_id"] == "evidence-cesenatico-folio-66v-uniurb"
+    )
+    evidence["locator"] = evidence["locator"].replace("66v", "68r")
+
+    with pytest.raises(WorldSliceScopeError, match="critical locator text drifted"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_patent_critical_transcription_locator_cannot_be_removed() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    claims["evidence_links"] = [
+        row
+        for row in claims["evidence_links"]
+        if row["evidence_link_id"] != "evidence-patent-uniurb-p16-n26"
+    ]
+    patent_claim = next(
+        row for row in claims["claims"] if row["claim_id"] == "claim-patent-date-1502-08-18"
+    )
+    patent_claim["evidence_link_refs"].remove("evidence-patent-uniurb-p16-n26")
+
+    with pytest.raises(WorldSliceScopeError, match="critical locator EvidenceLink is missing"):
         validate_package(selection, sources, coverage, cost, claims)
 
 

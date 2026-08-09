@@ -11,9 +11,9 @@
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "Institutional itinerary candidate; manuscript-level locator is not frozen.",
+      "confidence_basis": "Urbino University Press binds the dated observation to Manuscript L folio 78r; independent evidence review is still pending.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-rimini-visit-romagna"],
+      "evidence_link_refs": ["evidence-rimini-visit-romagna", "evidence-rimini-uniurb-f78r"],
       "uncertainty_refs": ["uncertainty-manuscript-folio-binding", "uncertainty-live-page-drift"]
     },
     {
@@ -24,9 +24,9 @@
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "Institutional itinerary and manuscript catalogue candidates are not yet reviewed together.",
+      "confidence_basis": "Urbino University Press binds the 10 August Cesena entry to Manuscript L folio 46v; independent evidence review is still pending.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-cesena-visit-romagna", "evidence-cesena-ms-l-context"],
+      "evidence_link_refs": ["evidence-cesena-visit-romagna", "evidence-cesena-ms-l-context", "evidence-cesena-uniurb-f46v"],
       "uncertainty_refs": ["uncertainty-manuscript-folio-binding", "uncertainty-live-page-drift"]
     },
     {
@@ -37,7 +37,7 @@
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "The folio range is named by an institutional itinerary but no reviewed facsimile or critical-edition artifact is pinned.",
+      "confidence_basis": "The folio range is named by the institutional itinerary but is distinct from the dated 10 August entry at folio 46v; direct facsimile or critical-edition verification remains pending.",
       "evidence_state": "missing",
       "evidence_link_refs": ["evidence-cesena-folios-visit-romagna", "evidence-ms-l-institutional-record"],
       "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
@@ -50,10 +50,10 @@
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "Institutional secondary sources agree on the date, but the archival or critical-edition locator is missing.",
+      "confidence_basis": "The university chronology reproduces the full patent text and dating formula at printed p. 16 n. 26; independent evidence review is still pending.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-patent-visit-romagna", "evidence-patent-rct-context"],
-      "uncertainty_refs": ["uncertainty-patent-primary-locator", "uncertainty-live-page-drift"]
+      "evidence_link_refs": ["evidence-patent-visit-romagna", "evidence-patent-rct-context", "evidence-patent-uniurb-p16-n26"],
+      "uncertainty_refs": ["uncertainty-patent-original-custody", "uncertainty-live-page-drift"]
     },
     {
       "claim_id": "claim-cesenatico-presence-1502-09-06",
@@ -63,22 +63,22 @@
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "Institutional itinerary candidate; the referenced folio has not been pinned for review.",
+      "confidence_basis": "Urbino University Press binds the dated Cesenatico entry to Manuscript L folio 66v; independent evidence review is still pending.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-cesenatico-visit-romagna", "evidence-cesenatico-ms-l-context"],
+      "evidence_link_refs": ["evidence-cesenatico-visit-romagna", "evidence-cesenatico-ms-l-context", "evidence-cesenatico-uniurb-f66v"],
       "uncertainty_refs": ["uncertainty-manuscript-folio-binding", "uncertainty-live-page-drift"]
     },
     {
-      "claim_id": "claim-cesenatico-folio-68r",
-      "statement": "The selected Cesenatico port drawing context is associated with Manuscript L folio 68r.",
+      "claim_id": "claim-cesenatico-dated-folio-66v",
+      "statement": "The selected dated Cesenatico port entry is associated with Manuscript L folio 66v.",
       "target_object_ref": "event-leonardo-cesenatico-port-note",
       "claim_kind": "factual",
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "The folio is identified by an institutional itinerary, but no reviewed facsimile or critical-edition artifact is pinned.",
+      "confidence_basis": "The university chronology transcribes the dated entry and identifies folio 66v; folio 68r is not used as evidence for the exact date.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-cesenatico-folio-visit-romagna", "evidence-ms-l-record-for-68r"],
+      "evidence_link_refs": ["evidence-cesenatico-folio-66v-uniurb", "evidence-ms-l-record-for-66v"],
       "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
     },
     {
@@ -115,10 +115,10 @@
       "origin": "curator",
       "review_state": "draft",
       "confidence": "unknown",
-      "confidence_basis": "Multiple institutional candidates exist, but the patent locator and exact State validity remain unresolved.",
+      "confidence_basis": "The published patent transcription supports the commissioned title; the exact end of the State and original-document custody locator remain unresolved.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-service-ms-l", "evidence-service-rct", "evidence-service-visit-romagna"],
-      "uncertainty_refs": ["uncertainty-patent-primary-locator", "uncertainty-service-end-validity"]
+      "evidence_link_refs": ["evidence-service-ms-l", "evidence-service-rct", "evidence-service-visit-romagna", "evidence-service-uniurb-patent"],
+      "uncertainty_refs": ["uncertainty-patent-original-custody", "uncertainty-service-end-validity"]
     },
     {
       "claim_id": "claim-safavid-isma-il-i-1501-1524",
@@ -146,6 +146,16 @@
       "reviewer": null
     },
     {
+      "evidence_link_id": "evidence-rimini-uniurb-f78r",
+      "claim_id": "claim-rimini-presence-1502-08-08",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; chronological entry transcribing the 8 August 1502 Rimini note and identifying Manuscript L folio 78r",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
       "evidence_link_id": "evidence-cesena-visit-romagna",
       "claim_id": "claim-cesena-presence-1502-08-10",
       "source_id": "source-visit-romagna-leonardo-borgia",
@@ -162,6 +172,16 @@
       "locator": "Institutional record key 100790; 1502 military-technology and architecture summary",
       "relation_to_claim": "contextualizes",
       "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesena-uniurb-f46v",
+      "claim_id": "claim-cesena-presence-1502-08-10",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; chronological entry transcribing the 10 August 1502 Cesena note and identifying Manuscript L folio 46v",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
       "review_state": "draft",
       "reviewer": null
     },
@@ -206,6 +226,16 @@
       "reviewer": null
     },
     {
+      "evidence_link_id": "evidence-patent-uniurb-p16-n26",
+      "claim_id": "claim-patent-date-1502-08-18",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16, note 26; full letter-patent transcription ending Datum Papiae die decimo octavo Augusti, anno Domini millesimo quingentesimo secundo",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
       "evidence_link_id": "evidence-cesenatico-visit-romagna",
       "claim_id": "claim-cesenatico-presence-1502-09-06",
       "source_id": "source-visit-romagna-leonardo-borgia",
@@ -226,18 +256,28 @@
       "reviewer": null
     },
     {
-      "evidence_link_id": "evidence-cesenatico-folio-visit-romagna",
-      "claim_id": "claim-cesenatico-folio-68r",
-      "source_id": "source-visit-romagna-leonardo-borgia",
-      "locator": "Section Cesenatico; paragraph identifying Manuscript L folio 68r",
+      "evidence_link_id": "evidence-cesenatico-uniurb-f66v",
+      "claim_id": "claim-cesenatico-presence-1502-09-06",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; chronological entry transcribing the 6 September 1502 Cesenatico note and identifying Manuscript L folio 66v",
       "relation_to_claim": "supports",
-      "evidence_strength": "indirect",
+      "evidence_strength": "direct",
       "review_state": "draft",
       "reviewer": null
     },
     {
-      "evidence_link_id": "evidence-ms-l-record-for-68r",
-      "claim_id": "claim-cesenatico-folio-68r",
+      "evidence_link_id": "evidence-cesenatico-folio-66v-uniurb",
+      "claim_id": "claim-cesenatico-dated-folio-66v",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; Cesenatico chronological entry explicitly identifies the dated note as Manuscript L folio 66v",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-ms-l-record-for-66v",
+      "claim_id": "claim-cesenatico-dated-folio-66v",
       "source_id": "source-museo-galileo-ms-l",
       "locator": "Institutional manuscript record key 100790",
       "relation_to_claim": "contextualizes",
@@ -296,6 +336,16 @@
       "reviewer": null
     },
     {
+      "evidence_link_id": "evidence-service-uniurb-patent",
+      "claim_id": "claim-leonardo-borgia-service-1502",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16, note 26; transcribed patent names Leonardo Architect and Engineer General and orders access for inspection and measurement",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
       "evidence_link_id": "evidence-safavid-met",
       "claim_id": "claim-safavid-isma-il-i-1501-1524",
       "source_id": "source-met-islamic-rulers",
@@ -310,21 +360,21 @@
     {
       "uncertainty_id": "uncertainty-manuscript-folio-binding",
       "dimension": "missing_evidence",
-      "description": "The candidate folio numbers are named by an institutional itinerary, but the relevant facsimile or critical-edition artifacts are not frozen.",
-      "effect": "Manuscript-based day, presence and work Claims remain draft and cannot be treated as reviewed direct evidence.",
+      "description": "Stable university-press locators now bind the dated Rimini, Cesena and Cesenatico entries to folios 78r, 46v and 66v, but no rights-cleared facsimile is frozen and the Cesena wall-survey folios 9r–10r still rely on the institutional itinerary.",
+      "effect": "The bibliographic locators are reviewable, but manuscript-based Claims remain draft until independent content review; the Cesena wall-survey folio association remains especially unresolved.",
       "target_refs": [
         "claim-rimini-presence-1502-08-08",
         "claim-cesena-presence-1502-08-10",
         "claim-cesena-survey-folios-9r-10r",
         "claim-cesenatico-presence-1502-09-06",
-        "claim-cesenatico-folio-68r"
+        "claim-cesenatico-dated-folio-66v"
       ]
     },
     {
-      "uncertainty_id": "uncertainty-patent-primary-locator",
+      "uncertainty_id": "uncertainty-patent-original-custody",
       "dimension": "missing_evidence",
-      "description": "The package lacks a verified archival repository/call number or critical-edition locator for the 18 August letter patent.",
-      "effect": "The exact patent date and commissioned-service State remain draft despite secondary institutional agreement.",
+      "description": "A university-press critical transcription is pinned, and Treccani identifies Archivio Melzi d'Eril in Vaprio d'Adda as the original-document custody location, but no archival call number or rights-cleared surrogate is available in the package.",
+      "effect": "The date and commissioned title can undergo textual review, while original-object provenance, physical inspection and media reuse remain unresolved.",
       "target_refs": ["claim-patent-date-1502-08-18", "claim-leonardo-borgia-service-1502"]
     },
     {

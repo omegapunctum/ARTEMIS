@@ -31,6 +31,38 @@ PROHIBITED_RELATION_PREDICATES = {
     "influence",
     "causal",
 }
+CRITICAL_LOCATOR_BINDINGS = {
+    "evidence-rimini-uniurb-f78r": {
+        "claim_id": "claim-rimini-presence-1502-08-08",
+        "source_id": "source-uniurb-volpe-chronology",
+        "required_tokens": ("Printed p. 16", "78r"),
+    },
+    "evidence-cesena-uniurb-f46v": {
+        "claim_id": "claim-cesena-presence-1502-08-10",
+        "source_id": "source-uniurb-volpe-chronology",
+        "required_tokens": ("Printed p. 16", "46v"),
+    },
+    "evidence-patent-uniurb-p16-n26": {
+        "claim_id": "claim-patent-date-1502-08-18",
+        "source_id": "source-uniurb-volpe-chronology",
+        "required_tokens": ("Printed p. 16", "note 26", "decimo octavo Augusti"),
+    },
+    "evidence-cesenatico-uniurb-f66v": {
+        "claim_id": "claim-cesenatico-presence-1502-09-06",
+        "source_id": "source-uniurb-volpe-chronology",
+        "required_tokens": ("Printed p. 16", "66v"),
+    },
+    "evidence-cesenatico-folio-66v-uniurb": {
+        "claim_id": "claim-cesenatico-dated-folio-66v",
+        "source_id": "source-uniurb-volpe-chronology",
+        "required_tokens": ("Printed p. 16", "66v"),
+    },
+    "evidence-service-uniurb-patent": {
+        "claim_id": "claim-leonardo-borgia-service-1502",
+        "source_id": "source-uniurb-volpe-chronology",
+        "required_tokens": ("Printed p. 16", "note 26", "Architect and Engineer General"),
+    },
+}
 
 
 class WorldSliceScopeError(ValueError):
@@ -269,6 +301,28 @@ def validate_package(
             raise WorldSliceScopeError(
                 f"reviewed EvidenceLink {evidence_id} requires a reviewer"
             )
+
+    for evidence_id, expected in CRITICAL_LOCATOR_BINDINGS.items():
+        evidence = evidence_index.get(evidence_id)
+        if evidence is None:
+            raise WorldSliceScopeError(f"critical locator EvidenceLink is missing: {evidence_id}")
+        if evidence["claim_id"] != expected["claim_id"] or evidence["source_id"] != expected["source_id"]:
+            raise WorldSliceScopeError(f"critical locator binding drifted: {evidence_id}")
+        if evidence["relation_to_claim"] != "supports" or evidence["evidence_strength"] != "direct":
+            raise WorldSliceScopeError(f"critical locator strength drifted: {evidence_id}")
+        missing_tokens = [
+            token for token in expected["required_tokens"] if token not in evidence["locator"]
+        ]
+        if missing_tokens:
+            raise WorldSliceScopeError(
+                f"critical locator text drifted for {evidence_id}: missing {missing_tokens}"
+            )
+
+    cesenatico_folio_claim = claim_index.get("claim-cesenatico-dated-folio-66v")
+    if cesenatico_folio_claim is None:
+        raise WorldSliceScopeError("dated Cesenatico folio Claim is missing")
+    if "66v" not in cesenatico_folio_claim["statement"] or "68r" in cesenatico_folio_claim["statement"]:
+        raise WorldSliceScopeError("dated Cesenatico Claim must bind folio 66v, not folio 68r")
 
     known_uncertainty_targets = set(claim_index) | set(object_index)
     for uncertainty_id, uncertainty in uncertainty_index.items():

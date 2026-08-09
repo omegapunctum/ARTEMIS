@@ -22,9 +22,9 @@ Canonical machine-readable scope: `fixtures/world_slices/leonardo_romagna_1502/v
 The eventual review experience should let a user move between:
 
 1. Leonardo's dated Rimini context on 8 August 1502;
-2. the Cesena survey context associated with Manuscript L folios 9r–10r;
-3. the 18 August letter-patent candidate, visibly pending a primary or critical-edition locator;
-4. the Cesenatico port context dated 6 September and associated with Manuscript L folio 68r;
+2. the Cesena 10 August context bound to Manuscript L folio 46v, with the separate wall-survey association at folios 9r–10r still unresolved;
+3. the 18 August letter-patent candidate bound to the complete university-press transcription at printed p. 16 n. 26;
+4. the Cesenatico port context dated 6 September and bound to Manuscript L folio 66v, without conflating it with the separate perspective at folio 68r;
 5. the autumn Imola map-work context represented by RCT collection items 912284 and 912686;
 6. explicit unresolved movement gaps between those presence contexts;
 7. a geometry-withheld Duchy of Romagna political Region candidate;
@@ -37,13 +37,14 @@ The slice does not assert that itinerary order proves a route, or that any selec
 Initial candidates use curated institutional sources:
 
 - Museo Galileo's Manuscript L catalogue record for manuscript identity and 1502 engineering context;
+- Gianni Volpe's university-press chronology for the dated Manuscript L folios and full letter-patent transcription;
 - Visit Romagna's institutional itinerary for candidate dates, sections and folio references;
 - Royal Collection Trust records 912284 and 912686 for the Imola map and street-plan sketches;
 - Comune di Imola Musei Civici for the Imola consultation and political-transition context;
 - Getty TGN for the attributed approximate Imola reference point and its ODC-By policy;
 - The Metropolitan Museum of Art chronology for one sparse Safavid context.
 
-Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package now contains ten atomic draft Claims and seventeen candidate EvidenceLinks, but draft links derive `evidence_state=missing`; they cannot masquerade as reviewed support. Candidate day precision stays draft until rights-compliant facsimile, archival or critical-edition locators are frozen. No RCT or manuscript image is copied or licensed by this package.
+Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package now contains ten atomic draft Claims and twenty-two candidate EvidenceLinks. The dated Rimini, Cesena and Cesenatico Claims use stable folio-level university-press locators, and the patent uses a complete critical transcription. Draft links still derive `evidence_state=missing`; they cannot masquerade as reviewed support. No RCT, patent or manuscript image is copied or licensed by this package.
 
 ## 4. Geometry and trajectory decision
 
@@ -66,8 +67,8 @@ The package explicitly records:
 
 - absent reviewed Romagna Region geometry;
 - unknown inter-place routes;
-- missing archival/critical-edition locator for the 18 August patent;
-- missing frozen Manuscript L folio artifacts;
+- missing original patent call number/rights-cleared surrogate despite the closed critical-transcription locator;
+- missing frozen Manuscript L facsimiles and unresolved direct binding for the Cesena wall-survey folios 9r–10r;
 - absent independent reviews;
 - sparse global context;
 - the prohibition on documented Relations.

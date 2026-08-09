@@ -18,18 +18,11 @@
       "exit_condition": "Retain unknown_route unless a reviewed source supports a route or an explicitly analytical uncertain corridor."
     },
     {
-      "gap_id": "gap-no-archival-patent-locator",
-      "dimension": "evidence",
-      "description": "Institutional secondary sources date the letter patent to 18 August 1502, but the package has no verified repository, call number or primary transcription locator.",
-      "effect": "The patent date remains a draft candidate and cannot support a reviewed State on its own.",
-      "exit_condition": "Verify an archival or critical-edition locator and bind the atomic date, title and commission-scope Claims separately."
-    },
-    {
       "gap_id": "gap-no-manuscript-folio-artifacts",
       "dimension": "evidence",
-      "description": "The institutional itinerary identifies Manuscript L folios 9r–10r and 68r, while the Museo Galileo record confirms the manuscript context; exact rights-compliant folio artifacts or critical-edition locators are not frozen.",
-      "effect": "Rimini, Cesena and Cesenatico presence/work assertions remain candidates rather than reviewed direct evidence.",
-      "exit_condition": "Freeze rights-compliant facsimile or bibliographic locators for each used folio and verify the relevant atomic Claims."
+      "description": "The university chronology now pins the dated Rimini, Cesena and Cesenatico entries to Manuscript L folios 78r, 46v and 66v, but no rights-cleared facsimiles are frozen; the Cesena wall-survey association with folios 9r–10r still has only an institutional-itinerary locator.",
+      "effect": "The dated presence Claims can proceed to textual review, but direct manuscript-image review and the separate Cesena wall-survey Claim remain unresolved.",
+      "exit_condition": "Complete independent textual review of the pinned university-press locators; retain the 9r–10r Claim as unresolved unless a rights-compliant facsimile or critical-edition locator is frozen."
     },
     {
       "gap_id": "gap-no-independent-content-reviews",

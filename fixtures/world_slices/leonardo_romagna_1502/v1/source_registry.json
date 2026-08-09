@@ -25,16 +25,38 @@
       }
     },
     {
+      "source_id": "source-uniurb-volpe-chronology",
+      "title": "Cronologia vinciana (1502–1503)",
+      "organization": "Urbino University Press — Università degli Studi di Urbino Carlo Bo",
+      "source_type": "scholarly_publication",
+      "url": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+      "locator": "Gianni Volpe, in Leonardo a Urbino (2023), printed p. 16: Manuscript L folios 78r, 46v and 66v for the dated Rimini, Cesena and Cesenatico entries; note 26 for the full 18 August 1502 letter-patent transcription and dating formula",
+      "intended_claims": [
+        "Manuscript L folio 78r contains the dated Rimini observation for 8 August 1502",
+        "Manuscript L folio 46v contains the Cesena entry for 10 August 1502",
+        "Manuscript L folio 66v contains the dated Cesenatico entry for 6 September 1502 at 15:00",
+        "The transcribed letter patent is dated at Pavia on 18 August 1502 and names Leonardo architect and engineer general"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "Gianni Volpe, Cronologia vinciana (1502–1503), in Leonardo a Urbino, Urbino University Press, 2023"
+      }
+    },
+    {
       "source_id": "source-visit-romagna-leonardo-borgia",
       "title": "Leonardo da Vinci and Cesare Borgia: ingenuity and intellect at the service of the duchy",
       "organization": "APT Servizi Emilia-Romagna — Visit Romagna",
       "source_type": "institutional_reference",
       "url": "https://visitromagna.it/en/leonardo-da-vinci-and-cesare-borgia-ingenuity-and-intellect-at-the-service-of-the-duchy",
-      "locator": "Sections introductory context, Rimini, Cesena and Cesenatico; dated itinerary statements and Manuscript L folio references 9r–10r and 68r",
+      "locator": "Sections introductory context, Rimini, Cesena and Cesenatico; dated itinerary statements, Cesena wall-survey folios 9r–10r and a separate Cesenatico perspective described at folio 68r",
       "intended_claims": [
         "The institutional itinerary dates Leonardo's Rimini note to 8 August 1502",
         "The itinerary places Leonardo in Cesena on 10 August 1502 and associates the survey with Manuscript L folios 9r–10r",
-        "The itinerary dates the Cesenatico port observation to 6 September 1502 and associates it with Manuscript L folio 68r",
+        "The itinerary dates the Cesenatico port observation to 6 September 1502 and separately describes a perspective at Manuscript L folio 68r",
         "The itinerary dates Cesare Borgia's letter patent to 18 August 1502"
       ],
       "relation_to_claim": "contextualizes",
