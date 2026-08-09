@@ -18,20 +18,14 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-### Active foundation maintenance
-
-| Document | Role | Exit |
-|---|---|---|
-| `2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` | #363 Foundation v3.1 North Star/attractor clarification; documentation/governance only | canonical concept/world-model/AI/governance owners agree, regression guard passes, no Gate D or public capability change |
-
-Foundation maintenance is not a second product vertical and does not consume the one-product-gate WIP slot. It may not start product implementation or change `project_state.json` lifecycle without a separate gate decision.
+There is currently no active foundation-maintenance decision after completion of #363 / PR #364. Foundation maintenance is not a second product vertical and does not consume the one-product-gate WIP slot; any new foundation change must be opened explicitly through its own decision record.
 
 Active execution rule for the Globe MVP:
 
 - it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md`, `PROJECT_TRUTH.md` or `DEVELOPMENT_OPERATING_SYSTEM.md`;
 - it authorizes the bounded #355 MVP only through explicitly opened product gates;
 - Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public input;
-- Gate D is next but is not started by #363 or by the Gate C completion itself;
+- Gate D is next but has not been opened merely by Gate C completion or by Foundation v3.1;
 - the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
 - it remains generated/non-public and must not create another root/Pages entrypoint before a separate promotion decision;
 - MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
@@ -43,15 +37,16 @@ Active execution rule for the Globe MVP:
 - the completed #344 parity contract remains a fail-closed promotion gate for every runtime change;
 - the Leonardo-in-Romagna 1502 Gate C package is frozen with two independent READY reviews, but its historical Claims remain draft, Region/route geometry remains withheld where unsupported and `promotion_allowed=false`.
 
-Attractor-refinement rule:
+Accepted Attractor-refinement rule from #363 / PR #364:
 
 - `ARTEMIS_CONCEPT.md` remains the only North Star/attractor owner;
-- `World Model` remains the technical semantic-core name but means knowledge about the world, not objective reality;
+- `World Model` remains the technical semantic-core name while the North Star defines ARTEMIS as knowledge about the world rather than objective reality;
 - no `ATTRACTOR.md`/`NORTH_STAR.md` competing canonical owner may be introduced;
 - one semantic core must serve future domains and interfaces;
 - future AI may only gain view/query control through a separate explicit reversible action contract;
 - personal knowledge, AI runtime, universal corpus, VR/AR and causal/counterfactual runtime stay gated/future;
-- issue #363 must not advance Gate D or public capability.
+- Foundation v3.1 does not itself advance Gate D or public capability;
+- the reviewed `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` v1.0 remains byte-preserved until separately re-reviewed.
 
 ## Gated under Foundation v3
 
@@ -80,6 +75,7 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` — #363 completed in PR `#364`; Foundation v3.1 fixes the long-term attractor, knowledge-about-world identity, one-core/many-domains/many-interfaces invariant and future reversible AI exploration boundary without starting Gate D or changing public capability.
 - `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C in PR `#362` with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary; Claims remain draft and Gate D is not started by that decision.
 - `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints, temporal boundaries and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
 - `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/non-public runtime and Pages boundaries accepted.
