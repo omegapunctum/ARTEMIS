@@ -12,7 +12,7 @@
 
 Foundation-layer сохраняет ARTEMIS как одну source-aware spatial-temporal knowledge model about the world, а не набор несвязанных map, timeline, cards, backend, courses, AI and 3D features.
 
-Технический термин `World Model` сохраняется, но означает source-aware representation знаний, assertions, observations и reconstructions о мире, а не objective digital twin реальности.
+Технический термин `World Model` сохраняется. Его identity-level interpretation принадлежит `ARTEMIS_CONCEPT.md`; reviewed executable spatial-temporal semantics остаются в `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` и меняются только через собственный review path.
 
 Foundation определяет:
 
@@ -59,7 +59,7 @@ North Star не является release promise. Backend code не являет
 
 | Document | Owner role |
 |---|---|
-| `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` | World Model epistemic boundary plus temporal/spatial/change/coverage/reconstruction semantics |
+| `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` | Reviewed temporal/spatial/change/coverage/reconstruction semantics; immutable #329 review dependency until separately re-reviewed |
 | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` | Scoped #330 normalization, filtering and projection profile |
 | `docs/ENTITY_MODEL.md` | Knowledge/research/runtime/context entity types |
 | `docs/EPISTEMIC_CONTRACT.md` | Claim/Evidence/uncertainty/inference semantics |
@@ -119,15 +119,19 @@ Working lifecycle authority remains only `docs/work/README.md`.
 
 Primary: `ARTEMIS_CONCEPT.md`.
 
+This owner defines the identity-level interpretation that ARTEMIS models source-aware knowledge **about** the world rather than claiming to be objective reality itself.
+
 There must not be a second canonical `ATTRACTOR.md`, `NORTH_STAR.md` or equivalent owner.
 
 ### Current vertical / scope
 
 Primary: `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`.
 
-### World Model epistemic boundary and spatial-temporal semantics
+### Reviewed spatial-temporal World Model semantics
 
 Primary: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
+
+The active v1.0 file is part of the immutable #329 READY review scope. Foundation v3.1 does not edit or reinterpret its executable semantics through a hidden documentation change. A future contract revision requires its own semantic change-control and independent review evidence.
 
 For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is
 `UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core
@@ -135,7 +139,6 @@ object identity or runtime schemas.
 
 Examples:
 
-- World Model vs external world/reality;
 - temporal precision;
 - changing geometry;
 - Event/State/Process/Trajectory/Region;
@@ -167,7 +170,7 @@ This contract is supporting scope; it does not redefine first value.
 
 ### AI
 
-Primary: `AI_POLICY.md`, constrained by world and epistemic contracts.
+Primary: `AI_POLICY.md`, constrained by reviewed world and epistemic contracts plus the North Star identity boundary.
 
 Future AI exploration actions may affect view/query state only through a separately approved runtime contract; they do not create a second knowledge owner.
 
@@ -188,10 +191,12 @@ Future AI exploration actions may affect view/query state only through a separat
 
 Foundation owner documents must be synchronized in one decision PR when identity changes.
 
+A reviewed executable contract cannot be changed merely to make identity-level wording match; its own review/change-control requirements still apply.
+
 ## 8. Foundation v3.1 invariants
 
 - ARTEMIS is an explorable source-aware spatial-temporal knowledge model about the world;
-- `World Model` is a technical knowledge representation, not objective reality/digital twin;
+- `World Model` is the technical semantic-core name; its reviewed v1.0 executable semantics remain unchanged by #363;
 - space/time are mandatory;
 - change objects are first-class;
 - evidence is trust layer;
@@ -207,6 +212,7 @@ Foundation owner documents must be synchronized in one decision PR when identity
 - personal knowledge context is future/private and not current canonical entity scope;
 - VR/AR and production-scale dynamic Earth remain future surfaces;
 - attractor guides architecture but does not authorize implementation scope;
+- reviewed contract integrity is not weakened for documentation convenience;
 - one validation decision opens one branch.
 
 ## 9. Current work status
@@ -274,6 +280,8 @@ Foundation changes must not be hidden inside UI/runtime work.
 
 A foundation clarification between product gates must not silently advance `project_state.json` to the next product gate.
 
+A reviewed semantic contract in a frozen READY scope must remain byte-identical unless its own review gate is deliberately reopened.
+
 ## 11. Final rule
 
-If a new feature cannot strengthen the explorable source-aware spatial-temporal knowledge model without breaking epistemic truth, capability truth or the one-semantic-core invariant, it is not part of ARTEMIS core.
+If a new feature cannot strengthen the explorable source-aware spatial-temporal knowledge model without breaking epistemic truth, capability truth, reviewed-contract integrity or the one-semantic-core invariant, it is not part of ARTEMIS core.
