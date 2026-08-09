@@ -1,12 +1,16 @@
 # ARTEMIS
 
-**ARTEMIS** is a source-aware spatial-temporal world model: an interactive environment for exploring entities, events, states and processes as synchronized layers across space and time.
+**ARTEMIS** is a source-aware spatial-temporal knowledge model about the world: an interactive environment for exploring entities, events, states and processes as synchronized layers across space and time.
 
-Its mission is to help people understand the world as an interconnected system—not as isolated map points, timeline entries or encyclopedia pages. Evidence remains mandatory through Claims, Sources, EvidenceLinks, locators and uncertainty, but it is the trust layer of the world model rather than the product identity.
+The technical term **World Model** remains the name of the shared semantic core. At the North Star level, ARTEMIS models source-aware knowledge, claims, observations and reconstructions **about** the world; it does not claim to be objective reality, a complete digital twin or a complete model of human knowledge.
 
-Foundation v3 restores space and time as core coordinates. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
+Its mission is to help people understand the world as an interconnected system—not as isolated map points, timeline entries or encyclopedia pages. Evidence remains mandatory through Claims, Sources, EvidenceLinks, locators and uncertainty, but it is the trust layer of the knowledge model rather than the product identity.
 
-The public runtime does **not** yet implement Foundation v3. A browser-executed MapLibre Globe R&D artifact now exists, and issue #355 makes a source-aware Globe MVP the active interface-development contour. The Globe is not public or product-validated; real Life in Context content, generative AI, causal reasoning, VR/AR and universal coverage remain target or future scope.
+The long-term attractor is an explorable spatial-temporal model of human knowledge about the world in which people and future AI can traverse space, time, entities, events, states, processes, Claims, Evidence and Uncertainty as one connected cognitive environment. The attractor guides architecture; it does **not** authorize implementation scope.
+
+Foundation v3 restored space and time as core coordinates. Foundation v3.1 clarifies the attractor, one-semantic-core/many-domains/many-interfaces rule and future AI exploration boundary without changing current capability. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations when permitted, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
+
+The public runtime does **not** yet implement the Foundation target. A browser-executed MapLibre Globe R&D artifact exists, and issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the non-public Leonardo-in-Romagna 1502 World Slice boundary; Gate D is the next product gate but has not started. The Globe is not public or product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -24,7 +28,7 @@ ARTEMIS currently combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The current operational state is **controlled engineering prototype / Globe MVP recovery**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
+The current operational state is **controlled engineering prototype / Gate C frozen / foundation refinement before Gate D**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 
@@ -34,8 +38,8 @@ The current operational state is **controlled engineering prototype / Globe MVP 
 | `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
 | `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
 | `R&D` | Executable experimental evidence, not a public capability | generated MapLibre 5.24.0 Globe spike and renderer contracts |
-| `CONCEPT TARGET` | Defined but not implemented in public runtime | spatial-temporal world model, Life in Context, State/Process/Trajectory/Region |
-| `FUTURE` | Not an active product capability | source-bound AI, causal/counterfactual runtime, production-scale dynamic Earth, VR/AR |
+| `CONCEPT TARGET` | Defined but not implemented in public runtime | spatial-temporal knowledge model, Life in Context, State/Process/Trajectory/Region |
+| `FUTURE` | Not an active product capability | source-bound AI/exploration actions, personal knowledge, causal/counterfactual runtime, production-scale dynamic Earth, VR/AR |
 
 ---
 
@@ -316,10 +320,10 @@ Repository documentation is organized into five pragmatic layers:
 
 Documentation governance is defined in `docs/DOCUMENTATION_SYSTEM.md`. The authoritative canonical registry, owner routing and reading order live only in `docs/FOUNDATION_INDEX.md`; working-document lifecycle lives only in `docs/work/README.md`.
 
-Product decisions follow four distinct levels:
+Project decisions follow five distinct levels:
 
-1. `docs/ARTEMIS_CONCEPT.md` — North Star.
-2. `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` — world-model semantics.
+1. `docs/ARTEMIS_CONCEPT.md` — North Star, identity and long-term attractor.
+2. `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` — reviewed spatial-temporal World Model semantics.
 3. `docs/PRODUCT_THESIS.md` and `docs/ARTEMIS_PRODUCT_SCOPE.md` — the user, problem and product being tested now.
 4. `docs/PROJECT_TRUTH.md` — what actually works.
 5. `docs/VALIDATION_DECISION.md` — what user evidence has proved and which one next branch is allowed.
@@ -332,6 +336,6 @@ The current accepted main-screen shell is documented by:
 - `docs/work/uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md`
 - `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md` — measured CSS ownership baseline and rollout batches.
 
-These files describe the implemented visual-shell baseline. They do not define the next product hierarchy: any new UI work must follow Foundation v3: synchronized space/time/layers are core, change objects are first-class, and co-presence must remain separate from documented Relations. They also do not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
+These files describe the implemented visual-shell baseline. They do not define the next product hierarchy: any new UI work must follow Foundation v3.1: synchronized space/time/layers are core, change objects are first-class, co-presence must remain separate from documented Relations, and the long-term attractor does not itself open future product scope. They also do not replace the owner-doc roles of `ARTEMIS_UI_UX_SYSTEM.md`, `ARTEMIS_UI_UX_COMPONENT_MAP.md`, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md`, or `docs/work/ARTEMIS_UI_UX_IMPLEMENTATION_PLAN_v1_0.md`.
 
 Historical documents live in `docs/archive/`, and diagnostic/reference documents live in `docs/reference/`; for example, `docs/reference/Artemis_UI_UX_Report.md` is diagnostic/reference material and **not** the primary UI/UX specification.
