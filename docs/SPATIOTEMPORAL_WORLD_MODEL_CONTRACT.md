@@ -3,60 +3,39 @@
 ## Статус
 
 - Тип: canonical foundation model contract.
-- Версия: 1.1.
-- Дата: 2026-08-09.
-- Статус: active after Foundation v3.1 attractor refinement / issue `#363`.
+- Версия: 1.0.
+- Дата: 2026-07-28.
+- Статус: active; accepted in PR `#328`.
 - Владеет: пространственно-временной семантикой knowledge model.
 - Не владеет: текущими JSON/API schemas; их определяют runtime/data contracts.
 
 ## 1. Назначение
 
-Этот контракт определяет минимальную семантику, необходимую для того, чтобы разные тематические слои ARTEMIS составляли одну source-aware модель знания о мире, а не набор несвязанных datasets.
+Этот контракт определяет минимальную семантику, необходимую для того, чтобы разные тематические слои ARTEMIS составляли одну модель мира, а не набор несвязанных datasets.
 
 Он отвечает на вопросы:
 
-- что утверждается о мире;
-- где и когда относится утверждаемое состояние/событие;
-- как оно менялось или перемещалось;
+- что существовало;
+- где и когда;
+- в каком состоянии;
+- как изменялось или перемещалось;
 - какие отношения утверждаются;
 - на каком основании;
-- что является наблюдением, вычислением, реконструкцией или гипотезой;
 - что неизвестно;
 - какой corpus вообще представлен.
 
-### 1.1 Epistemic boundary: World Model vs world reality
-
-`World Model` — техническое имя canonical semantic core ARTEMIS. Оно **не** означает, что ARTEMIS хранит саму объективную реальность или полный digital twin мира.
-
-Различаются:
-
-- **external world / historical reality** — референт, к которому относятся источники, наблюдения и исследования;
-- **ARTEMIS World Model** — structured source-aware representation Claims, observations, reconstructions, computed signals, uncertainty and coverage about that world;
-- **render/query projections** — производные представления World Model для интерфейсов и вычислений.
-
-Следствия:
-
-1. модель не должна представлять отсутствие записи как отсутствие явления в реальности;
-2. exact-looking geometry/time не создаёт объективную точность без evidence;
-3. competing scholarly reconstructions могут сосуществовать как отдельные model states;
-4. новый renderer/domain не получает права создавать отдельную semantic truth;
-5. completeness всегда ограничена corpus coverage;
-6. уточнение этой границы не переименовывает существующие `World Model` / `World Slice` contracts и не требует runtime migration само по себе.
-
 ## 2. Главные инварианты
 
-1. World Model представляет source-aware knowledge **about** the world, а не сам мир.
-2. Пространство и время моделируются совместно.
-3. Static entity не заменяет Event/State/Process.
-4. Геометрия имеет temporal validity.
-5. Время может быть точным, интервальным, приблизительным, открытым или спорным.
-6. Co-presence вычисляется из модели и не создаёт Relation автоматически.
-7. Любая содержательная Relation является Claim.
-8. Source/EvidenceLink относятся к конкретным Claims.
-9. Неопределённость не прячется в свободном тексте.
-10. Corpus coverage отделяется от historical absence.
-11. Current reconstruction, alternative reconstruction и counterfactual branch не смешиваются.
-12. Renderer/domain projection не становится второй ontology или source of truth.
+1. Пространство и время моделируются совместно.
+2. Static entity не заменяет Event/State/Process.
+3. Геометрия имеет temporal validity.
+4. Время может быть точным, интервальным, приблизительным, открытым или спорным.
+5. Co-presence вычисляется из модели и не создаёт Relation автоматически.
+6. Любая содержательная Relation является Claim.
+7. Source/EvidenceLink относятся к конкретным Claims.
+8. Неопределённость не прячется в свободном тексте.
+9. Corpus coverage отделяется от historical absence.
+10. Current reconstruction, alternative reconstruction и counterfactual branch не смешиваются.
 
 ## 3. Общий envelope
 
@@ -374,8 +353,6 @@ UI обязана показывать uncertainty рядом с затрону�
 
 Отсутствие события или сущности в slice не означает, что их не существовало.
 
-World Slice является bounded knowledge representation, а не заявлением о полноте выбранной части мира.
-
 ## 11. Reconstruction modes
 
 Поддерживаются отдельные modes:
@@ -404,8 +381,6 @@ Synchronized view содержит:
 
 Изменение time state обновляет все temporal objects через один shared state.
 
-View/query state является способом исследования model context. Его изменение не меняет underlying Claims, EvidenceLinks или canonical World Model.
-
 ## 13. Compatibility with current runtime
 
 Current GeoJSON point features and `year` fields — compatibility projection, не target model.
@@ -421,22 +396,7 @@ Compatibility projection must preserve missing target semantics as missing. It m
 
 An executable contract fixture may be explicitly synthetic when its purpose is to test semantics rather than curate history. A synthetic fixture must be visibly marked, source-bound to immutable fixture documents, excluded from historical capability claims and kept separate from the real World Slice corpus.
 
-## 14. Multi-domain and multi-interface compatibility
-
-A future domain or interface is compatible with ARTEMIS Core only if it:
-
-- preserves canonical object identity where shared;
-- uses common temporal/spatial semantics;
-- preserves Claim/Evidence/Uncertainty meaning;
-- makes domain-specific assumptions explicit;
-- does not create a competing source of truth;
-- exposes projection loss instead of silently deleting unsupported semantics.
-
-History-first scope does not make historical objects the only permitted domain. Ecology, geology, climate, culture, science, technology or future professional layers may extend the model only through reviewed compatible semantics.
-
-2D, Globe, local 3D, API, VR/AR and future clients remain projections/interfaces over one semantic core.
-
-## 15. Validation fixtures
+## 14. Validation fixtures
 
 Минимальный contract test set:
 
@@ -453,27 +413,24 @@ History-first scope does not make historical objects the only permitted domain. 
 
 Fixture validation must include negative cases for semantic collapse, orphan references, unsupported precision, derived proximity stored as Relation, invented compatibility evidence and corpus absence represented as historical absence.
 
-Passing fixtures proves contract representability only. It does not prove database/API/runtime implementation, historical corpus readiness, objective completeness or user value.
+Passing fixtures proves contract representability only. It does not prove database/API/runtime implementation, historical corpus readiness or user value.
 
-## 16. Change control
+## 15. Change control
 
-Изменение core object, temporal/spatial precision, relation ladder, uncertainty, reconstruction mode или epistemic boundary требует:
+Изменение core object, temporal/spatial precision, relation ladder, uncertainty or reconstruction mode требует:
 
 - update этого контракта;
-- update `ENTITY_MODEL.md` / `EPISTEMIC_CONTRACT.md` where semantics change;
+- update `ENTITY_MODEL.md` / `EPISTEMIC_CONTRACT.md`;
 - migration compatibility statement;
-- fixtures where executable semantics change;
+- fixtures;
 - UI/query impact;
 - current-truth statement;
 - executable validation before capability claim.
 
-Pure clarification that does not change schemas/fixtures must explicitly state that no runtime migration is required.
+## 16. Итог
 
-## 17. Итог
+ARTEMIS world model считается корректным только если пользователь может отличить:
 
-ARTEMIS World Model считается корректным только если пользователь может отличить:
-
-- external world/reality от model representation;
 - что утверждается;
 - где и когда это относится к миру;
 - как оно меняется;
@@ -482,5 +439,3 @@ ARTEMIS World Model считается корректным только есл�
 - что выведено или предположено;
 - что остаётся неизвестным;
 - какой части мира вообще касается dataset.
-
-**World Model is knowledge about the world, not a claim to be the world itself.**
