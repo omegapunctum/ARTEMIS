@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-08.
+- Updated: 2026-08-09.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,21 +13,24 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` | #339 bounded parallel 3D Globe / renderer architecture R&D record | #344–#345 parity/repository decisions complete or explicit stop decision |
-| `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` | #344 executable 2D/Globe semantic parity contract | expected/negative fixtures, temporal boundaries and dedicated parity CI accepted or explicit revision decision |
+| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | one real bounded World Slice, source-aware Globe experience, semantic/UX evidence and one explicit next decision |
+| `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 recovery/MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-Active execution rule for cross-renderer parity:
+Active execution rule for the Globe MVP:
 
-- parity cannot override canonical World Model / uncertainty / data contracts;
-- both renderers must be evaluated from the same World Slice + Explorer State + neutral Render Projection;
-- canonical object/subobject IDs, temporal membership, Region reconstruction identity, trajectory segment kind and Claim/Evidence/Source/Uncertainty refs are semantic and must match;
-- unresolved/non-spatial objects remain part of the complete renderer semantic envelope even when they do not create drawable primitives;
-- camera, styling, LOD, labels, GPU/tile implementation and screenshot pixels are renderer-only differences;
-- screenshots cannot satisfy or waive semantic parity;
-- a parity failure blocks renderer promotion even if both renderer builds are individually green;
-- #344 remains non-blocking for the primary #331 → #332 → #333 → #334 path.
+- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
+- it authorizes the bounded #355 MVP only through the accepted #340–#342 contracts and recovered #344 parity gate;
+- the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
+- it remains generated/non-public and must not create another root/Pages entrypoint before a separate promotion decision;
+- MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
+- the reviewed unknown Trajectory gap remains unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
+- synthetic Earth context/terrain fixtures cannot be described as real imagery, historical geography or production provider readiness;
+- live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
+- the MVP decision does not make 3D Globe a current public capability;
+- #331 is paused but becomes blocking before documented Relation predicates enter the real corpus/runtime;
+- the completed #344 parity contract remains a fail-closed promotion gate for every runtime change.
 
 ## Gated under Foundation v3
 
@@ -56,7 +59,10 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
-- `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` and `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` — #343 completed in PR `#350`; isolated MapLibre Globe artifact executed in headless Chrome/WebGL with semantic picking/uncertainty boundaries and visual CI evidence, without changing public runtime.
+- `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints, temporal boundaries and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
+- `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/non-public runtime and Pages boundaries accepted.
+- `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` — #343 completed in PR `#350`; MapLibre GL JS 5.24.0 selected for the bounded spike, with Cesium retained as measured-gap escalation; the generated runtime runbook remains active for #355.
+- `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` — #339 completed in PR `#346`; one semantic core and multiple projection renderers established.
 - `2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md` — #342 completed in PR `#349`; provider/CRS/vertical/temporal/provenance/license/cache/runtime boundaries accepted with synthetic fixtures and dedicated CI.
 - `2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md` — #341 completed in PR `#348`; one World Slice + Explorer State deterministically produce semantically equivalent 2D/Globe adapter payloads with explicit projection loss.
 - `2026-08-08_EXPLORER_STATE_CONTRACT_v1.md` — #340 completed in PR `#347`; renderer-neutral state schema/fixture/validator accepted, with two-adapter proof completed by PR `#348`.

@@ -1,20 +1,19 @@
-# ARTEMIS — PROJECT PHASES v6.1
+# ARTEMIS — PROJECT PHASES v6.3
 
 ## Статус
 
 - Тип: canonical operational phases document.
-- Дата: 2026-08-08.
-- Активная фаза: **4.7 World Model Contract**.
-- Active primary issue: **#331**.
-- Parallel non-blocking R&D: **#339–#345 3D Globe / renderer architecture**.
+- Дата: 2026-08-09.
+- Активная фаза: **4.8 Globe MVP recovery and vertical**.
+- Active primary issue: **#355**.
+- Immediate dependency: **#344 / PR #351**.
+- Public runtime: unchanged 2D MapLibre baseline.
 
-Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`.
+Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`; активное решение принадлежит `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
 ## Принцип перехода
 
-Фаза закрывается только по exit evidence. Документ или schema сами по себе не подтверждают value, content quality или public capability.
-
-Parallel R&D may explore reversible presentation architecture, but it cannot silently change the exit order of the primary validation phases.
+Фаза закрывается только по exit evidence. Документ, schema, synthetic fixture или визуально работающий Globe сами по себе не подтверждают historical content quality, semantic parity, public capability or user value.
 
 ## Фазы 0–4 — Technical baseline [закрыты с ограничениями]
 
@@ -33,188 +32,109 @@ Parallel R&D may explore reversible presentation architecture, but it cannot sil
 
 Статус: **SUPERSEDED BEFORE GATES B–E**.
 
-Завершено и сохранено:
-
-- Concept v2 decision/history;
-- Claim/Evidence and Relation discipline;
-- Gate A architecture validation modules;
-- audits and migration planning.
-
-Не выполняются:
-
-- Claim/Evidence schema migration under #323;
-- Investigation/revision/Brief migration under #324;
-- public target E2E under #325;
-- прежний UI/backend critical path.
-
-Причина: architecture comparison vertical был ошибочно превращён в идентичность всего проекта.
+Завершённые Architecture Atlas artifacts сохраняются, но старый #323–#325 execution path не возобновляется.
 
 ## Фаза 4.6 — Foundation v3 [завершена]
 
-### Цель
+Foundation v3 / PR #328 закрепила spatial-temporal world model, evidence, uncertainty, change objects and Life in Context as the first candidate vertical.
 
-Вернуть spatial-temporal world model в ядро ARTEMIS до irreversible implementation.
+## Фаза 4.7 — World Model foundations [частично завершена]
 
-### Track A — Foundation decision
+Completed:
 
-- Concept v3;
-- world-model contract;
-- product thesis/scope/truth;
-- entity/epistemic alignment;
-- migration matrix;
-- operational docs;
-- old decision marked superseded.
+- #329 / PR #336 — reviewed World Model fixtures;
+- #330 / PR #337 — reviewed uncertainty semantics.
 
-### Track B — Backlog correction
+Paused:
 
-- hold old issues until Foundation merge;
-- close superseded v2 implementation issues afterward;
-- preserve completed assets/history;
-- create clean v3 child issues.
+- #331 — documented Relation predicate semantics.
 
-### Exit
+#331 no longer blocks Globe infrastructure, time/layer synchronization or a real slice without documented Relations. It becomes blocking before documented encounter, interaction, influence or causal predicates enter the corpus/runtime. Derived proximity/co-presence remains separate meanwhile.
 
-- Foundation PR merged;
-- current truth unchanged except direction/status;
-- no contradictory active owner docs;
-- world-model fixtures are defined;
-- next work is contract/corpus, not schema migration.
+## Фаза 4.8 — Globe MVP recovery and vertical
 
-## Фаза 4.7 — World Model Contract
+Статус: **ACTIVE / ISSUE #355**.
 
-Статус: **ACTIVE / ISSUE #331**.
+### Gate A — Repository recovery
 
-Scope:
+- synchronize canonical owners around #355;
+- replace the incomplete/failing lifecycle guard introduced by PR #354;
+- keep PR #338 closed and #331 paused;
+- restore a green Release Discipline Gate.
 
-- temporal/spatial extent and precision;
-- Entity/Event/State/Process/Trajectory/Region/Layer;
-- uncertainty and alternative reconstruction;
-- relation ladder;
-- corpus coverage;
-- compatibility fixtures.
+### Gate B — Cross-renderer parity
 
-Exit:
+- complete #344 / PR #351 on current `main`;
+- repair selected-object / active-focus fixture drift;
+- preserve time-boundary, identity, uncertainty, alternative reconstruction, evidence and projection-loss semantics;
+- merge only with green required workflows.
 
-- versioned fixtures represent every required object kind;
-- deterministic validator and negative semantic tests pass;
-- two independent reviews find no unresolved critical contradiction;
-- non-inventive legacy mapping is explicit;
-- current truth continues to deny runtime implementation;
-- uncertainty and relation semantics are completed before first historical World Slice freeze.
+### Gate C — Real World Slice
 
-Progress:
+- freeze one bounded source-aware slice;
+- include Event, State, Process, Trajectory and temporally changing Region;
+- bind Claims/EvidenceLinks/locators/uncertainty;
+- declare coverage, known gaps, geometry provenance, licensing and cost;
+- omit documented Relation predicates until #331 is accepted.
 
-- #329 fixture package completed and merged in PR #336;
-- #330 uncertainty semantics completed and merged in PR #337;
-- #331 relation-ladder semantics are the active remaining P0 dependency.
+### Gate D — Source-aware Globe experience
 
-## Parallel R&D-G — 3D Globe / renderer architecture
+- consume World Model → Explorer State → Render Projection;
+- synchronize time, layers and selection;
+- expose sources, uncertainty, alternatives, coverage and projection losses;
+- preserve unresolved trajectories without invented lines;
+- treat modern terrain/imagery as contextual geospatial assets;
+- verify desktop/mobile/accessibility and representative performance.
 
-Статус: **ACTIVE PARALLEL R&D / NON-BLOCKING**.
+### Gate E — Evidence and decision
 
-Parent: #339.
+- provide a reproducible non-public preview/review artifact;
+- compare against the current 2D same-content baseline where useful;
+- test contextual understanding and semantic literacy rather than visual novelty alone;
+- record one result: continue generated R&D, promote to maintained experimental app, narrow/rework, or stop/rethink.
 
-This is not a replacement for phases 4.7–5. It exists to prevent the future Globe runtime from becoming a second semantic/data core while implementation is still cheap to change.
+Public promotion is a separate decision after provider/licensing/security/rollback/current-truth evidence.
 
-Scope:
+## Completed renderer foundations and open recovery
 
-- #340 renderer-neutral Explorer State;
-- #341 World Model → Render Projection contract;
-- #342 geospatial assets / terrain / imagery contract;
-- #343 minimal 3D Earth runtime spike;
-- #344 cross-renderer semantic parity tests;
-- #345 repository/runtime + CI boundary.
+Accepted executable foundations:
 
-Rules:
+- #339 / PR #346 — renderer-neutral architecture;
+- #340 / PR #347 — shared Explorer State;
+- #341 / PR #348 — deterministic Render Projection;
+- #342 / PR #349 — geospatial asset/provider boundary;
+- #343 / PR #350 — MapLibre Globe runtime spike;
+- #345 / PR #352 — repository/runtime/CI boundary.
 
-- current 2D MapLibre runtime remains the public baseline;
-- #333 remains the controlled 2D validation implementation;
-- Globe R&D cannot redefine World Model, uncertainty or relation semantics;
-- renderer payloads are projections, not independent historical truth;
-- bounded Globe work does not change `PUBLIC NOW` status;
-- product-scale dynamic Earth remains gated on separate evidence and decision.
+Open recovery:
 
-Working architecture record: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
+- #344 / PR #351 — semantic parity, reopened because its workflow is red and its implementation is not merged.
 
-## Фаза 4.8 — Life in Context Dataset
+The generated Globe spike remains R&D evidence. It is the implementation seed for #355, not a public product surface.
 
-Статус: **GATED ON #331**.
+## Current repository/runtime boundary
 
-Scope:
+Until Gate E explicitly promotes the Globe:
 
-- one frozen Leonardo World Slice;
-- source/locator/uncertainty review;
-- coverage statement;
-- curation cost;
-- no claim of comprehensive history.
+- root `index.html` remains the only public Pages app;
+- generated Globe artifacts stay non-public and disposable;
+- public MapLibre 4.7.1 remains unchanged;
+- the Globe spike may pin MapLibre 5.24.0 in isolation;
+- an `apps/globe/` move requires a separate maintained-application decision;
+- no renderer may own a separate historical model.
 
-Exit:
+## Independent future branches
 
-- content ready;
-- no invented trajectory/geometry;
-- relation ladder fixtures valid;
-- same-content baseline can be built.
+Still gated:
 
-## Фаза 4.9 — Spatial-Temporal Explorer
-
-Статус: **GATED ON #332**.
-
-Scope:
-
-- synchronized 2D map/timeline/layers;
-- trajectory;
-- Events/Regions/States/Processes;
-- local/global context;
-- evidence and uncertainty;
-- responsive/accessibility/browser acceptance.
-
-Exit:
-
-- deterministic shared state;
-- public/static pilot contour;
-- capability truth updated only after deploy evidence.
-
-The renderer-neutral work in #340/#341 may be reused where it reduces duplication, but it must not enlarge #333 scope or make the Globe a prerequisite.
-
-## Фаза 5 — Contextual Learning Pilot
-
-Статус: **GATED ON #333**.
-
-Scope:
-
-- same-content controlled baseline;
-- 6–8 users;
-- context/simultaneity/change measures;
-- relation overclaim errors;
-- source/uncertainty comprehension;
-- cost;
-- explicit decision.
-
-Possible outcomes:
-
-- `ITERATE`;
-- `EXPAND ONE BRANCH`;
-- `NARROW VERTICAL`;
-- `STOP/RETHINK`.
-
-## Independent future/product branches
-
-Blocked until pilot or separate explicit promotion decision:
-
-- richer temporal Regions/States at product scale;
-- product-scale 3D globe/dynamic Earth beyond bounded #339–#345 R&D;
-- guided learning;
-- source-bound AI;
-- broader World Slices;
-- institutional work;
-- VR/AR.
-
-One evidence-backed decision opens one product branch. Bounded R&D does not count as automatic product expansion.
-
-## Scaling/Business
-
-Security/reliability maintenance remains allowed. Scaling, platform distribution and monetization require separate evidence and operational reasons.
+- source-bound generative AI;
+- automatic causal/counterfactual engine;
+- universal or production-scale historical terrain;
+- broader World Slices beyond one evidence-backed decision;
+- institutional workflows;
+- VR/AR;
+- unrelated platform/framework scaling.
 
 ## Rule
 
-Update this document whenever active phase, exit gate, dependency order or explicitly allowed parallel R&D contour changes.
+Update this document whenever the active phase, exit gate, dependency order, public capability or Globe promotion boundary changes.

@@ -6,7 +6,7 @@ Its mission is to help people understand the world as an interconnected systemâ€
 
 Foundation v3 restores space and time as core coordinates. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
 
-The public runtime does **not** yet implement Foundation v3. Life in Context, first-class State/Process/Trajectory/temporal Region data, generative AI, causal reasoning, 3D/VR and universal coverage remain target or future scope.
+The public runtime does **not** yet implement Foundation v3. A browser-executed MapLibre Globe R&D artifact now exists, and issue #355 makes a source-aware Globe MVP the active interface-development contour. The Globe is not public or product-validated; real Life in Context content, generative AI, causal reasoning, VR/AR and universal coverage remain target or future scope.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -24,7 +24,7 @@ ARTEMIS currently combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The current operational state is **controlled engineering prototype / Foundation v3 correction**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
+The current operational state is **controlled engineering prototype / Globe MVP recovery**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 
@@ -33,8 +33,9 @@ The current operational state is **controlled engineering prototype / Foundation
 | `PUBLIC NOW` | Works on GitHub Pages without backend execution | map, timeline/filter/detail baseline, checked-in `data/*` |
 | `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
 | `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
+| `R&D` | Executable experimental evidence, not a public capability | generated MapLibre 5.24.0 Globe spike and renderer contracts |
 | `CONCEPT TARGET` | Defined but not implemented in public runtime | spatial-temporal world model, Life in Context, State/Process/Trajectory/Region |
-| `FUTURE` | Not an active product capability | source-bound AI, causal/counterfactual runtime, 3D/dynamic Earth, VR/AR |
+| `FUTURE` | Not an active product capability | source-bound AI, causal/counterfactual runtime, production-scale dynamic Earth, VR/AR |
 
 ---
 
@@ -100,7 +101,7 @@ Vanilla JavaScript (no frameworks):
 - Current low-sensitivity Web Storage use is limited to UI preference/session hints and frozen Courses progress; it is not a persistence contract for research data.
 - Access token stored **in memory only**
 - Refresh token stored in **httpOnly cookie**
-- **GeoJSON is the single source of truth** for the map
+- **GeoJSON is the single source of truth for the current public 2D map only**
 - Canonical public dataset for map rendering: **`data/features.geojson`** (served from `/data/*`)
 - `/api/map/feed` is an auxiliary, non-canonical runtime support/read-model route (not the production-default public map source)
 - No direct Airtable access from frontend

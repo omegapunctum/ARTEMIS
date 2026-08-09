@@ -186,35 +186,41 @@ Foundation owner documents must be synchronized in one decision PR when identity
 - corpus coverage is explicit;
 - Architecture Atlas is a thematic layer;
 - AI is future/source-bound and not Source;
-- 3D/VR/dynamic Earth are future surfaces;
+- the bounded Globe MVP may be an active interface surface without becoming a second semantic core or a public capability claim;
+- VR/AR and production-scale dynamic Earth remain future surfaces;
 - one validation decision opens one branch.
 
 ## 9. Current work status
 
 Active:
 
-1. Issue `#330`: executable temporal/spatial uncertainty semantics and independent review.
+1. Issue `#355`: first source-aware Globe MVP vertical.
+2. Recovery dependency `#344` / PR `#351`: cross-renderer semantic parity.
 
-Gated:
+Paused/gated:
 
-2. Issue `#331`: coexistence/encounter/interaction/influence distinctions.
-4. Issue `#332`: Leonardo World Slice.
-5. Issue `#333`: synchronized explorer.
-6. Issue `#334`: contextual-learning pilot.
-7. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
+3. Issue `#331`: coexistence/encounter/interaction/influence distinctions; required before documented Relation predicates enter the real corpus/runtime.
+4. Issues `#332`–`#334`: their corpus/explorer/validation goals may be reused inside #355, but they no longer define the active sequential path.
+5. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
 
 Frozen:
 
 - old Concept v2 Gate B–E critical path;
 - AI generation;
 - causal/counterfactual runtime;
-- 3D/VR;
+- public production Globe, universal historical terrain and VR/AR;
 - universal corpus;
 - product/platform expansion.
 
 Completed evidence:
 
-- issue `#329` / PR `#336`: READY world-model fixture package v1.
+- issue `#329` / PR `#336`: READY world-model fixture package v1;
+- issue `#330` / PR `#337`: READY uncertainty semantics v1;
+- issues `#339`–`#343` and `#345` / PRs `#346`–`#350`, `#352`: renderer architecture, state, projection, asset, runtime-spike and repository-boundary evidence.
+
+Active product/governance decision:
+
+- `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
 ## 10. Change control
 

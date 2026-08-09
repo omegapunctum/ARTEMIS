@@ -1,0 +1,68 @@
+name: Globe Repository Boundary Gate
+
+on:
+  push:
+    paths:
+      - "index.html"
+      - "manifest.json"
+      - "sw.js"
+      - "scripts/globe_spike/**"
+      - "scripts/build_globe_spike.py"
+      - "fixtures/globe_runtime/**"
+      - "docs/PROJECT_STRUCTURE.md"
+      - "docs/PROJECT_TRUTH.md"
+      - "docs/PRIORITIES.md"
+      - "docs/PROJECT_PHASES.md"
+      - "docs/work/2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md"
+      - "docs/work/README.md"
+      - ".github/workflows/globe-*.yml"
+      - "tests/test_globe_repository_boundary.py"
+  pull_request:
+    paths:
+      - "index.html"
+      - "manifest.json"
+      - "sw.js"
+      - "scripts/globe_spike/**"
+      - "scripts/build_globe_spike.py"
+      - "fixtures/globe_runtime/**"
+      - "docs/PROJECT_STRUCTURE.md"
+      - "docs/PROJECT_TRUTH.md"
+      - "docs/PRIORITIES.md"
+      - "docs/PROJECT_PHASES.md"
+      - "docs/work/2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md"
+      - "docs/work/README.md"
+      - ".github/workflows/globe-*.yml"
+      - "tests/test_globe_repository_boundary.py"
+
+jobs:
+  repository-boundary:
+    name: Public 2D + experimental Globe boundary
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install -r requirements.txt pytest
+
+      - name: Run Globe repository boundary tests
+        run: python -m pytest -q tests/test_globe_repository_boundary.py
+
+      - name: Verify no generated Globe build is tracked
+        run: |
+          test ! -e build/globe-spike
+          if git ls-files | grep -E '(^|/)build/globe-spike/' ; then
+            echo "Generated Globe build must not be checked into source control" >&2
+            exit 1
+          fi
+
+      - name: Verify Globe workflow is review-only
+        run: |
+          ! grep -R -E 'actions/(deploy-pages|upload-pages-artifact)|peaceiris/actions-gh-pages' .github/workflows/globe-*.yml
+          grep -F 'actions/upload-artifact@' .github/workflows/globe-runtime-spike.yml

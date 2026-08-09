@@ -27,7 +27,7 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 - Facts, observations, interpretations, inferences, hypotheses and counterfactuals are distinct.
 - Architecture Atlas is a preserved thematic layer and current technical/public baseline.
 - First validation vertical: `Life in Context`.
-- AI generation, causal/counterfactual runtime, 3D/VR, universal corpus and product expansion are frozen.
+- A bounded source-aware Globe MVP is active under #355; generative AI, causal/counterfactual runtime, VR/AR, universal corpus and production-scale dynamic Earth remain frozen.
 - Current ResearchSlice v2 is compatibility code; #323–#325 are not the active path.
 
 ## Change discipline
@@ -47,13 +47,16 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Issue `#329` is completed in PR `#336`. Active work is issue `#330`: executable temporal/spatial uncertainty semantics before relation-ladder or corpus work.
+Active work is issue `#355`: recover repository governance/parity, then build the first source-aware Globe MVP vertical.
 
-- follow clean v3 child issues `#329`–`#335` rather than rewriting old issues;
-- preserve `fixtures/world_model/v1` as the reviewed READY base;
-- no database/API/runtime migration before #330 and #331 pass;
-- the fixture package must not be described as public/runtime capability;
-- #332 Leonardo curation and #333 explorer remain gated;
+- preserve #329 / PR #336 World Model fixtures and #330 / PR #337 uncertainty semantics as reviewed READY foundations;
+- complete reopened #344 / PR #351 before expanding Globe runtime scope;
+- keep #331 `PAUSED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is accepted;
+- use one World Model → Explorer State → Render Projection path for both 2D and Globe;
+- keep the current root 2D MapLibre runtime as the public baseline and rollback path;
+- keep Globe artifacts non-public until a separate promotion decision;
+- use MapLibre as the leading MVP engine unless measured evidence justifies a Cesium comparison;
+- do not create a framework/backend/repository rewrite without a demonstrated blocker;
 - security, compatibility and critical maintenance remain allowed.
 
 ## Verification

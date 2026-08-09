@@ -3,9 +3,9 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.0.
-- Дата: 2026-07-28.
-- Active vertical: `Life in Context`.
+- Версия: 3.1.
+- Дата: 2026-08-09.
+- Active vertical: `Life in Context` Globe MVP / issue `#355`.
 - Thematic baseline retained: `Architecture Atlas`.
 - North Star: `ARTEMIS_CONCEPT.md`.
 - Current reality: `PROJECT_TRUTH.md`.
@@ -15,7 +15,7 @@
 
 ## 1. Формула текущего продукта
 
-ARTEMIS Life in Context — **source-aware synchronized map/timeline/layer experience для исследования жизненного пути личности внутри локальных и глобальных процессов её времени**.
+ARTEMIS Life in Context — **source-aware synchronized Globe/timeline/layer experience для исследования жизненного пути личности внутри локальных и глобальных процессов её времени**.
 
 Продукт помогает:
 
@@ -39,10 +39,12 @@ ARTEMIS Life in Context — **source-aware synchronized map/timeline/layer exper
 - зафиксировать migration disposition прежнего backlog;
 - не выполнять schema/runtime migration.
 
-### Validation slice
+### Globe MVP vertical
 
 - подготовить ограниченный Leonardo `World Slice`;
-- реализовать synchronized 2D map, timeline and layers на существующем static Pages contour;
+- восстановить cross-renderer parity в #344 / PR #351;
+- реализовать synchronized Globe, timeline and layers через общий Explorer State / Render Projection;
+- сохранить 2D renderer как same-content baseline и rollback path;
 - проверить contextual understanding against same-content baseline;
 - записать decision.
 
@@ -57,7 +59,7 @@ ARTEMIS Life in Context — **source-aware synchronized map/timeline/layer exper
 - regional political/cultural States;
 - at least one long Process;
 - selected contemporaries;
-- documented Relations;
+- documented Relations only after #331 is accepted; before then, derived proximity/co-presence only;
 - co-presence observations represented separately;
 - selected synchronous global Events;
 - Claim/EvidenceLink/locator for material content;
@@ -67,7 +69,8 @@ ARTEMIS Life in Context — **source-aware synchronized map/timeline/layer exper
 
 ## 4. Обязательный interface scope
 
-- 2D map as primary spatial surface;
+- 3D Globe as the primary MVP spatial surface;
+- 2D map as the public compatibility baseline, semantic parity target and rollback surface;
 - compact synchronized timeline;
 - current time/time-range control;
 - layer visibility and legend;
@@ -125,8 +128,8 @@ Until a recorded decision opens one named branch:
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
 - counterfactual simulation;
-- high-fidelity 3D globe;
-- dynamic terrain reconstruction;
+- public production Globe before promotion evidence;
+- photorealistic or universal historical terrain reconstruction;
 - VR/AR;
 - open-ended UGC;
 - institutional collaboration;
@@ -151,12 +154,13 @@ Capability labels:
 
 The current public site remains Architecture Atlas baseline until a Life in Context implementation is merged and deployed.
 
-Concept v3 does not make:
+The #355 decision and Concept v3 do not make:
 
 - Leonardo World Slice public;
 - temporal Regions implemented;
 - AI available;
-- 3D/VR available;
+- the Globe public or product-validated;
+- VR available;
 - world-scale coverage real.
 
 ## 10. Exit gates
@@ -192,19 +196,16 @@ Validation gate:
 - relation overclaim errors are measured;
 - decision is recorded before branch expansion.
 
-## 11. Next named branches
+## 11. Promotion decision
 
-Only after validation, one branch may be opened:
+After the #355 evidence cycle, record exactly one result:
 
-- richer temporal Regions/States;
-- 3D globe/dynamic terrain;
-- guided learning;
-- source-bound AI reasoning;
-- broader domain World Slice;
-- institutional workflow;
-- VR/AR research.
+- continue as generated R&D evidence;
+- promote to a maintained experimental Globe app;
+- narrow/rework the vertical;
+- stop/rethink.
 
-One `EXPAND` decision opens one branch.
+Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR each remain separate decisions.
 
 ## 12. Owner documents
 
@@ -218,3 +219,4 @@ One `EXPAND` decision opens one branch.
 - research persistence: `RESEARCH_SLICE_CONTRACT.md`;
 - Foundation decision: `work/2026-07-28_FOUNDATION_V3_DECISION.md`;
 - validation execution: `work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`.
+- active Globe decision: `work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
