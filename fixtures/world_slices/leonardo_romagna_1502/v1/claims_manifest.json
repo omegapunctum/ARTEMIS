@@ -135,7 +135,7 @@
     },
     {
       "claim_id": "claim-leonardo-source-identity",
-      "statement": "The institutional source records identify Leonardo da Vinci as the creator or subject of the selected manuscript and map records.",
+      "statement": "The institutional source records identify Leonardo da Vinci as the creator of the selected manuscript and map records.",
       "target_object_ref": "entity-leonardo-da-vinci",
       "claim_kind": "factual",
       "origin": "curator",
@@ -148,7 +148,7 @@
     },
     {
       "claim_id": "claim-cesare-borgia-patent-identity",
-      "statement": "The published patent transcription identifies Cesare Borgia as the issuing authority and Leonardo as Architect and Engineer General.",
+      "statement": "The published patent transcription identifies Cesare Borgia as the issuing authority.",
       "target_object_ref": "entity-cesare-borgia",
       "claim_kind": "factual",
       "origin": "curator",
@@ -236,6 +236,19 @@
       "evidence_state": "missing",
       "evidence_link_refs": ["evidence-trajectory-uniurb", "evidence-trajectory-rct-imola"],
       "uncertainty_refs": ["uncertainty-trajectory-route-gaps"]
+    },
+    {
+      "claim_id": "claim-imola-political-transition-context-1499-1502",
+      "statement": "The Imola civic history describes a political transition after the 1499 siege, before the selected 1502 Borgia duchy context.",
+      "target_object_ref": "region-duchy-romagna-context",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The civic history supplies the transition sequence but not a precise handover date or a territorial boundary.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-imola-political-transition-civic"],
+      "uncertainty_refs": ["uncertainty-romagna-transition-range", "uncertainty-romagna-region-reconstruction"]
     },
     {
       "claim_id": "claim-romagna-title-based-context",
@@ -599,6 +612,16 @@
       "reviewer": null
     },
     {
+      "evidence_link_id": "evidence-imola-political-transition-civic",
+      "claim_id": "claim-imola-political-transition-context-1499-1502",
+      "source_id": "source-imola-civic-museums-rocca",
+      "locator": "Rocca Sforzesca historical overview; political transition described after the 1499 siege and before the 1502 Leonardo context",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
       "evidence_link_id": "evidence-region-title-uniurb-patent",
       "claim_id": "claim-romagna-title-based-context",
       "source_id": "source-uniurb-volpe-chronology",
@@ -734,7 +757,18 @@
       "basis": "The registered sources do not supply both a boundary method and affirmative derived-geometry rights.",
       "basis_claim_refs": [],
       "review_state": "draft",
-      "target_refs": ["claim-imola-street-sketch-source-object", "claim-romagna-title-based-context", "claim-romagna-documented-place-only-alternative", "region-duchy-romagna-context"]
+      "target_refs": ["claim-imola-street-sketch-source-object", "claim-imola-political-transition-context-1499-1502", "claim-romagna-title-based-context", "claim-romagna-documented-place-only-alternative", "region-duchy-romagna-context"]
+    },
+    {
+      "uncertainty_id": "uncertainty-romagna-transition-range",
+      "dimension": "date",
+      "description": "The civic history establishes a post-1499 political transition sequence but the frozen locator does not provide a precise transfer date.",
+      "effect": "The prior Region state remains a broad 1499/1502 transition context and cannot render as an exact instant or imply stable territorial control.",
+      "basis_kind": "claim_refs",
+      "basis": "The transition Claim is bound to a source sequence rather than to an exact-date record.",
+      "basis_claim_refs": ["claim-imola-political-transition-context-1499-1502"],
+      "review_state": "draft",
+      "target_refs": ["claim-imola-political-transition-context-1499-1502", "region-duchy-romagna-context"]
     },
     {
       "uncertainty_id": "uncertainty-global-coverage",

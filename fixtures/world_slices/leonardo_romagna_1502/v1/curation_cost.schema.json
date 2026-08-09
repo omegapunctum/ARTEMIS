@@ -22,11 +22,11 @@
           "activity": {"type": "string", "minLength": 1},
           "actor_kind": {"enum": ["agent_assisted", "human_curator", "independent_reviewer"]},
           "duration_minutes": {"type": ["integer", "null"], "minimum": 0},
-          "measurement_state": {"enum": ["pending", "recorded"]},
+          "measurement_state": {"enum": ["pending", "recorded", "superseded_unmeasured"]},
           "notes": {"type": "string", "minLength": 1}
         }
       }
     },
-    "ready_rule": {"const": "Every entry must be measured and review cost must be recorded before READY."}
+    "ready_rule": {"const": "No pending entry is allowed at READY. Historical unmeasured entries may remain null only when explicitly superseded by a recorded full recuration activity; both final independent-review costs must be recorded."}
   }
 }

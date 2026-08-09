@@ -62,7 +62,7 @@
           "uniqueItems": true,
           "items": {"type": "string", "minLength": 1}
         },
-        "global_context_policy": {"type": "string", "minLength": 1},
+        "global_context_policy": {"const": "Retain exactly one independently sourced Safavid State and one scholarly year-precision Ottoman Event to exercise local/global comparison; possible temporal overlap never implies a Relation, contact, influence or causation."},
         "historical_polygon": {"type": "null"}
       }
     },
@@ -88,7 +88,15 @@
       "additionalProperties": false,
       "required": ["include", "exclude", "absence_rule"],
       "properties": {
-        "include": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "include": {
+          "const": [
+            "Atomic candidate Claims needed to explain source-bound presences at Rimini, Cesena, Cesenatico and Imola between 8 August and 31 December 1502",
+            "Explicit unknown-route gaps between independently evidenced presence contexts",
+            "One political Region candidate with two source-bound temporal states and two explicit reconstruction alternatives; all geometry remains withheld",
+            "Exactly one independently sourced Safavid State and one scholarly year-precision Ottoman Event as sparse global context",
+            "Only objects required by a concrete synchronized 2D and Globe review task"
+          ]
+        },
         "exclude": {"$ref": "#/$defs/nonEmptyStringArray"},
         "absence_rule": {"type": "string", "minLength": 1}
       }
@@ -218,11 +226,12 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["version_id", "alternative_group_id", "reconstruction_mode", "reconstruction_question", "interpretation", "temporal_hint", "geometry_status", "geometry", "source_refs"],
+            "required": ["version_id", "alternative_group_id", "reconstruction_mode", "alternative_kind", "reconstruction_question", "interpretation", "temporal_hint", "geometry_status", "geometry", "source_refs"],
             "properties": {
               "version_id": {"type": "string", "minLength": 1},
               "alternative_group_id": {"const": "romagna-political-scope-1502"},
-              "reconstruction_mode": {"enum": ["title_based_context", "documented_place_only_context"]},
+              "reconstruction_mode": {"enum": ["historical_assertion", "scholarly_reconstruction", "alternative_reconstruction", "analytical_model", "hypothesis", "counterfactual"]},
+              "alternative_kind": {"enum": ["title_based_context", "documented_place_only_context"]},
               "reconstruction_question": {"const": "What spatial scope can the frozen evidence justify for the Duchy of Romagna label during the selected interval?"},
               "interpretation": {"type": "string", "minLength": 30},
               "temporal_hint": {
@@ -236,6 +245,33 @@
                 }
               },
               "geometry_status": {"const": "pending_digitization_review"},
+              "geometry": {"type": "null"},
+              "source_refs": {"$ref": "#/$defs/nonEmptyStringArray"}
+            }
+          }
+        },
+        "temporal_states": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state_id", "state_kind", "interpretation", "temporal_hint", "geometry_status", "geometry", "source_refs"],
+            "properties": {
+              "state_id": {"type": "string", "pattern": "^region-state-[a-z0-9-]+$"},
+              "state_kind": {"enum": ["source_bound_transition_context", "source_bound_selected_interval_context"]},
+              "interpretation": {"type": "string", "minLength": 30},
+              "temporal_hint": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["value", "precision", "assertion_status"],
+                "properties": {
+                  "value": {"type": "string", "minLength": 1},
+                  "precision": {"const": "range"},
+                  "assertion_status": {"const": "candidate_requires_claim_binding"}
+                }
+              },
+              "geometry_status": {"const": "withheld_no_boundary_evidence"},
               "geometry": {"type": "null"},
               "source_refs": {"$ref": "#/$defs/nonEmptyStringArray"}
             }

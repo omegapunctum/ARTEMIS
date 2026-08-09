@@ -1,9 +1,18 @@
 import copy
 import json
+from datetime import datetime, timezone
 
 import pytest
 
-from scripts.validate_project_state import ProjectStateError, STATE_PATH, validate_project_state
+from scripts.validate_project_state import (
+    ProjectStateError,
+    STATE_PATH,
+    _reviewed_content_digest,
+    _validate_completed_gate_transition,
+    _validate_frozen_git_revision,
+    _validate_review_chronology,
+    validate_project_state,
+)
 
 
 def _state() -> dict:
@@ -11,11 +20,12 @@ def _state() -> dict:
 
 
 def test_current_project_state_is_valid_and_single_gate() -> None:
+    state = _state()
     assert validate_project_state() == {
         "gate": "C",
-        "gate_status": "in_progress",
-        "active_issue_count": 3,
-        "blocker_count": 2,
+        "gate_status": state["gate"]["status"],
+        "active_issue_count": len(state["github"]["active_issues"]),
+        "blocker_count": len(state["blockers"]),
     }
 
 
@@ -75,3 +85,62 @@ def test_completed_gate_c_cannot_keep_blockers() -> None:
 
     with pytest.raises(ProjectStateError, match="schema validation failed"):
         validate_project_state(state)
+
+
+def test_nonexistent_frozen_commit_is_rejected_by_git() -> None:
+    with pytest.raises(ProjectStateError, match="Git verification failed"):
+        _validate_frozen_git_revision("a" * 40, "b" * 40, "c" * 64)
+
+
+def test_frozen_commit_tree_mismatch_is_rejected() -> None:
+    import subprocess
+
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    with pytest.raises(ProjectStateError, match="does not resolve to the recorded tree"):
+        _validate_frozen_git_revision(commit, "b" * 40, "c" * 64)
+
+
+def test_review_chronology_rejects_reversed_timestamps() -> None:
+    review = {
+        "started_at": "2026-08-09T09:10:00Z",
+        "completed_at": "2026-08-09T09:09:00Z",
+        "duration_minutes": 1,
+    }
+    with pytest.raises(ProjectStateError, match="cannot precede"):
+        _validate_review_chronology(review, datetime(2026, 8, 9, 10, tzinfo=timezone.utc))
+
+
+def test_review_duration_must_equal_rounded_elapsed_time() -> None:
+    review = {
+        "started_at": "2026-08-09T09:00:00Z",
+        "completed_at": "2026-08-09T09:05:01Z",
+        "duration_minutes": 999,
+    }
+    with pytest.raises(ProjectStateError, match="rounded-up elapsed"):
+        _validate_review_chronology(review, datetime(2026, 8, 9, 10, tzinfo=timezone.utc))
+
+
+def test_reviewed_content_digest_rejects_revision_without_scope_files() -> None:
+    import subprocess
+
+    empty_tree = subprocess.check_output(
+        ["git", "hash-object", "-t", "tree", "/dev/null"], text=True
+    ).strip()
+    with pytest.raises(ProjectStateError, match="lacks reviewed content paths"):
+        _reviewed_content_digest(empty_tree)
+
+
+def test_narrow_cannot_close_the_old_frozen_scope() -> None:
+    state = _state()
+    state["gate"]["decision"] = "NARROW"
+    with pytest.raises(ProjectStateError, match="new in-progress Gate C revision"):
+        _validate_completed_gate_transition(state)
+
+
+def test_reject_cannot_advance_to_gate_d() -> None:
+    state = _state()
+    state["gate"]["decision"] = "REJECT"
+    state["capability"]["world_slice"] = "gate_c_rejected_non_public"
+    state["next_transition"]["gate"] = "D"
+    with pytest.raises(ProjectStateError, match="transition to STOP"):
+        _validate_completed_gate_transition(state)

@@ -59,12 +59,13 @@
         "evidence": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["frozen_commit", "frozen_tree", "review_registry_ref", "gate_decision_ref", "review_cost_ref"],
+          "required": ["frozen_commit", "frozen_tree", "reviewed_content_digest", "review_registry_ref", "gate_decision_ref", "review_cost_ref"],
           "properties": {
             "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
             "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-            "review_registry_ref": {"type": "string", "pattern": "^fixtures/.+review_registry\\.json$"},
-            "gate_decision_ref": {"type": "string", "pattern": "^fixtures/.+gate_c_decision\\.json$"},
+            "reviewed_content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "review_registry_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"},
+            "gate_decision_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json"},
             "review_cost_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"}
           }
         }
@@ -89,7 +90,7 @@
       "properties": {
         "public_runtime": {"const": "2d_architecture_atlas_baseline"},
         "globe": {"const": "non_public_r_and_d"},
-        "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "projected_non_public"]}
+        "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]}
       }
     },
     "canonical_refs": {

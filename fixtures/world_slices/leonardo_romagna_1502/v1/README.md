@@ -13,7 +13,7 @@ The analytical window is 8 August–31 December 1502. The selected candidate sto
 - dated or datable contexts at Rimini, Cesena, Cesenatico and Imola;
 - commissioned engineering service and a bounded surveying/fortification Process;
 - a presence-only Trajectory with three explicit unknown-route gaps;
-- a geometry-withheld Duchy of Romagna Region with explicit title-based and documented-place-only alternatives;
+- a geometry-withheld Duchy of Romagna Region with two source-bound temporal states plus explicit title-based and documented-place-only alternatives using canonical reconstruction modes;
 - one sparse Safavid State plus one year-precision Ottoman displacement Event for global simultaneity.
 
 Every date, place, State and Region version remains a candidate until it is represented by atomic Claims, reviewed EvidenceLinks and reproducible locators.
@@ -26,8 +26,8 @@ Every date, place, State and Region version remains a candidate until it is repr
 | `source_registry.json` | institutional/scholarly source candidates, locators, intended Claim scope, access, text/media and derived-geometry rights |
 | `claims_manifest.json` | atomic draft Claims, candidate EvidenceLinks and explicit Uncertainty bindings |
 | `coverage_manifest.json` | explicit corpus limits, material gaps and exit conditions |
-| `curation_cost.json` | measured locator-normalization cost plus explicit pending preparation/review durations; unknown time is never estimated |
-| `review_registry.schema.json`, `gate_c_decision.schema.json` | fail-closed contract for two same-revision reviews and the final gate decision |
+| `curation_cost.json` | measured activities plus explicit null history superseded by one measured full recuration; unknown time is never estimated |
+| `review_artifact.schema.json`, `review_registry.schema.json`, `gate_c_decision.schema.json` | fail-closed Git/digest/chronology contract for two same-revision reviews and the final gate decision |
 | `*.schema.json` | closed Draft 2020-12 structural contracts |
 | `scripts/validate_leonardo_world_slice.py` | semantic fail-closed validator |
 | `tests/test_leonardo_world_slice.py` | positive and controlled-corruption regression tests |
@@ -47,18 +47,19 @@ Candidate evidence comes from institutional catalogues/references and scholarly 
 
 The institutional itinerary is not treated as direct manuscript evidence. The university-press chronology closes the bibliographic locators for the dated Rimini (`78r`), Cesena (`46v`) and Cesenatico (`66v`) entries and for the 18 August patent. The separate Cesena wall-survey association with folios `9r–10r` lacks a direct facsimile or critical-edition binding and is explicitly `rejected` from the supported Gate C Claim set without being declared historically false. All EvidenceLinks remain draft pending content review. No RCT, patent or manuscript image is copied.
 
-The package contains 17 candidate objects, 10 registered sources, 21 atomic Claims, 37 EvidenceLinks and 10 provenance-bearing Uncertainty records. Every candidate object has at least one atomic Claim target. Source access, text/data use, image reuse and derived-geometry use are separate fields.
+The package contains 17 candidate objects, 10 registered sources, 22 atomic Claims, 38 EvidenceLinks and 11 provenance-bearing Uncertainty records. Every candidate object has at least one atomic Claim target. Source access, text/data use, image reuse and derived-geometry use are separate fields.
 
 ## Fail-closed rules
 
 - Candidate historical geometry is `null`.
 - Every inter-place trajectory gap is `unknown_route` and has no line.
 - The Duchy Region is not a modern administrative polygon.
-- Both Region alternatives answer one explicit reconstruction question and keep geometry `null`.
+- Two source-bound Region states expose temporal change without fabricating dates or boundaries.
+- Both Region alternatives answer one explicit reconstruction question, use canonical reconstruction modes and keep geometry `null`.
 - Candidate day precision remains draft where direct locators are missing.
 - No stored Relation is allowed while #331 is paused.
 - Candidate assertions are not READY and cannot be promoted.
-- Unknown cost is `null`, not an estimate.
+- Historical unmeasured cost is `null`, not an estimate, and is superseded only by a measured full recuration.
 - Absence from the package never means historical absence.
 
 ## Validate
@@ -70,4 +71,4 @@ python -m pytest -q tests/test_leonardo_world_slice.py
 
 ## Next gate
 
-Independently re-review the corrected frozen Claim/Evidence/Uncertainty inventory and gate-transition guards, then record exactly one `FREEZE`/`NARROW`/`REJECT` decision. The first review round returned `CHANGES_REQUIRED`; two independent `READY` reviews on one corrected frozen revision are required to close Gate C.
+Independently re-review the corrected frozen Claim/Evidence/Uncertainty inventory and Git-bound gate-transition guards, then record exactly one `FREEZE`/`NARROW`/`REJECT` decision. Two earlier review rounds returned `CHANGES_REQUIRED`; two independent `READY` reviews on one corrected frozen revision are required to close Gate C.

@@ -37,9 +37,9 @@ def test_scope_frozen_package_passes_fail_closed_validation() -> None:
         "known_gap_count": 6,
         "trajectory_gap_count": 3,
         "region_version_count": 2,
-        "claim_count": 21,
-        "evidence_link_count": 37,
-        "uncertainty_count": 10,
+        "claim_count": 22,
+        "evidence_link_count": 38,
+        "uncertainty_count": 11,
         "promotion_allowed": False,
     }
 
@@ -124,6 +124,15 @@ def test_region_versions_require_temporal_claim_binding() -> None:
     del region["versions"][0]["temporal_hint"]
 
     with pytest.raises(WorldSliceScopeError, match="schema validation failed"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_region_requires_two_source_bound_temporal_states() -> None:
+    selection, sources, coverage, cost = _baseline()
+    region = next(row for row in selection["candidate_objects"] if row["object_type"] == "Region")
+    region["temporal_states"][1]["state_kind"] = "source_bound_transition_context"
+
+    with pytest.raises(WorldSliceScopeError, match="both source-bound temporal states"):
         validate_package(selection, sources, coverage, cost)
 
 
@@ -345,7 +354,28 @@ def test_scope_requires_one_source_bound_global_event() -> None:
 def test_region_requires_both_explicit_reconstruction_alternatives() -> None:
     selection, sources, coverage, cost = _baseline()
     region = next(row for row in selection["candidate_objects"] if row["object_type"] == "Region")
-    region["versions"][1]["reconstruction_mode"] = "title_based_context"
+    region["versions"][1]["alternative_kind"] = "title_based_context"
 
     with pytest.raises(WorldSliceScopeError, match="both explicit reconstruction alternatives"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_region_reconstruction_mode_rejects_noncanonical_label() -> None:
+    selection, sources, coverage, cost = _baseline()
+    region = next(row for row in selection["candidate_objects"] if row["object_type"] == "Region")
+    region["versions"][0]["reconstruction_mode"] = "title_based_context"
+
+    with pytest.raises(WorldSliceScopeError, match="schema validation failed"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_global_context_policy_and_object_set_cannot_drift() -> None:
+    selection, sources, coverage, cost = _baseline()
+    state = next(
+        row for row in selection["candidate_objects"]
+        if row["object_id"] == "state-safavid-isma-il-i"
+    )
+    state["layer_refs"] = ["layer-local-context"]
+
+    with pytest.raises(WorldSliceScopeError, match="global context must contain exactly"):
         validate_package(selection, sources, coverage, cost)

@@ -33,6 +33,18 @@ PROHIBITED_RELATION_PREDICATES = {
     "influence",
     "causal",
 }
+GLOBAL_CONTEXT_OBJECTS = {
+    "state-safavid-isma-il-i": "State",
+    "event-ottoman-turkmen-displacement-1502": "Event",
+}
+REGION_ALTERNATIVES = {
+    "title_based_context": "scholarly_reconstruction",
+    "documented_place_only_context": "analytical_model",
+}
+REGION_TEMPORAL_STATES = {
+    "source_bound_transition_context",
+    "source_bound_selected_interval_context",
+}
 CRITICAL_LOCATOR_BINDINGS = {
     "evidence-rimini-uniurb-f78r": {
         "claim_id": "claim-rimini-presence-1502-08-08",
@@ -199,9 +211,10 @@ def validate_package(
     versions = regions[0].get("versions") or []
     if len(versions) < 2:
         raise WorldSliceScopeError("candidate Region must preserve at least two source-bound versions")
-    expected_reconstruction_modes = {"title_based_context", "documented_place_only_context"}
-    actual_reconstruction_modes = {version["reconstruction_mode"] for version in versions}
-    if actual_reconstruction_modes != expected_reconstruction_modes:
+    actual_alternatives = {
+        version["alternative_kind"]: version["reconstruction_mode"] for version in versions
+    }
+    if actual_alternatives != REGION_ALTERNATIVES:
         raise WorldSliceScopeError("candidate Region must preserve both explicit reconstruction alternatives")
     if len({version["alternative_group_id"] for version in versions}) != 1:
         raise WorldSliceScopeError("candidate Region alternatives must answer one reconstruction question")
@@ -214,6 +227,24 @@ def validate_package(
                 f"Region version {version['version_id']} references missing sources: {sorted(missing_sources)}"
             )
         used_source_refs.update(version["source_refs"])
+
+    temporal_states = regions[0].get("temporal_states") or []
+    if {row["state_kind"] for row in temporal_states} != REGION_TEMPORAL_STATES:
+        raise WorldSliceScopeError("candidate Region must expose both source-bound temporal states")
+    if len({row["temporal_hint"]["value"] for row in temporal_states}) != 2:
+        raise WorldSliceScopeError("candidate Region temporal states must expose changing time ranges")
+    for temporal_state in temporal_states:
+        if temporal_state["geometry_status"] != "withheld_no_boundary_evidence":
+            raise WorldSliceScopeError("candidate Region temporal state cannot imply boundary evidence")
+        if temporal_state["geometry"] is not None:
+            raise WorldSliceScopeError("candidate Region temporal state geometry must remain null")
+        missing_sources = set(temporal_state["source_refs"]) - set(source_index)
+        if missing_sources:
+            raise WorldSliceScopeError(
+                f"Region temporal state {temporal_state['state_id']} references missing sources: "
+                f"{sorted(missing_sources)}"
+            )
+        used_source_refs.update(temporal_state["source_refs"])
 
     for source_id, source in source_index.items():
         rights = source["rights"]
@@ -249,6 +280,8 @@ def validate_package(
             raise WorldSliceScopeError("pending cost entries must not invent a duration")
         if entry["measurement_state"] == "recorded" and entry["duration_minutes"] is None:
             raise WorldSliceScopeError("recorded cost entries require an actual duration")
+        if entry["measurement_state"] == "superseded_unmeasured" and entry["duration_minutes"] is not None:
+            raise WorldSliceScopeError("superseded unmeasured entries must preserve a null duration")
 
     used_evidence_refs: set[str] = set()
     used_uncertainty_refs: set[str] = set()
@@ -267,6 +300,15 @@ def validate_package(
         if missing_uncertainty:
             raise WorldSliceScopeError(
                 f"Claim {claim_id} references missing Uncertainties: {sorted(missing_uncertainty)}"
+            )
+        nonreciprocal_uncertainties = [
+            ref for ref in claim["uncertainty_refs"]
+            if claim_id not in uncertainty_index[ref]["target_refs"]
+        ]
+        if nonreciprocal_uncertainties:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} has non-reciprocal Uncertainty refs: "
+                f"{nonreciprocal_uncertainties}"
             )
         used_evidence_refs.update(claim["evidence_link_refs"])
         used_uncertainty_refs.update(claim["uncertainty_refs"])
@@ -420,6 +462,15 @@ def validate_package(
     ]
     if len(global_event_candidates) != 1:
         raise WorldSliceScopeError("scope must include exactly one source-bound global Event candidate")
+    actual_global_context = {
+        row["object_id"]: row["object_type"]
+        for row in object_index.values()
+        if "layer-global-simultaneity" in row["layer_refs"]
+    }
+    if actual_global_context != GLOBAL_CONTEXT_OBJECTS:
+        raise WorldSliceScopeError(
+            "global context must contain exactly the frozen Safavid State and Ottoman Event"
+        )
 
     readiness = selection["readiness"]
     if (

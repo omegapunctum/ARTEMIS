@@ -9,16 +9,16 @@
       "activity": "Scope definition and institutional source triage",
       "actor_kind": "agent_assisted",
       "duration_minutes": null,
-      "measurement_state": "pending",
-      "notes": "The artifact establishes the cost-log shape without inventing elapsed time. The responsible curator must record actual duration before the package can become READY."
+      "measurement_state": "superseded_unmeasured",
+      "notes": "Original elapsed time was not measured and remains null. This activity is superseded in full, without estimation, by cost-gate-c-full-recuration."
     },
     {
       "activity_id": "cost-claim-and-locator-curation",
       "activity": "Atomic Claim, locator and uncertainty curation",
       "actor_kind": "human_curator",
       "duration_minutes": null,
-      "measurement_state": "pending",
-      "notes": "Dated folio and patent transcription locators are pinned. The separate Cesena wall-survey folios 9r–10r Claim is explicitly rejected from the supported Gate C set; earlier unmeasured curation time remains null."
+      "measurement_state": "superseded_unmeasured",
+      "notes": "Original elapsed time was not measured and remains null. This activity is superseded in full, without estimation, by cost-gate-c-full-recuration."
     },
     {
       "activity_id": "cost-initial-validator-integrity-review",
@@ -51,7 +51,31 @@
       "duration_minutes": 23,
       "measurement_state": "recorded",
       "notes": "Measured wall-clock interval 2026-08-09T09:07:30Z–09:29:54Z, rounded up to whole minutes. Includes response to both initial CHANGES_REQUIRED reviews and regression verification."
+    },
+    {
+      "activity_id": "cost-second-validator-integrity-review",
+      "activity": "Second independent validator-integrity review of the remediated frozen revision",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 6,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T09:32:09Z–09:38:01Z and rounded up to whole minutes. Decision CHANGES_REQUIRED; this is review history, not final Gate C evidence."
+    },
+    {
+      "activity_id": "cost-second-semantic-content-review",
+      "activity": "Second independent semantic-content review of the remediated frozen revision",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 7,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T09:32:22Z–09:39:03Z and rounded up to whole minutes. Decision CHANGES_REQUIRED; this is review history, not final Gate C evidence."
+    },
+    {
+      "activity_id": "cost-gate-c-full-recuration",
+      "activity": "Complete replacement recuration of scope, sources, atomic Claims, locators, rights, Uncertainties, cost and transition guards",
+      "actor_kind": "agent_assisted",
+      "duration_minutes": 11,
+      "measurement_state": "recorded",
+      "notes": "Measured wall-clock interval 2026-08-09T09:44:59Z–09:55:18Z and rounded up to whole minutes. Re-audited all 17 objects, 10 sources, 22 Claims, 38 EvidenceLinks, 11 Uncertainties, source/rights reciprocity, temporal Region states, canonical reconstruction modes, global context policy and controlled-corruption guards. This supersedes both original unmeasured preparation entries without estimating them."
     }
   ],
-  "ready_rule": "Every entry must be measured and review cost must be recorded before READY."
+  "ready_rule": "No pending entry is allowed at READY. Historical unmeasured entries may remain null only when explicitly superseded by a recorded full recuration activity; both final independent-review costs must be recorded."
 }

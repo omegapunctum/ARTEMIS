@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/leonardo-gate-c-review-artifact-v1.json",
+  "title": "ARTEMIS Gate C independent review artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "slice_id", "review_id", "reviewer_id", "reviewer_instance_id", "track",
+    "independence_method", "frozen_commit", "frozen_tree",
+    "reviewed_content_digest", "started_at", "completed_at",
+    "duration_minutes", "decision", "unresolved_critical",
+    "unresolved_material", "cost_activity_ref", "findings", "commands", "conclusion"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "slice_id": {"const": "world-slice-leonardo-romagna-1502-v1"},
+    "review_id": {"type": "string", "pattern": "^gate-c-review-[a-z0-9-]+$"},
+    "reviewer_id": {"type": "string", "minLength": 1},
+    "reviewer_instance_id": {"type": "string", "minLength": 1},
+    "track": {"enum": ["semantic-content", "validator-integrity"]},
+    "independence_method": {"const": "separate_agent_task_read_only"},
+    "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "reviewed_content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "duration_minutes": {"type": "integer", "minimum": 1},
+    "decision": {"const": "READY"},
+    "unresolved_critical": {"const": 0},
+    "unresolved_material": {"const": 0},
+    "cost_activity_ref": {"type": "string", "pattern": "^cost-[a-z0-9-]+$"},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "severity", "status", "summary"],
+        "properties": {
+          "finding_id": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["minor", "informational"]},
+          "status": {"enum": ["resolved", "accepted"]},
+          "summary": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "conclusion": {"type": "string", "minLength": 20}
+  }
+}

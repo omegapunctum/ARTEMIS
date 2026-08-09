@@ -23,7 +23,7 @@
       "place-cesenatico",
       "place-imola"
     ],
-    "global_context_policy": "Retain one independently sourced simultaneous Safavid State only to exercise local/global comparison; overlap never implies contact or influence.",
+    "global_context_policy": "Retain exactly one independently sourced Safavid State and one scholarly year-precision Ottoman Event to exercise local/global comparison; possible temporal overlap never implies a Relation, contact, influence or causation.",
     "historical_polygon": null
   },
   "layers": [
@@ -52,8 +52,8 @@
     "include": [
       "Atomic candidate Claims needed to explain source-bound presences at Rimini, Cesena, Cesenatico and Imola between 8 August and 31 December 1502",
       "Explicit unknown-route gaps between independently evidenced presence contexts",
-      "One political Region candidate whose changing versions remain geometry-withheld until provenance and independent review are complete",
-      "One sparse global context item with independent institutional evidence",
+      "One political Region candidate with two source-bound temporal states and two explicit reconstruction alternatives; all geometry remains withheld",
+      "Exactly one independently sourced Safavid State and one scholarly year-precision Ottoman Event as sparse global context",
       "Only objects required by a concrete synchronized 2D and Globe review task"
     ],
     "exclude": [
@@ -384,12 +384,41 @@
       },
       "spatial_mode": "historical_region_pending",
       "geometry": null,
-      "notes": "Political Region candidate, not a modern Emilia-Romagna substitute. The two explicit alternatives test a title-based contextual envelope against an evidence-minimal documented-place-only view. Neither authorizes a polygon.",
+      "notes": "Political Region candidate, not a modern Emilia-Romagna substitute. Two source-bound temporal states expose change from the 1499 Imola transition context to the 1502 Borgia duchy context. Two explicit reconstruction alternatives test a title-based contextual envelope against an evidence-minimal documented-place-only view. None authorizes a polygon.",
+      "temporal_states": [
+        {
+          "state_id": "region-state-imola-post-siege-transition-1499-1502",
+          "state_kind": "source_bound_transition_context",
+          "interpretation": "The Imola civic history identifies a political transition after the 1499 siege. The broad 1499/1502 interval records only the source-bounded transition context and does not assert a precise handover date or territorial boundary.",
+          "temporal_hint": {
+            "value": "1499/1502",
+            "precision": "range",
+            "assertion_status": "candidate_requires_claim_binding"
+          },
+          "geometry_status": "withheld_no_boundary_evidence",
+          "geometry": null,
+          "source_refs": ["source-imola-civic-museums-rocca"]
+        },
+        {
+          "state_id": "region-state-borgia-duchy-context-1502",
+          "state_kind": "source_bound_selected_interval_context",
+          "interpretation": "The patent transcription and institutional orientation sources support a Borgia duchy-title context within the selected 1502 interval, without establishing a polygon or implying unchanged control across Romagna.",
+          "temporal_hint": {
+            "value": "1502-08/1502-12",
+            "precision": "range",
+            "assertion_status": "candidate_requires_claim_binding"
+          },
+          "geometry_status": "withheld_no_boundary_evidence",
+          "geometry": null,
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"]
+        }
+      ],
       "versions": [
         {
           "version_id": "region-version-borgia-romagna-1502",
           "alternative_group_id": "romagna-political-scope-1502",
-          "reconstruction_mode": "title_based_context",
+          "reconstruction_mode": "scholarly_reconstruction",
+          "alternative_kind": "title_based_context",
           "reconstruction_question": "What spatial scope can the frozen evidence justify for the Duchy of Romagna label during the selected interval?",
           "interpretation": "The patent and institutional orientation sources justify a political-title context, but they do not define a reviewable territorial boundary.",
           "temporal_hint": {
@@ -404,7 +433,8 @@
         {
           "version_id": "region-version-documented-place-only-1502",
           "alternative_group_id": "romagna-political-scope-1502",
-          "reconstruction_mode": "documented_place_only_context",
+          "reconstruction_mode": "analytical_model",
+          "alternative_kind": "documented_place_only_context",
           "reconstruction_question": "What spatial scope can the frozen evidence justify for the Duchy of Romagna label during the selected interval?",
           "interpretation": "The conservative alternative exposes only the four named-place evidence anchors and withholds any claim about the territory between them.",
           "temporal_hint": {

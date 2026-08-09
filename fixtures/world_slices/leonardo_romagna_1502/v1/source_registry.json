@@ -144,7 +144,8 @@
       "url": "https://museiciviciimola.it/rocca-sforzesca-imola/luogo-rocca-sforzesca-imola-imola/",
       "locator": "Historical overview paragraphs on the 1499 political transition and Leonardo's 1502 consultation/visit context",
       "intended_claims": [
-        "claim-imola-map-work-autumn-1502"
+        "claim-imola-map-work-autumn-1502",
+        "claim-imola-political-transition-context-1499-1502"
       ],
       "relation_to_claim": "contextualizes",
       "curation_state": "verified_candidate_not_reviewed",
