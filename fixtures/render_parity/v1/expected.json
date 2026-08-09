@@ -1,0 +1,330 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "artemis-cross-renderer-parity-fixture-v1",
+  "source": {
+    "world_slice_ref": "world-slice-fixture-basin-v1",
+    "dataset_identity": {
+      "kind": "fixture_package",
+      "value": "artemis-world-model-contract-fixture-v1@1.0.0"
+    },
+    "explorer_state_ref": "explorer-state-1504-local-global"
+  },
+  "selection": {
+    "primary_object_ref": "event-documented-workshop-meeting",
+    "selected_object_refs": [
+      "entity-mara-vale",
+      "event-documented-workshop-meeting"
+    ],
+    "active_focus": {
+      "trajectory_ref": "trajectory-mara-vale",
+      "trajectory_segment_ref": "trajectory-segment-workshop",
+      "region_ref": "region-fixture-basin",
+      "region_geometry_ref": "region-geometry-v2"
+    }
+  },
+  "expected_semantic_state": {
+    "active_object_refs": [
+      "event-documented-workshop-meeting",
+      "event-far-observation",
+      "process-coastal-exchange",
+      "region-fixture-basin",
+      "region-south-coast",
+      "state-mara-workshop-presence",
+      "state-north-harbor-administration",
+      "trajectory-mara-vale"
+    ],
+    "possible_active_object_refs": [
+      "event-workshop-arrival"
+    ],
+    "context_object_refs": [
+      "entity-mara-vale",
+      "place-far-observatory",
+      "place-inland-workshop"
+    ],
+    "deferred_object_types": [
+      "Relation"
+    ]
+  },
+  "anchors": [
+    {
+      "item_id": "rp:event:event-far-observation",
+      "object_ref": "event-far-observation",
+      "object_type": "Event",
+      "subobject_ref": null,
+      "render_role": "event",
+      "temporal_membership": "active",
+      "spatial_status": "resolved",
+      "geometry_refs": [
+        "geom:event-far-observation"
+      ],
+      "layer_refs": [
+        "layer-distant-context"
+      ],
+      "claim_refs": [
+        "claim-global-event"
+      ],
+      "uncertainty_refs": [],
+      "evidence_link_refs": [
+        "evidence-global-event"
+      ],
+      "source_refs": [
+        "source-field-beta"
+      ],
+      "semantic_flags": {
+        "segment_kind": null,
+        "reconstruction_mode": null,
+        "is_primary": null,
+        "state_kind": null,
+        "process_mode": null
+      }
+    },
+    {
+      "item_id": "rp:event:event-workshop-arrival",
+      "object_ref": "event-workshop-arrival",
+      "object_type": "Event",
+      "subobject_ref": null,
+      "render_role": "event",
+      "temporal_membership": "possible_active",
+      "spatial_status": "unresolved",
+      "geometry_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ],
+      "claim_refs": [
+        "claim-arrival-event",
+        "claim-arrival-event-1504"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-arrival-date"
+      ],
+      "evidence_link_refs": [
+        "evidence-arrival-1504-beta",
+        "evidence-arrival-alpha",
+        "evidence-arrival-beta"
+      ],
+      "source_refs": [
+        "source-field-alpha",
+        "source-field-beta"
+      ],
+      "semantic_flags": {
+        "segment_kind": null,
+        "reconstruction_mode": null,
+        "is_primary": null,
+        "state_kind": null,
+        "process_mode": null
+      }
+    },
+    {
+      "item_id": "rp:region_geometry:region-fixture-basin:region-geometry-v2",
+      "object_ref": "region-fixture-basin",
+      "object_type": "Region",
+      "subobject_ref": "region-geometry-v2",
+      "render_role": "region_geometry",
+      "temporal_membership": "active",
+      "spatial_status": "resolved",
+      "geometry_refs": [
+        "geom:region-fixture-basin:region-geometry-v2"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ],
+      "claim_refs": [
+        "claim-region-v2"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ],
+      "evidence_link_refs": [
+        "evidence-region-v2-alpha",
+        "evidence-region-v2-beta"
+      ],
+      "source_refs": [
+        "source-field-alpha",
+        "source-field-beta"
+      ],
+      "semantic_flags": {
+        "segment_kind": null,
+        "reconstruction_mode": "scholarly_reconstruction",
+        "is_primary": true,
+        "state_kind": null,
+        "process_mode": null
+      }
+    },
+    {
+      "item_id": "rp:region_geometry:region-fixture-basin:region-geometry-v2-alternative",
+      "object_ref": "region-fixture-basin",
+      "object_type": "Region",
+      "subobject_ref": "region-geometry-v2-alternative",
+      "render_role": "region_geometry",
+      "temporal_membership": "active",
+      "spatial_status": "resolved",
+      "geometry_refs": [
+        "geom:region-fixture-basin:region-geometry-v2-alternative"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ],
+      "claim_refs": [
+        "claim-region-v2-alternative"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ],
+      "evidence_link_refs": [
+        "evidence-region-v2-alternative"
+      ],
+      "source_refs": [
+        "source-field-beta"
+      ],
+      "semantic_flags": {
+        "segment_kind": null,
+        "reconstruction_mode": "alternative_reconstruction",
+        "is_primary": false,
+        "state_kind": null,
+        "process_mode": null
+      }
+    },
+    {
+      "item_id": "rp:state:state-north-harbor-administration",
+      "object_ref": "state-north-harbor-administration",
+      "object_type": "State",
+      "subobject_ref": null,
+      "render_role": "state",
+      "temporal_membership": "active",
+      "spatial_status": "resolved",
+      "geometry_refs": [
+        "geom:region-fixture-basin:region-geometry-v2",
+        "geom:region-fixture-basin:region-geometry-v2-alternative"
+      ],
+      "layer_refs": [
+        "layer-politics"
+      ],
+      "claim_refs": [
+        "claim-administration-state"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-region-alternative"
+      ],
+      "evidence_link_refs": [
+        "evidence-administration"
+      ],
+      "source_refs": [
+        "source-field-alpha"
+      ],
+      "semantic_flags": {
+        "segment_kind": null,
+        "reconstruction_mode": null,
+        "is_primary": null,
+        "state_kind": "administration",
+        "process_mode": null
+      }
+    },
+    {
+      "item_id": "rp:trajectory_segment:trajectory-mara-vale:trajectory-segment-gap",
+      "object_ref": "trajectory-mara-vale",
+      "object_type": "Trajectory",
+      "subobject_ref": "trajectory-segment-gap",
+      "render_role": "trajectory_segment",
+      "temporal_membership": "active",
+      "spatial_status": "unresolved",
+      "geometry_refs": [],
+      "layer_refs": [
+        "layer-biography"
+      ],
+      "claim_refs": [
+        "claim-trajectory-gap"
+      ],
+      "uncertainty_refs": [
+        "uncertainty-trajectory-route"
+      ],
+      "evidence_link_refs": [
+        "evidence-trajectory-gap"
+      ],
+      "source_refs": [
+        "source-field-alpha"
+      ],
+      "semantic_flags": {
+        "segment_kind": "inferred_gap",
+        "reconstruction_mode": null,
+        "is_primary": null,
+        "state_kind": null,
+        "process_mode": null
+      }
+    }
+  ],
+  "relation_distinction": {
+    "derived_observation_ref": "observation-mara-traveler-co-presence",
+    "relation_created": false,
+    "documented_relation_refs": [
+      "relation-mara-ren-encounter",
+      "relation-ren-influences-council-protocol"
+    ],
+    "adapter_relation_policy": "deferred"
+  },
+  "boundary_cases": [
+    {
+      "case_id": "boundary-end-1503",
+      "temporal_selection": {
+        "mode": "instant",
+        "start": "1503-12-31",
+        "end": "1503-12-31",
+        "precision": "day",
+        "calendar": "proleptic_gregorian"
+      },
+      "active_focus": {
+        "trajectory_ref": "trajectory-mara-vale",
+        "trajectory_segment_ref": "trajectory-segment-gap",
+        "region_ref": "region-fixture-basin",
+        "region_geometry_ref": "region-geometry-v1"
+      },
+      "expected_present_subobject_refs": [
+        "process-stage-north",
+        "region-geometry-v1",
+        "trajectory-segment-gap"
+      ],
+      "expected_absent_subobject_refs": [
+        "process-stage-south",
+        "region-geometry-v2",
+        "region-geometry-v2-alternative"
+      ]
+    },
+    {
+      "case_id": "boundary-start-1504",
+      "temporal_selection": {
+        "mode": "instant",
+        "start": "1504-01-01",
+        "end": "1504-01-01",
+        "precision": "day",
+        "calendar": "proleptic_gregorian"
+      },
+      "active_focus": {
+        "trajectory_ref": "trajectory-mara-vale",
+        "trajectory_segment_ref": "trajectory-segment-gap",
+        "region_ref": "region-fixture-basin",
+        "region_geometry_ref": "region-geometry-v2"
+      },
+      "expected_present_subobject_refs": [
+        "process-stage-south",
+        "region-geometry-v2",
+        "region-geometry-v2-alternative",
+        "trajectory-segment-gap"
+      ],
+      "expected_absent_subobject_refs": [
+        "process-stage-north",
+        "region-geometry-v1"
+      ]
+    }
+  ],
+  "renderer_only_differences": [
+    "technical_feature_or_primitive_type",
+    "camera_and_orientation",
+    "screen_coordinates_and_pixel_size",
+    "paint_style_color_opacity",
+    "clustering_and_lod",
+    "label_placement",
+    "terrain_draping_as_presentation_only",
+    "presentation_animation",
+    "gpu_tile_cache_and_picking_buffer_implementation",
+    "screenshot_pixels"
+  ]
+}

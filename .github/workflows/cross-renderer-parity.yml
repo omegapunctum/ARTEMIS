@@ -1,0 +1,62 @@
+name: Cross-Renderer Semantic Parity Gate
+
+on:
+  push:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "fixtures/render_parity/**"
+      - "scripts/build_render_projection_fixtures.py"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/validate_renderer_parity.py"
+      - "tests/test_render_projection_contract.py"
+      - "tests/test_renderer_parity.py"
+      - "docs/work/2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md"
+      - ".github/workflows/cross-renderer-parity.yml"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "fixtures/world_model/**"
+      - "fixtures/explorer_state/**"
+      - "fixtures/render_projection/**"
+      - "fixtures/render_parity/**"
+      - "scripts/build_render_projection_fixtures.py"
+      - "scripts/validate_explorer_state_fixtures.py"
+      - "scripts/validate_renderer_parity.py"
+      - "tests/test_render_projection_contract.py"
+      - "tests/test_renderer_parity.py"
+      - "docs/work/2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md"
+      - ".github/workflows/cross-renderer-parity.yml"
+      - "requirements.txt"
+
+jobs:
+  semantic-parity:
+    name: 2D + Globe semantic parity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Validate upstream renderer-neutral contracts
+        run: |
+          python scripts/validate_explorer_state_fixtures.py
+          python scripts/build_render_projection_fixtures.py
+
+      - name: Validate machine-checkable semantic parity
+        run: python scripts/validate_renderer_parity.py
+
+      - name: Run projection + parity regression tests
+        run: |
+          pytest -q \
+            tests/test_render_projection_contract.py \
+            tests/test_renderer_parity.py

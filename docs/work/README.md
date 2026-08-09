@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-08.
+- Updated: 2026-08-09.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -30,7 +30,7 @@ Active execution rule for the Globe MVP:
 - live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
 - the MVP decision does not make 3D Globe a current public capability;
 - #331 is paused but becomes blocking before documented Relation predicates enter the real corpus/runtime;
-- #344 / PR #351 must be green and merged before runtime scope expands.
+- the completed #344 parity contract remains a fail-closed promotion gate for every runtime change.
 
 ## Gated under Foundation v3
 
@@ -59,8 +59,9 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints, temporal boundaries and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
 - `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/non-public runtime and Pages boundaries accepted.
-- `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` — #343 completed in PR `#350`; MapLibre GL JS 5.24.0 selected for the bounded spike, with Cesium retained as measured-gap escalation.
+- `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` — #343 completed in PR `#350`; MapLibre GL JS 5.24.0 selected for the bounded spike, with Cesium retained as measured-gap escalation; the generated runtime runbook remains active for #355.
 - `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` — #339 completed in PR `#346`; one semantic core and multiple projection renderers established.
 - `2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md` — #342 completed in PR `#349`; provider/CRS/vertical/temporal/provenance/license/cache/runtime boundaries accepted with synthetic fixtures and dedicated CI.
 - `2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md` — #341 completed in PR `#348`; one World Slice + Explorer State deterministically produce semantically equivalent 2D/Globe adapter payloads with explicit projection loss.
