@@ -3,27 +3,29 @@
 ## Статус документа
 
 - Тип: foundation AI policy document
-- Версия: 3.0
-- Дата: 2026-07-28
-- Статус: active canonical policy
+- Версия: 3.1
+- Дата: 2026-08-09
+- Статус: active canonical policy after Foundation v3.1 attractor refinement / issue `#363`
 - Роль: фиксирует допустимую и недопустимую роль AI в ARTEMIS
-- Назначение: защитить проект от AI drift, source substitution, hallucinated authority и смешения фактов, интерпретаций, гипотез и AI-output
-- Scope: future source-bound analysis of the spatial-temporal world model, Claim/Evidence discipline, inference trace, counterfactual isolation and content governance
+- Назначение: защитить проект от AI drift, source substitution, hallucinated authority, hidden state changes и смешения фактов, интерпретаций, гипотез и AI-output
+- Scope: future source-bound analysis and exploration of the spatial-temporal knowledge model, Claim/Evidence discipline, reversible view actions, inference trace, counterfactual isolation and content governance
 
 ---
 
 ## 1. Главный принцип
 
-AI in ARTEMIS is an assistant, not an authority.
+AI in ARTEMIS is an assistant and exploration interface, not an authority.
 
-ИИ в ARTEMIS может:
+ИИ в ARTEMIS в будущем может:
 - объяснять;
 - сравнивать;
 - структурировать;
 - помогать искать паттерны;
 - предлагать гипотезы;
 - указывать на слабые места данных;
-- помогать готовить drafts for stories/courses.
+- помогать готовить drafts for stories/courses;
+- предлагать exploration plans;
+- управлять обратимыми view/query actions в разрешённом model context.
 
 ИИ в ARTEMIS не может:
 - быть источником истины;
@@ -32,30 +34,37 @@ AI in ARTEMIS is an assistant, not an authority.
 - превращать гипотезу в факт;
 - скрывать неопределённость;
 - выдавать causal claims без явной маркировки;
-- смешивать counterfactual scenario с historical reality.
+- смешивать counterfactual scenario с historical reality;
+- изменять canonical knowledge через скрытое действие интерфейса.
 
-Главное правило:
+Главные правила:
 
 > AI output is never canonical knowledge by default.
+
+> AI may control the VIEW. AI may propose KNOWLEDGE. AI may not silently rewrite TRUTH.
 
 ---
 
 ## 2. Зачем нужна AI policy
 
-ARTEMIS строится как source-aware spatial-temporal world model. AI является future analytical branch над этой моделью, не Source, не второй canonical reality и не AI-authoritative layer.
+ARTEMIS строится как source-aware spatial-temporal knowledge model about the world. AI является future analytical/exploration branch над этой моделью, не Source, не второй canonical reality и не AI-authoritative layer.
 
 AI policy нужна, чтобы:
 
 - сохранить доверие к знаниям;
 - защитить source/provenance discipline;
 - не превратить ARTEMIS в chatbot over map;
+- позволить AI взаимодействовать с самой exploration environment, не создавая hidden truth mutations;
 - не дать AI подменить Investigation/revision/Brief model;
-- не смешивать факт, интерпретацию, гипотезу и генерацию;
+- не смешивать факт, interpretation, hypothesis и generation;
 - обеспечить explainable AI assistance поверх structured context;
 - подготовить безопасный фундамент для будущих reasoning layers;
 - не превращать spatial/temporal correlation или co-presence в influence/causality;
 - сохранять inference trace, model assumptions and reconstruction mode;
-- изолировать counterfactual branches from historical assertions.
+- изолировать counterfactual branches from historical assertions;
+- отделить reversible interface actions от changes to canonical knowledge.
+
+Эта policy **не открывает AI implementation scope**. Generative AI/runtime остаётся gated до отдельного product/architecture decision.
 
 ---
 
@@ -123,13 +132,39 @@ Rules:
 - AI may flag risk;
 - AI flag does not equal final governance decision.
 
+### 3.7 Knowledge Exploration Interface
+
+После отдельного AI implementation gate AI может помогать пользователю исследовать ARTEMIS не только текстом, но и через явные изменения view/query state.
+
+Допустимые будущие action classes:
+
+- set/change time or time range;
+- focus a Place, Region, Entity, Event or bounded spatial area;
+- activate/deactivate thematic layers;
+- select objects or establish comparison scope;
+- switch approved reconstruction mode;
+- change uncertainty visibility/detail level;
+- assemble an exploration sequence from explicit reversible steps.
+
+Requirements:
+
+- action must be derived from explicit user intent or a visible AI proposal;
+- action must be inspectable and reversible;
+- before/after semantic state must be attributable to the action;
+- action may change `SynchronizedView` / Explorer State or a future compatible query-state envelope;
+- action must not mutate underlying Claims, Sources, EvidenceLinks, Uncertainty or canonical dataset identity;
+- action must not silently geocode, infer route/geometry or upgrade temporal precision;
+- a sequence of actions remains an exploration plan, not historical evidence.
+
+A view action is not a Claim, Source, EvidenceLink or canonical Entity type merely because AI initiated it.
+
 ---
 
-## 4. AI output types
+## 4. AI output and action types
 
-AI output must have an explicit function and always has `origin=ai`.
+AI output must have an explicit function and always has `origin=ai` where epistemic output is persisted or displayed.
 
-Allowed baseline types:
+Allowed baseline/future types:
 
 | Type | Meaning | Canonical by default |
 |---|---|---:|
@@ -141,12 +176,16 @@ Allowed baseline types:
 | `draft` | черновик story/course/content | no |
 | `warning` | указание на слабость данных/логики | no |
 | `source_candidate` | потенциальный источник для проверки | no |
+| `exploration_plan` | последовательность предложенных reversible view/query steps | no |
+| `view_action` | конкретное reversible изменение view/query state | no; not knowledge |
 
 Rules:
-- every AI output must be visibly marked as AI-generated;
+- every AI epistemic output must be visibly marked as AI-generated;
 - review does not erase AI origin from the original output;
 - a human may create a new reviewed Claim based on independently verified evidence;
-- AI output cannot become factual Claim or Relation without Source/EvidenceLink governance.
+- AI output cannot become factual Claim or Relation without Source/EvidenceLink governance;
+- `view_action` changes presentation/query context only and must never be serialized as historical evidence;
+- a saved AI-driven view may persist state, but persistence does not promote the AI rationale into canonical knowledge.
 
 ---
 
@@ -158,6 +197,7 @@ Preferred input contexts:
 - immutable Slice Revision or explicitly labelled mutable ResearchSlice context;
 - selected Claims and EvidenceLinks;
 - selected entity/detail context;
+- current SynchronizedView / Explorer State where available;
 - Story step;
 - Course module;
 - Explainability Context Contract;
@@ -168,12 +208,21 @@ Minimum context for strong AI output:
 - entities considered;
 - time range;
 - spatial/layer context where relevant;
+- current reconstruction mode where relevant;
 - known Sources, EvidenceLinks and locators;
 - claim kind, origin, review, confidence, evidence state and uncertainty;
 - user note/question.
 
+Minimum context for AI view action:
+- current view/query state;
+- target state or intended delta;
+- dataset/World Slice identity;
+- supported action capabilities;
+- visible assumptions/limits where action depends on uncertain context.
+
 Forbidden default:
-- detached AI answer presented as ARTEMIS knowledge without reference to context.
+- detached AI answer presented as ARTEMIS knowledge without reference to context;
+- hidden interface action presented as if it reflected a canonical model change.
 
 ---
 
@@ -189,7 +238,8 @@ Rules:
 - AI may not invent locators;
 - AI may not cite unverifiable source as confirmed;
 - AI-suggested source must be verified before use;
-- AI output must not overwrite source/provenance fields.
+- AI output must not overwrite source/provenance fields;
+- AI navigation to a Source does not strengthen the evidentiary relation by itself.
 
 If AI answer and source-backed data conflict:
 - source-backed data and governance process take priority;
@@ -207,25 +257,55 @@ Required separations:
 - factual Claim vs interpretation/hypothesis;
 - Source/EvidenceLink vs model-generated text;
 - substantive Relation vs classification/Similarity;
-- historical reality vs counterfactual scenario.
+- historical reality vs counterfactual scenario;
+- canonical knowledge vs reversible view/query state.
 
 AI must not:
 - upgrade uncertainty to certainty;
 - erase source conflict;
 - convert correlation into causality;
 - present narrative coherence as proof;
-- hide that a claim is model-generated.
+- hide that a claim is model-generated;
+- use a view change as evidence that the viewed relationship exists.
 
 AI should prefer:
 - modest claims;
 - explicit limitations;
 - visible uncertainty;
 - source-aware reasoning;
-- asking for better data when necessary.
+- asking for better data when necessary;
+- reversible exploration before persistent mutation.
 
 ---
 
-## 8. AI and research-work context
+## 8. AI and view/query state
+
+A future AI branch may act on the ARTEMIS exploration state only through an explicit action boundary.
+
+Allowed state targets may include:
+- temporal selection;
+- spatial focus/view intent;
+- active layer refs;
+- selected/comparison object refs;
+- reconstruction mode;
+- uncertainty-display intent;
+- bounded local/global context selection.
+
+Forbidden state effects:
+- changing World Slice/dataset identity without explicit user-visible transition;
+- changing canonical Claim/Evidence/Source records;
+- fabricating missing geometry to satisfy a focus action;
+- silently resolving an unresolved route or Region;
+- hiding material uncertainty because it makes a visualization cleaner;
+- converting renderer-local camera state into domain truth.
+
+View-state history should be auditable enough that a user can understand what the AI changed and undo it.
+
+The exact runtime command schema is future implementation detail and does not become canonical ontology merely because this policy names the action class.
+
+---
+
+## 9. AI and research-work context
 
 После отдельного AI branch decision immutable Slice Revision может стать primary AI context unit. AI generation не входит в active MVP.
 
@@ -236,7 +316,8 @@ AI over revision may:
 - identify visible patterns;
 - suggest hypotheses;
 - propose missing evidence checks;
-- flag weak evidence.
+- flag weak evidence;
+- propose a reversible exploration plan over the revision's saved spatial-temporal context.
 
 AI over revision must include or preserve:
 - investigation/revision id;
@@ -256,7 +337,7 @@ AI over revision must not:
 
 ---
 
-## 9. AI and Stories
+## 10. AI and Stories
 
 AI may help create or refine stories.
 
@@ -266,7 +347,8 @@ Allowed:
 - suggest narrative order;
 - identify missing transition;
 - simplify explanation for audience;
-- produce review checklist.
+- produce review checklist;
+- suggest a view sequence that remains source-bound and reversible.
 
 Forbidden:
 - publish AI-generated story as curated without review;
@@ -278,7 +360,7 @@ Story AI output remains draft until human/editorial approval.
 
 ---
 
-## 10. AI and Courses
+## 11. AI and Courses
 
 AI may support course design.
 
@@ -288,7 +370,8 @@ Allowed:
 - summarize story/course module;
 - suggest learning sequence;
 - identify gaps in source context;
-- adapt explanation level.
+- adapt explanation level;
+- suggest spatial-temporal exploration steps.
 
 Forbidden:
 - replace curated educational design entirely;
@@ -300,7 +383,7 @@ Course AI output remains draft until review.
 
 ---
 
-## 11. AI and UGC / moderation
+## 12. AI and UGC / moderation
 
 AI may assist moderation but must not be final moderator by default.
 
@@ -322,7 +405,7 @@ Moderation decision remains governance process, not raw AI output.
 
 ---
 
-## 12. AI and public canonical data
+## 13. AI and public canonical data
 
 AI must not directly alter canonical public data.
 
@@ -332,7 +415,8 @@ Rules:
 - AI may create draft content;
 - AI may generate validation warnings;
 - AI may not write directly to `data/features.geojson` as source of truth;
-- AI-generated candidate must pass content governance and ETL/release checks.
+- AI-generated candidate must pass content governance and ETL/release checks;
+- AI-driven view/query state must not be mistaken for a data edit.
 
 Public data changes must follow:
 - source/governance review;
@@ -342,9 +426,9 @@ Public data changes must follow:
 
 ---
 
-## 13. Counterfactual and causal limits
+## 14. Counterfactual and causal limits
 
-Baseline v1.0 does not promise causal engine or counterfactual simulation.
+Baseline does not promise causal engine or counterfactual simulation.
 
 AI must not present:
 - prediction as known outcome;
@@ -352,19 +436,21 @@ AI must not present:
 - causality as proven when only correlation exists;
 - narrative plausibility as evidence.
 
-Allowed with strict marking:
+Allowed with strict marking after appropriate future gates:
 - hypothesis about possible relation;
 - explanation of known scholarly interpretations;
 - clearly marked counterfactual thought experiment outside canonical public history;
 - caveated causal candidate if supported by sources and marked.
 
+Counterfactual navigation/view state must remain visibly isolated from historical/reconstruction modes.
+
 ---
 
-## 14. UI requirements for AI output
+## 15. UI requirements for AI output and actions
 
 AI output should be visibly distinct from source-backed data.
 
-Minimum UI requirements:
+Minimum UI requirements for epistemic output:
 - label AI-generated content;
 - show output type where relevant;
 - show uncertainty/limitations when material;
@@ -372,12 +458,19 @@ Minimum UI requirements:
 - do not visually flatten AI hypothesis into factual card content;
 - keep counterfactual/speculative mode separate.
 
+Minimum UI requirements for AI actions:
+- make material state changes visible;
+- allow user undo/reversal for reversible actions;
+- distinguish AI-changed view state from underlying knowledge change;
+- preserve material uncertainty visibility;
+- show when requested action cannot be performed without inventing missing semantics.
+
 Failure mode:
-- if user cannot tell whether content is source-backed, human-authored or AI-generated, AI policy is violated.
+- if user cannot tell whether content is source-backed, human-authored, AI-generated or merely an AI-driven view state, AI policy is violated.
 
 ---
 
-## 15. AI memory and user context
+## 16. AI memory and user context
 
 AI may use user/session context only within explicit product boundaries.
 
@@ -386,11 +479,14 @@ Rules:
 - AI should not expose private slice content to other users;
 - AI should not use private user annotations as public source;
 - AI summaries derived from private content remain private unless explicitly exported/shared;
-- privacy and ownership rules override convenience.
+- privacy and ownership rules override convenience;
+- future personal knowledge context remains private/product-governed and is not canonical public knowledge.
+
+Foundation v3.1 does not add a personal knowledge entity model or authorize its implementation.
 
 ---
 
-## 16. Relationship to working AI strategy
+## 17. Relationship to working AI strategy
 
 `docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` preserves historical pre-Concept-Lock proposals only.
 
@@ -398,19 +494,20 @@ This file, `docs/AI_POLICY.md`, defines canonical constraints. The archived stra
 
 ---
 
-## 17. Relationship to other foundation docs
+## 18. Relationship to other foundation docs
 
-- `ARTEMIS_CONCEPT.md` defines why AI must not replace human judgment or source discipline.
-- `ARTEMIS_PRODUCT_SCOPE.md` keeps AI generation outside the active Architecture Atlas MVP; ECC may remain as a backend context contract, but no generated explanation is a current public product promise.
+- `ARTEMIS_CONCEPT.md` defines the long-term attractor and why AI must not replace human judgment or source discipline.
+- `ARTEMIS_PRODUCT_SCOPE.md` keeps AI generation outside the active Globe MVP unless a separate decision opens it.
+- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` defines the World Model as knowledge about the world and keeps view state separate from canonical knowledge.
 - `RESEARCH_SLICE_CONTRACT.md` defines Investigation/revision as possible future AI context.
 - `EPISTEMIC_CONTRACT.md` defines Claim/EvidenceLink and independent dimensions AI must obey.
-- `ENTITY_MODEL.md` defines AIInsight and ExplainabilityContext.
+- `ENTITY_MODEL.md` defines current/future named entity roles; view actions do not become entity types by implication.
 - `CONTENT_GOVERNANCE.md` defines how AI-generated candidates may be reviewed/promoted/rejected.
 - `DATA_CONTRACT.md` defines canonical public data artifacts AI must not bypass.
 
 ---
 
-## 18. AI failure modes
+## 19. AI failure modes
 
 AI policy is broken if:
 
@@ -423,39 +520,48 @@ AI policy is broken if:
 - AI story/course draft is published without review;
 - AI works from detached prompt while UI implies it used current revision/evidence;
 - AI treats private user context as public knowledge;
-- AI suggests fake/unverified sources as confirmed.
+- AI suggests fake/unverified sources as confirmed;
+- AI changes view/query state invisibly;
+- AI view action fabricates geometry/time/relation semantics;
+- AI-controlled navigation is presented as a change to canonical World Model truth.
 
 ---
 
-## 19. Change-control rule
+## 20. Change-control rule
 
 Any change to AI behavior must check impact on:
 
 - `ARTEMIS_CONCEPT.md`;
 - `ARTEMIS_PRODUCT_SCOPE.md`;
+- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
 - `RESEARCH_SLICE_CONTRACT.md`;
 - `EPISTEMIC_CONTRACT.md`;
 - `ENTITY_MODEL.md`;
 - `CONTENT_GOVERNANCE.md`;
 - `DATA_CONTRACT.md`;
 - `docs/archive/ARTEMIS_AI_STRATEGY_v1_0.md` only when historical context is necessary;
-- UI labels and output rendering;
+- UI labels, action disclosure and output rendering;
 - moderation/content governance;
 - tests/release checks if executable behavior changes.
 
-No AI feature should be implemented only as a prompt or UI addition if it changes source/trust/product semantics.
+No AI feature should be implemented only as a prompt or UI addition if it changes source/trust/product semantics or state-control authority.
+
+A future runtime command schema must be separately reviewed before implementation; this policy does not define an executable API.
 
 ---
 
-## 20. Итоговое правило
+## 21. Итоговое правило
 
-If an AI branch is ever opened, ARTEMIS should use AI to make structured evidence more understandable, not to replace human research.
+If an AI branch is ever opened, ARTEMIS should use AI to make structured knowledge easier to explore and evidence easier to understand, not to replace human research or canonical governance.
 
 AI strengthens ARTEMIS only when it remains:
 
 - context-bound;
 - source-aware;
 - epistemically marked;
+- view-state transparent;
+- reversible where it changes exploration state;
 - human-reviewable;
 - limited by product scope;
-- unable to bypass content governance.
+- unable to bypass content governance;
+- unable to silently rewrite canonical knowledge.
