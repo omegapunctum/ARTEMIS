@@ -81,7 +81,7 @@ Execution path:
 1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations.
 2. Preserve the completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
-4. Freeze and curate the small 1502–1504 Leonardo World Slice through #332 inside #355.
+4. Freeze and curate the bounded Leonardo-in-Romagna slice for 8 August–31 December 1502 through #332/#360 inside #355.
 5. Build the synchronized Globe/timeline/layers experience through Explorer State and Render Projection.
 6. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
 7. Collect semantic, UX, accessibility and performance evidence.

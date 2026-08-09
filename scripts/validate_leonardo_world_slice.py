@@ -11,7 +11,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_1502_1504" / "v1"
+PACKAGE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_romagna_1502" / "v1"
 SELECTION_PATH = PACKAGE_ROOT / "selection_manifest.json"
 SELECTION_SCHEMA_PATH = PACKAGE_ROOT / "selection_manifest.schema.json"
 SOURCE_PATH = PACKAGE_ROOT / "source_registry.json"
@@ -20,6 +20,8 @@ COVERAGE_PATH = PACKAGE_ROOT / "coverage_manifest.json"
 COVERAGE_SCHEMA_PATH = PACKAGE_ROOT / "coverage_manifest.schema.json"
 COST_PATH = PACKAGE_ROOT / "curation_cost.json"
 COST_SCHEMA_PATH = PACKAGE_ROOT / "curation_cost.schema.json"
+CLAIMS_PATH = PACKAGE_ROOT / "claims_manifest.json"
+CLAIMS_SCHEMA_PATH = PACKAGE_ROOT / "claims_manifest.schema.json"
 
 REQUIRED_OBJECT_TYPES = {"Entity", "Event", "State", "Process", "Trajectory", "Region"}
 PROHIBITED_RELATION_PREDICATES = {
@@ -76,22 +78,32 @@ def validate_package(
     sources: dict[str, Any] | None = None,
     coverage: dict[str, Any] | None = None,
     cost: dict[str, Any] | None = None,
+    claims_package: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     selection = selection or _load(SELECTION_PATH)
     sources = sources or _load(SOURCE_PATH)
     coverage = coverage or _load(COVERAGE_PATH)
     cost = cost or _load(COST_PATH)
+    claims_package = claims_package or _load(CLAIMS_PATH)
 
     _validate_schema(selection, _load(SELECTION_SCHEMA_PATH), "selection manifest")
     _validate_schema(sources, _load(SOURCE_SCHEMA_PATH), "source registry")
     _validate_schema(coverage, _load(COVERAGE_SCHEMA_PATH), "coverage manifest")
     _validate_schema(cost, _load(COST_SCHEMA_PATH), "curation cost log")
+    _validate_schema(claims_package, _load(CLAIMS_SCHEMA_PATH), "claims manifest")
 
     layer_index = _index(selection["layers"], "layer_id", "layer")
     object_index = _index(selection["candidate_objects"], "object_id", "candidate object")
     source_index = _index(sources["sources"], "source_id", "source")
     gap_index = _index(coverage["known_gaps"], "gap_id", "known gap")
     _index(cost["entries"], "activity_id", "cost activity")
+    claim_index = _index(claims_package["claims"], "claim_id", "Claim")
+    evidence_index = _index(
+        claims_package["evidence_links"], "evidence_link_id", "EvidenceLink"
+    )
+    uncertainty_index = _index(
+        claims_package["uncertainties"], "uncertainty_id", "Uncertainty"
+    )
 
     object_types = {row["object_type"] for row in object_index.values()}
     if not REQUIRED_OBJECT_TYPES.issubset(object_types):
@@ -132,13 +144,13 @@ def validate_package(
         raise WorldSliceScopeError("candidate Trajectory must remain an unknown route with null geometry")
     segments = trajectory.get("segments") or []
     gap_segments = [row for row in segments if row["segment_kind"] == "inferred_gap"]
-    if len(gap_segments) != 1:
-        raise WorldSliceScopeError("candidate Trajectory must expose exactly one inferred gap")
-    gap = gap_segments[0]
-    if gap["spatial_mode"] != "unknown_route" or gap["geometry"] is not None:
-        raise WorldSliceScopeError("inferred trajectory gap cannot carry route geometry")
-    if gap["source_refs"]:
-        raise WorldSliceScopeError("unknown route gap cannot pretend to have route evidence")
+    if not gap_segments:
+        raise WorldSliceScopeError("candidate Trajectory must expose at least one inferred gap")
+    for gap in gap_segments:
+        if gap["spatial_mode"] != "unknown_route" or gap["geometry"] is not None:
+            raise WorldSliceScopeError("inferred trajectory gap cannot carry route geometry")
+        if gap["source_refs"]:
+            raise WorldSliceScopeError("unknown route gap cannot pretend to have route evidence")
     for segment in segments:
         missing_sources = set(segment["source_refs"]) - set(source_index)
         if missing_sources:
@@ -154,8 +166,8 @@ def validate_package(
     if len(versions) < 2:
         raise WorldSliceScopeError("candidate Region must preserve at least two source-bound versions")
     for version in versions:
-        if version["reconstruction_mode"] != "analytical_model":
-            raise WorldSliceScopeError("candidate Region version must remain an analytical model")
+        if version["reconstruction_mode"] != "scholarly_reconstruction":
+            raise WorldSliceScopeError("candidate Region version must remain a scholarly reconstruction")
         if version["geometry_status"] != "pending_digitization_review" or version["geometry"] is not None:
             raise WorldSliceScopeError("candidate Region geometry must remain withheld pending review")
         missing_sources = set(version["source_refs"]) - set(source_index)
@@ -190,6 +202,84 @@ def validate_package(
         if entry["measurement_state"] == "recorded" and entry["duration_minutes"] is None:
             raise WorldSliceScopeError("recorded cost entries require an actual duration")
 
+    used_evidence_refs: set[str] = set()
+    used_uncertainty_refs: set[str] = set()
+    for claim_id, claim in claim_index.items():
+        if claim["target_object_ref"] not in object_index:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} references unknown candidate object {claim['target_object_ref']}"
+            )
+        missing_evidence = set(claim["evidence_link_refs"]) - set(evidence_index)
+        if missing_evidence:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} references missing EvidenceLinks: {sorted(missing_evidence)}"
+            )
+        missing_uncertainty = set(claim["uncertainty_refs"]) - set(uncertainty_index)
+        if missing_uncertainty:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} references missing Uncertainties: {sorted(missing_uncertainty)}"
+            )
+        used_evidence_refs.update(claim["evidence_link_refs"])
+        used_uncertainty_refs.update(claim["uncertainty_refs"])
+
+        linked = [evidence_index[ref] for ref in claim["evidence_link_refs"]]
+        escaped = [row["evidence_link_id"] for row in linked if row["claim_id"] != claim_id]
+        if escaped:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} includes EvidenceLinks bound to another Claim: {escaped}"
+            )
+        reviewed_relations = {
+            row["relation_to_claim"] for row in linked if row["review_state"] == "reviewed"
+        }
+        if "supports" in reviewed_relations and "challenges" in reviewed_relations:
+            derived_evidence_state = "mixed"
+        elif "supports" in reviewed_relations:
+            derived_evidence_state = "supported"
+        elif "challenges" in reviewed_relations:
+            derived_evidence_state = "challenged"
+        else:
+            derived_evidence_state = "missing"
+        if claim["evidence_state"] != derived_evidence_state:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} evidence_state must derive from reviewed EvidenceLinks: "
+                f"{claim['evidence_state']} != {derived_evidence_state}"
+            )
+        if claim["review_state"] == "reviewed" and not reviewed_relations:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} cannot be reviewed without reviewed EvidenceLinks"
+            )
+
+    if used_evidence_refs != set(evidence_index):
+        raise WorldSliceScopeError("every EvidenceLink must be referenced by exactly its Claim scope")
+
+    for evidence_id, evidence in evidence_index.items():
+        if evidence["claim_id"] not in claim_index:
+            raise WorldSliceScopeError(
+                f"EvidenceLink {evidence_id} references missing Claim {evidence['claim_id']}"
+            )
+        if evidence["source_id"] not in source_index:
+            raise WorldSliceScopeError(
+                f"EvidenceLink {evidence_id} references missing Source {evidence['source_id']}"
+            )
+        if evidence["review_state"] == "draft" and evidence["reviewer"] is not None:
+            raise WorldSliceScopeError(
+                f"draft EvidenceLink {evidence_id} cannot claim a reviewer"
+            )
+        if evidence["review_state"] == "reviewed" and not str(evidence["reviewer"] or "").strip():
+            raise WorldSliceScopeError(
+                f"reviewed EvidenceLink {evidence_id} requires a reviewer"
+            )
+
+    known_uncertainty_targets = set(claim_index) | set(object_index)
+    for uncertainty_id, uncertainty in uncertainty_index.items():
+        missing_targets = set(uncertainty["target_refs"]) - known_uncertainty_targets
+        if missing_targets:
+            raise WorldSliceScopeError(
+                f"Uncertainty {uncertainty_id} references missing targets: {sorted(missing_targets)}"
+            )
+    if used_uncertainty_refs - set(uncertainty_index):
+        raise WorldSliceScopeError("Claim uncertainty closure is incomplete")
+
     readiness = selection["readiness"]
     if readiness != {
         "scope_frozen": True,
@@ -207,6 +297,9 @@ def validate_package(
         "known_gap_count": len(gap_index),
         "trajectory_gap_count": len(gap_segments),
         "region_version_count": len(versions),
+        "claim_count": len(claim_index),
+        "evidence_link_count": len(evidence_index),
+        "uncertainty_count": len(uncertainty_index),
         "promotion_allowed": readiness["promotion_allowed"],
     }
 
@@ -220,7 +313,9 @@ def main() -> int:
     print(
         "Leonardo World Slice scope: PASS "
         f"(objects={summary['candidate_object_count']}, sources={summary['source_count']}, "
-        f"gaps={summary['known_gap_count']}, region_versions={summary['region_version_count']}, "
+        f"gaps={summary['known_gap_count']}, claims={summary['claim_count']}, "
+        f"evidence_links={summary['evidence_link_count']}, "
+        f"region_versions={summary['region_version_count']}, "
         f"promotion_allowed={summary['promotion_allowed']})"
     )
     return 0

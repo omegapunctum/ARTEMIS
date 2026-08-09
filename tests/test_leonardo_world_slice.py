@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from scripts.validate_leonardo_world_slice import (
+    CLAIMS_PATH,
     COST_PATH,
     COVERAGE_PATH,
     SELECTION_PATH,
@@ -22,16 +23,23 @@ def _baseline():
     return _load(SELECTION_PATH), _load(SOURCE_PATH), _load(COVERAGE_PATH), _load(COST_PATH)
 
 
+def _claims():
+    return _load(CLAIMS_PATH)
+
+
 def test_scope_frozen_package_passes_fail_closed_validation() -> None:
     summary = validate_package()
     assert summary == {
-        "slice_id": "world-slice-leonardo-1502-1504-v1",
+        "slice_id": "world-slice-leonardo-romagna-1502-v1",
         "status": "SCOPE_FROZEN",
-        "candidate_object_count": 11,
+        "candidate_object_count": 16,
         "source_count": 8,
-        "known_gap_count": 6,
-        "trajectory_gap_count": 1,
+        "known_gap_count": 7,
+        "trajectory_gap_count": 3,
         "region_version_count": 2,
+        "claim_count": 10,
+        "evidence_link_count": 17,
+        "uncertainty_count": 7,
         "promotion_allowed": False,
     }
 
@@ -60,6 +68,40 @@ def test_unknown_trajectory_gap_rejects_invented_line_geometry() -> None:
         validate_package(selection, sources, coverage, cost)
 
 
+def test_scope_cannot_silently_expand_back_to_florence_or_1504() -> None:
+    selection, sources, coverage, cost = _baseline()
+    selection["temporal_scope"]["end"] = "1504-12-31"
+    selection["spatial_scope"]["focus_place_refs"].append("place-florence")
+
+    with pytest.raises(WorldSliceScopeError, match="schema validation failed"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_all_inter_place_gaps_are_explicit_and_evidence_free() -> None:
+    selection, sources, coverage, cost = _baseline()
+    trajectory = next(
+        row for row in selection["candidate_objects"] if row["object_type"] == "Trajectory"
+    )
+    gaps = [row for row in trajectory["segments"] if row["segment_kind"] == "inferred_gap"]
+
+    assert len(gaps) == 3
+    assert all(row["spatial_mode"] == "unknown_route" for row in gaps)
+    assert all(row["geometry"] is None for row in gaps)
+    assert all(row["source_refs"] == [] for row in gaps)
+
+
+def test_unknown_route_gap_cannot_claim_route_evidence() -> None:
+    selection, sources, coverage, cost = _baseline()
+    trajectory = next(
+        row for row in selection["candidate_objects"] if row["object_type"] == "Trajectory"
+    )
+    gap = next(row for row in trajectory["segments"] if row["segment_kind"] == "inferred_gap")
+    gap["source_refs"] = ["source-visit-romagna-leonardo-borgia"]
+
+    with pytest.raises(WorldSliceScopeError, match="cannot pretend to have route evidence"):
+        validate_package(selection, sources, coverage, cost)
+
+
 def test_candidate_region_rejects_unreviewed_polygon() -> None:
     selection, sources, coverage, cost = _baseline()
     region = next(
@@ -69,6 +111,17 @@ def test_candidate_region_rejects_unreviewed_polygon() -> None:
         "type": "Polygon",
         "coordinates": [[[11.0, 43.0], [12.0, 43.0], [12.0, 44.0], [11.0, 43.0]]],
     }
+
+    with pytest.raises(WorldSliceScopeError, match="schema validation failed"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_region_versions_require_temporal_claim_binding() -> None:
+    selection, sources, coverage, cost = _baseline()
+    region = next(
+        row for row in selection["candidate_objects"] if row["object_type"] == "Region"
+    )
+    del region["versions"][0]["temporal_hint"]
 
     with pytest.raises(WorldSliceScopeError, match="schema validation failed"):
         validate_package(selection, sources, coverage, cost)
@@ -124,3 +177,42 @@ def test_cost_log_cannot_mark_unmeasured_work_as_recorded() -> None:
 
     with pytest.raises(WorldSliceScopeError, match="require an actual duration"):
         validate_package(selection, sources, coverage, cost)
+
+
+def test_draft_evidence_cannot_masquerade_as_supported() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    claims["claims"][0]["evidence_state"] = "supported"
+
+    with pytest.raises(WorldSliceScopeError, match="must derive from reviewed EvidenceLinks"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_evidence_link_cannot_escape_its_atomic_claim() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    claims["evidence_links"][0]["claim_id"] = "claim-cesena-presence-1502-08-10"
+
+    with pytest.raises(WorldSliceScopeError, match="bound to another Claim"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_reviewed_evidence_requires_named_reviewer() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    evidence = claims["evidence_links"][0]
+    evidence["review_state"] = "reviewed"
+    evidence["reviewer"] = None
+    claims["claims"][0]["evidence_state"] = "supported"
+
+    with pytest.raises(WorldSliceScopeError, match="requires a reviewer"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_claim_target_must_stay_inside_frozen_scope() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    claims["claims"][0]["target_object_ref"] = "event-florence-outside-scope"
+
+    with pytest.raises(WorldSliceScopeError, match="unknown candidate object"):
+        validate_package(selection, sources, coverage, cost, claims)

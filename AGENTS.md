@@ -59,7 +59,7 @@ Active work is issue `#355`: build the first source-aware Globe MVP vertical. Is
 - do not create a framework/backend/repository rewrite without a demonstrated blocker;
 - security, compatibility and critical maintenance remain allowed.
 
-The current active artifact is the non-public 1502–1504 Leonardo scope package under `fixtures/world_slices/leonardo_1502_1504/v1/`. It is a curation boundary, not READY historical data. Do not add route or Region geometry until the package's evidence, rights and independent-review gaps are closed.
+The current active artifact is the non-public Leonardo-in-Romagna 1502 scope package under `fixtures/world_slices/leonardo_romagna_1502/v1/`. It is a curation boundary, not READY historical data. Do not add route or Region geometry until the package's evidence, rights and independent-review gaps are closed.
 
 ## Verification
 

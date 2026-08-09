@@ -1,85 +1,89 @@
-# ARTEMIS — Leonardo World Slice Scope v1
+# ARTEMIS — Leonardo-in-Romagna World Slice Scope v1
 
 ## Status
 
 - Type: active Gate C curation decision.
 - Date: 2026-08-09.
 - Parent: issue `#355`.
-- Delivery issue: `#332`.
+- Delivery issues: `#332`, `#360`.
 - State: `SCOPE_FROZEN / CURATION IN PROGRESS`.
 - Public capability change: none.
 
 ## 1. Decision
 
-The first real Globe MVP World Slice is narrowed to an analytical 1502–1504 window around Leonardo's documented work contexts in central Italy.
+The first real Globe MVP World Slice is narrowed to Leonardo's source-bound Romagna contexts from **8 August through 31 December 1502**.
 
-This is intentionally smaller than a 1452–1519 biography. It is large enough to exercise Event, State, Process, Trajectory, temporally versioned Region, evidence, uncertainty, local/global simultaneity and 2D/Globe parity, while remaining small enough for claim-level review.
+This supersedes the earlier 1502–1504 candidate inside the same unmerged Gate C PR. Florence and the Battle of Anghiari material are excluded from v1. The smaller boundary is better suited to folio-level review while still exercising Event, State, Process, Trajectory, changing Region, evidence, uncertainty, local/global simultaneity and 2D/Globe parity.
 
-Canonical machine-readable scope: `fixtures/world_slices/leonardo_1502_1504/v1/selection_manifest.json`.
+Canonical machine-readable scope: `fixtures/world_slices/leonardo_romagna_1502/v1/selection_manifest.json`.
 
 ## 2. Selected review story
 
 The eventual review experience should let a user move between:
 
-1. Leonardo's institutional-catalogue-supported appointment/work context in 1502;
-2. a documented Imola presence context;
-3. an explicit unknown-route gap;
-4. the source-bound Florence commission/work context in 1503–1504;
-5. analytical map-coverage Region versions that remain visibly reconstructed;
-6. one sparse simultaneous world context with no implied Relation.
+1. Leonardo's dated Rimini context on 8 August 1502;
+2. the Cesena survey context associated with Manuscript L folios 9r–10r;
+3. the 18 August letter-patent candidate, visibly pending a primary or critical-edition locator;
+4. the Cesenatico port context dated 6 September and associated with Manuscript L folio 68r;
+5. the autumn Imola map-work context represented by RCT collection items 912284 and 912686;
+6. explicit unresolved movement gaps between those presence contexts;
+7. a geometry-withheld Duchy of Romagna political Region candidate;
+8. one sparse simultaneous Safavid State with no implied Relation.
 
-The slice is not a narrative assertion that these objects caused or influenced each other.
+The slice does not assert that itinerary order proves a route, or that any selected object caused or influenced another.
 
 ## 3. Source and rights decision
 
 Initial candidates use curated institutional sources:
 
-- Royal Collection Trust collection records for the Imola and southern Tuscany maps;
-- Comune di Imola Musei Civici for the Imola visit and local political-context candidates;
-- National Gallery scholarly catalogue notes for the Battle of Anghiari commission;
-- Getty TGN controlled vocabulary for attributed approximate place reference points;
-- The Metropolitan Museum of Art chronology for a sparse Safavid context candidate.
+- Museo Galileo's Manuscript L catalogue record for manuscript identity and 1502 engineering context;
+- Visit Romagna's institutional itinerary for candidate dates, sections and folio references;
+- Royal Collection Trust records 912284 and 912686 for the Imola map and street-plan sketches;
+- Comune di Imola Musei Civici for the Imola consultation and political-transition context;
+- Getty TGN for the attributed approximate Imola reference point and its ODC-By policy;
+- The Metropolitan Museum of Art chronology for one sparse Safavid context.
 
-The package stores URLs, locators, intended Claim scope and rights policy. It does not copy RCT images. Live pages remain candidate evidence until rights-compliant immutable locator evidence or stable bibliographic locators are frozen.
+Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package now contains ten atomic draft Claims and seventeen candidate EvidenceLinks, but draft links derive `evidence_state=missing`; they cannot masquerade as reviewed support. Candidate day precision stays draft until rights-compliant facsimile, archival or critical-edition locators are frozen. No RCT or manuscript image is copied or licensed by this package.
 
 ## 4. Geometry and trajectory decision
 
 - No historical polygon is included at scope freeze.
-- No line connects Imola and Florence.
-- The trajectory carries an `inferred_gap` with `unknown_route` and `geometry=null`.
-- Getty TGN coordinates are approximate reference points only.
-- The two Region candidates model changing analytical document coverage, not political control.
-- Region geometries remain `pending_digitization_review` until method, CRS/control points, rights, alternatives and review are recorded.
+- No line connects the selected presence contexts.
+- Three trajectory gaps use `unknown_route` and `geometry=null`.
+- Named places remain geometry-null except a later optional attributed Getty reference point for Imola.
+- The Duchy of Romagna cannot be substituted with modern Emilia-Romagna.
+- Region versions remain `pending_digitization_review` until source rights, reconstruction question, method, CRS/control points, residuals, alternatives and independent review are recorded.
 
 ## 5. Relation decision
 
 Issue #331 remains paused.
 
-The slice may later compute `derived_co_presence` from reviewed extents. It may not store possible encounter, documented encounter, interaction, influence or causal predicates. A work/service `State` is not rewritten as a Relation.
+The slice may later compute `derived_co_presence` from reviewed extents. It may not store possible encounter, documented encounter, interaction, influence or causal predicates. A commissioned-service `State` is not rewritten as a Relation.
 
 ## 6. Coverage and cost
 
 The package explicitly records:
 
-- incomplete historical geometry;
-- the unknown route;
-- live-page locator risk;
+- absent reviewed Romagna Region geometry;
+- unknown inter-place routes;
+- missing archival/critical-edition locator for the 18 August patent;
+- missing frozen Manuscript L folio artifacts;
 - absent independent reviews;
 - sparse global context;
 - the prohibition on documented Relations.
 
-The cost log exists now, but unknown durations remain `null`. Before READY, actual curation and review minutes must be recorded; estimates cannot be substituted for measurement.
+Unknown duration remains `null`. Before READY, actual human curation and review minutes must be recorded; estimates cannot replace measurement.
 
 ## 7. Exit
 
 Scope freeze exits when the candidates become a versioned real World Model package with:
 
 - atomic Claims and EvidenceLinks;
-- reproducible locators and explicit evidence states;
+- reproducible locators and derived evidence states;
 - Uncertainty and coverage bindings;
 - reviewed place/Region/trajectory projection semantics;
 - deterministic 2D/Globe projection and parity evidence;
-- two independent reviews with no unresolved critical finding;
+- two independent reviews with no unresolved critical or material finding;
 - measured preparation and review cost.
 
 Until then, the package remains non-public and cannot support a historical capability claim.

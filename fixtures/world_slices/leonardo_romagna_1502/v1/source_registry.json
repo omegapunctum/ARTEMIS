@@ -1,0 +1,171 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "accessed_at": "2026-08-09",
+  "sources": [
+    {
+      "source_id": "source-museo-galileo-ms-l",
+      "title": "Leonardo da Vinci — Manuscript L",
+      "organization": "Museo Galileo — Institute and Museum of the History of Science",
+      "source_type": "institutional_reference",
+      "url": "https://brunelleschi.imss.fi.it/genscheda.asp?appl=LIR&chiave=100790&lingua=ENG&xsl=manoscritto",
+      "locator": "Institutional manuscript record key 100790; summary identifying Institut de France Ms. L and its 1502 military-technology and architecture content",
+      "intended_claims": [
+        "Manuscript L is held by the Institut de France",
+        "The manuscript includes military-technology and architecture material dating from Leonardo's 1502 service for Cesare Borgia",
+        "Manuscript L is the source object to which the candidate Cesena and Cesenatico folio locators belong"
+      ],
+      "relation_to_claim": "contextualizes",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "Museo Galileo, Leonardo and the Engineers of the Renaissance, Manuscript L record"
+      }
+    },
+    {
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "title": "Leonardo da Vinci and Cesare Borgia: ingenuity and intellect at the service of the duchy",
+      "organization": "APT Servizi Emilia-Romagna — Visit Romagna",
+      "source_type": "institutional_reference",
+      "url": "https://visitromagna.it/en/leonardo-da-vinci-and-cesare-borgia-ingenuity-and-intellect-at-the-service-of-the-duchy",
+      "locator": "Sections introductory context, Rimini, Cesena and Cesenatico; dated itinerary statements and Manuscript L folio references 9r–10r and 68r",
+      "intended_claims": [
+        "The institutional itinerary dates Leonardo's Rimini note to 8 August 1502",
+        "The itinerary places Leonardo in Cesena on 10 August 1502 and associates the survey with Manuscript L folios 9r–10r",
+        "The itinerary dates the Cesenatico port observation to 6 September 1502 and associates it with Manuscript L folio 68r",
+        "The itinerary dates Cesare Borgia's letter patent to 18 August 1502"
+      ],
+      "relation_to_claim": "contextualizes",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "APT Servizi Emilia-Romagna — Visit Romagna"
+      }
+    },
+    {
+      "source_id": "source-rct-imola-map",
+      "title": "Leonardo da Vinci (1452–1519): A map of Imola",
+      "organization": "Royal Collection Trust",
+      "source_type": "collection_catalogue",
+      "url": "https://www.rct.uk/collection/912284/a-map-of-imola",
+      "locator": "Collection item 912284; catalogue description on the August 1502 appointment, autumn Imola context and map construction",
+      "intended_claims": [
+        "The catalogue associates Leonardo's Imola map with his 1502 Borgia-service context",
+        "The catalogue describes an August 1502 appointment and autumn Imola context",
+        "Collection item 912284 is a source object and not automatically georeferenced geometry"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "Royal Collection Trust, collection item 912284"
+      }
+    },
+    {
+      "source_id": "source-rct-imola-street-sketches",
+      "title": "Recto: Sketches of the street plan of Imola. Verso: Notes on mathematics",
+      "organization": "Royal Collection Trust",
+      "source_type": "collection_catalogue",
+      "url": "https://www.rct.uk/collection/912686/recto-sketches-of-the-street-plan-of-imola-verso-notes-on-mathematics",
+      "locator": "Collection item 912686; catalogue identity and recto/verso description",
+      "intended_claims": [
+        "Collection item 912686 catalogues Leonardo's sketches of the street plan of Imola",
+        "The sketches are a source object and do not authorize a historical polygon or EPSG:4326 geometry"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "Royal Collection Trust, collection item 912686"
+      }
+    },
+    {
+      "source_id": "source-imola-civic-museums-rocca",
+      "title": "Rocca Sforzesca di Imola",
+      "organization": "Comune di Imola — Musei Civici",
+      "source_type": "institutional_reference",
+      "url": "https://museiciviciimola.it/rocca-sforzesca-imola/luogo-rocca-sforzesca-imola-imola/",
+      "locator": "Historical overview paragraphs on the 1499 political transition and Leonardo's 1502 consultation/visit context",
+      "intended_claims": [
+        "The civic museum account associates Leonardo with a 1502 Imola fortress-consultation context",
+        "The account describes a political transition after the 1499 siege",
+        "The account does not itself provide reviewed historical boundary geometry"
+      ],
+      "relation_to_claim": "contextualizes",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "not_applicable",
+        "license": null,
+        "attribution": "Comune di Imola — Musei Civici, Rocca Sforzesca historical overview"
+      }
+    },
+    {
+      "source_id": "source-getty-tgn-imola",
+      "title": "TGN Full Record: Imola (7004864)",
+      "organization": "J. Paul Getty Trust, Getty Research Institute",
+      "source_type": "controlled_vocabulary",
+      "url": "https://www.getty.edu/vow/TGNFullDisplay?find=&nation=&place=&subjectid=7004864",
+      "locator": "TGN subject 7004864; preferred name and approximate reference coordinates",
+      "intended_claims": [
+        "Imola place identity",
+        "Approximate present-day reference coordinates 44.3500, 11.7000"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "attributed_structured_data",
+        "media_reuse": "not_applicable",
+        "license": "ODC-By-1.0",
+        "attribution": "Contains information from the Getty Thesaurus of Geographic Names (TGN), J. Paul Getty Trust, Getty Research Institute, under ODC-By 1.0"
+      }
+    },
+    {
+      "source_id": "source-getty-vocab-license",
+      "title": "Getty Vocabularies as Linked Open Data",
+      "organization": "J. Paul Getty Trust, Getty Research Institute",
+      "source_type": "license_policy",
+      "url": "https://www.getty.edu/research/tools/vocabularies/lod/index.html",
+      "locator": "Licensing section stating ODC-By 1.0 availability for Getty Vocabulary data",
+      "intended_claims": [
+        "Getty TGN structured data is available under ODC-By 1.0"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "attributed_structured_data",
+        "media_reuse": "not_applicable",
+        "license": "ODC-By-1.0",
+        "attribution": "J. Paul Getty Trust, Getty Research Institute"
+      }
+    },
+    {
+      "source_id": "source-met-islamic-rulers",
+      "title": "List of Rulers of the Islamic World",
+      "organization": "The Metropolitan Museum of Art, Department of Islamic Art",
+      "source_type": "institutional_reference",
+      "url": "https://www.metmuseum.org/toah/hd/isru/hd_isru.htm",
+      "locator": "Iran after the Mongols; Safavid dynasty and Isma'il I entries",
+      "intended_claims": [
+        "The institutional chronology dates Isma'il I to 1501–1524",
+        "The State overlaps the selected 1502 interval without implying a Relation to Leonardo"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "not_applicable",
+        "license": null,
+        "attribution": "Department of Islamic Art, The Metropolitan Museum of Art, Heilbrunn Timeline of Art History"
+      }
+    }
+  ]
+}

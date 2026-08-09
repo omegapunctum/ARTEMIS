@@ -73,6 +73,8 @@ jobs:
           sleep 1
           curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS Globe R&D Spike"
           curl -fsS http://127.0.0.1:8123/build-meta.json | python -m json.tool >/dev/null
+          curl -fsS http://127.0.0.1:8123/knowledge-index.json | python -m json.tool >/dev/null
+          curl -fsS http://127.0.0.1:8123/sources/field-notebook-alpha.md | grep -F "LOCATOR[alpha-encounter]"
 
       - name: Execute Globe artifact in headless browser
         run: |
@@ -114,6 +116,9 @@ jobs:
           grep -F "world-slice-fixture-basin-v1" /tmp/artemis-globe-dom.html
           grep -F "explorer-state-1504-local-global" /tmp/artemis-globe-dom.html
           grep -F "uncertainty-trajectory-route" /tmp/artemis-globe-dom.html
+          grep -F "LOCATOR[alpha-encounter]" /tmp/artemis-globe-dom.html
+          grep -F "Synthetic field notebook alpha" /tmp/artemis-globe-dom.html
+          grep -F "synthetic contract fixture · not historical evidence" /tmp/artemis-globe-dom.html
           grep -F "Terrain: capability path ready" /tmp/artemis-globe-dom.html
           grep -F "engine: MapLibre GL JS" /tmp/artemis-globe-dom.html
           grep -F "maplibregl-canvas" /tmp/artemis-globe-dom.html

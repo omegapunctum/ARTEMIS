@@ -7,7 +7,7 @@
   "required": ["schema_version", "slice_id", "accessed_at", "sources"],
   "properties": {
     "schema_version": {"const": "1.0.0"},
-    "slice_id": {"const": "world-slice-leonardo-1502-1504-v1"},
+    "slice_id": {"const": "world-slice-leonardo-romagna-1502-v1"},
     "accessed_at": {"const": "2026-08-09"},
     "sources": {
       "type": "array",

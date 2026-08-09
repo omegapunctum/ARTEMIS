@@ -48,7 +48,7 @@ def test_globe_mvp_is_active_and_relation_contract_is_paused() -> None:
     assert "SUPERSEDED BEFORE GATES B–E" in phases
     assert "#330 / PR #337 — reviewed uncertainty semantics" in phases
     assert "Completed recovery foundation" in phases
-    assert "#332 / Leonardo World Slice 1502–1504" in phases
+    assert "#332/#360 / Leonardo-in-Romagna World Slice 1502" in phases
 
     assert "#330 / PR #337 uncertainty semantics — READY" in truth
     assert "Issue #331 is paused" in truth

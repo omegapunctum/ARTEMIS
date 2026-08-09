@@ -119,8 +119,8 @@ def test_real_world_slice_scope_is_active_but_not_ready_or_public() -> None:
     scope = _text(WORLD_SLICE_SCOPE)
 
     assert "Active Gate C delivery: #332" in priorities
-    assert "#332 / Leonardo World Slice 1502–1504" in phases
+    assert "#332/#360 / Leonardo-in-Romagna World Slice 1502" in phases
     assert "not yet a curated READY World Model package" in truth
     assert "SCOPE_FROZEN / CURATION IN PROGRESS" in scope
     assert "Public capability change: none" in scope
-    assert "No line connects Imola and Florence" in scope
+    assert "No line connects the selected presence contexts" in scope

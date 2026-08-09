@@ -26,7 +26,7 @@ Foundation v3, accepted in PR `#328`, fixes the long-term direction of ARTEMIS: 
 - **A real executable 3D Globe R&D artifact now exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
 - The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface, no real historical World Slice in that runtime and no production terrain/provider decision.
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 is the active product-facing MVP contour.
-- A non-public 1502–1504 Leonardo scope package now freezes the Gate C selection, source/rights candidates and material gaps; it is not yet a curated READY World Model package.
+- A non-public Leonardo-in-Romagna scope package for 8 August–31 December 1502 now freezes the Gate C selection, source/rights candidates, atomic draft Claim/Evidence/Uncertainty inventory and material gaps; it is not yet a curated READY World Model package.
 
 ## 2. Что доступно публично
 
@@ -142,7 +142,7 @@ Completed recovery:
 
 Следующий допустимый primary order:
 
-1. curate the frozen 1502–1504 Leonardo scope through #332 into a reviewed real World Model package;
+1. curate the frozen Leonardo-in-Romagna 1502 scope through #332/#360 into a reviewed real World Model package;
 2. implement the synchronized Globe/timeline/layers experience through shared contracts;
 3. preserve the current 2D renderer as public baseline, parity target and rollback path;
 4. collect semantic, UX, accessibility and representative performance evidence;

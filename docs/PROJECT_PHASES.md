@@ -6,7 +6,7 @@
 - Дата: 2026-08-09.
 - Активная фаза: **4.8 Globe MVP vertical / real World Slice**.
 - Active primary issue: **#355**.
-- Active delivery: **#332 / Leonardo World Slice 1502–1504**.
+- Active delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
 - Completed recovery foundation: **#344 / PR #351**.
 - Public runtime: unchanged 2D MapLibre baseline.
 
@@ -73,7 +73,7 @@ Paused:
 ### Gate C — Real World Slice
 
 - active through #332 and `docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`;
-- freeze the analytical 1502–1504 selection boundary before claiming historical content readiness;
+- freeze the analytical 8 August–31 December 1502 Romagna selection boundary before claiming historical content readiness;
 - freeze one bounded source-aware slice;
 - include Event, State, Process, Trajectory and temporally changing Region;
 - bind Claims/EvidenceLinks/locators/uncertainty;

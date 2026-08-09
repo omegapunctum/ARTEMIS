@@ -195,7 +195,7 @@ Foundation owner documents must be synchronized in one decision PR when identity
 Active:
 
 1. Issue `#355`: first source-aware Globe MVP vertical.
-2. Issue `#332`: Gate C delivery for the non-public 1502–1504 Leonardo World Slice scope and curation package.
+2. Issues `#332` / `#360`: Gate C delivery for the non-public Leonardo-in-Romagna World Slice, 8 August–31 December 1502.
 
 Paused/gated:
 

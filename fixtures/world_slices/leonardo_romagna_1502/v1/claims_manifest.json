@@ -1,0 +1,374 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "status": "CLAIM_CURATION_IN_PROGRESS",
+  "claims": [
+    {
+      "claim_id": "claim-rimini-presence-1502-08-08",
+      "statement": "Leonardo recorded an observation in Rimini dated 8 August 1502.",
+      "target_object_ref": "event-leonardo-rimini-note",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Institutional itinerary candidate; manuscript-level locator is not frozen.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-rimini-visit-romagna"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding", "uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-cesena-presence-1502-08-10",
+      "statement": "Leonardo was present in Cesena by 10 August 1502 in the selected survey context.",
+      "target_object_ref": "event-leonardo-cesena-survey",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Institutional itinerary and manuscript catalogue candidates are not yet reviewed together.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesena-visit-romagna", "evidence-cesena-ms-l-context"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding", "uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-cesena-survey-folios-9r-10r",
+      "statement": "The selected Cesena survey context is associated with Manuscript L folios 9r through 10r.",
+      "target_object_ref": "event-leonardo-cesena-survey",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The folio range is named by an institutional itinerary but no reviewed facsimile or critical-edition artifact is pinned.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesena-folios-visit-romagna", "evidence-ms-l-institutional-record"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
+    },
+    {
+      "claim_id": "claim-patent-date-1502-08-18",
+      "statement": "Cesare Borgia's letter patent for Leonardo is dated 18 August 1502.",
+      "target_object_ref": "event-leonardo-borgia-patent",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Institutional secondary sources agree on the date, but the archival or critical-edition locator is missing.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-patent-visit-romagna", "evidence-patent-rct-context"],
+      "uncertainty_refs": ["uncertainty-patent-primary-locator", "uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-cesenatico-presence-1502-09-06",
+      "statement": "Leonardo recorded the Cesenatico port context on 6 September 1502.",
+      "target_object_ref": "event-leonardo-cesenatico-port-note",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Institutional itinerary candidate; the referenced folio has not been pinned for review.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesenatico-visit-romagna", "evidence-cesenatico-ms-l-context"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding", "uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-cesenatico-folio-68r",
+      "statement": "The selected Cesenatico port drawing context is associated with Manuscript L folio 68r.",
+      "target_object_ref": "event-leonardo-cesenatico-port-note",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The folio is identified by an institutional itinerary, but no reviewed facsimile or critical-edition artifact is pinned.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesenatico-folio-visit-romagna", "evidence-ms-l-record-for-68r"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
+    },
+    {
+      "claim_id": "claim-imola-map-work-autumn-1502",
+      "statement": "Royal Collection item 912284 associates Leonardo's Imola map with his autumn 1502 work context.",
+      "target_object_ref": "event-leonardo-imola-map-context",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Specific collection item candidate; the exact supporting catalogue passage still requires review.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-imola-map-rct"],
+      "uncertainty_refs": ["uncertainty-imola-autumn-range", "uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-imola-street-sketch-source-object",
+      "statement": "Royal Collection item 912686 catalogues Leonardo's sketches of the street plan of Imola.",
+      "target_object_ref": "event-leonardo-imola-map-context",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The collection identity is stable, but the source object has not been reviewed for historical geometry use.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-imola-sketches-rct"],
+      "uncertainty_refs": ["uncertainty-romagna-region-reconstruction", "uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-leonardo-borgia-service-1502",
+      "statement": "The selected sources describe Leonardo as serving Cesare Borgia in an engineering capacity during 1502.",
+      "target_object_ref": "state-leonardo-in-borgia-service",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Multiple institutional candidates exist, but the patent locator and exact State validity remain unresolved.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-service-ms-l", "evidence-service-rct", "evidence-service-visit-romagna"],
+      "uncertainty_refs": ["uncertainty-patent-primary-locator", "uncertainty-service-end-validity"]
+    },
+    {
+      "claim_id": "claim-safavid-isma-il-i-1501-1524",
+      "statement": "The Metropolitan Museum of Art chronology dates the rule of Isma'il I to 1501 through 1524.",
+      "target_object_ref": "state-safavid-isma-il-i",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Specific institutional chronology entry; content review has not yet occurred.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-safavid-met"],
+      "uncertainty_refs": ["uncertainty-live-page-drift", "uncertainty-global-coverage"]
+    }
+  ],
+  "evidence_links": [
+    {
+      "evidence_link_id": "evidence-rimini-visit-romagna",
+      "claim_id": "claim-rimini-presence-1502-08-08",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Section Rimini; paragraph containing the dated 8 August 1502 observation",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesena-visit-romagna",
+      "claim_id": "claim-cesena-presence-1502-08-10",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Section Cesena; opening paragraph dating presence to 10 August 1502",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesena-ms-l-context",
+      "claim_id": "claim-cesena-presence-1502-08-10",
+      "source_id": "source-museo-galileo-ms-l",
+      "locator": "Institutional record key 100790; 1502 military-technology and architecture summary",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesena-folios-visit-romagna",
+      "claim_id": "claim-cesena-survey-folios-9r-10r",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Section Cesena; paragraph naming Manuscript L folios 9r, 9v and 10r",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-ms-l-institutional-record",
+      "claim_id": "claim-cesena-survey-folios-9r-10r",
+      "source_id": "source-museo-galileo-ms-l",
+      "locator": "Institutional manuscript record key 100790",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-patent-visit-romagna",
+      "claim_id": "claim-patent-date-1502-08-18",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Introductory context; paragraph dating the letter patent to 18 August 1502",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-patent-rct-context",
+      "claim_id": "claim-patent-date-1502-08-18",
+      "source_id": "source-rct-imola-map",
+      "locator": "Collection item 912284; catalogue appointment context",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesenatico-visit-romagna",
+      "claim_id": "claim-cesenatico-presence-1502-09-06",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Section Cesenatico; paragraph dating the port observation to 6 September 1502",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesenatico-ms-l-context",
+      "claim_id": "claim-cesenatico-presence-1502-09-06",
+      "source_id": "source-museo-galileo-ms-l",
+      "locator": "Institutional record key 100790; 1502 manuscript context",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesenatico-folio-visit-romagna",
+      "claim_id": "claim-cesenatico-folio-68r",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Section Cesenatico; paragraph identifying Manuscript L folio 68r",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-ms-l-record-for-68r",
+      "claim_id": "claim-cesenatico-folio-68r",
+      "source_id": "source-museo-galileo-ms-l",
+      "locator": "Institutional manuscript record key 100790",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-imola-map-rct",
+      "claim_id": "claim-imola-map-work-autumn-1502",
+      "source_id": "source-rct-imola-map",
+      "locator": "Collection item 912284; catalogue map-work and autumn 1502 context",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-imola-sketches-rct",
+      "claim_id": "claim-imola-street-sketch-source-object",
+      "source_id": "source-rct-imola-street-sketches",
+      "locator": "Collection item 912686; recto catalogue title and object description",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-service-ms-l",
+      "claim_id": "claim-leonardo-borgia-service-1502",
+      "source_id": "source-museo-galileo-ms-l",
+      "locator": "Institutional record key 100790; 1502 service context",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-service-rct",
+      "claim_id": "claim-leonardo-borgia-service-1502",
+      "source_id": "source-rct-imola-map",
+      "locator": "Collection item 912284; catalogue appointment and work context",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-service-visit-romagna",
+      "claim_id": "claim-leonardo-borgia-service-1502",
+      "source_id": "source-visit-romagna-leonardo-borgia",
+      "locator": "Introductory context; commissioned engineering service description",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-safavid-met",
+      "claim_id": "claim-safavid-isma-il-i-1501-1524",
+      "source_id": "source-met-islamic-rulers",
+      "locator": "Iran after the Mongols; Safavid dynasty; Isma'il I 1501–1524 entry",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    }
+  ],
+  "uncertainties": [
+    {
+      "uncertainty_id": "uncertainty-manuscript-folio-binding",
+      "dimension": "missing_evidence",
+      "description": "The candidate folio numbers are named by an institutional itinerary, but the relevant facsimile or critical-edition artifacts are not frozen.",
+      "effect": "Manuscript-based day, presence and work Claims remain draft and cannot be treated as reviewed direct evidence.",
+      "target_refs": [
+        "claim-rimini-presence-1502-08-08",
+        "claim-cesena-presence-1502-08-10",
+        "claim-cesena-survey-folios-9r-10r",
+        "claim-cesenatico-presence-1502-09-06",
+        "claim-cesenatico-folio-68r"
+      ]
+    },
+    {
+      "uncertainty_id": "uncertainty-patent-primary-locator",
+      "dimension": "missing_evidence",
+      "description": "The package lacks a verified archival repository/call number or critical-edition locator for the 18 August letter patent.",
+      "effect": "The exact patent date and commissioned-service State remain draft despite secondary institutional agreement.",
+      "target_refs": ["claim-patent-date-1502-08-18", "claim-leonardo-borgia-service-1502"]
+    },
+    {
+      "uncertainty_id": "uncertainty-live-page-drift",
+      "dimension": "source",
+      "description": "Current candidate locators point to live institutional pages whose wording may change.",
+      "effect": "No Claim may become reviewed until a rights-compliant immutable artifact or stable bibliographic locator is frozen.",
+      "target_refs": [
+        "claim-rimini-presence-1502-08-08",
+        "claim-cesena-presence-1502-08-10",
+        "claim-patent-date-1502-08-18",
+        "claim-cesenatico-presence-1502-09-06",
+        "claim-imola-map-work-autumn-1502",
+        "claim-imola-street-sketch-source-object",
+        "claim-safavid-isma-il-i-1501-1524"
+      ]
+    },
+    {
+      "uncertainty_id": "uncertainty-imola-autumn-range",
+      "dimension": "date",
+      "description": "The selected RCT context supports an autumn 1502 framing rather than an exact day.",
+      "effect": "The Imola map-work Event must remain an approximate range and cannot be rendered as an exact instant.",
+      "target_refs": ["claim-imola-map-work-autumn-1502"]
+    },
+    {
+      "uncertainty_id": "uncertainty-service-end-validity",
+      "dimension": "date",
+      "description": "The selected slice does not establish the exact end of Leonardo's commissioned-service State.",
+      "effect": "The State cannot silently use 31 December 1502 as a historical end date; that date is only the analytical slice boundary.",
+      "target_refs": ["claim-leonardo-borgia-service-1502"]
+    },
+    {
+      "uncertainty_id": "uncertainty-romagna-region-reconstruction",
+      "dimension": "reconstruction",
+      "description": "No reviewed source-backed geometry defines the changing Duchy of Romagna boundary for the selected interval.",
+      "effect": "Region geometry remains null and modern Emilia-Romagna cannot be substituted.",
+      "target_refs": ["claim-imola-street-sketch-source-object", "region-duchy-romagna-context"]
+    },
+    {
+      "uncertainty_id": "uncertainty-global-coverage",
+      "dimension": "scope_limitation",
+      "description": "One Safavid State is the only global simultaneity anchor in this sparse review slice.",
+      "effect": "The package cannot imply representative world coverage or any relation to Leonardo.",
+      "target_refs": ["claim-safavid-isma-il-i-1501-1524", "state-safavid-isma-il-i"]
+    }
+  ]
+}
