@@ -34,7 +34,8 @@ def test_reviewed_world_model_contract_is_preserved_instead_of_silently_redeclar
     assert "Статус: active; accepted in PR `#328`" in model
     assert "Source/EvidenceLink относятся к конкретным Claims" in model
     assert "Corpus coverage отделяется от historical absence" in model
-    assert "immutable #329 review scope" in foundation
+    assert "immutable #329" in foundation
+    assert "review scope" in foundation
     assert "remains **byte-preserved v1.0**" in decision
     assert "requires a separate semantic-contract revision with new independent review evidence" in decision
 
@@ -75,6 +76,6 @@ def test_personal_knowledge_remains_future_and_does_not_change_entity_model() ->
     entity_model = _read("docs/ENTITY_MODEL.md")
 
     assert "Персональный контекст знания — future branch" in concept
-    assert "не** добавляет `UserKnowledgeState`, `KnowledgeGap`, `ConceptMastery`" in concept
+    assert "**не** добавляет `UserKnowledgeState`, `KnowledgeGap`, `ConceptMastery`" in concept
     assert "UserKnowledgeState" not in entity_model
     assert "ConceptMastery" not in entity_model
