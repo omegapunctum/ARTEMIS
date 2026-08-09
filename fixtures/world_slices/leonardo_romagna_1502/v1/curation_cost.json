@@ -75,6 +75,30 @@
       "duration_minutes": 11,
       "measurement_state": "recorded",
       "notes": "Measured wall-clock interval 2026-08-09T09:44:59Z–09:55:18Z and rounded up to whole minutes. Re-audited all 17 objects, 10 sources, 22 Claims, 38 EvidenceLinks, 11 Uncertainties, source/rights reciprocity, temporal Region states, canonical reconstruction modes, global context policy and controlled-corruption guards. This supersedes both original unmeasured preparation entries without estimating them."
+    },
+    {
+      "activity_id": "cost-third-validator-integrity-review",
+      "activity": "Third independent validator-integrity review of Git-bound completion chronology",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 7,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T09:58:17Z–10:04:40Z and rounded up to whole minutes. Decision CHANGES_REQUIRED with one material pre-freeze chronology finding; this is review history, not final Gate C evidence."
+    },
+    {
+      "activity_id": "cost-pre-freeze-chronology-remediation",
+      "activity": "Bind Gate C review chronology to the frozen Git commit timestamp and add controlled-corruption coverage",
+      "actor_kind": "agent_assisted",
+      "duration_minutes": 3,
+      "measurement_state": "recorded",
+      "notes": "Measured wall-clock interval 2026-08-09T10:04:40Z–10:07:01Z and rounded up to whole minutes. Implements frozen_commit_time <= review start and verifies the guard with a negative test."
+    },
+    {
+      "activity_id": "cost-third-semantic-content-review-interrupted",
+      "activity": "Interrupted third independent semantic-content review after the frozen revision was invalidated by the other track",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 9,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T09:58:29Z–10:07:20Z and rounded up to whole minutes. Interrupted without a semantic decision once the same frozen revision received CHANGES_REQUIRED on validator integrity; this is cost history, not Gate C evidence."
     }
   ],
   "ready_rule": "No pending entry is allowed at READY. Historical unmeasured entries may remain null only when explicitly superseded by a recorded full recuration activity; both final independent-review costs must be recorded."

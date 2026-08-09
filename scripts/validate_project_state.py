@@ -139,11 +139,21 @@ def _parse_utc_timestamp(value: str, label: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
-def _validate_review_chronology(review: dict, now: datetime) -> tuple[datetime, datetime]:
+def _frozen_commit_time(commit: str) -> datetime:
+    return _parse_utc_timestamp(
+        _git("show", "-s", "--format=%cI", commit), "frozen commit timestamp"
+    )
+
+
+def _validate_review_chronology(
+    review: dict, now: datetime, not_before: datetime | None = None
+) -> tuple[datetime, datetime]:
     started = _parse_utc_timestamp(review["started_at"], "review started_at")
     completed = _parse_utc_timestamp(review["completed_at"], "review completed_at")
     if completed < started:
         raise ProjectStateError("review completed_at cannot precede started_at")
+    if not_before is not None and started < not_before:
+        raise ProjectStateError("review cannot start before the frozen commit exists")
     if started > now or completed > now:
         raise ProjectStateError("review timestamps cannot be in the future")
     expected_duration = max(1, math.ceil((completed - started).total_seconds() / 60))
@@ -256,6 +266,7 @@ def _validate_gate_c_evidence(payload: dict) -> None:
     frozen_identity = (evidence["frozen_commit"], evidence["frozen_tree"])
     digest = evidence["reviewed_content_digest"]
     _validate_frozen_git_revision(*frozen_identity, digest)
+    frozen_commit_time = _frozen_commit_time(evidence["frozen_commit"])
     if (review_registry.get("frozen_commit"), review_registry.get("frozen_tree")) != frozen_identity:
         raise ProjectStateError("review registry must bind the completed gate's frozen revision")
     if review_registry.get("reviewed_content_digest") != digest:
@@ -297,7 +308,9 @@ def _validate_gate_c_evidence(payload: dict) -> None:
         )
         if any(artifact_payload.get(field) != review.get(field) for field in identity_fields):
             raise ProjectStateError("review artifact identity disagrees with the review registry")
-        _started, completed = _validate_review_chronology(review, now)
+        _started, completed = _validate_review_chronology(
+            review, now, not_before=frozen_commit_time
+        )
         review_completed_times.append(completed)
 
     if (gate_decision.get("frozen_commit"), gate_decision.get("frozen_tree")) != frozen_identity:

@@ -120,6 +120,20 @@ def test_review_duration_must_equal_rounded_elapsed_time() -> None:
         _validate_review_chronology(review, datetime(2026, 8, 9, 10, tzinfo=timezone.utc))
 
 
+def test_review_cannot_predate_the_frozen_commit() -> None:
+    review = {
+        "started_at": "2026-08-09T09:00:00Z",
+        "completed_at": "2026-08-09T09:01:00Z",
+        "duration_minutes": 1,
+    }
+    with pytest.raises(ProjectStateError, match="before the frozen commit exists"):
+        _validate_review_chronology(
+            review,
+            datetime(2026, 8, 9, 10, tzinfo=timezone.utc),
+            not_before=datetime(2026, 8, 9, 9, 57, 2, tzinfo=timezone.utc),
+        )
+
+
 def test_reviewed_content_digest_rejects_revision_without_scope_files() -> None:
     import subprocess
 
