@@ -21,6 +21,7 @@ They pin semantic invariants only:
 - Trajectory segment kind and uncertainty;
 - Claim / EvidenceLink / Source refs;
 - selected-object identity;
+- active trajectory/Region focus from the accepted Explorer State;
 - DerivedObservation vs documented Relation distinction.
 
 Camera, color, projection pixels, label placement, clustering, LOD, GPU/tile/cache implementation and screenshots are renderer-only concerns and are deliberately outside semantic parity.

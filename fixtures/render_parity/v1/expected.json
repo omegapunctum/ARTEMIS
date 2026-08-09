@@ -12,11 +12,12 @@
   "selection": {
     "primary_object_ref": "event-documented-workshop-meeting",
     "selected_object_refs": [
+      "entity-mara-vale",
       "event-documented-workshop-meeting"
     ],
     "active_focus": {
       "trajectory_ref": "trajectory-mara-vale",
-      "trajectory_segment_ref": "trajectory-segment-gap",
+      "trajectory_segment_ref": "trajectory-segment-workshop",
       "region_ref": "region-fixture-basin",
       "region_geometry_ref": "region-geometry-v2"
     }
@@ -36,7 +37,6 @@
       "event-workshop-arrival"
     ],
     "context_object_refs": [
-      "entity-fixture-basin",
       "entity-mara-vale",
       "place-far-observatory",
       "place-inland-workshop"
@@ -322,7 +322,7 @@
     "paint_style_color_opacity",
     "clustering_and_lod",
     "label_placement",
-    "terrain_draping_without_historical_altitude_claim",
+    "terrain_draping_as_presentation_only",
     "presentation_animation",
     "gpu_tile_cache_and_picking_buffer_implementation",
     "screenshot_pixels"

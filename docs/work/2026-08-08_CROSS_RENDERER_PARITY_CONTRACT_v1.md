@@ -123,15 +123,22 @@ For `trajectory-mara-vale`:
 - `uncertainty-trajectory-route` survives;
 - it cannot become a LineString through renderer interpolation.
 
+The accepted baseline Explorer State focuses `trajectory-segment-workshop`. The
+unresolved gap remains part of the complete semantic envelope and is tested as an
+independent uncertainty anchor; focus is not rewritten merely to make the gap
+drawable or selected.
+
 The separate #343 capability path is outside World Model parity because it has no canonical object identity.
 
 ## 8. Selected-object parity
 
-The baseline Explorer State selects `event-documented-workshop-meeting` as primary.
+The baseline Explorer State selects `event-documented-workshop-meeting` as primary
+and keeps `entity-mara-vale` in the full selected-object set.
 
 That event has a named-place reference without canonical geometry in the reviewed fixture. Therefore the correct renderer behavior is not to invent a point: both renderer envelopes must resolve the selected object as the same `unresolved` semantic item.
 
-Selection identity is semantic; camera centering, highlight color and popup layout are visual.
+Primary selection, the complete selected-object set and active focus are semantic;
+camera centering, highlight color and popup layout are visual.
 
 ## 9. Epistemic parity
 

@@ -363,7 +363,7 @@ def _boundary_state(
     state = copy.deepcopy(base_state)
     state["state_id"] = f"{base_state['state_id']}:{case['case_id']}"
     state["temporal_selection"] = copy.deepcopy(case["temporal_selection"])
-    state["active_focus"] = copy.deepcopy(case["active_focus"])
+    state["active_focus"].update(copy.deepcopy(case["active_focus"]))
     return state
 
 

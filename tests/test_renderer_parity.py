@@ -44,6 +44,16 @@ def test_2d_and_globe_semantic_envelopes_are_identical() -> None:
     assert left == right
     assert left["source"]["world_slice_ref"] == "world-slice-fixture-basin-v1"
     assert left["selection"]["primary_object_ref"] == "event-documented-workshop-meeting"
+    assert left["selection"] == {
+        "primary_object_ref": state["selection"]["primary_object_ref"],
+        "selected_object_refs": sorted(state["selection"]["selected_object_refs"]),
+        "active_focus": {
+            "trajectory_ref": state["active_focus"]["trajectory_ref"],
+            "trajectory_segment_ref": state["active_focus"]["trajectory_segment_ref"],
+            "region_ref": state["active_focus"]["region_ref"],
+            "region_geometry_ref": state["active_focus"]["region_geometry_ref"],
+        },
+    }
 
 
 def test_selected_unresolved_object_has_same_identity_for_both_renderers() -> None:
