@@ -11,7 +11,7 @@
 
 ## 1. Принятое продуктовое направление
 
-Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal World Model. Foundation v3.1 / issue `#363` clarifies that `World Model` is a source-aware **knowledge representation about the world**, not an objective digital twin or a claim of completeness. This clarification changes North Star wording, not current capability.
+Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal World Model. Foundation v3.1 / issue `#363` / PR `#364` clarifies that `World Model` is a source-aware **knowledge representation about the world**, not an objective digital twin or a claim of completeness. This accepted clarification changes North Star wording, not current capability.
 
 Первый active validation vertical — `Life in Context`; issue #355 делает 3D Globe основной interface-development surface этого цикла. Architecture Atlas и root 2D MapLibre сохраняются как thematic/public technical baseline and rollback path.
 
@@ -28,7 +28,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
-- Gate D is the next product gate but is not started by Gate C completion or by Foundation v3.1 / #363.
+- Foundation v3.1 / #363 / PR #364 is completed; Gate D is still only the next product gate and has not been opened by the Foundation decision.
 
 ## 2. Что доступно публично
 
@@ -141,30 +141,27 @@ Gate C historical curation package is separate from the public Airtable export:
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / foundation refinement before Gate D**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D not opened**.
 
 Current public runtime and data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation.
 
-Reviewed contract/foundation evidence includes:
+Reviewed/accepted foundation evidence includes:
 
 - #329 / PR #336 world-model fixtures — READY;
 - #330 / PR #337 uncertainty semantics — READY;
 - #339–#345 / PRs #346–#352 renderer-neutral Globe foundations — accepted;
-- #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews.
+- #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews;
+- #363 / PR #364 Foundation v3.1 Attractor refinement — accepted with all required repository workflows green on its merge candidate.
 
-Current foundation maintenance:
-
-- #363 refines the North Star attractor and AI/world-model interpretation only;
-- it does not start Gate D, change `project_state.json` lifecycle, deploy runtime or open frozen AI scope.
+There is currently no active foundation-maintenance issue. The next product transition is Gate D, but it must be opened explicitly under #355 before implementation resumes.
 
 Следующий допустимый primary order:
 
-1. complete Foundation v3.1 / #363 and keep canonical docs/guards consistent;
-2. separately open Gate D under #355 when product execution resumes;
-3. build the synchronized Globe/timeline/layers experience from the frozen Gate C boundary through shared contracts;
-4. preserve the current 2D renderer as public baseline, parity target and rollback path;
-5. collect semantic, UX, accessibility and representative performance evidence;
-6. record one promotion/iterate/narrow/stop decision before public deployment.
+1. explicitly open Gate D under #355 with a bounded source-aware Globe experience contract;
+2. build the synchronized Globe/timeline/layers experience from the frozen Gate C boundary through shared contracts;
+3. preserve the current 2D renderer as public baseline, parity target and rollback path;
+4. collect semantic, UX, accessibility and representative performance evidence;
+5. record one promotion/iterate/narrow/stop decision before public deployment.
 
 Issue #331 is paused outside this critical path. Until it is accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
