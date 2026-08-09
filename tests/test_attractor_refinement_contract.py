@@ -25,15 +25,18 @@ def test_concept_owns_the_long_term_attractor_and_knowledge_model_boundary() -> 
     assert "The attractor constrains direction, not schedule" in decision
 
 
-def test_world_model_is_explicitly_knowledge_about_the_world() -> None:
+def test_reviewed_world_model_contract_is_preserved_instead_of_silently_redeclared_ready() -> None:
     model = _read("docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md")
+    foundation = _read("docs/FOUNDATION_INDEX.md")
+    decision = _read("docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md")
 
-    assert "Epistemic boundary: World Model vs world reality" in model
-    assert "World Model представляет source-aware knowledge **about** the world" in model
-    assert "не означает, что ARTEMIS хранит саму объективную реальность" in model
-    assert "World Slice является bounded knowledge representation" in model
-    assert "Renderer/domain projection не становится второй ontology" in model
-    assert "World Model is knowledge about the world, not a claim to be the world itself" in model
+    assert "Версия: 1.0" in model
+    assert "Статус: active; accepted in PR `#328`" in model
+    assert "Source/EvidenceLink относятся к конкретным Claims" in model
+    assert "Corpus coverage отделяется от historical absence" in model
+    assert "immutable #329 review scope" in foundation
+    assert "remains **byte-preserved v1.0**" in decision
+    assert "requires a separate semantic-contract revision with new independent review evidence" in decision
 
 
 def test_ai_can_change_future_view_state_but_not_canonical_knowledge() -> None:
