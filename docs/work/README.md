@@ -14,6 +14,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | one real bounded World Slice, source-aware Globe experience, semantic/UX evidence and one explicit next decision |
+| `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` | #332 active Gate C scope for the non-public 1502–1504 real-slice curation package | atomic Claim/Evidence/Uncertainty package, reviewed geometry, measured cost and two independent reviews |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 recovery/MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
@@ -31,6 +32,7 @@ Active execution rule for the Globe MVP:
 - the MVP decision does not make 3D Globe a current public capability;
 - #331 is paused but becomes blocking before documented Relation predicates enter the real corpus/runtime;
 - the completed #344 parity contract remains a fail-closed promotion gate for every runtime change.
+- the 1502–1504 Leonardo scope package freezes selection only: candidate geometry is null, the Imola→Florence route is unknown and no historical capability may be claimed before evidence binding and review.
 
 ## Gated under Foundation v3
 

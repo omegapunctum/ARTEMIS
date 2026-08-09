@@ -9,6 +9,7 @@ MASTER = ROOT / "docs" / "ARTEMIS_MASTER_PROMPT.md"
 SCOPE = ROOT / "docs" / "ARTEMIS_PRODUCT_SCOPE.md"
 WORK_REGISTRY = ROOT / "docs" / "work" / "README.md"
 DECISION = ROOT / "docs" / "work" / "2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md"
+WORLD_SLICE_SCOPE = ROOT / "docs" / "work" / "2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md"
 
 
 def _text(path: Path) -> str:
@@ -28,7 +29,7 @@ def test_globe_mvp_355_is_the_single_active_product_contour() -> None:
     assert "Globe MVP / issue `#355`" in scope
 
 
-def test_parity_is_open_recovery_not_false_completed_evidence() -> None:
+def test_parity_is_completed_recovery_foundation() -> None:
     priorities = _text(PRIORITIES)
     phases = _text(PHASES)
     truth = _text(TRUTH)
@@ -38,10 +39,10 @@ def test_parity_is_open_recovery_not_false_completed_evidence() -> None:
         assert "#344" in text
         assert "PR #351" in text
 
-    assert "Recovery still open" in priorities
-    assert "Open recovery" in phases
-    assert "not accepted" in truth
-    assert "issue #344 was closed while PR #351 remained open" in decision
+    assert "COMPLETED / #344 / PR #351" in priorities
+    assert "#344 / PR #351 — cross-renderer semantic parity" in phases
+    assert "semantic parity is merged executable evidence" in truth
+    assert "Completed recovery: issue `#344` / PR `#351`" in decision
 
 
 def test_relation_semantics_are_paused_but_fail_closed() -> None:
@@ -85,7 +86,7 @@ def test_one_semantic_core_and_2d_rollback_are_preserved() -> None:
     assert "same-content comparison surface and rollback path" in decision
 
 
-def test_accepted_renderer_foundations_are_traceable_without_claiming_351() -> None:
+def test_accepted_renderer_foundations_are_traceable_with_351() -> None:
     priorities = _text(PRIORITIES)
     accepted = {
         "#339 / PR #346",
@@ -93,17 +94,33 @@ def test_accepted_renderer_foundations_are_traceable_without_claiming_351() -> N
         "#341 / PR #348",
         "#342 / PR #349",
         "#343 / PR #350",
+        "#344 / PR #351",
         "#345 / PR #352",
     }
     assert all(token in priorities for token in accepted)
     assert "#344 / PR #351 — cross-renderer semantic parity" in priorities
-    assert "Recovery still open" in priorities
+    assert "Recovery still open" not in priorities
 
 
 def test_active_decision_is_registered_and_old_rnd_records_are_evidence() -> None:
     registry = _text(WORK_REGISTRY)
 
     assert "2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md" in registry
+    assert "2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md" in registry
     assert "#355 active Globe MVP product/governance decision" in registry
     assert "2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md" in registry
     assert "Completed execution evidence" in registry
+
+
+def test_real_world_slice_scope_is_active_but_not_ready_or_public() -> None:
+    priorities = _text(PRIORITIES)
+    phases = _text(PHASES)
+    truth = _text(TRUTH)
+    scope = _text(WORLD_SLICE_SCOPE)
+
+    assert "Active Gate C delivery: #332" in priorities
+    assert "#332 / Leonardo World Slice 1502–1504" in phases
+    assert "not yet a curated READY World Model package" in truth
+    assert "SCOPE_FROZEN / CURATION IN PROGRESS" in scope
+    assert "Public capability change: none" in scope
+    assert "No line connects Imola and Florence" in scope

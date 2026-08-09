@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-1502-1504-v1",
+  "accessed_at": "2026-08-09",
+  "sources": [
+    {
+      "source_id": "source-rct-imola-map",
+      "title": "Leonardo da Vinci (1452–1519): A map of Imola",
+      "organization": "Royal Collection Trust",
+      "source_type": "collection_catalogue",
+      "url": "https://www.rct.uk/collection/912284/a-map-of-imola",
+      "locator": "Collection item 912284, catalogue description paragraphs on the August 1502 appointment, autumn 1502 Imola context and map construction",
+      "intended_claims": [
+        "Leonardo was appointed General Architect and Engineer to Cesare Borgia in August 1502",
+        "Cesare Borgia and his entourage were in Imola in autumn 1502",
+        "The catalogued map of Imola is associated with Leonardo's work in that context"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "Royal Collection Trust, collection item 912284"
+      }
+    },
+    {
+      "source_id": "source-rct-southern-tuscany-map",
+      "title": "Leonardo da Vinci (1452–1519): A map of southern Tuscany",
+      "organization": "Royal Collection Trust",
+      "source_type": "collection_catalogue",
+      "url": "https://www.rct.uk/collection/912278/a-map-of-southern-tuscany",
+      "locator": "Collection item 912278, catalogue description paragraphs on Borgia service in 1502–1503, the June 1502 Arezzo context and the map's represented area",
+      "intended_claims": [
+        "Leonardo was in Cesare Borgia's service in 1502–1503",
+        "The catalogued map represents a wide area of southern Tuscany",
+        "The map is associated by the catalogue with the June 1502 Arezzo context"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "license": null,
+        "attribution": "Royal Collection Trust, collection item 912278"
+      }
+    },
+    {
+      "source_id": "source-ng-procession-calvary",
+      "title": "The Procession to Calvary",
+      "organization": "The National Gallery, London",
+      "source_type": "scholarly_catalogue",
+      "url": "https://www.nationalgallery.org.uk/paintings/catalogues/plazzotta-and-henry-2022/the-procession-to-calvary",
+      "locator": "Catalogue note 21: October 1503 Battle of Anghiari commission and 4 May 1504 formal contract",
+      "intended_claims": [
+        "Leonardo received the Battle of Anghiari commission in October 1503",
+        "The formal contract was made on 4 May 1504",
+        "The work context included the Sala del Papa at Santa Maria Novella"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "not_applicable",
+        "license": null,
+        "attribution": "The National Gallery, London, online scholarly catalogue, note 21"
+      }
+    },
+    {
+      "source_id": "source-imola-civic-museums-rocca",
+      "title": "Rocca Sforzesca di Imola",
+      "organization": "Comune di Imola — Musei Civici",
+      "source_type": "institutional_reference",
+      "url": "https://museiciviciimola.it/rocca-sforzesca-imola/luogo-rocca-sforzesca-imola-imola/",
+      "locator": "Historical overview paragraphs on the 1499 return to direct papal domination and Leonardo's 1502 consultation/visit evidenced by the Imola plan",
+      "intended_claims": [
+        "Leonardo visited Imola in the 1502 fortress-consultation context",
+        "The plan of Imola is presented as evidence of that visit",
+        "The 1499 siege was followed by a return to direct papal domination"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "not_applicable",
+        "license": null,
+        "attribution": "Comune di Imola — Musei Civici, Rocca Sforzesca historical overview"
+      }
+    },
+    {
+      "source_id": "source-getty-tgn-imola",
+      "title": "TGN Full Record: Imola (7004864)",
+      "organization": "J. Paul Getty Trust, Getty Research Institute",
+      "source_type": "controlled_vocabulary",
+      "url": "https://www.getty.edu/vow/TGNFullDisplay?find=&nation=&place=&subjectid=7004864",
+      "locator": "TGN subject 7004864, preferred name and reference coordinates",
+      "intended_claims": [
+        "Imola place identity",
+        "Approximate reference coordinates 44.3500, 11.7000"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "attributed_structured_data",
+        "media_reuse": "not_applicable",
+        "license": "ODC-By-1.0",
+        "attribution": "Contains information from the Getty Thesaurus of Geographic Names (TGN), J. Paul Getty Trust, Getty Research Institute, under ODC-By 1.0"
+      }
+    },
+    {
+      "source_id": "source-getty-tgn-florence",
+      "title": "TGN Full Record: Florence (7000457)",
+      "organization": "J. Paul Getty Trust, Getty Research Institute",
+      "source_type": "controlled_vocabulary",
+      "url": "https://www.getty.edu/vow/TGNFullDisplay?find=&nation=&place=&subjectid=7000457",
+      "locator": "TGN subject 7000457, preferred name and reference coordinates",
+      "intended_claims": [
+        "Florence place identity",
+        "Approximate reference coordinates 43.7667, 11.2500"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "attributed_structured_data",
+        "media_reuse": "not_applicable",
+        "license": "ODC-By-1.0",
+        "attribution": "Contains information from the Getty Thesaurus of Geographic Names (TGN), J. Paul Getty Trust, Getty Research Institute, under ODC-By 1.0"
+      }
+    },
+    {
+      "source_id": "source-getty-vocab-license",
+      "title": "Getty Vocabularies as Linked Open Data",
+      "organization": "J. Paul Getty Trust, Getty Research Institute",
+      "source_type": "license_policy",
+      "url": "https://www.getty.edu/research/tools/vocabularies/lod/index.html",
+      "locator": "Licensing section stating ODC-By 1.0 availability for Getty Vocabulary data",
+      "intended_claims": [
+        "Getty TGN structured data is available under ODC-By 1.0"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "attributed_structured_data",
+        "media_reuse": "not_applicable",
+        "license": "ODC-By-1.0",
+        "attribution": "J. Paul Getty Trust, Getty Research Institute"
+      }
+    },
+    {
+      "source_id": "source-met-islamic-rulers",
+      "title": "List of Rulers of the Islamic World",
+      "organization": "The Metropolitan Museum of Art, Department of Islamic Art",
+      "source_type": "institutional_reference",
+      "url": "https://www.metmuseum.org/toah/hd/isru/hd_isru.htm",
+      "locator": "Iran (after the Mongols), Safavid dynasty and Isma'il I entries",
+      "intended_claims": [
+        "The Safavid dynasty is dated 1501–1732 in the institutional chronology",
+        "Isma'il I is dated 1501–1524 in the institutional chronology"
+      ],
+      "relation_to_claim": "supports",
+      "curation_state": "verified_candidate_not_reviewed",
+      "rights": {
+        "data_or_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "not_applicable",
+        "license": null,
+        "attribution": "Department of Islamic Art, The Metropolitan Museum of Art, Heilbrunn Timeline of Art History"
+      }
+    }
+  ]
+}

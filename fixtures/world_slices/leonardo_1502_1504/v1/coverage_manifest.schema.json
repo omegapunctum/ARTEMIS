@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/leonardo-world-slice-coverage-v1.json",
+  "title": "ARTEMIS Leonardo World Slice coverage manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "slice_id", "coverage_statement", "known_gaps"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "slice_id": {"const": "world-slice-leonardo-1502-1504-v1"},
+    "coverage_statement": {"type": "string", "minLength": 1},
+    "known_gaps": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gap_id", "dimension", "description", "effect", "exit_condition"],
+        "properties": {
+          "gap_id": {"type": "string", "pattern": "^gap-[a-z0-9-]+$"},
+          "dimension": {"enum": ["geometry", "trajectory", "evidence", "review", "coverage", "relation"]},
+          "description": {"type": "string", "minLength": 1},
+          "effect": {"type": "string", "minLength": 1},
+          "exit_condition": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

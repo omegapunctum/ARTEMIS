@@ -79,9 +79,9 @@ Active: Globe MVP / issue `#355`.
 Execution path:
 
 1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations.
-2. Restore canonical lifecycle and Release Discipline after the incomplete PR #354 merge.
-3. Complete reopened #344 / PR #351 semantic parity on current `main`.
-4. Freeze one small real source-aware World Slice inside #355.
+2. Preserve the completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
+3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
+4. Freeze and curate the small 1502–1504 Leonardo World Slice through #332 inside #355.
 5. Build the synchronized Globe/timeline/layers experience through Explorer State and Render Projection.
 6. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
 7. Collect semantic, UX, accessibility and performance evidence.
@@ -89,7 +89,7 @@ Execution path:
 
 Issue #331 is `PAUSED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until then, only derived proximity/co-presence is allowed.
 
-Issues #339–#343 and #345 / PRs #346–#350 and #352 are accepted renderer foundations. #344 / PR #351 remains an open recovery dependency.
+Issues #339–#345 / PRs #346–#352 are accepted renderer foundations, including the recovered cross-renderer semantic parity contract.
 
 Foundation v3 is accepted in PR `#328`. The superseded #323–#325 path and PR #314 are closed and must not be reopened as the active ontology.
 

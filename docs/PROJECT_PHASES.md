@@ -4,9 +4,10 @@
 
 - Тип: canonical operational phases document.
 - Дата: 2026-08-09.
-- Активная фаза: **4.8 Globe MVP recovery and vertical**.
+- Активная фаза: **4.8 Globe MVP vertical / real World Slice**.
 - Active primary issue: **#355**.
-- Immediate dependency: **#344 / PR #351**.
+- Active delivery: **#332 / Leonardo World Slice 1502–1504**.
+- Completed recovery foundation: **#344 / PR #351**.
 - Public runtime: unchanged 2D MapLibre baseline.
 
 Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`; активное решение принадлежит `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
@@ -51,26 +52,28 @@ Paused:
 
 #331 no longer blocks Globe infrastructure, time/layer synchronization or a real slice without documented Relations. It becomes blocking before documented encounter, interaction, influence or causal predicates enter the corpus/runtime. Derived proximity/co-presence remains separate meanwhile.
 
-## Фаза 4.8 — Globe MVP recovery and vertical
+## Фаза 4.8 — Globe MVP vertical
 
 Статус: **ACTIVE / ISSUE #355**.
 
 ### Gate A — Repository recovery
 
-- synchronize canonical owners around #355;
-- replace the incomplete/failing lifecycle guard introduced by PR #354;
-- keep PR #338 closed and #331 paused;
-- restore a green Release Discipline Gate.
+- completed in PRs #356–#357;
+- canonical owners agree on #355;
+- PR #338 remains closed and #331 paused;
+- Release Discipline Gate is green.
 
 ### Gate B — Cross-renderer parity
 
-- complete #344 / PR #351 on current `main`;
-- repair selected-object / active-focus fixture drift;
-- preserve time-boundary, identity, uncertainty, alternative reconstruction, evidence and projection-loss semantics;
-- merge only with green required workflows.
+- completed in #344 / PR #351;
+- selected-object / active-focus fixture drift is repaired;
+- time-boundary, identity, uncertainty, alternative reconstruction, evidence and projection-loss semantics are executable;
+- parity and required repository workflows passed before merge.
 
 ### Gate C — Real World Slice
 
+- active through #332 and `docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`;
+- freeze the analytical 1502–1504 selection boundary before claiming historical content readiness;
 - freeze one bounded source-aware slice;
 - include Event, State, Process, Trajectory and temporally changing Region;
 - bind Claims/EvidenceLinks/locators/uncertainty;
@@ -95,7 +98,7 @@ Paused:
 
 Public promotion is a separate decision after provider/licensing/security/rollback/current-truth evidence.
 
-## Completed renderer foundations and open recovery
+## Completed renderer foundations
 
 Accepted executable foundations:
 
@@ -104,11 +107,8 @@ Accepted executable foundations:
 - #341 / PR #348 — deterministic Render Projection;
 - #342 / PR #349 — geospatial asset/provider boundary;
 - #343 / PR #350 — MapLibre Globe runtime spike;
+- #344 / PR #351 — cross-renderer semantic parity;
 - #345 / PR #352 — repository/runtime/CI boundary.
-
-Open recovery:
-
-- #344 / PR #351 — semantic parity, reopened because its workflow is red and its implementation is not merged.
 
 The generated Globe spike remains R&D evidence. It is the implementation seed for #355, not a public product surface.
 

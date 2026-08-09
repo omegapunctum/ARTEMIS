@@ -6,12 +6,12 @@
 - Дата: 2026-08-09.
 - Active cycle: Globe MVP.
 - Active primary issue: GitHub issue `#355`.
-- Immediate recovery dependency: issue `#344` / PR `#351`.
+- Completed recovery foundation: issue `#344` / PR `#351`.
 - Current public baseline: root 2D MapLibre runtime; no public Globe promotion is implied.
 
 The active product decision is recorded in `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
-## P0 — Restore repository truth and parity
+## P0 — Restore repository truth and parity — COMPLETED
 
 ### P0.1 Lifecycle recovery
 
@@ -21,15 +21,15 @@ The active product decision is recorded in `docs/work/2026-08-09_GLOBE_MVP_PROMO
 - make canonical owners, agent routing and executable lifecycle guards agree on #355;
 - restore a green Release Discipline Gate.
 
-### P0.2 Cross-renderer semantic parity — ACTIVE / #344 / PR #351
+### P0.2 Cross-renderer semantic parity — COMPLETED / #344 / PR #351
 
-- update PR #351 from current `main`;
-- repair selected-object / active-focus fixture drift against the accepted Explorer State;
-- preserve object identity, time-boundary membership, uncertainty, alternatives, evidence and projection-loss semantics;
-- keep screenshot/visual regression separate from semantic parity;
-- merge only with all required workflows green.
+- PR #351 was synchronized with current `main`;
+- selected-object / active-focus fixture drift was repaired against the accepted Explorer State;
+- object identity, time-boundary membership, uncertainty, alternatives, evidence and projection-loss semantics are executable;
+- screenshot/visual regression remains separate from semantic parity;
+- the recovered parity and repository gates passed before merge.
 
-Exit: `main` is green, #344 is closed by a merged parity implementation, and governance no longer claims completed evidence that is absent.
+Exit achieved: `main` is green, #344 is closed by the merged parity implementation, and governance describes the evidence actually present.
 
 ## P1 — First real Globe World Slice
 
@@ -43,7 +43,9 @@ Required content:
 - geometry provenance and licensing;
 - measured curation/review cost.
 
-The initial candidate remains a bounded Leonardo / Life in Context slice. Existing issue #332 may supply decomposition and evidence, but #355 owns the active cross-cutting vertical.
+The initial candidate is the bounded Leonardo / Life in Context slice delivered through #332, while #355 owns the active cross-cutting vertical.
+
+Active Gate C delivery: #332 freezes a non-public 1502–1504 curation boundary with institutional source candidates, rights/locator policy, an explicit unknown-route gap, geometry-withheld Region versions, known gaps and cost tracking. It is not READY historical data.
 
 Until #331 is accepted, the slice may expose derived proximity/co-presence only. It must not publish documented encounter, interaction, influence or causal predicates.
 
@@ -98,11 +100,8 @@ Preserved executable architecture evidence:
 - #341 / PR #348 — Render Projection;
 - #342 / PR #349 — geospatial asset/provider boundary;
 - #343 / PR #350 — browser-executed MapLibre Globe spike;
-- #345 / PR #352 — repository/runtime/CI boundary.
-
-Recovery still open:
-
 - #344 / PR #351 — cross-renderer semantic parity.
+- #345 / PR #352 — repository/runtime/CI boundary.
 
 PR #354 attempted to close the lifecycle but merged only a workflow change and a failing guard, without the declared canonical owner updates. Its intended evidence claim is therefore superseded by the recovery decision above.
 
@@ -141,12 +140,11 @@ Security, compatibility and critical reliability maintenance remain allowed.
 
 ## Execution order
 
-1. Restore governance and Release Discipline on current `main`.
-2. Complete #344 / PR #351.
-3. Freeze the first real bounded World Slice within #355.
-4. Build the source-aware Globe MVP through shared contracts.
-5. Validate semantic, UX, accessibility and performance behavior.
-6. Record one explicit next decision.
+1. Preserve the completed governance, Release Discipline and #344 parity foundations.
+2. Freeze and curate the first real bounded World Slice through #332 within #355.
+3. Build the source-aware Globe MVP through shared contracts.
+4. Validate semantic, UX, accessibility and performance behavior.
+5. Record one explicit next decision.
 
 ## Completion rule
 

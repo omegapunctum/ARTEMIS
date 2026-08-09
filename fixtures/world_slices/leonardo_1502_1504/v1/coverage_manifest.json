@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-1502-1504-v1",
+  "coverage_statement": "This package freezes a sparse curation boundary for a non-public Globe MVP. It does not claim complete coverage of Leonardo, central Italy, the Renaissance or synchronous world history, and it contains no publication-ready historical geometry or World Model Claims yet.",
+  "known_gaps": [
+    {
+      "gap_id": "gap-no-reviewed-historical-region-geometry",
+      "dimension": "geometry",
+      "description": "The two candidate cartographic-coverage Region versions have not been digitized or independently reviewed.",
+      "effect": "Historical Region geometry is null and cannot be rendered or promoted.",
+      "exit_condition": "Record source-image rights, digitization method, CRS/control points, reconstruction mode, alternatives and two independent geometry reviews."
+    },
+    {
+      "gap_id": "gap-unknown-imola-florence-route",
+      "dimension": "trajectory",
+      "description": "The selected institutional sources establish endpoint contexts but do not establish a route between Imola and Florence.",
+      "effect": "The trajectory contains an inferred_gap with no line geometry.",
+      "exit_condition": "Retain unknown_route unless a reviewed source supports a route or an explicitly analytical uncertain corridor."
+    },
+    {
+      "gap_id": "gap-no-immutable-source-snapshots",
+      "dimension": "evidence",
+      "description": "The candidate registry points to live institutional pages; exact normalized source passages are not yet pinned as immutable review artifacts.",
+      "effect": "Candidate assertions cannot become READY Claim/EvidenceLink records.",
+      "exit_condition": "Create rights-compliant immutable locator evidence or bibliographic page/section locators and verify every atomic Claim."
+    },
+    {
+      "gap_id": "gap-no-independent-content-reviews",
+      "dimension": "review",
+      "description": "No independent content or validator-integrity review has been completed for this real slice.",
+      "effect": "The package remains candidate_not_ready and promotion_allowed=false.",
+      "exit_condition": "Complete two independent reviews on one frozen commit with no unresolved critical finding."
+    },
+    {
+      "gap_id": "gap-sparse-global-context",
+      "dimension": "coverage",
+      "description": "Only one global simultaneity candidate is selected at scope-freeze time.",
+      "effect": "The slice cannot imply representative global coverage.",
+      "exit_condition": "Review the user task and either justify one anchor as sufficient or add the smallest additional source-bound context."
+    },
+    {
+      "gap_id": "gap-no-documented-relations",
+      "dimension": "relation",
+      "description": "Issue #331 is paused, so documented encounter, interaction, influence and causal predicates are prohibited.",
+      "effect": "Only deterministic derived co-presence may be computed and it cannot be stored as a historical Relation.",
+      "exit_condition": "Resume and accept #331 before introducing any documented Relation predicate."
+    }
+  ]
+}
