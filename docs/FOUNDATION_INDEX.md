@@ -5,7 +5,7 @@
 - Тип: canonical foundation index.
 - Версия: 3.1.
 - Дата: 2026-08-09.
-- Статус: active after Foundation v3.1 attractor refinement / issue `#363`.
+- Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
 
 ## 1. Foundation purpose
@@ -81,20 +81,21 @@ North Star не является release promise. Backend code не являет
 
 Historical vertical documents such as `MVP_ARCHITECTURE_ATLAS.md` and the Concept v2 `PRODUCT_VALIDATION_PLAN.md` remain traceable but are not active v3 scope owners.
 
-## 4. Active foundation decision records
+## 4. Foundation decision records
 
-- Foundation umbrella: GitHub issue `#327`.
-- Accepted Foundation v3 decision: `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md` (PR `#328`).
-- Active Foundation v3.1 refinement: issue `#363` + `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md`.
+Accepted:
+
+- Foundation v3: `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md` / PR `#328`.
+- Foundation v3.1 attractor refinement: `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` / issue `#363` / PR `#364`.
 - Migration/disposition: `docs/work/2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md`.
-- Validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`.
+- Validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated until its corresponding product gate is explicitly opened.
 
 Historical:
 
 - `docs/work/2026-07-26_CONCEPT_LOCK_V2.md` — `SUPERSEDED`, retained for rationale/history.
 - Gate A architecture module package — completed Architecture Layer fixtures, not active v3 validation.
 
-Working lifecycle authority remains only `docs/work/README.md`.
+There is currently no active foundation-maintenance decision. Working lifecycle authority remains only `docs/work/README.md`.
 
 ## 5. Reading order
 
@@ -110,7 +111,7 @@ Working lifecycle authority remains only `docs/work/README.md`.
 10. `docs/AI_POLICY.md` when AI behavior or future AI interaction is relevant.
 11. `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md` and `docs/DEVELOPMENT_OPERATING_SYSTEM.md`.
 12. `docs/project_state.json`.
-13. `docs/work/README.md`, then active Foundation records.
+13. `docs/work/README.md`, then active/accepted Foundation records.
 14. Task-specific data/runtime/governance contracts.
 
 ## 6. Routing
@@ -133,9 +134,7 @@ Primary: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
 
 The active v1.0 file is part of the immutable #329 READY review scope. Foundation v3.1 does not edit or reinterpret its executable semantics through a hidden documentation change. A future contract revision requires its own semantic change-control and independent review evidence.
 
-For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is
-`UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core
-object identity or runtime schemas.
+For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is `UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core object identity or runtime schemas.
 
 Examples:
 
@@ -196,7 +195,7 @@ A reviewed executable contract cannot be changed merely to make identity-level w
 ## 8. Foundation v3.1 invariants
 
 - ARTEMIS is an explorable source-aware spatial-temporal knowledge model about the world;
-- `World Model` is the technical semantic-core name; its reviewed v1.0 executable semantics remain unchanged by #363;
+- `World Model` is the technical semantic-core name; its reviewed v1.0 executable semantics remain unchanged by Foundation v3.1;
 - space/time are mandatory;
 - change objects are first-class;
 - evidence is trust layer;
@@ -227,11 +226,11 @@ Completed product gate:
 
 Next product gate:
 
-3. Gate D — source-aware Globe experience. It is next but is **not started by Foundation v3.1 / #363**.
+3. Gate D — source-aware Globe experience. It is the next transition but is **not currently opened/in progress**.
 
-Active foundation maintenance:
+Foundation status:
 
-4. Issue `#363`: Attractor refinement. Documentation/governance only; no product capability or gate transition.
+4. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
 
 Paused/gated:
 
@@ -251,6 +250,7 @@ Frozen:
 
 Completed evidence:
 
+- issue `#363` / PR `#364`: Foundation v3.1 long-term attractor and governance guard;
 - issue `#329` / PR `#336`: READY world-model fixture package v1;
 - issue `#330` / PR `#337`: READY uncertainty semantics v1;
 - issues `#339`–`#345` / PRs `#346`–`#352`: renderer architecture, state, projection, asset, runtime-spike, cross-renderer parity and repository-boundary evidence;
@@ -260,7 +260,7 @@ Active product/governance decision:
 
 - `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
-Active foundation decision:
+Accepted foundation decision:
 
 - `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md`.
 
