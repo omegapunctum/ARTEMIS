@@ -25,7 +25,7 @@ def test_globe_mvp_355_is_the_single_active_product_contour() -> None:
     assert "Active cycle: Globe MVP" in priorities
     assert "Active primary issue: GitHub issue `#355`" in priorities
     assert "ACTIVE / ISSUE #355" in phases
-    assert "Active: Globe MVP / issue `#355`." in master
+    assert "Active product vertical: Globe MVP / issue `#355`" in master
     assert "Globe MVP / issue `#355`" in scope
 
 
@@ -82,7 +82,7 @@ def test_one_semantic_core_and_2d_rollback_are_preserved() -> None:
     assert "one World Model → Explorer State → Render Projection path" in priorities
     assert "Renderer engines do not own domain semantics" in master
     assert "Screenshot equality is not semantic parity" in master
-    assert "creating separate 2D/3D historical truth datasets" in master
+    assert "separate domain-specific or renderer-specific truth models" in master
     assert "same-content comparison surface and rollback path" in decision
 
 
@@ -112,15 +112,18 @@ def test_active_decision_is_registered_and_old_rnd_records_are_evidence() -> Non
     assert "Completed execution evidence" in registry
 
 
-def test_real_world_slice_scope_is_active_but_not_ready_or_public() -> None:
+def test_real_world_slice_gate_c_is_completed_but_not_historical_product_data() -> None:
     priorities = _text(PRIORITIES)
     phases = _text(PHASES)
     truth = _text(TRUTH)
     scope = _text(WORLD_SLICE_SCOPE)
 
-    assert "Active Gate C delivery: #332" in priorities
-    assert "#332/#360 / Leonardo-in-Romagna World Slice 1502" in phases
-    assert "not yet a curated READY World Model package" in truth
-    assert "SCOPE_FROZEN / CURATION IN PROGRESS" in scope
+    assert "Gate C is completed by a `FREEZE` decision" in priorities
+    assert "Completed Gate C delivery" in phases
+    assert "Gate C is completed/FREEZE" in truth
+    assert "State: `SCOPE_FROZEN / GATE C REVIEWED / NON-PUBLIC`" in scope
+    assert "Decision: `FREEZE`" in scope
     assert "Public capability change: none" in scope
     assert "No line connects the selected presence contexts" in scope
+    assert "This is not a promotion to reviewed historical data" in scope
+    assert "Gate D is the next permitted transition but is not started by this decision" in scope
