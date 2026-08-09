@@ -48,6 +48,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install test dependency
+        run: python -m pip install pytest
+
       - name: Run Globe repository boundary tests
         run: pytest -q tests/test_globe_repository_boundary.py
 
