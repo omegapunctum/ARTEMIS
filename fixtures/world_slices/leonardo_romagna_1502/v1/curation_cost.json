@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "status": "CURATION_IN_PROGRESS",
+  "unit": "minutes",
+  "entries": [
+    {
+      "activity_id": "cost-scope-and-source-triage",
+      "activity": "Scope definition and institutional source triage",
+      "actor_kind": "agent_assisted",
+      "duration_minutes": null,
+      "measurement_state": "pending",
+      "notes": "The artifact establishes the cost-log shape without inventing elapsed time. The responsible curator must record actual duration before the package can become READY."
+    },
+    {
+      "activity_id": "cost-claim-and-locator-curation",
+      "activity": "Atomic Claim, locator and uncertainty curation",
+      "actor_kind": "human_curator",
+      "duration_minutes": null,
+      "measurement_state": "pending",
+      "notes": "Dated folio and patent transcription locators are now pinned. Claims remain draft until independent content review; the separate Cesena wall-survey folios 9r–10r still need direct verification."
+    },
+    {
+      "activity_id": "cost-independent-review",
+      "activity": "Independent semantic and geometry review",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": null,
+      "measurement_state": "pending",
+      "notes": "No review has been performed."
+    },
+    {
+      "activity_id": "cost-critical-locator-normalization",
+      "activity": "Critical folio and patent locator normalization plus fail-closed guard implementation",
+      "actor_kind": "agent_assisted",
+      "duration_minutes": 7,
+      "measurement_state": "recorded",
+      "notes": "Measured wall-clock interval 2026-08-09T08:08:48Z–08:15:12Z, rounded up to whole minutes. Earlier scope/source work remains unmeasured rather than inferred."
+    }
+  ],
+  "ready_rule": "Every entry must be measured and review cost must be recorded before READY."
+}

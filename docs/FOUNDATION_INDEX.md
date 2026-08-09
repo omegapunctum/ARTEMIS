@@ -195,12 +195,12 @@ Foundation owner documents must be synchronized in one decision PR when identity
 Active:
 
 1. Issue `#355`: first source-aware Globe MVP vertical.
-2. Recovery dependency `#344` / PR `#351`: cross-renderer semantic parity.
+2. Issues `#332` / `#360`: Gate C delivery for the non-public Leonardo-in-Romagna World Slice, 8 August–31 December 1502.
 
 Paused/gated:
 
 3. Issue `#331`: coexistence/encounter/interaction/influence distinctions; required before documented Relation predicates enter the real corpus/runtime.
-4. Issues `#332`–`#334`: their corpus/explorer/validation goals may be reused inside #355, but they no longer define the active sequential path.
+4. Issues `#333`–`#334`: their explorer/validation goals may be reused inside #355 after the real slice gate, but they do not define a standalone sequential path.
 5. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
 
 Frozen:
@@ -216,7 +216,7 @@ Completed evidence:
 
 - issue `#329` / PR `#336`: READY world-model fixture package v1;
 - issue `#330` / PR `#337`: READY uncertainty semantics v1;
-- issues `#339`–`#343` and `#345` / PRs `#346`–`#350`, `#352`: renderer architecture, state, projection, asset, runtime-spike and repository-boundary evidence.
+- issues `#339`–`#345` / PRs `#346`–`#352`: renderer architecture, state, projection, asset, runtime-spike, cross-renderer parity and repository-boundary evidence.
 
 Active product/governance decision:
 

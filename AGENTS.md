@@ -47,10 +47,10 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Active work is issue `#355`: recover repository governance/parity, then build the first source-aware Globe MVP vertical.
+Active work is issue `#355`: build the first source-aware Globe MVP vertical. Issue `#332` is the active Gate C delivery for the first real bounded World Slice.
 
 - preserve #329 / PR #336 World Model fixtures and #330 / PR #337 uncertainty semantics as reviewed READY foundations;
-- complete reopened #344 / PR #351 before expanding Globe runtime scope;
+- preserve completed #344 / PR #351 cross-renderer parity as a required green foundation;
 - keep #331 `PAUSED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is accepted;
 - use one World Model → Explorer State → Render Projection path for both 2D and Globe;
 - keep the current root 2D MapLibre runtime as the public baseline and rollback path;
@@ -58,6 +58,8 @@ Active work is issue `#355`: recover repository governance/parity, then build th
 - use MapLibre as the leading MVP engine unless measured evidence justifies a Cesium comparison;
 - do not create a framework/backend/repository rewrite without a demonstrated blocker;
 - security, compatibility and critical maintenance remain allowed.
+
+The current active artifact is the non-public Leonardo-in-Romagna 1502 scope package under `fixtures/world_slices/leonardo_romagna_1502/v1/`. It is a curation boundary, not READY historical data. Do not add route or Region geometry until the package's evidence, rights and independent-review gaps are closed.
 
 ## Verification
 

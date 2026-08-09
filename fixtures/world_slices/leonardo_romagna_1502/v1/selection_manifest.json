@@ -1,0 +1,459 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "title": "Leonardo in Romagna: documented presences and unresolved movement, 1502",
+  "status": "SCOPE_FROZEN",
+  "publication_status": "non_public_curation",
+  "issue_refs": {
+    "parent": 355,
+    "delivery": 332,
+    "paused_relation_gate": 331
+  },
+  "temporal_scope": {
+    "start": "1502-08-08",
+    "end": "1502-12-31",
+    "boundary_kind": "analytical_closed_interval",
+    "historical_precision_note": "The boundary begins with the dated Rimini note and ends analytically after the selected autumn Imola context. Each candidate retains its own day, month, seasonal or unresolved precision."
+  },
+  "spatial_scope": {
+    "focus": "romagna",
+    "focus_place_refs": [
+      "place-rimini",
+      "place-cesena",
+      "place-cesenatico",
+      "place-imola"
+    ],
+    "global_context_policy": "Retain one independently sourced simultaneous Safavid State only to exercise local/global comparison; overlap never implies contact or influence.",
+    "historical_polygon": null
+  },
+  "layers": [
+    {
+      "layer_id": "layer-leonardo-trajectory",
+      "label": "Leonardo documented presences and unresolved movement",
+      "role": "primary_trajectory"
+    },
+    {
+      "layer_id": "layer-local-context",
+      "label": "Romagna events and political context",
+      "role": "local_context"
+    },
+    {
+      "layer_id": "layer-engineering-work",
+      "label": "Surveying, fortification and cartographic work",
+      "role": "change_context"
+    },
+    {
+      "layer_id": "layer-global-simultaneity",
+      "label": "Selected global simultaneity",
+      "role": "global_context"
+    }
+  ],
+  "selection_rules": {
+    "include": [
+      "Atomic candidate Claims needed to explain source-bound presences at Rimini, Cesena, Cesenatico and Imola between 8 August and 31 December 1502",
+      "Explicit unknown-route gaps between independently evidenced presence contexts",
+      "One political Region candidate whose changing versions remain geometry-withheld until provenance and independent review are complete",
+      "One sparse global context item with independent institutional evidence",
+      "Only objects required by a concrete synchronized 2D and Globe review task"
+    ],
+    "exclude": [
+      "Florence, the Battle of Anghiari commission and all 1503–1504 content from the first slice",
+      "Routes inferred from straight lines or presumed itinerary order",
+      "Documented encounter, interaction, influence or causal predicates while issue #331 is paused",
+      "Duchy of Romagna boundaries digitized from modern administrative borders or unsourced web maps",
+      "Royal Collection or manuscript images without explicit reuse permission",
+      "Objects selected only for visual density"
+    ],
+    "absence_rule": "Absence from this deliberately sparse World Slice never asserts historical absence."
+  },
+  "relation_policy": {
+    "allowed_computed_observations": [
+      "derived_co_presence"
+    ],
+    "prohibited_predicates": [
+      "possible_encounter",
+      "documented_encounter",
+      "interaction",
+      "influence",
+      "causal"
+    ],
+    "stored_relations": []
+  },
+  "required_object_types": [
+    "Entity",
+    "Event",
+    "State",
+    "Process",
+    "Trajectory",
+    "Region"
+  ],
+  "candidate_objects": [
+    {
+      "object_id": "entity-leonardo-da-vinci",
+      "object_type": "Entity",
+      "label": "Leonardo da Vinci",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-museo-galileo-ms-l", "source-rct-imola-map"],
+      "temporal_hint": {
+        "value": "1452/1519",
+        "precision": "range",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Primary Person candidate. Identity and lifespan remain outside the selected interval and still require atomic reviewed Claims before READY."
+    },
+    {
+      "object_id": "entity-cesare-borgia",
+      "object_type": "Entity",
+      "label": "Cesare Borgia",
+      "layer_refs": ["layer-local-context", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map"],
+      "temporal_hint": {
+        "value": "1502",
+        "precision": "year",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Context Entity only. Inclusion does not assert meeting, interaction or influence."
+    },
+    {
+      "object_id": "place-rimini",
+      "object_type": "Entity",
+      "label": "Rimini",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-local-context"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": null,
+        "precision": "pending",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Named-place context only. No point or historical footprint is yet authorized."
+    },
+    {
+      "object_id": "place-cesena",
+      "object_type": "Entity",
+      "label": "Cesena",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-local-context", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": null,
+        "precision": "pending",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Named-place context linked to Manuscript L folio candidates; geometry remains null."
+    },
+    {
+      "object_id": "place-cesenatico",
+      "object_type": "Entity",
+      "label": "Cesenatico",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": null,
+        "precision": "pending",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Named-place context linked to the dated Manuscript L folio 66v entry. A separate perspective at folio 68r is outside the atomic dated-presence Claim; geometry remains null."
+    },
+    {
+      "object_id": "place-imola",
+      "object_type": "Entity",
+      "label": "Imola",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-local-context", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-getty-tgn-imola", "source-rct-imola-map"],
+      "temporal_hint": {
+        "value": null,
+        "precision": "pending",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "approximate_point",
+      "geometry": null,
+      "notes": "Getty coordinates may later supply an attributed present-day reference point, never an exact Leonardo location or historical boundary."
+    },
+    {
+      "object_id": "event-leonardo-rimini-note",
+      "object_type": "Event",
+      "label": "Leonardo records the dated Rimini observation",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-08-08",
+        "precision": "day",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "The exact day is bound to the published Manuscript L folio 78r locator. The Claim remains draft until independent evidence review."
+    },
+    {
+      "object_id": "event-leonardo-cesena-survey",
+      "object_type": "Event",
+      "label": "Leonardo documented in the Cesena survey context",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-08-10",
+        "precision": "day",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "The 10 August presence is bound to Manuscript L folio 46v in the university chronology. The separate wall-survey association with folios 9r–10r remains an unreviewed secondary locator."
+    },
+    {
+      "object_id": "event-leonardo-borgia-patent",
+      "object_type": "Event",
+      "label": "Cesare Borgia issues Leonardo's letter patent",
+      "layer_refs": ["layer-local-context", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-08-18",
+        "precision": "day",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "The date and commissioned title are bound to the full transcription at Volpe (2023), printed p. 16 n. 26. The original survives at Archivio Melzi d'Eril, but this package does not claim an archival call number or media rights."
+    },
+    {
+      "object_id": "event-leonardo-cesenatico-port-note",
+      "object_type": "Event",
+      "label": "Leonardo records the Cesenatico port",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-09-06",
+        "precision": "day",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "The dated port entry is bound to Manuscript L folio 66v in the university chronology. Folio 68r is not used as evidence for this exact date."
+    },
+    {
+      "object_id": "event-leonardo-imola-map-context",
+      "object_type": "Event",
+      "label": "Leonardo's documented Imola map-work context",
+      "layer_refs": ["layer-leonardo-trajectory", "layer-local-context", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-rct-imola-map", "source-rct-imola-street-sketches", "source-imola-civic-museums-rocca"],
+      "temporal_hint": {
+        "value": "1502-09/1502-11",
+        "precision": "range",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Autumn is preserved as a range candidate. The map and sketches are source objects, not automatic georeferenced historical geometry."
+    },
+    {
+      "object_id": "state-leonardo-in-borgia-service",
+      "object_type": "State",
+      "label": "Leonardo in commissioned engineering service for Cesare Borgia",
+      "layer_refs": ["layer-local-context", "layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-08-18/1502-12-31",
+        "precision": "range",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Work/service State only; it is not a Relation claim and does not assert personal encounter. End validity remains analytical and unresolved."
+    },
+    {
+      "object_id": "process-leonardo-romagna-surveying",
+      "object_type": "Process",
+      "label": "Source-bound sequence of Leonardo's surveying and engineering observations in Romagna",
+      "layer_refs": ["layer-engineering-work"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-museo-galileo-ms-l", "source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-rct-imola-street-sketches", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-08-08/1502-11",
+        "precision": "range",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "The Process groups documented work contexts without asserting a continuous route, mechanism, causal sequence or complete itinerary."
+    },
+    {
+      "object_id": "trajectory-leonardo-romagna-1502",
+      "object_type": "Trajectory",
+      "label": "Leonardo's selected Romagna presence sequence with unresolved routes",
+      "layer_refs": ["layer-leonardo-trajectory"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-rct-imola-map", "source-imola-civic-museums-rocca", "source-uniurb-volpe-chronology"],
+      "temporal_hint": {
+        "value": "1502-08-08/1502-11",
+        "precision": "range",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "unknown_route",
+      "geometry": null,
+      "notes": "Presence contexts are separated by explicit gaps. No path, order beyond dated anchors or continuous movement is asserted.",
+      "segments": [
+        {
+          "segment_id": "segment-rimini-presence",
+          "segment_kind": "presence",
+          "place_ref": "place-rimini",
+          "spatial_mode": "named_place",
+          "geometry": null,
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"]
+        },
+        {
+          "segment_id": "segment-rimini-cesena-gap",
+          "segment_kind": "inferred_gap",
+          "place_ref": null,
+          "spatial_mode": "unknown_route",
+          "geometry": null,
+          "source_refs": []
+        },
+        {
+          "segment_id": "segment-cesena-presence",
+          "segment_kind": "presence",
+          "place_ref": "place-cesena",
+          "spatial_mode": "named_place",
+          "geometry": null,
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"]
+        },
+        {
+          "segment_id": "segment-cesena-cesenatico-gap",
+          "segment_kind": "inferred_gap",
+          "place_ref": null,
+          "spatial_mode": "unknown_route",
+          "geometry": null,
+          "source_refs": []
+        },
+        {
+          "segment_id": "segment-cesenatico-presence",
+          "segment_kind": "presence",
+          "place_ref": "place-cesenatico",
+          "spatial_mode": "named_place",
+          "geometry": null,
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"]
+        },
+        {
+          "segment_id": "segment-cesenatico-imola-gap",
+          "segment_kind": "inferred_gap",
+          "place_ref": null,
+          "spatial_mode": "unknown_route",
+          "geometry": null,
+          "source_refs": []
+        },
+        {
+          "segment_id": "segment-imola-presence",
+          "segment_kind": "presence",
+          "place_ref": "place-imola",
+          "spatial_mode": "named_place",
+          "geometry": null,
+          "source_refs": ["source-rct-imola-map", "source-imola-civic-museums-rocca"]
+        }
+      ]
+    },
+    {
+      "object_id": "region-duchy-romagna-context",
+      "object_type": "Region",
+      "label": "Duchy of Romagna political context",
+      "layer_refs": ["layer-local-context"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-imola-civic-museums-rocca"],
+      "temporal_hint": {
+        "value": "1502",
+        "precision": "year",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "historical_region_pending",
+      "geometry": null,
+      "notes": "Political Region candidate, not a modern Emilia-Romagna substitute. Both versions remain geometry-withheld and require scholarly provenance.",
+      "versions": [
+        {
+          "version_id": "region-version-borgia-romagna-1502",
+          "reconstruction_mode": "scholarly_reconstruction",
+          "temporal_hint": {
+            "value": "1502-08/1502-12",
+            "precision": "range",
+            "assertion_status": "candidate_requires_claim_binding"
+          },
+          "geometry_status": "pending_digitization_review",
+          "geometry": null,
+          "source_refs": ["source-visit-romagna-leonardo-borgia"]
+        },
+        {
+          "version_id": "region-version-imola-papal-transition-context",
+          "reconstruction_mode": "scholarly_reconstruction",
+          "temporal_hint": {
+            "value": "1499/1502",
+            "precision": "range",
+            "assertion_status": "candidate_requires_claim_binding"
+          },
+          "geometry_status": "pending_digitization_review",
+          "geometry": null,
+          "source_refs": ["source-imola-civic-museums-rocca"]
+        }
+      ]
+    },
+    {
+      "object_id": "state-safavid-isma-il-i",
+      "object_type": "State",
+      "label": "Safavid rule under Isma'il I",
+      "layer_refs": ["layer-global-simultaneity"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-met-islamic-rulers"],
+      "temporal_hint": {
+        "value": "1501/1524",
+        "precision": "range",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "Sparse global context candidate. Simultaneity is a computed observation only and carries no Relation."
+    }
+  ],
+  "source_policy": {
+    "minimum_quality": "curated_institutional",
+    "locator_required": true,
+    "source_url_is_not_blanket_proof": true,
+    "immutable_snapshot_required_for_ready": true
+  },
+  "geometry_policy": {
+    "crs": "EPSG:4326",
+    "place_points": "approximate_reference_only",
+    "routes": "no_line_without_documented_or_reviewed_corridor_geometry",
+    "historical_regions": "withheld_until_digitization_and_independent_review",
+    "modern_context": "attributed_rendering_context_not_historical_truth"
+  },
+  "known_gap_refs": [
+    "gap-no-reviewed-romagna-region-geometry",
+    "gap-unknown-inter-place-routes",
+    "gap-no-manuscript-folio-artifacts",
+    "gap-no-independent-content-reviews",
+    "gap-sparse-global-context",
+    "gap-no-documented-relations"
+  ],
+  "readiness": {
+    "scope_frozen": true,
+    "historical_objects_ready": false,
+    "independent_review_count": 0,
+    "promotion_allowed": false
+  }
+}

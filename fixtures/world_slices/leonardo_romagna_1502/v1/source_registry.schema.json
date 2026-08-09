@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/leonardo-world-slice-sources-v1.json",
+  "title": "ARTEMIS Leonardo World Slice source registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "slice_id", "accessed_at", "sources"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "slice_id": {"const": "world-slice-leonardo-romagna-1502-v1"},
+    "accessed_at": {"const": "2026-08-09"},
+    "sources": {
+      "type": "array",
+      "minItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "title",
+          "organization",
+          "source_type",
+          "url",
+          "locator",
+          "intended_claims",
+          "relation_to_claim",
+          "curation_state",
+          "rights"
+        ],
+        "properties": {
+          "source_id": {"type": "string", "pattern": "^source-[a-z0-9-]+$"},
+          "title": {"type": "string", "minLength": 1},
+          "organization": {"type": "string", "minLength": 1},
+          "source_type": {
+            "enum": ["collection_catalogue", "scholarly_catalogue", "scholarly_publication", "controlled_vocabulary", "institutional_reference", "license_policy"]
+          },
+          "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+          "locator": {"type": "string", "minLength": 1},
+          "intended_claims": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "relation_to_claim": {"enum": ["supports", "contextualizes"]},
+          "curation_state": {"const": "verified_candidate_not_reviewed"},
+          "rights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["data_or_text_use", "media_reuse", "license", "attribution"],
+            "properties": {
+              "data_or_text_use": {"enum": ["citation_and_factual_claims_only", "attributed_structured_data"]},
+              "media_reuse": {"enum": ["prohibited_without_permission", "not_applicable"]},
+              "license": {"type": ["string", "null"]},
+              "attribution": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

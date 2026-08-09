@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/leonardo-world-slice-selection-v1.json",
+  "title": "ARTEMIS Leonardo World Slice selection manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "slice_id",
+    "title",
+    "status",
+    "publication_status",
+    "issue_refs",
+    "temporal_scope",
+    "spatial_scope",
+    "layers",
+    "selection_rules",
+    "relation_policy",
+    "required_object_types",
+    "candidate_objects",
+    "source_policy",
+    "geometry_policy",
+    "known_gap_refs",
+    "readiness"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "slice_id": {"const": "world-slice-leonardo-romagna-1502-v1"},
+    "title": {"type": "string", "minLength": 1},
+    "status": {"const": "SCOPE_FROZEN"},
+    "publication_status": {"const": "non_public_curation"},
+    "issue_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent", "delivery", "paused_relation_gate"],
+      "properties": {
+        "parent": {"const": 355},
+        "delivery": {"const": 332},
+        "paused_relation_gate": {"const": 331}
+      }
+    },
+    "temporal_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "boundary_kind", "historical_precision_note"],
+      "properties": {
+        "start": {"const": "1502-08-08"},
+        "end": {"const": "1502-12-31"},
+        "boundary_kind": {"const": "analytical_closed_interval"},
+        "historical_precision_note": {"type": "string", "minLength": 1}
+      }
+    },
+    "spatial_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["focus", "focus_place_refs", "global_context_policy", "historical_polygon"],
+      "properties": {
+        "focus": {"const": "romagna"},
+        "focus_place_refs": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "global_context_policy": {"type": "string", "minLength": 1},
+        "historical_polygon": {"type": "null"}
+      }
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["layer_id", "label", "role"],
+        "properties": {
+          "layer_id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1},
+          "role": {
+            "enum": ["primary_trajectory", "local_context", "change_context", "global_context"]
+          }
+        }
+      }
+    },
+    "selection_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["include", "exclude", "absence_rule"],
+      "properties": {
+        "include": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "exclude": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "absence_rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "relation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_computed_observations", "prohibited_predicates", "stored_relations"],
+      "properties": {
+        "allowed_computed_observations": {
+          "type": "array",
+          "const": ["derived_co_presence"]
+        },
+        "prohibited_predicates": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "stored_relations": {"type": "array", "maxItems": 0}
+      }
+    },
+    "required_object_types": {
+      "type": "array",
+      "const": ["Entity", "Event", "State", "Process", "Trajectory", "Region"]
+    },
+    "candidate_objects": {
+      "type": "array",
+      "minItems": 8,
+      "items": {"$ref": "#/$defs/candidateObject"}
+    },
+    "source_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_quality", "locator_required", "source_url_is_not_blanket_proof", "immutable_snapshot_required_for_ready"],
+      "properties": {
+        "minimum_quality": {"const": "curated_institutional"},
+        "locator_required": {"const": true},
+        "source_url_is_not_blanket_proof": {"const": true},
+        "immutable_snapshot_required_for_ready": {"const": true}
+      }
+    },
+    "geometry_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["crs", "place_points", "routes", "historical_regions", "modern_context"],
+      "properties": {
+        "crs": {"const": "EPSG:4326"},
+        "place_points": {"const": "approximate_reference_only"},
+        "routes": {"const": "no_line_without_documented_or_reviewed_corridor_geometry"},
+        "historical_regions": {"const": "withheld_until_digitization_and_independent_review"},
+        "modern_context": {"const": "attributed_rendering_context_not_historical_truth"}
+      }
+    },
+    "known_gap_refs": {"$ref": "#/$defs/nonEmptyStringArray"},
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_frozen", "historical_objects_ready", "independent_review_count", "promotion_allowed"],
+      "properties": {
+        "scope_frozen": {"const": true},
+        "historical_objects_ready": {"const": false},
+        "independent_review_count": {"const": 0},
+        "promotion_allowed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "candidateObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_id",
+        "object_type",
+        "label",
+        "layer_refs",
+        "curation_state",
+        "source_refs",
+        "temporal_hint",
+        "spatial_mode",
+        "geometry",
+        "notes"
+      ],
+      "properties": {
+        "object_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "object_type": {"enum": ["Entity", "Event", "State", "Process", "Trajectory", "Region"]},
+        "label": {"type": "string", "minLength": 1},
+        "layer_refs": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "curation_state": {"const": "candidate_not_ready"},
+        "source_refs": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "temporal_hint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "precision", "assertion_status"],
+          "properties": {
+            "value": {"type": ["string", "null"]},
+            "precision": {"enum": ["day", "month", "year", "range", "pending"]},
+            "assertion_status": {"const": "candidate_requires_claim_binding"}
+          }
+        },
+        "spatial_mode": {
+          "enum": ["named_place", "approximate_point", "unknown_route", "historical_region_pending"]
+        },
+        "geometry": {"type": "null"},
+        "notes": {"type": "string", "minLength": 1},
+        "segments": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["segment_id", "segment_kind", "place_ref", "spatial_mode", "geometry", "source_refs"],
+            "properties": {
+              "segment_id": {"type": "string", "minLength": 1},
+              "segment_kind": {"enum": ["presence", "inferred_gap"]},
+              "place_ref": {"type": ["string", "null"]},
+              "spatial_mode": {"enum": ["named_place", "unknown_route"]},
+              "geometry": {"type": "null"},
+              "source_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        },
+        "versions": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["version_id", "reconstruction_mode", "temporal_hint", "geometry_status", "geometry", "source_refs"],
+            "properties": {
+              "version_id": {"type": "string", "minLength": 1},
+              "reconstruction_mode": {"const": "scholarly_reconstruction"},
+              "temporal_hint": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["value", "precision", "assertion_status"],
+                "properties": {
+                  "value": {"type": "string", "minLength": 1},
+                  "precision": {"enum": ["day", "month", "year", "range"]},
+                  "assertion_status": {"const": "candidate_requires_claim_binding"}
+                }
+              },
+              "geometry_status": {"const": "pending_digitization_review"},
+              "geometry": {"type": "null"},
+              "source_refs": {"$ref": "#/$defs/nonEmptyStringArray"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

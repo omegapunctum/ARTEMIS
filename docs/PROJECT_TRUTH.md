@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-08-08.
+- Дата фиксации: 2026-08-09.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D status иначе создаёт прямое противоречие с capability wording.
 
@@ -25,7 +25,8 @@ Foundation v3, accepted in PR `#328`, fixes the long-term direction of ARTEMIS: 
 - generative AI, causal/counterfactual runtime, VR/AR and universal corpus remain frozen/future;
 - **A real executable 3D Globe R&D artifact now exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
 - The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface, no real historical World Slice in that runtime and no production terrain/provider decision.
-- Issue #344 / PR #351 semantic parity remains an open recovery gate; issue #355 is the active product-facing MVP contour after that recovery.
+- Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 is the active product-facing MVP contour.
+- A non-public Leonardo-in-Romagna scope package for 8 August–31 December 1502 now freezes the Gate C selection, source/rights candidates, atomic draft Claim/Evidence/Uncertainty inventory and material gaps; it is not yet a curated READY World Model package.
 
 ## 2. Что доступно публично
 
@@ -125,7 +126,7 @@ Migration preflight и release gate подтверждают current backend cap
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Globe MVP recovery**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Globe MVP real-slice curation**.
 
 Current runtime and data remain the Architecture Atlas baseline. Foundation v3 is accepted, but its world-model objects are not implemented in the public runtime or database/API.
 
@@ -134,19 +135,22 @@ Reviewed contract foundation now includes:
 - #329 / PR #336 world-model fixtures — READY;
 - #330 / PR #337 uncertainty semantics — READY.
 
+Completed recovery:
+
+- PRs #356–#357 restored the repository-boundary test environment, canonical governance and a green Release Discipline Gate;
+- #344 / PR #351 restored and merged cross-renderer semantic parity.
+
 Следующий допустимый primary order:
 
-1. restore canonical governance and a green Release Discipline Gate after PR #354;
-2. complete reopened #344 / PR #351 cross-renderer semantic parity;
-3. freeze one small real source-aware World Slice inside #355;
-4. implement the synchronized Globe/timeline/layers experience through shared contracts;
-5. preserve the current 2D renderer as public baseline, parity target and rollback path;
-6. collect semantic, UX, accessibility and representative performance evidence;
-7. record one promotion/iterate/narrow/stop decision before public deployment.
+1. curate the frozen Leonardo-in-Romagna 1502 scope through #332/#360 into a reviewed real World Model package;
+2. implement the synchronized Globe/timeline/layers experience through shared contracts;
+3. preserve the current 2D renderer as public baseline, parity target and rollback path;
+4. collect semantic, UX, accessibility and representative performance evidence;
+5. record one promotion/iterate/narrow/stop decision before public deployment.
 
 Issue #331 is paused outside this critical path. Until it is accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
-Accepted renderer foundations are #339–#343 and #345 / PRs #346–#350 and #352. #344 / PR #351 is not accepted until its red parity workflow is repaired and the implementation is merged.
+Accepted renderer foundations are #339–#345 / PRs #346–#352, including the recovered cross-renderer semantic parity implementation.
 
 The superseded #323–#325 path and PR #314 are closed. Passing fixtures proves contract representability only; it does not change `PUBLIC NOW`, `BACKEND-AVAILABLE` or user-value status.
 

@@ -5,7 +5,8 @@
 - Type: active product/governance decision record.
 - Date: 2026-08-09.
 - Active epic: GitHub issue `#355`.
-- Recovery dependency: issue `#344` / PR `#351`.
+- Completed recovery: issue `#344` / PR `#351`.
+- Active Gate C delivery: issue `#332` and `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`.
 - Public capability change: none.
 
 ## 1. Decision
@@ -47,9 +48,9 @@ However, the lifecycle was closed incorrectly:
 
 The recovery order is therefore:
 
-1. restore canonical governance and a green Release Discipline Gate;
-2. complete #344 / PR #351 on current `main`;
-3. freeze one small real World Slice boundary;
+1. restore canonical governance and a green Release Discipline Gate — completed in PRs #356–#357;
+2. complete #344 / PR #351 on current `main` — completed;
+3. freeze one small real World Slice boundary — active through #332;
 4. build a source-aware Globe MVP through the shared semantic pipeline;
 5. collect semantic, UX, accessibility and performance evidence;
 6. record one promotion/iterate/narrow/stop decision.

@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "coverage_statement": "This package freezes a sparse, non-public Romagna curation boundary from 8 August through 31 December 1502. It does not claim a complete itinerary, complete Romagna coverage, direct evidence for every date, reviewed historical geometry or representative world history.",
+  "known_gaps": [
+    {
+      "gap_id": "gap-no-reviewed-romagna-region-geometry",
+      "dimension": "geometry",
+      "description": "No source-backed changing Duchy of Romagna polygon has been digitized, georeferenced or independently reviewed.",
+      "effect": "Both Region versions remain geometry-withheld and cannot be rendered or promoted.",
+      "exit_condition": "Freeze source images and rights, define the reconstruction question, method, CRS/control points and residuals, then complete two independent geometry reviews."
+    },
+    {
+      "gap_id": "gap-unknown-inter-place-routes",
+      "dimension": "trajectory",
+      "description": "Selected sources support dated or datable presence contexts but do not establish the routes between Rimini, Cesena, Cesenatico and Imola.",
+      "effect": "Three inferred gaps remain without line or corridor geometry.",
+      "exit_condition": "Retain unknown_route unless a reviewed source supports a route or an explicitly analytical uncertain corridor."
+    },
+    {
+      "gap_id": "gap-no-manuscript-folio-artifacts",
+      "dimension": "evidence",
+      "description": "The university chronology now pins the dated Rimini, Cesena and Cesenatico entries to Manuscript L folios 78r, 46v and 66v, but no rights-cleared facsimiles are frozen; the Cesena wall-survey association with folios 9r–10r still has only an institutional-itinerary locator.",
+      "effect": "The dated presence Claims can proceed to textual review, but direct manuscript-image review and the separate Cesena wall-survey Claim remain unresolved.",
+      "exit_condition": "Complete independent textual review of the pinned university-press locators; retain the 9r–10r Claim as unresolved unless a rights-compliant facsimile or critical-edition locator is frozen."
+    },
+    {
+      "gap_id": "gap-no-independent-content-reviews",
+      "dimension": "review",
+      "description": "No independent semantic/content or validator-integrity review has been completed for the historical slice.",
+      "effect": "The package remains candidate_not_ready and promotion_allowed=false.",
+      "exit_condition": "Complete two independent reviews on one frozen commit with no unresolved critical or material finding."
+    },
+    {
+      "gap_id": "gap-sparse-global-context",
+      "dimension": "coverage",
+      "description": "Only one global simultaneity candidate is selected.",
+      "effect": "The slice cannot imply representative global coverage.",
+      "exit_condition": "Validate the comparison task and either justify one anchor as sufficient or add the smallest additional source-bound 1502 context."
+    },
+    {
+      "gap_id": "gap-no-documented-relations",
+      "dimension": "relation",
+      "description": "Issue #331 is paused, so documented encounter, interaction, influence and causal predicates are prohibited.",
+      "effect": "Only deterministic derived co-presence may be computed and it cannot be stored as a historical Relation.",
+      "exit_condition": "Resume and accept #331 before introducing any documented Relation predicate."
+    }
+  ]
+}
