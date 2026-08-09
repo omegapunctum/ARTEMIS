@@ -59,6 +59,7 @@ def test_attractor_refinement_does_not_advance_product_gate_or_capability() -> N
     state = json.loads(_read("docs/project_state.json"))
     foundation = _read("docs/FOUNDATION_INDEX.md")
     master = _read("docs/ARTEMIS_MASTER_PROMPT.md")
+    truth = _read("docs/PROJECT_TRUTH.md")
 
     assert state["gate"]["id"] == "C"
     assert state["gate"]["status"] == "completed"
@@ -67,8 +68,10 @@ def test_attractor_refinement_does_not_advance_product_gate_or_capability() -> N
     assert state["capability"]["globe"] == "non_public_r_and_d"
     assert state["github"]["active_issues"] == [355]
 
-    assert "Issue `#363`: Attractor refinement. Documentation/governance only" in foundation
-    assert "Gate D — source-aware Globe experience — is the next product gate, but it is **not started by issue #363**" in master
+    assert "Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**" in foundation
+    assert "Gate D — source-aware Globe experience — is the next product gate, but it is **not currently opened/in progress**" in master
+    assert "Foundation v3.1 / #363 / PR #364 is completed" in truth
+    assert "Gate D is still only the next product gate" in truth
 
 
 def test_personal_knowledge_remains_future_and_does_not_change_entity_model() -> None:

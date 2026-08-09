@@ -105,9 +105,9 @@ Current operational truth:
 2. Preserve completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
 4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
-5. Gate D — source-aware Globe experience — is the next product gate, but it is **not started by issue #363**.
-6. Issue #363 is foundation/documentation refinement only; it must not change public capability, start Gate D, add runtime schemas, mutate reviewed #329 scope or open AI implementation.
-7. When Gate D is separately opened, build from the frozen World Slice through Explorer State and Render Projection.
+5. Preserve accepted Foundation v3.1 / #363 / PR #364 attractor and governance rules; #363 is completed, not active maintenance.
+6. Gate D — source-aware Globe experience — is the next product gate, but it is **not currently opened/in progress**.
+7. When Gate D is separately opened under #355, build from the frozen World Slice through Explorer State and Render Projection.
 8. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
 9. Collect semantic, UX, accessibility and performance evidence before any promotion decision.
 10. Record one explicit promotion/iterate/narrow/stop decision before public deployment.
@@ -118,7 +118,7 @@ Issue #335 source-bound AI contract remains `GATED / NOT ACTIVE`.
 
 Issues #339–#345 / PRs #346–#352 are accepted renderer foundations, including cross-renderer semantic parity.
 
-Foundation v3 is accepted in PR `#328`; Foundation v3.1 attractor clarification is tracked in #363. The superseded #323–#325 path and PR #314 remain closed.
+Foundation v3 is accepted in PR `#328`; Foundation v3.1 attractor clarification is accepted in PR `#364`. The superseded #323–#325 path and PR #314 remain closed.
 
 ## 6. Frozen / gated work
 
@@ -139,7 +139,7 @@ Frozen or gated at product scale:
 
 Security/compatibility maintenance remains allowed.
 
-The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Gate C completion alone does not start Gate D or make Globe public.
+The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Gate C completion and Foundation v3.1 acceptance do not start Gate D or make Globe public.
 
 ## 7. Attractor decision test
 
