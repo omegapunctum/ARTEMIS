@@ -13,31 +13,51 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | one real bounded World Slice, source-aware Globe experience, semantic/UX evidence and one explicit next decision |
-| `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 recovery/MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
+| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D/E evidence and one explicit next decision after a separately opened Gate D |
+| `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
+### Active foundation maintenance
+
+| Document | Role | Exit |
+|---|---|---|
+| `2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` | #363 Foundation v3.1 North Star/attractor clarification; documentation/governance only | canonical concept/world-model/AI/governance owners agree, regression guard passes, no Gate D or public capability change |
+
+Foundation maintenance is not a second product vertical and does not consume the one-product-gate WIP slot. It may not start product implementation or change `project_state.json` lifecycle without a separate gate decision.
+
 Active execution rule for the Globe MVP:
 
-- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md` or `PROJECT_TRUTH.md`;
-- it authorizes the bounded #355 MVP only through the accepted #340–#342 contracts and recovered #344 parity gate;
+- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md`, `PROJECT_TRUTH.md` or `DEVELOPMENT_OPERATING_SYSTEM.md`;
+- it authorizes the bounded #355 MVP only through explicitly opened product gates;
+- Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public input;
+- Gate D is next but is not started by #363 or by the Gate C completion itself;
 - the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
 - it remains generated/non-public and must not create another root/Pages entrypoint before a separate promotion decision;
 - MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
-- the reviewed unknown Trajectory gap remains unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
+- the reviewed unknown Trajectory gaps remain unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
 - synthetic Earth context/terrain fixtures cannot be described as real imagery, historical geography or production provider readiness;
 - live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
 - the MVP decision does not make 3D Globe a current public capability;
 - #331 is paused but becomes blocking before documented Relation predicates enter the real corpus/runtime;
-- the completed #344 parity contract remains a fail-closed promotion gate for every runtime change.
-- the Leonardo-in-Romagna 1502 package freezes selection only: candidate geometry is null, all inter-place routes are unknown and no historical capability may be claimed before evidence binding and review.
+- the completed #344 parity contract remains a fail-closed promotion gate for every runtime change;
+- the Leonardo-in-Romagna 1502 Gate C package is frozen with two independent READY reviews, but its historical Claims remain draft, Region/route geometry remains withheld where unsupported and `promotion_allowed=false`.
+
+Attractor-refinement rule:
+
+- `ARTEMIS_CONCEPT.md` remains the only North Star/attractor owner;
+- `World Model` remains the technical semantic-core name but means knowledge about the world, not objective reality;
+- no `ATTRACTOR.md`/`NORTH_STAR.md` competing canonical owner may be introduced;
+- one semantic core must serve future domains and interfaces;
+- future AI may only gain view/query control through a separate explicit reversible action contract;
+- personal knowledge, AI runtime, universal corpus, VR/AR and causal/counterfactual runtime stay gated/future;
+- issue #363 must not advance Gate D or public capability.
 
 ## Gated under Foundation v3
 
 | Document/group | Lifecycle | Rule |
 |---|---|---|
-| `2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` | gated Life in Context validation design | Freeze only after #329–#333 dependencies are ready |
+| `2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` | gated Life in Context validation design | Use only when the corresponding product gate is opened and prerequisites are satisfied |
 | `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md` | completed Architecture Layer preparation program | Modules/fixtures may be reused; no longer the active product-validation gate |
 | `validation_modules/` | completed Gate A executable package | Preserve as architecture fixtures and historical readiness evidence |
 | `2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md` | superseded execution plan | Must not authorize #323–#325 or v2 migration order |
@@ -49,19 +69,18 @@ Active execution rule for the Globe MVP:
 | `uiux/2026-07-16_UIUX_MAIN_SCREEN_REFINEMENT_SPEC_ACTIVE_v1_0.md` | implemented-shell compatibility | `ACTIVE` in filename is historical |
 | `uiux/2026-07-17_COMPARISON_FIRST_WIREFRAME_SPEC_v1.md` | partial interface input | Must not define first v3 value |
 | `uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md` | measured technical baseline | Apply only where v3 explorer touches ownership |
-| `uiux/2026-07-17_UX_CONCEPT_CORRECTION_v1.md` | historical decision context | Foundation v3 wins on conflict |
+| `uiux/2026-07-17_UX_CONCEPT_CORRECTION_v1.md` | historical decision context | Foundation v3+ owner docs win on conflict |
 | `uiux/2026-04-26_UIUX_APP_STRUCTURE_SPEC_ACTIVE_v1_0.md` and `uiux/main-screen/**` | historical design context | Not current lifecycle authority |
 
 ## Superseded decision
 
 - `2026-07-26_CONCEPT_LOCK_V2.md` — superseded by Foundation v3; preserve rationale/history.
 
-Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply only where Foundation v3 owner docs keep them.
+Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply only where current Foundation owner docs keep them.
 
 ## Completed execution evidence
 
-- `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary; Claims remain draft and Gate D is not started by that decision.
-
+- `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C in PR `#362` with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary; Claims remain draft and Gate D is not started by that decision.
 - `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints, temporal boundaries and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
 - `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/non-public runtime and Pages boundaries accepted.
 - `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` — #343 completed in PR `#350`; MapLibre GL JS 5.24.0 selected for the bounded spike, with Cesium retained as measured-gap escalation; the generated runtime runbook remains active for #355.
