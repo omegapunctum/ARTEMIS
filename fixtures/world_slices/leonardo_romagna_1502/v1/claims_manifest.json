@@ -91,7 +91,7 @@
       "confidence": "unknown",
       "confidence_basis": "Specific collection item candidate; the exact supporting catalogue passage still requires review.",
       "evidence_state": "missing",
-      "evidence_link_refs": ["evidence-imola-map-rct"],
+      "evidence_link_refs": ["evidence-imola-map-rct", "evidence-imola-civic-context"],
       "uncertainty_refs": ["uncertainty-imola-autumn-range", "uncertainty-live-page-drift"]
     },
     {
@@ -132,6 +132,149 @@
       "evidence_state": "missing",
       "evidence_link_refs": ["evidence-safavid-met"],
       "uncertainty_refs": ["uncertainty-live-page-drift", "uncertainty-global-coverage"]
+    },
+    {
+      "claim_id": "claim-leonardo-source-identity",
+      "statement": "The institutional source records identify Leonardo da Vinci as the creator or subject of the selected manuscript and map records.",
+      "target_object_ref": "entity-leonardo-da-vinci",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Museo Galileo and Royal Collection Trust institutional records identify Leonardo; independent evidence review is pending.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-leonardo-identity-ms-l", "evidence-leonardo-identity-rct"],
+      "uncertainty_refs": ["uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-cesare-borgia-patent-identity",
+      "statement": "The published patent transcription identifies Cesare Borgia as the issuing authority and Leonardo as Architect and Engineer General.",
+      "target_object_ref": "entity-cesare-borgia",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The university-press transcription at printed p. 16 note 26 supplies the selected identity and title context; review is pending.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesare-borgia-uniurb-patent"],
+      "uncertainty_refs": ["uncertainty-patent-original-custody"]
+    },
+    {
+      "claim_id": "claim-rimini-named-place-context",
+      "statement": "The dated 8 August 1502 manuscript entry names Rimini as its observation context.",
+      "target_object_ref": "place-rimini",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The university chronology supplies the place name and folio locator; no point geometry is asserted.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-rimini-place-uniurb"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
+    },
+    {
+      "claim_id": "claim-cesena-named-place-context",
+      "statement": "The dated 10 August 1502 manuscript entry names Cesena as its observation context.",
+      "target_object_ref": "place-cesena",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The university chronology supplies the place name and folio locator; no point geometry is asserted.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesena-place-uniurb"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
+    },
+    {
+      "claim_id": "claim-cesenatico-named-place-context",
+      "statement": "The dated 6 September 1502 manuscript entry names Cesenatico as its port observation context.",
+      "target_object_ref": "place-cesenatico",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The university chronology supplies the place name and folio locator; no point or port geometry is asserted.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-cesenatico-place-uniurb"],
+      "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
+    },
+    {
+      "claim_id": "claim-imola-place-record-identity",
+      "statement": "Getty TGN record 7004864 identifies Imola for the selected place candidate.",
+      "target_object_ref": "place-imola",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The controlled-vocabulary record is attributable under ODC-By 1.0; historical geometry is not inferred from it.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-imola-place-getty"],
+      "uncertainty_refs": ["uncertainty-live-page-drift"]
+    },
+    {
+      "claim_id": "claim-romagna-survey-process-analytical-grouping",
+      "statement": "The Process groups selected dated engineering observations as an analytical corpus and does not assert a continuous mechanism, cause or itinerary.",
+      "target_object_ref": "process-leonardo-romagna-surveying",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The grouping is a declared curation interpretation over the dated source records, not a historical assertion of continuity.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-process-uniurb-chronology"],
+      "uncertainty_refs": ["uncertainty-process-analytical-grouping"]
+    },
+    {
+      "claim_id": "claim-romagna-trajectory-presence-only",
+      "statement": "The Trajectory contains four source-bound presence contexts separated by three explicit gaps with unknown routes.",
+      "target_object_ref": "trajectory-leonardo-romagna-1502",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "Dated Rimini, Cesena and Cesenatico entries plus the datable Imola context support anchors only; route evidence is absent.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-trajectory-uniurb", "evidence-trajectory-rct-imola"],
+      "uncertainty_refs": ["uncertainty-trajectory-route-gaps"]
+    },
+    {
+      "claim_id": "claim-romagna-title-based-context",
+      "statement": "The patent's ducal title supports a Duchy of Romagna political context but does not specify a territorial boundary.",
+      "target_object_ref": "region-duchy-romagna-context",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The university-press patent transcription supports the title-based context; it supplies no polygon or boundary method.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-region-title-uniurb-patent"],
+      "uncertainty_refs": ["uncertainty-romagna-region-reconstruction"]
+    },
+    {
+      "claim_id": "claim-romagna-documented-place-only-alternative",
+      "statement": "A conservative alternative represents only the four documented named-place anchors and makes no claim about territory between them.",
+      "target_object_ref": "region-duchy-romagna-context",
+      "claim_kind": "interpretation",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "This alternative is a fail-closed analytical response to missing boundary evidence and unresolved derived-geometry rights.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-region-place-only-uniurb", "evidence-region-place-only-rct"],
+      "uncertainty_refs": ["uncertainty-romagna-region-reconstruction"]
+    },
+    {
+      "claim_id": "claim-ottoman-turkmen-displacement-1502",
+      "statement": "Atçıl records that in 1502 an Ottoman authority forcibly displaced a large Turkmen group suspected of supporting Shah Isma'il to the Morea.",
+      "target_object_ref": "event-ottoman-turkmen-displacement-1502",
+      "claim_kind": "factual",
+      "origin": "curator",
+      "review_state": "draft",
+      "confidence": "unknown",
+      "confidence_basis": "The Cambridge University Press article supplies a year-precision statement at printed p. 298 with note 13; review is pending.",
+      "evidence_state": "missing",
+      "evidence_link_refs": ["evidence-ottoman-displacement-cambridge-p298"],
+      "uncertainty_refs": ["uncertainty-global-event-year-precision", "uncertainty-global-coverage", "uncertainty-live-page-drift"]
     }
   ],
   "evidence_links": [
@@ -354,6 +497,156 @@
       "evidence_strength": "direct",
       "review_state": "draft",
       "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-leonardo-identity-ms-l",
+      "claim_id": "claim-leonardo-source-identity",
+      "source_id": "source-museo-galileo-ms-l",
+      "locator": "Institutional manuscript record key 100790; creator and 1502 manuscript context",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-leonardo-identity-rct",
+      "claim_id": "claim-leonardo-source-identity",
+      "source_id": "source-rct-imola-map",
+      "locator": "Royal Collection Trust item 912284; creator identity",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesare-borgia-uniurb-patent",
+      "claim_id": "claim-cesare-borgia-patent-identity",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16, note 26; full patent transcription naming Cesare Borgia and Leonardo's commissioned title",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-rimini-place-uniurb",
+      "claim_id": "claim-rimini-named-place-context",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; 8 August 1502 entry naming Rimini and Manuscript L folio 78r",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesena-place-uniurb",
+      "claim_id": "claim-cesena-named-place-context",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; 10 August 1502 entry naming Cesena and Manuscript L folio 46v",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-cesenatico-place-uniurb",
+      "claim_id": "claim-cesenatico-named-place-context",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; 6 September 1502 entry naming Cesenatico and Manuscript L folio 66v",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-imola-place-getty",
+      "claim_id": "claim-imola-place-record-identity",
+      "source_id": "source-getty-tgn-imola",
+      "locator": "TGN subject 7004864; preferred-name record for Imola",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-process-uniurb-chronology",
+      "claim_id": "claim-romagna-survey-process-analytical-grouping",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; separate dated Rimini, Cesena and Cesenatico observation entries",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-trajectory-uniurb",
+      "claim_id": "claim-romagna-trajectory-presence-only",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; dated Rimini, Cesena and Cesenatico entries used only as presence anchors",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-trajectory-rct-imola",
+      "claim_id": "claim-romagna-trajectory-presence-only",
+      "source_id": "source-rct-imola-map",
+      "locator": "Royal Collection Trust item 912284; autumn 1502 Imola work context used as a presence anchor",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-region-title-uniurb-patent",
+      "claim_id": "claim-romagna-title-based-context",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16, note 26; patent transcription supplies the ducal political-title context without a boundary",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-region-place-only-uniurb",
+      "claim_id": "claim-romagna-documented-place-only-alternative",
+      "source_id": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; dated named-place evidence anchors without inter-place territorial evidence",
+      "relation_to_claim": "supports",
+      "evidence_strength": "indirect",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-region-place-only-rct",
+      "claim_id": "claim-romagna-documented-place-only-alternative",
+      "source_id": "source-rct-imola-map",
+      "locator": "Royal Collection Trust item 912284; Imola source-object context, not a licensed regional boundary",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-ottoman-displacement-cambridge-p298",
+      "claim_id": "claim-ottoman-turkmen-displacement-1502",
+      "source_id": "source-cambridge-atcil-safavid-threat",
+      "locator": "Atçıl (2017), International Journal of Middle East Studies 49(2), printed p. 298 and note 13",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct",
+      "review_state": "draft",
+      "reviewer": null
+    },
+    {
+      "evidence_link_id": "evidence-imola-civic-context",
+      "claim_id": "claim-imola-map-work-autumn-1502",
+      "source_id": "source-imola-civic-museums-rocca",
+      "locator": "Rocca Sforzesca historical overview; Leonardo consultation and 1502 political-transition context",
+      "relation_to_claim": "contextualizes",
+      "evidence_strength": "background",
+      "review_state": "draft",
+      "reviewer": null
     }
   ],
   "uncertainties": [
@@ -362,26 +655,41 @@
       "dimension": "missing_evidence",
       "description": "Stable university-press locators bind the dated Rimini, Cesena and Cesenatico entries to folios 78r, 46v and 66v, but no rights-cleared facsimile is frozen. The separate Cesena wall-survey folios 9r–10r association relies only on the institutional itinerary in the frozen source set.",
       "effect": "The dated bibliographic locators remain reviewable. The separate Cesena wall-survey folio Claim is rejected from the Gate C supported Claim set and may return only after a critical-edition locator or rights-compliant facsimile is reviewed.",
+      "basis_kind": "claim_refs",
+      "basis": "The uncertainty is attached to the five atomic folio and dated-presence Claims that expose the locator boundary.",
+      "basis_claim_refs": ["claim-rimini-presence-1502-08-08", "claim-cesena-presence-1502-08-10", "claim-cesena-survey-folios-9r-10r", "claim-cesenatico-presence-1502-09-06", "claim-cesenatico-dated-folio-66v"],
+      "review_state": "draft",
       "target_refs": [
         "claim-rimini-presence-1502-08-08",
         "claim-cesena-presence-1502-08-10",
         "claim-cesena-survey-folios-9r-10r",
         "claim-cesenatico-presence-1502-09-06",
-        "claim-cesenatico-dated-folio-66v"
+        "claim-cesenatico-dated-folio-66v",
+        "claim-rimini-named-place-context",
+        "claim-cesena-named-place-context",
+        "claim-cesenatico-named-place-context"
       ]
     },
     {
       "uncertainty_id": "uncertainty-patent-original-custody",
       "dimension": "missing_evidence",
-      "description": "A university-press critical transcription is pinned, and Treccani identifies Archivio Melzi d'Eril in Vaprio d'Adda as the original-document custody location, but no archival call number or rights-cleared surrogate is available in the package.",
+      "description": "A university-press critical transcription is pinned, but the frozen source graph contains no original-document repository record, archival call number or rights-cleared surrogate.",
       "effect": "The date and commissioned title can undergo textual review, while original-object provenance, physical inspection and media reuse remain unresolved.",
-      "target_refs": ["claim-patent-date-1502-08-18", "claim-leonardo-borgia-service-1502"]
+      "basis_kind": "explicit_missing_evidence",
+      "basis": "The source registry has a transcription locator but no registered archival custody or surrogate source.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
+      "target_refs": ["claim-patent-date-1502-08-18", "claim-leonardo-borgia-service-1502", "claim-cesare-borgia-patent-identity"]
     },
     {
       "uncertainty_id": "uncertainty-live-page-drift",
       "dimension": "source",
       "description": "Current candidate locators point to live institutional pages whose wording may change.",
       "effect": "No Claim may become reviewed until a rights-compliant immutable artifact or stable bibliographic locator is frozen.",
+      "basis_kind": "scope_policy",
+      "basis": "Gate C preserves URLs and bibliographic locators but does not archive copyrighted source content.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
       "target_refs": [
         "claim-rimini-presence-1502-08-08",
         "claim-cesena-presence-1502-08-10",
@@ -389,7 +697,10 @@
         "claim-cesenatico-presence-1502-09-06",
         "claim-imola-map-work-autumn-1502",
         "claim-imola-street-sketch-source-object",
-        "claim-safavid-isma-il-i-1501-1524"
+        "claim-safavid-isma-il-i-1501-1524",
+        "claim-leonardo-source-identity",
+        "claim-imola-place-record-identity",
+        "claim-ottoman-turkmen-displacement-1502"
       ]
     },
     {
@@ -397,6 +708,10 @@
       "dimension": "date",
       "description": "The selected RCT context supports an autumn 1502 framing rather than an exact day.",
       "effect": "The Imola map-work Event must remain an approximate range and cannot be rendered as an exact instant.",
+      "basis_kind": "claim_refs",
+      "basis": "The Imola map-work Claim is bound to a catalogue range rather than an exact-date locator.",
+      "basis_claim_refs": ["claim-imola-map-work-autumn-1502"],
+      "review_state": "draft",
       "target_refs": ["claim-imola-map-work-autumn-1502"]
     },
     {
@@ -404,6 +719,10 @@
       "dimension": "date",
       "description": "The selected slice does not establish the exact end of Leonardo's commissioned-service State.",
       "effect": "The State cannot silently use 31 December 1502 as a historical end date; that date is only the analytical slice boundary.",
+      "basis_kind": "explicit_missing_evidence",
+      "basis": "No frozen EvidenceLink supplies an end date for the commissioned-service State.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
       "target_refs": ["claim-leonardo-borgia-service-1502"]
     },
     {
@@ -411,14 +730,55 @@
       "dimension": "reconstruction",
       "description": "No reviewed source-backed geometry defines the changing Duchy of Romagna boundary for the selected interval.",
       "effect": "Region geometry remains null and modern Emilia-Romagna cannot be substituted.",
-      "target_refs": ["claim-imola-street-sketch-source-object", "region-duchy-romagna-context"]
+      "basis_kind": "explicit_missing_evidence",
+      "basis": "The registered sources do not supply both a boundary method and affirmative derived-geometry rights.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
+      "target_refs": ["claim-imola-street-sketch-source-object", "claim-romagna-title-based-context", "claim-romagna-documented-place-only-alternative", "region-duchy-romagna-context"]
     },
     {
       "uncertainty_id": "uncertainty-global-coverage",
       "dimension": "scope_limitation",
-      "description": "One Safavid State is the only global simultaneity anchor in this sparse review slice.",
+      "description": "One Safavid State and one year-precision Ottoman displacement Event are the only global simultaneity anchors in this sparse review slice.",
       "effect": "The package cannot imply representative world coverage or any relation to Leonardo.",
-      "target_refs": ["claim-safavid-isma-il-i-1501-1524", "state-safavid-isma-il-i"]
+      "basis_kind": "scope_policy",
+      "basis": "The gate intentionally selects only the smallest global pair needed to test simultaneous State and Event semantics.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
+      "target_refs": ["claim-safavid-isma-il-i-1501-1524", "claim-ottoman-turkmen-displacement-1502", "state-safavid-isma-il-i", "event-ottoman-turkmen-displacement-1502"]
+    },
+    {
+      "uncertainty_id": "uncertainty-process-analytical-grouping",
+      "dimension": "scope_limitation",
+      "description": "The Process is a curator-defined grouping over selected observations, not evidence of a continuous historical mechanism or complete work programme.",
+      "effect": "Renderers and projections must preserve the analytical label and cannot infer causality, continuity or completeness.",
+      "basis_kind": "scope_policy",
+      "basis": "The selection rule groups independently dated observations only to exercise Process semantics.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
+      "target_refs": ["claim-romagna-survey-process-analytical-grouping", "process-leonardo-romagna-surveying"]
+    },
+    {
+      "uncertainty_id": "uncertainty-trajectory-route-gaps",
+      "dimension": "location",
+      "description": "The frozen sources establish selected presence contexts but provide no reviewed route evidence between them.",
+      "effect": "All three inter-place segments remain unknown_route with null geometry and cannot be projected as lines.",
+      "basis_kind": "explicit_missing_evidence",
+      "basis": "No EvidenceLink in the package claims a path, corridor or travel mechanism between the four anchors.",
+      "basis_claim_refs": [],
+      "review_state": "draft",
+      "target_refs": ["claim-romagna-trajectory-presence-only", "trajectory-leonardo-romagna-1502"]
+    },
+    {
+      "uncertainty_id": "uncertainty-global-event-year-precision",
+      "dimension": "date",
+      "description": "The scholarly locator dates the forced displacement only to 1502 and does not supply a month or day.",
+      "effect": "The Event has possible rather than certain overlap with the 8 August–31 December analytical interval and cannot render as an exact instant.",
+      "basis_kind": "claim_refs",
+      "basis": "The global Event Claim and its Cambridge locator expose year precision explicitly.",
+      "basis_claim_refs": ["claim-ottoman-turkmen-displacement-1502"],
+      "review_state": "draft",
+      "target_refs": ["claim-ottoman-turkmen-displacement-1502", "event-ottoman-turkmen-displacement-1502"]
     }
   ]
 }

@@ -6,8 +6,8 @@
     {
       "gap_id": "gap-no-reviewed-romagna-region-geometry",
       "dimension": "geometry",
-      "description": "No source-backed changing Duchy of Romagna polygon has been digitized, georeferenced or independently reviewed.",
-      "effect": "Both Region versions remain geometry-withheld and cannot be rendered or promoted.",
+      "description": "No source-backed changing Duchy of Romagna polygon has affirmative derived-geometry rights, a digitization method, georeferencing evidence or independent review.",
+      "effect": "The title-based and documented-place-only alternatives both remain geometry-withheld and cannot be rendered as polygons or promoted.",
       "exit_condition": "Freeze source images and rights, define the reconstruction question, method, CRS/control points and residuals, then complete two independent geometry reviews."
     },
     {
@@ -27,16 +27,16 @@
     {
       "gap_id": "gap-no-independent-content-reviews",
       "dimension": "review",
-      "description": "No independent semantic/content or validator-integrity review has been completed for the historical slice.",
+      "description": "The first independent semantic/content and validator-integrity review round returned CHANGES_REQUIRED; no final READY review pair has been completed on the corrected revision.",
       "effect": "The package remains candidate_not_ready and promotion_allowed=false.",
       "exit_condition": "Complete two independent reviews on one frozen commit with no unresolved critical or material finding."
     },
     {
       "gap_id": "gap-sparse-global-context",
       "dimension": "coverage",
-      "description": "Only one global simultaneity candidate is selected.",
+      "description": "Only one Safavid State and one year-precision Ottoman displacement Event are selected as global simultaneity candidates.",
       "effect": "The slice cannot imply representative global coverage.",
-      "exit_condition": "Validate the comparison task and either justify one anchor as sufficient or add the smallest additional source-bound 1502 context."
+      "exit_condition": "Keep the pair explicitly sparse until a later comparison task justifies additional global coverage."
     },
     {
       "gap_id": "gap-no-documented-relations",

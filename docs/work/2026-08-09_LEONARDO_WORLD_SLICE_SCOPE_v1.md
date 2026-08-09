@@ -27,14 +27,15 @@ The eventual review experience should let a user move between:
 4. the Cesenatico port context dated 6 September and bound to Manuscript L folio 66v, without conflating it with the separate perspective at folio 68r;
 5. the autumn Imola map-work context represented by RCT collection items 912284 and 912686;
 6. explicit unresolved movement gaps between those presence contexts;
-7. a geometry-withheld Duchy of Romagna political Region candidate;
-8. one sparse simultaneous Safavid State with no implied Relation.
+7. a geometry-withheld Duchy of Romagna political Region with explicit title-based and documented-place-only reconstruction alternatives;
+8. one sparse simultaneous Safavid State;
+9. one year-precision Ottoman displacement Event sourced to a Cambridge University Press article, with possible rather than exact overlap and no implied Relation.
 
 The slice does not assert that itinerary order proves a route, or that any selected object caused or influenced another.
 
 ## 3. Source and rights decision
 
-Initial candidates use curated institutional sources:
+Initial candidates use curated institutional and scholarly sources:
 
 - Museo Galileo's Manuscript L catalogue record for manuscript identity and 1502 engineering context;
 - Gianni Volpe's university-press chronology for the dated Manuscript L folios and full letter-patent transcription;
@@ -42,9 +43,12 @@ Initial candidates use curated institutional sources:
 - Royal Collection Trust records 912284 and 912686 for the Imola map and street-plan sketches;
 - Comune di Imola Musei Civici for the Imola consultation and political-transition context;
 - Getty TGN for the attributed approximate Imola reference point and its ODC-By policy;
-- The Metropolitan Museum of Art chronology for one sparse Safavid context.
+- The Metropolitan Museum of Art chronology for one sparse Safavid State;
+- Abdurrahman Atçıl's Cambridge University Press article, printed p. 298 and note 13, for the year-precision global Event.
 
-Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package contains ten atomic Claims and twenty-two candidate EvidenceLinks. The dated Rimini, Cesena and Cesenatico Claims use stable folio-level university-press locators, and the patent uses a complete critical transcription. The separate Cesena wall-survey folio Claim remains traceable but is `rejected` from the supported set because only the institutional itinerary names `9r/9v–10r`; rejection does not assert historical falsity. Draft links still derive `evidence_state=missing`; they cannot masquerade as reviewed support. No RCT, patent or manuscript image is copied or licensed by this package.
+Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package contains 17 candidate objects, 10 sources, 21 atomic Claims, 37 candidate EvidenceLinks and 10 provenance-bearing Uncertainty records; every candidate object is a Claim target. The dated Rimini, Cesena and Cesenatico Claims use stable folio-level university-press locators, and the patent uses a complete critical transcription. The separate Cesena wall-survey folio Claim remains traceable but is `rejected` from the supported set because only the institutional itinerary names `9r/9v–10r`; rejection does not assert historical falsity. Draft links still derive `evidence_state=missing`; they cannot masquerade as reviewed support. No RCT, patent or manuscript image is copied or licensed by this package.
+
+For every source, verified access, data/text use, media reuse and derived-geometry use are recorded separately. RCT image reuse and derived geometry remain prohibited without permission; Getty TGN structured data retains ODC-By attribution. No source with unresolved derived-geometry rights authorizes a polygon.
 
 ## 4. Geometry and trajectory decision
 
@@ -53,7 +57,7 @@ Visit Romagna is an institutional secondary orientation source, not a substitute
 - Three trajectory gaps use `unknown_route` and `geometry=null`.
 - Named places remain geometry-null except a later optional attributed Getty reference point for Imola.
 - The Duchy of Romagna cannot be substituted with modern Emilia-Romagna.
-- Region versions remain `pending_digitization_review` until source rights, reconstruction question, method, CRS/control points, residuals, alternatives and independent review are recorded.
+- The title-based alternative exposes political-title context without a boundary; the documented-place-only alternative exposes only four named-place anchors. Both remain `pending_digitization_review` with `geometry=null` until positive rights, method, CRS/control points, residuals and independent geometry review are recorded.
 
 ## 5. Relation decision
 
@@ -69,8 +73,8 @@ The package explicitly records:
 - unknown inter-place routes;
 - missing original patent call number/rights-cleared surrogate despite the closed critical-transcription locator;
 - missing frozen Manuscript L facsimiles and the evidence-based rejection of the separate Cesena wall-survey folios 9r–10r Claim from the supported set;
-- absent independent reviews;
-- sparse global context;
+- an initial independent review round that returned `CHANGES_REQUIRED`, with a final same-revision `READY` pair still absent;
+- intentionally sparse global context limited to one State and one year-precision Event;
 - the prohibition on documented Relations.
 
 Unknown duration remains `null`. Before READY, actual human curation and review minutes must be recorded; estimates cannot replace measurement.

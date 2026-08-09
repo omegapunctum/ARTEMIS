@@ -110,7 +110,7 @@
       "label": "Cesare Borgia",
       "layer_refs": ["layer-local-context", "layer-engineering-work"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
         "value": "1502",
         "precision": "year",
@@ -230,7 +230,7 @@
       },
       "spatial_mode": "named_place",
       "geometry": null,
-      "notes": "The date and commissioned title are bound to the full transcription at Volpe (2023), printed p. 16 n. 26. The original survives at Archivio Melzi d'Eril, but this package does not claim an archival call number or media rights."
+      "notes": "The date and commissioned title are bound to the full transcription at Volpe (2023), printed p. 16 n. 26. The frozen source graph does not claim an original-document repository, archival call number or media rights."
     },
     {
       "object_id": "event-leonardo-cesenatico-port-note",
@@ -272,7 +272,7 @@
       "curation_state": "candidate_not_ready",
       "source_refs": ["source-visit-romagna-leonardo-borgia", "source-rct-imola-map", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology"],
       "temporal_hint": {
-        "value": "1502-08-18/1502-12-31",
+        "value": "1502-08-18/unknown",
         "precision": "range",
         "assertion_status": "candidate_requires_claim_binding"
       },
@@ -376,7 +376,7 @@
       "label": "Duchy of Romagna political context",
       "layer_refs": ["layer-local-context"],
       "curation_state": "candidate_not_ready",
-      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-imola-civic-museums-rocca"],
+      "source_refs": ["source-visit-romagna-leonardo-borgia", "source-imola-civic-museums-rocca", "source-uniurb-volpe-chronology", "source-rct-imola-map"],
       "temporal_hint": {
         "value": "1502",
         "precision": "year",
@@ -384,11 +384,14 @@
       },
       "spatial_mode": "historical_region_pending",
       "geometry": null,
-      "notes": "Political Region candidate, not a modern Emilia-Romagna substitute. Both versions remain geometry-withheld and require scholarly provenance.",
+      "notes": "Political Region candidate, not a modern Emilia-Romagna substitute. The two explicit alternatives test a title-based contextual envelope against an evidence-minimal documented-place-only view. Neither authorizes a polygon.",
       "versions": [
         {
           "version_id": "region-version-borgia-romagna-1502",
-          "reconstruction_mode": "scholarly_reconstruction",
+          "alternative_group_id": "romagna-political-scope-1502",
+          "reconstruction_mode": "title_based_context",
+          "reconstruction_question": "What spatial scope can the frozen evidence justify for the Duchy of Romagna label during the selected interval?",
+          "interpretation": "The patent and institutional orientation sources justify a political-title context, but they do not define a reviewable territorial boundary.",
           "temporal_hint": {
             "value": "1502-08/1502-12",
             "precision": "range",
@@ -396,21 +399,40 @@
           },
           "geometry_status": "pending_digitization_review",
           "geometry": null,
-          "source_refs": ["source-visit-romagna-leonardo-borgia"]
+          "source_refs": ["source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology"]
         },
         {
-          "version_id": "region-version-imola-papal-transition-context",
-          "reconstruction_mode": "scholarly_reconstruction",
+          "version_id": "region-version-documented-place-only-1502",
+          "alternative_group_id": "romagna-political-scope-1502",
+          "reconstruction_mode": "documented_place_only_context",
+          "reconstruction_question": "What spatial scope can the frozen evidence justify for the Duchy of Romagna label during the selected interval?",
+          "interpretation": "The conservative alternative exposes only the four named-place evidence anchors and withholds any claim about the territory between them.",
           "temporal_hint": {
-            "value": "1499/1502",
+            "value": "1502-08/1502-12",
             "precision": "range",
             "assertion_status": "candidate_requires_claim_binding"
           },
           "geometry_status": "pending_digitization_review",
           "geometry": null,
-          "source_refs": ["source-imola-civic-museums-rocca"]
+          "source_refs": ["source-uniurb-volpe-chronology", "source-rct-imola-map", "source-imola-civic-museums-rocca"]
         }
       ]
+    },
+    {
+      "object_id": "event-ottoman-turkmen-displacement-1502",
+      "object_type": "Event",
+      "label": "Ottoman forced displacement of a Turkmen group to the Morea",
+      "layer_refs": ["layer-global-simultaneity"],
+      "curation_state": "candidate_not_ready",
+      "source_refs": ["source-cambridge-atcil-safavid-threat"],
+      "temporal_hint": {
+        "value": "1502",
+        "precision": "year",
+        "assertion_status": "candidate_requires_claim_binding"
+      },
+      "spatial_mode": "named_place",
+      "geometry": null,
+      "notes": "A year-precision global Event candidate. Possible overlap with the analytical slice is shown as uncertainty; no exact day, geometry or Relation to Leonardo is asserted."
     },
     {
       "object_id": "state-safavid-isma-il-i",
@@ -430,7 +452,7 @@
     }
   ],
   "source_policy": {
-    "minimum_quality": "curated_institutional",
+    "minimum_quality": "curated_institutional_or_scholarly",
     "locator_required": true,
     "source_url_is_not_blanket_proof": true,
     "immutable_snapshot_required_for_ready": true

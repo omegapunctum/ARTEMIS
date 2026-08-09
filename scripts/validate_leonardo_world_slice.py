@@ -22,6 +22,8 @@ COST_PATH = PACKAGE_ROOT / "curation_cost.json"
 COST_SCHEMA_PATH = PACKAGE_ROOT / "curation_cost.schema.json"
 CLAIMS_PATH = PACKAGE_ROOT / "claims_manifest.json"
 CLAIMS_SCHEMA_PATH = PACKAGE_ROOT / "claims_manifest.schema.json"
+REVIEW_REGISTRY_PATH = PACKAGE_ROOT / "review_registry.json"
+REVIEW_REGISTRY_SCHEMA_PATH = PACKAGE_ROOT / "review_registry.schema.json"
 
 REQUIRED_OBJECT_TYPES = {"Entity", "Event", "State", "Process", "Trajectory", "Region"}
 PROHIBITED_RELATION_PREDICATES = {
@@ -112,11 +114,11 @@ def validate_package(
     cost: dict[str, Any] | None = None,
     claims_package: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    selection = selection or _load(SELECTION_PATH)
-    sources = sources or _load(SOURCE_PATH)
-    coverage = coverage or _load(COVERAGE_PATH)
-    cost = cost or _load(COST_PATH)
-    claims_package = claims_package or _load(CLAIMS_PATH)
+    selection = _load(SELECTION_PATH) if selection is None else selection
+    sources = _load(SOURCE_PATH) if sources is None else sources
+    coverage = _load(COVERAGE_PATH) if coverage is None else coverage
+    cost = _load(COST_PATH) if cost is None else cost
+    claims_package = _load(CLAIMS_PATH) if claims_package is None else claims_package
 
     _validate_schema(selection, _load(SELECTION_SCHEMA_PATH), "selection manifest")
     _validate_schema(sources, _load(SOURCE_SCHEMA_PATH), "source registry")
@@ -197,9 +199,13 @@ def validate_package(
     versions = regions[0].get("versions") or []
     if len(versions) < 2:
         raise WorldSliceScopeError("candidate Region must preserve at least two source-bound versions")
+    expected_reconstruction_modes = {"title_based_context", "documented_place_only_context"}
+    actual_reconstruction_modes = {version["reconstruction_mode"] for version in versions}
+    if actual_reconstruction_modes != expected_reconstruction_modes:
+        raise WorldSliceScopeError("candidate Region must preserve both explicit reconstruction alternatives")
+    if len({version["alternative_group_id"] for version in versions}) != 1:
+        raise WorldSliceScopeError("candidate Region alternatives must answer one reconstruction question")
     for version in versions:
-        if version["reconstruction_mode"] != "scholarly_reconstruction":
-            raise WorldSliceScopeError("candidate Region version must remain a scholarly reconstruction")
         if version["geometry_status"] != "pending_digitization_review" or version["geometry"] is not None:
             raise WorldSliceScopeError("candidate Region geometry must remain withheld pending review")
         missing_sources = set(version["source_refs"]) - set(source_index)
@@ -211,11 +217,19 @@ def validate_package(
 
     for source_id, source in source_index.items():
         rights = source["rights"]
+        intended_claims = set(source["intended_claims"])
+        missing_intended_claims = intended_claims - set(claim_index)
+        if missing_intended_claims:
+            raise WorldSliceScopeError(
+                f"source {source_id} references missing intended Claims: {sorted(missing_intended_claims)}"
+            )
         if source_id.startswith("source-rct-"):
             if rights["data_or_text_use"] != "citation_and_factual_claims_only":
                 raise WorldSliceScopeError(f"{source_id} must remain citation/factual-use only")
             if rights["media_reuse"] != "prohibited_without_permission":
                 raise WorldSliceScopeError(f"{source_id} cannot authorize image reuse")
+            if rights["derived_geometry_use"] != "prohibited":
+                raise WorldSliceScopeError(f"{source_id} cannot authorize derived geometry")
         if source_id.startswith("source-getty-"):
             if rights["license"] != "ODC-By-1.0":
                 raise WorldSliceScopeError(f"{source_id} must preserve Getty ODC-By 1.0 licensing")
@@ -223,6 +237,8 @@ def validate_package(
                 raise WorldSliceScopeError(f"{source_id} must preserve Getty attribution")
         if source["source_type"] != "license_policy" and source_id not in used_source_refs:
             raise WorldSliceScopeError(f"unused candidate source is outside the frozen scope: {source_id}")
+        if rights["access_status"] != "accessible":
+            raise WorldSliceScopeError(f"frozen source must record verified access: {source_id}")
 
     manifest_gap_refs = set(selection["known_gap_refs"])
     if manifest_gap_refs != set(gap_index):
@@ -236,6 +252,7 @@ def validate_package(
 
     used_evidence_refs: set[str] = set()
     used_uncertainty_refs: set[str] = set()
+    claimed_object_refs: set[str] = set()
     for claim_id, claim in claim_index.items():
         if claim["target_object_ref"] not in object_index:
             raise WorldSliceScopeError(
@@ -253,8 +270,17 @@ def validate_package(
             )
         used_evidence_refs.update(claim["evidence_link_refs"])
         used_uncertainty_refs.update(claim["uncertainty_refs"])
+        claimed_object_refs.add(claim["target_object_ref"])
 
         linked = [evidence_index[ref] for ref in claim["evidence_link_refs"]]
+        target_source_refs = set(object_index[claim["target_object_ref"]]["source_refs"])
+        escaped_sources = [
+            row["source_id"] for row in linked if row["source_id"] not in target_source_refs
+        ]
+        if escaped_sources:
+            raise WorldSliceScopeError(
+                f"Claim {claim_id} uses sources outside its target object's frozen scope: {escaped_sources}"
+            )
         escaped = [row["evidence_link_id"] for row in linked if row["claim_id"] != claim_id]
         if escaped:
             raise WorldSliceScopeError(
@@ -283,6 +309,11 @@ def validate_package(
 
     if used_evidence_refs != set(evidence_index):
         raise WorldSliceScopeError("every EvidenceLink must be referenced by exactly its Claim scope")
+    if claimed_object_refs != set(object_index):
+        missing_claim_targets = sorted(set(object_index) - claimed_object_refs)
+        raise WorldSliceScopeError(
+            f"every frozen candidate object requires an atomic Claim binding: {missing_claim_targets}"
+        )
 
     for evidence_id, evidence in evidence_index.items():
         if evidence["claim_id"] not in claim_index:
@@ -318,6 +349,17 @@ def validate_package(
                 f"critical locator text drifted for {evidence_id}: missing {missing_tokens}"
             )
 
+    for source_id, source in source_index.items():
+        if source["source_type"] == "license_policy":
+            continue
+        linked_claims = {
+            row["claim_id"] for row in evidence_index.values() if row["source_id"] == source_id
+        }
+        if set(source["intended_claims"]) != linked_claims:
+            raise WorldSliceScopeError(
+                f"source {source_id} intended Claim refs must match its EvidenceLinks"
+            )
+
     cesenatico_folio_claim = claim_index.get("claim-cesenatico-dated-folio-66v")
     if cesenatico_folio_claim is None:
         raise WorldSliceScopeError("dated Cesenatico folio Claim is missing")
@@ -350,17 +392,52 @@ def validate_package(
             raise WorldSliceScopeError(
                 f"Uncertainty {uncertainty_id} references missing targets: {sorted(missing_targets)}"
             )
-    if used_uncertainty_refs - set(uncertainty_index):
-        raise WorldSliceScopeError("Claim uncertainty closure is incomplete")
+        missing_basis_claims = set(uncertainty["basis_claim_refs"]) - set(claim_index)
+        if missing_basis_claims:
+            raise WorldSliceScopeError(
+                f"Uncertainty {uncertainty_id} references missing basis Claims: {sorted(missing_basis_claims)}"
+            )
+        if uncertainty["basis_kind"] == "claim_refs" and not uncertainty["basis_claim_refs"]:
+            raise WorldSliceScopeError(
+                f"Uncertainty {uncertainty_id} requires at least one basis Claim"
+            )
+        if uncertainty["basis_kind"] != "claim_refs" and uncertainty["basis_claim_refs"]:
+            raise WorldSliceScopeError(
+                f"Uncertainty {uncertainty_id} cannot hide Claim refs behind {uncertainty['basis_kind']}"
+            )
+        for target_ref in uncertainty["target_refs"]:
+            if target_ref in claim_index and uncertainty_id not in claim_index[target_ref]["uncertainty_refs"]:
+                raise WorldSliceScopeError(
+                    f"Uncertainty {uncertainty_id} is not reciprocally bound by Claim {target_ref}"
+                )
+    if used_uncertainty_refs != set(uncertainty_index):
+        raise WorldSliceScopeError("every Uncertainty must be referenced by at least one atomic Claim")
+
+    global_event_candidates = [
+        row
+        for row in object_index.values()
+        if row["object_type"] == "Event" and "layer-global-simultaneity" in row["layer_refs"]
+    ]
+    if len(global_event_candidates) != 1:
+        raise WorldSliceScopeError("scope must include exactly one source-bound global Event candidate")
 
     readiness = selection["readiness"]
-    if readiness != {
-        "scope_frozen": True,
-        "historical_objects_ready": False,
-        "independent_review_count": 0,
-        "promotion_allowed": False,
-    }:
+    if (
+        readiness["scope_frozen"] is not True
+        or readiness["historical_objects_ready"] is not False
+        or readiness["promotion_allowed"] is not False
+        or readiness["independent_review_count"] not in {0, 2}
+    ):
         raise WorldSliceScopeError("scope-freeze readiness must remain explicitly non-promotable")
+    if readiness["independent_review_count"] == 2:
+        review_registry = _load(REVIEW_REGISTRY_PATH)
+        _validate_schema(
+            review_registry, _load(REVIEW_REGISTRY_SCHEMA_PATH), "review registry"
+        )
+        if len(review_registry["reviews"]) != 2 or any(
+            review["decision"] != "READY" for review in review_registry["reviews"]
+        ):
+            raise WorldSliceScopeError("review count requires two READY review records")
 
     return {
         "slice_id": selection["slice_id"],

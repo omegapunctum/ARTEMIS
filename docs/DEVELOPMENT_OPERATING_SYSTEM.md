@@ -81,6 +81,19 @@ A gate closes only when:
 6. current capability wording remains truthful;
 7. exactly one next decision or stop condition is recorded.
 
+For a machine-readable `completed` gate, these conditions are bindings rather than prose:
+
+- `project_state.json` names the frozen commit and tree, review registry, decision artifact and cost log;
+- exactly two independent review records name distinct reviewer instances, the same frozen revision,
+  both required tracks, measured durations and durable artifacts;
+- both review decisions are `READY` with zero unresolved critical and material findings;
+- blockers are empty, the delivery issue moves out of `active_issues`, capability truth is updated and
+  `next_transition` advances to the next gate or `STOP`.
+
+The validator must reject a partial transition. Review artifacts are added only after the reviewed
+content revision is frozen, so the final metadata commit cannot rewrite the content that reviewers
+inspected.
+
 ## 7. Pull-request core gate
 
 Every decision PR must show:

@@ -120,7 +120,7 @@
       "additionalProperties": false,
       "required": ["minimum_quality", "locator_required", "source_url_is_not_blanket_proof", "immutable_snapshot_required_for_ready"],
       "properties": {
-        "minimum_quality": {"const": "curated_institutional"},
+        "minimum_quality": {"const": "curated_institutional_or_scholarly"},
         "locator_required": {"const": true},
         "source_url_is_not_blanket_proof": {"const": true},
         "immutable_snapshot_required_for_ready": {"const": true}
@@ -146,7 +146,7 @@
       "properties": {
         "scope_frozen": {"const": true},
         "historical_objects_ready": {"const": false},
-        "independent_review_count": {"const": 0},
+        "independent_review_count": {"enum": [0, 2]},
         "promotion_allowed": {"const": false}
       }
     }
@@ -218,10 +218,13 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["version_id", "reconstruction_mode", "temporal_hint", "geometry_status", "geometry", "source_refs"],
+            "required": ["version_id", "alternative_group_id", "reconstruction_mode", "reconstruction_question", "interpretation", "temporal_hint", "geometry_status", "geometry", "source_refs"],
             "properties": {
               "version_id": {"type": "string", "minLength": 1},
-              "reconstruction_mode": {"const": "scholarly_reconstruction"},
+              "alternative_group_id": {"const": "romagna-political-scope-1502"},
+              "reconstruction_mode": {"enum": ["title_based_context", "documented_place_only_context"]},
+              "reconstruction_question": {"const": "What spatial scope can the frozen evidence justify for the Duchy of Romagna label during the selected interval?"},
+              "interpretation": {"type": "string", "minLength": 30},
               "temporal_hint": {
                 "type": "object",
                 "additionalProperties": false,

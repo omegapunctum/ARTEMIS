@@ -18,15 +18,23 @@
       "actor_kind": "human_curator",
       "duration_minutes": null,
       "measurement_state": "pending",
-      "notes": "Dated folio and patent transcription locators are now pinned. Claims remain draft until independent content review; the separate Cesena wall-survey folios 9r–10r still need direct verification."
+      "notes": "Dated folio and patent transcription locators are pinned. The separate Cesena wall-survey folios 9r–10r Claim is explicitly rejected from the supported Gate C set; earlier unmeasured curation time remains null."
     },
     {
-      "activity_id": "cost-independent-review",
-      "activity": "Independent semantic and geometry review",
+      "activity_id": "cost-initial-validator-integrity-review",
+      "activity": "Initial independent validator-integrity review",
       "actor_kind": "independent_reviewer",
-      "duration_minutes": null,
-      "measurement_state": "pending",
-      "notes": "No review has been performed."
+      "duration_minutes": 6,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T08:59:45Z–09:05:24Z and rounded up to whole minutes. Decision CHANGES_REQUIRED; this is review history, not final Gate C evidence."
+    },
+    {
+      "activity_id": "cost-initial-semantic-content-review",
+      "activity": "Initial independent semantic-content review",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 8,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T08:59:35Z–09:07:30Z and rounded up to whole minutes. Decision CHANGES_REQUIRED; this is review history, not final Gate C evidence."
     },
     {
       "activity_id": "cost-critical-locator-normalization",
@@ -35,6 +43,14 @@
       "duration_minutes": 7,
       "measurement_state": "recorded",
       "notes": "Measured wall-clock interval 2026-08-09T08:08:48Z–08:15:12Z, rounded up to whole minutes. Earlier scope/source work remains unmeasured rather than inferred."
+    },
+    {
+      "activity_id": "cost-gate-c-review-remediation",
+      "activity": "Gate C review remediation, source normalization and transition-guard implementation",
+      "actor_kind": "agent_assisted",
+      "duration_minutes": 23,
+      "measurement_state": "recorded",
+      "notes": "Measured wall-clock interval 2026-08-09T09:07:30Z–09:29:54Z, rounded up to whole minutes. Includes response to both initial CHANGES_REQUIRED reviews and regression verification."
     }
   ],
   "ready_rule": "Every entry must be measured and review cost must be recorded before READY."
