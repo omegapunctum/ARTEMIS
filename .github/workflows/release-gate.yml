@@ -42,6 +42,8 @@ jobs:
 
       - name: Validate active Leonardo World Slice scope
         run: |
+          python scripts/validate_project_state.py
+          pytest -q tests/test_project_state.py
           python scripts/validate_leonardo_world_slice.py
           pytest -q tests/test_leonardo_world_slice.py
 

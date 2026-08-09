@@ -20,9 +20,9 @@
     {
       "gap_id": "gap-no-manuscript-folio-artifacts",
       "dimension": "evidence",
-      "description": "The university chronology now pins the dated Rimini, Cesena and Cesenatico entries to Manuscript L folios 78r, 46v and 66v, but no rights-cleared facsimiles are frozen; the Cesena wall-survey association with folios 9r–10r still has only an institutional-itinerary locator.",
-      "effect": "The dated presence Claims can proceed to textual review, but direct manuscript-image review and the separate Cesena wall-survey Claim remain unresolved.",
-      "exit_condition": "Complete independent textual review of the pinned university-press locators; retain the 9r–10r Claim as unresolved unless a rights-compliant facsimile or critical-edition locator is frozen."
+      "description": "The university chronology pins the dated Rimini, Cesena and Cesenatico entries to Manuscript L folios 78r, 46v and 66v, but no rights-cleared facsimiles are frozen; the separate Cesena wall-survey association with folios 9r–10r has only an institutional-itinerary locator in the frozen source set.",
+      "effect": "The dated presence Claims can proceed to textual review. The separate Cesena wall-survey folio Claim is rejected from the Gate C supported set without being declared historically false.",
+      "exit_condition": "Retain the rejection unless a rights-compliant facsimile or critical-edition locator is frozen and independently reviewed."
     },
     {
       "gap_id": "gap-no-independent-content-reviews",

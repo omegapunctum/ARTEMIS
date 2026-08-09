@@ -324,6 +324,25 @@ def validate_package(
     if "66v" not in cesenatico_folio_claim["statement"] or "68r" in cesenatico_folio_claim["statement"]:
         raise WorldSliceScopeError("dated Cesenatico Claim must bind folio 66v, not folio 68r")
 
+    cesena_wall_claim = claim_index.get("claim-cesena-survey-folios-9r-10r")
+    if cesena_wall_claim is None:
+        raise WorldSliceScopeError("Cesena wall-survey Claim must remain traceable")
+    if (
+        cesena_wall_claim["review_state"] != "rejected"
+        or cesena_wall_claim["evidence_state"] != "missing"
+        or cesena_wall_claim["confidence"] != "low"
+    ):
+        raise WorldSliceScopeError(
+            "Cesena folios 9r–10r Claim must remain rejected and unsupported in Gate C"
+        )
+    if any(
+        evidence_index[ref]["review_state"] == "reviewed"
+        for ref in cesena_wall_claim["evidence_link_refs"]
+    ):
+        raise WorldSliceScopeError(
+            "Cesena folios 9r–10r Claim cannot acquire reviewed evidence without a new gate"
+        )
+
     known_uncertainty_targets = set(claim_index) | set(object_index)
     for uncertainty_id, uncertainty in uncertainty_index.items():
         missing_targets = set(uncertainty["target_refs"]) - known_uncertainty_targets

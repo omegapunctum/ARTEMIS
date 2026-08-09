@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/project-state-v1.json",
+  "title": "ARTEMIS machine-readable operational state v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project",
+    "updated_at",
+    "north_star_ref",
+    "active_vertical",
+    "phase",
+    "gate",
+    "work_in_progress_limit",
+    "github",
+    "capability",
+    "canonical_refs",
+    "blockers",
+    "next_transition"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "project": {"const": "ARTEMIS"},
+    "updated_at": {"type": "string", "format": "date"},
+    "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
+    "active_vertical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "issue"],
+      "properties": {
+        "id": {"const": "life-in-context-globe-mvp"},
+        "label": {"type": "string", "minLength": 1},
+        "issue": {"const": 355}
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status"],
+      "properties": {
+        "id": {"const": "4.8"},
+        "status": {"const": "active"}
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "status", "allowed_decisions"],
+      "properties": {
+        "id": {"enum": ["C", "D", "E"]},
+        "label": {"type": "string", "minLength": 1},
+        "status": {"enum": ["in_progress", "completed", "blocked"]},
+        "allowed_decisions": {
+          "type": "array",
+          "const": ["FREEZE", "NARROW", "REJECT"]
+        },
+        "decision": {"enum": ["FREEZE", "NARROW", "REJECT"]}
+      }
+    },
+    "work_in_progress_limit": {"const": 1},
+    "github": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["active_issues", "paused_issues", "completed_prerequisites"],
+      "properties": {
+        "active_issues": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer"}},
+        "paused_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "completed_prerequisites": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_runtime", "globe", "world_slice"],
+      "properties": {
+        "public_runtime": {"const": "2d_architecture_atlas_baseline"},
+        "globe": {"const": "non_public_r_and_d"},
+        "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "projected_non_public"]}
+      }
+    },
+    "canonical_refs": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^docs/"}
+    },
+    "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "next_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "condition"],
+      "properties": {
+        "gate": {"enum": ["C", "D", "E", "STOP"]},
+        "condition": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"gate": {"properties": {"status": {"const": "completed"}}}}},
+      "then": {"properties": {"gate": {"required": ["decision"]}}}
+    }
+  ]
+}

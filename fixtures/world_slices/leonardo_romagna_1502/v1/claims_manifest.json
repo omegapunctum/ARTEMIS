@@ -35,9 +35,9 @@
       "target_object_ref": "event-leonardo-cesena-survey",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "draft",
-      "confidence": "unknown",
-      "confidence_basis": "The folio range is named by the institutional itinerary but is distinct from the dated 10 August entry at folio 46v; direct facsimile or critical-edition verification remains pending.",
+      "review_state": "rejected",
+      "confidence": "low",
+      "confidence_basis": "The institutional itinerary names folios 9r, 9v and 10r, but the frozen source set has no critical-edition locator or rights-compliant facsimile that independently verifies this separate wall-survey association. It is rejected from the Gate C supported Claim set without asserting that the association is historically false.",
       "evidence_state": "missing",
       "evidence_link_refs": ["evidence-cesena-folios-visit-romagna", "evidence-ms-l-institutional-record"],
       "uncertainty_refs": ["uncertainty-manuscript-folio-binding"]
@@ -360,8 +360,8 @@
     {
       "uncertainty_id": "uncertainty-manuscript-folio-binding",
       "dimension": "missing_evidence",
-      "description": "Stable university-press locators now bind the dated Rimini, Cesena and Cesenatico entries to folios 78r, 46v and 66v, but no rights-cleared facsimile is frozen and the Cesena wall-survey folios 9r–10r still rely on the institutional itinerary.",
-      "effect": "The bibliographic locators are reviewable, but manuscript-based Claims remain draft until independent content review; the Cesena wall-survey folio association remains especially unresolved.",
+      "description": "Stable university-press locators bind the dated Rimini, Cesena and Cesenatico entries to folios 78r, 46v and 66v, but no rights-cleared facsimile is frozen. The separate Cesena wall-survey folios 9r–10r association relies only on the institutional itinerary in the frozen source set.",
+      "effect": "The dated bibliographic locators remain reviewable. The separate Cesena wall-survey folio Claim is rejected from the Gate C supported Claim set and may return only after a critical-edition locator or rights-compliant facsimile is reviewed.",
       "target_refs": [
         "claim-rimini-presence-1502-08-08",
         "claim-cesena-presence-1502-08-10",

@@ -240,6 +240,22 @@ def test_patent_critical_transcription_locator_cannot_be_removed() -> None:
         validate_package(selection, sources, coverage, cost, claims)
 
 
+def test_cesena_wall_folios_remain_traceable_but_rejected_from_supported_scope() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    wall_claim = next(
+        row for row in claims["claims"] if row["claim_id"] == "claim-cesena-survey-folios-9r-10r"
+    )
+
+    assert wall_claim["review_state"] == "rejected"
+    assert wall_claim["evidence_state"] == "missing"
+    assert wall_claim["confidence"] == "low"
+
+    wall_claim["confidence"] = "unknown"
+    with pytest.raises(WorldSliceScopeError, match="must remain rejected and unsupported"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
 def test_claim_target_must_stay_inside_frozen_scope() -> None:
     selection, sources, coverage, cost = _baseline()
     claims = _claims()

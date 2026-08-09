@@ -48,6 +48,8 @@ North Star не является release promise. Backend code не являет
 | `docs/PROJECT_TRUTH.md` | Public/backend/pilot/target/future facts |
 | `docs/PRIORITIES.md` | Current load-bearing priorities |
 | `docs/PROJECT_PHASES.md` | Operational phase order |
+| `docs/DEVELOPMENT_OPERATING_SYSTEM.md` | One-vertical/one-gate execution and tool responsibility contract |
+| `docs/project_state.json` | Machine-readable operational status snapshot; validated mirror, not a semantic owner |
 | `docs/VALIDATION_DECISION.md` | Recorded evidence outcome and permission to expand |
 
 ### World and knowledge model
@@ -101,9 +103,10 @@ Working lifecycle authority remains only `docs/work/README.md`.
 7. `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
 8. `docs/ENTITY_MODEL.md`.
 9. `docs/EPISTEMIC_CONTRACT.md`.
-10. `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
-11. `docs/work/README.md`, then active Foundation v3 records.
-12. Task-specific data/runtime/governance contracts.
+10. `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md` and `docs/DEVELOPMENT_OPERATING_SYSTEM.md`.
+11. `docs/project_state.json`.
+12. `docs/work/README.md`, then active Foundation v3 records.
+13. Task-specific data/runtime/governance contracts.
 
 ## 6. Routing
 

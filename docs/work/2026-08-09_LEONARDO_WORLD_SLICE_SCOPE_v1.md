@@ -22,7 +22,7 @@ Canonical machine-readable scope: `fixtures/world_slices/leonardo_romagna_1502/v
 The eventual review experience should let a user move between:
 
 1. Leonardo's dated Rimini context on 8 August 1502;
-2. the Cesena 10 August context bound to Manuscript L folio 46v, with the separate wall-survey association at folios 9r–10r still unresolved;
+2. the Cesena 10 August context bound to Manuscript L folio 46v; the separate wall-survey association at folios 9r–10r is rejected from the supported Gate C Claim set pending stronger evidence;
 3. the 18 August letter-patent candidate bound to the complete university-press transcription at printed p. 16 n. 26;
 4. the Cesenatico port context dated 6 September and bound to Manuscript L folio 66v, without conflating it with the separate perspective at folio 68r;
 5. the autumn Imola map-work context represented by RCT collection items 912284 and 912686;
@@ -44,7 +44,7 @@ Initial candidates use curated institutional sources:
 - Getty TGN for the attributed approximate Imola reference point and its ODC-By policy;
 - The Metropolitan Museum of Art chronology for one sparse Safavid context.
 
-Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package now contains ten atomic draft Claims and twenty-two candidate EvidenceLinks. The dated Rimini, Cesena and Cesenatico Claims use stable folio-level university-press locators, and the patent uses a complete critical transcription. Draft links still derive `evidence_state=missing`; they cannot masquerade as reviewed support. No RCT, patent or manuscript image is copied or licensed by this package.
+Visit Romagna is an institutional secondary orientation source, not a substitute for Manuscript L or the letter patent. The package contains ten atomic Claims and twenty-two candidate EvidenceLinks. The dated Rimini, Cesena and Cesenatico Claims use stable folio-level university-press locators, and the patent uses a complete critical transcription. The separate Cesena wall-survey folio Claim remains traceable but is `rejected` from the supported set because only the institutional itinerary names `9r/9v–10r`; rejection does not assert historical falsity. Draft links still derive `evidence_state=missing`; they cannot masquerade as reviewed support. No RCT, patent or manuscript image is copied or licensed by this package.
 
 ## 4. Geometry and trajectory decision
 
@@ -68,7 +68,7 @@ The package explicitly records:
 - absent reviewed Romagna Region geometry;
 - unknown inter-place routes;
 - missing original patent call number/rights-cleared surrogate despite the closed critical-transcription locator;
-- missing frozen Manuscript L facsimiles and unresolved direct binding for the Cesena wall-survey folios 9r–10r;
+- missing frozen Manuscript L facsimiles and the evidence-based rejection of the separate Cesena wall-survey folios 9r–10r Claim from the supported set;
 - absent independent reviews;
 - sparse global context;
 - the prohibition on documented Relations.
