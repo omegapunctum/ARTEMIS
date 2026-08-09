@@ -7,7 +7,7 @@
 
 ARTEMIS — source-aware spatial-temporal knowledge model about the world.
 
-Технический `World Model` является representation знаний, Claims, observations и reconstructions о мире, а не objective digital twin реальности.
+Технический `World Model` является semantic-core name. Identity-level North Star clarifies that ARTEMIS represents source-aware knowledge about the world rather than claiming to be objective reality itself; reviewed executable World Model semantics remain governed by their own frozen contracts.
 
 Миссия:
 
@@ -35,9 +35,9 @@ Attractor guides architecture; it does not authorize implementation scope.
 
 - canonical registry/routing: `docs/FOUNDATION_INDEX.md`;
 - current capability: `docs/PROJECT_TRUTH.md`;
-- North Star + attractor: `docs/ARTEMIS_CONCEPT.md`;
+- North Star + attractor + identity-level World Model interpretation: `docs/ARTEMIS_CONCEPT.md`;
 - active product: `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`;
-- world-model semantics and epistemic boundary: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- reviewed spatial-temporal World Model semantics: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
 - uncertainty profile: `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
 - epistemics: `docs/EPISTEMIC_CONTRACT.md`;
 - entities: `docs/ENTITY_MODEL.md`;
@@ -51,6 +51,8 @@ Attractor guides architecture; it does not authorize implementation scope.
 Working/audit/archive files cannot override canonical owners.
 
 No separate `ATTRACTOR.md` or `NORTH_STAR.md` may become a competing canonical owner; the owner is `ARTEMIS_CONCEPT.md`.
+
+A reviewed executable contract cannot be edited merely to make wording match a new identity-level clarification. Its own review/change-control path remains authoritative.
 
 ## 3. Current technical boundaries
 
@@ -70,27 +72,28 @@ No separate `ATTRACTOR.md` or `NORTH_STAR.md` may become a competing canonical o
 
 ## 4. Foundation invariants
 
-1. ARTEMIS models source-aware knowledge about the world; it does not claim to encode objective reality itself.
-2. Space and time are mandatory coordinates.
-3. Static cards/dates do not replace change objects.
-4. Geometry and state may change over time.
-5. Precision and uncertainty are explicit.
-6. Co-presence is not encounter, interaction, influence or causality.
-7. Relation is a structured Claim.
-8. Claim kind, origin, review, confidence, evidence and uncertainty are independent.
-9. AI is not Source and not a silent canonical writer.
-10. Counterfactual world is isolated from historical assertions.
-11. Dataset absence is not historical absence.
-12. Current capability is separate from concept.
-13. Compatibility runtime does not define target ontology.
-14. One semantic core supports many domains; domains do not own separate truth models.
-15. Renderer engines do not own domain semantics.
-16. Renderer payloads are projections of one World Model / World Slice, not independent historical truth datasets.
-17. Terrain/imagery/tiles are geospatial rendering assets unless they explicitly assert historical state through World Model semantics.
-18. 2D/3D visual differences must not change active object identity, temporal validity, uncertainty, evidence or relation meaning.
-19. Future AI view/query actions must be visible, reversible and separate from knowledge mutation.
-20. Personal knowledge context, VR/AR, universal corpus and causal/counterfactual runtime remain future branches until separately opened.
-21. Attractor constrains direction, not schedule or current scope.
+1. ARTEMIS identity models source-aware knowledge about the world; it does not claim to encode objective reality itself.
+2. Reviewed semantic contracts retain their exact reviewed meaning until separately re-reviewed.
+3. Space and time are mandatory coordinates.
+4. Static cards/dates do not replace change objects.
+5. Geometry and state may change over time.
+6. Precision and uncertainty are explicit.
+7. Co-presence is not encounter, interaction, influence or causality.
+8. Relation is a structured Claim.
+9. Claim kind, origin, review, confidence, evidence and uncertainty are independent.
+10. AI is not Source and not a silent canonical writer.
+11. Counterfactual world is isolated from historical assertions.
+12. Dataset absence is not historical absence.
+13. Current capability is separate from concept.
+14. Compatibility runtime does not define target ontology.
+15. One semantic core supports many domains; domains do not own separate truth models.
+16. Renderer engines do not own domain semantics.
+17. Renderer payloads are projections of one World Model / World Slice, not independent historical truth datasets.
+18. Terrain/imagery/tiles are geospatial rendering assets unless they explicitly assert historical state through World Model semantics.
+19. 2D/3D visual differences must not change active object identity, temporal validity, uncertainty, evidence or relation meaning.
+20. Future AI view/query actions must be visible, reversible and separate from knowledge mutation.
+21. Personal knowledge context, VR/AR, universal corpus and causal/counterfactual runtime remain future branches until separately opened.
+22. Attractor constrains direction, not schedule or current scope.
 
 ## 5. Current order
 
@@ -98,12 +101,12 @@ Active product vertical: Globe MVP / issue `#355`.
 
 Current operational truth:
 
-1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations.
+1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations byte-for-byte where their READY review scope requires it.
 2. Preserve completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
 4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
 5. Gate D — source-aware Globe experience — is the next product gate, but it is **not started by issue #363**.
-6. Issue #363 is foundation/documentation refinement only; it must not change public capability, start Gate D, add runtime schemas or open AI implementation.
+6. Issue #363 is foundation/documentation refinement only; it must not change public capability, start Gate D, add runtime schemas, mutate reviewed #329 scope or open AI implementation.
 7. When Gate D is separately opened, build from the frozen World Slice through Explorer State and Render Projection.
 8. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
 9. Collect semantic, UX, accessibility and performance evidence before any promotion decision.
@@ -146,8 +149,9 @@ For every proposed capability, ask in order:
 2. Can it reuse the shared World Model / epistemic core rather than creating a second truth model?
 3. Does it preserve space/time/change/provenance/uncertainty semantics?
 4. Is it a domain extension, interface projection, analytical tool or knowledge mutation — and is that boundary explicit?
-5. Is it current-scope work, or merely consistent with the long-term attractor?
-6. What evidence/gate authorizes implementation now?
+5. Does it require changing a reviewed contract? If yes, has that contract's review gate been explicitly reopened?
+6. Is it current-scope work, or merely consistent with the long-term attractor?
+7. What evidence/gate authorizes implementation now?
 
 A capability may be strategically aligned with the attractor and still be **not allowed now**.
 
@@ -190,13 +194,16 @@ For changes to mission, model, data, runtime, release, AI or governance:
 
 1. analyze conflict;
 2. identify owner docs;
-3. define scope and decision;
-4. update docs/contracts;
-5. review consistency;
-6. only then implement;
-7. run checks and update current truth.
+3. identify whether any owner belongs to a frozen reviewed scope;
+4. define scope and decision;
+5. update only documents/contracts whose own change-control allows the change;
+6. review consistency;
+7. only then implement;
+8. run checks and update current truth.
 
 Foundation identity changes require one synchronized decision PR and an executable regression guard.
+
+A frozen reviewed semantic contract requires new review evidence before its bytes change; do not weaken the validator to avoid that requirement.
 
 ## 11. Prohibited shortcuts
 
@@ -206,12 +213,14 @@ Foundation identity changes require one synchronized decision PR and an executab
 - converting co-presence/similarity into Relation;
 - treating AI output as Source;
 - hiding corpus coverage;
-- treating World Model as objective digital twin or complete historical reality;
+- describing ARTEMIS identity as an objective digital twin or complete historical reality;
 - claiming 3D/VR/AI/world coverage before implementation;
 - creating separate domain-specific or renderer-specific truth models;
 - creating `*_2d`, `*_3d`, `history_core`, `earth_core` or similar source-of-truth forks without a foundation decision;
 - allowing a map/globe engine to redefine temporal, spatial or epistemic semantics;
 - allowing an AI view action to mutate canonical knowledge implicitly;
+- rewriting a frozen reviewed contract while retaining its previous READY claim;
+- weakening a review digest or validator because a documentation change touched reviewed scope;
 - rewriting old issues into new meaning;
 - performing irreversible migration before fixtures/contract;
 - using archive or audit as active owner;
@@ -223,6 +232,7 @@ A task is ready when:
 
 - goal and expected result are explicit;
 - owner docs and affected files are known;
+- reviewed/frozen ownership is known;
 - current vs target boundary is known;
 - scope lock and non-goals are stated;
 - happy path, uncertainty/error cases and checks are defined;
@@ -238,6 +248,7 @@ A task is ready when:
 - current truth is honest;
 - no invented epistemic/spatial/temporal precision;
 - no hidden competing model;
+- no invalidated READY review claim;
 - next dependency or stop decision is explicit.
 
 For renderer work, Done additionally requires no silent semantic divergence from the shared World Model/Explorer State contract.
@@ -262,6 +273,6 @@ For implementation:
 
 ## 15. Final rule
 
-Do not expand ARTEMIS by losing its knowledge-model identity.
+Do not expand ARTEMIS by losing its knowledge-model identity or reviewed-contract integrity.
 
 Build toward one explorable source-aware spatial-temporal model of connected knowledge, but implement only the branch and gate that evidence currently authorizes.
