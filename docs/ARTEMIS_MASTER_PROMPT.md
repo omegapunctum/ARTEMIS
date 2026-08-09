@@ -1,7 +1,7 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v6.1
+# ARTEMIS — МАСТЕР-ПРОМПТ v6.3
 
 Статус: canonical operational governance for AI agents and assistants.
-Дата: 2026-08-08.
+Дата: 2026-08-09.
 
 ## 1. Роль проекта
 
@@ -46,6 +46,7 @@ Working/audit/archive files cannot override canonical owners.
 - Airtable curated source.
 - ETL publishes current canonical public `data/*` artifacts.
 - `data/features.geojson` is the current public **2D map projection/source**, not the universal representation of all Foundation v3 knowledge.
+- A generated MapLibre GL JS 5.24.0 Globe R&D artifact exists, but it is not a public entrypoint or a real historical corpus.
 - GitHub Pages serves the static frontend; backend is separate.
 - No React/Vue/Angular/TypeScript without architecture decision.
 - No direct frontend Airtable access.
@@ -73,29 +74,22 @@ Working/audit/archive files cannot override canonical owners.
 
 ## 5. Current order
 
-Active: World Model Contract / issue `#331`.
+Active: Globe MVP / issue `#355`.
 
-Primary validation path:
+Execution path:
 
-1. Preserve the reviewed READY world-model base from #329 / PR #336.
-2. Preserve completed #330 / PR #337 uncertainty semantics as the active precision/uncertainty foundation.
-3. Resolve #331 relation semantics against that completed contract.
-4. Freeze the first World Slice under #332.
-5. Implement the synchronized 2D explorer under #333.
-6. Run contextual-learning validation under #334.
-7. Open at most one evidence-backed product branch.
+1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations.
+2. Restore canonical lifecycle and Release Discipline after the incomplete PR #354 merge.
+3. Complete reopened #344 / PR #351 semantic parity on current `main`.
+4. Freeze one small real source-aware World Slice inside #355.
+5. Build the synchronized Globe/timeline/layers experience through Explorer State and Render Projection.
+6. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
+7. Collect semantic, UX, accessibility and performance evidence.
+8. Record one explicit promotion/iterate/narrow/stop decision.
 
-Parallel non-blocking R&D:
+Issue #331 is `PAUSED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until then, only derived proximity/co-presence is allowed.
 
-1. #339 owns renderer-neutral 2D/3D Globe architecture.
-2. #340 defines shared Explorer State.
-3. #341 defines World Model → Render Projection semantics.
-4. #342 defines geospatial asset / terrain / imagery boundaries.
-5. #343 may build a bounded 3D Earth runtime spike.
-6. #344 proves cross-renderer semantic parity.
-7. #345 decides repository/runtime/CI integration.
-
-Parallel Globe R&D must not block or silently replace #331 → #332 → #333 → #334.
+Issues #339–#343 and #345 / PRs #346–#350 and #352 are accepted renderer foundations. #344 / PR #351 remains an open recovery dependency.
 
 Foundation v3 is accepted in PR `#328`. The superseded #323–#325 path and PR #314 are closed and must not be reopened as the active ontology.
 
@@ -105,7 +99,8 @@ Frozen or gated at product scale:
 
 - generative AI;
 - causal/counterfactual engine;
-- production-scale 3D/dynamic terrain beyond bounded #339–#345 R&D;
+- public production Globe before promotion evidence;
+- universal or photorealistic historical terrain reconstruction;
 - VR/AR;
 - Stories/Courses expansion;
 - open UGC;
@@ -115,7 +110,7 @@ Frozen or gated at product scale:
 
 Security/compatibility maintenance remains allowed.
 
-Bounded Globe architecture/prototype work is explicitly allowed only under #339–#345 and remains `R&D`, not `PUBLIC NOW`.
+The bounded source-aware Globe MVP is explicitly allowed under #355. It remains non-public until a separate promotion decision.
 
 ## 7. Renderer / Globe rule
 
@@ -128,9 +123,11 @@ When working on 2D map, 3D Globe or future renderers:
 5. expose unsupported semantics instead of silently dropping them;
 6. never invent route, geometry, altitude, terrain history or temporal precision because a renderer can draw it;
 7. keep engine-specific camera/GPU/tile/picking state outside the semantic core;
-8. require semantic parity before promoting a second renderer.
+8. require semantic parity before promoting a second renderer;
+9. treat screenshot equality as visual evidence only: **Screenshot equality is not semantic parity**.
 
-Working architecture: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` under parent #339.
+Working architecture: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
+Active product decision: `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` under #355.
 
 ## 8. Docs-first rule
 
@@ -153,7 +150,7 @@ For changes to mission, model, data, runtime, release, AI or governance:
 - treating AI output as Source;
 - hiding corpus coverage;
 - claiming 3D/VR/AI/world coverage before implementation;
-- creating `*_2d` and `*_3d` historical source-of-truth forks;
+- creating separate 2D/3D historical truth datasets or `*_2d` / `*_3d` source-of-truth forks;
 - allowing a map/globe engine to redefine temporal, spatial or epistemic semantics;
 - rewriting old issues into new meaning;
 - performing irreversible migration before fixtures/contract;
@@ -203,4 +200,4 @@ For implementation:
 
 Do not expand ARTEMIS by losing its world-model identity.
 
-Build small, source-aware World Slices that prove understanding. Bounded renderer/Globe R&D is allowed when it strengthens that model without becoming a second product or source of truth. AI, VR, universal scale and product-scale dynamic Earth remain gated until evidence justifies them.
+Build one small, source-aware Globe World Slice that proves understanding without becoming a second semantic source of truth. AI, VR, universal scale, public Globe promotion and production-scale dynamic Earth remain gated until evidence justifies them.

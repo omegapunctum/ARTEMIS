@@ -13,17 +13,19 @@
 
 Foundation v3, accepted in PR `#328`, fixes the long-term direction of ARTEMIS: **source-aware spatial-temporal world model**, in which a person explores Entities, Events, States, Processes, Trajectories and Regions as synchronized layers of space and time.
 
-Первый proposed validation vertical — `Life in Context` на ограниченном Leonardo World Slice. Architecture Atlas сохраняется как thematic layer и current public/technical baseline.
+Первый active validation vertical — `Life in Context` на ограниченном Leonardo World Slice; issue #355 делает 3D Globe основной interface-development surface этого цикла. Architecture Atlas и root 2D MapLibre сохраняются как thematic/public technical baseline and rollback path.
 
 Важно:
 
 - Foundation v3 documentation не реализует world model;
 - текущий public runtime остаётся статическим Architecture Atlas;
-- Life in Context, temporal Regions, full Trajectories and synchronized multi-layer change ещё не доступны;
+- real Life in Context corpus, temporal Regions, full Trajectories and synchronized multi-layer change ещё не доступны публично;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
 - generative AI, causal/counterfactual runtime, VR/AR and universal corpus remain frozen/future;
-- **bounded 3D Globe / renderer architecture R&D is active under #339–#345, but no 3D Globe runtime is currently PUBLIC NOW or product-validated; production-scale dynamic Earth remains gated.**
+- **A real executable 3D Globe R&D artifact now exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
+- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface, no real historical World Slice in that runtime and no production terrain/provider decision.
+- Issue #344 / PR #351 semantic parity remains an open recovery gate; issue #355 is the active product-facing MVP contour after that recovery.
 
 ## 2. Что доступно публично
 
@@ -98,7 +100,7 @@ Migration preflight и release gate подтверждают current backend cap
 - universal spatial-temporal world model runtime;
 - Life in Context World Slice and synchronized explorer;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
-- public/product 3D Globe, dynamic terrain or VR experience; active #339–#345 architecture/R&D work does not change this capability status;
+- public/product 3D Globe, production dynamic terrain or VR experience; #355 changes active development scope, not current public capability;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
 - полноценные guided Stories и Courses;
@@ -118,11 +120,12 @@ Migration preflight и release gate подтверждают current backend cap
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
 6. Backend-complete mutable Slice v2 может быть ошибочно принят за target immutable research model.
 7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
-8. Parallel Globe R&D может создать второй semantic/data core, если renderer projection и shared state boundaries не будут зафиксированы до масштабирования runtime.
+8. Globe MVP может стать shadow product, если он обойдёт shared World Model / Explorer State / Render Projection или преждевременно войдёт в public Pages.
+9. PR #354 was merged with an incomplete governance diff and a failing lifecycle guard; repository lifecycle evidence must be verified from the actual diff and CI, not the PR narrative.
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / World Model Contract**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Globe MVP recovery**.
 
 Current runtime and data remain the Architecture Atlas baseline. Foundation v3 is accepted, but its world-model objects are not implemented in the public runtime or database/API.
 
@@ -131,23 +134,19 @@ Reviewed contract foundation now includes:
 - #329 / PR #336 world-model fixtures — READY;
 - #330 / PR #337 uncertainty semantics — READY.
 
-Следующий допустимый primary validation order:
+Следующий допустимый primary order:
 
-1. preserve #329 / PR #336 and #330 / PR #337 as reviewed contract evidence;
-2. resolve #331 relation semantics against the completed uncertainty contract;
-3. prepare one limited source-aware Leonardo World Slice under #332;
-4. implement synchronized 2D map/timeline/layers under #333 on the static-first contour;
-5. run #334 contextual-learning validation;
-6. open at most one evidence-backed product branch.
+1. restore canonical governance and a green Release Discipline Gate after PR #354;
+2. complete reopened #344 / PR #351 cross-renderer semantic parity;
+3. freeze one small real source-aware World Slice inside #355;
+4. implement the synchronized Globe/timeline/layers experience through shared contracts;
+5. preserve the current 2D renderer as public baseline, parity target and rollback path;
+6. collect semantic, UX, accessibility and representative performance evidence;
+7. record one promotion/iterate/narrow/stop decision before public deployment.
 
-Parallel non-blocking R&D order:
+Issue #331 is paused outside this critical path. Until it is accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
-1. #339 establishes renderer-neutral 2D/3D architecture;
-2. #340–#342 define shared state, render projections and geospatial asset boundaries;
-3. #343 builds a bounded 3D Earth runtime spike;
-4. #344 proves cross-renderer semantic parity;
-5. #345 decides repository/runtime/CI integration;
-6. no product promotion occurs without separate executable evidence and owner-doc decision.
+Accepted renderer foundations are #339–#343 and #345 / PRs #346–#350 and #352. #344 / PR #351 is not accepted until its red parity workflow is repaired and the implementation is merged.
 
 The superseded #323–#325 path and PR #314 are closed. Passing fixtures proves contract representability only; it does not change `PUBLIC NOW`, `BACKEND-AVAILABLE` or user-value status.
 
@@ -158,7 +157,7 @@ README, UI, issues, release notes и публичные материалы об�
 - `PUBLIC NOW` — работает на опубликованном URL;
 - `BACKEND-AVAILABLE` — реализовано, но требует отдельного runtime/configuration;
 - `PILOT` — существует, но недостаточно подтверждено данными или пользователями;
-- `R&D` — bounded experimental architecture/runtime work that is not a product capability promise;
+- `R&D` — bounded experimental architecture/runtime work that is not a public capability promise;
 - `CONCEPT TARGET` — утверждено концептуально, но не реализовано;
 - `FUTURE` — концепция или запланированный слой.
 

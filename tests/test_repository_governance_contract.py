@@ -31,31 +31,31 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "uncertainty/" in structure
 
 
-def test_relation_contract_is_active_and_globe_rnd_is_non_blocking() -> None:
+def test_globe_mvp_is_active_and_relation_contract_is_paused() -> None:
     priorities = _read("docs/PRIORITIES.md")
     phases = _read("docs/PROJECT_PHASES.md")
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: World Model Contract" in priorities
-    assert "Active primary issue: GitHub issue `#331`" in priorities
-    assert "#330 / PR #337 — executable uncertainty semantics v1" in priorities
-    assert "R&D-G — Parallel 3D Globe / renderer architecture" in priorities
-    assert "does not block #331 → #332 → #333 → #334" in priorities
+    assert "Active cycle: Globe MVP" in priorities
+    assert "Active primary issue: GitHub issue `#355`" in priorities
+    assert "#330 uncertainty fixtures" in priorities
+    assert "P0.2 Cross-renderer semantic parity" in priorities
+    assert "#331 relation predicates" in priorities
 
-    assert "Активная фаза: **4.7 World Model Contract**" in phases
-    assert "Статус: **ACTIVE / ISSUE #331**" in phases
+    assert "Активная фаза: **4.8 Globe MVP recovery and vertical**" in phases
+    assert "Статус: **ACTIVE / ISSUE #355**" in phases
     assert "SUPERSEDED BEFORE GATES B–E" in phases
-    assert "#330 uncertainty semantics completed and merged in PR #337" in phases
-    assert "ACTIVE PARALLEL R&D / NON-BLOCKING" in phases
+    assert "#330 / PR #337 — reviewed uncertainty semantics" in phases
+    assert "Open recovery" in phases
 
     assert "#330 / PR #337 uncertainty semantics — READY" in truth
-    assert "resolve #331 relation semantics" in truth
-    assert "bounded 3D Globe / renderer architecture R&D is active" in truth
+    assert "Issue #331 is paused" in truth
+    assert "issue #355 is the active product-facing MVP contour" in truth
 
-    assert "Active: World Model Contract / issue `#331`." in master_prompt
-    assert "#339 owns renderer-neutral 2D/3D Globe architecture" in master_prompt
-    assert "Parallel Globe R&D must not block or silently replace #331 → #332 → #333 → #334" in master_prompt
+    assert "Active: Globe MVP / issue `#355`." in master_prompt
+    assert "#344 / PR #351 remains an open recovery dependency" in master_prompt
+    assert "Issue #331 is `PAUSED`" in master_prompt
     assert "superseded #323–#325 path and PR #314 are closed" in master_prompt
 
 

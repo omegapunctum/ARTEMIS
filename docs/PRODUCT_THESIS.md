@@ -3,18 +3,18 @@
 ## Статус
 
 - Тип: canonical active product thesis.
-- Версия: 3.0.
-- Дата: 2026-07-28.
-- Решение: Foundation v3 / first `Life in Context` validation vertical.
-- Основание: `ARTEMIS_CONCEPT.md`, issue `#327` и Foundation v3 decision record.
+- Версия: 3.1.
+- Дата: 2026-08-09.
+- Решение: Foundation v3 / first `Life in Context` Globe MVP vertical.
+- Основание: `ARTEMIS_CONCEPT.md`, issue `#355` и `work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
 ## 1. Product statement
 
-**ARTEMIS Life in Context помогает любознательному студенту или самостоятельному исследователю проследить жизнь исторической личности внутри изменяющегося мира: синхронно видеть её перемещения, локальные события, состояние региона, подтверждённые связи и события, происходящие в других частях мира.**
+**ARTEMIS Life in Context помогает любознательному студенту или самостоятельному исследователю проследить жизнь исторической личности на интерактивном глобусе внутри изменяющегося мира: синхронно видеть её перемещения, локальные события, состояние региона и события, происходящие в других частях мира.**
 
 Дифференциация:
 
-> Обычная карта показывает место, биография — последовательность эпизодов, энциклопедия — отдельные статьи. ARTEMIS показывает их как одну source-aware пространственно-временную конфигурацию и не превращает одновременность в выдуманную связь.
+> Обычная карта показывает место, биография — последовательность эпизодов, энциклопедия — отдельные статьи. ARTEMIS показывает их на глобальной пространственной поверхности как одну source-aware пространственно-временную конфигурацию и не превращает одновременность в выдуманную связь.
 
 ## 2. Проблема
 
@@ -61,8 +61,8 @@ Secondary exploratory audiences:
 
 Core loop:
 
-1. Выбрать личность и временной интервал.
-2. Перемещаться по её траектории.
+1. Выбрать личность и временной интервал на глобусе.
+2. Перемещаться между глобальным контекстом и её локальной траекторией.
 3. Видеть локальные события и состояние региона.
 4. Включать/выключать тематические слои.
 5. Сравнивать локальный контекст с синхронными событиями в других местах.
@@ -123,7 +123,11 @@ Slice должен включать только материал, необхо�
 
 Пользователь может объяснить вклад хотя бы двух тематических слоёв в своё понимание, а не только факт их наличия.
 
-### H7 — sustainable World Slice
+### H7 — Globe orientation value
+
+Переход между глобальным и локальным масштабом помогает понять расстояние, одновременность и пространственный контекст лучше, чем тот же материал в несинхронизированном или плоском baseline, и эта ценность не сводится к визуальной новизне 3D.
+
+### H8 — sustainable World Slice
 
 Ограниченный междисциплинарный World Slice можно подготовить и проверить с измеримой стоимостью.
 
@@ -155,7 +159,7 @@ Vertical получает право на следующую реализаци�
 - critical co-presence→influence errors не увеличиваются;
 - пользователи могут проверять существенные claims;
 - минимум два слоя дают объяснимый вклад;
-- observed value не зависит от обещаний AI/3D/VR;
+- observed value не зависит от обещаний AI/VR или визуальной новизны 3D без пространственно-временного понимания;
 - World Slice имеет известную стоимость подготовки и review;
 - принято решение `ITERATE`, `EXPAND ONE BRANCH`, `NARROW VERTICAL` или `STOP/RETHINK`.
 
@@ -166,7 +170,7 @@ Vertical получает право на следующую реализаци�
 - generative AI;
 - causal engine;
 - counterfactual simulation;
-- high-fidelity 3D reconstruction;
+- photorealistic or universal historical 3D reconstruction;
 - VR/AR;
 - public UGC;
 - institution/enterprise workflow;
@@ -182,6 +186,7 @@ Vertical получает право на следующую реализаци�
 5. Evidence supports the model; it does not replace the experience.
 6. Uncertainty is visible and spatial-temporal.
 7. Small complete World Slice before corpus breadth.
-8. Static Pages first unless backend is necessary for the hypothesis.
-9. AI/3D/VR remain separate gates.
-10. Current truth is never inferred from the North Star.
+8. Generated/non-public Globe evidence first; public deployment only after a separate promotion decision.
+9. Globe is the active interface candidate, but value must come from shared spatial-temporal semantics rather than decorative 3D.
+10. AI/VR and production-scale dynamic Earth remain separate gates.
+11. Current truth is never inferred from the North Star.
