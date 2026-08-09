@@ -7,6 +7,7 @@ import pytest
 from scripts.validate_project_state import (
     ProjectStateError,
     STATE_PATH,
+    _frozen_commit_time,
     _reviewed_content_digest,
     _validate_completed_gate_transition,
     _validate_frozen_git_revision,
@@ -132,6 +133,14 @@ def test_review_cannot_predate_the_frozen_commit() -> None:
             datetime(2026, 8, 9, 10, tzinfo=timezone.utc),
             not_before=datetime(2026, 8, 9, 9, 57, 2, tzinfo=timezone.utc),
         )
+
+
+def test_frozen_git_timestamp_with_non_utc_offset_is_normalized() -> None:
+    import subprocess
+
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    parsed = _frozen_commit_time(commit)
+    assert parsed.tzinfo is timezone.utc
 
 
 def test_reviewed_content_digest_rejects_revision_without_scope_files() -> None:

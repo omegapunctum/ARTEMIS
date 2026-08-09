@@ -140,9 +140,14 @@ def _parse_utc_timestamp(value: str, label: str) -> datetime:
 
 
 def _frozen_commit_time(commit: str) -> datetime:
-    return _parse_utc_timestamp(
-        _git("show", "-s", "--format=%cI", commit), "frozen commit timestamp"
-    )
+    value = _git("show", "-s", "--format=%cI", commit)
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ProjectStateError("frozen commit timestamp must be RFC 3339") from exc
+    if parsed.tzinfo is None:
+        raise ProjectStateError("frozen commit timestamp must include a timezone offset")
+    return parsed.astimezone(timezone.utc)
 
 
 def _validate_review_chronology(

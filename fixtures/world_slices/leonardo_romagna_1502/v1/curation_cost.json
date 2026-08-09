@@ -99,6 +99,22 @@
       "duration_minutes": 9,
       "measurement_state": "recorded",
       "notes": "Measured 2026-08-09T09:58:29Z–10:07:20Z and rounded up to whole minutes. Interrupted without a semantic decision once the same frozen revision received CHANGES_REQUIRED on validator integrity; this is cost history, not Gate C evidence."
+    },
+    {
+      "activity_id": "cost-fourth-semantic-content-review-interrupted",
+      "activity": "Interrupted fourth independent semantic-content review after a Git timestamp parser deadlock invalidated the revision",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 6,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T10:09:25Z–10:14:37Z and rounded up to whole minutes. Interrupted without a semantic decision once the same revision received CHANGES_REQUIRED on validator integrity; this is cost history, not Gate C evidence."
+    },
+    {
+      "activity_id": "cost-fourth-validator-integrity-review",
+      "activity": "Fourth independent validator-integrity review of Git timestamp normalization",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 8,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T10:09:13Z–10:16:45Z and rounded up to whole minutes. Decision CHANGES_REQUIRED with one material timezone-offset deadlock; this is review history, not final Gate C evidence."
     }
   ],
   "ready_rule": "No pending entry is allowed at READY. Historical unmeasured entries may remain null only when explicitly superseded by a recorded full recuration activity; both final independent-review costs must be recorded."
