@@ -131,19 +131,39 @@ The refinement is acceptable only if:
 6. current product scope and `project_state.json` are not advanced to Gate D;
 7. an executable documentation guard blocks regression;
 8. #329 `--require-ready` remains valid;
-9. Release Discipline Gate passes on the exact PR head.
+9. Gate C historical evidence remains reproducible after the #362 squash merge;
+10. Release Discipline Gate passes on the exact PR head.
 
-## 9. Evidence reachability note
+## 9. Gate C evidence retention and validator repair
 
-Gate C / PR #362 was squash-merged after its reviewers inspected frozen commit `bd2e103cdeec615cb19f0a4293c708fe37a4ae52`. Because `project_state.json` intentionally verifies that exact revision, the frozen commit must remain reachable in Git.
+Gate C / PR #362 was squash-merged after reviewers inspected frozen commit `bd2e103cdeec615cb19f0a4293c708fe37a4ae52` and before the completed decision was recorded at finalization commit `c4879b793407d71f9a352a34ab9cd1b260b3e510`.
 
-A durable evidence branch `evidence/gate-c-leonardo-romagna-1502-frozen` now points to that exact reviewed commit. This preserves evidence reachability; it does not reopen Gate C or create a product branch.
+A squash merge intentionally does not make those pre-squash commits ancestors of the resulting `main` commit. The original `validate_project_state.py` assumed that every future `HEAD` would remain a descendant of the frozen review commit and therefore made any subsequent governance change fail even when historical Gate C evidence was untouched.
+
+Evidence is now retained through two durable refs:
+
+- `evidence/gate-c-leonardo-romagna-1502-frozen` → exact reviewed commit `bd2e103c...`;
+- `evidence/gate-c-leonardo-romagna-1502-finalization` → exact finalization commit `c4879b79...` with pinned tree `8246d6d5b7d3ad63d105ea934e539833e1a0c39f`.
+
+The validator now checks the correct historical chain:
+
+`frozen review revision → pinned finalization revision`
+
+It verifies:
+
+- exact frozen commit/tree/digest;
+- exact pinned finalization commit/tree through the durable evidence ref;
+- frozen commit ancestry to the finalization commit;
+- only allowlisted finalization paths changed between those revisions;
+- the entire Gate C fixture/evidence subtree in current `HEAD` remains byte-identical to the pinned finalization subtree.
+
+It no longer requires unrelated future `HEAD` commits to descend from the pre-squash review branch. This does not weaken Gate C evidence: it makes the immutable evidence boundary explicit while allowing later governance/code evolution outside the completed Gate C package.
 
 ## 10. Rollback
 
-Because this is documentation/governance only, rollback is a normal revert of the decision PR. No data or runtime recovery is required.
+Because the attractor changes are documentation/governance only, they can be reverted normally without data/runtime recovery.
 
-The Gate C evidence branch is independent evidence retention and should not be deleted while `project_state.json` references its frozen commit.
+The Gate C evidence refs are independent retention anchors and should not be deleted or moved while project-state validation relies on them. The validator fails closed if the finalization ref is absent, moved or no longer resolves to the pinned commit/tree.
 
 ## 11. Final rule
 
