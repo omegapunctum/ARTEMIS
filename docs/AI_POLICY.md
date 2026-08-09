@@ -496,9 +496,9 @@ This file, `docs/AI_POLICY.md`, defines canonical constraints. The archived stra
 
 ## 18. Relationship to other foundation docs
 
-- `ARTEMIS_CONCEPT.md` defines the long-term attractor and why AI must not replace human judgment or source discipline.
+- `ARTEMIS_CONCEPT.md` defines the long-term attractor, the identity-level knowledge-about-world interpretation and why AI must not replace human judgment or source discipline.
 - `ARTEMIS_PRODUCT_SCOPE.md` keeps AI generation outside the active Globe MVP unless a separate decision opens it.
-- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` defines the World Model as knowledge about the world and keeps view state separate from canonical knowledge.
+- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` remains the reviewed v1.0 owner of spatial-temporal/change/coverage/reconstruction semantics; Foundation v3.1 does not rewrite that frozen #329 review dependency.
 - `RESEARCH_SLICE_CONTRACT.md` defines Investigation/revision as possible future AI context.
 - `EPISTEMIC_CONTRACT.md` defines Claim/EvidenceLink and independent dimensions AI must obey.
 - `ENTITY_MODEL.md` defines current/future named entity roles; view actions do not become entity types by implication.
@@ -543,6 +543,8 @@ Any change to AI behavior must check impact on:
 - UI labels, action disclosure and output rendering;
 - moderation/content governance;
 - tests/release checks if executable behavior changes.
+
+Checking impact on a frozen reviewed contract does not authorize editing it. If AI behavior requires a semantic-contract byte change, that contract's own review/change-control gate must be reopened.
 
 No AI feature should be implemented only as a prompt or UI addition if it changes source/trust/product semantics or state-control authority.
 
