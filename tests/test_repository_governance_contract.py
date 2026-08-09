@@ -60,13 +60,15 @@ def test_globe_mvp_remains_active_after_gate_c_freeze_and_relation_contract_is_p
     assert "issue #355 remains the active product-facing MVP contour" in truth
     assert "#344 / PR #351 semantic parity is merged executable evidence" in truth
     assert "Gate C is completed/FREEZE" in truth
-    assert "Gate D is the next product gate" in truth
+    assert "Gate D is still only the next product gate" in truth
+    assert "has not been opened by the Foundation decision" in truth
 
     assert "Active product vertical: Globe MVP / issue `#355`" in master_prompt
     assert "#344 / PR #351 semantic parity as a green renderer foundation" in master_prompt
     assert "Issue #331 is `PAUSED`" in master_prompt
     assert "superseded #323–#325 path and PR #314 remain closed" in master_prompt
     assert "Gate D — source-aware Globe experience — is the next product gate" in master_prompt
+    assert "not currently opened/in progress" in master_prompt
 
 
 def test_globe_architecture_does_not_create_a_second_semantic_core() -> None:
