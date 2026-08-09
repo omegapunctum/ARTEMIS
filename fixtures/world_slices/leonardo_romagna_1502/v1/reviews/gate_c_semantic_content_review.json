@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "review_id": "gate-c-review-semantic-content-bd2e103c",
+  "reviewer_id": "codex-semantic-content-reviewer",
+  "reviewer_instance_id": "codex-gate-c-semantic-content-20260809t103219z-bd2e103c",
+  "track": "semantic-content",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+  "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+  "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+  "started_at": "2026-08-09T10:32:19Z",
+  "completed_at": "2026-08-09T10:36:59Z",
+  "duration_minutes": 5,
+  "decision": "READY",
+  "unresolved_critical": 0,
+  "unresolved_material": 0,
+  "cost_activity_ref": "cost-sixth-semantic-content-review",
+  "findings": [
+    {
+      "finding_id": "SC6-M01",
+      "severity": "minor",
+      "status": "accepted",
+      "summary": "The Leonardo creator-identity Claim combines manuscript and map authorship. Both have direct institutional EvidenceLinks and remain draft/missing; later splitting would improve contestability but does not block Gate C."
+    },
+    {
+      "finding_id": "SC6-I01",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "Optional full-suite failures remain confined to unchanged Foundation world-model fixture tests; relevant Gate C validators, 96 targeted tests, release_check and remote CI pass."
+    }
+  ],
+  "commands": [
+    "GitHub exact commit/tree, PR #362 and issues #332/#360 -> published revision and acceptance boundaries confirmed read-only",
+    "GitHub workflows -> required gates successful; ETL was still in progress at reviewer observation",
+    "git status and revision identity -> clean exact commit/tree",
+    "git diff from fifth READY revision -> only curation_cost.json and tests/test_project_state.py; semantic payload unchanged",
+    "reviewed-content digest -> exact 1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+    "Leonardo World Slice validator -> PASS; 17 objects, 10 sources, 22 Claims, 38 EvidenceLinks, 11 Uncertainties, no promotion",
+    "project_state validator -> PASS in-progress state",
+    "relevant Gate C semantic/governance/render tests -> 96 passed",
+    "release_check.py -> PASS all lanes",
+    "optional full pytest -> 19 failed, 681 passed, 3 skipped; failures confined to unchanged Foundation fixture harness",
+    "semantic assertions -> exact global pair; two temporal Region states; null geometry; no Relations; draft/non-public state",
+    "rights assertions -> 10 sources, no field violations; RCT media/geometry prohibited; unresolved rights authorize no polygons",
+    "Uncertainty assertions -> 11 records, no structural violations or unregistered custody assertion",
+    "final git status -> clean; no reviewer mutations"
+  ],
+  "conclusion": "READY for non-public Gate C FREEZE: the exact semantic payload satisfies the State/Event, temporal Region, alternatives, cost, Claim/locator, Cesena, rights, Uncertainty, no-Relation, coverage and no-promotion acceptance boundaries without making historical objects ready."
+}

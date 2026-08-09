@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "status": "GATE_C_COMPLETED",
+  "decision": "FREEZE",
+  "decided_at": "2026-08-09T10:38:06Z",
+  "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+  "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+  "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+  "review_registry_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json",
+  "scope_outcome": "frozen",
+  "cesena_folios_9r_10r_disposition": "rejected_from_supported_gate_c_claim_set",
+  "region_geometry_disposition": "withheld_null_geometry",
+  "relation_gate_disposition": "issue_331_paused_no_stored_relations",
+  "global_event_disposition": "one_year_precision_event_candidate_included",
+  "unresolved_critical": 0,
+  "unresolved_material": 0,
+  "promotion_allowed": false,
+  "next_gate": "D"
+}

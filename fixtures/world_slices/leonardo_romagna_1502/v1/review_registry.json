@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+  "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+  "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+  "required_review_count": 2,
+  "reviews": [
+    {
+      "review_id": "gate-c-review-validator-integrity-final-bd2e103c",
+      "reviewer_id": "codex-validator-integrity",
+      "reviewer_instance_id": "gate-c-validator-integrity-final-20260809T103212Z",
+      "track": "validator-integrity",
+      "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+      "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+      "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+      "started_at": "2026-08-09T10:32:12Z",
+      "completed_at": "2026-08-09T10:35:17Z",
+      "duration_minutes": 4,
+      "decision": "READY",
+      "unresolved_critical": 0,
+      "unresolved_material": 0,
+      "cost_activity_ref": "cost-final-validator-integrity-review",
+      "artifact_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/reviews/gate_c_validator_integrity_review.json"
+    },
+    {
+      "review_id": "gate-c-review-semantic-content-bd2e103c",
+      "reviewer_id": "codex-semantic-content-reviewer",
+      "reviewer_instance_id": "codex-gate-c-semantic-content-20260809t103219z-bd2e103c",
+      "track": "semantic-content",
+      "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+      "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+      "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+      "started_at": "2026-08-09T10:32:19Z",
+      "completed_at": "2026-08-09T10:36:59Z",
+      "duration_minutes": 5,
+      "decision": "READY",
+      "unresolved_critical": 0,
+      "unresolved_material": 0,
+      "cost_activity_ref": "cost-sixth-semantic-content-review",
+      "artifact_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/reviews/gate_c_semantic_content_review.json"
+    }
+  ]
+}

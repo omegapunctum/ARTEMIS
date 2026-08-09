@@ -14,7 +14,6 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | one real bounded World Slice, source-aware Globe experience, semantic/UX evidence and one explicit next decision |
-| `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` | #332/#360 active Gate C scope for the non-public Leonardo-in-Romagna 1502 curation package | atomic Claim/Evidence/Uncertainty package, reviewed geometry, measured cost and two independent reviews |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 recovery/MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
@@ -60,6 +59,8 @@ Active execution rule for the Globe MVP:
 Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply only where Foundation v3 owner docs keep them.
 
 ## Completed execution evidence
+
+- `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary; Claims remain draft and Gate D is not started by that decision.
 
 - `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints, temporal boundaries and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
 - `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/non-public runtime and Pages boundaries accepted.

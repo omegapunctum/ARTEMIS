@@ -63,12 +63,20 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["uncertainty_id", "dimension", "description", "effect", "target_refs"],
+        "required": ["uncertainty_id", "dimension", "description", "effect", "basis_kind", "basis", "basis_claim_refs", "review_state", "target_refs"],
         "properties": {
           "uncertainty_id": {"type": "string", "pattern": "^uncertainty-[a-z0-9-]+$"},
           "dimension": {"enum": ["date", "location", "source", "reconstruction", "missing_evidence", "scope_limitation"]},
           "description": {"type": "string", "minLength": 12},
           "effect": {"type": "string", "minLength": 12},
+          "basis_kind": {"enum": ["claim_refs", "explicit_missing_evidence", "scope_policy"]},
+          "basis": {"type": "string", "minLength": 12},
+          "basis_claim_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
+          },
+          "review_state": {"enum": ["draft", "reviewed", "contested", "rejected", "superseded"]},
           "target_refs": {"$ref": "#/$defs/refArray"}
         }
       }

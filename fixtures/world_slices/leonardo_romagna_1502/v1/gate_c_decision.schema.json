@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/leonardo-gate-c-decision-v1.json",
+  "title": "ARTEMIS Leonardo World Slice Gate C decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "slice_id", "status", "decision", "decided_at", "frozen_commit", "frozen_tree", "reviewed_content_digest", "review_registry_ref", "scope_outcome", "cesena_folios_9r_10r_disposition", "region_geometry_disposition", "relation_gate_disposition", "global_event_disposition", "unresolved_critical", "unresolved_material", "promotion_allowed", "next_gate"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "slice_id": {"const": "world-slice-leonardo-romagna-1502-v1"},
+    "status": {"const": "GATE_C_COMPLETED"},
+    "decision": {"enum": ["FREEZE", "NARROW", "REJECT"]},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "reviewed_content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "review_registry_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"},
+    "scope_outcome": {"enum": ["frozen", "narrowed", "rejected"]},
+    "cesena_folios_9r_10r_disposition": {"const": "rejected_from_supported_gate_c_claim_set"},
+    "region_geometry_disposition": {"const": "withheld_null_geometry"},
+    "relation_gate_disposition": {"const": "issue_331_paused_no_stored_relations"},
+    "global_event_disposition": {"const": "one_year_precision_event_candidate_included"},
+    "unresolved_critical": {"const": 0},
+    "unresolved_material": {"const": 0},
+    "promotion_allowed": {"const": false},
+    "next_gate": {"enum": ["D", "STOP"]}
+  }
+}

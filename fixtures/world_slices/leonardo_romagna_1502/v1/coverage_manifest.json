@@ -6,8 +6,8 @@
     {
       "gap_id": "gap-no-reviewed-romagna-region-geometry",
       "dimension": "geometry",
-      "description": "No source-backed changing Duchy of Romagna polygon has been digitized, georeferenced or independently reviewed.",
-      "effect": "Both Region versions remain geometry-withheld and cannot be rendered or promoted.",
+      "description": "No source-backed changing Duchy of Romagna polygon has affirmative derived-geometry rights, a digitization method, georeferencing evidence or independent review.",
+      "effect": "The title-based and documented-place-only alternatives both remain geometry-withheld and cannot be rendered as polygons or promoted.",
       "exit_condition": "Freeze source images and rights, define the reconstruction question, method, CRS/control points and residuals, then complete two independent geometry reviews."
     },
     {
@@ -20,23 +20,23 @@
     {
       "gap_id": "gap-no-manuscript-folio-artifacts",
       "dimension": "evidence",
-      "description": "The university chronology now pins the dated Rimini, Cesena and Cesenatico entries to Manuscript L folios 78r, 46v and 66v, but no rights-cleared facsimiles are frozen; the Cesena wall-survey association with folios 9r–10r still has only an institutional-itinerary locator.",
-      "effect": "The dated presence Claims can proceed to textual review, but direct manuscript-image review and the separate Cesena wall-survey Claim remain unresolved.",
-      "exit_condition": "Complete independent textual review of the pinned university-press locators; retain the 9r–10r Claim as unresolved unless a rights-compliant facsimile or critical-edition locator is frozen."
+      "description": "The university chronology pins the dated Rimini, Cesena and Cesenatico entries to Manuscript L folios 78r, 46v and 66v, but no rights-cleared facsimiles are frozen; the separate Cesena wall-survey association with folios 9r–10r has only an institutional-itinerary locator in the frozen source set.",
+      "effect": "The dated presence Claims can proceed to textual review. The separate Cesena wall-survey folio Claim is rejected from the Gate C supported set without being declared historically false.",
+      "exit_condition": "Retain the rejection unless a rights-compliant facsimile or critical-edition locator is frozen and independently reviewed."
     },
     {
       "gap_id": "gap-no-independent-content-reviews",
       "dimension": "review",
-      "description": "No independent semantic/content or validator-integrity review has been completed for the historical slice.",
+      "description": "The first independent semantic/content and validator-integrity review round returned CHANGES_REQUIRED; no final READY review pair has been completed on the corrected revision.",
       "effect": "The package remains candidate_not_ready and promotion_allowed=false.",
       "exit_condition": "Complete two independent reviews on one frozen commit with no unresolved critical or material finding."
     },
     {
       "gap_id": "gap-sparse-global-context",
       "dimension": "coverage",
-      "description": "Only one global simultaneity candidate is selected.",
+      "description": "Only one Safavid State and one year-precision Ottoman displacement Event are selected as global simultaneity candidates.",
       "effect": "The slice cannot imply representative global coverage.",
-      "exit_condition": "Validate the comparison task and either justify one anchor as sufficient or add the smallest additional source-bound 1502 context."
+      "exit_condition": "Keep the pair explicitly sparse until a later comparison task justifies additional global coverage."
     },
     {
       "gap_id": "gap-no-documented-relations",

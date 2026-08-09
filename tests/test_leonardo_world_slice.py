@@ -32,14 +32,14 @@ def test_scope_frozen_package_passes_fail_closed_validation() -> None:
     assert summary == {
         "slice_id": "world-slice-leonardo-romagna-1502-v1",
         "status": "SCOPE_FROZEN",
-        "candidate_object_count": 16,
-        "source_count": 9,
+        "candidate_object_count": 17,
+        "source_count": 10,
         "known_gap_count": 6,
         "trajectory_gap_count": 3,
         "region_version_count": 2,
-        "claim_count": 10,
-        "evidence_link_count": 22,
-        "uncertainty_count": 7,
+        "claim_count": 22,
+        "evidence_link_count": 38,
+        "uncertainty_count": 11,
         "promotion_allowed": False,
     }
 
@@ -127,6 +127,15 @@ def test_region_versions_require_temporal_claim_binding() -> None:
         validate_package(selection, sources, coverage, cost)
 
 
+def test_region_requires_two_source_bound_temporal_states() -> None:
+    selection, sources, coverage, cost = _baseline()
+    region = next(row for row in selection["candidate_objects"] if row["object_type"] == "Region")
+    region["temporal_states"][1]["state_kind"] = "source_bound_transition_context"
+
+    with pytest.raises(WorldSliceScopeError, match="both source-bound temporal states"):
+        validate_package(selection, sources, coverage, cost)
+
+
 def test_paused_relation_gate_rejects_stored_relation() -> None:
     selection, sources, coverage, cost = _baseline()
     selection["relation_policy"]["stored_relations"].append(
@@ -151,6 +160,15 @@ def test_rct_rights_cannot_silently_allow_image_reuse() -> None:
     rct["rights"]["media_reuse"] = "not_applicable"
 
     with pytest.raises(WorldSliceScopeError, match="cannot authorize image reuse"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_rct_rights_cannot_silently_allow_derived_geometry() -> None:
+    selection, sources, coverage, cost = _baseline()
+    rct = next(row for row in sources["sources"] if row["source_id"] == "source-rct-imola-map")
+    rct["rights"]["derived_geometry_use"] = "permitted"
+
+    with pytest.raises(WorldSliceScopeError, match="cannot authorize derived geometry"):
         validate_package(selection, sources, coverage, cost)
 
 
@@ -240,6 +258,22 @@ def test_patent_critical_transcription_locator_cannot_be_removed() -> None:
         validate_package(selection, sources, coverage, cost, claims)
 
 
+def test_cesena_wall_folios_remain_traceable_but_rejected_from_supported_scope() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    wall_claim = next(
+        row for row in claims["claims"] if row["claim_id"] == "claim-cesena-survey-folios-9r-10r"
+    )
+
+    assert wall_claim["review_state"] == "rejected"
+    assert wall_claim["evidence_state"] == "missing"
+    assert wall_claim["confidence"] == "low"
+
+    wall_claim["confidence"] = "unknown"
+    with pytest.raises(WorldSliceScopeError, match="must remain rejected and unsupported"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
 def test_claim_target_must_stay_inside_frozen_scope() -> None:
     selection, sources, coverage, cost = _baseline()
     claims = _claims()
@@ -247,3 +281,101 @@ def test_claim_target_must_stay_inside_frozen_scope() -> None:
 
     with pytest.raises(WorldSliceScopeError, match="unknown candidate object"):
         validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_every_candidate_object_requires_an_atomic_claim_binding() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    claims["claims"] = [
+        row for row in claims["claims"] if row["target_object_ref"] != "process-leonardo-romagna-surveying"
+    ]
+    claims["evidence_links"] = [
+        row
+        for row in claims["evidence_links"]
+        if row["claim_id"] != "claim-romagna-survey-process-analytical-grouping"
+    ]
+    claims["uncertainties"] = [
+        row
+        for row in claims["uncertainties"]
+        if row["uncertainty_id"] != "uncertainty-process-analytical-grouping"
+    ]
+    uniurb = next(
+        row for row in sources["sources"] if row["source_id"] == "source-uniurb-volpe-chronology"
+    )
+    uniurb["intended_claims"].remove("claim-romagna-survey-process-analytical-grouping")
+
+    with pytest.raises(WorldSliceScopeError, match="requires an atomic Claim binding"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_uncertainty_requires_explicit_provenance_basis() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    uncertainty = claims["uncertainties"][0]
+    uncertainty["basis_kind"] = "claim_refs"
+    uncertainty["basis_claim_refs"] = []
+
+    with pytest.raises(WorldSliceScopeError, match="requires at least one basis Claim"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_orphan_uncertainty_is_rejected() -> None:
+    selection, sources, coverage, cost = _baseline()
+    claims = _claims()
+    claims["claims"] = [
+        {
+            **row,
+            "uncertainty_refs": [
+                ref
+                for ref in row["uncertainty_refs"]
+                if ref != "uncertainty-global-event-year-precision"
+            ],
+        }
+        for row in claims["claims"]
+    ]
+
+    with pytest.raises(WorldSliceScopeError, match="not reciprocally bound"):
+        validate_package(selection, sources, coverage, cost, claims)
+
+
+def test_scope_requires_one_source_bound_global_event() -> None:
+    selection, sources, coverage, cost = _baseline()
+    event = next(
+        row
+        for row in selection["candidate_objects"]
+        if row["object_id"] == "event-ottoman-turkmen-displacement-1502"
+    )
+    event["layer_refs"] = ["layer-local-context"]
+
+    with pytest.raises(WorldSliceScopeError, match="exactly one source-bound global Event"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_region_requires_both_explicit_reconstruction_alternatives() -> None:
+    selection, sources, coverage, cost = _baseline()
+    region = next(row for row in selection["candidate_objects"] if row["object_type"] == "Region")
+    region["versions"][1]["alternative_kind"] = "title_based_context"
+
+    with pytest.raises(WorldSliceScopeError, match="both explicit reconstruction alternatives"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_region_reconstruction_mode_rejects_noncanonical_label() -> None:
+    selection, sources, coverage, cost = _baseline()
+    region = next(row for row in selection["candidate_objects"] if row["object_type"] == "Region")
+    region["versions"][0]["reconstruction_mode"] = "title_based_context"
+
+    with pytest.raises(WorldSliceScopeError, match="schema validation failed"):
+        validate_package(selection, sources, coverage, cost)
+
+
+def test_global_context_policy_and_object_set_cannot_drift() -> None:
+    selection, sources, coverage, cost = _baseline()
+    state = next(
+        row for row in selection["candidate_objects"]
+        if row["object_id"] == "state-safavid-isma-il-i"
+    )
+    state["layer_refs"] = ["layer-local-context"]
+
+    with pytest.raises(WorldSliceScopeError, match="global context must contain exactly"):
+        validate_package(selection, sources, coverage, cost)

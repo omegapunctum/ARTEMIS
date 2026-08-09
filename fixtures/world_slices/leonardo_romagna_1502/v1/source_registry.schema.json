@@ -11,7 +11,7 @@
     "accessed_at": {"const": "2026-08-09"},
     "sources": {
       "type": "array",
-      "minItems": 9,
+      "minItems": 10,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -40,17 +40,19 @@
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
-            "items": {"type": "string", "minLength": 1}
+            "items": {"type": "string", "pattern": "^claim-[a-z0-9-]+$"}
           },
           "relation_to_claim": {"enum": ["supports", "contextualizes"]},
           "curation_state": {"const": "verified_candidate_not_reviewed"},
           "rights": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["data_or_text_use", "media_reuse", "license", "attribution"],
+            "required": ["access_status", "data_or_text_use", "media_reuse", "derived_geometry_use", "license", "attribution"],
             "properties": {
+              "access_status": {"enum": ["accessible", "restricted", "unavailable", "unresolved"]},
               "data_or_text_use": {"enum": ["citation_and_factual_claims_only", "attributed_structured_data"]},
               "media_reuse": {"enum": ["prohibited_without_permission", "not_applicable"]},
+              "derived_geometry_use": {"enum": ["permitted", "prohibited", "unresolved", "not_applicable"]},
               "license": {"type": ["string", "null"]},
               "attribution": {"type": "string", "minLength": 1}
             }

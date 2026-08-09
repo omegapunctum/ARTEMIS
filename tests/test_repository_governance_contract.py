@@ -14,6 +14,7 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     documentation = _read("docs/DOCUMENTATION_SYSTEM.md")
     structure = _read("docs/PROJECT_STRUCTURE.md")
     work_registry = _read("docs/work/README.md")
+    operating_system = _read("docs/DEVELOPMENT_OPERATING_SYSTEM.md")
 
     assert "single entrypoint for agents" in agents
     assert "docs/FOUNDATION_INDEX.md" in agents
@@ -29,6 +30,9 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "validate_world_model_fixtures.py" in structure
     assert "validate_uncertainty_fixtures.py" in structure
     assert "uncertainty/" in structure
+    assert "One product vertical is active" in operating_system
+    assert "docs/project_state.json" in operating_system
+    assert (ROOT / "docs" / "project_state.schema.json").is_file()
 
 
 def test_globe_mvp_is_active_and_relation_contract_is_paused() -> None:
