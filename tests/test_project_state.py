@@ -5,9 +5,12 @@ from datetime import datetime, timezone
 import pytest
 
 from scripts.validate_project_state import (
+    GATE_C_FINALIZATION_COMMIT,
+    GATE_C_FINALIZATION_TREE,
     ProjectStateError,
     STATE_PATH,
     _frozen_commit_time,
+    _resolve_gate_c_finalization_ref,
     _reviewed_content_digest,
     _validate_completed_gate_transition,
     _validate_frozen_git_revision,
@@ -57,6 +60,16 @@ def test_current_project_state_is_valid_and_single_gate() -> None:
     }
 
 
+def test_gate_c_finalization_evidence_ref_is_pinned() -> None:
+    import subprocess
+
+    assert _resolve_gate_c_finalization_ref() == GATE_C_FINALIZATION_COMMIT
+    actual_tree = subprocess.check_output(
+        ["git", "rev-parse", f"{GATE_C_FINALIZATION_COMMIT}^{{tree}}"], text=True
+    ).strip()
+    assert actual_tree == GATE_C_FINALIZATION_TREE
+
+
 def test_active_issue_cannot_also_be_paused() -> None:
     state = _state()
     state["github"]["paused_issues"].append(332)
@@ -104,6 +117,7 @@ def test_completed_gate_c_cannot_keep_blockers() -> None:
     state["gate"]["evidence"] = {
         "frozen_commit": "a" * 40,
         "frozen_tree": "b" * 40,
+        "frozen_content_digest": "c" * 64,
         "review_registry_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json",
         "gate_decision_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json",
         "review_cost_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json",

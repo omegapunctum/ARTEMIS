@@ -16,10 +16,24 @@ ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / "docs" / "project_state.json"
 SCHEMA_PATH = ROOT / "docs" / "project_state.schema.json"
 GATE_C_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_romagna_1502" / "v1"
+GATE_C_ROOT_RELATIVE = "fixtures/world_slices/leonardo_romagna_1502/v1"
 REVIEW_REGISTRY_SCHEMA_PATH = GATE_C_ROOT / "review_registry.schema.json"
 GATE_C_DECISION_SCHEMA_PATH = GATE_C_ROOT / "gate_c_decision.schema.json"
 REVIEW_ARTIFACT_SCHEMA_PATH = GATE_C_ROOT / "review_artifact.schema.json"
 COST_SCHEMA_PATH = GATE_C_ROOT / "curation_cost.schema.json"
+
+# Gate C was independently reviewed on the frozen revision and finalized on this exact
+# descendant before PR #362 was squash-merged. The squash commit intentionally is not a
+# descendant of the reviewed branch history, so historical evidence is retained through
+# immutable, commit-pinned evidence refs rather than by requiring every future HEAD to
+# descend from the pre-squash review commit.
+GATE_C_FINALIZATION_COMMIT = "c4879b793407d71f9a352a34ab9cd1b260b3e510"
+GATE_C_FINALIZATION_TREE = "8246d6d5b7d3ad63d105ea934e539833e1a0c39f"
+GATE_C_FINALIZATION_REFS = (
+    "refs/remotes/origin/evidence/gate-c-leonardo-romagna-1502-finalization",
+    "refs/heads/evidence/gate-c-leonardo-romagna-1502-finalization",
+)
+
 REVIEWED_CONTENT_PATHS = (
     ".github/workflows/release-gate.yml",
     "docs/DEVELOPMENT_OPERATING_SYSTEM.md",
@@ -85,6 +99,66 @@ def _git(*args: str) -> str:
         raise ProjectStateError(f"Git verification failed for {' '.join(args)}: {output}") from exc
 
 
+def _resolve_gate_c_finalization_ref() -> str:
+    for ref in GATE_C_FINALIZATION_REFS:
+        result = subprocess.run(
+            ["git", "rev-parse", "--verify", f"{ref}^{{commit}}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            resolved = result.stdout.strip()
+            if resolved != GATE_C_FINALIZATION_COMMIT:
+                raise ProjectStateError(
+                    "Gate C finalization evidence ref moved away from the pinned commit"
+                )
+            return resolved
+    raise ProjectStateError(
+        "Gate C finalization evidence ref is unavailable; fetch/retain "
+        "evidence/gate-c-leonardo-romagna-1502-finalization"
+    )
+
+
+def _validate_gate_c_finalization_anchor(frozen_commit: str) -> str:
+    finalization_commit = _resolve_gate_c_finalization_ref()
+    actual_tree = _git("rev-parse", f"{finalization_commit}^{{tree}}")
+    if actual_tree != GATE_C_FINALIZATION_TREE:
+        raise ProjectStateError("Gate C finalization commit tree does not match its pinned tree")
+    try:
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", frozen_commit, finalization_commit],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise ProjectStateError(
+            "frozen Gate C review commit must be an ancestor of the pinned finalization commit"
+        ) from exc
+    changed = set(
+        filter(None, _git("diff", "--name-only", f"{frozen_commit}..{finalization_commit}").splitlines())
+    )
+    unexpected = changed - GATE_C_FINALIZATION_PATHS
+    if unexpected:
+        raise ProjectStateError(
+            f"reviewed content changed during Gate C finalization: {sorted(unexpected)}"
+        )
+    return finalization_commit
+
+
+def _validate_current_gate_c_evidence_subtree(finalization_commit: str) -> None:
+    finalization_subtree = _git(
+        "rev-parse", f"{finalization_commit}:{GATE_C_ROOT_RELATIVE}"
+    )
+    current_subtree = _git("rev-parse", f"HEAD:{GATE_C_ROOT_RELATIVE}")
+    if current_subtree != finalization_subtree:
+        raise ProjectStateError(
+            "completed Gate C evidence subtree changed after its pinned finalization"
+        )
+
+
 def _validate_frozen_git_revision(commit: str, tree: str, digest: str) -> None:
     if not re.fullmatch(r"[0-9a-f]{40}", commit) or not re.fullmatch(r"[0-9a-f]{40}", tree):
         raise ProjectStateError("frozen commit and tree must be full lowercase Git object ids")
@@ -92,25 +166,11 @@ def _validate_frozen_git_revision(commit: str, tree: str, digest: str) -> None:
     actual_tree = _git("rev-parse", f"{commit}^{{tree}}")
     if actual_tree != tree:
         raise ProjectStateError("frozen commit does not resolve to the recorded tree")
-    try:
-        subprocess.run(
-            ["git", "merge-base", "--is-ancestor", commit, "HEAD"],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except subprocess.CalledProcessError as exc:
-        raise ProjectStateError("frozen commit must be an ancestor of the decision HEAD") from exc
+    finalization_commit = _validate_gate_c_finalization_anchor(commit)
     actual_digest = _reviewed_content_digest(commit)
     if actual_digest != digest:
         raise ProjectStateError("reviewed-content digest does not match the frozen Git revision")
-    changed = set(filter(None, _git("diff", "--name-only", f"{commit}..HEAD").splitlines()))
-    unexpected = changed - GATE_C_FINALIZATION_PATHS
-    if unexpected:
-        raise ProjectStateError(
-            f"reviewed content changed after the frozen revision: {sorted(unexpected)}"
-        )
+    _validate_current_gate_c_evidence_subtree(finalization_commit)
 
 
 def _reviewed_content_digest(commit: str) -> str:

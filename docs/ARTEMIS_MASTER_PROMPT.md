@@ -1,15 +1,21 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v6.3
+# ARTEMIS — МАСТЕР-ПРОМПТ v6.4
 
 Статус: canonical operational governance for AI agents and assistants.
 Дата: 2026-08-09.
 
 ## 1. Роль проекта
 
-ARTEMIS — source-aware spatial-temporal world model.
+ARTEMIS — source-aware spatial-temporal knowledge model about the world.
+
+Технический `World Model` является semantic-core name. Identity-level North Star clarifies that ARTEMIS represents source-aware knowledge about the world rather than claiming to be objective reality itself; reviewed executable World Model semantics remain governed by their own frozen contracts.
 
 Миссия:
 
 > помогать человеку понимать мир как взаимосвязанную систему сущностей, событий, состояний и процессов, наблюдаемую в пространстве и времени.
+
+Long-term attractor:
+
+> explorable source-aware spatial-temporal model of human knowledge about the world, usable by people and future AI as one connected cognitive environment.
 
 Core:
 
@@ -18,25 +24,35 @@ Core:
 - Claim/EvidenceLink/Source/locator;
 - visible uncertainty and corpus coverage;
 - explicit relation ladder;
+- one semantic core across domains and interfaces;
 - human judgment.
 
 Architecture Atlas — thematic layer and technical baseline. `Life in Context` — first validation vertical.
+
+Attractor guides architecture; it does not authorize implementation scope.
 
 ## 2. Source of truth
 
 - canonical registry/routing: `docs/FOUNDATION_INDEX.md`;
 - current capability: `docs/PROJECT_TRUTH.md`;
-- North Star: `docs/ARTEMIS_CONCEPT.md`;
+- North Star + attractor + identity-level World Model interpretation: `docs/ARTEMIS_CONCEPT.md`;
 - active product: `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`;
-- world model: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- reviewed spatial-temporal World Model semantics: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
 - uncertainty profile: `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
 - epistemics: `docs/EPISTEMIC_CONTRACT.md`;
 - entities: `docs/ENTITY_MODEL.md`;
+- AI behavior: `docs/AI_POLICY.md`;
 - current public data/runtime contract: `docs/DATA_CONTRACT.md`;
 - priorities/order: `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`;
+- development execution contract: `docs/DEVELOPMENT_OPERATING_SYSTEM.md`;
+- machine-readable operational state: `docs/project_state.json`;
 - working lifecycle: `docs/work/README.md`.
 
 Working/audit/archive files cannot override canonical owners.
+
+No separate `ATTRACTOR.md` or `NORTH_STAR.md` may become a competing canonical owner; the owner is `ARTEMIS_CONCEPT.md`.
+
+A reviewed executable contract cannot be edited merely to make wording match a new identity-level clarification. Its own review/change-control path remains authoritative.
 
 ## 3. Current technical boundaries
 
@@ -45,8 +61,9 @@ Working/audit/archive files cannot override canonical owners.
 - SQLite baseline; PostgreSQL may require later decision.
 - Airtable curated source.
 - ETL publishes current canonical public `data/*` artifacts.
-- `data/features.geojson` is the current public **2D map projection/source**, not the universal representation of all Foundation v3 knowledge.
-- A generated MapLibre GL JS 5.24.0 Globe R&D artifact exists, but it is not a public entrypoint or a real historical corpus.
+- `data/features.geojson` is the current public **2D map projection/source**, not the universal representation of Foundation knowledge.
+- A generated MapLibre GL JS 5.24.0 Globe R&D artifact exists, but it is not a public entrypoint or a product-validated historical Globe.
+- Gate C Leonardo-in-Romagna World Slice boundary is frozen/non-public; its Claims remain draft rather than public historical truth.
 - GitHub Pages serves the static frontend; backend is separate.
 - No React/Vue/Angular/TypeScript without architecture decision.
 - No direct frontend Airtable access.
@@ -55,49 +72,60 @@ Working/audit/archive files cannot override canonical owners.
 
 ## 4. Foundation invariants
 
-1. Space and time are mandatory coordinates.
-2. Static cards/dates do not replace change objects.
-3. Geometry and state may change over time.
-4. Precision and uncertainty are explicit.
-5. Co-presence is not encounter, interaction, influence or causality.
-6. Relation is a structured Claim.
-7. Claim kind, origin, review, confidence, evidence and uncertainty are independent.
-8. AI is not Source.
-9. Counterfactual world is isolated from historical assertions.
-10. Dataset absence is not historical absence.
-11. Current capability is separate from concept.
-12. Compatibility runtime does not define target ontology.
-13. Renderer engines do not own domain semantics.
-14. Renderer payloads are projections of one World Model / World Slice, not independent historical truth datasets.
-15. Terrain/imagery/tiles are geospatial rendering assets unless they explicitly assert historical state through World Model semantics.
-16. 2D/3D visual differences must not change active object identity, temporal validity, uncertainty, evidence or relation meaning.
+1. ARTEMIS identity models source-aware knowledge about the world; it does not claim to encode objective reality itself.
+2. Reviewed semantic contracts retain their exact reviewed meaning until separately re-reviewed.
+3. Space and time are mandatory coordinates.
+4. Static cards/dates do not replace change objects.
+5. Geometry and state may change over time.
+6. Precision and uncertainty are explicit.
+7. Co-presence is not encounter, interaction, influence or causality.
+8. Relation is a structured Claim.
+9. Claim kind, origin, review, confidence, evidence and uncertainty are independent.
+10. AI is not Source and not a silent canonical writer.
+11. Counterfactual world is isolated from historical assertions.
+12. Dataset absence is not historical absence.
+13. Current capability is separate from concept.
+14. Compatibility runtime does not define target ontology.
+15. One semantic core supports many domains; domains do not own separate truth models.
+16. Renderer engines do not own domain semantics.
+17. Renderer payloads are projections of one World Model / World Slice, not independent historical truth datasets.
+18. Terrain/imagery/tiles are geospatial rendering assets unless they explicitly assert historical state through World Model semantics.
+19. 2D/3D visual differences must not change active object identity, temporal validity, uncertainty, evidence or relation meaning.
+20. Future AI view/query actions must be visible, reversible and separate from knowledge mutation.
+21. Personal knowledge context, VR/AR, universal corpus and causal/counterfactual runtime remain future branches until separately opened.
+22. Attractor constrains direction, not schedule or current scope.
 
 ## 5. Current order
 
-Active: Globe MVP / issue `#355`.
+Active product vertical: Globe MVP / issue `#355`.
 
-Execution path:
+Current operational truth:
 
-1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations.
-2. Preserve the completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
+1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations byte-for-byte where their READY review scope requires it.
+2. Preserve completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
-4. Freeze and curate the bounded Leonardo-in-Romagna slice for 8 August–31 December 1502 through #332/#360 inside #355.
-5. Build the synchronized Globe/timeline/layers experience through Explorer State and Render Projection.
-6. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
-7. Collect semantic, UX, accessibility and performance evidence.
-8. Record one explicit promotion/iterate/narrow/stop decision.
+4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
+5. Gate D — source-aware Globe experience — is the next product gate, but it is **not started by issue #363**.
+6. Issue #363 is foundation/documentation refinement only; it must not change public capability, start Gate D, add runtime schemas, mutate reviewed #329 scope or open AI implementation.
+7. When Gate D is separately opened, build from the frozen World Slice through Explorer State and Render Projection.
+8. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
+9. Collect semantic, UX, accessibility and performance evidence before any promotion decision.
+10. Record one explicit promotion/iterate/narrow/stop decision before public deployment.
 
 Issue #331 is `PAUSED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until then, only derived proximity/co-presence is allowed.
 
-Issues #339–#345 / PRs #346–#352 are accepted renderer foundations, including the recovered cross-renderer semantic parity contract.
+Issue #335 source-bound AI contract remains `GATED / NOT ACTIVE`.
 
-Foundation v3 is accepted in PR `#328`. The superseded #323–#325 path and PR #314 are closed and must not be reopened as the active ontology.
+Issues #339–#345 / PRs #346–#352 are accepted renderer foundations, including cross-renderer semantic parity.
+
+Foundation v3 is accepted in PR `#328`; Foundation v3.1 attractor clarification is tracked in #363. The superseded #323–#325 path and PR #314 remain closed.
 
 ## 6. Frozen / gated work
 
 Frozen or gated at product scale:
 
-- generative AI;
+- generative AI runtime;
+- AI-controlled view/query runtime until a separate command/state contract is approved;
 - causal/counterfactual engine;
 - public production Globe before promotion evidence;
 - universal or photorealistic historical terrain reconstruction;
@@ -106,13 +134,28 @@ Frozen or gated at product scale:
 - open UGC;
 - institutional workflow;
 - universal corpus;
+- personal knowledge model;
 - heavy scaling/platform work.
 
 Security/compatibility maintenance remains allowed.
 
-The bounded source-aware Globe MVP is explicitly allowed under #355. It remains non-public until a separate promotion decision.
+The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Gate C completion alone does not start Gate D or make Globe public.
 
-## 7. Renderer / Globe rule
+## 7. Attractor decision test
+
+For every proposed capability, ask in order:
+
+1. Does it strengthen ARTEMIS as an explorable source-aware spatial-temporal knowledge model?
+2. Can it reuse the shared World Model / epistemic core rather than creating a second truth model?
+3. Does it preserve space/time/change/provenance/uncertainty semantics?
+4. Is it a domain extension, interface projection, analytical tool or knowledge mutation — and is that boundary explicit?
+5. Does it require changing a reviewed contract? If yes, has that contract's review gate been explicitly reopened?
+6. Is it current-scope work, or merely consistent with the long-term attractor?
+7. What evidence/gate authorizes implementation now?
+
+A capability may be strategically aligned with the attractor and still be **not allowed now**.
+
+## 8. Renderer / Globe rule
 
 When working on 2D map, 3D Globe or future renderers:
 
@@ -124,24 +167,45 @@ When working on 2D map, 3D Globe or future renderers:
 6. never invent route, geometry, altitude, terrain history or temporal precision because a renderer can draw it;
 7. keep engine-specific camera/GPU/tile/picking state outside the semantic core;
 8. require semantic parity before promoting a second renderer;
-9. treat screenshot equality as visual evidence only: **Screenshot equality is not semantic parity**.
+9. treat screenshot equality as visual evidence only: **Screenshot equality is not semantic parity**;
+10. treat 2D, Globe, local 3D, VR/AR and future clients as interfaces over one semantic core.
 
 Working architecture: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
 Active product decision: `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` under #355.
 
-## 8. Docs-first rule
+## 9. AI rule
+
+For future AI work, read `AI_POLICY.md` before designing prompts, tools or state actions.
+
+Core distinction:
+
+- AI may explain or propose knowledge candidates;
+- AI may eventually change approved view/query state through explicit reversible actions;
+- AI may not treat a view change as evidence;
+- AI may not silently mutate canonical Claims/Evidence/Sources/Uncertainty;
+- AI output is not Source;
+- an AI command schema requires a separate implementation decision.
+
+Do not implement AI behavior merely because it appears in the long-term attractor.
+
+## 10. Docs-first rule
 
 For changes to mission, model, data, runtime, release, AI or governance:
 
 1. analyze conflict;
 2. identify owner docs;
-3. define scope and decision;
-4. update docs/contracts;
-5. review consistency;
-6. only then implement;
-7. run checks and update current truth.
+3. identify whether any owner belongs to a frozen reviewed scope;
+4. define scope and decision;
+5. update only documents/contracts whose own change-control allows the change;
+6. review consistency;
+7. only then implement;
+8. run checks and update current truth.
 
-## 9. Prohibited shortcuts
+Foundation identity changes require one synchronized decision PR and an executable regression guard.
+
+A frozen reviewed semantic contract requires new review evidence before its bytes change; do not weaken the validator to avoid that requirement.
+
+## 11. Prohibited shortcuts
 
 - inventing date/geometry/route/evidence/locator;
 - using smooth visual interpolation as historical fact;
@@ -149,25 +213,33 @@ For changes to mission, model, data, runtime, release, AI or governance:
 - converting co-presence/similarity into Relation;
 - treating AI output as Source;
 - hiding corpus coverage;
+- describing ARTEMIS identity as an objective digital twin or complete historical reality;
 - claiming 3D/VR/AI/world coverage before implementation;
-- creating separate 2D/3D historical truth datasets or `*_2d` / `*_3d` source-of-truth forks;
+- creating separate domain-specific or renderer-specific truth models;
+- creating `*_2d`, `*_3d`, `history_core`, `earth_core` or similar source-of-truth forks without a foundation decision;
 - allowing a map/globe engine to redefine temporal, spatial or epistemic semantics;
+- allowing an AI view action to mutate canonical knowledge implicitly;
+- rewriting a frozen reviewed contract while retaining its previous READY claim;
+- weakening a review digest or validator because a documentation change touched reviewed scope;
 - rewriting old issues into new meaning;
 - performing irreversible migration before fixtures/contract;
-- using archive or audit as active owner.
+- using archive or audit as active owner;
+- using the attractor itself as implementation authorization.
 
-## 10. Definition of Ready
+## 12. Definition of Ready
 
 A task is ready when:
 
 - goal and expected result are explicit;
 - owner docs and affected files are known;
+- reviewed/frozen ownership is known;
 - current vs target boundary is known;
 - scope lock and non-goals are stated;
 - happy path, uncertainty/error cases and checks are defined;
-- migration/rollback is defined if data/runtime changes.
+- migration/rollback is defined if data/runtime changes;
+- current gate/issue authorization is explicit.
 
-## 11. Definition of Done
+## 13. Definition of Done
 
 - requested artifact exists;
 - only intended scope changed;
@@ -176,11 +248,14 @@ A task is ready when:
 - current truth is honest;
 - no invented epistemic/spatial/temporal precision;
 - no hidden competing model;
+- no invalidated READY review claim;
 - next dependency or stop decision is explicit.
 
 For renderer work, Done additionally requires no silent semantic divergence from the shared World Model/Explorer State contract.
 
-## 12. Response format
+For AI view-state work, Done additionally requires visible/reversible state transitions and no hidden canonical knowledge mutation.
+
+## 14. Response format
 
 For analysis:
 
@@ -196,8 +271,8 @@ For implementation:
 3. verification;
 4. remaining gate/blocker.
 
-## 13. Final rule
+## 15. Final rule
 
-Do not expand ARTEMIS by losing its world-model identity.
+Do not expand ARTEMIS by losing its knowledge-model identity or reviewed-contract integrity.
 
-Build one small, source-aware Globe World Slice that proves understanding without becoming a second semantic source of truth. AI, VR, universal scale, public Globe promotion and production-scale dynamic Earth remain gated until evidence justifies them.
+Build toward one explorable source-aware spatial-temporal model of connected knowledge, but implement only the branch and gate that evidence currently authorizes.

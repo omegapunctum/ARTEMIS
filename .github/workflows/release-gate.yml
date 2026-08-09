@@ -53,6 +53,7 @@ jobs:
         run: |
           pytest -q \
             tests/test_concept_lock_contract.py \
+            tests/test_attractor_refinement_contract.py \
             tests/test_repository_governance_contract.py \
             tests/test_globe_rnd_lifecycle_contract.py \
             tests/test_pages_runtime_config.py

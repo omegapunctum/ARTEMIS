@@ -1,9 +1,9 @@
-# ARTEMIS — Development Operating System v1
+# ARTEMIS — Development Operating System v1.1
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.0.
+- Version: 1.1.
 - Date: 2026-08-09.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
@@ -11,6 +11,9 @@
 This document connects the ARTEMIS North Star to one active validation vertical, one gate and the
 GitHub issues/PRs that produce executable evidence. It does not replace any semantic, product,
 runtime or release owner document.
+
+Foundation maintenance may refine the North Star between product gates, but it must remain explicit,
+documentation/governance-bounded and unable to advance product state by implication.
 
 ## 1. Decision hierarchy
 
@@ -20,6 +23,9 @@ The permitted execution chain is:
 
 Each lower level must reference the level above it. A passing PR cannot silently change the North
 Star, active product hypothesis or public capability.
+
+The long-term attractor is architectural direction, not an implementation authorization. A feature
+may fit the North Star and still remain frozen until a product/technical gate explicitly opens it.
 
 ## 2. Single project state
 
@@ -35,14 +41,19 @@ Star, active product hypothesis or public capability.
 The snapshot is an operational index, not a new semantic owner. On conflict, the owner hierarchy in
 `FOUNDATION_INDEX.md` wins and the snapshot must be corrected in the same PR that changes lifecycle.
 
+A foundation-only issue is not added to `active_issues` merely because it is being worked. The
+machine-readable product state changes only when the product lifecycle itself changes.
+
 ## 3. Work-in-progress rule
 
 - One product vertical is active.
-- One gate may be `in_progress`.
-- Product-scope work outside that gate is paused or frozen.
+- At most one product gate may be `in_progress`.
+- A completed gate may point to a next gate without starting it.
+- Product-scope work outside the opened gate is paused or frozen.
 - Security, compatibility and critical reliability work may proceed separately when it does not
   redefine product scope.
-- A gate transition must update `project_state.json`, canonical lifecycle documents and the affected
+- Foundation maintenance may proceed between gates if its non-goals explicitly prohibit product/runtime expansion.
+- A product gate transition must update `project_state.json`, canonical lifecycle documents and the affected
   GitHub issues in one decision PR.
 
 ## 4. Documentation classes
@@ -94,7 +105,25 @@ The validator must reject a partial transition. Review artifacts are added only 
 content revision is frozen, so the final metadata commit cannot rewrite the content that reviewers
 inspected.
 
-## 7. Pull-request core gate
+`next_transition` is permission to consider/open the next gate, not evidence that the gate is already
+in progress.
+
+## 7. Foundation-maintenance contract
+
+A foundation-maintenance PR may run between product gates when all of the following hold:
+
+1. the affected canonical owner documents are named;
+2. the issue states current vs target meaning and explicit non-goals;
+3. no runtime/data/schema/product implementation is introduced unless separately authorized;
+4. `project_state.json` stays unchanged unless product lifecycle actually changes;
+5. current capability wording stays truthful;
+6. an executable guard protects the new invariant when drift risk is material;
+7. the change does not create a second North Star, ontology or semantic source of truth.
+
+Foundation maintenance does not consume the one-product-gate WIP slot, but it also cannot be used to
+circumvent that limit.
+
+## 8. Pull-request core gate
 
 Every decision PR must show:
 
@@ -107,9 +136,17 @@ Every decision PR must show:
 
 Baseline failures must be named and reproducible; they cannot be used to hide a new regression.
 
-## 8. Current application
+## 9. Current application
 
-The active vertical is `Life in Context / Globe MVP` under issue `#355`. Gate C is the bounded
-Leonardo-in-Romagna source boundary under issues `#332` and `#360`. Issue `#331` remains paused,
-so documented Relation predicates are prohibited. The public runtime remains the root 2D
-Architecture Atlas until a later explicit promotion decision.
+The active product vertical is `Life in Context / Globe MVP` under issue `#355`.
+
+Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the non-public
+Leonardo-in-Romagna source/semantic boundary. `docs/project_state.json` correctly points to Gate D as
+the next transition, but Gate D is not in progress yet.
+
+Issue `#363` is current foundation maintenance: it clarifies the ARTEMIS long-term attractor,
+World Model epistemic boundary and future AI exploration semantics. It must not advance the product
+gate, start Gate D, open AI runtime or change public capability.
+
+Issue `#331` remains paused, so documented Relation predicates are prohibited. The public runtime
+remains the root 2D Architecture Atlas until a later explicit promotion decision.

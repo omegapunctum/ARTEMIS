@@ -3,33 +3,38 @@
 ## Статус документа
 
 - Тип: canonical foundational concept document.
-- Версия: 3.0.
-- Дата: 2026-07-28.
-- Статус: active; accepted in PR `#328`.
-- Роль: фиксирует идентичность, миссию, инварианты и долгосрочное направление ARTEMIS.
-- Основание: Foundation v3 issue `#327` и `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md`.
+- Версия: 3.1.
+- Дата: 2026-08-09.
+- Статус: active after merge of Foundation v3.1 attractor refinement / issue `#363`.
+- Роль: единственный canonical owner идентичности, миссии, долгосрочного аттрактора и неизменяемых принципов ARTEMIS.
+- Основание: Foundation v3 / PR `#328` + `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md`.
 
 Границы owner documents:
 
-- `ARTEMIS_CONCEPT.md` — долгосрочная идентичность и инварианты;
-- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` — обязательная структура пространственно-временной модели;
-- `PRODUCT_THESIS.md` — пользователь, job и hypotheses первого validation vertical;
+- `ARTEMIS_CONCEPT.md` — долгосрочная идентичность, аттрактор и инварианты;
+- `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` — обязательная структура пространственно-временной knowledge model;
+- `PRODUCT_THESIS.md` — пользователь, job и hypotheses активного validation vertical;
 - `ARTEMIS_PRODUCT_SCOPE.md` — разрешённый scope текущего цикла;
 - `PROJECT_TRUTH.md` — фактически доступные возможности;
 - `EPISTEMIC_CONTRACT.md` — правила доказательности, вывода и неопределённости;
-- `ENTITY_MODEL.md` — типы сущностей и их роли.
+- `ENTITY_MODEL.md` — типы сущностей и их роли;
+- `AI_POLICY.md` — допустимая роль AI и границы AI actions.
 
-North Star не является release promise.
+North Star не является release promise. Attractor guides architecture; it does not authorize implementation scope.
 
 ## 1. Определение
 
-**ARTEMIS — интерактивная, основанная на источниках пространственно-временная модель мира, в которой человек исследует сущности, события, состояния и процессы как синхронизированные слои пространства и времени, чтобы видеть их сосуществование, изменение и возможные взаимосвязи.**
+**ARTEMIS — интерактивная, основанная на источниках пространственно-временная модель знания о мире, в которой человек исследует сущности, события, состояния, процессы, связи, утверждения, evidence и uncertainty как синхронизированную систему пространства и времени.**
+
+Технический термин `World Model` сохраняется, но имеет строгое эпистемическое значение:
+
+> `World Model` — это source-aware representation знаний, утверждений, наблюдений и реконструкций **о мире**. Это не сам мир, не объективный digital twin и не утверждение о полноте реальности.
 
 ARTEMIS соединяет:
 
-`Пространство × Время × Сущности × Состояния × Процессы × Связи × Источники`
+`Пространство × Время × Сущности × Состояния × Процессы × Связи × Claims × Evidence × Uncertainty`
 
-Вместо изолированной карточки или текста пользователь получает изменяющуюся конфигурацию мира: что существовало, где находилось, что происходило одновременно, как перемещались люди и явления, как менялись территории и какие связи действительно подтверждены.
+Вместо изолированной карточки или текста пользователь получает изменяющуюся конфигурацию знания о мире: что утверждается, где и когда это относится к миру, что происходило одновременно, как менялись состояния и процессы, из чего это известно и где остаётся неопределённость.
 
 ARTEMIS не является:
 
@@ -37,6 +42,7 @@ ARTEMIS не является:
 - геопривязанной энциклопедией;
 - одной линейной временной шкалой;
 - универсальным knowledge graph без пространственно-временной семантики;
+- объективным цифровым двойником исторической реальности;
 - генератором готовых причинных выводов;
 - AI chat поверх набора документов;
 - обещанием немедленно смоделировать всё знание человечества.
@@ -53,22 +59,30 @@ ARTEMIS должен помогать:
 - наблюдать изменение регионов, границ, культурных состояний, экосистем и рельефа;
 - отличать простое сосуществование от встречи, взаимодействия, влияния и причинности;
 - переходить от визуального наблюдения к проверяемому исследовательскому вопросу;
-- сохранять происхождение утверждений, неопределённость и конкурирующие реконструкции.
+- сохранять происхождение утверждений, неопределённость и конкурирующие реконструкции;
+- связывать разрозненные знания в единую исследуемую пространственно-временную конфигурацию.
 
-Evidence не является миссией ARTEMIS. Evidence — условие, при котором пространственно-временной модели можно доверять.
+Evidence не является миссией ARTEMIS. Evidence — условие, при котором пространственно-временной модели знания можно доверять.
 
 ## 3. Исходная проблема
 
-Сегодня знание фрагментировано по носителям:
+Мир существует и изменяется параллельно, но большинство носителей знания заставляют человека изучать его последовательно и фрагментарно.
+
+Сегодня знание распределено по носителям и дисциплинам:
 
 - карта показывает пространство, но почти не показывает историческое изменение;
 - timeline показывает последовательность, но слабо показывает географию и одновременность;
 - энциклопедия и статья объясняют текстом, но требуют мысленно собирать мир из отдельных страниц;
+- книга и лекция ведут по одному narrative и плохо показывают параллельный контекст;
 - 3D-модель показывает форму, но обычно лишена исторического, культурного и природного контекста;
-- тематические базы разделяют политическую, культурную, биографическую и природную историю;
+- тематические базы разделяют политическую, культурную, биографическую, технологическую и природную историю;
 - причинные формулировки часто скрывают, где заканчивается факт и начинается интерпретация.
 
-Следствие — пользователь изучает явления изолированно и плохо видит:
+Следствие — пользователь вынужден самостоятельно удерживать и соединять вопросы:
+
+`что? → где? → когда? → что происходило рядом? → что происходило одновременно? → что менялось? → с чем это связано? → откуда это известно?`
+
+Он плохо видит:
 
 - конфигурацию мира в выбранный момент;
 - одновременность;
@@ -76,19 +90,59 @@ Evidence не является миссией ARTEMIS. Evidence — услови
 - масштаб;
 - пространственное соседство;
 - возможные механизмы связи;
+- конкурирующие объяснения;
 - границы доступного корпуса и знания.
 
-ARTEMIS закрывает этот разрыв синхронизированной моделью пространства и времени, а не одним новым форматом карточек или заметок.
+ARTEMIS закрывает этот разрыв не новым типом карточки, а синхронизированной пространственно-временной моделью связанных знаний.
 
-## 4. Неизменяемые принципы
+## 4. Долгосрочный аттрактор
 
-### 4.1 Space and time are core coordinates
+Долгосрочный аттрактор ARTEMIS:
+
+> **исследуемая, source-aware пространственно-временная модель знания человечества о мире, в которой человек и будущий AI могут перемещаться по пространству, времени, сущностям, событиям, состояниям, процессам, Claims, Evidence и uncertainty как по одной связанной когнитивной среде.**
+
+Это предельное направление, а не обещание полноты.
+
+```text
+World / historical reality
+        ↓ observation / sources / scholarship
+Source-aware knowledge model
+        ↓
+ARTEMIS Core
+        ↓
+Human + AI exploration
+        ↓
+2D | Globe | local 3D | mobile | API | VR/AR | future domain modes
+```
+
+Аттрактор выполняет три функции:
+
+1. определяет, к какой системе должна сходиться архитектура;
+2. помогает отбрасывать функции, создающие локальную ценность ценой semantic fragmentation;
+3. защищает MVP от превращения временного интерфейса, dataset или vertical в идентичность всего ARTEMIS.
+
+Аттрактор **не**:
+
+- открывает frozen scope;
+- разрешает universal corpus;
+- делает AI/VR/AR current capability;
+- требует реализовать дальний горизонт до доказательства ближайшего product loop.
+
+## 5. Неизменяемые принципы
+
+### 5.1 Space and time are core coordinates
 
 Пространство и время обязательны для идентичности ARTEMIS. Они не являются факультативными линзами, которые можно удалить при неудаче одного интерфейсного эксперимента.
 
 Конкретная визуализация может меняться: 2D-карта, 3D-глобус, локальная сцена, timeline, animation, VR/AR. Но модель обязана сохранять пространственно-временную адресуемость, изменение и синхронизацию.
 
-### 4.2 The world is modeled through change
+### 5.2 The World Model represents knowledge about the world
+
+ARTEMIS не имеет прямого доступа к «объективному миру». Он хранит и связывает source-aware assertions, observations, reconstructions, computed signals и uncertainty о нём.
+
+Историческая реальность является external referent; canonical model обязана показывать основания, coverage и ограничения знания о ней.
+
+### 5.3 The world is modeled through change
 
 ARTEMIS моделирует не только `Entity`, но и:
 
@@ -100,7 +154,7 @@ ARTEMIS моделирует не только `Entity`, но и:
 
 Дата на карточке не заменяет модель изменения.
 
-### 4.3 Coexistence is not interaction
+### 5.4 Coexistence is not interaction
 
 Нахождение двух сущностей в одном городе или временном интервале означает только пространственно-временное совпадение.
 
@@ -110,19 +164,19 @@ ARTEMIS моделирует не только `Entity`, но и:
 
 Переход на более сильный уровень требует отдельного Claim и evidence.
 
-### 4.4 Evidence is attached to claims
+### 5.5 Evidence is attached to claims
 
 Каждое содержательное утверждение о событии, состоянии, границе, траектории, процессе или relation должно быть связано с источником через `Claim` и `EvidenceLink`, когда доказательность применима.
 
 Source URL не является blanket proof. Locator и отношение `supports | challenges | contextualizes` сохраняются.
 
-### 4.5 Epistemic forms remain distinct
+### 5.6 Epistemic forms remain distinct
 
 Факт, наблюдение, интерпретация, вывод, гипотеза и контрфактический сценарий не сливаются.
 
 Origin, review state, confidence, evidence state и uncertainty остаются независимыми измерениями.
 
-### 4.6 Uncertainty is part of the model
+### 5.7 Uncertainty is part of the model
 
 ARTEMIS обязан показывать:
 
@@ -136,17 +190,31 @@ ARTEMIS обязан показывать:
 
 Точная геометрия или плавная animation не должны создавать ложную точность.
 
-### 4.7 Human judgment remains primary
+### 5.8 One semantic core, many domains
 
-Человек выбирает вопрос, scope, слои и уровень допустимого вывода. ARTEMIS помогает видеть структуру мира и основания суждения, но не подменяет решение.
+История — первый proof domain, а не конечная граница ARTEMIS.
 
-### 4.8 Current truth is separate from North Star
+Культура, религия, экология, биология, геология, климат, наука, технологии, инфраструктура и будущие профессиональные modes могут расширять систему только через общий spatial-temporal/epistemic core или через явно reviewed domain extension.
+
+Нельзя создавать отдельные несовместимые truth models для каждого domain.
+
+### 5.9 One semantic core, many interfaces
+
+2D map, Globe, local 3D, mobile, API, VR и AR являются интерфейсами/projections над одним ARTEMIS Core.
+
+Renderer или client не владеет отдельной historical truth dataset и не переопределяет domain semantics.
+
+### 5.10 Human judgment remains primary
+
+Человек выбирает вопрос, scope, слои и уровень допустимого вывода. ARTEMIS помогает видеть структуру знания и основания суждения, но не подменяет решение.
+
+### 5.11 Current truth is separate from North Star
 
 Концепция, данные, runtime, публичный deployment и подтверждённая пользовательская ценность — разные уровни истины.
 
-3D, VR, AI reasoning или глобальный охват нельзя описывать как доступные возможности до их фактической реализации.
+3D, VR, AI reasoning, personal knowledge context или глобальный охват нельзя описывать как доступные возможности до их фактической реализации.
 
-## 5. Пространственно-временное ядро
+## 6. Пространственно-временное ядро
 
 Минимальные knowledge objects:
 
@@ -156,7 +224,7 @@ ARTEMIS обязан показывать:
 - `Process` — изменение, развёрнутое во времени и пространстве;
 - `Trajectory` — последовательность мест/состояний перемещающейся сущности;
 - `Region` — точка, линия, область, объём или неопределённая геометрия с temporal validity;
-- `Layer` — тематическая перспектива: политика, культура, религия, биосфера, рельеф и другие;
+- `Layer` — тематическая перспектива;
 - `Relation` — конкретное утверждение между сущностями или явлениями;
 - `Claim` — проверяемое содержательное утверждение;
 - `Source` — provenance unit;
@@ -166,7 +234,9 @@ ARTEMIS обязан показывать:
 
 Canonical semantics принадлежат `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `ENTITY_MODEL.md` и `EPISTEMIC_CONTRACT.md`.
 
-## 6. Основной пользовательский опыт
+`World Model` остаётся техническим именем этого ядра; Foundation v3.1 уточняет его epistemic interpretation, а не создаёт вторую ontology.
+
+## 7. Основной пользовательский опыт
 
 Базовый опыт ARTEMIS:
 
@@ -175,14 +245,16 @@ Canonical semantics принадлежат `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.
 3. Включить релевантные тематические слои.
 4. Увидеть сущности, события, состояния, процессы и траектории в общей конфигурации.
 5. Перемещать время и наблюдать изменения.
-6. Открыть элемент и проверить источник, locator и uncertainty.
+6. Открыть элемент и проверить source, locator и uncertainty.
 7. Сравнить локальный контекст с синхронными явлениями в другом месте.
 8. Отделить наблюдаемое совпадение от подтверждённой relation.
 9. Сохранить view, вопрос или версионированный исследовательский результат, если это нужно.
 
 Первый момент ценности — не экспорт документа, а **новое контекстуальное понимание, возникшее благодаря совместному наблюдению пространства, времени и слоёв**.
 
-## 7. Evidence и исследовательские артефакты
+В будущем AI может стать дополнительным способом управлять этим exploration loop, но ответом ARTEMIS не должен становиться только текст: релевантным outcome может быть новое, прозрачное и обратимое состояние самой модели/представления.
+
+## 8. Evidence и исследовательские артефакты
 
 Claim/EvidenceLink остаются фундаментом доверия.
 
@@ -198,27 +270,28 @@ Claim/EvidenceLink остаются фундаментом доверия.
 - Research Brief;
 - guided exploration или teaching module после отдельного решения.
 
-## 8. Масштабирование знания
+## 9. Масштабирование знания
 
 ARTEMIS не пытается сразу включить всю информацию человечества.
 
 Реалистичная стратегия:
 
-1. универсальный пространственно-временной контракт;
+1. универсальный пространственно-временной и epistemic contract;
 2. небольшие законченные `World Slice` datasets;
-3. явные тематические layers;
+3. явные thematic/domain layers;
 4. видимая полнота и границы каждого slice;
 5. загрузка детализации по масштабу и запросу;
 6. независимая проверка новых типов данных;
-7. совместимость слоёв через общий контракт, а не через одну гигантскую таблицу.
+7. совместимость domains через общий contract, а не через одну гигантскую таблицу;
+8. постепенное расширение от history-first verticals к другим областям только после evidence-backed decisions.
 
 Новая предметная область разрешена, если она выражается через общий world-model contract и имеет собственную provenance/uncertainty policy.
 
-## 9. Роль Architecture Atlas
+## 10. Роль Architecture Atlas
 
 Architecture Atlas сохраняется как:
 
-- первый реализованный тематический слой;
+- первый реализованный thematic layer;
 - источник технических fixtures и pipeline lessons;
 - корпус архитектурных объектов, Sources, Media и ограниченных Relations;
 - возможный компонент междисциплинарных World Slices.
@@ -230,19 +303,27 @@ Architecture Atlas больше не определяет:
 - обязательный основной outcome;
 - границы всех будущих сущностей.
 
-## 10. Роль AI
+## 11. Роль AI
 
-AI является долгосрочным аналитическим слоем над source-aware world model.
+AI является долгосрочным analytical and exploration layer над source-aware knowledge model.
 
-После независимых value/safety gates AI сможет:
+После отдельного AI branch decision и value/safety gates AI сможет:
 
-- находить пространственно-временные совпадения и пропуски;
-- сопоставлять source-backed Claims;
+- объяснять source-backed Claims и uncertainty;
+- находить пространственно-временные совпадения, пробелы и конфликты;
+- сопоставлять Claims, entities, revisions и World Slices;
 - предлагать возможные механизмы влияния как явно маркированные hypotheses;
 - объяснять, какие evidence и inference steps ведут к выводу;
 - обнаруживать противоречия и альтернативные реконструкции;
-- помогать исследовать детерминированность и чувствительность сценариев;
-- строить изолированные counterfactual simulations.
+- предлагать exploration plans;
+- управлять обратимыми view/query actions: временем, spatial focus, layers, selection/comparison, reconstruction и uncertainty display;
+- после отдельных решений поддерживать изолированные analytical/counterfactual modes.
+
+Ключевое разделение:
+
+> **AI may control the VIEW. AI may propose KNOWLEDGE. AI may not silently rewrite TRUTH.**
+
+AI view action не является Claim, Source или Evidence. Изменение view state не изменяет underlying World Model.
 
 AI не сможет:
 
@@ -251,11 +332,12 @@ AI не сможет:
 - скрывать origin или inference trace;
 - превращать корреляцию/сосуществование в причинность;
 - автоматически публиковать canonical Claims или Relations;
-- смешивать фактический мир с counterfactual branch.
+- смешивать factual/reconstruction mode с counterfactual branch;
+- изменять canonical knowledge через скрытое действие интерфейса.
 
-Generative AI остаётся замороженным в первом Foundation v3 vertical. Сначала определяется контракт.
+Generative AI остаётся gated и не открывается этим документом. Детальные правила принадлежат `AI_POLICY.md`.
 
-## 11. 3D, динамическая Земля и VR/AR
+## 12. 3D, динамическая Земля и VR/AR
 
 Долгосрочная форма ARTEMIS допускает:
 
@@ -265,14 +347,27 @@ Generative AI остаётся замороженным в первом Foundati
 - несколько конкурирующих реконструкций;
 - VR/AR-наблюдение мира и процессов.
 
-Эти направления являются North Star interaction surfaces. Они не разрешают:
+Эти направления являются interaction surfaces над ARTEMIS Core. Они не разрешают:
 
 - использовать декоративный 3D без дополнительной познавательной ценности;
 - выдавать реконструкцию за точное прошлое;
-- откладывать проверку базового 2D synchronized experience;
+- создавать отдельный semantic core для каждого renderer;
 - обещать реализацию до отдельных technical and value gates.
 
-## 12. Первый validation vertical
+## 13. Персональный контекст знания — future branch
+
+В дальнем горизонте ARTEMIS может хранить отдельный private context о том, что пользователь уже исследовал, какие понятия связал, где оставил вопросы и какие области знает слабее.
+
+Такой слой потенциально позволяет:
+
+- связывать новую тему с уже изученным;
+- показывать knowledge gaps;
+- строить персональные exploration paths;
+- адаптировать объяснение без изменения canonical public knowledge.
+
+Foundation v3.1 **не** добавляет `UserKnowledgeState`, `KnowledgeGap`, `ConceptMastery` или аналогичные сущности в `ENTITY_MODEL.md`. Это отдельная future decision branch с privacy, ownership и product validation requirements.
+
+## 14. Первый validation vertical
 
 Foundation v3 начинает с `Life in Context`.
 
@@ -280,29 +375,33 @@ Foundation v3 начинает с `Life in Context`.
 
 - события в текущем месте и периоде;
 - политическое и культурное состояние региона;
-- документированные встречи и relations;
+- документированные relations только когда разрешены соответствующим relation contract;
 - простое сосуществование без ложного утверждения о связи;
 - значимые синхронные события в других регионах;
 - источники и неопределённость.
 
-Первый кандидат: Leonardo da Vinci, 1452–1519.
+Первый bounded corpus — Leonardo da Vinci. Gate C уже доказал возможность заморозить source-aware Leonardo-in-Romagna boundary как non-public input; это не делает полный Life in Context продукт реализованным.
 
 Это не новая идентичность ARTEMIS, а контролируемая проверка пространственно-временного ядра на малом междисциплинарном slice.
 
-## 13. Development model
+## 15. Development model
 
-Развитие идёт через gates:
+Развитие идёт через gates и отдельные foundation decisions.
 
-1. `Foundation v3` — согласованная идентичность и contracts.
-2. `World Model Contract` — точная семантика данных и uncertainty.
-3. `Life in Context Dataset` — ограниченный source-aware World Slice.
-4. `Spatial-Temporal Explorer` — synchronized map/timeline/layers.
-5. `Contextual Learning Pilot` — измерение понимания и discovery.
-6. Независимые branches: 3D/dynamic regions, guided learning, source-bound AI, institutional work, VR/AR.
+Базовый порядок:
 
-Один gate не открывает все ветви.
+1. зафиксировать North Star и contracts;
+2. доказать representability на fixtures;
+3. заморозить малый real World Slice;
+4. построить synchronized experience;
+5. измерить contextual understanding и semantic literacy;
+6. открыть ровно одну следующую branch по evidence.
 
-## 14. Success criteria ядра
+Foundation refinement может происходить между product gates, если он не скрывает product expansion и не меняет current capability без отдельного решения.
+
+Один gate или дальний аттрактор не открывает все ветви.
+
+## 16. Success criteria ядра
 
 Пространственно-временное ядро получает evidence в свою пользу, если пользователь:
 
@@ -314,25 +413,30 @@ Foundation v3 начинает с `Life in Context`.
 - использует map/time/layer synchronization, а не только карточки;
 - получает ценность при устойчивой стоимости подготовки World Slice.
 
-Если конкретный UI или vertical не даёт этого эффекта, пересматриваются UI, corpus и vertical. Пространственно-временная миссия не заменяется другим продуктом без нового foundation decision.
+Если конкретный UI или vertical не даёт этого эффекта, пересматриваются UI, corpus и vertical. Пространственно-временная knowledge mission не заменяется другим продуктом без нового foundation decision.
 
-## 15. Official Foundation v3 lock
+## 17. Official Foundation v3.1 lock
 
 После merge считаются утверждёнными:
 
 1. миссия — понимание мира как взаимосвязанной системы;
-2. пространство и время — обязательные координаты ядра;
-3. world model включает Entity/Event/State/Process/Trajectory/Region/Layer;
-4. evidence — обязательный trust layer;
-5. co-presence, encounter, interaction, influence и causality различаются;
-6. факты, наблюдения, интерпретации, hypotheses и counterfactuals разделены;
-7. uncertainty и corpus incompleteness видимы;
-8. Architecture Atlas — thematic layer, а не идентичность всего проекта;
-9. AI — будущий source-bound analytical layer, не Source;
-10. 3D/VR/dynamic Earth — North Star surfaces, не current promise;
-11. первый vertical — Life in Context;
-12. изменение этих положений требует нового foundation decision.
+2. долгосрочный аттрактор — explorable source-aware spatial-temporal model of human knowledge about the world;
+3. `World Model` — technical knowledge representation about the world, not objective reality/digital twin;
+4. пространство и время — обязательные координаты ядра;
+5. world model включает Entity/Event/State/Process/Trajectory/Region/Layer;
+6. evidence — обязательный trust layer;
+7. co-presence, encounter, interaction, influence и causality различаются;
+8. факты, observations, interpretations, hypotheses и counterfactuals разделены;
+9. uncertainty и corpus incompleteness видимы;
+10. one semantic core supports many domains and many interfaces;
+11. Architecture Atlas — thematic layer, а не идентичность всего проекта;
+12. AI — future source-bound analytical/exploration layer, не Source и не canonical writer;
+13. 3D/VR/dynamic Earth — future interfaces/surfaces, не current promise;
+14. personal knowledge context — future private branch, не current entity model;
+15. первый validation vertical — Life in Context;
+16. attractor guides architecture but does not authorize implementation scope;
+17. изменение этих положений требует нового foundation decision.
 
-## 16. Финальная формула
+## 18. Финальная формула
 
-**ARTEMIS помогает увидеть мир во времени: не как набор изолированных фактов, а как проверяемую пространственно-временную систему сущностей, состояний, процессов и связей.**
+**ARTEMIS превращает разрозненные знания о мире в исследуемую пространственно-временную систему связей, сохраняя источники, неопределённость и границу между знанием, выводом и неизвестным.**

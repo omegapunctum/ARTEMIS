@@ -35,7 +35,7 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert (ROOT / "docs" / "project_state.schema.json").is_file()
 
 
-def test_globe_mvp_is_active_and_relation_contract_is_paused() -> None:
+def test_globe_mvp_remains_active_after_gate_c_freeze_and_relation_contract_is_paused() -> None:
     priorities = _read("docs/PRIORITIES.md")
     phases = _read("docs/PROJECT_PHASES.md")
     truth = _read("docs/PROJECT_TRUTH.md")
@@ -52,17 +52,21 @@ def test_globe_mvp_is_active_and_relation_contract_is_paused() -> None:
     assert "SUPERSEDED BEFORE GATES B–E" in phases
     assert "#330 / PR #337 — reviewed uncertainty semantics" in phases
     assert "Completed recovery foundation" in phases
+    assert "Completed Gate C delivery" in phases
     assert "#332/#360 / Leonardo-in-Romagna World Slice 1502" in phases
 
     assert "#330 / PR #337 uncertainty semantics — READY" in truth
     assert "Issue #331 is paused" in truth
-    assert "issue #355 is the active product-facing MVP contour" in truth
+    assert "issue #355 remains the active product-facing MVP contour" in truth
     assert "#344 / PR #351 semantic parity is merged executable evidence" in truth
+    assert "Gate C is completed/FREEZE" in truth
+    assert "Gate D is the next product gate" in truth
 
-    assert "Active: Globe MVP / issue `#355`." in master_prompt
+    assert "Active product vertical: Globe MVP / issue `#355`" in master_prompt
     assert "#344 / PR #351 semantic parity as a green renderer foundation" in master_prompt
     assert "Issue #331 is `PAUSED`" in master_prompt
-    assert "superseded #323–#325 path and PR #314 are closed" in master_prompt
+    assert "superseded #323–#325 path and PR #314 remain closed" in master_prompt
+    assert "Gate D — source-aware Globe experience — is the next product gate" in master_prompt
 
 
 def test_globe_architecture_does_not_create_a_second_semantic_core() -> None:

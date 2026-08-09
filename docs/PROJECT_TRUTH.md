@@ -11,22 +11,24 @@
 
 ## 1. Принятое продуктовое направление
 
-Foundation v3, accepted in PR `#328`, fixes the long-term direction of ARTEMIS: **source-aware spatial-temporal world model**, in which a person explores Entities, Events, States, Processes, Trajectories and Regions as synchronized layers of space and time.
+Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal World Model. Foundation v3.1 / issue `#363` clarifies that `World Model` is a source-aware **knowledge representation about the world**, not an objective digital twin or a claim of completeness. This clarification changes North Star wording, not current capability.
 
-Первый active validation vertical — `Life in Context` на ограниченном Leonardo World Slice; issue #355 делает 3D Globe основной interface-development surface этого цикла. Architecture Atlas и root 2D MapLibre сохраняются как thematic/public technical baseline and rollback path.
+Первый active validation vertical — `Life in Context`; issue #355 делает 3D Globe основной interface-development surface этого цикла. Architecture Atlas и root 2D MapLibre сохраняются как thematic/public technical baseline and rollback path.
 
 Важно:
 
-- Foundation v3 documentation не реализует world model;
+- Foundation documentation не реализует world model runtime;
 - текущий public runtime остаётся статическим Architecture Atlas;
-- real Life in Context corpus, temporal Regions, full Trajectories and synchronized multi-layer change ещё не доступны публично;
+- real Life in Context synchronized multi-layer experience ещё не доступен публично;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
-- generative AI, causal/counterfactual runtime, VR/AR and universal corpus remain frozen/future;
-- **A real executable 3D Globe R&D artifact now exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
-- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface, no real historical World Slice in that runtime and no production terrain/provider decision.
-- Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 is the active product-facing MVP contour.
-- A non-public Leonardo-in-Romagna scope package for 8 August–31 December 1502 now freezes the Gate C selection, source/rights candidates, atomic draft Claim/Evidence/Uncertainty inventory and material gaps; it is not yet a curated READY World Model package.
+- generative AI, causal/counterfactual runtime, personal knowledge model, VR/AR and universal corpus remain frozen/future;
+- **A real executable 3D Globe R&D artifact exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
+- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface, no Gate C historical World Slice integrated into that runtime and no production terrain/provider decision.
+- Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
+- Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
+- The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
+- Gate D is the next product gate but is not started by Gate C completion or by Foundation v3.1 / #363.
 
 ## 2. Что доступно публично
 
@@ -77,7 +79,7 @@ Migration preflight и release gate подтверждают current backend cap
 - 12 reviewed current Relation records и 21 reviewed legacy relation-source links;
 - только архитектурные объекты.
 
-Известные ограничения:
+Известные ограничения public/Architecture Atlas corpus:
 
 - canonical identity migration v1 завершена в PR `#290`: ETL и public artifacts используют `Features.id` UUID v4, а Airtable record ID отделён как `source_record_id`;
 - source migration выполнена: контрольное чтение Airtable подтверждает `19/19 id_status=ok`; точная таблица, execution evidence и recovery-план зафиксированы в `docs/work/2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`;
@@ -89,28 +91,40 @@ Migration preflight и release gate подтверждают current backend cap
 - 10 из 12 current Relation records имеют тип `same_movement`; Concept Lock v2 классифицирует их как documented shared-classification compatibility records, а не substantive historical Relations;
 - только два current records (`influenced`, `inspired_by`) являются кандидатами на substantive Relation value, но ещё не имеют target claim-level locator/evidence semantics;
 - semantic ETL/release gate проверяет blocking errors отдельно от budgeted warnings, cross-artifact evidence/review semantics, enabled populated Layers и отсутствие unreviewed legacy image URLs;
-- текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors.
+- текущий checked-in report имеет статус `ready_with_warnings`: 14 warnings (7 empty-Layer exclusions, 3 missing primary Media и 4 corpus-quality signals), 0 blocking errors;
 - comparison-pilot profile имеет технический статус `comparison_ready`: 31 Feature, 6 cohorts, 12 legacy-counted Relations, 100% current link coverage и 90.32% primary Media;
-- Architecture Gate A package завершён со статусом `3/3 READY` и двумя independent review processes; он сохраняется как reviewed fixture/evidence package, но не является Foundation v3 user-value validation.
+- Architecture Gate A package завершён со статусом `3/3 READY` и двумя independent review processes; он сохраняется как reviewed fixture/evidence package, но не является Foundation v3 user-value validation;
 - executable world-model fixtures #329 / PR #336 and uncertainty semantics #330 / PR #337 are reviewed READY contract evidence; they are fixtures/contracts, not public World Model data or a public Globe runtime.
 
-До исправления этих ограничений dataset считается pilot, а не исследовательским корпусом production-уровня.
+Gate C historical curation package is separate from the public Airtable export:
+
+- #332/#360 / PR #362 froze Leonardo-in-Romagna 1502 as a non-public World Slice boundary;
+- 17 candidate objects, 10 Sources, 22 atomic Claims, 38 EvidenceLinks and 11 provenance-bearing Uncertainties are bound to the frozen reviewed revision;
+- no documented Relations are stored while #331 remains paused;
+- three inter-place routes remain unknown with no invented geometry;
+- Duchy of Romagna Region states remain geometry-withheld where evidence/rights do not support a boundary;
+- this package is reviewed as a **Gate C boundary**, not promoted to public/READY historical product data.
+
+До отдельной promotion/runtime decision public dataset остаётся Architecture Atlas pilot, а Gate C package — non-public frozen input.
 
 ## 5. Что не считается реализованным продуктом
 
-- universal spatial-temporal world model runtime;
-- Life in Context World Slice and synchronized explorer;
+- universal spatial-temporal knowledge-model runtime;
+- public/product-ready Life in Context World Slice and synchronized explorer;
+- Gate C package integrated into the Globe runtime as a complete Gate D experience;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
 - public/product 3D Globe, production dynamic terrain or VR experience; #355 changes active development scope, not current public capability;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
 - полноценные guided Stories и Courses;
-- AI explanation, comparison или hypothesis generation;
+- AI explanation/comparison/hypothesis generation runtime;
+- AI Knowledge Exploration Interface or executable AI view-action contract;
+- personal knowledge model;
 - зрелый relation graph за пределами 12-record validation pilot;
-- first-class Claim/EvidenceLink corpus;
-- Foundation v3 Leonardo World Slice and same-content baseline;
+- first-class public Claim/EvidenceLink corpus;
 - immutable Investigation/revision model and Research Brief export;
-- causal, predictive или counterfactual engine.
+- causal, predictive или counterfactual engine;
+- universal corpus or objective digital twin of the world.
 
 ## 6. Главные риски текущего состояния
 
@@ -122,37 +136,39 @@ Migration preflight и release gate подтверждают current backend cap
 6. Backend-complete mutable Slice v2 может быть ошибочно принят за target immutable research model.
 7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
 8. Globe MVP может стать shadow product, если он обойдёт shared World Model / Explorer State / Render Projection или преждевременно войдёт в public Pages.
-9. PR #354 was merged with an incomplete governance diff and a failing lifecycle guard; repository lifecycle evidence must be verified from the actual diff and CI, not the PR narrative.
+9. Long-term attractor может быть ошибочно воспринят как permission to implement AI/VR/universal corpus before gates; Foundation v3.1 explicitly forbids this.
+10. `World Model` wording can drift back toward objective-digital-twin claims unless the knowledge-vs-world boundary remains explicit.
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Globe MVP real-slice curation**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / foundation refinement before Gate D**.
 
-Current runtime and data remain the Architecture Atlas baseline. Foundation v3 is accepted, but its world-model objects are not implemented in the public runtime or database/API.
+Current public runtime and data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation.
 
-Reviewed contract foundation now includes:
+Reviewed contract/foundation evidence includes:
 
 - #329 / PR #336 world-model fixtures — READY;
-- #330 / PR #337 uncertainty semantics — READY.
+- #330 / PR #337 uncertainty semantics — READY;
+- #339–#345 / PRs #346–#352 renderer-neutral Globe foundations — accepted;
+- #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews.
 
-Completed recovery:
+Current foundation maintenance:
 
-- PRs #356–#357 restored the repository-boundary test environment, canonical governance and a green Release Discipline Gate;
-- #344 / PR #351 restored and merged cross-renderer semantic parity.
+- #363 refines the North Star attractor and AI/world-model interpretation only;
+- it does not start Gate D, change `project_state.json` lifecycle, deploy runtime or open frozen AI scope.
 
 Следующий допустимый primary order:
 
-1. curate the frozen Leonardo-in-Romagna 1502 scope through #332/#360 into a reviewed real World Model package;
-2. implement the synchronized Globe/timeline/layers experience through shared contracts;
-3. preserve the current 2D renderer as public baseline, parity target and rollback path;
-4. collect semantic, UX, accessibility and representative performance evidence;
-5. record one promotion/iterate/narrow/stop decision before public deployment.
+1. complete Foundation v3.1 / #363 and keep canonical docs/guards consistent;
+2. separately open Gate D under #355 when product execution resumes;
+3. build the synchronized Globe/timeline/layers experience from the frozen Gate C boundary through shared contracts;
+4. preserve the current 2D renderer as public baseline, parity target and rollback path;
+5. collect semantic, UX, accessibility and representative performance evidence;
+6. record one promotion/iterate/narrow/stop decision before public deployment.
 
 Issue #331 is paused outside this critical path. Until it is accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
-Accepted renderer foundations are #339–#345 / PRs #346–#352, including the recovered cross-renderer semantic parity implementation.
-
-The superseded #323–#325 path and PR #314 are closed. Passing fixtures proves contract representability only; it does not change `PUBLIC NOW`, `BACKEND-AVAILABLE` or user-value status.
+The superseded #323–#325 path and PR #314 remain closed. Passing fixtures or Foundation documents prove neither public capability nor user value.
 
 ## 8. Правило честного описания
 
@@ -164,5 +180,7 @@ README, UI, issues, release notes и публичные материалы об�
 - `R&D` — bounded experimental architecture/runtime work that is not a public capability promise;
 - `CONCEPT TARGET` — утверждено концептуально, но не реализовано;
 - `FUTURE` — концепция или запланированный слой.
+
+Long-term attractor, AI view-control semantics, personal knowledge, universal corpus and VR/AR remain `FUTURE` until separately implemented and validated.
 
 Формулировка более высокого уровня зрелости запрещена без исполнимого evidence.
