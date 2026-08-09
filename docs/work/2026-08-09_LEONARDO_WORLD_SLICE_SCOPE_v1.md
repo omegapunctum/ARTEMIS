@@ -2,11 +2,12 @@
 
 ## Status
 
-- Type: active Gate C curation decision.
+- Type: completed Gate C scope decision.
 - Date: 2026-08-09.
 - Parent: issue `#355`.
 - Delivery issues: `#332`, `#360`.
-- State: `SCOPE_FROZEN / CURATION IN PROGRESS`.
+- State: `SCOPE_FROZEN / GATE C REVIEWED / NON-PUBLIC`.
+- Superseded pre-decision state: `SCOPE_FROZEN / CURATION IN PROGRESS`.
 - Public capability change: none.
 
 ## 1. Decision
@@ -74,22 +75,24 @@ The package explicitly records:
 - unknown inter-place routes;
 - missing original patent call number/rights-cleared surrogate despite the closed critical-transcription locator;
 - missing frozen Manuscript L facsimiles and the evidence-based rejection of the separate Cesena wall-survey folios 9r–10r Claim from the supported set;
-- two independent review rounds that returned `CHANGES_REQUIRED`, with a final same-revision `READY` pair still absent;
+- measured remediation history plus two final independent `READY` reviews on one Git-bound revision, with zero unresolved critical/material findings;
 - intentionally sparse global context limited to one State and one year-precision Event;
 - the prohibition on documented Relations.
 
 Original unmeasured duration remains `null` and is marked superseded rather than estimated. A complete replacement recuration session and every review round use measured UTC wall-clock intervals. No pending cost entry is allowed at READY.
 
-## 7. Exit
+## 7. Gate C outcome
 
-Scope freeze exits when the candidates become a versioned real World Model package with:
+Decision: `FREEZE` the reviewed selection/source/Claim/Uncertainty boundary as the non-public input to Gate D.
+
+The Gate C boundary contains:
 
 - atomic Claims and EvidenceLinks;
 - reproducible locators and derived evidence states;
 - Uncertainty and coverage bindings;
-- reviewed place/Region/trajectory projection semantics;
-- deterministic 2D/Globe projection and parity evidence;
+- reviewed scope-level place/Region/trajectory semantics with geometry withheld where evidence is absent;
+- deterministic validation and explicit compatibility/parity requirements for downstream projection;
 - two independent reviews with no unresolved critical or material finding;
 - measured preparation and review cost.
 
-Until then, the package remains non-public and cannot support a historical capability claim.
+This is not a promotion to reviewed historical data: Claims and EvidenceLinks remain draft, Region and route geometry remain null, #331 remains paused, and public capability is unchanged. Gate D is the next permitted transition but is not started by this decision.

@@ -6,7 +6,7 @@
 - Дата: 2026-08-09.
 - Активная фаза: **4.8 Globe MVP vertical / real World Slice**.
 - Active primary issue: **#355**.
-- Active delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
+- Completed Gate C delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
 - Completed recovery foundation: **#344 / PR #351**.
 - Public runtime: unchanged 2D MapLibre baseline.
 
@@ -72,9 +72,9 @@ Paused:
 
 ### Gate C — Real World Slice
 
-- active through #332 and `docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`;
-- freeze the analytical 8 August–31 December 1502 Romagna selection boundary before claiming historical content readiness;
-- freeze one bounded source-aware slice;
+- completed with `FREEZE` through #332/#360 and `docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`;
+- the analytical 8 August–31 December 1502 Romagna selection boundary is frozen without claiming historical content readiness;
+- one bounded source-aware slice is frozen as a non-public capability boundary;
 - include Event, State, Process, Trajectory and temporally changing Region;
 - bind Claims/EvidenceLinks/locators/uncertainty;
 - declare coverage, known gaps, geometry provenance, licensing and cost;
@@ -82,6 +82,7 @@ Paused:
 
 ### Gate D — Source-aware Globe experience
 
+- next gate; not started by the Gate C decision;
 - consume World Model → Explorer State → Render Projection;
 - synchronize time, layers and selection;
 - expose sources, uncertainty, alternatives, coverage and projection losses;

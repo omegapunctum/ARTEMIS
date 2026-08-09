@@ -1,6 +1,6 @@
 # Leonardo-in-Romagna World Slice 1502 — scope package v1
 
-Status: `SCOPE_FROZEN / CURATION IN PROGRESS / NON-PUBLIC`.
+Status: `SCOPE_FROZEN / GATE C REVIEWED / NON-PUBLIC`.
 
 Issues: [#355](https://github.com/omegapunctum/ARTEMIS/issues/355), [#332](https://github.com/omegapunctum/ARTEMIS/issues/332) and [#360](https://github.com/omegapunctum/ARTEMIS/issues/360).
 
@@ -71,4 +71,4 @@ python -m pytest -q tests/test_leonardo_world_slice.py
 
 ## Next gate
 
-Independently re-review the corrected frozen Claim/Evidence/Uncertainty inventory and Git-bound gate-transition guards, then record exactly one `FREEZE`/`NARROW`/`REJECT` decision. Two earlier review rounds returned `CHANGES_REQUIRED`; two independent `READY` reviews on one corrected frozen revision are required to close Gate C.
+Gate C is completed with `FREEZE` after two independent `READY` reviews on commit `bd2e103cdeec615cb19f0a4293c708fe37a4ae52`. Gate D is the next permitted transition, but this decision does not start it, review the draft Claims as historical truth, add geometry, resume Relations or promote a public capability.

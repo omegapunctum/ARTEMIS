@@ -139,6 +139,22 @@
       "duration_minutes": 5,
       "measurement_state": "recorded",
       "notes": "Measured wall-clock interval 2026-08-09T10:26:21Z–10:30:41Z and rounded up to whole minutes. The protected tests now construct explicit lifecycle fixtures instead of assuming the repository state remains in progress."
+    },
+    {
+      "activity_id": "cost-final-validator-integrity-review",
+      "activity": "Final independent validator-integrity review of the exact sixth frozen revision",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 4,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T10:32:12Z–10:35:17Z and rounded up to whole minutes. Decision READY with zero unresolved critical or material findings; bound to the final review registry and artifact."
+    },
+    {
+      "activity_id": "cost-sixth-semantic-content-review",
+      "activity": "Final independent semantic-content review of the exact sixth frozen revision",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 5,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T10:32:19Z–10:36:59Z and rounded up to whole minutes. Decision READY with zero unresolved critical or material findings; bound to the final review registry and artifact."
     }
   ],
   "ready_rule": "No pending entry is allowed at READY. Historical unmeasured entries may remain null only when explicitly superseded by a recorded full recuration activity; both final independent-review costs must be recorded."
