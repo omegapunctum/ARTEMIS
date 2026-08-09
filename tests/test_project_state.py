@@ -20,6 +20,33 @@ def _state() -> dict:
     return json.loads(STATE_PATH.read_text(encoding="utf-8"))
 
 
+def _in_progress_state() -> dict:
+    state = _state()
+    state["gate"]["status"] = "in_progress"
+    state["gate"].pop("decision", None)
+    state["gate"].pop("evidence", None)
+    state["github"]["active_issues"] = [332, 360, 355]
+    state["github"]["completed_issues"] = [
+        issue for issue in state["github"]["completed_issues"] if issue not in {332, 360}
+    ]
+    state["capability"]["world_slice"] = "scope_curation"
+    state["blockers"] = ["Gate C review evidence is not complete"]
+    state["next_transition"] = {"gate": "C", "condition": "Complete Gate C review."}
+    return state
+
+
+def _completed_state_without_evidence() -> dict:
+    state = _in_progress_state()
+    state["gate"]["status"] = "completed"
+    state["gate"]["decision"] = "FREEZE"
+    state["github"]["active_issues"] = [355]
+    state["github"]["completed_issues"].extend([332, 360])
+    state["capability"]["world_slice"] = "gate_c_frozen_non_public"
+    state["blockers"] = []
+    state["next_transition"] = {"gate": "D", "condition": "Begin Gate D."}
+    return state
+
+
 def test_current_project_state_is_valid_and_single_gate() -> None:
     state = _state()
     assert validate_project_state() == {
@@ -38,14 +65,14 @@ def test_active_issue_cannot_also_be_paused() -> None:
 
 
 def test_gate_c_cannot_drop_delivery_issue() -> None:
-    state = _state()
+    state = _in_progress_state()
     state["github"]["active_issues"].remove(360)
     with pytest.raises(ProjectStateError, match="requires active delivery issues"):
         validate_project_state(state)
 
 
 def test_unfinished_gate_cannot_claim_decision() -> None:
-    state = _state()
+    state = _in_progress_state()
     state["gate"]["decision"] = "FREEZE"
     with pytest.raises(ProjectStateError, match="unfinished gate"):
         validate_project_state(state)
@@ -64,9 +91,7 @@ def test_empty_payload_is_validated_instead_of_reloading_current_state() -> None
 
 
 def test_completed_gate_c_cannot_bypass_frozen_review_evidence() -> None:
-    state = _state()
-    state["gate"]["status"] = "completed"
-    state["gate"]["decision"] = "FREEZE"
+    state = _completed_state_without_evidence()
 
     with pytest.raises(ProjectStateError, match="schema validation failed"):
         validate_project_state(state)

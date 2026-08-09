@@ -115,6 +115,30 @@
       "duration_minutes": 8,
       "measurement_state": "recorded",
       "notes": "Measured 2026-08-09T10:09:13Z–10:16:45Z and rounded up to whole minutes. Decision CHANGES_REQUIRED with one material timezone-offset deadlock; this is review history, not final Gate C evidence."
+    },
+    {
+      "activity_id": "cost-fifth-validator-integrity-review",
+      "activity": "Fifth independent validator-integrity review before finalization-test hardening",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 3,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T10:19:58Z–10:22:35Z and rounded up to whole minutes. Decision READY on its exact revision, later superseded only because protected lifecycle tests required a new frozen tree before completion metadata."
+    },
+    {
+      "activity_id": "cost-fifth-semantic-content-review",
+      "activity": "Fifth independent semantic-content review before finalization-test hardening",
+      "actor_kind": "independent_reviewer",
+      "duration_minutes": 6,
+      "measurement_state": "recorded",
+      "notes": "Measured 2026-08-09T10:20:00Z–10:25:05Z and rounded up to whole minutes. Decision READY on its exact revision, later superseded only because protected lifecycle tests required a new frozen tree before completion metadata."
+    },
+    {
+      "activity_id": "cost-state-independent-finalization-tests",
+      "activity": "Make Gate C transition corruption tests valid against both in-progress and completed project states",
+      "actor_kind": "agent_assisted",
+      "duration_minutes": 5,
+      "measurement_state": "recorded",
+      "notes": "Measured wall-clock interval 2026-08-09T10:26:21Z–10:30:41Z and rounded up to whole minutes. The protected tests now construct explicit lifecycle fixtures instead of assuming the repository state remains in progress."
     }
   ],
   "ready_rule": "No pending entry is allowed at READY. Historical unmeasured entries may remain null only when explicitly superseded by a recorded full recuration activity; both final independent-review costs must be recorded."
