@@ -124,14 +124,46 @@ button { cursor: pointer; }
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
+.unresolved-item {
+  width: 100%;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.unresolved-item:hover { background: #142236; }
+.unresolved-item:focus-visible, .selection-card:focus-visible {
+  outline: 2px solid #79cfff;
+  outline-offset: 2px;
+}
 .selection-card.empty { color: #8296ad; }
 .selection-card dl { display: grid; grid-template-columns: 95px minmax(0, 1fr); gap: 5px 8px; margin: 0; }
 .selection-card dt { color: #8296ad; }
 .selection-card dd { margin: 0; }
+.selection-title { margin-bottom: 2px; font-size: 15px; font-weight: 700; }
+.record-id { color: #8eb0d3; font: 11px/1.35 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.identity-list { margin-top: 10px !important; }
+.knowledge-section { margin: 12px 0 0 !important; padding: 12px 0 0 !important; border-top: 1px solid #21344a; border-bottom: 0 !important; }
+.knowledge-section h3 { margin: 0 0 8px; color: #d6e7fa; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+.evidence-group, .uncertainty-card, .loss-card {
+  margin-top: 8px;
+  border: 1px solid #263b54;
+  border-radius: 7px;
+  background: #101c2a;
+  padding: 9px;
+}
+.claim-statement, .uncertainty-card p { margin: 6px 0 !important; }
+.record-meta, .empty-note { color: #91a6bd; font-size: 11px; }
+.evidence-row { display: grid; gap: 3px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #24384f; }
+.evidence-row a { color: #83d2ff; font-weight: 650; }
+.evidence-locator { color: #f1c986; white-space: normal; }
+.uncertainty-card { border-color: #8b6a34; background: #201a12; }
+.uncertainty-effect { color: #ffd9a0; }
+.loss-card { color: #ffc5b8; border-color: #70483f; background: #211614; }
 
 #unresolved-list { display: grid; gap: 8px; }
 .unresolved-item[data-kind="trajectory-gap"] { border-style: dashed; border-color: #d0a862; }
 .unresolved-item strong { display: block; margin-bottom: 4px; }
+.unresolved-item span { display: block; }
 .unresolved-item code { color: #bfdcff; }
 
 #fatal-error {

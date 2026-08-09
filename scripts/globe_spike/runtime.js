@@ -9,6 +9,7 @@
     context: './synthetic-earth-context.geojson',
     capabilityPath: './capability-path.geojson',
     engineEvaluation: './engine-evaluation.json',
+    knowledge: './knowledge-index.json',
     meta: './build-meta.json'
   };
 
@@ -27,6 +28,7 @@
   const runtime = {
     map: null,
     data: null,
+    knowledgeByItem: new Map(),
     alternativesVisible: true,
     performance: {
       startupToIdleMs: null,
@@ -43,6 +45,14 @@
   function setText(id, value) {
     const node = byId(id);
     if (node) node.textContent = String(value ?? '—');
+  }
+
+  function appendText(host, tagName, text, className = '') {
+    const node = document.createElement(tagName);
+    if (className) node.className = className;
+    node.textContent = String(text ?? '—');
+    host.append(node);
+    return node;
   }
 
   function fatal(error) {
@@ -316,6 +326,13 @@
     setText('selected-time', temporal.start === temporal.end ? temporal.start : `${temporal.start} → ${temporal.end}`);
     setText('projection-id', data.projection.projection_id);
     setText('primitive-count', (data.globe.primitives || []).length);
+    setText(
+      'corpus-status',
+      data.knowledge.historical_corpus_ready
+        ? 'reviewed historical corpus'
+        : 'synthetic contract fixture · not historical evidence'
+    );
+    setText('deferred-types', (data.knowledge.deferred_object_types || []).join(', ') || 'none');
 
     const cards = [
       ['active', (data.projection.active_object_refs || []).length],
@@ -350,18 +367,22 @@
     for (const item of unresolved) {
       const loss = lossByItem.get(item.item_id);
       const segmentKind = item.semantic_flags?.segment_kind || null;
-      const row = document.createElement('div');
+      const row = document.createElement('button');
+      row.type = 'button';
       row.className = 'unresolved-item';
       if (segmentKind === 'inferred_gap') row.dataset.kind = 'trajectory-gap';
+      row.dataset.itemId = item.item_id;
+      row.setAttribute('aria-label', `Inspect unresolved ${item.object_type} ${item.object_ref}`);
 
-      const title = document.createElement('strong');
-      title.textContent = `${item.object_type} · ${item.object_ref}`;
-      row.append(title);
+      appendText(row, 'strong', `${item.object_type} · ${item.object_ref}`);
 
-      const details = document.createElement('div');
       const uncertainty = (item.uncertainty_refs || []).join(', ') || 'none';
-      details.textContent = `subobject=${item.subobject_ref || '—'} · reason=${loss?.reason || 'unresolved'} · uncertainty=${uncertainty}`;
-      row.append(details);
+      appendText(
+        row,
+        'span',
+        `subobject=${item.subobject_ref || '—'} · reason=${loss?.reason || 'unresolved'} · uncertainty=${uncertainty}`
+      );
+      row.addEventListener('click', () => selectKnowledgeItem(item.item_id, { focus: true }));
       host.append(row);
     }
 
@@ -370,32 +391,166 @@
     }
   }
 
-  function renderSelection(properties) {
+  function addIdentityRows(host, record) {
+    const rows = [
+      ['object_ref', record.object_ref],
+      ['subobject_ref', record.subobject_ref || '—'],
+      ['type', record.object_type],
+      ['role', record.render_role],
+      ['temporal', record.temporal_membership],
+      ['spatial', record.spatial_status]
+    ];
+    const dl = document.createElement('dl');
+    dl.className = 'identity-list';
+    for (const [key, value] of rows) {
+      appendText(dl, 'dt', key);
+      appendText(dl, 'dd', value);
+    }
+    host.append(dl);
+  }
+
+  function addEvidence(host, record) {
+    const section = document.createElement('section');
+    section.className = 'knowledge-section';
+    appendText(section, 'h3', 'Claims & evidence');
+    const evidenceByClaim = new Map();
+    for (const evidence of record.evidence_links || []) {
+      const rows = evidenceByClaim.get(evidence.claim_id) || [];
+      rows.push(evidence);
+      evidenceByClaim.set(evidence.claim_id, rows);
+    }
+    const sourceById = new Map((record.sources || []).map((source) => [source.id, source]));
+
+    if (!(record.claims || []).length) {
+      appendText(section, 'p', 'No projected claims for this semantic item.', 'empty-note');
+    }
+    for (const claim of record.claims || []) {
+      const group = document.createElement('article');
+      group.className = 'evidence-group';
+      appendText(group, 'div', claim.id, 'record-id');
+      appendText(group, 'p', claim.statement, 'claim-statement');
+      appendText(
+        group,
+        'div',
+        `${claim.review_state} · confidence ${claim.confidence} · evidence ${claim.evidence_state}`,
+        'record-meta'
+      );
+
+      for (const evidence of evidenceByClaim.get(claim.id) || []) {
+        const source = sourceById.get(evidence.source_id);
+        const row = document.createElement('div');
+        row.className = 'evidence-row';
+        if (source) {
+          const link = document.createElement('a');
+          link.href = source.artifact_uri || source.uri;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = source.title || source.id;
+          row.append(link);
+        } else {
+          appendText(row, 'span', evidence.source_id);
+        }
+        if (source) {
+          appendText(
+            row,
+            'span',
+            `${source.source_type} · ${source.review_state} · ${source.uri}`,
+            'record-meta'
+          );
+        }
+        appendText(row, 'code', evidence.locator, 'evidence-locator');
+        appendText(
+          row,
+          'span',
+          `${evidence.relation_to_claim} · ${evidence.evidence_strength} · ${evidence.review_state}`,
+          'record-meta'
+        );
+        group.append(row);
+      }
+      section.append(group);
+    }
+    host.append(section);
+  }
+
+  function addUncertainties(host, record) {
+    const section = document.createElement('section');
+    section.className = 'knowledge-section';
+    appendText(section, 'h3', 'Material uncertainty');
+    if (!(record.uncertainties || []).length) {
+      appendText(section, 'p', 'No material uncertainty is referenced by this projection item.', 'empty-note');
+    }
+    for (const uncertainty of record.uncertainties || []) {
+      const card = document.createElement('article');
+      card.className = 'uncertainty-card';
+      appendText(card, 'div', uncertainty.id, 'record-id');
+      appendText(card, 'strong', uncertainty.dimension);
+      appendText(card, 'p', uncertainty.description);
+      appendText(card, 'p', `Effect: ${uncertainty.effect}`, 'uncertainty-effect');
+      if ((uncertainty.alternatives || []).length) {
+        appendText(card, 'p', `Alternatives: ${uncertainty.alternatives.join(' · ')}`, 'record-meta');
+      }
+      section.append(card);
+    }
+    host.append(section);
+  }
+
+  function addProjectionLosses(host, record) {
+    const section = document.createElement('section');
+    section.className = 'knowledge-section';
+    appendText(section, 'h3', 'Projection loss');
+    if (!(record.projection_losses || []).length) {
+      appendText(section, 'p', 'No projection loss is recorded for this item.', 'empty-note');
+    }
+    for (const loss of record.projection_losses || []) {
+      appendText(
+        section,
+        'p',
+        `${loss.loss_kind} · ${loss.reason} · ${loss.severity}`,
+        'loss-card'
+      );
+    }
+    host.append(section);
+  }
+
+  function renderKnowledgeRecord(record) {
     const card = byId('selection-card');
     if (!card) return;
     card.classList.remove('empty');
     card.innerHTML = '';
+    card.dataset.itemId = record.item_id;
+    appendText(card, 'div', record.label, 'selection-title');
+    appendText(card, 'div', record.item_id, 'record-id');
+    addIdentityRows(card, record);
+    addEvidence(card, record);
+    addUncertainties(card, record);
+    addProjectionLosses(card, record);
+  }
 
-    const rows = [
-      ['object_ref', properties.object_ref],
-      ['subobject_ref', properties.subobject_ref || '—'],
-      ['type', properties.object_type],
-      ['role', properties.render_role],
-      ['temporal', properties.temporal_membership],
-      ['reconstruction', properties.geometry_reconstruction_mode || '—'],
-      ['claims', parseList(properties.claim_refs).join(', ') || 'none'],
-      ['uncertainty', parseList(properties.uncertainty_refs).join(', ') || 'none'],
-      ['sources', parseList(properties.source_refs).join(', ') || 'none']
-    ];
-    const dl = document.createElement('dl');
-    for (const [key, value] of rows) {
-      const dt = document.createElement('dt');
-      dt.textContent = key;
-      const dd = document.createElement('dd');
-      dd.textContent = String(value ?? '—');
-      dl.append(dt, dd);
+  function selectKnowledgeItem(itemId, options = {}) {
+    const record = runtime.knowledgeByItem.get(itemId);
+    if (!record) {
+      const card = byId('selection-card');
+      if (card) {
+        card.classList.remove('empty');
+        card.textContent = `No knowledge-index record exists for ${itemId}.`;
+      }
+      return;
     }
-    card.append(dl);
+    renderKnowledgeRecord(record);
+    if (options.focus) byId('selection-card')?.focus({ preventScroll: false });
+  }
+
+  function renderSelection(properties) {
+    const itemId = properties.item_id;
+    if (itemId) {
+      selectKnowledgeItem(itemId, { focus: true });
+      return;
+    }
+    const card = byId('selection-card');
+    if (card) {
+      card.classList.remove('empty');
+      card.textContent = 'Rendered feature has no semantic item_id and cannot be resolved.';
+    }
   }
 
   function renderCapabilitySelection() {
@@ -465,7 +620,7 @@
   async function main() {
     if (!window.maplibregl) throw new Error('MapLibre GL JS 5.24.0 failed to load. Network access to the pinned engine CDN is required for this R&D artifact.');
 
-    const [projection, globe, state, assets, context, capabilityPath, engineEvaluation, meta] = await Promise.all([
+    const [projection, globe, state, assets, context, capabilityPath, engineEvaluation, knowledge, meta] = await Promise.all([
       loadJson(FILES.projection),
       loadJson(FILES.globe),
       loadJson(FILES.state),
@@ -473,13 +628,19 @@
       loadJson(FILES.context),
       loadJson(FILES.capabilityPath),
       loadJson(FILES.engineEvaluation),
+      loadJson(FILES.knowledge),
       loadJson(FILES.meta)
     ]);
 
-    runtime.data = { projection, globe, state, assets, context, capabilityPath, engineEvaluation, meta };
+    runtime.data = { projection, globe, state, assets, context, capabilityPath, engineEvaluation, knowledge, meta };
+    runtime.knowledgeByItem = new Map((knowledge.records || []).map((record) => [record.item_id, record]));
+    runtime.selectItem = (itemId) => selectKnowledgeItem(itemId, { focus: true });
     renderSharedState(runtime.data);
     renderUnresolved(projection);
     renderAttribution(assets);
+    const primaryObjectRef = state.selection?.primary_object_ref;
+    const primaryRecord = (knowledge.records || []).find((record) => record.object_ref === primaryObjectRef);
+    if (primaryRecord) renderKnowledgeRecord(primaryRecord);
     setText('engine-status', `engine: MapLibre GL JS ${window.maplibregl.version || '5.24.0'} · R&D`);
 
     const map = new maplibregl.Map({
