@@ -96,6 +96,26 @@ Historical/valid time remains explicit signed-year/date text plus separate preci
 
 Airtable rejected `UTC` as a `dateTime` display timezone in the current API configuration, so these record-time fields use `Europe/London`. This is a display/storage implementation detail and cannot be interpreted as historical valid-time semantics.
 
+### 4.4 Gate C layer mapping remains deliberately unresolved
+
+The frozen Gate C selection manifest uses four layer IDs:
+
+- `layer-leonardo-trajectory`;
+- `layer-local-context`;
+- `layer-engineering-work`;
+- `layer-global-simultaneity`.
+
+Those IDs do **not** currently exist in the legacy Architecture Atlas `Layers` table.
+
+#368 therefore creates only the `KnowledgeObjects.layers` schema link and does **not** add any new Layer records. Silently inserting the Gate C layers into the legacy public-source table would couple shadow curation to the current Architecture Atlas exporter before an explicit mapping decision.
+
+Before any Gate C shadow import, the mapping contract must choose and validate one clean representation, for example:
+
+- prove that shadow-only Layer records can coexist in the existing `Layers` table without entering or perturbing the public export; or
+- introduce a separate versioned World Model layer/slice-layer representation if contextual layer roles cannot be preserved by the legacy table.
+
+The choice must preserve the Gate C `layer_id` values and per-slice roles (`primary_trajectory`, `local_context`, `change_context`, `global_context`) without inventing or dropping semantics. No legacy Layer record should be created merely to make an import pass.
+
 ## 5. Fail-closed semantic rules
 
 The new tables preserve the accepted boundaries:
@@ -105,7 +125,7 @@ The new tables preserve the accepted boundaries:
 - `ObjectParts.spatial_status=unknown_route` and `segment_kind=unknown_route` exist explicitly so route geometry need not be fabricated;
 - `EvidenceLinks` requires explicit `locator`, `supports | challenges | contextualizes`, and `direct | indirect | background` semantics in the contract;
 - `Sources` are reused rather than duplicated, but a Source does not support a Claim without an EvidenceLink;
-- `Layers` remain grouping, never evidence;
+- `Layers` remain grouping, never evidence; Gate C layer-record mapping is unresolved rather than silently written into the legacy public-source table;
 - `Media` remains presentation/rights, never evidence by default;
 - no Relation table is added to the shadow World Model while #331 remains paused;
 - no compatibility `same_movement` record is promoted into a substantive Relation;
@@ -145,11 +165,12 @@ That future issue must, before writing real records:
 
 1. implement row-level validators for cardinality and cross-reference closure;
 2. define deterministic import/export mapping from the frozen Gate C package;
-3. prohibit invention of missing locator/evidence/geometry/relation semantics;
-4. preserve unknown-route and geometry-withheld states;
-5. compare IDs, object counts, Claims, EvidenceLinks, Sources, Uncertainties and reconstruction semantics back to the frozen repository package;
-6. keep Airtable non-authoritative until parity passes;
-7. leave Gate D unopened unless #355 separately performs its explicit lifecycle transition.
+3. resolve Gate C Layer IDs and per-slice roles without silently polluting the legacy public-source `Layers` table;
+4. prohibit invention of missing locator/evidence/geometry/relation semantics;
+5. preserve unknown-route and geometry-withheld states;
+6. compare IDs, object counts, Claims, EvidenceLinks, Sources, Uncertainties, layer roles and reconstruction semantics back to the frozen repository package;
+7. keep Airtable non-authoritative until parity passes;
+8. leave Gate D unopened unless #355 separately performs its explicit lifecycle transition.
 
 ## 9. Lifecycle handoff
 
