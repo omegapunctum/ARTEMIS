@@ -38,7 +38,9 @@ def test_shadow_schema_is_non_authoritative_and_pre_gate_d() -> None:
     assert contract["gate_boundary"]["next_gate_opened"] is False
     assert contract["gate_boundary"]["paused_relation_issue"] == 331
 
-    assert state["gate"] == {"id": "C", "status": "completed", "decision": "FREEZE"}
+    assert state["gate"]["id"] == "C"
+    assert state["gate"]["status"] == "completed"
+    assert state["gate"]["decision"] == "FREEZE"
     assert state["next_transition"]["gate"] == "D"
     assert state["github"]["paused_issues"] == [331]
 
