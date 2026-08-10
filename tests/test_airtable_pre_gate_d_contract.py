@@ -10,6 +10,7 @@ ALIGNMENT = ROOT / "docs" / "work" / "2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v
 AUDIT_SCRIPT = ROOT / "scripts" / "audit_airtable.py"
 PROJECT_STATE = ROOT / "docs" / "project_state.json"
 WORLD_MODEL_CONTRACT = ROOT / "docs" / "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md"
+CURATION_PLAN = ROOT / "fixtures" / "airtable_curation" / "v1" / "plan.json"
 
 
 def _load_audit_module():
@@ -62,6 +63,53 @@ def test_legacy_audit_entrypoint_uses_canonical_semantic_gate() -> None:
 def test_legacy_audit_validates_current_checked_in_artifacts() -> None:
     module = _load_audit_module()
     assert module.main(["--root", str(ROOT)]) == 0
+
+
+def test_curation_plan_is_proposal_only_and_preserves_gate_boundary() -> None:
+    plan = json.loads(CURATION_PLAN.read_text(encoding="utf-8"))
+
+    assert plan["schema_version"] == "1.0.0"
+    assert plan["status"] == "proposal_only"
+    assert plan["issue"] == 366
+    assert plan["gate_boundary"] == {
+        "current_gate": "C",
+        "current_status": "completed",
+        "current_decision": "FREEZE",
+        "next_gate": "D",
+        "next_gate_opened": False,
+    }
+    assert plan["authority"]["airtable_role"] == "editorial_curation_surface_not_semantic_owner"
+
+    legacy_names = {table["name"] for table in plan["legacy_tables"]}
+    assert legacy_names == {
+        "Features",
+        "Layers",
+        "Sources",
+        "Media",
+        "FeatureSources",
+        "FeatureMedia",
+        "Relations",
+        "RelationSources",
+    }
+
+    proposed_names = [table["name"] for table in plan["proposed_tables"]]
+    assert proposed_names == [
+        "WorldSlices",
+        "KnowledgeObjects",
+        "ObjectParts",
+        "Claims",
+        "EvidenceLinks",
+        "Uncertainties",
+    ]
+
+    evidence_links = next(table for table in plan["proposed_tables"] if table["name"] == "EvidenceLinks")
+    evidence_field_names = {field["name"] for field in evidence_links["fields"]}
+    assert {"claim", "source", "locator", "relation_to_claim", "evidence_strength"} <= evidence_field_names
+
+    prohibited = set(plan["prohibited"])
+    assert "opening Gate D by implication" in prohibited
+    assert "creating a second World Model ontology in Airtable" in prohibited
+    assert "modifying the frozen Gate C package during shadow import" in prohibited
 
 
 def test_reviewed_world_model_contract_is_not_redeclared_by_alignment() -> None:
