@@ -1,8 +1,9 @@
 # ARTEMIS — Airtable Shadow Curation Schema v1
 
-Status: **ACTIVE PRE-GATE-D DATA GOVERNANCE / SHADOW ONLY**  
+Status: **COMPLETED PRE-GATE-D EVIDENCE / SHADOW ONLY**  
 Date: 2026-08-10  
 Issue: #368  
+Implementation: PR #369 / merge `db273a525f0f5906c2d9681b561ee17d17d63d60`  
 Predecessor: #366 / PR #367  
 Parent product contour: #355
 
@@ -62,6 +63,8 @@ The earlier #366 proposal remains in the working layer at:
 
 The executable contract validates itself against that accepted plan so implementation cannot silently diverge from the decision that authorized it.
 
+PR #369 passed all standard repository workflows on its final head, including Release Discipline, ETL Check, Globe Repository Boundary, Geospatial Assets, Moderation and Auth Redis integration.
+
 ## 4. Airtable implementation details
 
 ### 4.1 Inverse linked-record fields
@@ -107,7 +110,7 @@ The frozen Gate C selection manifest uses four layer IDs:
 
 Those IDs do **not** currently exist in the legacy Architecture Atlas `Layers` table.
 
-#368 therefore creates only the `KnowledgeObjects.layers` schema link and does **not** add any new Layer records. Silently inserting the Gate C layers into the legacy public-source table would couple shadow curation to the current Architecture Atlas exporter before an explicit mapping decision.
+#368 therefore created only the `KnowledgeObjects.layers` schema link and did **not** add any new Layer records. Silently inserting the Gate C layers into the legacy public-source table would couple shadow curation to the current Architecture Atlas exporter before an explicit mapping decision.
 
 Before any Gate C shadow import, the mapping contract must choose and validate one clean representation, for example:
 
@@ -153,13 +156,13 @@ The frozen repository package:
 
 remains the authority for the reviewed Gate C boundary.
 
-There are **zero Leonardo/Gate C records** in the six shadow tables at #368 schema creation time.
+There are **zero Leonardo/Gate C records** in the six shadow tables at #368 completion.
 
 A later import issue must treat Airtable records as a non-authoritative shadow copy until a deterministic round-trip comparison proves semantic equivalence against the frozen package.
 
 ## 8. Next allowed step
 
-After #368 is accepted, the next optional data-governance step is a separate **Gate C shadow import + round-trip parity** issue.
+The next optional data-governance step is a separate **Gate C shadow import + round-trip parity** issue. It is intentionally **not opened** by #368 completion.
 
 That future issue must, before writing real records:
 
@@ -172,8 +175,10 @@ That future issue must, before writing real records:
 7. keep Airtable non-authoritative until parity passes;
 8. leave Gate D unopened unless #355 separately performs its explicit lifecycle transition.
 
-## 9. Lifecycle handoff
+## 9. Lifecycle closure
 
-#366 is complete after PR #367: the legacy Airtable boundary, descriptions, canonical audit path and proposal were aligned.
+#366 completed in PR #367: legacy Airtable ownership/schema truth, canonical audit routing and the proposal-only schema decision were aligned.
 
-#368 is the active data-governance maintenance step until the executable schema contract, live empty schema evidence and repository CI are accepted.
+#368 completed in PR #369: six empty shadow tables, executable contract/snapshot validation and Release Discipline integration were accepted with all standard workflows green.
+
+There is no active Airtable data-governance execution after this lifecycle close. The next data step requires a new explicit issue; Gate D remains unopened.
