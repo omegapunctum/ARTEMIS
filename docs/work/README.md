@@ -13,17 +13,23 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` | #368 active pre-Gate-D data-governance step; executable empty World Model curation schema plus live metadata evidence | six empty tables + contract/snapshot/validator accepted and CI green; then only a separate shadow-import parity issue may write real Gate C records |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D/E evidence and one explicit next decision after a separately opened Gate D |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-There is currently no active foundation-maintenance decision after completion of #363 / PR #364. Foundation maintenance is not a second product vertical and does not consume the one-product-gate WIP slot; any new foundation change must be opened explicitly through its own decision record.
+There is currently no active foundation-maintenance or Airtable data-governance decision. Foundation/data maintenance is not a second product vertical and does not consume the one-product-gate WIP slot; any new change must be opened explicitly through its own decision record.
 
-#368 is active **data-governance maintenance**, not a product-gate transition or second product vertical. It does not consume the one-product-gate WIP slot, does not change `docs/project_state.json` away from Gate C `completed/FREEZE`, and may create only the empty non-authoritative World Model shadow schema defined by #366. It may not import the frozen Gate C package, feed public `data/*`, resume #331 or open Gate D. Its owner is `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md`; executable schema evidence lives under `fixtures/airtable_curation/v1/` and is guarded by `scripts/validate_airtable_curation_schema.py`.
+#366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. #368 / PR #369 completed the six-table empty non-authoritative shadow schema plus executable contract/snapshot validation. Neither opened Gate D, imported the frozen Gate C package or changed the Architecture Atlas public export authority.
 
-The predecessor #366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. Its proposal remains working decision evidence at `airtable/2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json` and is not itself executable fixture evidence.
+The accepted Airtable working/evidence chain is:
+
+- `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md` — compatibility boundary and architecture decision;
+- `airtable/2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json` — proposal-only schema plan;
+- `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` — completed live empty schema implementation/evidence;
+- `fixtures/airtable_curation/v1/` + `scripts/validate_airtable_curation_schema.py` — executable schema evidence and guard.
+
+No real Gate C Airtable import is active. A future import/round-trip parity contour must be opened explicitly and must first resolve the Gate C layer-ID/per-slice-role mismatch without silently contaminating the legacy public-source `Layers` table.
 
 Active execution rule for the Globe MVP:
 
@@ -80,6 +86,7 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` — #368 completed in PR `#369`; six empty non-authoritative World Model curation tables, executable live schema snapshot/contract and Release Discipline guard were accepted, with no Gate C import, no public export authority and an explicit unresolved Gate C Layer mapping blocker before any future import.
 - `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md` — #366 completed in PR `#367`; current eight-table Architecture Atlas Airtable boundary, schema descriptions and canonical audit routing were aligned, with a proposal-only World Model curation plan and explicit Gate D prohibition.
 - `2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` — #363 completed in PR `#364`; Foundation v3.1 fixes the long-term attractor, knowledge-about-world identity, one-core/many-domains/many-interfaces invariant and future reversible AI exploration boundary without starting Gate D or changing public capability.
 - `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C in PR `#362` with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary; Claims remain draft and Gate D is not started by that decision.
