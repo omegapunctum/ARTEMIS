@@ -10,7 +10,7 @@ The canonical current-data path is:
 
 By default this command validates the checked-in public artifacts without network
 access. Pass ``--refresh-from-airtable`` to run the canonical Airtable export first
-and then validate the generated artifacts.
+and then validate the generated ``data/*`` artifacts.
 
 This script is pre-Gate-D maintenance. It does not write back to Airtable, change
 the frozen Gate C package, or open a product gate.
@@ -46,7 +46,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--refresh-from-airtable",
         action="store_true",
-        help="Run scripts/export_airtable.py against Airtable before validating artifacts.",
+        help="Run scripts/export_airtable.py against Airtable before validating canonical data/* artifacts.",
     )
     parser.add_argument(
         "--base",
@@ -57,11 +57,6 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--table",
         default="Features",
         help="Primary Airtable table passed to the canonical exporter (default: Features).",
-    )
-    parser.add_argument(
-        "--out-dir",
-        default="data",
-        help="Export artifact directory relative to --root (default: data).",
     )
     return parser.parse_args(argv)
 
@@ -96,7 +91,7 @@ def _run_canonical_export(args: argparse.Namespace, root: Path) -> int:
         "--table",
         args.table,
         "--out-dir",
-        args.out_dir,
+        "data",
     ]
     completed = subprocess.run(command, cwd=root, check=False)
     if completed.returncode != 0:
