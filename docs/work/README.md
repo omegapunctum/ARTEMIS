@@ -21,7 +21,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 There is currently no active foundation-maintenance decision after completion of #363 / PR #364. Foundation maintenance is not a second product vertical and does not consume the one-product-gate WIP slot; any new foundation change must be opened explicitly through its own decision record.
 
-#366 is active **data-governance maintenance**, not a product-gate transition or a second product vertical. It does not consume the one-product-gate WIP slot, does not change `docs/project_state.json` away from Gate C `completed/FREEZE`, and cannot create/populate World Model Airtable tables or import the frozen Gate C package. Its accepted working owner is `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md`; the machine-readable proposal is `fixtures/airtable_curation/v1/plan.json`.
+#366 is active **data-governance maintenance**, not a product-gate transition or a second product vertical. It does not consume the one-product-gate WIP slot, does not change `docs/project_state.json` away from Gate C `completed/FREEZE`, and cannot create/populate World Model Airtable tables or import the frozen Gate C package. Its accepted working owner is `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md`; the machine-readable proposal is `airtable/2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json`. It remains in the working layer because it is proposal-only; `fixtures/*` stays reserved for executable contract evidence.
 
 Active execution rule for the Globe MVP:
 
