@@ -1,0 +1,136 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SHADOW_SCHEMA_V1",
+  "authoritative": false,
+  "issue": 368,
+  "source_plan": "docs/work/airtable/2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json",
+  "semantic_owner": "docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md",
+  "gate_boundary": {
+    "current_gate": "C",
+    "current_status": "completed",
+    "current_decision": "FREEZE",
+    "next_gate": "D",
+    "next_gate_opened": false,
+    "paused_relation_issue": 331
+  },
+  "rules": {
+    "record_count_required": 0,
+    "real_gate_c_import_allowed": false,
+    "public_export_authority": false,
+    "legacy_architecture_atlas_authority_changed": false,
+    "airtable_inverse_link_fields_allowed": true
+  },
+  "reused_tables": {
+    "Sources": "tblfLhLLhppIywhYM",
+    "Layers": "tblVKoF68mrZ8BM8B",
+    "Media": "tblXWjucWBSa9Go5a"
+  },
+  "tables": [
+    {
+      "name": "WorldSlices",
+      "fields": [
+        {"name":"id","type":"singleLineText"},
+        {"name":"label","type":"singleLineText"},
+        {"name":"status","type":"singleSelect","choices":["draft","frozen","reviewed","superseded"]},
+        {"name":"temporal_start","type":"singleLineText"},
+        {"name":"temporal_end","type":"singleLineText"},
+        {"name":"spatial_scope_note","type":"multilineText"},
+        {"name":"selection_rationale","type":"multilineText"},
+        {"name":"known_exclusions","type":"multilineText"},
+        {"name":"coverage_limitations","type":"multilineText"},
+        {"name":"source_package_ref","type":"singleLineText"},
+        {"name":"review_version","type":"singleLineText"},
+        {"name":"frozen_digest","type":"singleLineText"},
+        {"name":"promotion_allowed","type":"checkbox"},
+        {"name":"notes","type":"multilineText"}
+      ]
+    },
+    {
+      "name": "KnowledgeObjects",
+      "fields": [
+        {"name":"id","type":"singleLineText"},
+        {"name":"object_type","type":"singleSelect","choices":["entity","event","state","process","trajectory","region"]},
+        {"name":"label","type":"singleLineText"},
+        {"name":"world_slices","type":"multipleRecordLinks","linked_table":"WorldSlices"},
+        {"name":"temporal_start","type":"singleLineText"},
+        {"name":"temporal_end","type":"singleLineText"},
+        {"name":"temporal_precision","type":"singleLineText"},
+        {"name":"temporal_certainty","type":"singleLineText"},
+        {"name":"spatial_status","type":"singleSelect","choices":["resolved","place_ref","geometry_withheld","not_spatial"]},
+        {"name":"place_ref","type":"singleLineText"},
+        {"name":"geometry_provenance_ref","type":"singleLineText"},
+        {"name":"reconstruction_mode","type":"singleLineText"},
+        {"name":"layers","type":"multipleRecordLinks","linked_table":"Layers"},
+        {"name":"review_state","type":"singleSelect","choices":["draft","reviewed","rejected"]},
+        {"name":"notes","type":"multilineText"}
+      ]
+    },
+    {
+      "name": "ObjectParts",
+      "fields": [
+        {"name":"id","type":"singleLineText"},
+        {"name":"knowledge_object","type":"multipleRecordLinks","linked_table":"KnowledgeObjects","cardinality":"exactly_one"},
+        {"name":"part_kind","type":"singleSelect","choices":["trajectory_segment","process_stage","region_state","reconstruction_alternative","other_reviewed_part"]},
+        {"name":"sequence_order","type":"number","precision":0},
+        {"name":"temporal_start","type":"singleLineText"},
+        {"name":"temporal_end","type":"singleLineText"},
+        {"name":"temporal_precision","type":"singleLineText"},
+        {"name":"temporal_certainty","type":"singleLineText"},
+        {"name":"spatial_status","type":"singleSelect","choices":["resolved","place_ref","geometry_withheld","unknown_route","not_spatial"]},
+        {"name":"place_ref","type":"singleLineText"},
+        {"name":"geometry_ref","type":"singleLineText"},
+        {"name":"segment_kind","type":"singleSelect","choices":["presence","movement","unknown_route"]},
+        {"name":"reconstruction_mode","type":"singleLineText"},
+        {"name":"is_primary","type":"checkbox"},
+        {"name":"review_state","type":"singleSelect","choices":["draft","reviewed","rejected"]},
+        {"name":"notes","type":"multilineText"}
+      ]
+    },
+    {
+      "name": "Claims",
+      "fields": [
+        {"name":"id","type":"singleLineText"},
+        {"name":"statement","type":"multilineText"},
+        {"name":"knowledge_object","type":"multipleRecordLinks","linked_table":"KnowledgeObjects","cardinality":"exactly_one"},
+        {"name":"object_part","type":"multipleRecordLinks","linked_table":"ObjectParts","cardinality":"zero_or_one"},
+        {"name":"claim_kind","type":"singleLineText"},
+        {"name":"origin","type":"singleLineText"},
+        {"name":"review_state","type":"singleSelect","choices":["draft","reviewed","rejected"]},
+        {"name":"confidence","type":"singleLineText"},
+        {"name":"evidence_state","type":"singleLineText"},
+        {"name":"created_at","type":"dateTime","time_zone":"Europe/London"},
+        {"name":"updated_at","type":"dateTime","time_zone":"Europe/London"}
+      ]
+    },
+    {
+      "name": "EvidenceLinks",
+      "fields": [
+        {"name":"id","type":"singleLineText"},
+        {"name":"claim","type":"multipleRecordLinks","linked_table":"Claims","cardinality":"exactly_one"},
+        {"name":"source","type":"multipleRecordLinks","linked_table":"Sources","cardinality":"exactly_one"},
+        {"name":"locator","type":"singleLineText"},
+        {"name":"relation_to_claim","type":"singleSelect","choices":["supports","challenges","contextualizes"]},
+        {"name":"evidence_strength","type":"singleSelect","choices":["direct","indirect","background"]},
+        {"name":"review_state","type":"singleSelect","choices":["draft","reviewed","rejected"]},
+        {"name":"reviewer","type":"singleLineText"},
+        {"name":"reviewed_at","type":"dateTime","time_zone":"Europe/London"}
+      ]
+    },
+    {
+      "name": "Uncertainties",
+      "target_cardinality":"exactly_one_of_knowledge_object_object_part_claim",
+      "fields": [
+        {"name":"id","type":"singleLineText"},
+        {"name":"knowledge_object","type":"multipleRecordLinks","linked_table":"KnowledgeObjects","cardinality":"zero_or_one"},
+        {"name":"object_part","type":"multipleRecordLinks","linked_table":"ObjectParts","cardinality":"zero_or_one"},
+        {"name":"claim","type":"multipleRecordLinks","linked_table":"Claims","cardinality":"zero_or_one"},
+        {"name":"dimension","type":"singleLineText"},
+        {"name":"description","type":"multilineText"},
+        {"name":"effect","type":"multilineText"},
+        {"name":"range_or_alternatives","type":"multilineText"},
+        {"name":"basis","type":"multilineText"},
+        {"name":"review_state","type":"singleSelect","choices":["draft","reviewed","rejected"]}
+      ]
+    }
+  ]
+}
