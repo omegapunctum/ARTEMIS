@@ -10,7 +10,8 @@ ALIGNMENT = ROOT / "docs" / "work" / "2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v
 AUDIT_SCRIPT = ROOT / "scripts" / "audit_airtable.py"
 PROJECT_STATE = ROOT / "docs" / "project_state.json"
 WORLD_MODEL_CONTRACT = ROOT / "docs" / "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md"
-CURATION_PLAN = ROOT / "fixtures" / "airtable_curation" / "v1" / "plan.json"
+CURATION_PLAN = ROOT / "docs" / "work" / "airtable" / "2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json"
+STALE_FIXTURE_PLAN = ROOT / "fixtures" / "airtable_curation" / "v1" / "plan.json"
 
 
 def _load_audit_module():
@@ -58,6 +59,7 @@ def test_legacy_audit_entrypoint_uses_canonical_semantic_gate() -> None:
     assert "ALLOWED_LICENSES" not in text
     assert "validate_feature(" not in text
     assert "validate_layer(" not in text
+    assert '"--out-dir"' not in text
 
 
 def test_legacy_audit_validates_current_checked_in_artifacts() -> None:
@@ -65,7 +67,10 @@ def test_legacy_audit_validates_current_checked_in_artifacts() -> None:
     assert module.main(["--root", str(ROOT)]) == 0
 
 
-def test_curation_plan_is_proposal_only_and_preserves_gate_boundary() -> None:
+def test_curation_plan_is_working_proposal_not_executable_fixture() -> None:
+    assert CURATION_PLAN.exists()
+    assert not STALE_FIXTURE_PLAN.exists()
+
     plan = json.loads(CURATION_PLAN.read_text(encoding="utf-8"))
 
     assert plan["schema_version"] == "1.0.0"
