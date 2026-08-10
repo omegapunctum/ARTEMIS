@@ -49,6 +49,13 @@ jobs:
           python scripts/validate_leonardo_world_slice.py
           pytest -q tests/test_leonardo_world_slice.py
 
+      - name: Validate Airtable pre-Gate-D shadow curation schema
+        run: |
+          python scripts/validate_airtable_curation_schema.py --require-empty
+          pytest -q \
+            tests/test_airtable_pre_gate_d_contract.py \
+            tests/test_airtable_curation_schema.py
+
       - name: Run concept and repository governance guards
         run: |
           pytest -q \

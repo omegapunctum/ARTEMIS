@@ -52,6 +52,8 @@ def test_project_state_remains_gate_c_freeze_with_gate_d_only_next() -> None:
 
 def test_legacy_audit_entrypoint_uses_canonical_semantic_gate() -> None:
     text = AUDIT_SCRIPT.read_text(encoding="utf-8")
+    module = _load_audit_module()
+    public_args = module.parse_args([])
 
     assert "validate_semantic_release" in text
     assert "export_airtable.py" in text
@@ -59,7 +61,9 @@ def test_legacy_audit_entrypoint_uses_canonical_semantic_gate() -> None:
     assert "ALLOWED_LICENSES" not in text
     assert "validate_feature(" not in text
     assert "validate_layer(" not in text
-    assert '"--out-dir"' not in text
+    # The wrapper may pass a fixed --out-dir=data to the canonical exporter internally,
+    # but callers must not be able to select a competing output/audit path.
+    assert not hasattr(public_args, "out_dir")
 
 
 def test_legacy_audit_validates_current_checked_in_artifacts() -> None:
