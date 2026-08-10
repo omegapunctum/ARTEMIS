@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-09.
+- Updated: 2026-08-10.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,12 +13,15 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
+| `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md` | #366 active pre-Gate-D data-governance alignment; repairs current Airtable truth and specifies a proposal-only World Model curation boundary | Airtable descriptions and canonical audit path aligned, proposal/guards accepted, then explicit shadow-schema decision without opening Gate D |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D/E evidence and one explicit next decision after a separately opened Gate D |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
 There is currently no active foundation-maintenance decision after completion of #363 / PR #364. Foundation maintenance is not a second product vertical and does not consume the one-product-gate WIP slot; any new foundation change must be opened explicitly through its own decision record.
+
+#366 is active **data-governance maintenance**, not a product-gate transition or a second product vertical. It does not consume the one-product-gate WIP slot, does not change `docs/project_state.json` away from Gate C `completed/FREEZE`, and cannot create/populate World Model Airtable tables or import the frozen Gate C package. Its accepted working owner is `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md`; the machine-readable proposal is `airtable/2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json`. It remains in the working layer because it is proposal-only; `fixtures/*` stays reserved for executable contract evidence.
 
 Active execution rule for the Globe MVP:
 
