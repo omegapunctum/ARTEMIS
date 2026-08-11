@@ -4,6 +4,7 @@
   "issue": 371,
   "authoritative_source": "fixtures/world_slices/leonardo_romagna_1502/v1",
   "target_schema": "fixtures/airtable_curation/v2/extension_contract.json",
+  "row_plan_lock": "fixtures/airtable_curation/v2/row_plan_lock.json",
   "slice_id": "world-slice-leonardo-romagna-1502-v1",
   "expected_counts": {
     "world_slices": 1,
@@ -13,6 +14,7 @@
     "claims": 22,
     "evidence_links": 38,
     "uncertainties": 11,
+    "uncertainty_targets": 40,
     "slice_layers": 4,
     "unknown_route_parts": 3
   },
