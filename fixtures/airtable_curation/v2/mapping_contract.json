@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PREFLIGHT_ONLY",
+  "issue": 371,
+  "authoritative_source": "fixtures/world_slices/leonardo_romagna_1502/v1",
+  "target_schema": "fixtures/airtable_curation/v2/extension_contract.json",
+  "slice_id": "world-slice-leonardo-romagna-1502-v1",
+  "expected_counts": {
+    "world_slices": 1,
+    "knowledge_objects": 17,
+    "object_parts": 11,
+    "world_sources": 10,
+    "claims": 22,
+    "evidence_links": 38,
+    "uncertainties": 11,
+    "slice_layers": 4,
+    "unknown_route_parts": 3
+  },
+  "layers": [
+    {"layer_id": "layer-leonardo-trajectory", "role": "primary_trajectory"},
+    {"layer_id": "layer-local-context", "role": "local_context"},
+    {"layer_id": "layer-engineering-work", "role": "change_context"},
+    {"layer_id": "layer-global-simultaneity", "role": "global_context"}
+  ],
+  "mapping": {
+    "WorldSlices": {
+      "source": "selection_manifest root",
+      "id": "slice_id",
+      "status": "frozen",
+      "promotion_allowed": false
+    },
+    "SliceLayers": {
+      "source": "selection_manifest.layers[]",
+      "stable_id": "slice-layer::{slice_id}::{layer_id}",
+      "legacy_layers_field": "must_remain_empty"
+    },
+    "KnowledgeObjects": {
+      "source": "selection_manifest.candidate_objects[]",
+      "id": "object_id",
+      "object_type": "lowercase(object_type)",
+      "review_state": "draft unless source Claim state explicitly requires rejected handling",
+      "source_spatial_mode": "spatial_mode",
+      "source_curation_state": "curation_state",
+      "temporal_assertion_status": "temporal_hint.assertion_status",
+      "world_sources": "source_refs[]",
+      "slice_layers": "layer_refs[]",
+      "legacy_layers_field": "must_remain_empty",
+      "geometry": "never_invent"
+    },
+    "ObjectParts": {
+      "trajectory_segments": "candidate Trajectory.segments[]",
+      "region_states": "candidate Region.temporal_states[]",
+      "reconstruction_alternatives": "candidate Region.versions[]",
+      "stable_id": "source segment_id/state_id/version_id",
+      "source_kind": "exact source subtype token",
+      "unknown_route_normalization": "inferred_gap -> segment_kind unknown_route while source_kind preserves inferred_gap",
+      "geometry": "must_remain_null when source geometry is null",
+      "world_sources": "source_refs[]"
+    },
+    "WorldSources": {
+      "source": "source_registry.sources[]",
+      "id": "source_id",
+      "source_type": "preserve exact token",
+      "rights": "expand rights object into explicit fields",
+      "review_state": "draft",
+      "intended_claims": "intended_claims[]",
+      "default_relation_to_claim": "relation_to_claim",
+      "legacy_sources_table": "must_not_write"
+    },
+    "Claims": {
+      "source": "claims_manifest.claims[]",
+      "id": "claim_id",
+      "knowledge_object": "target_object_ref",
+      "review_state": "preserve exact draft/rejected token",
+      "confidence_basis": "preserve exact text",
+      "evidence_refs": "validated through EvidenceLinks",
+      "uncertainty_refs": "validated through Uncertainties/UncertaintyTargets"
+    },
+    "EvidenceLinks": {
+      "source": "claims_manifest.evidence_links[]",
+      "id": "evidence_link_id",
+      "claim": "exactly one claim_id",
+      "world_source": "exactly one source_id",
+      "legacy_source_field": "must_remain_empty",
+      "locator": "must be nonblank",
+      "relation_to_claim": "preserve exact token",
+      "evidence_strength": "preserve exact token"
+    },
+    "Uncertainties": {
+      "source": "claims_manifest.uncertainties[]",
+      "id": "uncertainty_id",
+      "identity_count": "preserve exactly 11 source identities",
+      "basis_kind": "preserve exact token",
+      "basis_claims": "basis_claim_refs[]",
+      "targets": "expand target_refs[] into UncertaintyTargets without cloning Uncertainty identity"
+    },
+    "UncertaintyTargets": {
+      "stable_id": "uncertainty-target::{uncertainty_id}::{target_ref}",
+      "uncertainty": "exactly one",
+      "target": "exactly one of KnowledgeObject/ObjectPart/Claim",
+      "duplicates": "prohibited"
+    }
+  },
+  "prohibitions": [
+    "No write to legacy Layers for Gate C layer IDs.",
+    "No write to legacy Sources for Gate C WorldSources.",
+    "No stored Relation predicates while #331 is paused.",
+    "No route line for unknown-route parts.",
+    "No Region polygon while source geometry is withheld.",
+    "No promotion of draft Claims or Sources during shadow import.",
+    "No public data/* or exporter authority change.",
+    "No Gate D transition from this data-governance contour."
+  ]
+}
