@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "status": "REVIEW_REQUIRED",
+  "parent_issue": 371,
+  "pull_request": 372,
+  "track": "mapping-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "row_plan_sha256": "ff63b8ed036ec79ac73e11c2eb4d3cad22b69b0e5a361c23cef767c5c5ac83f1",
+  "review_scope": [
+    "fixtures/airtable_curation/v2/extension_contract.json",
+    "fixtures/airtable_curation/v2/live_extension_snapshot.json",
+    "fixtures/airtable_curation/v2/mapping_contract.json",
+    "fixtures/airtable_curation/v2/row_plan_lock.json",
+    "scripts/validate_airtable_leonardo_shadow_preflight.py",
+    "scripts/build_airtable_leonardo_shadow_plan.py",
+    "scripts/validate_airtable_leonardo_row_plan_lock.py",
+    "fixtures/world_slices/leonardo_romagna_1502/v1/selection_manifest.json",
+    "fixtures/world_slices/leonardo_romagna_1502/v1/claims_manifest.json",
+    "fixtures/world_slices/leonardo_romagna_1502/v1/source_registry.json"
+  ],
+  "acceptance": {
+    "decision": "READY",
+    "open_critical": 0,
+    "open_material": 0,
+    "artifact_schema": "fixtures/airtable_curation/v2/review_artifact.schema.json",
+    "registry": "fixtures/airtable_curation/v2/review_registry.json"
+  },
+  "write_boundary": {
+    "historical_rows_authorized": false,
+    "gate_d_opened": false
+  }
+}
