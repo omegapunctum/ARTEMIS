@@ -38,19 +38,25 @@
     }
   },
   "field_extensions": [
-    {
-      "table": "KnowledgeObjects",
-      "name": "slice_layers",
-      "type": "multipleRecordLinks",
-      "linked_table": "SliceLayers"
-    },
-    {
-      "table": "EvidenceLinks",
-      "name": "world_source",
-      "type": "multipleRecordLinks",
-      "linked_table": "WorldSources",
-      "cardinality": "exactly_one"
-    }
+    {"table": "KnowledgeObjects", "name": "slice_layers", "type": "multipleRecordLinks", "linked_table": "SliceLayers"},
+    {"table": "KnowledgeObjects", "name": "source_spatial_mode", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "source_curation_state", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "temporal_assertion_status", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "world_sources", "type": "multipleRecordLinks", "linked_table": "WorldSources"},
+    {"table": "ObjectParts", "name": "source_kind", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "source_spatial_mode", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "source_temporal_value", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "temporal_assertion_status", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "geometry_status", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "alternative_group_id", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "alternative_kind", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "reconstruction_question", "type": "multilineText"},
+    {"table": "ObjectParts", "name": "interpretation", "type": "multilineText"},
+    {"table": "ObjectParts", "name": "world_sources", "type": "multipleRecordLinks", "linked_table": "WorldSources"},
+    {"table": "Claims", "name": "confidence_basis", "type": "multilineText"},
+    {"table": "EvidenceLinks", "name": "world_source", "type": "multipleRecordLinks", "linked_table": "WorldSources", "cardinality": "exactly_one"},
+    {"table": "Uncertainties", "name": "basis_kind", "type": "singleLineText"},
+    {"table": "Uncertainties", "name": "basis_claims", "type": "multipleRecordLinks", "linked_table": "Claims"}
   ],
   "tables": [
     {
@@ -98,7 +104,9 @@
         {"name": "license", "type": "singleLineText"},
         {"name": "attribution", "type": "multilineText"},
         {"name": "review_state", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
-        {"name": "notes", "type": "multilineText"}
+        {"name": "notes", "type": "multilineText"},
+        {"name": "intended_claims", "type": "multipleRecordLinks", "linked_table": "Claims"},
+        {"name": "default_relation_to_claim", "type": "singleLineText"}
       ]
     }
   ]
