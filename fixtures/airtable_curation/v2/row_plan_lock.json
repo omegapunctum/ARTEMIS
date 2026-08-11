@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "status": "ROW_PLAN_FROZEN",
+  "authoritative": false,
+  "issue": 371,
+  "source_package": "fixtures/world_slices/leonardo_romagna_1502/v1",
+  "builder": "scripts/build_airtable_leonardo_shadow_plan.py",
+  "mapping_contract": "fixtures/airtable_curation/v2/mapping_contract.json",
+  "frozen_gate_c": {
+    "commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+    "tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+    "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca"
+  },
+  "row_plan": {
+    "sha256": "ff63b8ed036ec79ac73e11c2eb4d3cad22b69b0e5a361c23cef767c5c5ac83f1",
+    "total_rows": 154,
+    "counts": {
+      "WorldSlices": 1,
+      "SliceLayers": 4,
+      "WorldSources": 10,
+      "KnowledgeObjects": 17,
+      "ObjectParts": 11,
+      "Claims": 22,
+      "EvidenceLinks": 38,
+      "Uncertainties": 11,
+      "UncertaintyTargets": 40
+    },
+    "derived_on_ci_head": "2f28e5cd069b013cda7f04792a80ecc5435cf235",
+    "release_discipline_run": 31476963580,
+    "release_discipline_result": "success"
+  },
+  "write_authorization": {
+    "historical_rows_authorized": false,
+    "independent_mapping_review_required": true,
+    "round_trip_parity_required_after_write": true,
+    "gate_d_opened": false
+  },
+  "legacy_isolation": {
+    "KnowledgeObjects.layers": "must_remain_empty",
+    "EvidenceLinks.source": "must_remain_empty"
+  }
+}
