@@ -25,7 +25,7 @@ def test_leonardo_shadow_preflight_passes_without_historical_rows() -> None:
     assert module.validate() == {
         "new_tables": 3,
         "new_table_fields": 31,
-        "field_extensions": 19,
+        "field_extensions": 22,
         "records": 0,
         "world_slices": 1,
         "knowledge_objects": 17,
@@ -66,6 +66,16 @@ def test_legacy_public_layers_and_sources_are_explicitly_isolated() -> None:
     assert field_extensions[("EvidenceLinks", "world_source")]["linked_table"] == "WorldSources"
     assert field_extensions[("KnowledgeObjects", "world_sources")]["linked_table"] == "WorldSources"
     assert field_extensions[("ObjectParts", "world_sources")]["linked_table"] == "WorldSources"
+
+
+def test_source_temporal_tokens_are_preserved_separately_from_normalized_enums() -> None:
+    extension = json.loads(EXTENSION.read_text(encoding="utf-8"))
+    field_extensions = {(field["table"], field["name"]): field for field in extension["field_extensions"]}
+
+    assert ("KnowledgeObjects", "source_temporal_value") in field_extensions
+    assert ("KnowledgeObjects", "source_temporal_precision") in field_extensions
+    assert ("ObjectParts", "source_temporal_value") in field_extensions
+    assert ("ObjectParts", "source_temporal_precision") in field_extensions
 
 
 def test_uncertainty_identity_is_preserved_via_target_junction() -> None:
