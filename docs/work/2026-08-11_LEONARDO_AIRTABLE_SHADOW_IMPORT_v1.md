@@ -1,8 +1,9 @@
 # ARTEMIS — Leonardo Gate C Airtable Shadow Import v1
 
-Status: **ACTIVE PREFLIGHT / NO HISTORICAL ROWS WRITTEN**  
+Status: **ACTIVE / ROW PLAN FROZEN / LIVE HISTORICAL WRITE BLOCKED**  
 Date: 2026-08-11  
 Issue: #371  
+Implementation: draft PR #372  
 Parent product contour: #355  
 Predecessor: #368 / PR #369  
 Product gate: Gate C remains `completed/FREEZE`; Gate D remains unopened.
@@ -13,7 +14,7 @@ Prove a deterministic and fail-closed mapping from the frozen, authoritative rep
 
 `fixtures/world_slices/leonardo_romagna_1502/v1/`
 
-into a non-authoritative Airtable shadow representation, then later prove round-trip semantic parity before Airtable can be used as a practical editorial surface for this World Slice.
+into a non-authoritative Airtable shadow representation, then prove round-trip semantic parity before Airtable can be used as a practical editorial surface for this World Slice.
 
 This work is data-governance maintenance outside the one-product-gate WIP slot. It does not start Gate D, change the public runtime, promote historical Claims or resume #331 Relation semantics.
 
@@ -41,7 +42,7 @@ The frozen Gate C package contains:
 
 At #371 start all six original shadow tables contained 0 historical records.
 
-## 3. Preflight findings
+## 3. Preflight findings and decisions
 
 ### 3.1 Legacy `Layers` cannot represent the Gate C layer boundary safely
 
@@ -66,17 +67,19 @@ Decision: preserve the 11 `Uncertainties` unchanged and create `UncertaintyTarge
 
 The current Architecture Atlas exporter reads reviewed legacy `Sources` into public `data/sources.json`. The frozen Gate C source registry also uses source-type tokens such as `institutional_reference`, `scholarly_publication` and `collection_catalogue` that are not the legacy Architecture Atlas Source enum.
 
-Using legacy Sources would therefore require either:
-
-- a lossy source-type rewrite; or
-- adding new reviewed Sources that can leak into current public output; or
-- an undocumented draft-only compatibility convention that makes one legacy table own two different models.
+Using legacy Sources would therefore require either a lossy source-type rewrite, a public-export risk, or an undocumented dual-model convention.
 
 Decision: create shadow-only `WorldSources` and add `EvidenceLinks.world_source`. For Gate C import, legacy `EvidenceLinks.source` must remain empty.
 
 A WorldSource is still not Evidence by itself. Claim-specific support remains only:
 
 `Claim → EvidenceLink → WorldSource + locator`.
+
+### 3.4 Source temporal tokens cannot be collapsed into normalized Airtable values
+
+The frozen package uses source precision tokens including `range` and `pending`, while the normalized curation representation uses values such as `interval` and `unresolved`.
+
+Decision: preserve exact `source_temporal_value` and `source_temporal_precision` separately from normalized temporal fields. Normalization may aid querying but cannot erase the source package token needed for round-trip parity.
 
 ## 4. Live preflight schema extensions
 
@@ -88,14 +91,14 @@ Created with zero records:
 
 Added parity/provenance fields to the existing shadow tables so the frozen package need not be collapsed into `notes` or rewritten tokens:
 
-- `KnowledgeObjects`: `slice_layers`, `source_spatial_mode`, `source_curation_state`, `temporal_assertion_status`, `world_sources`;
+- `KnowledgeObjects`: `slice_layers`, exact source spatial/curation/temporal tokens, `temporal_assertion_status`, `world_sources`;
 - `ObjectParts`: exact source kind/spatial/temporal tokens, geometry status, reconstruction alternative metadata and WorldSource refs;
 - `Claims`: `confidence_basis`;
 - `EvidenceLinks`: `world_source`;
 - `Uncertainties`: `basis_kind`, `basis_claims`;
 - `WorldSources`: source identity, source type, rights envelope, intended Claims and source-level candidate relation metadata.
 
-All three new tables were explicitly read after creation and verified at 0 records.
+All three new tables were explicitly read after creation and verified at 0 records. The original six #368 tables also remain empty under the v1 `--require-empty` guard.
 
 ## 5. Executable preflight
 
@@ -105,31 +108,22 @@ Versioned repository evidence is under:
 
 It contains:
 
-- `extension_contract.json` — accepted v2 shadow-storage extension and legacy-isolation rules;
+- `extension_contract.json` — v2 shadow-storage extension and legacy-isolation rules;
 - `live_extension_snapshot.json` — exact live table/field IDs with zero-record evidence;
-- `mapping_contract.json` — deterministic frozen-package → shadow mapping rules.
+- `mapping_contract.json` — deterministic frozen-package → shadow mapping rules;
+- `row_plan_lock.json` — frozen semantic-ID row plan binding and write prohibition.
 
-`scripts/validate_airtable_leonardo_shadow_preflight.py` fails closed on:
+Executable controls:
 
-- drift of the completed #368 six-table empty schema;
-- v2 table/field/link-target drift;
-- Gate D opening or #331 resumption;
-- changed layer IDs/roles;
-- changed frozen counts;
-- unresolved Claim/Evidence/Source/Uncertainty references;
-- blank EvidenceLink locators or invalid relation/strength tokens;
-- invented candidate geometry;
-- non-empty unknown-route source/geometry/place bindings;
-- Region geometry appearing where the source package withholds it;
-- loss of exact reconstruction metadata;
-- duplication of Uncertainty identity instead of target-junction expansion;
-- any Uncertainty target that does not resolve to exactly one KnowledgeObject/ObjectPart/Claim.
+- `scripts/validate_airtable_leonardo_shadow_preflight.py` — validates schema/package/ref/geometry/Gate boundaries;
+- `scripts/build_airtable_leonardo_shadow_plan.py` — deterministically derives the semantic-ID candidate rows without network access or writes;
+- `scripts/validate_airtable_leonardo_row_plan_lock.py` — recomputes the entire plan and rejects any digest/count/source/isolation drift.
 
-Release Discipline runs this preflight and its regression tests.
+Release Discipline executes all three plus their regression suites.
 
-## 6. Mapping boundary
+## 6. Frozen mapping and row plan
 
-The preflight deterministically derives 11 ObjectParts:
+The mapping deterministically derives 11 ObjectParts:
 
 - 7 Trajectory parts: four `presence` anchors plus three source `inferred_gap` parts normalized to shadow `unknown_route` while preserving the exact source token;
 - 2 temporal Region states;
@@ -141,32 +135,61 @@ The four Gate C layers map to `SliceLayers`, not legacy `Layers`.
 
 The ten frozen Sources map to `WorldSources`, not legacy `Sources`.
 
-The 11 frozen Uncertainty identities remain 11 records; their `target_refs[]` expand only into deterministic `UncertaintyTargets` rows.
+The 11 frozen Uncertainty identities remain 11 records; their `target_refs[]` expand only into 40 deterministic `UncertaintyTargets` rows.
+
+The complete deterministic candidate plan contains **154 rows**:
+
+- 1 `WorldSlices`;
+- 4 `SliceLayers`;
+- 10 `WorldSources`;
+- 17 `KnowledgeObjects`;
+- 11 `ObjectParts`;
+- 22 `Claims`;
+- 38 `EvidenceLinks`;
+- 11 `Uncertainties`;
+- 40 `UncertaintyTargets`.
+
+Release Discipline on exact head `2f28e5cd069b013cda7f04792a80ecc5435cf235` reproduced:
+
+`ff63b8ed036ec79ac73e11c2eb4d3cad22b69b0e5a361c23cef767c5c5ac83f1`
+
+as the canonical SHA-256 of that semantic row plan. `row_plan_lock.json` freezes this digest and binds it to the reviewed Gate C commit/tree/digest.
+
+The lock explicitly states:
+
+- `historical_rows_authorized=false`;
+- `independent_mapping_review_required=true`;
+- `round_trip_parity_required_after_write=true`;
+- `gate_d_opened=false`.
 
 ## 7. What remains prohibited
 
-Until the preflight PR is green and the import revision explicitly changes the lifecycle:
+At the row-plan-lock stage:
 
 - no Leonardo/Gate C historical record may be created in Airtable shadow tables;
 - no import status may claim parity;
 - no legacy Layer or Source may be created for convenience;
 - no route line or Region polygon may be invented;
 - no stored Relation predicate may be added while #331 is paused;
-- no Claim or Source may be promoted from draft merely because it is imported;
+- no Claim or Source may be promoted from draft merely because it will be imported;
 - no `data/*`, Architecture Atlas exporter or public runtime may change;
 - Gate D remains unopened.
 
+A green row-plan lock proves deterministic mapping, not the correctness of live write behavior and not round-trip parity.
+
 ## 8. Next transition inside #371
 
-After exact-head CI proves the preflight:
+The next allowed step is **independent review of the exact frozen row plan/mapping**.
 
-1. freeze the deterministic normalized row plan;
-2. independently inspect the mapping before live historical writes;
-3. write records in dependency order with stable IDs and draft/non-authoritative state;
-4. read every written row back from Airtable;
-5. validate row-level cardinality and reference closure;
-6. normalize the live shadow copy back to repository semantics;
-7. prove round-trip parity against the frozen Gate C package;
-8. only then close #371 as completed data-governance evidence.
+Only after that review is recorded against the same digest may #371 move to a separate controlled-write revision that:
+
+1. changes write authorization explicitly;
+2. writes the frozen plan in dependency order with stable IDs and draft/non-authoritative state;
+3. reads every written row back from Airtable;
+4. validates row-level cardinality and reference closure;
+5. normalizes the live shadow copy back to repository semantics;
+6. proves round-trip parity against the frozen Gate C package;
+7. records any actual import/review cost;
+8. only then closes #371 as completed data-governance evidence.
 
 That completion still does not open Gate D. Gate D requires its separate #355 lifecycle transition.
