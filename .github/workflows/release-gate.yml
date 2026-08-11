@@ -59,7 +59,10 @@ jobs:
       - name: Validate Leonardo Airtable shadow-import preflight
         run: |
           python scripts/validate_airtable_leonardo_shadow_preflight.py
-          pytest -q tests/test_airtable_leonardo_shadow_preflight.py
+          python scripts/build_airtable_leonardo_shadow_plan.py
+          pytest -q \
+            tests/test_airtable_leonardo_shadow_preflight.py \
+            tests/test_airtable_leonardo_shadow_plan.py
 
       - name: Run concept and repository governance guards
         run: |
