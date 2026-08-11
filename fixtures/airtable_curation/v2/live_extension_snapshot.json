@@ -6,22 +6,25 @@
   "historical_records_present": false,
   "record_counts_verified_zero": true,
   "field_extensions": [
-    {
-      "table": "KnowledgeObjects",
-      "table_id": "tblffBsDcOZ0HOLfw",
-      "name": "slice_layers",
-      "id": "fldo2NLQvg4MWux5k",
-      "type": "multipleRecordLinks",
-      "linked_table_id": "tblwhHRmSNz3rglFG"
-    },
-    {
-      "table": "EvidenceLinks",
-      "table_id": "tblGqSgg3PBndArk5",
-      "name": "world_source",
-      "id": "fld4MIoqmmYl78FVz",
-      "type": "multipleRecordLinks",
-      "linked_table_id": "tbl7I4XNC8bayxmn9"
-    }
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "slice_layers", "id": "fldo2NLQvg4MWux5k", "type": "multipleRecordLinks", "linked_table_id": "tblwhHRmSNz3rglFG"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "source_spatial_mode", "id": "fldPe8HJ7vUVh6jX9", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "source_curation_state", "id": "fldEX4Lcs7Vkc1Ju7", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "temporal_assertion_status", "id": "fldDSnKuy4sNba0wH", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "world_sources", "id": "fldFir1amIYU4ZYYx", "type": "multipleRecordLinks", "linked_table_id": "tbl7I4XNC8bayxmn9"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_kind", "id": "fldnCq9aTOPDlMzg0", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_spatial_mode", "id": "fldyVmbfV1JXQqRC3", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_temporal_value", "id": "flda8saGHonyVXPCg", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "temporal_assertion_status", "id": "fldBNLfCk2wNde7n4", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "geometry_status", "id": "fldZV8TTZn7sFSoDF", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "alternative_group_id", "id": "fldObnNMindAMKQT1", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "alternative_kind", "id": "fld6yxgp7nGamgftg", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "reconstruction_question", "id": "fldlXh4hGLzQmTVzg", "type": "multilineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "interpretation", "id": "fldt5SNFKxD9GSE2g", "type": "multilineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "world_sources", "id": "fldlBPAHLeKJbFIhV", "type": "multipleRecordLinks", "linked_table_id": "tbl7I4XNC8bayxmn9"},
+    {"table": "Claims", "table_id": "tblOeuGE19Vbg3XLh", "name": "confidence_basis", "id": "fldvnsvLWjKwSj7fy", "type": "multilineText"},
+    {"table": "EvidenceLinks", "table_id": "tblGqSgg3PBndArk5", "name": "world_source", "id": "fld4MIoqmmYl78FVz", "type": "multipleRecordLinks", "linked_table_id": "tbl7I4XNC8bayxmn9"},
+    {"table": "Uncertainties", "table_id": "tbl370NEfV6TtYiM2", "name": "basis_kind", "id": "fldtlGfVL8Mtoa4Y7", "type": "singleLineText"},
+    {"table": "Uncertainties", "table_id": "tbl370NEfV6TtYiM2", "name": "basis_claims", "id": "fldikU6MzquDacUOk", "type": "multipleRecordLinks", "linked_table_id": "tblOeuGE19Vbg3XLh"}
   ],
   "tables": [
     {
@@ -71,7 +74,9 @@
         {"name": "license", "id": "fldRVW7ttyLPUZZgR", "type": "singleLineText"},
         {"name": "attribution", "id": "fldZVXIUpjVmSApTH", "type": "multilineText"},
         {"name": "review_state", "id": "fldM6ez0XDul9Uq4v", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
-        {"name": "notes", "id": "fldKxYR82b028RwJ4", "type": "multilineText"}
+        {"name": "notes", "id": "fldKxYR82b028RwJ4", "type": "multilineText"},
+        {"name": "intended_claims", "id": "fldgRAWb1qiD8kdTO", "type": "multipleRecordLinks", "linked_table_id": "tblOeuGE19Vbg3XLh"},
+        {"name": "default_relation_to_claim", "id": "fldI1tmZvsXNV0wHf", "type": "singleLineText"}
       ]
     }
   ]
