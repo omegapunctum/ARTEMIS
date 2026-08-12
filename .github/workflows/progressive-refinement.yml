@@ -6,6 +6,8 @@ on:
     paths:
       - ".github/workflows/progressive-refinement.yml"
       - "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+      - "docs/CONTENT_GOVERNANCE.md"
+      - "docs/DEVELOPMENT_OPERATING_SYSTEM.md"
       - "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
       - "fixtures/world_model/refinement/v1/**"
       - "scripts/validate_progressive_refinement_fixtures.py"
@@ -14,6 +16,8 @@ on:
     paths:
       - ".github/workflows/progressive-refinement.yml"
       - "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+      - "docs/CONTENT_GOVERNANCE.md"
+      - "docs/DEVELOPMENT_OPERATING_SYSTEM.md"
       - "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
       - "fixtures/world_model/refinement/v1/**"
       - "scripts/validate_progressive_refinement_fixtures.py"

@@ -9,11 +9,16 @@ from pathlib import Path
 
 import pytest
 
+import scripts.validate_progressive_refinement_fixtures as refinement_validator
+
 from scripts.validate_progressive_refinement_fixtures import (
     PACKAGE_PATH,
+    REVIEW_REGISTRY_PATH,
+    REVIEW_REQUEST_PATH,
     SCHEMA_PATH,
     RefinementValidationError,
     validate_package,
+    reviewed_content_sha256,
 )
 
 ROOT = PACKAGE_PATH.parents[4]
@@ -56,15 +61,18 @@ def assert_rejected(tmp_path: Path, package: dict, match: str, *, refresh: bool 
 
 def test_fixture_validates() -> None:
     summary = validate_package()
-    assert summary == {
-        "status": "REVIEW_REQUIRED",
-        "series": 8,
-        "revisions": 14,
-        "claims": 14,
-        "evidence_links": 14,
-        "uncertainties": 5,
-        "ledger_sha256": "b11cbbf47c8318b39dea1e131472feacb94bca09d48fb396cec28bd218355c8e",
-    }
+    assert summary["status"] == "REVIEW_REQUIRED"
+    assert summary["review_status"] == "REVIEW_REQUIRED"
+    assert summary["review_count"] == 0
+    assert summary["reviewed_content_sha256"] == json.loads(
+        REVIEW_REGISTRY_PATH.read_text(encoding="utf-8")
+    )["reviewed_content_sha256"]
+    assert summary["series"] == 8
+    assert summary["revisions"] == 14
+    assert summary["claims"] == 14
+    assert summary["evidence_links"] == 14
+    assert summary["uncertainties"] == 5
+    assert summary["ledger_sha256"] == "b11cbbf47c8318b39dea1e131472feacb94bca09d48fb396cec28bd218355c8e"
 
 
 def test_require_ready_fails_closed() -> None:
@@ -76,7 +84,33 @@ def test_require_ready_fails_closed() -> None:
         check=False,
     )
     assert result.returncode == 1
-    assert "package is not READY" in result.stdout
+    assert "package and independent review registry are not READY" in result.stdout
+
+
+def test_review_registry_is_fail_closed_before_two_independent_reviews() -> None:
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    assert registry["status"] == "REVIEW_REQUIRED"
+    assert registry["frozen_commit"] is None
+    assert registry["reviews"] == []
+    assert registry["required_tracks"] == ["semantic-model", "validator-integrity"]
+    assert registry["required_independence_method"] == "separate_agent_task_read_only"
+
+
+def test_review_scope_rejects_review_metadata() -> None:
+    request = json.loads(REVIEW_REQUEST_PATH.read_text(encoding="utf-8"))
+    request["review_scope"].append("fixtures/world_model/refinement/v1/review_registry.json")
+    with pytest.raises(RefinementValidationError, match="review metadata"):
+        reviewed_content_sha256(request)
+
+
+def test_review_registry_rejects_content_digest_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry["reviewed_content_sha256"] = "0" * 64
+    path = tmp_path / "review_registry.json"
+    path.write_text(json.dumps(registry), encoding="utf-8")
+    monkeypatch.setattr(refinement_validator, "REVIEW_REGISTRY_PATH", path)
+    with pytest.raises(RefinementValidationError, match="content digest"):
+        refinement_validator.validate_review_envelope()
 
 
 def test_rejects_in_place_mutation_without_lock_update(tmp_path: Path) -> None:
@@ -249,6 +283,18 @@ def test_candidate_is_routed_as_review_required_not_capability() -> None:
     assert "Issue #377 is active foundation maintenance with `REVIEW_REQUIRED` fixtures" in truth
     assert "#377 as active foundation maintenance" in agents
     assert "Public capability impact: none" in decision
+
+
+def test_progressive_intake_and_promotion_are_routed_without_competing_truth_owner() -> None:
+    contract = (ROOT / "docs" / "PROGRESSIVE_REFINEMENT_CONTRACT.md").read_text(encoding="utf-8")
+    governance = (ROOT / "docs" / "CONTENT_GOVERNANCE.md").read_text(encoding="utf-8")
+    operating_system = (ROOT / "docs" / "DEVELOPMENT_OPERATING_SYSTEM.md").read_text(encoding="utf-8")
+    for text in (contract, governance):
+        assert "candidate intake → atomic Claim/revision" in text
+        assert "deterministic current frontier" in text
+        assert "separately authorized export/publication" in text
+    assert "Drive research originals → authorized curated corpus intake" in operating_system
+    assert "No Drive file, Airtable row, AI output or runtime edit becomes canonical" in operating_system
 
 
 def test_required_ci_guards_are_wired() -> None:

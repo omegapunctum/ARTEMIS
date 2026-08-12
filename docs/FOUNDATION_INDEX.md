@@ -64,7 +64,7 @@ North Star не является release promise. Backend code не являет
 | `docs/PROGRESSIVE_REFINEMENT_CONTRACT.md` | Draft #377 non-destructive coarse-to-fine revision semantics; `REVIEW_REQUIRED`, not accepted capability |
 | `docs/ENTITY_MODEL.md` | Knowledge/research/runtime/context entity types |
 | `docs/EPISTEMIC_CONTRACT.md` | Claim/Evidence/uncertainty/inference semantics |
-| `docs/CONTENT_GOVERNANCE.md` | Candidate/review/correction/publish trust |
+| `docs/CONTENT_GOVERNANCE.md` | Candidate intake, review, progressive correction/withdrawal and publish trust |
 | `docs/AI_POLICY.md` | AI behavior, source/publish boundaries and future reversible exploration actions |
 | `docs/RESEARCH_SLICE_CONTRACT.md` | Optional Investigation/revision/Brief model |
 

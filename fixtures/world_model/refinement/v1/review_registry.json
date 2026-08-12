@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "status": "REVIEW_REQUIRED",
+  "issue": 377,
+  "pull_request": 378,
+  "required_review_count": 2,
+  "required_tracks": [
+    "semantic-model",
+    "validator-integrity"
+  ],
+  "required_independence_method": "separate_agent_task_read_only",
+  "frozen_commit": null,
+  "reviewed_content_sha256": "6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc",
+  "reviews": []
+}

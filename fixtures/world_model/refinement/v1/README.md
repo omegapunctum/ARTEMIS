@@ -29,6 +29,13 @@ python scripts/validate_progressive_refinement_fixtures.py
 python -m pytest -q tests/test_progressive_refinement_fixtures.py
 ```
 
+## Independent review
+
+`review_request.json` freezes the two review tracks and the exact reviewed-file scope.
+`review_registry.json` stays fail-closed with no reviews until both independent read-only tasks bind
+one remote commit and one computed content digest. Review artifacts must validate against
+`review_artifact.schema.json`; green CI alone cannot change the package to `READY`.
+
 ## Boundary
 
 Passing this fixture proves representability and validator behavior only. It does not implement a

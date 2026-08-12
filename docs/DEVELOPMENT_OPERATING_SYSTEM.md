@@ -92,6 +92,15 @@ A document name or old status header cannot make it active.
 
 New tools are introduced only when their information flow, owner and synchronization rule are named.
 
+The default knowledge-promotion chain is:
+
+`Drive research originals → authorized curated corpus intake → versioned GitHub contract/evidence → controlled runtime/export projection`
+
+This is a responsibility flow, not an automatic synchronization promise. A stage may be skipped
+when the active decision deliberately uses a frozen repository fixture/package, as Gate D currently
+does. No Drive file, Airtable row, AI output or runtime edit becomes canonical merely by existing;
+promotion requires the owner contract, review state and write/release gate for that contour.
+
 ## 6. Gate transition contract
 
 A gate closes only when:

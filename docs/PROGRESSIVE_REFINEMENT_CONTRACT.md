@@ -115,6 +115,29 @@ cannot normalize to a survey-grade boundary.
 Finer source-native values that already exist should be preserved even if the current UI displays
 a coarser projection. Display generalization is reversible; invented sharpening is not.
 
+## 5.1 Intake and promotion workflow
+
+The semantic ledger is one stage in a controlled knowledge flow, not a direct editing shortcut:
+
+`source/research artifact → candidate intake → atomic Claim/revision → epistemic review → accepted ledger revision → deterministic current frontier → separately authorized export/publication`
+
+At candidate intake, the curator records the decision target, source-native expression, material
+dimensions, uncertainty and minimum sufficient fidelity. A coarse value may be accepted when it is
+honest and sufficient; missing precision is not a validation failure by itself.
+
+When a target series already exists, the intake proposal must explicitly choose `refine`,
+`correct`, `add_alternative` or `withdraw`. A storage field update has no independent semantic
+meaning and cannot bypass lineage or Claim/Evidence review.
+
+Research originals, GIS and media may remain in Google Drive; authorized curated records may live
+in Airtable; contracts, frozen evidence, reviews and decisions live in GitHub. These systems do not
+become competing truth owners. AI may propose candidate revisions or source leads, but cannot act
+as Source, approve its own proposal or silently publish a frontier value.
+
+Ledger acceptance and public publication are separate decisions. A valid revision may remain
+non-public, and a public projection may generalize it without changing the accepted source-native
+value.
+
 ## 6. Dimension-specific refinement
 
 ### 6.1 Temporal values
@@ -271,6 +294,8 @@ Acceptance requires:
 - synchronized routing/operational documents without changing `project_state.json`;
 - versioned fixture, schema, validator and controlled-corruption tests;
 - one frozen reviewed content revision;
+- a fail-closed review request/registry that binds both reviewer instances to that exact revision
+  and one reviewed-content digest;
 - two independent reviews covering semantic content and validator integrity;
 - zero unresolved critical/material findings;
 - one decision: `ACCEPT`, `NARROW` or `REJECT`.

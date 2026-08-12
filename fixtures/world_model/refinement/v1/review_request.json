@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "status": "REVIEW_REQUIRED",
+  "issue": 377,
+  "pull_request": 378,
+  "required_tracks": [
+    "semantic-model",
+    "validator-integrity"
+  ],
+  "independence_method": "separate_agent_task_read_only",
+  "review_scope": [
+    "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md",
+    "docs/CONTENT_GOVERNANCE.md",
+    "docs/DEVELOPMENT_OPERATING_SYSTEM.md",
+    "fixtures/world_model/refinement/v1/package.json",
+    "fixtures/world_model/refinement/v1/schema.json",
+    "scripts/validate_progressive_refinement_fixtures.py",
+    "tests/test_progressive_refinement_fixtures.py",
+    ".github/workflows/progressive-refinement.yml"
+  ],
+  "acceptance": {
+    "required_review_count": 2,
+    "allowed_decisions": [
+      "READY",
+      "CHANGES_REQUIRED"
+    ],
+    "ready_requires_open_critical": 0,
+    "ready_requires_open_material": 0,
+    "artifact_schema": "fixtures/world_model/refinement/v1/review_artifact.schema.json",
+    "registry": "fixtures/world_model/refinement/v1/review_registry.json"
+  }
+}

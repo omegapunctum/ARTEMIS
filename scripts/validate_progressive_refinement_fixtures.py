@@ -17,6 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = ROOT / "fixtures" / "world_model" / "refinement" / "v1"
 PACKAGE_PATH = FIXTURE_DIR / "package.json"
 SCHEMA_PATH = FIXTURE_DIR / "schema.json"
+REVIEW_REQUEST_PATH = FIXTURE_DIR / "review_request.json"
+REVIEW_REGISTRY_PATH = FIXTURE_DIR / "review_registry.json"
+REVIEW_ARTIFACT_SCHEMA_PATH = FIXTURE_DIR / "review_artifact.schema.json"
 
 EXPECTED_SERIES = {
     "series-leo-time",
@@ -162,6 +165,104 @@ def strict_bbox_subset(child: tuple[float, float, float, float], parent: tuple[f
 def canonical_sha256(value: Any) -> str:
     payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
+
+
+def reviewed_content_sha256(request: dict[str, Any]) -> str:
+    digest = hashlib.sha256()
+    scope = request.get("review_scope")
+    if not isinstance(scope, list) or not scope or len(scope) != len(set(scope)):
+        fail("review_request.review_scope must be a non-empty unique list")
+    forbidden = {
+        "fixtures/world_model/refinement/v1/review_request.json",
+        "fixtures/world_model/refinement/v1/review_registry.json",
+    }
+    for raw_path in scope:
+        if not isinstance(raw_path, str) or not raw_path or raw_path.startswith("/") or ".." in Path(raw_path).parts:
+            fail("review scope contains an unsafe path")
+        if raw_path in forbidden or raw_path.endswith("review_artifact.schema.json"):
+            fail("review metadata cannot be part of the reviewed content digest")
+        path = ROOT / raw_path
+        if not path.is_file() or path.is_symlink():
+            fail(f"review scope path is not a regular file: {raw_path}")
+        digest.update(raw_path.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def validate_review_envelope() -> dict[str, Any]:
+    request = read_json(REVIEW_REQUEST_PATH)
+    registry = read_json(REVIEW_REGISTRY_PATH)
+    artifact_schema = read_json(REVIEW_ARTIFACT_SCHEMA_PATH)
+    try:
+        Draft202012Validator.check_schema(artifact_schema)
+    except SchemaError as exc:
+        fail(f"review artifact schema is invalid: {exc.message}")
+
+    if request.get("schema_version") != "1.0.0" or request.get("status") != "REVIEW_REQUIRED":
+        fail("review request must remain v1 REVIEW_REQUIRED metadata")
+    if (request.get("issue"), request.get("pull_request")) != (377, 378):
+        fail("review request must bind issue #377 and PR #378")
+    tracks = request.get("required_tracks")
+    if tracks != ["semantic-model", "validator-integrity"]:
+        fail("review request must require semantic-model and validator-integrity tracks")
+    if request.get("independence_method") != "separate_agent_task_read_only":
+        fail("review request must require separate read-only agent tasks")
+
+    digest = reviewed_content_sha256(request)
+    if registry.get("reviewed_content_sha256") != digest:
+        fail("review registry content digest does not match exact review scope")
+    if registry.get("required_review_count") != 2 or registry.get("required_tracks") != tracks:
+        fail("review registry must require exactly the two declared tracks")
+    if registry.get("required_independence_method") != request["independence_method"]:
+        fail("review registry independence method drift")
+
+    status = registry.get("status")
+    reviews = registry.get("reviews")
+    if not isinstance(reviews, list):
+        fail("review registry reviews must be a list")
+    if status == "REVIEW_REQUIRED":
+        if registry.get("frozen_commit") is not None or reviews:
+            fail("REVIEW_REQUIRED registry cannot claim a frozen review or completed reviews")
+        return {"review_status": status, "reviewed_content_sha256": digest, "review_count": 0}
+    if status not in {"REVIEWS_COMPLETE", "READY"}:
+        fail("unsupported review registry status")
+    frozen_commit = registry.get("frozen_commit")
+    if not isinstance(frozen_commit, str) or len(frozen_commit) != 40 or any(c not in "0123456789abcdef" for c in frozen_commit):
+        fail("completed reviews require one exact frozen commit")
+    if len(reviews) != 2:
+        fail("completed review registry requires exactly two reviews")
+
+    seen_tracks: set[str] = set()
+    reviewer_ids: set[str] = set()
+    reviewer_instances: set[str] = set()
+    for review in reviews:
+        artifact_ref = review.get("artifact_ref")
+        if not isinstance(artifact_ref, str) or not artifact_ref.startswith("fixtures/world_model/refinement/v1/reviews/"):
+            fail("review artifact_ref is outside the refinement review directory")
+        artifact_path = ROOT / artifact_ref
+        if not artifact_path.is_file() or artifact_path.is_symlink():
+            fail(f"review artifact is missing: {artifact_ref}")
+        artifact = read_json(artifact_path)
+        validate_schema(artifact, artifact_schema)
+        for field in ("review_id", "reviewer_id", "reviewer_instance_id", "track", "independence_method", "frozen_commit", "reviewed_content_sha256", "decision"):
+            if review.get(field) != artifact.get(field):
+                fail(f"review registry/artifact mismatch for {field}")
+        if artifact["frozen_commit"] != frozen_commit or artifact["reviewed_content_sha256"] != digest:
+            fail("both reviews must bind the same frozen commit and reviewed content digest")
+        if artifact["independence_method"] != "separate_agent_task_read_only":
+            fail("review artifact is not independently produced")
+        if artifact["decision"] == "READY" and (artifact["open_critical"] or artifact["open_material"]):
+            fail("READY review cannot retain open critical/material findings")
+        seen_tracks.add(artifact["track"])
+        reviewer_ids.add(artifact["reviewer_id"])
+        reviewer_instances.add(artifact["reviewer_instance_id"])
+    if seen_tracks != set(tracks) or len(reviewer_ids) != 2 or len(reviewer_instances) != 2:
+        fail("reviews must use distinct reviewers/instances and cover both required tracks")
+    if status == "READY" and any(review["decision"] != "READY" for review in reviews):
+        fail("READY registry requires two READY decisions")
+    return {"review_status": status, "reviewed_content_sha256": digest, "review_count": 2}
 
 
 def calculate_frontier(
@@ -419,6 +520,7 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
     if revisions["revision-label-withdrawn"]["normalized_assertion"] is not None:
         fail("withdrawal scenario must not remain in the current value frontier")
 
+    review = validate_review_envelope()
     return {
         "status": package["status"],
         "series": len(series),
@@ -427,6 +529,7 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
         "evidence_links": len(evidence_links),
         "uncertainties": len(uncertainties),
         "ledger_sha256": actual_digest,
+        **review,
     }
 
 
@@ -438,8 +541,8 @@ def main() -> int:
     args = parser.parse_args()
     try:
         summary = validate_package(args.package, args.schema)
-        if args.require_ready and summary["status"] != "READY":
-            fail("package is not READY")
+        if args.require_ready and (summary["status"] != "READY" or summary["review_status"] != "READY"):
+            fail("package and independent review registry are not READY")
     except RefinementValidationError as exc:
         print(f"FAIL: {exc}")
         return 1
