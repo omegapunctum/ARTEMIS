@@ -1,10 +1,10 @@
-# ARTEMIS — Development Operating System v1.1
+# ARTEMIS — Development Operating System v1.2
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.1.
-- Date: 2026-08-09.
+- Version: 1.2.
+- Date: 2026-08-12.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
 
@@ -46,6 +46,21 @@ A foundation-only issue is not added to `active_issues` merely because it is bei
 - Security, compatibility and critical reliability work may proceed separately when it does not redefine product scope.
 - Foundation maintenance may proceed between gates if its non-goals explicitly prohibit product/runtime expansion.
 - A product gate transition must update `project_state.json`, canonical lifecycle documents and the affected GitHub issues in one decision PR.
+
+### 3.1 Progressive fidelity execution rule
+
+ARTEMIS develops **from coarse to fine**. Research, curation and engineering should stop at the minimum sufficient fidelity that answers the current product hypothesis or gate decision; they should not pursue maximum possible detail by default.
+
+Execution rules:
+
+- first establish broad identity, time range, place/context, object type and uncertainty; refine only when the next decision requires it;
+- preserve finer source-native values when already available, but do not create a new research task solely to obtain finer precision unless it changes product or validation semantics;
+- prioritize refinement when it changes identity, ordering, overlap/co-presence, geometry, relation interpretation, UX behavior, safety/trust or the gate decision;
+- hour-level historical movement, building-level coordinates, exact route geometry, exhaustive source coverage and similar high-resolution work are **not default MVP requirements**;
+- later work may refine an existing object without replacing its identity or erasing earlier evidence/revisions;
+- progressive fidelity never permits fabricated precision: `unknown`, approximate and range semantics remain explicit until stronger evidence exists.
+
+This is a resource-allocation rule, not a relaxation of accuracy. ARTEMIS may be intentionally coarse at a given stage, but it must not be falsely precise.
 
 ## 4. Documentation classes
 
