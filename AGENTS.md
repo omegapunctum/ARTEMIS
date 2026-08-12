@@ -52,6 +52,7 @@ Active work is issue `#355`: Gate D builds the first source-aware Globe experien
 
 - preserve #329 / PR #336 World Model fixtures and #330 / PR #337 uncertainty semantics as reviewed READY foundations;
 - preserve completed #344 / PR #351 cross-renderer parity as a required green foundation;
+- treat #377 as active foundation maintenance: refinement semantics remain `REVIEW_REQUIRED`; Gate D may consume frozen data but must not implement mutable precision/history behavior before acceptance;
 - keep #331 `DEFERRED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is explicitly reopened and accepted;
 - keep #371/#373 deferred and the nine Airtable World Model tables empty; the merged mapping preflight does not authorize historical writes;
 - use one World Model → Explorer State → Render Projection path for both 2D and Globe;

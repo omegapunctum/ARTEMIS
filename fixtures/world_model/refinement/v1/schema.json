@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/fixtures/world-model/refinement/1.0.0",
+  "title": "ARTEMIS progressive refinement fixture package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "package_id",
+    "fixture_mode",
+    "status",
+    "created_at",
+    "sources",
+    "claims",
+    "evidence_links",
+    "uncertainties",
+    "series",
+    "revisions",
+    "ledger_lock",
+    "expected_current_frontier",
+    "replay_checkpoints"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "package_id": {"const": "artemis-progressive-refinement-v1"},
+    "fixture_mode": {"const": "synthetic_contract_fixture"},
+    "status": {"enum": ["REVIEW_REQUIRED", "READY"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "sources": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/source"}},
+    "claims": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/claim"}},
+    "evidence_links": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidenceLink"}},
+    "uncertainties": {"type": "array", "items": {"$ref": "#/$defs/uncertainty"}},
+    "series": {"type": "array", "minItems": 8, "items": {"$ref": "#/$defs/series"}},
+    "revisions": {"type": "array", "minItems": 12, "items": {"$ref": "#/$defs/revision"}},
+    "ledger_lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision_ids", "revisions_sha256"],
+      "properties": {
+        "revision_ids": {"$ref": "#/$defs/refs"},
+        "revisions_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "expected_current_frontier": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/refs"}
+    },
+    "replay_checkpoints": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["recorded_through", "expected_frontier"],
+        "properties": {
+          "recorded_through": {"type": "string", "format": "date-time"},
+          "expected_frontier": {
+            "type": "object",
+            "additionalProperties": {"$ref": "#/$defs/refs"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "precision": {
+      "enum": [
+        "unknown", "century", "decade", "year", "month", "day",
+        "region", "subregion", "locality", "point",
+        "route_unknown", "corridor", "documented_path", "categorical"
+      ]
+    },
+    "timeExtent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "precision", "certainty"],
+      "properties": {
+        "start": {"type": ["string", "null"]},
+        "end": {"type": ["string", "null"]},
+        "precision": {"$ref": "#/$defs/precision"},
+        "certainty": {"enum": ["exact", "approximate", "unknown"]}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "type", "historical_authority"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"type": "string", "minLength": 1},
+        "type": {"const": "synthetic_fixture_source"},
+        "historical_authority": {"const": false}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "revision_ref", "statement", "claim_kind", "origin", "review_state",
+        "confidence", "evidence_state", "evidence_link_refs", "uncertainty_refs"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "revision_ref": {"$ref": "#/$defs/id"},
+        "statement": {"type": "string", "minLength": 1},
+        "claim_kind": {"enum": ["factual", "inference", "observation"]},
+        "origin": {"enum": ["curator", "system"]},
+        "review_state": {"enum": ["draft", "reviewed", "contested", "rejected", "superseded"]},
+        "confidence": {"enum": ["high", "medium", "low", "unknown"]},
+        "evidence_state": {"enum": ["supported", "mixed", "challenged", "missing"]},
+        "evidence_link_refs": {"$ref": "#/$defs/refs"},
+        "uncertainty_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "evidenceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "claim_ref", "source_ref", "locator", "relation_to_claim", "review_state"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "claim_ref": {"$ref": "#/$defs/id"},
+        "source_ref": {"$ref": "#/$defs/id"},
+        "locator": {"type": "string", "minLength": 1},
+        "relation_to_claim": {"enum": ["supports", "challenges", "contextualizes"]},
+        "review_state": {"enum": ["draft", "reviewed"]}
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision_ref", "dimension", "description", "effect"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "revision_ref": {"$ref": "#/$defs/id"},
+        "dimension": {"enum": ["temporal_precision", "spatial_precision", "trajectory_gap", "geometry_reconstruction", "source_conflict"]},
+        "description": {"type": "string", "minLength": 1},
+        "effect": {"enum": ["show_range", "show_fuzzy_area", "prohibit_geometry", "show_alternatives", "show_contested"]}
+      }
+    },
+    "series": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "subject_ref", "target_key", "dimension"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "subject_ref": {"$ref": "#/$defs/id"},
+        "target_key": {"type": "string", "minLength": 1},
+        "dimension": {"enum": ["temporal", "spatial", "route", "literal"]}
+      }
+    },
+    "sourceValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw", "precision"],
+      "properties": {
+        "raw": {"type": "string", "minLength": 1},
+        "precision": {"$ref": "#/$defs/precision"}
+      }
+    },
+    "value": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "start", "end"],
+          "properties": {
+            "kind": {"const": "temporal_extent"},
+            "start": {"type": ["string", "null"]},
+            "end": {"type": ["string", "null"]}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "bbox"],
+          "properties": {
+            "kind": {"const": "bbox"},
+            "bbox": {
+              "type": "array", "minItems": 4, "maxItems": 4,
+              "items": {"type": "number"}
+            }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "mode", "geometry"],
+          "properties": {
+            "kind": {"const": "route"},
+            "mode": {"enum": ["unknown_route", "inferred_corridor", "documented_path"]},
+            "geometry": {"type": ["object", "null"]}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": {"const": "literal"},
+            "value": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["valid_time", "precision", "value"],
+      "properties": {
+        "valid_time": {"$ref": "#/$defs/timeExtent"},
+        "precision": {"$ref": "#/$defs/precision"},
+        "value": {"$ref": "#/$defs/value"}
+      }
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "series_ref", "operation", "predecessor_refs", "recorded_at", "origin",
+        "source_value", "normalized_assertion", "claim_ref", "evidence_link_refs",
+        "uncertainty_refs", "change_reason"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "series_ref": {"$ref": "#/$defs/id"},
+        "operation": {"enum": ["initial", "refine", "correct", "add_alternative", "withdraw"]},
+        "predecessor_refs": {"$ref": "#/$defs/refs"},
+        "recorded_at": {"type": "string", "format": "date-time"},
+        "origin": {"enum": ["curator", "system"]},
+        "source_value": {"$ref": "#/$defs/sourceValue"},
+        "normalized_assertion": {"oneOf": [{"$ref": "#/$defs/assertion"}, {"type": "null"}]},
+        "claim_ref": {"$ref": "#/$defs/id"},
+        "evidence_link_refs": {"$ref": "#/$defs/refs"},
+        "uncertainty_refs": {"$ref": "#/$defs/refs"},
+        "change_reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.2.
+- Версия: 3.3.
 - Дата: 2026-08-12.
 - Active vertical: `Life in Context` Globe MVP / issue `#355`.
 - Current gate: Gate D `Source-aware Globe experience` — `in_progress`, non-public.
@@ -83,6 +83,11 @@ ARTEMIS развивается **от общего к частному**. Тек
 - coarse current scope никогда не разрешает invented exactness: неизвестное остаётся неизвестным, а отсутствие точного route не заполняется правдоподобной линией.
 
 Это правило экономит curation/research budget, но **не ослабляет accuracy, provenance, uncertainty или evidence requirements**.
+
+The proposed append-only recording/refinement mechanism is scoped by issue `#377` and
+`PROGRESSIVE_REFINEMENT_CONTRACT.md`. Until that contour is independently accepted, Gate D must
+consume the frozen Gate C fidelity and must not implement mutable precision updates as if they were
+lossless knowledge revisions.
 
 ## 4. Обязательный interface scope
 

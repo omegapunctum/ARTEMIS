@@ -1,4 +1,4 @@
-# ARTEMIS — PROJECT PHASES v6.4
+# ARTEMIS — PROJECT PHASES v6.5
 
 ## Статус
 
@@ -46,6 +46,11 @@ Completed:
 - #329 / PR #336 — reviewed World Model fixtures;
 - #330 / PR #337 — reviewed uncertainty semantics.
 
+Active foundation maintenance:
+
+- #377 — progressive refinement/source-native fidelity contract; `REVIEW_REQUIRED` and required
+  before runtime/storage implements mutable knowledge refinement.
+
 Deferred:
 
 - #331 — documented Relation predicate semantics; reopen before such predicates enter the corpus/runtime.
@@ -84,6 +89,8 @@ Deferred:
 
 - **ACTIVE / IN PROGRESS** under #355; opened separately after the Gate C freeze;
 - consume the frozen repository package directly; #371/#373 Airtable import/review are deferred and no historical write is authorized;
+- read/render work may proceed over the frozen package, but editable precision/history behavior is
+  blocked on #377 acceptance; #377 does not change Gate D lifecycle state;
 - consume World Model → Explorer State → Render Projection;
 - synchronize time, layers and selection;
 - expose sources, uncertainty, alternatives, coverage and projection losses;

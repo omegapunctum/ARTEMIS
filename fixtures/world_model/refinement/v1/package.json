@@ -1,0 +1,146 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "fixture_mode": "synthetic_contract_fixture",
+  "status": "REVIEW_REQUIRED",
+  "created_at": "2026-08-10T00:00:00Z",
+  "sources": [
+    {"id": "source-synthetic-travel-notebook", "title": "Synthetic travel-notebook assertions", "type": "synthetic_fixture_source", "historical_authority": false},
+    {"id": "source-synthetic-range-atlas", "title": "Synthetic ecological-range assertions", "type": "synthetic_fixture_source", "historical_authority": false}
+  ],
+  "claims": [
+    {"id": "claim-leo-time-coarse", "revision_ref": "revision-leo-time-coarse", "statement": "The synthetic subject was present during August 1502.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "evidence_link_refs": ["evidence-leo-time-coarse"], "uncertainty_refs": ["uncertainty-leo-time-coarse"]},
+    {"id": "claim-leo-time-refined", "revision_ref": "revision-leo-time-refined", "statement": "The synthetic subject was present on 8 August 1502.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "evidence_link_refs": ["evidence-leo-time-refined"], "uncertainty_refs": []},
+    {"id": "claim-leo-place-coarse", "revision_ref": "revision-leo-place-coarse", "statement": "The synthetic subject was present somewhere in Romagna.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "evidence_link_refs": ["evidence-leo-place-coarse"], "uncertainty_refs": ["uncertainty-leo-place-coarse"]},
+    {"id": "claim-leo-place-refined", "revision_ref": "revision-leo-place-refined", "statement": "The synthetic subject was present in the Cesena locality envelope.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "evidence_link_refs": ["evidence-leo-place-refined"], "uncertainty_refs": []},
+    {"id": "claim-leo-route-unknown", "revision_ref": "revision-leo-route-unknown", "statement": "The synthetic inter-place route is unknown.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "evidence_link_refs": ["evidence-leo-route-unknown"], "uncertainty_refs": ["uncertainty-leo-route-unknown"]},
+    {"id": "claim-range-1900-coarse", "revision_ref": "revision-range-1900-coarse", "statement": "The synthetic species occupied the coarse 1900 range envelope.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "evidence_link_refs": ["evidence-range-1900-coarse"], "uncertainty_refs": ["uncertainty-range-1900-coarse"]},
+    {"id": "claim-range-1900-refined", "revision_ref": "revision-range-1900-refined", "statement": "The synthetic species occupied the narrower supported 1900 range envelope.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "evidence_link_refs": ["evidence-range-1900-refined"], "uncertainty_refs": []},
+    {"id": "claim-range-2000-state", "revision_ref": "revision-range-2000-state", "statement": "The synthetic species occupied a different range during 2000 through 2010.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "medium", "evidence_state": "supported", "evidence_link_refs": ["evidence-range-2000-state"], "uncertainty_refs": []},
+    {"id": "claim-stop-initial", "revision_ref": "revision-stop-initial", "statement": "The synthetic stop label was Cesena.", "claim_kind": "factual", "origin": "curator", "review_state": "superseded", "confidence": "low", "evidence_state": "supported", "evidence_link_refs": ["evidence-stop-initial"], "uncertainty_refs": []},
+    {"id": "claim-stop-corrected", "revision_ref": "revision-stop-corrected", "statement": "The synthetic stop label was Cesenatico, correcting the earlier assertion.", "claim_kind": "factual", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "evidence_link_refs": ["evidence-stop-corrected"], "uncertainty_refs": []},
+    {"id": "claim-region-primary", "revision_ref": "revision-region-primary", "statement": "Synthetic reconstruction A covers one possible 1502 region envelope.", "claim_kind": "inference", "origin": "curator", "review_state": "contested", "confidence": "medium", "evidence_state": "supported", "evidence_link_refs": ["evidence-region-primary"], "uncertainty_refs": []},
+    {"id": "claim-region-alternative", "revision_ref": "revision-region-alternative", "statement": "Synthetic reconstruction B is a competing 1502 region envelope.", "claim_kind": "inference", "origin": "curator", "review_state": "contested", "confidence": "medium", "evidence_state": "supported", "evidence_link_refs": ["evidence-region-alternative"], "uncertainty_refs": ["uncertainty-region-alternatives"]},
+    {"id": "claim-label-initial", "revision_ref": "revision-label-initial", "statement": "The synthetic classification label was accepted provisionally.", "claim_kind": "factual", "origin": "curator", "review_state": "superseded", "confidence": "low", "evidence_state": "supported", "evidence_link_refs": ["evidence-label-initial"], "uncertainty_refs": []},
+    {"id": "claim-label-withdrawn", "revision_ref": "revision-label-withdrawn", "statement": "The provisional synthetic classification was withdrawn from current use.", "claim_kind": "observation", "origin": "curator", "review_state": "reviewed", "confidence": "high", "evidence_state": "supported", "evidence_link_refs": ["evidence-label-withdrawn"], "uncertainty_refs": []}
+  ],
+  "evidence_links": [
+    {"id": "evidence-leo-time-coarse", "claim_ref": "claim-leo-time-coarse", "source_ref": "source-synthetic-travel-notebook", "locator": "TIME-COARSE", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-leo-time-refined", "claim_ref": "claim-leo-time-refined", "source_ref": "source-synthetic-travel-notebook", "locator": "TIME-REFINED", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-leo-place-coarse", "claim_ref": "claim-leo-place-coarse", "source_ref": "source-synthetic-travel-notebook", "locator": "PLACE-COARSE", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-leo-place-refined", "claim_ref": "claim-leo-place-refined", "source_ref": "source-synthetic-travel-notebook", "locator": "PLACE-REFINED", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-leo-route-unknown", "claim_ref": "claim-leo-route-unknown", "source_ref": "source-synthetic-travel-notebook", "locator": "ROUTE-UNKNOWN", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-range-1900-coarse", "claim_ref": "claim-range-1900-coarse", "source_ref": "source-synthetic-range-atlas", "locator": "RANGE-1900-COARSE", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-range-1900-refined", "claim_ref": "claim-range-1900-refined", "source_ref": "source-synthetic-range-atlas", "locator": "RANGE-1900-REFINED", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-range-2000-state", "claim_ref": "claim-range-2000-state", "source_ref": "source-synthetic-range-atlas", "locator": "RANGE-2000", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-stop-initial", "claim_ref": "claim-stop-initial", "source_ref": "source-synthetic-travel-notebook", "locator": "STOP-INITIAL", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-stop-corrected", "claim_ref": "claim-stop-corrected", "source_ref": "source-synthetic-travel-notebook", "locator": "STOP-CORRECTED", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-region-primary", "claim_ref": "claim-region-primary", "source_ref": "source-synthetic-range-atlas", "locator": "REGION-A", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-region-alternative", "claim_ref": "claim-region-alternative", "source_ref": "source-synthetic-range-atlas", "locator": "REGION-B", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-label-initial", "claim_ref": "claim-label-initial", "source_ref": "source-synthetic-travel-notebook", "locator": "LABEL-INITIAL", "relation_to_claim": "supports", "review_state": "reviewed"},
+    {"id": "evidence-label-withdrawn", "claim_ref": "claim-label-withdrawn", "source_ref": "source-synthetic-travel-notebook", "locator": "LABEL-WITHDRAWN", "relation_to_claim": "supports", "review_state": "reviewed"}
+  ],
+  "uncertainties": [
+    {"id": "uncertainty-leo-time-coarse", "revision_ref": "revision-leo-time-coarse", "dimension": "temporal_precision", "description": "Only the month is established in the first synthetic assertion.", "effect": "show_range"},
+    {"id": "uncertainty-leo-place-coarse", "revision_ref": "revision-leo-place-coarse", "dimension": "spatial_precision", "description": "Only a broad regional envelope is established initially.", "effect": "show_fuzzy_area"},
+    {"id": "uncertainty-leo-route-unknown", "revision_ref": "revision-leo-route-unknown", "dimension": "trajectory_gap", "description": "No path between documented presences is established.", "effect": "prohibit_geometry"},
+    {"id": "uncertainty-range-1900-coarse", "revision_ref": "revision-range-1900-coarse", "dimension": "spatial_precision", "description": "The first 1900 range is a coarse possibility envelope.", "effect": "show_fuzzy_area"},
+    {"id": "uncertainty-region-alternatives", "revision_ref": "revision-region-alternative", "dimension": "geometry_reconstruction", "description": "Two material 1502 region reconstructions remain unresolved.", "effect": "show_alternatives"}
+  ],
+  "series": [
+    {"id": "series-leo-time", "subject_ref": "person-synthetic-leonardo", "target_key": "presence-1502.temporal", "dimension": "temporal"},
+    {"id": "series-leo-place", "subject_ref": "person-synthetic-leonardo", "target_key": "presence-1502.spatial", "dimension": "spatial"},
+    {"id": "series-leo-route", "subject_ref": "person-synthetic-leonardo", "target_key": "route-1502.geometry", "dimension": "route"},
+    {"id": "series-range-1900", "subject_ref": "organism-synthetic-wolf", "target_key": "range-state-1900.geometry", "dimension": "spatial"},
+    {"id": "series-range-2000", "subject_ref": "organism-synthetic-wolf", "target_key": "range-state-2000.geometry", "dimension": "spatial"},
+    {"id": "series-stop-correction", "subject_ref": "person-synthetic-leonardo", "target_key": "stop-1502.label", "dimension": "literal"},
+    {"id": "series-region-alternatives", "subject_ref": "region-synthetic-1502", "target_key": "region-1502.geometry", "dimension": "spatial"},
+    {"id": "series-label-withdrawal", "subject_ref": "object-synthetic-work", "target_key": "classification.provisional", "dimension": "literal"}
+  ],
+  "revisions": [
+    {"id": "revision-leo-time-coarse", "series_ref": "series-leo-time", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T01:00:00Z", "origin": "curator", "source_value": {"raw": "August 1502", "precision": "month"}, "normalized_assertion": {"valid_time": {"start": "1502-08-01", "end": "1502-08-31", "precision": "month", "certainty": "approximate"}, "precision": "month", "value": {"kind": "temporal_extent", "start": "1502-08-01", "end": "1502-08-31"}}, "claim_ref": "claim-leo-time-coarse", "evidence_link_refs": ["evidence-leo-time-coarse"], "uncertainty_refs": ["uncertainty-leo-time-coarse"], "change_reason": "Establish the minimum supported month range."},
+    {"id": "revision-leo-place-coarse", "series_ref": "series-leo-place", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T02:00:00Z", "origin": "curator", "source_value": {"raw": "Romagna", "precision": "region"}, "normalized_assertion": {"valid_time": {"start": "1502-08-01", "end": "1502-08-31", "precision": "month", "certainty": "approximate"}, "precision": "region", "value": {"kind": "bbox", "bbox": [11.5, 43.5, 13.2, 45.0]}}, "claim_ref": "claim-leo-place-coarse", "evidence_link_refs": ["evidence-leo-place-coarse"], "uncertainty_refs": ["uncertainty-leo-place-coarse"], "change_reason": "Establish a broad synthetic regional envelope."},
+    {"id": "revision-leo-route-unknown", "series_ref": "series-leo-route", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T03:00:00Z", "origin": "curator", "source_value": {"raw": "route not documented", "precision": "route_unknown"}, "normalized_assertion": {"valid_time": {"start": "1502-08-01", "end": "1502-08-31", "precision": "month", "certainty": "approximate"}, "precision": "route_unknown", "value": {"kind": "route", "mode": "unknown_route", "geometry": null}}, "claim_ref": "claim-leo-route-unknown", "evidence_link_refs": ["evidence-leo-route-unknown"], "uncertainty_refs": ["uncertainty-leo-route-unknown"], "change_reason": "Preserve the movement gap without an invented line."},
+    {"id": "revision-range-1900-coarse", "series_ref": "series-range-1900", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T04:00:00Z", "origin": "curator", "source_value": {"raw": "broad 1900 range envelope", "precision": "region"}, "normalized_assertion": {"valid_time": {"start": "1900-01-01", "end": "1900-12-31", "precision": "year", "certainty": "approximate"}, "precision": "region", "value": {"kind": "bbox", "bbox": [4.0, 43.0, 20.0, 55.0]}}, "claim_ref": "claim-range-1900-coarse", "evidence_link_refs": ["evidence-range-1900-coarse"], "uncertainty_refs": ["uncertainty-range-1900-coarse"], "change_reason": "Start with a coarse range sufficient for continental context."},
+    {"id": "revision-range-2000-state", "series_ref": "series-range-2000", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T05:00:00Z", "origin": "curator", "source_value": {"raw": "2000-2010 range state", "precision": "region"}, "normalized_assertion": {"valid_time": {"start": "2000-01-01", "end": "2010-12-31", "precision": "decade", "certainty": "approximate"}, "precision": "region", "value": {"kind": "bbox", "bbox": [8.0, 45.0, 22.0, 56.0]}}, "claim_ref": "claim-range-2000-state", "evidence_link_refs": ["evidence-range-2000-state"], "uncertainty_refs": [], "change_reason": "Represent a later world state, not a knowledge refinement of 1900."},
+    {"id": "revision-stop-initial", "series_ref": "series-stop-correction", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T06:00:00Z", "origin": "curator", "source_value": {"raw": "Cesena", "precision": "categorical"}, "normalized_assertion": {"valid_time": {"start": "1502-08-08", "end": "1502-08-08", "precision": "day", "certainty": "exact"}, "precision": "categorical", "value": {"kind": "literal", "value": "Cesena"}}, "claim_ref": "claim-stop-initial", "evidence_link_refs": ["evidence-stop-initial"], "uncertainty_refs": [], "change_reason": "Record the initially accepted synthetic stop label."},
+    {"id": "revision-region-primary", "series_ref": "series-region-alternatives", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T07:00:00Z", "origin": "curator", "source_value": {"raw": "reconstruction A", "precision": "region"}, "normalized_assertion": {"valid_time": {"start": "1502-01-01", "end": "1502-12-31", "precision": "year", "certainty": "approximate"}, "precision": "region", "value": {"kind": "bbox", "bbox": [10.0, 44.0, 14.0, 48.0]}}, "claim_ref": "claim-region-primary", "evidence_link_refs": ["evidence-region-primary"], "uncertainty_refs": [], "change_reason": "Add the first synthetic scholarly reconstruction."},
+    {"id": "revision-label-initial", "series_ref": "series-label-withdrawal", "operation": "initial", "predecessor_refs": [], "recorded_at": "2026-08-11T08:00:00Z", "origin": "curator", "source_value": {"raw": "provisional-school-a", "precision": "categorical"}, "normalized_assertion": {"valid_time": {"start": "1500-01-01", "end": "1510-12-31", "precision": "decade", "certainty": "approximate"}, "precision": "categorical", "value": {"kind": "literal", "value": "provisional-school-a"}}, "claim_ref": "claim-label-initial", "evidence_link_refs": ["evidence-label-initial"], "uncertainty_refs": [], "change_reason": "Record a provisional synthetic classification."},
+    {"id": "revision-leo-time-refined", "series_ref": "series-leo-time", "operation": "refine", "predecessor_refs": ["revision-leo-time-coarse"], "recorded_at": "2026-08-11T09:00:00Z", "origin": "curator", "source_value": {"raw": "8 August 1502", "precision": "day"}, "normalized_assertion": {"valid_time": {"start": "1502-08-08", "end": "1502-08-08", "precision": "day", "certainty": "exact"}, "precision": "day", "value": {"kind": "temporal_extent", "start": "1502-08-08", "end": "1502-08-08"}}, "claim_ref": "claim-leo-time-refined", "evidence_link_refs": ["evidence-leo-time-refined"], "uncertainty_refs": [], "change_reason": "A stronger synthetic locator narrows the supported time."},
+    {"id": "revision-leo-place-refined", "series_ref": "series-leo-place", "operation": "refine", "predecessor_refs": ["revision-leo-place-coarse"], "recorded_at": "2026-08-11T10:00:00Z", "origin": "curator", "source_value": {"raw": "Cesena locality", "precision": "locality"}, "normalized_assertion": {"valid_time": {"start": "1502-08-01", "end": "1502-08-31", "precision": "month", "certainty": "approximate"}, "precision": "locality", "value": {"kind": "bbox", "bbox": [12.15, 44.05, 12.35, 44.25]}}, "claim_ref": "claim-leo-place-refined", "evidence_link_refs": ["evidence-leo-place-refined"], "uncertainty_refs": [], "change_reason": "A stronger synthetic locator narrows the place envelope independently of route."},
+    {"id": "revision-range-1900-refined", "series_ref": "series-range-1900", "operation": "refine", "predecessor_refs": ["revision-range-1900-coarse"], "recorded_at": "2026-08-11T11:00:00Z", "origin": "curator", "source_value": {"raw": "supported 1900 subregional range", "precision": "subregion"}, "normalized_assertion": {"valid_time": {"start": "1900-01-01", "end": "1900-12-31", "precision": "year", "certainty": "approximate"}, "precision": "subregion", "value": {"kind": "bbox", "bbox": [6.0, 44.0, 18.0, 53.0]}}, "claim_ref": "claim-range-1900-refined", "evidence_link_refs": ["evidence-range-1900-refined"], "uncertainty_refs": [], "change_reason": "Narrow the possible 1900 area without changing its valid time."},
+    {"id": "revision-stop-corrected", "series_ref": "series-stop-correction", "operation": "correct", "predecessor_refs": ["revision-stop-initial"], "recorded_at": "2026-08-11T12:00:00Z", "origin": "curator", "source_value": {"raw": "Cesenatico", "precision": "categorical"}, "normalized_assertion": {"valid_time": {"start": "1502-08-08", "end": "1502-08-08", "precision": "day", "certainty": "exact"}, "precision": "categorical", "value": {"kind": "literal", "value": "Cesenatico"}}, "claim_ref": "claim-stop-corrected", "evidence_link_refs": ["evidence-stop-corrected"], "uncertainty_refs": [], "change_reason": "New synthetic evidence contradicts rather than narrows the earlier label."},
+    {"id": "revision-region-alternative", "series_ref": "series-region-alternatives", "operation": "add_alternative", "predecessor_refs": ["revision-region-primary"], "recorded_at": "2026-08-11T13:00:00Z", "origin": "curator", "source_value": {"raw": "reconstruction B", "precision": "region"}, "normalized_assertion": {"valid_time": {"start": "1502-01-01", "end": "1502-12-31", "precision": "year", "certainty": "approximate"}, "precision": "region", "value": {"kind": "bbox", "bbox": [11.0, 43.5, 15.0, 47.0]}}, "claim_ref": "claim-region-alternative", "evidence_link_refs": ["evidence-region-alternative"], "uncertainty_refs": ["uncertainty-region-alternatives"], "change_reason": "Preserve a material competing reconstruction without selecting a winner."},
+    {"id": "revision-label-withdrawn", "series_ref": "series-label-withdrawal", "operation": "withdraw", "predecessor_refs": ["revision-label-initial"], "recorded_at": "2026-08-11T14:00:00Z", "origin": "curator", "source_value": {"raw": "withdraw provisional classification", "precision": "categorical"}, "normalized_assertion": null, "claim_ref": "claim-label-withdrawn", "evidence_link_refs": ["evidence-label-withdrawn"], "uncertainty_refs": [], "change_reason": "The provisional classification is removed from current use but retained in history."}
+  ],
+  "ledger_lock": {
+    "revision_ids": [
+      "revision-leo-time-coarse",
+      "revision-leo-place-coarse",
+      "revision-leo-route-unknown",
+      "revision-range-1900-coarse",
+      "revision-range-2000-state",
+      "revision-stop-initial",
+      "revision-region-primary",
+      "revision-label-initial",
+      "revision-leo-time-refined",
+      "revision-leo-place-refined",
+      "revision-range-1900-refined",
+      "revision-stop-corrected",
+      "revision-region-alternative",
+      "revision-label-withdrawn"
+    ],
+    "revisions_sha256": "b11cbbf47c8318b39dea1e131472feacb94bca09d48fb396cec28bd218355c8e"
+  },
+  "expected_current_frontier": {
+    "series-leo-time": ["revision-leo-time-refined"],
+    "series-leo-place": ["revision-leo-place-refined"],
+    "series-leo-route": ["revision-leo-route-unknown"],
+    "series-range-1900": ["revision-range-1900-refined"],
+    "series-range-2000": ["revision-range-2000-state"],
+    "series-stop-correction": ["revision-stop-corrected"],
+    "series-region-alternatives": ["revision-region-primary", "revision-region-alternative"],
+    "series-label-withdrawal": []
+  },
+  "replay_checkpoints": [
+    {
+      "recorded_through": "2026-08-11T08:00:00Z",
+      "expected_frontier": {
+        "series-leo-time": ["revision-leo-time-coarse"],
+        "series-leo-place": ["revision-leo-place-coarse"],
+        "series-leo-route": ["revision-leo-route-unknown"],
+        "series-range-1900": ["revision-range-1900-coarse"],
+        "series-range-2000": ["revision-range-2000-state"],
+        "series-stop-correction": ["revision-stop-initial"],
+        "series-region-alternatives": ["revision-region-primary"],
+        "series-label-withdrawal": ["revision-label-initial"]
+      }
+    },
+    {
+      "recorded_through": "2026-08-11T12:00:00Z",
+      "expected_frontier": {
+        "series-leo-time": ["revision-leo-time-refined"],
+        "series-leo-place": ["revision-leo-place-refined"],
+        "series-leo-route": ["revision-leo-route-unknown"],
+        "series-range-1900": ["revision-range-1900-refined"],
+        "series-range-2000": ["revision-range-2000-state"],
+        "series-stop-correction": ["revision-stop-corrected"],
+        "series-region-alternatives": ["revision-region-primary"],
+        "series-label-withdrawal": ["revision-label-initial"]
+      }
+    },
+    {
+      "recorded_through": "2026-08-11T14:00:00Z",
+      "expected_frontier": {
+        "series-leo-time": ["revision-leo-time-refined"],
+        "series-leo-place": ["revision-leo-place-refined"],
+        "series-leo-route": ["revision-leo-route-unknown"],
+        "series-range-1900": ["revision-range-1900-refined"],
+        "series-range-2000": ["revision-range-2000-state"],
+        "series-stop-correction": ["revision-stop-corrected"],
+        "series-region-alternatives": ["revision-region-primary", "revision-region-alternative"],
+        "series-label-withdrawal": []
+      }
+    }
+  ]
+}

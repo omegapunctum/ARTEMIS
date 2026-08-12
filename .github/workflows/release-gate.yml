@@ -49,6 +49,11 @@ jobs:
           python scripts/validate_leonardo_world_slice.py
           pytest -q tests/test_leonardo_world_slice.py
 
+      - name: Validate progressive refinement contract candidate
+        run: |
+          python scripts/validate_progressive_refinement_fixtures.py
+          pytest -q tests/test_progressive_refinement_fixtures.py
+
       - name: Validate Airtable pre-Gate-D shadow curation schema
         run: |
           python scripts/validate_airtable_curation_schema.py --require-empty

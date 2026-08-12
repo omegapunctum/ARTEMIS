@@ -14,12 +14,16 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-08-12_GATE_D_OPENING_v1.md` | #355 active Gate D source-aware Globe contract | synchronized non-public experience and one Gate D exit decision: `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` |
+| `2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md` | #377 foundation-only coarse-to-fine knowledge refinement decision | one frozen fixture revision, two independent READY reviews and `ACCEPT`, `NARROW` or `REJECT` |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D evidence and one explicit next decision before Gate E |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-There is currently no active foundation-maintenance or Airtable import decision. #371/#373 are deferred; they do not consume the one-product-gate WIP slot. Gate D is active under #355 and does not change public capability.
+Issue #377 is the active foundation-maintenance decision and does not consume the one-product-gate
+WIP slot. It may add a scoped refinement contract and executable synthetic fixtures, but it cannot
+change Gate D state, runtime, public capability, Airtable data or the frozen Leonardo package.
+#371/#373 remain deferred.
 
 #366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. #368 / PR #369 completed the six-table empty non-authoritative shadow schema plus executable contract/snapshot validation. Neither opened Gate D, imported the frozen Gate C package or changed the Architecture Atlas public export authority.
 

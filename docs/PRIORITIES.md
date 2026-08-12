@@ -1,4 +1,4 @@
-# ARTEMIS — PRIORITIES v6.4
+# ARTEMIS — PRIORITIES v6.5
 
 ## Статус
 
@@ -52,6 +52,11 @@ Until #331 is accepted, the slice may expose derived proximity/co-presence only.
 ## P2 — Source-aware Globe MVP
 
 The Globe is the primary interface-development surface for this cycle.
+
+Foundation dependency #377 is active before any Gate D behavior assumes editable precision or
+knowledge-history mutation. Gate D may continue to read and render the frozen Gate C package, but
+write/edit/refinement behavior must wait for an accepted append-only refinement contract. This
+does not reopen Gate C or change `project_state`.
 
 Required interaction:
 

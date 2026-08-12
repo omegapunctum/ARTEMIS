@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical foundation index.
-- Версия: 3.2.
+- Версия: 3.3.
 - Дата: 2026-08-12.
 - Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
@@ -61,6 +61,7 @@ North Star не является release promise. Backend code не являет
 |---|---|
 | `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` | Reviewed temporal/spatial/change/coverage/reconstruction semantics; immutable #329 review dependency until separately re-reviewed |
 | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` | Scoped #330 normalization, filtering and projection profile |
+| `docs/PROGRESSIVE_REFINEMENT_CONTRACT.md` | Draft #377 non-destructive coarse-to-fine revision semantics; `REVIEW_REQUIRED`, not accepted capability |
 | `docs/ENTITY_MODEL.md` | Knowledge/research/runtime/context entity types |
 | `docs/EPISTEMIC_CONTRACT.md` | Claim/Evidence/uncertainty/inference semantics |
 | `docs/CONTENT_GOVERNANCE.md` | Candidate/review/correction/publish trust |
@@ -95,7 +96,10 @@ Historical:
 - `docs/work/2026-07-26_CONCEPT_LOCK_V2.md` — `SUPERSEDED`, retained for rationale/history.
 - Gate A architecture module package — completed Architecture Layer fixtures, not active v3 validation.
 
-There is currently no active foundation-maintenance decision. Working lifecycle authority remains only `docs/work/README.md`.
+The active foundation-maintenance decision is issue `#377` /
+`docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md`. It remains `REVIEW_REQUIRED`, does not
+consume the Gate D product WIP slot and cannot authorize runtime/data migration or capability
+change. Working lifecycle authority remains `docs/work/README.md`.
 
 ## 5. Reading order
 
@@ -135,6 +139,11 @@ Primary: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
 The active v1.0 file is part of the immutable #329 READY review scope. Foundation v3.1 does not edit or reinterpret its executable semantics through a hidden documentation change. A future contract revision requires its own semantic change-control and independent review evidence.
 
 For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is `UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core object identity or runtime schemas.
+
+For append-only coarse-to-fine Claim/reconstruction lineage, valid-time versus record-time
+separation and deterministic current-frontier behavior, the scoped candidate owner is
+`PROGRESSIVE_REFINEMENT_CONTRACT.md`. Until issue #377 completes its independent review path, the
+file and fixtures remain `REVIEW_REQUIRED` and cannot authorize runtime/storage migration.
 
 Examples:
 
@@ -231,13 +240,14 @@ Active product gate:
 Foundation status:
 
 4. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
+5. Issue `#377`: Progressive Refinement Contract v1 — **IN PROGRESS / REVIEW_REQUIRED**; no product-gate or capability change.
 
 Deferred/gated:
 
-5. Issue `#331`: deferred; required before documented Relation predicates enter the real corpus/runtime.
-6. Issue `#333`: superseded by #355 Gate D. Issue `#334`: deferred until Gate E.
-7. Issues `#371` / `#373`: deferred; no Airtable historical import or review is active, and `historical_rows_authorized=false` remains fail-closed.
-8. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
+6. Issue `#331`: deferred; required before documented Relation predicates enter the real corpus/runtime.
+7. Issue `#333`: superseded by #355 Gate D. Issue `#334`: deferred until Gate E.
+8. Issues `#371` / `#373`: deferred; no Airtable historical import or review is active, and `historical_rows_authorized=false` remains fail-closed.
+9. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
 
 Frozen:
 
