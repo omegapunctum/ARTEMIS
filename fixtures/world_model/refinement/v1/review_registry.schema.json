@@ -13,7 +13,7 @@
     "status": {"enum": ["REVIEW_REQUIRED", "REVIEWS_COMPLETE", "READY"]},
     "issue": {"const": 377},
     "pull_request": {"const": 378},
-    "current_round": {"const": 9},
+    "current_round": {"const": 10},
     "required_review_count": {"const": 2},
     "required_tracks": {"const": ["semantic-model", "validator-integrity"]},
     "required_independence_method": {"const": "separate_agent_task_read_only"},

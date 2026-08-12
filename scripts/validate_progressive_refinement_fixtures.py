@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import stat
 import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -412,8 +414,22 @@ def require_regular_repo_file(path: Path, label: str) -> None:
 
 
 def git_output(*args: str) -> bytes:
+    git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    git_env["GIT_CONFIG_NOSYSTEM"] = "1"
+    git_env["GIT_CONFIG_GLOBAL"] = os.devnull
     result = subprocess.run(
-        ["git", *args], cwd=ROOT, capture_output=True, check=False
+        [
+            "git", "--no-replace-objects",
+            "-c", "core.fsmonitor=false",
+            "-c", "core.checkStat=default",
+            "-c", "core.trustctime=true",
+            "-c", "core.fileMode=true",
+            *args,
+        ],
+        cwd=ROOT,
+        env=git_env,
+        capture_output=True,
+        check=False,
     )
     if result.returncode != 0:
         fail(f"git {' '.join(args)} failed")
@@ -434,13 +450,51 @@ def validate_index_visibility(index_entries: bytes) -> None:
         fail("READY validation rejects assume-unchanged, skip-worktree or nonstandard index entries")
 
 
+def validate_tracked_worktree(tree_entries: bytes) -> None:
+    root_bytes = os.fsencode(ROOT.resolve())
+    for entry in tree_entries.split(b"\0"):
+        if not entry:
+            continue
+        try:
+            header, raw_path = entry.split(b"\t", 1)
+            mode, object_type, expected_oid = header.split(b" ", 2)
+        except ValueError:
+            fail("READY tracked-tree enumeration is malformed")
+        if object_type != b"blob" or mode not in {b"100644", b"100755", b"120000"}:
+            fail("READY checkout contains an unsupported tracked object")
+        worktree_path = os.path.join(root_bytes, raw_path)
+        try:
+            metadata = os.lstat(worktree_path)
+            if mode == b"120000":
+                if not stat.S_ISLNK(metadata.st_mode):
+                    fail("READY tracked symlink mode differs from HEAD")
+                payload = os.readlink(worktree_path)
+            else:
+                if not stat.S_ISREG(metadata.st_mode):
+                    fail("READY tracked file is missing or not regular")
+                if bool(metadata.st_mode & 0o111) != (mode == b"100755"):
+                    fail("READY tracked executable mode differs from HEAD")
+                with open(worktree_path, "rb") as handle:
+                    payload = handle.read()
+        except OSError:
+            fail("READY tracked worktree object cannot be read")
+        algorithm = hashlib.sha256 if len(expected_oid) == 64 else hashlib.sha1
+        actual_oid = algorithm(b"blob " + str(len(payload)).encode() + b"\0" + payload).hexdigest().encode()
+        if actual_oid != expected_oid:
+            fail("READY tracked worktree bytes differ from HEAD")
+
+
 def validate_clean_checkout() -> None:
+    top_level = Path(git_output("rev-parse", "--show-toplevel").decode().strip()).resolve()
+    if top_level != ROOT.resolve():
+        fail("READY Git worktree must resolve to the repository root")
     validate_index_visibility(git_output("ls-files", "-v", "-z"))
     git_output("update-index", "--really-refresh")
     validate_clean_state(
         git_output("status", "--porcelain=v1", "--untracked-files=all").decode(),
         git_output("ls-files", "--others").decode(),
     )
+    validate_tracked_worktree(git_output("ls-tree", "-rz", "--full-tree", "HEAD"))
 
 
 def validate_git_blob_entry(raw_path: str, entry: str) -> None:

@@ -3,7 +3,7 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
-  "review_round": 9,
+  "review_round": 10,
   "required_tracks": [
     "semantic-model",
     "validator-integrity"
@@ -11,15 +11,15 @@
   "independence_method": "separate_agent_task_read_only",
   "review_slots": [
     {
-      "reviewer_id": "codex-semantic-model-reviewer-r9",
-      "reviewer_instance_id": "semantic-r9-index-visibility-remediation-20260812",
-      "review_task_path": "/root/refinement_semantic_review_r9",
+      "reviewer_id": "codex-semantic-model-reviewer-r10",
+      "reviewer_instance_id": "semantic-r10-git-context-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r10",
       "track": "semantic-model"
     },
     {
-      "reviewer_id": "codex-validator-integrity-reviewer-r9",
-      "reviewer_instance_id": "validator-r9-index-visibility-remediation-20260812",
-      "review_task_path": "/root/refinement_validator_review_r9",
+      "reviewer_id": "codex-validator-integrity-reviewer-r10",
+      "reviewer_instance_id": "validator-r10-git-context-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r10",
       "track": "validator-integrity"
     }
   ],

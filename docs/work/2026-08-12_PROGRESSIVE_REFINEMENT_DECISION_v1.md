@@ -152,6 +152,17 @@ Round 9 rejects every nonstandard tracked-index visibility marker using NUL-safe
 forces `git update-index --really-refresh` before the ordinary dirty-state checks. Round-8 artifacts
 remain immutable audit history and do not count toward the new reviews.
 
+Round 9 froze commit `d3cae310ba63a547063ea856cf5153dc50f40edc` with reviewed-content
+digest `b81fb1072ef1ce727525f3affe322116945244c4127bb2a12c11821bf8e6b239`.
+The semantic-model track returned `READY`; validator-integrity returned `CHANGES_REQUIRED` because
+caller-controlled `GIT_WORK_TREE`, weakened stat-cache configuration or `core.fileMode=false` could
+still conceal unreviewed tracked bytes/modes.
+
+Round 10 strips repository-changing Git environment, ignores global/system configuration, forces
+trustworthy core settings, verifies the discovered top-level and independently hashes and `lstat`s
+every tracked worktree object against HEAD. Round-9 artifacts remain immutable audit history and do
+not count toward the new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

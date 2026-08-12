@@ -31,6 +31,7 @@ from scripts.validate_progressive_refinement_fixtures import (
     validate_package,
     validate_ready_descendant_paths,
     validate_review_artifact,
+    validate_tracked_worktree,
     validate_time_extent,
     reviewed_content_sha256,
 )
@@ -812,6 +813,41 @@ def test_ready_checkout_rejects_hidden_index_visibility_flags(index_entry: bytes
     validate_index_visibility(b"H README.md\0H path with newline\ninside.md\0")
     with pytest.raises(RefinementValidationError, match="nonstandard index entries"):
         validate_index_visibility(index_entry)
+
+
+def test_ready_git_context_ignores_caller_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("GIT_WORK_TREE", str(tmp_path))
+    discovered = refinement_validator.git_output("rev-parse", "--show-toplevel").decode().strip()
+    assert Path(discovered).resolve() == ROOT.resolve()
+
+
+def test_ready_checkout_hashes_tracked_bytes_against_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    regular = tmp_path / "regular.txt"
+    regular.write_bytes(b"reviewed\n")
+    monkeypatch.setattr(refinement_validator, "ROOT", tmp_path)
+    oid = hashlib.sha1(b"blob 9\0reviewed\n").hexdigest().encode()
+    entry = b"100644 blob " + oid + b"\tregular.txt\0"
+    validate_tracked_worktree(entry)
+    regular.write_bytes(b"tampered\n")
+    with pytest.raises(RefinementValidationError, match="bytes differ from HEAD"):
+        validate_tracked_worktree(entry)
+
+
+def test_ready_checkout_rejects_tracked_mode_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    executable = tmp_path / "tool.sh"
+    executable.write_bytes(b"exit 0\n")
+    executable.chmod(0o644)
+    monkeypatch.setattr(refinement_validator, "ROOT", tmp_path)
+    oid = hashlib.sha1(b"blob 7\0exit 0\n").hexdigest().encode()
+    entry = b"100755 blob " + oid + b"\ttool.sh\0"
+    with pytest.raises(RefinementValidationError, match="executable mode differs from HEAD"):
+        validate_tracked_worktree(entry)
 
 
 def test_ready_metadata_requires_regular_git_blob_mode() -> None:
