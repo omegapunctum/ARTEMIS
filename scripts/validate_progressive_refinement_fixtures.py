@@ -4,6 +4,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
+import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,8 +20,12 @@ FIXTURE_DIR = ROOT / "fixtures" / "world_model" / "refinement" / "v1"
 PACKAGE_PATH = FIXTURE_DIR / "package.json"
 SCHEMA_PATH = FIXTURE_DIR / "schema.json"
 REVIEW_REQUEST_PATH = FIXTURE_DIR / "review_request.json"
+REVIEW_REQUEST_SCHEMA_PATH = FIXTURE_DIR / "review_request.schema.json"
 REVIEW_REGISTRY_PATH = FIXTURE_DIR / "review_registry.json"
+REVIEW_REGISTRY_SCHEMA_PATH = FIXTURE_DIR / "review_registry.schema.json"
 REVIEW_ARTIFACT_SCHEMA_PATH = FIXTURE_DIR / "review_artifact.schema.json"
+ACCEPTANCE_DECISION_PATH = FIXTURE_DIR / "acceptance_decision.json"
+ACCEPTANCE_DECISION_SCHEMA_PATH = FIXTURE_DIR / "acceptance_decision.schema.json"
 
 EXPECTED_SERIES = {
     "series-leo-time",
@@ -47,6 +53,17 @@ EXPECTED_REVISIONS = {
     "revision-region-alternative",
     "revision-label-initial",
     "revision-label-withdrawn",
+}
+
+EXPECTED_SOURCES = {"source-synthetic-travel-notebook", "source-synthetic-range-atlas"}
+EXPECTED_CLAIMS = {f"claim-{value.removeprefix('revision-')}" for value in EXPECTED_REVISIONS}
+EXPECTED_EVIDENCE_LINKS = {f"evidence-{value.removeprefix('revision-')}" for value in EXPECTED_REVISIONS}
+EXPECTED_UNCERTAINTIES = {
+    "uncertainty-leo-time-coarse",
+    "uncertainty-leo-place-coarse",
+    "uncertainty-leo-route-unknown",
+    "uncertainty-range-1900-coarse",
+    "uncertainty-region-alternatives",
 }
 
 PRECISION_FAMILIES = {
@@ -126,19 +143,65 @@ def validate_schema(package: dict[str, Any], schema: dict[str, Any]) -> None:
 
 
 def validate_time_extent(extent: dict[str, Any], label: str) -> tuple[datetime | None, datetime | None]:
+    if extent["calendar"] not in {"proleptic_gregorian", "source_native_unresolved"}:
+        fail(f"{label}.calendar is unsupported")
     precision = extent["precision"]
     if precision not in PRECISION_FAMILIES["temporal"]:
         fail(f"{label}.precision must be temporal")
     start = parse_day(extent["start"], f"{label}.start")
     end = parse_day(extent["end"], f"{label}.end")
-    if (start is None) != (end is None):
-        fail(f"{label} must have both bounds or neither")
     if start is not None and end is not None and start > end:
         fail(f"{label} start must not follow end")
-    if extent["certainty"] == "unknown" and (start is not None or end is not None):
-        fail(f"{label} unknown certainty cannot carry bounds")
-    if extent["certainty"] != "unknown" and (start is None or end is None):
-        fail(f"{label} non-unknown certainty requires bounds")
+    kind = extent["kind"]
+    expected_presence = {
+        "instant": (True, True),
+        "closed_interval": (True, True),
+        "open_start_interval": (False, True),
+        "open_end_interval": (True, False),
+        "unknown": (False, False),
+    }[kind]
+    if (start is not None, end is not None) != expected_presence:
+        fail(f"{label} bounds do not match kind {kind}")
+    if kind == "instant" and start != end:
+        fail(f"{label} instant bounds must be equal")
+    if kind == "closed_interval" and start == end:
+        fail(f"{label} closed interval must span more than one instant")
+    for side, bound in (("start", start), ("end", end)):
+        inclusive = extent[f"{side}_inclusive"]
+        qualifier = extent[f"{side}_qualifier"]
+        if bound is None and (inclusive is not None or qualifier != "unknown"):
+            fail(f"{label}.{side} open bound must use inclusive=null and qualifier=unknown")
+        if bound is not None and (not isinstance(inclusive, bool) or qualifier == "unknown"):
+            fail(f"{label}.{side} finite bound requires inclusivity and a non-unknown qualifier")
+    if extent["certainty"] == "unknown" and kind != "unknown":
+        fail(f"{label} unknown certainty requires unknown kind")
+    if kind == "unknown" and extent["certainty"] != "unknown":
+        fail(f"{label} unknown kind requires unknown certainty")
+    if extent["normalization_state"] == "unresolved" and extent["calendar"] != "source_native_unresolved":
+        fail(f"{label} unresolved normalization must retain source-native calendar state")
+    if not extent["basis_claim_refs"]:
+        fail(f"{label} requires at least one basis Claim")
+    alternative_ids: set[str] = set()
+    for index, alternative in enumerate(extent["alternatives"]):
+        alternative_label = f"{label}.alternatives[{index}]"
+        if alternative["id"] in alternative_ids:
+            fail(f"{label} alternative ids must be unique")
+        alternative_ids.add(alternative["id"])
+        validate_time_extent({
+            "calendar": extent["calendar"],
+            "kind": alternative["kind"],
+            "start": alternative["start"],
+            "end": alternative["end"],
+            "start_inclusive": alternative["start_inclusive"],
+            "end_inclusive": alternative["end_inclusive"],
+            "start_qualifier": alternative["start_qualifier"],
+            "end_qualifier": alternative["end_qualifier"],
+            "precision": alternative["precision"],
+            "certainty": "unknown" if alternative["kind"] == "unknown" else "disputed",
+            "normalization_state": extent["normalization_state"],
+            "basis_claim_refs": alternative["basis_claim_refs"],
+            "alternatives": [],
+        }, alternative_label)
     return start, end
 
 
@@ -167,7 +230,36 @@ def canonical_sha256(value: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def reviewed_content_sha256(request: dict[str, Any]) -> str:
+PACKAGE_LOCK_COLLECTIONS = ("sources", "claims", "evidence_links", "uncertainties", "series", "revisions")
+
+
+def package_semantic_payload(package: dict[str, Any]) -> dict[str, Any]:
+    return {key: package[key] for key in PACKAGE_LOCK_COLLECTIONS}
+
+
+def normalized_review_bytes(raw_path: str, content: bytes) -> bytes:
+    if raw_path == "fixtures/world_model/refinement/v1/package.json":
+        package = json.loads(content.decode("utf-8"), object_pairs_hook=_reject_duplicate_pairs)
+        package["status"] = "REVIEW_REQUIRED"
+        return json.dumps(package, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    if raw_path == "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md":
+        text = content.decode("utf-8")
+        text = re.sub(r"^- Version: .+$", "- Version: 1.0-review-candidate.", text, count=1, flags=re.MULTILINE)
+        text = re.sub(
+            r"^- Status: .+$",
+            "- Status: `REVIEW_REQUIRED` under issue `#377`.",
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        return text.encode("utf-8")
+    return content
+
+
+def reviewed_content_sha256(
+    request: dict[str, Any],
+    content_loader: Any | None = None,
+) -> str:
     digest = hashlib.sha256()
     scope = request.get("review_scope")
     if not isinstance(scope, list) or not scope or len(scope) != len(set(scope)):
@@ -181,34 +273,92 @@ def reviewed_content_sha256(request: dict[str, Any]) -> str:
             fail("review scope contains an unsafe path")
         if raw_path in forbidden or raw_path.endswith("review_artifact.schema.json"):
             fail("review metadata cannot be part of the reviewed content digest")
-        path = ROOT / raw_path
-        if not path.is_file() or path.is_symlink():
-            fail(f"review scope path is not a regular file: {raw_path}")
+        if content_loader is None:
+            path = ROOT / raw_path
+            if not path.is_file() or path.is_symlink():
+                fail(f"review scope path is not a regular file: {raw_path}")
+            content = path.read_bytes()
+        else:
+            content = content_loader(raw_path)
         digest.update(raw_path.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(path.read_bytes())
+        digest.update(normalized_review_bytes(raw_path, content))
         digest.update(b"\0")
     return digest.hexdigest()
+
+
+def safe_metadata_path(raw_path: str, directory: Path, label: str) -> Path:
+    path_value = Path(raw_path)
+    if path_value.is_absolute() or ".." in path_value.parts:
+        fail(f"{label} contains an unsafe path")
+    path = ROOT / path_value
+    directory_resolved = directory.resolve()
+    if not path.is_file() or path.is_symlink() or not path.resolve().is_relative_to(directory_resolved):
+        fail(f"{label} is not a regular in-scope file: {raw_path}")
+    return path
+
+
+def git_output(*args: str) -> bytes:
+    result = subprocess.run(
+        ["git", *args], cwd=ROOT, capture_output=True, check=False
+    )
+    if result.returncode != 0:
+        fail(f"git {' '.join(args)} failed")
+    return result.stdout
+
+
+def validate_review_artifact(
+    artifact: dict[str, Any],
+    artifact_schema: dict[str, Any],
+    label: str,
+) -> None:
+    validate_schema(artifact, artifact_schema)
+    open_critical = sum(
+        item["severity"] == "critical" and item["status"] == "open"
+        for item in artifact["findings"]
+    )
+    open_material = sum(
+        item["severity"] == "material" and item["status"] == "open"
+        for item in artifact["findings"]
+    )
+    if artifact["open_critical"] != open_critical or artifact["open_material"] != open_material:
+        fail(f"{label} finding counters do not match findings[]")
+    if artifact["decision"] == "READY" and (open_critical or open_material):
+        fail(f"{label} READY decision retains open critical/material findings")
+
+
+def validate_review_entry(
+    entry: dict[str, Any],
+    artifact_schema: dict[str, Any],
+    label: str,
+) -> dict[str, Any]:
+    artifact_path = safe_metadata_path(
+        entry["artifact_ref"], FIXTURE_DIR / "reviews", f"{label}.artifact_ref"
+    )
+    artifact_bytes = artifact_path.read_bytes()
+    if hashlib.sha256(artifact_bytes).hexdigest() != entry["artifact_sha256"]:
+        fail(f"{label} artifact digest drift")
+    artifact = read_json(artifact_path)
+    validate_review_artifact(artifact, artifact_schema, label)
+    for field in (
+        "review_round", "review_id", "reviewer_id", "reviewer_instance_id", "review_task_path",
+        "track", "independence_method", "frozen_commit", "frozen_tree",
+        "reviewed_content_sha256", "decision",
+    ):
+        if entry[field] != artifact[field]:
+            fail(f"{label} registry/artifact mismatch for {field}")
+    return artifact
 
 
 def validate_review_envelope() -> dict[str, Any]:
     request = read_json(REVIEW_REQUEST_PATH)
     registry = read_json(REVIEW_REGISTRY_PATH)
     artifact_schema = read_json(REVIEW_ARTIFACT_SCHEMA_PATH)
-    try:
-        Draft202012Validator.check_schema(artifact_schema)
-    except SchemaError as exc:
-        fail(f"review artifact schema is invalid: {exc.message}")
-
-    if request.get("schema_version") != "1.0.0" or request.get("status") != "REVIEW_REQUIRED":
-        fail("review request must remain v1 REVIEW_REQUIRED metadata")
-    if (request.get("issue"), request.get("pull_request")) != (377, 378):
-        fail("review request must bind issue #377 and PR #378")
-    tracks = request.get("required_tracks")
-    if tracks != ["semantic-model", "validator-integrity"]:
-        fail("review request must require semantic-model and validator-integrity tracks")
-    if request.get("independence_method") != "separate_agent_task_read_only":
-        fail("review request must require separate read-only agent tasks")
+    validate_schema(request, read_json(REVIEW_REQUEST_SCHEMA_PATH))
+    validate_schema(registry, read_json(REVIEW_REGISTRY_SCHEMA_PATH))
+    decision = read_json(ACCEPTANCE_DECISION_PATH)
+    validate_schema(decision, read_json(ACCEPTANCE_DECISION_SCHEMA_PATH))
+    tracks = request["required_tracks"]
 
     digest = reviewed_content_sha256(request)
     if registry.get("reviewed_content_sha256") != digest:
@@ -217,44 +367,69 @@ def validate_review_envelope() -> dict[str, Any]:
         fail("review registry must require exactly the two declared tracks")
     if registry.get("required_independence_method") != request["independence_method"]:
         fail("review registry independence method drift")
+    if decision["reviewed_content_sha256"] != digest:
+        fail("acceptance decision content digest drift")
+
+    prior_artifacts = [
+        validate_review_entry(entry, artifact_schema, f"prior_reviews[{index}]")
+        for index, entry in enumerate(registry["prior_reviews"])
+    ]
+    if {artifact["track"] for artifact in prior_artifacts} != set(tracks):
+        fail("prior review history must preserve both independent tracks")
 
     status = registry.get("status")
     reviews = registry.get("reviews")
-    if not isinstance(reviews, list):
-        fail("review registry reviews must be a list")
     if status == "REVIEW_REQUIRED":
-        if registry.get("frozen_commit") is not None or reviews:
+        if registry.get("frozen_commit") is not None or registry.get("frozen_tree") is not None or reviews:
             fail("REVIEW_REQUIRED registry cannot claim a frozen review or completed reviews")
-        return {"review_status": status, "reviewed_content_sha256": digest, "review_count": 0}
+        if decision["status"] != "PENDING" or decision["decision"] is not None:
+            fail("REVIEW_REQUIRED registry requires a pending acceptance decision")
+        if decision["frozen_commit"] is not None or decision["frozen_tree"] is not None:
+            fail("pending acceptance decision cannot claim a frozen revision")
+        return {
+            "review_status": status,
+            "reviewed_content_sha256": digest,
+            "review_count": 0,
+            "acceptance_decision": None,
+        }
     if status not in {"REVIEWS_COMPLETE", "READY"}:
         fail("unsupported review registry status")
     frozen_commit = registry.get("frozen_commit")
+    frozen_tree = registry.get("frozen_tree")
     if not isinstance(frozen_commit, str) or len(frozen_commit) != 40 or any(c not in "0123456789abcdef" for c in frozen_commit):
         fail("completed reviews require one exact frozen commit")
+    if not isinstance(frozen_tree, str) or len(frozen_tree) != 40 or any(c not in "0123456789abcdef" for c in frozen_tree):
+        fail("completed reviews require one exact frozen tree")
     if len(reviews) != 2:
         fail("completed review registry requires exactly two reviews")
+
+    git_output("cat-file", "-e", f"{frozen_commit}^{{commit}}")
+    actual_tree = git_output("show", "-s", "--format=%T", frozen_commit).decode().strip()
+    if actual_tree != frozen_tree:
+        fail("frozen tree does not match frozen commit")
+    git_output("merge-base", "--is-ancestor", frozen_commit, "HEAD")
+
+    def frozen_loader(raw_path: str) -> bytes:
+        return git_output("show", f"{frozen_commit}:{raw_path}")
+
+    if reviewed_content_sha256(request, frozen_loader) != digest:
+        fail("frozen commit does not contain the reviewed content digest")
 
     seen_tracks: set[str] = set()
     reviewer_ids: set[str] = set()
     reviewer_instances: set[str] = set()
-    for review in reviews:
-        artifact_ref = review.get("artifact_ref")
-        if not isinstance(artifact_ref, str) or not artifact_ref.startswith("fixtures/world_model/refinement/v1/reviews/"):
-            fail("review artifact_ref is outside the refinement review directory")
-        artifact_path = ROOT / artifact_ref
-        if not artifact_path.is_file() or artifact_path.is_symlink():
-            fail(f"review artifact is missing: {artifact_ref}")
-        artifact = read_json(artifact_path)
-        validate_schema(artifact, artifact_schema)
-        for field in ("review_id", "reviewer_id", "reviewer_instance_id", "track", "independence_method", "frozen_commit", "reviewed_content_sha256", "decision"):
-            if review.get(field) != artifact.get(field):
-                fail(f"review registry/artifact mismatch for {field}")
-        if artifact["frozen_commit"] != frozen_commit or artifact["reviewed_content_sha256"] != digest:
+    slots = {slot["track"]: slot for slot in request["review_slots"]}
+    if set(slots) != set(tracks) or len({slot["reviewer_instance_id"] for slot in slots.values()}) != 2:
+        fail("review request must pre-issue two distinct track slots")
+    for index, review in enumerate(reviews):
+        artifact = validate_review_entry(review, artifact_schema, f"reviews[{index}]")
+        if artifact["review_round"] != request["review_round"]:
+            fail("current review artifact uses the wrong review round")
+        if artifact["frozen_commit"] != frozen_commit or artifact["frozen_tree"] != frozen_tree or artifact["reviewed_content_sha256"] != digest:
             fail("both reviews must bind the same frozen commit and reviewed content digest")
-        if artifact["independence_method"] != "separate_agent_task_read_only":
-            fail("review artifact is not independently produced")
-        if artifact["decision"] == "READY" and (artifact["open_critical"] or artifact["open_material"]):
-            fail("READY review cannot retain open critical/material findings")
+        slot = slots.get(artifact["track"])
+        if slot is None or any(artifact[field] != slot[field] for field in ("reviewer_id", "reviewer_instance_id", "review_task_path", "track")):
+            fail("review artifact does not match its pre-issued independent review slot")
         seen_tracks.add(artifact["track"])
         reviewer_ids.add(artifact["reviewer_id"])
         reviewer_instances.add(artifact["reviewer_instance_id"])
@@ -262,7 +437,19 @@ def validate_review_envelope() -> dict[str, Any]:
         fail("reviews must use distinct reviewers/instances and cover both required tracks")
     if status == "READY" and any(review["decision"] != "READY" for review in reviews):
         fail("READY registry requires two READY decisions")
-    return {"review_status": status, "reviewed_content_sha256": digest, "review_count": 2}
+    if status == "READY":
+        if decision["status"] != "DECIDED" or decision["decision"] != "ACCEPT":
+            fail("READY registry requires an explicit ACCEPT decision")
+        if (decision["frozen_commit"], decision["frozen_tree"]) != (frozen_commit, frozen_tree):
+            fail("acceptance decision does not bind the frozen revision")
+    elif decision["status"] == "DECIDED" and decision["decision"] == "ACCEPT":
+        fail("ACCEPT decision requires READY registry status")
+    return {
+        "review_status": status,
+        "reviewed_content_sha256": digest,
+        "review_count": 2,
+        "acceptance_decision": decision["decision"],
+    }
 
 
 def calculate_frontier(
@@ -422,6 +609,31 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
         fail("fixture series coverage does not match the closed v1 scenario set")
     if set(revisions) != EXPECTED_REVISIONS:
         fail("fixture revision coverage does not match the closed v1 scenario set")
+    if set(sources) != EXPECTED_SOURCES:
+        fail("fixture Source coverage does not match the closed v1 scenario set")
+    if set(claims) != EXPECTED_CLAIMS:
+        fail("fixture Claim coverage does not match the closed v1 scenario set")
+    if set(evidence_links) != EXPECTED_EVIDENCE_LINKS:
+        fail("fixture EvidenceLink coverage does not match the closed v1 scenario set")
+    if set(uncertainties) != EXPECTED_UNCERTAINTIES:
+        fail("fixture Uncertainty coverage does not match the closed v1 scenario set")
+
+    target_series: dict[tuple[str, str], str] = {}
+    dimension_suffixes = {
+        "temporal": (".temporal",),
+        "spatial": (".spatial", ".geometry"),
+        "route": (".geometry",),
+        "literal": (".label", ".provisional"),
+    }
+    for series_item in series.values():
+        atomic_target = (series_item["subject_ref"], series_item["target_key"])
+        if atomic_target in target_series:
+            fail(f"atomic target has more than one revision series: {atomic_target}")
+        target_series[atomic_target] = series_item["id"]
+        if not series_item["target_key"].endswith(dimension_suffixes[series_item["dimension"]]):
+            fail(f"{series_item['id']} target_key is inconsistent with its dimension")
+        if series_item["dimension"] == "route" and not series_item["target_key"].startswith("route-"):
+            fail(f"{series_item['id']} route target_key must identify a route target")
 
     lock = package["ledger_lock"]
     revision_order = [item["id"] for item in package["revisions"]]
@@ -430,6 +642,16 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
     actual_digest = canonical_sha256(package["revisions"])
     if lock["revisions_sha256"] != actual_digest:
         fail("ledger_lock revisions_sha256 does not match immutable revision payload")
+
+    package_lock = package["package_lock"]
+    expected_collection_ids = {
+        key: [item["id"] for item in package[key]] for key in PACKAGE_LOCK_COLLECTIONS
+    }
+    if package_lock["collection_ids"] != expected_collection_ids:
+        fail("package_lock collection_ids must preserve every semantic collection and order")
+    semantic_digest = canonical_sha256(package_semantic_payload(package))
+    if package_lock["semantic_sha256"] != semantic_digest:
+        fail("package_lock semantic_sha256 does not match the complete semantic payload")
 
     created_at = parse_utc(package["created_at"], "created_at")
     computed = calculate_frontier(package["revisions"], set(series))
@@ -461,11 +683,51 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
     if set(claim_by_revision) != set(revisions):
         fail("every revision must have exactly one atomic Claim")
 
+    for revision in revisions.values():
+        assertion = revision["normalized_assertion"]
+        if assertion is None:
+            continue
+        valid_time = assertion["valid_time"]
+        if revision["claim_ref"] not in valid_time["basis_claim_refs"]:
+            fail(f"{revision['id']} valid_time must bind its atomic Claim")
+        for basis_ref in valid_time["basis_claim_refs"]:
+            if basis_ref not in claims:
+                fail(f"{revision['id']} valid_time has unknown basis Claim")
+        for alternative in valid_time["alternatives"]:
+            if any(basis_ref not in claims for basis_ref in alternative["basis_claim_refs"]):
+                fail(f"{revision['id']} temporal alternative has unknown basis Claim")
+
     for evidence in evidence_links.values():
         if evidence["claim_ref"] not in claims:
             fail(f"{evidence['id']} references unknown Claim")
         if evidence["source_ref"] not in sources:
             fail(f"{evidence['id']} references unknown Source")
+
+    source_texts: dict[str, str] = {}
+    for source in sources.values():
+        artifact_ref = source["artifact_ref"]
+        if artifact_ref.startswith("/") or ".." in Path(artifact_ref).parts:
+            fail(f"{source['id']} has unsafe source artifact path")
+        artifact_path = ROOT / artifact_ref
+        expected_parent = (FIXTURE_DIR / "sources").resolve()
+        if not artifact_path.is_file() or artifact_path.is_symlink() or not artifact_path.resolve().is_relative_to(expected_parent):
+            fail(f"{source['id']} source artifact is not a regular in-scope file")
+        content = artifact_path.read_bytes()
+        if hashlib.sha256(content).hexdigest() != source["artifact_sha256"]:
+            fail(f"{source['id']} source artifact digest drift")
+        source_texts[source["id"]] = content.decode("utf-8")
+
+    for evidence in evidence_links.values():
+        claim_item = claims[evidence["claim_ref"]]
+        revision = revisions[claim_item["revision_ref"]]
+        marker = (
+            f"## {evidence['locator']}\n\n"
+            f"raw: `{revision['source_value']['raw']}`\n\n"
+            f"claim: {claim_item['statement']}\n"
+        )
+        source_text = source_texts[evidence["source_ref"]]
+        if source_text.count(f"## {evidence['locator']}\n") != 1 or marker not in source_text:
+            fail(f"{evidence['id']} locator does not reproduce its source-native value and Claim")
 
     for uncertainty in uncertainties.values():
         if uncertainty["revision_ref"] not in revisions:
@@ -529,6 +791,7 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
         "evidence_links": len(evidence_links),
         "uncertainties": len(uncertainties),
         "ledger_sha256": actual_digest,
+        "semantic_sha256": semantic_digest,
         **review,
     }
 
@@ -540,9 +803,15 @@ def main() -> int:
     parser.add_argument("--require-ready", action="store_true")
     args = parser.parse_args()
     try:
+        if args.require_ready and (args.package.resolve() != PACKAGE_PATH.resolve() or args.schema.resolve() != SCHEMA_PATH.resolve()):
+            fail("--require-ready is restricted to the canonical reviewed package and schema")
         summary = validate_package(args.package, args.schema)
-        if args.require_ready and (summary["status"] != "READY" or summary["review_status"] != "READY"):
-            fail("package and independent review registry are not READY")
+        if args.require_ready and (
+            summary["status"] != "READY"
+            or summary["review_status"] != "READY"
+            or summary["acceptance_decision"] != "ACCEPT"
+        ):
+            fail("package, independent reviews and ACCEPT decision are not READY")
     except RefinementValidationError as exc:
         print(f"FAIL: {exc}")
         return 1

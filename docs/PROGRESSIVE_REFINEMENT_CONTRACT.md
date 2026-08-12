@@ -85,6 +85,10 @@ change_reason
 Accepted revision bytes are immutable. A typo or semantic error is repaired by a new revision,
 not by mutating history. Stable ids are never reused for different payloads.
 
+The pair `(subject_ref, target_key)` identifies one atomic target and may resolve to exactly one
+series in a package. A second ledger for the same pair is invalid even if it uses another series
+id. The declared target dimension must agree with the target key and the value family.
+
 The permitted operations are:
 
 | Operation | Meaning | Current-view effect |
@@ -107,6 +111,10 @@ Every value-bearing revision preserves:
 - source-native raw expression;
 - source-native precision or unresolved normalization state;
 - normalized value used by query/projection, when normalization is supported.
+
+A reviewed supporting EvidenceLink must resolve to a checked-in or otherwise immutable Source
+artifact, a reproducible Claim-level locator and the exact source-native expression used by the
+revision. Reference closure without locator reproduction is not sufficient for `supported`.
 
 Normalization may retain or coarsen precision. It may not produce a value finer than the source
 and evidence support. A source saying “August 1502” cannot normalize to a day. A regional range map
@@ -149,6 +157,12 @@ A temporal refinement must:
 - reduce the interval or establish a finer supported precision;
 - carry its own atomic Claim and evidence;
 - preserve open, approximate or alternative semantics when they remain material.
+
+The temporal envelope carries the accepted #330 semantics rather than reducing them to two dates:
+calendar/normalization state, exact or qualified bounds, inclusivity, open-start/open-end/unknown
+kind, precision, basis Claims and explicit alternatives. A refinement may narrow a possible set,
+but it cannot discard an open bound, qualifier, calendar state or alternative merely because the
+current fixture uses a finite Gregorian example.
 
 An interval is not refined merely because a midpoint was chosen.
 
@@ -298,7 +312,8 @@ Acceptance requires:
   and one reviewed-content digest;
 - two independent reviews covering semantic content and validator integrity;
 - zero unresolved critical/material findings;
-- one decision: `ACCEPT`, `NARROW` or `REJECT`.
+- one machine-validated decision artifact: `ACCEPT`, `NARROW` or `REJECT`, bound to the same frozen
+  commit/tree, reviewed-content digest and review registry.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

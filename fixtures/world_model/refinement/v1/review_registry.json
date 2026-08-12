@@ -3,6 +3,7 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
+  "current_round": 2,
   "required_review_count": 2,
   "required_tracks": [
     "semantic-model",
@@ -10,6 +11,39 @@
   ],
   "required_independence_method": "separate_agent_task_read_only",
   "frozen_commit": null,
-  "reviewed_content_sha256": "6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc",
+  "frozen_tree": null,
+  "reviewed_content_sha256": "fb54684ae9f710e2e148baea7800928ff433c8915dd50e023c0f1e5444fcb840",
+  "prior_reviews": [
+    {
+      "review_round": 1,
+      "review_id": "refinement-v1-round1-semantic-model",
+      "reviewer_id": "codex-semantic-model-reviewer",
+      "reviewer_instance_id": "codex-semantic-model-20260812-a95859964506-r1",
+      "review_task_path": "/root/refinement_semantic_review",
+      "track": "semantic-model",
+      "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "ba1b1846cd926ad83923ae8a7908a1c21b4d3e03",
+      "frozen_tree": "e31e50f40ecde6fea2706bf97d03dacf8b0d2049",
+      "reviewed_content_sha256": "6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc",
+      "decision": "CHANGES_REQUIRED",
+      "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round1_semantic_model.json",
+      "artifact_sha256": "ceafa832c243301e77c8220f36d4327d5c267238e89e6b28069c2c1734c85815"
+    },
+    {
+      "review_round": 1,
+      "review_id": "refinement-v1-round1-validator-integrity",
+      "reviewer_id": "codex-validator-integrity-reviewer",
+      "reviewer_instance_id": "validator-integrity-6c01c74f-ba1b1846",
+      "review_task_path": "/root/refinement_validator_review",
+      "track": "validator-integrity",
+      "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "ba1b1846cd926ad83923ae8a7908a1c21b4d3e03",
+      "frozen_tree": "e31e50f40ecde6fea2706bf97d03dacf8b0d2049",
+      "reviewed_content_sha256": "6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc",
+      "decision": "CHANGES_REQUIRED",
+      "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round1_validator_integrity.json",
+      "artifact_sha256": "51f98daadb184f82ea426c91a0fac9d340e4072ce4bbbc531a22490d6d33dd66"
+    }
+  ],
   "reviews": []
 }

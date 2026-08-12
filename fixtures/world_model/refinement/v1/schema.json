@@ -17,6 +17,7 @@
     "series",
     "revisions",
     "ledger_lock",
+    "package_lock",
     "expected_current_frontier",
     "replay_checkpoints"
   ],
@@ -39,6 +40,27 @@
       "properties": {
         "revision_ids": {"$ref": "#/$defs/refs"},
         "revisions_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "package_lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collection_ids", "semantic_sha256"],
+      "properties": {
+        "collection_ids": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sources", "claims", "evidence_links", "uncertainties", "series", "revisions"],
+          "properties": {
+            "sources": {"$ref": "#/$defs/refs"},
+            "claims": {"$ref": "#/$defs/refs"},
+            "evidence_links": {"$ref": "#/$defs/refs"},
+            "uncertainties": {"$ref": "#/$defs/refs"},
+            "series": {"$ref": "#/$defs/refs"},
+            "revisions": {"$ref": "#/$defs/refs"}
+          }
+        },
+        "semantic_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
     "expected_current_frontier": {
@@ -72,26 +94,61 @@
         "route_unknown", "corridor", "documented_path", "categorical"
       ]
     },
+    "timeAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "kind", "start", "end", "start_inclusive", "end_inclusive",
+        "start_qualifier", "end_qualifier", "precision", "basis_claim_refs"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["instant", "closed_interval", "open_start_interval", "open_end_interval", "unknown"]},
+        "start": {"type": ["string", "null"]},
+        "end": {"type": ["string", "null"]},
+        "start_inclusive": {"type": ["boolean", "null"]},
+        "end_inclusive": {"type": ["boolean", "null"]},
+        "start_qualifier": {"enum": ["exact", "approximate", "not_before", "unknown"]},
+        "end_qualifier": {"enum": ["exact", "approximate", "not_after", "unknown"]},
+        "precision": {"$ref": "#/$defs/precision"},
+        "basis_claim_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
     "timeExtent": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["start", "end", "precision", "certainty"],
+      "required": [
+        "calendar", "kind", "start", "end", "start_inclusive", "end_inclusive",
+        "start_qualifier", "end_qualifier", "precision", "certainty",
+        "normalization_state", "basis_claim_refs", "alternatives"
+      ],
       "properties": {
+        "calendar": {"enum": ["proleptic_gregorian", "source_native_unresolved"]},
+        "kind": {"enum": ["instant", "closed_interval", "open_start_interval", "open_end_interval", "unknown"]},
         "start": {"type": ["string", "null"]},
         "end": {"type": ["string", "null"]},
+        "start_inclusive": {"type": ["boolean", "null"]},
+        "end_inclusive": {"type": ["boolean", "null"]},
+        "start_qualifier": {"enum": ["exact", "approximate", "not_before", "unknown"]},
+        "end_qualifier": {"enum": ["exact", "approximate", "not_after", "unknown"]},
         "precision": {"$ref": "#/$defs/precision"},
-        "certainty": {"enum": ["exact", "approximate", "unknown"]}
+        "certainty": {"enum": ["exact", "approximate", "unknown", "disputed"]},
+        "normalization_state": {"enum": ["normalized", "unresolved"]},
+        "basis_claim_refs": {"$ref": "#/$defs/refs"},
+        "alternatives": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/timeAlternative"}}
       }
     },
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "title", "type", "historical_authority"],
+      "required": ["id", "title", "type", "historical_authority", "artifact_ref", "artifact_sha256"],
       "properties": {
         "id": {"$ref": "#/$defs/id"},
         "title": {"type": "string", "minLength": 1},
         "type": {"const": "synthetic_fixture_source"},
-        "historical_authority": {"const": false}
+        "historical_authority": {"const": false},
+        "artifact_ref": {"type": "string", "pattern": "^fixtures/world_model/refinement/v1/sources/[a-z0-9-]+\\.md$"},
+        "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
     "claim": {

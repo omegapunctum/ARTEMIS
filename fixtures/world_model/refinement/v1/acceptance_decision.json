@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "issue": 377,
+  "pull_request": 378,
+  "status": "PENDING",
+  "decision": null,
+  "frozen_commit": null,
+  "frozen_tree": null,
+  "reviewed_content_sha256": "fb54684ae9f710e2e148baea7800928ff433c8915dd50e023c0f1e5444fcb840",
+  "review_registry_ref": "fixtures/world_model/refinement/v1/review_registry.json",
+  "runtime_migration_authorized": false,
+  "airtable_historical_write_authorized": false,
+  "public_capability_change": false
+}

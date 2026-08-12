@@ -55,6 +55,22 @@ behavior is a fail-closed, domain-neutral refinement ledger demonstrated by exec
 5. Two independent reviews with zero critical/material findings.
 6. Recorded `ACCEPT`, `NARROW` or `REJECT` decision.
 
+## Review history
+
+Round 1 froze commit `ba1b1846cd926ad83923ae8a7908a1c21b4d3e03` with reviewed-content
+digest `6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc`.
+Both independent tracks returned `CHANGES_REQUIRED`:
+
+- semantic-model: `0 critical / 3 material` — reproducible source locators, full #330 temporal
+  envelope and atomic-target uniqueness;
+- validator-integrity: `2 critical / 5 material / 1 minor` — findings/counter reconciliation,
+  Git/reviewer-slot binding, safe metadata paths, legitimate READY transition, complete semantic
+  lock, canonical require-ready scope and executable final decision.
+
+The structured round-1 artifacts are retained under
+`fixtures/world_model/refinement/v1/reviews/`. They do not count toward round 2. A corrected
+candidate requires two fresh independent reviews on one new exact commit/digest.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

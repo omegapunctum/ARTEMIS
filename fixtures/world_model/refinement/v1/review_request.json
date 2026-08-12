@@ -3,17 +3,34 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
+  "review_round": 2,
   "required_tracks": [
     "semantic-model",
     "validator-integrity"
   ],
   "independence_method": "separate_agent_task_read_only",
+  "review_slots": [
+    {
+      "reviewer_id": "codex-semantic-model-reviewer-r2",
+      "reviewer_instance_id": "semantic-r2-ba1-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r2",
+      "track": "semantic-model"
+    },
+    {
+      "reviewer_id": "codex-validator-integrity-reviewer-r2",
+      "reviewer_instance_id": "validator-r2-ba1-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r2",
+      "track": "validator-integrity"
+    }
+  ],
   "review_scope": [
     "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md",
     "docs/CONTENT_GOVERNANCE.md",
     "docs/DEVELOPMENT_OPERATING_SYSTEM.md",
     "fixtures/world_model/refinement/v1/package.json",
     "fixtures/world_model/refinement/v1/schema.json",
+    "fixtures/world_model/refinement/v1/sources/synthetic-travel-notebook.md",
+    "fixtures/world_model/refinement/v1/sources/synthetic-range-atlas.md",
     "scripts/validate_progressive_refinement_fixtures.py",
     "tests/test_progressive_refinement_fixtures.py",
     ".github/workflows/progressive-refinement.yml"
@@ -27,6 +44,7 @@
     "ready_requires_open_critical": 0,
     "ready_requires_open_material": 0,
     "artifact_schema": "fixtures/world_model/refinement/v1/review_artifact.schema.json",
-    "registry": "fixtures/world_model/refinement/v1/review_registry.json"
+    "registry": "fixtures/world_model/refinement/v1/review_registry.json",
+    "decision": "fixtures/world_model/refinement/v1/acceptance_decision.json"
   }
 }

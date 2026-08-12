@@ -13,11 +13,18 @@ import scripts.validate_progressive_refinement_fixtures as refinement_validator
 
 from scripts.validate_progressive_refinement_fixtures import (
     PACKAGE_PATH,
+    PACKAGE_LOCK_COLLECTIONS,
+    REVIEW_ARTIFACT_SCHEMA_PATH,
     REVIEW_REGISTRY_PATH,
     REVIEW_REQUEST_PATH,
     SCHEMA_PATH,
     RefinementValidationError,
+    canonical_sha256,
+    package_semantic_payload,
+    safe_metadata_path,
     validate_package,
+    validate_review_artifact,
+    validate_time_extent,
     reviewed_content_sha256,
 )
 
@@ -42,6 +49,12 @@ def refresh_lock(package: dict) -> None:
         package["revisions"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
     package["ledger_lock"]["revisions_sha256"] = hashlib.sha256(raw).hexdigest()
+    package["package_lock"]["collection_ids"] = {
+        key: [item["id"] for item in package[key]] for key in PACKAGE_LOCK_COLLECTIONS
+    }
+    package["package_lock"]["semantic_sha256"] = canonical_sha256(
+        package_semantic_payload(package)
+    )
 
 
 def write_package(tmp_path: Path, package: dict, *, refresh: bool = True) -> Path:
@@ -72,7 +85,8 @@ def test_fixture_validates() -> None:
     assert summary["claims"] == 14
     assert summary["evidence_links"] == 14
     assert summary["uncertainties"] == 5
-    assert summary["ledger_sha256"] == "b11cbbf47c8318b39dea1e131472feacb94bca09d48fb396cec28bd218355c8e"
+    assert summary["ledger_sha256"] == "bc134ee6566eab73e8741f749652418ed847c0cb7245713d9f649a4532a640ab"
+    assert summary["semantic_sha256"] == "6c3122c3566857f02d66e15e4ebbe322aa1c9547e07b4bc423df92dea288d9cd"
 
 
 def test_require_ready_fails_closed() -> None:
@@ -84,7 +98,7 @@ def test_require_ready_fails_closed() -> None:
         check=False,
     )
     assert result.returncode == 1
-    assert "package and independent review registry are not READY" in result.stdout
+    assert "package, independent reviews and ACCEPT decision are not READY" in result.stdout
 
 
 def test_review_registry_is_fail_closed_before_two_independent_reviews() -> None:
@@ -113,6 +127,138 @@ def test_review_registry_rejects_content_digest_drift(tmp_path: Path, monkeypatc
         refinement_validator.validate_review_envelope()
 
 
+def test_ready_artifact_rejects_open_findings_even_when_counters_are_zero() -> None:
+    schema = json.loads(REVIEW_ARTIFACT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    artifact = json.loads(
+        (ROOT / "fixtures/world_model/refinement/v1/reviews/round1_validator_integrity.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    artifact["decision"] = "READY"
+    artifact["open_critical"] = 0
+    artifact["open_material"] = 0
+    with pytest.raises(RefinementValidationError, match="finding counters"):
+        validate_review_artifact(artifact, schema, "adversarial")
+
+
+def test_review_artifact_path_rejects_traversal() -> None:
+    with pytest.raises(RefinementValidationError, match="unsafe path"):
+        safe_metadata_path(
+            "fixtures/world_model/refinement/v1/reviews/../../../../outside.json",
+            ROOT / "fixtures/world_model/refinement/v1/reviews",
+            "artifact_ref",
+        )
+
+
+def test_review_digest_allows_only_normalized_lifecycle_status_transition() -> None:
+    request = json.loads(REVIEW_REQUEST_PATH.read_text(encoding="utf-8"))
+    baseline = reviewed_content_sha256(request)
+
+    def loader(raw_path: str) -> bytes:
+        content = (ROOT / raw_path).read_bytes()
+        if raw_path == "fixtures/world_model/refinement/v1/package.json":
+            package = json.loads(content)
+            package["status"] = "READY"
+            return json.dumps(package).encode("utf-8")
+        if raw_path == "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md":
+            text = content.decode("utf-8").replace("1.0-draft", "1.0", 1).replace(
+                "`REVIEW_REQUIRED` under issue `#377`", "`READY` under issue `#377`", 1
+            )
+            return text.encode("utf-8")
+        return content
+
+    assert reviewed_content_sha256(request, loader) == baseline
+
+
+def test_source_locator_reproduces_raw_value_and_claim(tmp_path: Path) -> None:
+    package = load_package()
+    revision(package, "revision-leo-time-refined")["source_value"]["raw"] = "9 August 1502"
+    refresh_lock(package)
+    path = write_package(tmp_path, package)
+    with pytest.raises(RefinementValidationError, match="locator does not reproduce"):
+        validate_package(path, SCHEMA_PATH)
+
+
+def test_temporal_envelope_supports_open_bounds_and_alternatives() -> None:
+    basis = ["claim-leo-time-coarse"]
+    start, end = validate_time_extent(
+        {
+            "calendar": "proleptic_gregorian",
+            "kind": "open_end_interval",
+            "start": "1502-08-01",
+            "end": None,
+            "start_inclusive": True,
+            "end_inclusive": None,
+            "start_qualifier": "not_before",
+            "end_qualifier": "unknown",
+            "precision": "day",
+            "certainty": "approximate",
+            "normalization_state": "normalized",
+            "basis_claim_refs": basis,
+            "alternatives": [
+                {
+                    "id": "alternative-open-start",
+                    "kind": "open_start_interval",
+                    "start": None,
+                    "end": "1502-08-31",
+                    "start_inclusive": None,
+                    "end_inclusive": False,
+                    "start_qualifier": "unknown",
+                    "end_qualifier": "not_after",
+                    "precision": "day",
+                    "basis_claim_refs": basis,
+                }
+            ],
+        },
+        "temporal-test",
+    )
+    assert start is not None and end is None
+
+
+def test_rejects_duplicate_atomic_target_series(tmp_path: Path) -> None:
+    package = load_package()
+    duplicate = copy.deepcopy(package["series"][0])
+    duplicate["id"] = "series-leo-time-duplicate"
+    package["series"].append(duplicate)
+    refresh_lock(package)
+    path = write_package(tmp_path, package)
+    with pytest.raises(RefinementValidationError, match="series coverage|more than one revision series"):
+        validate_package(path, SCHEMA_PATH)
+
+
+def test_rejects_evidence_history_erasure_even_with_recomputed_locks(tmp_path: Path) -> None:
+    package = load_package()
+    package["evidence_links"] = [
+        item for item in package["evidence_links"] if item["id"] != "evidence-leo-route-unknown"
+    ]
+    revision(package, "revision-leo-route-unknown")["evidence_link_refs"] = []
+    claim(package, "claim-leo-route-unknown")["evidence_link_refs"] = []
+    claim(package, "claim-leo-route-unknown")["evidence_state"] = "missing"
+    refresh_lock(package)
+    path = write_package(tmp_path, package)
+    with pytest.raises(RefinementValidationError, match="EvidenceLink coverage"):
+        validate_package(path, SCHEMA_PATH)
+
+
+def test_require_ready_rejects_custom_package(tmp_path: Path) -> None:
+    path = write_package(tmp_path, load_package())
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/validate_progressive_refinement_fixtures.py",
+            "--package",
+            str(path),
+            "--require-ready",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "restricted to the canonical reviewed package" in result.stdout
+
+
 def test_rejects_in_place_mutation_without_lock_update(tmp_path: Path) -> None:
     package = load_package()
     revision(package, "revision-leo-time-coarse")["source_value"]["raw"] = "September 1502"
@@ -131,7 +277,9 @@ def test_rejects_false_temporal_refinement(tmp_path: Path) -> None:
     package = load_package()
     item = revision(package, "revision-leo-time-refined")
     item["normalized_assertion"]["valid_time"]["start"] = "1502-07-31"
+    item["normalized_assertion"]["valid_time"]["end"] = "1502-07-31"
     item["normalized_assertion"]["value"]["start"] = "1502-07-31"
+    item["normalized_assertion"]["value"]["end"] = "1502-07-31"
     assert_rejected(tmp_path, package, "temporal possible set is not strictly narrower")
 
 
@@ -303,3 +451,5 @@ def test_required_ci_guards_are_wired() -> None:
     ).read_text(encoding="utf-8")
     assert "python scripts/validate_progressive_refinement_fixtures.py" in workflow
     assert "pytest -q tests/test_progressive_refinement_fixtures.py" in workflow
+    assert 'fetch-depth: 0' in workflow
+    assert 'requirements.txt' in workflow

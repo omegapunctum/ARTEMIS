@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/progressive-refinement-review-registry-v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "issue", "pull_request", "current_round",
+    "required_review_count", "required_tracks", "required_independence_method",
+    "frozen_commit", "frozen_tree", "reviewed_content_sha256", "prior_reviews", "reviews"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"enum": ["REVIEW_REQUIRED", "REVIEWS_COMPLETE", "READY"]},
+    "issue": {"const": 377},
+    "pull_request": {"const": 378},
+    "current_round": {"const": 2},
+    "required_review_count": {"const": 2},
+    "required_tracks": {"const": ["semantic-model", "validator-integrity"]},
+    "required_independence_method": {"const": "separate_agent_task_read_only"},
+    "frozen_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "frozen_tree": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "reviewed_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "prior_reviews": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/reviewEntry"}},
+    "reviews": {"type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/reviewEntry"}}
+  },
+  "$defs": {
+    "reviewEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_round", "review_id", "reviewer_id", "reviewer_instance_id", "review_task_path",
+        "track", "independence_method", "frozen_commit", "frozen_tree",
+        "reviewed_content_sha256", "decision", "artifact_ref", "artifact_sha256"
+      ],
+      "properties": {
+        "review_round": {"type": "integer", "minimum": 1},
+        "review_id": {"type": "string", "pattern": "^refinement-v1-[a-z0-9-]+$"},
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "reviewer_instance_id": {"type": "string", "minLength": 1},
+        "review_task_path": {"type": "string", "minLength": 1},
+        "track": {"enum": ["semantic-model", "validator-integrity"]},
+        "independence_method": {"const": "separate_agent_task_read_only"},
+        "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "reviewed_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "decision": {"enum": ["READY", "CHANGES_REQUIRED"]},
+        "artifact_ref": {"type": "string", "pattern": "^fixtures/world_model/refinement/v1/reviews/[a-z0-9_-]+\\.json$"},
+        "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}
