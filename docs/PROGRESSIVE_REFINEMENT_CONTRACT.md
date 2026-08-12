@@ -3,9 +3,9 @@
 ## Status
 
 - Type: scoped canonical extension candidate.
-- Version: 1.0.
+- Version: 1.0-draft.
 - Date: 2026-08-12.
-- Status: `READY` under issue `#377`.
+- Status: `REVIEW_REQUIRED` under issue `#377`.
 - Extends: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `EPISTEMIC_CONTRACT.md` and `ENTITY_MODEL.md`.
 - Owns: non-destructive coarse-to-fine knowledge refinement, revision lineage and deterministic current-view semantics.
 - Does not own: core object identity, relation semantics, runtime/database schema, Airtable authority, historical readiness or public capability.
@@ -367,6 +367,11 @@ that Git resolves to the actual repository root and forces a full index refresh.
 every tracked worktree object's bytes, type and executable mode directly with the HEAD tree rather
 than trusting Git's stat cache. Every allowed lifecycle/control path must resolve to a regular
 in-repository `100644` Git blob; symlinks and external mutable payloads are invalid.
+The reviewed test harness is lifecycle-aware: candidate assertions remain fail-closed before
+acceptance, while the same frozen tests also validate a metadata-only READY descendant without
+assuming that the package must remain permanently `REVIEW_REQUIRED`. Only explicit canonical
+`--require-ready` invokes checkout cleanliness, so pytest's own ignored cache cannot alter ordinary
+fixture-unit semantics.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

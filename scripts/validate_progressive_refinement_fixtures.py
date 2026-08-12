@@ -614,7 +614,7 @@ def validate_lifecycle_consistency(package_status: str, registry_status: str) ->
         fail("package, registry and contract lifecycle states are inconsistent")
 
 
-def validate_review_envelope() -> dict[str, Any]:
+def validate_review_envelope(*, require_clean_checkout: bool = False) -> dict[str, Any]:
     for path, label in (
         (REVIEW_REQUEST_PATH, "review request"),
         (REVIEW_REQUEST_SCHEMA_PATH, "review request schema"),
@@ -719,7 +719,8 @@ def validate_review_envelope() -> dict[str, Any]:
     }
     changed_paths = git_output("diff", "--name-only", f"{frozen_commit}..HEAD").decode().splitlines()
     validate_ready_descendant_paths(changed_paths, allowed_descendant_paths)
-    validate_clean_checkout()
+    if require_clean_checkout:
+        validate_clean_checkout()
     for raw_path in sorted(allowed_descendant_paths):
         require_head_regular_blob(raw_path)
 
@@ -930,7 +931,12 @@ def validate_revision_semantics(
             fail(f"{revision_id} refinement cannot reduce declared precision")
 
 
-def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHEMA_PATH) -> dict[str, Any]:
+def validate_package(
+    package_path: Path = PACKAGE_PATH,
+    schema_path: Path = SCHEMA_PATH,
+    *,
+    require_ready: bool = False,
+) -> dict[str, Any]:
     package = read_json(package_path)
     schema = read_json(schema_path)
     validate_schema(package, schema)
@@ -1142,7 +1148,7 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
     if revisions["revision-label-withdrawn"]["normalized_assertion"] is not None:
         fail("withdrawal scenario must not remain in the current value frontier")
 
-    review = validate_review_envelope()
+    review = validate_review_envelope(require_clean_checkout=require_ready)
     validate_lifecycle_consistency(package["status"], review["review_status"])
     return {
         "status": package["status"],
@@ -1166,7 +1172,7 @@ def main() -> int:
     try:
         if args.require_ready and (args.package.resolve() != PACKAGE_PATH.resolve() or args.schema.resolve() != SCHEMA_PATH.resolve()):
             fail("--require-ready is restricted to the canonical reviewed package and schema")
-        summary = validate_package(args.package, args.schema)
+        summary = validate_package(args.package, args.schema, require_ready=args.require_ready)
         if args.require_ready and (
             summary["status"] != "READY"
             or summary["review_status"] != "READY"

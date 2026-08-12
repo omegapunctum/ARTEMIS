@@ -1,18 +1,18 @@
 {
   "schema_version": "1.0.0",
-  "status": "READY",
+  "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
-  "current_round": 10,
+  "current_round": 11,
   "required_review_count": 2,
   "required_tracks": [
     "semantic-model",
     "validator-integrity"
   ],
   "required_independence_method": "separate_agent_task_read_only",
-  "frozen_commit": "c2eabcf30165ee6670790defbda16af562690490",
-  "frozen_tree": "921b84d4321954145e9b760b49812fefd35326b9",
-  "reviewed_content_sha256": "36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8",
+  "frozen_commit": null,
+  "frozen_tree": null,
+  "reviewed_content_sha256": "a7f8b29d0f5abf1252a6e5122599a8482a67ec29a5f52c83634a25595d4fd6e4",
   "prior_reviews": [
     {
       "review_round": 1,
@@ -283,9 +283,7 @@
       "decision": "CHANGES_REQUIRED",
       "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round9_validator_integrity.json",
       "artifact_sha256": "d3d6e7a19b63bb9bf195dd396140fa66bcbe6393b2ff942768ea4f21f854cda7"
-    }
-  ],
-  "reviews": [
+    },
     {
       "review_round": 10,
       "review_id": "refinement-v1-round10-semantic-model",
@@ -316,5 +314,6 @@
       "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round10_validator_integrity.json",
       "artifact_sha256": "6960b78af427d34943fb41cb95b97ca09adbeb2b0abb097d8e14055a7e164479"
     }
-  ]
+  ],
+  "reviews": []
 }

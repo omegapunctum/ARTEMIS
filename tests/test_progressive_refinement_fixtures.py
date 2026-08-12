@@ -91,12 +91,11 @@ def assert_rejected(tmp_path: Path, package: dict, match: str, *, refresh: bool 
 
 def test_fixture_validates() -> None:
     summary = validate_package()
-    assert summary["status"] == "REVIEW_REQUIRED"
-    assert summary["review_status"] == "REVIEW_REQUIRED"
-    assert summary["review_count"] == 0
-    assert summary["reviewed_content_sha256"] == json.loads(
-        REVIEW_REGISTRY_PATH.read_text(encoding="utf-8")
-    )["reviewed_content_sha256"]
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    assert summary["status"] == ("READY" if registry["status"] == "READY" else "REVIEW_REQUIRED")
+    assert summary["review_status"] == registry["status"]
+    assert summary["review_count"] == len(registry["reviews"])
+    assert summary["reviewed_content_sha256"] == registry["reviewed_content_sha256"]
     assert summary["series"] == 8
     assert summary["revisions"] == 14
     assert summary["claims"] == 14
@@ -106,7 +105,12 @@ def test_fixture_validates() -> None:
     assert summary["semantic_sha256"] == "742dd8007da20fe558a7e3422641281c47f0aae6e4c4821ee4ccd28587b923a7"
 
 
-def test_require_ready_fails_closed() -> None:
+def test_require_ready_fails_closed_before_acceptance() -> None:
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    if registry["status"] == "READY":
+        assert len(registry["reviews"]) == 2
+        assert all(review["decision"] == "READY" for review in registry["reviews"])
+        return
     result = subprocess.run(
         [sys.executable, "scripts/validate_progressive_refinement_fixtures.py", "--require-ready"],
         cwd=PACKAGE_PATH.parents[4],
@@ -118,11 +122,17 @@ def test_require_ready_fails_closed() -> None:
     assert "package, independent reviews and ACCEPT decision are not READY" in result.stdout
 
 
-def test_review_registry_is_fail_closed_before_two_independent_reviews() -> None:
+def test_review_registry_lifecycle_is_fail_closed() -> None:
     registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
-    assert registry["status"] == "REVIEW_REQUIRED"
-    assert registry["frozen_commit"] is None
-    assert registry["reviews"] == []
+    if registry["status"] == "REVIEW_REQUIRED":
+        assert registry["frozen_commit"] is None
+        assert registry["frozen_tree"] is None
+        assert registry["reviews"] == []
+    else:
+        assert registry["status"] == "READY"
+        assert len(registry["reviews"]) == 2
+        assert registry["frozen_commit"] is not None
+        assert registry["frozen_tree"] is not None
     assert registry["required_tracks"] == ["semantic-model", "validator-integrity"]
     assert registry["required_independence_method"] == "separate_agent_task_read_only"
 
@@ -248,9 +258,11 @@ def test_review_digest_rejects_semantic_text_appended_to_lifecycle_header() -> N
     def loader(raw_path: str) -> bytes:
         content = (ROOT / raw_path).read_bytes()
         if raw_path == "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md":
+            status = b"READY" if b"- Status: `READY` under issue `#377`." in content else b"REVIEW_REQUIRED"
+            marker = b"- Status: `" + status + b"` under issue `#377`."
             return content.replace(
-                b"- Status: `REVIEW_REQUIRED` under issue `#377`.",
-                b"- Status: `REVIEW_REQUIRED` under issue `#377`; runtime export authorized.",
+                marker,
+                marker[:-1] + b"; runtime export authorized.",
                 1,
             )
         return content
@@ -740,7 +752,7 @@ def test_foundation_candidate_does_not_change_product_gate_state() -> None:
     assert all(377 not in values for values in issue_sets)
 
 
-def test_candidate_is_routed_as_review_required_not_capability() -> None:
+def test_candidate_is_routed_by_lifecycle_not_capability() -> None:
     contract = (ROOT / "docs" / "PROGRESSIVE_REFINEMENT_CONTRACT.md").read_text(encoding="utf-8")
     foundation = (ROOT / "docs" / "FOUNDATION_INDEX.md").read_text(encoding="utf-8")
     truth = (ROOT / "docs" / "PROJECT_TRUTH.md").read_text(encoding="utf-8")
@@ -748,7 +760,8 @@ def test_candidate_is_routed_as_review_required_not_capability() -> None:
     decision = (
         ROOT / "docs" / "work" / "2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
     ).read_text(encoding="utf-8")
-    assert "Status: `REVIEW_REQUIRED` under issue `#377`" in contract
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    assert f"Status: `{registry['status']}` under issue `#377`" in contract
     assert "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md" in foundation
     assert "Issue #377 is active foundation maintenance with `REVIEW_REQUIRED` fixtures" in truth
     assert "#377 as active foundation maintenance" in agents
@@ -863,9 +876,12 @@ def test_ready_metadata_requires_regular_git_blob_mode() -> None:
 
 
 def test_lifecycle_consistency_rejects_package_registry_contradiction() -> None:
-    validate_lifecycle_consistency("REVIEW_REQUIRED", "REVIEW_REQUIRED")
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    package = load_package()
+    validate_lifecycle_consistency(package["status"], registry["status"])
+    opposite = "REVIEW_REQUIRED" if package["status"] == "READY" else "READY"
     with pytest.raises(RefinementValidationError, match="lifecycle states are inconsistent"):
-        validate_lifecycle_consistency("READY", "REVIEW_REQUIRED")
+        validate_lifecycle_consistency(opposite, registry["status"])
 
 
 def test_review_registry_rejects_duplicate_review_ids(

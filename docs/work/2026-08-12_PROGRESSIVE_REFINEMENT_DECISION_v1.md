@@ -163,6 +163,17 @@ trustworthy core settings, verifies the discovered top-level and independently h
 every tracked worktree object against HEAD. Round-9 artifacts remain immutable audit history and do
 not count toward the new reviews.
 
+Round 10 froze commit `c2eabcf30165ee6670790defbda16af562690490` with reviewed-content
+digest `36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8`.
+Both independent tracks returned `READY`, and a clean metadata-only ACCEPT descendant passed
+canonical `--require-ready`. The subsequent PR workflow exposed a lifecycle-harness defect: nine
+frozen tests still asserted the pre-acceptance `REVIEW_REQUIRED` state, and ordinary validation
+invoked canonical checkout cleanliness after pytest created its ignored cache.
+
+Round 11 makes the frozen harness lifecycle-aware and reserves clean-check enforcement for explicit
+canonical `--require-ready`. Round-10 READY artifacts remain immutable audit history; acceptance is
+reopened until the same frozen test suite passes both before and after the metadata-only transition.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration
