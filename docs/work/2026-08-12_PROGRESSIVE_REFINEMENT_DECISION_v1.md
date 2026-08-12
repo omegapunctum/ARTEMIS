@@ -142,6 +142,16 @@ alternative precision, requires a completely clean checkout for canonical READY 
 allowed lifecycle/control path as a committed regular `100644` blob. Round-7 artifacts remain
 immutable negative history and do not count toward new reviews.
 
+Round 8 froze commit `01544ead1fb0e58bbd62fcab30b88fa55f841ddf` with reviewed-content
+digest `09dfac0aef6571a3b07894400320db24d97e8f5dbdde41af58d7b4cf807970ff`.
+The semantic-model track returned `READY`; validator-integrity returned `CHANGES_REQUIRED` because
+Git `assume-unchanged` or `skip-worktree` flags could hide modified tracked governance/control bytes
+from the clean-check while canonical READY still passed.
+
+Round 9 rejects every nonstandard tracked-index visibility marker using NUL-safe enumeration and
+forces `git update-index --really-refresh` before the ordinary dirty-state checks. Round-8 artifacts
+remain immutable audit history and do not count toward the new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

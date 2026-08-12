@@ -24,9 +24,10 @@ from scripts.validate_progressive_refinement_fixtures import (
     safe_metadata_path,
     validate_acceptance_binding,
     validate_capability_prohibitions,
-    validate_lifecycle_consistency,
     validate_clean_state,
     validate_git_blob_entry,
+    validate_index_visibility,
+    validate_lifecycle_consistency,
     validate_package,
     validate_ready_descendant_paths,
     validate_review_artifact,
@@ -801,6 +802,16 @@ def test_ready_checkout_rejects_staged_unstaged_untracked_and_ignored_files(
 ) -> None:
     with pytest.raises(RefinementValidationError, match="clean index/worktree"):
         validate_clean_state(status_output, other_files)
+
+
+@pytest.mark.parametrize(
+    "index_entry",
+    [b"h docs/PROJECT_TRUTH.md\0", b"S docs/PROJECT_TRUTH.md\0", b"s docs/PROJECT_TRUTH.md\0"],
+)
+def test_ready_checkout_rejects_hidden_index_visibility_flags(index_entry: bytes) -> None:
+    validate_index_visibility(b"H README.md\0H path with newline\ninside.md\0")
+    with pytest.raises(RefinementValidationError, match="nonstandard index entries"):
+        validate_index_visibility(index_entry)
 
 
 def test_ready_metadata_requires_regular_git_blob_mode() -> None:

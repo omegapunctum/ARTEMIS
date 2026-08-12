@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 8,
+  "review_id": "refinement-v1-round8-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r8",
+  "reviewer_instance_id": "semantic-r8-source-worktree-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r8",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "01544ead1fb0e58bbd62fcab30b88fa55f841ddf",
+  "frozen_tree": "a43456ab1aecb668ad1a755d0ea1f5ef6ff6073e",
+  "reviewed_content_sha256": "09dfac0aef6571a3b07894400320db24d97e8f5dbdde41af58d7b4cf807970ff",
+  "decision": "READY",
+  "open_critical": 0,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "REF-SEM-R8-001", "severity": "material", "status": "resolved", "summary": "Every reviewed locator now binds canonical hashes of the complete source_value, including raw expression and precision, plus the exact normalized assertion. Precision relabelling against unchanged Source/Claim/locator evidence fails."},
+    {"finding_id": "REF-SEM-R8-002", "severity": "material", "status": "resolved", "summary": "Temporal alternatives are validated against both source-native and top-level temporal precision; a day alternative under month-level support is rejected."},
+    {"finding_id": "REF-SEM-R8-003", "severity": "informational", "status": "accepted", "summary": "Exact normalized-assertion binding, non-empty temporal sets, merged-union strictness, calendar profiles and primary/alternative containment remain fail-closed."},
+    {"finding_id": "REF-SEM-R8-004", "severity": "informational", "status": "accepted", "summary": "Valid-time/record-time separation, append-only lineage, correct/add_alternative/withdraw behavior, unresolved frontiers, Claim/Evidence/Uncertainty closure and geometry-null unknown routes remain intact."},
+    {"finding_id": "REF-SEM-R8-005", "severity": "informational", "status": "accepted", "summary": "The PR does not modify frozen #329/#330 fixtures, Gate C/Leonardo fixtures, project_state.json, runtime, frontend or public data, and introduces no capability authorization."}
+  ],
+  "commands": [
+    "verify remote PR head, commit and tree",
+    "independently recompute normalized reviewed-content digest",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "focused source-binding, alternative-precision, temporal-union, lineage, route, frontier and withdrawal mutations",
+    "python scripts/release_check.py",
+    "git diff --check",
+    "verify protected #329/#330, Gate C, project-state, runtime and public-data scopes unchanged"
+  ],
+  "conclusion": "Round 8 resolves both open round-7 semantic findings without weakening prior semantic boundaries. The frozen revision is READY for the semantic-model track."
+}

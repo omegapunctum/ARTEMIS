@@ -361,8 +361,10 @@ three to transition together. After content freeze, the descendant may change on
 package/contract lifecycle files, registry, acceptance decision and the two pre-issued current review
 artifacts; any other changed path invalidates READY even when it was outside `review_scope`.
 Canonical READY validation runs only on a clean Git index/worktree with no untracked or ignored
-files. Every allowed lifecycle/control path must resolve to a regular in-repository `100644` Git
-blob; symlinks and external mutable payloads are invalid.
+files. It rejects tracked index entries marked `assume-unchanged`, `skip-worktree` or another
+nonstandard visibility state, forces a full index refresh, then evaluates cleanliness. Every allowed
+lifecycle/control path must resolve to a regular in-repository `100644` Git blob; symlinks and
+external mutable payloads are invalid.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

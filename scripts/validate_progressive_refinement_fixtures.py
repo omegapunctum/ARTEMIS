@@ -425,7 +425,18 @@ def validate_clean_state(status_output: str, all_other_files: str) -> None:
         fail("READY validation requires a clean index/worktree with no untracked or ignored files")
 
 
+def validate_index_visibility(index_entries: bytes) -> None:
+    hidden_entries = [
+        entry for entry in index_entries.split(b"\0")
+        if entry and not entry.startswith(b"H ")
+    ]
+    if hidden_entries:
+        fail("READY validation rejects assume-unchanged, skip-worktree or nonstandard index entries")
+
+
 def validate_clean_checkout() -> None:
+    validate_index_visibility(git_output("ls-files", "-v", "-z"))
+    git_output("update-index", "--really-refresh")
     validate_clean_state(
         git_output("status", "--porcelain=v1", "--untracked-files=all").decode(),
         git_output("ls-files", "--others").decode(),
