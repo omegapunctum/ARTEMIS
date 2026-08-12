@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical foundation index.
-- Версия: 3.1.
-- Дата: 2026-08-09.
+- Версия: 3.2.
+- Дата: 2026-08-12.
 - Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
 
@@ -224,19 +224,20 @@ Completed product gate:
 
 2. Issues `#332` / `#360` + PR `#362`: Gate C `FREEZE` for the non-public Leonardo-in-Romagna World Slice, 8 August–31 December 1502.
 
-Next product gate:
+Active product gate:
 
-3. Gate D — source-aware Globe experience. It is the next transition but is **not currently opened/in progress**.
+3. Gate D — source-aware Globe experience. It is **in progress** under #355 as a non-public contour over the frozen Gate C package.
 
 Foundation status:
 
 4. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
 
-Paused/gated:
+Deferred/gated:
 
-5. Issue `#331`: coexistence/encounter/interaction/influence distinctions; required before documented Relation predicates enter the real corpus/runtime.
-6. Issues `#333`–`#334`: explorer/validation goals may be reused inside #355 when the corresponding gate is opened; they do not define a standalone sequential path.
-7. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
+5. Issue `#331`: deferred; required before documented Relation predicates enter the real corpus/runtime.
+6. Issue `#333`: superseded by #355 Gate D. Issue `#334`: deferred until Gate E.
+7. Issues `#371` / `#373`: deferred; no Airtable historical import or review is active, and `historical_rows_authorized=false` remains fail-closed.
+8. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
 
 Frozen:
 

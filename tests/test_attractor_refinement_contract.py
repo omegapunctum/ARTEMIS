@@ -61,17 +61,20 @@ def test_attractor_refinement_does_not_advance_product_gate_or_capability() -> N
     master = _read("docs/ARTEMIS_MASTER_PROMPT.md")
     truth = _read("docs/PROJECT_TRUTH.md")
 
-    assert state["gate"]["id"] == "C"
-    assert state["gate"]["status"] == "completed"
-    assert state["gate"]["decision"] == "FREEZE"
+    gate_c = state["completed_gates"][0]
+    assert gate_c["id"] == "C"
+    assert gate_c["status"] == "completed"
+    assert gate_c["decision"] == "FREEZE"
+    assert state["gate"]["id"] == "D"
+    assert state["gate"]["status"] == "in_progress"
     assert state["next_transition"]["gate"] == "D"
     assert state["capability"]["globe"] == "non_public_r_and_d"
     assert state["github"]["active_issues"] == [355]
 
     assert "Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**" in foundation
-    assert "Gate D — source-aware Globe experience — is the next product gate, but it is **not currently opened/in progress**" in master
+    assert "Gate D — source-aware Globe experience — is **currently in progress**" in master
     assert "Foundation v3.1 / #363 / PR #364 is completed" in truth
-    assert "Gate D is still only the next product gate" in truth
+    assert "Gate D is now separately opened and in progress under #355" in truth
 
 
 def test_personal_knowledge_remains_future_and_does_not_change_entity_model() -> None:

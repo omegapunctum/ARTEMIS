@@ -1,9 +1,9 @@
-# ARTEMIS — PROJECT PHASES v6.3
+# ARTEMIS — PROJECT PHASES v6.4
 
 ## Статус
 
 - Тип: canonical operational phases document.
-- Дата: 2026-08-09.
+- Дата: 2026-08-12.
 - Активная фаза: **4.8 Globe MVP vertical / real World Slice**.
 - Active primary issue: **#355**.
 - Completed Gate C delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
@@ -46,9 +46,9 @@ Completed:
 - #329 / PR #336 — reviewed World Model fixtures;
 - #330 / PR #337 — reviewed uncertainty semantics.
 
-Paused:
+Deferred:
 
-- #331 — documented Relation predicate semantics.
+- #331 — documented Relation predicate semantics; reopen before such predicates enter the corpus/runtime.
 
 #331 no longer blocks Globe infrastructure, time/layer synchronization or a real slice without documented Relations. It becomes blocking before documented encounter, interaction, influence or causal predicates enter the corpus/runtime. Derived proximity/co-presence remains separate meanwhile.
 
@@ -60,7 +60,7 @@ Paused:
 
 - completed in PRs #356–#357;
 - canonical owners agree on #355;
-- PR #338 remains closed and #331 paused;
+- PR #338 remains closed and #331 deferred;
 - Release Discipline Gate is green.
 
 ### Gate B — Cross-renderer parity
@@ -82,7 +82,8 @@ Paused:
 
 ### Gate D — Source-aware Globe experience
 
-- next gate; not started by the Gate C decision;
+- **ACTIVE / IN PROGRESS** under #355; opened separately after the Gate C freeze;
+- consume the frozen repository package directly; #371/#373 Airtable import/review are deferred and no historical write is authorized;
 - consume World Model → Explorer State → Render Projection;
 - synchronize time, layers and selection;
 - expose sources, uncertainty, alternatives, coverage and projection losses;
@@ -92,6 +93,7 @@ Paused:
 
 ### Gate E — Evidence and decision
 
+- deferred until Gate D exit evidence exists; issue #334 is not active during Gate D;
 - provide a reproducible non-public preview/review artifact;
 - compare against the current 2D same-content baseline where useful;
 - test contextual understanding and semantic literacy rather than visual novelty alone;

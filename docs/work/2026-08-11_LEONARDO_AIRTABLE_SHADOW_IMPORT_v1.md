@@ -1,12 +1,12 @@
 # ARTEMIS — Leonardo Gate C Airtable Shadow Import v1
 
-Status: **ACTIVE / ROW PLAN FROZEN / LIVE HISTORICAL WRITE BLOCKED**  
-Date: 2026-08-11  
-Issue: #371  
-Implementation: draft PR #372  
-Parent product contour: #355  
-Predecessor: #368 / PR #369  
-Product gate: Gate C remains `completed/FREEZE`; Gate D remains unopened.
+Status: **PREFLIGHT COMPLETE / IMPORT DEFERRED / LIVE HISTORICAL WRITE BLOCKED**
+Date: 2026-08-12
+Issue: #371
+Implementation: merged PR #372
+Parent product contour: #355
+Predecessor: #368 / PR #369
+Product gate: Gate C remains `completed/FREEZE`; Gate D is separately in progress under #355.
 
 ## 1. Goal
 
@@ -16,7 +16,9 @@ Prove a deterministic and fail-closed mapping from the frozen, authoritative rep
 
 into a non-authoritative Airtable shadow representation, then prove round-trip semantic parity before Airtable can be used as a practical editorial surface for this World Slice.
 
-This work is data-governance maintenance outside the one-product-gate WIP slot. It does not start Gate D, change the public runtime, promote historical Claims or resume #331 Relation semantics.
+This work is data-governance maintenance outside the one-product-gate WIP slot. It did not start Gate D, change the public runtime, promote historical Claims or resume #331 Relation semantics.
+
+The mapping preflight was merged fail-closed. Progressive fidelity now lets Gate D consume the frozen repository package directly, so #371/#373 and all historical Airtable writes are deferred. The nine shadow tables remain empty and `historical_rows_authorized=false` remains authoritative.
 
 ## 2. Starting boundary
 
@@ -170,16 +172,16 @@ At the row-plan-lock stage:
 - no import status may claim parity;
 - no legacy Layer or Source may be created for convenience;
 - no route line or Region polygon may be invented;
-- no stored Relation predicate may be added while #331 is paused;
+- no stored Relation predicate may be added while #331 is deferred;
 - no Claim or Source may be promoted from draft merely because it will be imported;
 - no `data/*`, Architecture Atlas exporter or public runtime may change;
-- Gate D remains unopened.
+- this contour cannot open, advance or validate Gate D.
 
 A green row-plan lock proves deterministic mapping, not the correctness of live write behavior and not round-trip parity.
 
-## 8. Next transition inside #371
+## 8. Deferred transition inside #371
 
-The next allowed step is **independent review of the exact frozen row plan/mapping**.
+If #371 is explicitly reopened, the next allowed step is **independent review of the exact frozen row plan/mapping** under #373.
 
 Only after that review is recorded against the same digest may #371 move to a separate controlled-write revision that:
 
@@ -192,4 +194,4 @@ Only after that review is recorded against the same digest may #371 move to a se
 7. records any actual import/review cost;
 8. only then closes #371 as completed data-governance evidence.
 
-That completion still does not open Gate D. Gate D requires its separate #355 lifecycle transition.
+That future completion would still not open or advance Gate D. Gate D has its separate #355 lifecycle.

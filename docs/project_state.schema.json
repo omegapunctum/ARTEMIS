@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.json",
-  "title": "ARTEMIS machine-readable operational state v1",
+  "$id": "https://artemis.example/schemas/project-state-v1.1.json",
+  "title": "ARTEMIS machine-readable operational state v1.1",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -11,6 +11,7 @@
     "north_star_ref",
     "active_vertical",
     "phase",
+    "completed_gates",
     "gate",
     "work_in_progress_limit",
     "github",
@@ -19,8 +20,37 @@
     "blockers",
     "next_transition"
   ],
+  "$defs": {
+    "gateCEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frozen_commit", "frozen_tree", "reviewed_content_digest", "review_registry_ref", "gate_decision_ref", "review_cost_ref"],
+      "properties": {
+        "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "reviewed_content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "review_registry_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"},
+        "gate_decision_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json"},
+        "review_cost_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"}
+      }
+    },
+    "completedGateC": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "status", "allowed_decisions", "decision", "next_gate", "evidence"],
+      "properties": {
+        "id": {"const": "C"},
+        "label": {"type": "string", "minLength": 1},
+        "status": {"const": "completed"},
+        "allowed_decisions": {"const": ["FREEZE", "NARROW", "REJECT"]},
+        "decision": {"enum": ["FREEZE", "NARROW", "REJECT"]},
+        "next_gate": {"const": "D"},
+        "evidence": {"$ref": "#/$defs/gateCEvidence"}
+      }
+    }
+  },
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -43,31 +73,25 @@
         "status": {"const": "active"}
       }
     },
+    "completed_gates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {"$ref": "#/$defs/completedGateC"}
+    },
     "gate": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "label", "status", "allowed_decisions"],
       "properties": {
-        "id": {"enum": ["C", "D", "E"]},
+        "id": {"enum": ["D", "E"]},
         "label": {"type": "string", "minLength": 1},
-        "status": {"enum": ["in_progress", "completed", "blocked"]},
+        "status": {"enum": ["in_progress", "blocked"]},
         "allowed_decisions": {
           "type": "array",
-          "const": ["FREEZE", "NARROW", "REJECT"]
-        },
-        "decision": {"enum": ["FREEZE", "NARROW", "REJECT"]},
-        "evidence": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["frozen_commit", "frozen_tree", "reviewed_content_digest", "review_registry_ref", "gate_decision_ref", "review_cost_ref"],
-          "properties": {
-            "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-            "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-            "reviewed_content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-            "review_registry_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"},
-            "gate_decision_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json"},
-            "review_cost_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"}
-          }
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
         }
       }
     },
@@ -75,10 +99,12 @@
     "github": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["active_issues", "paused_issues", "completed_issues", "completed_prerequisites"],
+      "required": ["active_issues", "paused_issues", "deferred_issues", "superseded_issues", "completed_issues", "completed_prerequisites"],
       "properties": {
         "active_issues": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer"}},
         "paused_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "deferred_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "superseded_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
         "completed_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
         "completed_prerequisites": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
       }
@@ -105,20 +131,9 @@
       "additionalProperties": false,
       "required": ["gate", "condition"],
       "properties": {
-        "gate": {"enum": ["C", "D", "E", "STOP"]},
+        "gate": {"enum": ["D", "E", "STOP"]},
         "condition": {"type": "string", "minLength": 1}
       }
     }
-  },
-  "allOf": [
-    {
-      "if": {"properties": {"gate": {"properties": {"status": {"const": "completed"}}}}},
-      "then": {
-        "properties": {
-          "gate": {"required": ["decision", "evidence"]},
-          "blockers": {"maxItems": 0}
-        }
-      }
-    }
-  ]
+  }
 }

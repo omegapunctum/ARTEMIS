@@ -5,7 +5,7 @@ This validator performs no network access and no Airtable writes. It proves that
 
 - the completed #368 v1 empty shadow schema remains valid;
 - the #371 v2 live extension snapshot matches its executable contract;
-- Gate C remains completed/FREEZE and Gate D remains unopened;
+- Gate C remains completed/FREEZE in history and this contour never opens Gate D;
 - the frozen Leonardo package has the reviewed counts and closed reference graph;
 - the package deterministically expands to 11 ObjectParts without geometry invention;
 - four World Model layers are isolated from legacy Architecture Atlas Layers;
@@ -90,12 +90,15 @@ def _validate_project_boundary(project_state: dict[str, Any], extension: dict[st
     next_transition = project_state.get("next_transition", {})
     github = project_state.get("github", {})
     capability = project_state.get("capability", {})
+    completed_gates = project_state.get("completed_gates", [])
+    gate_c = next((item for item in completed_gates if item.get("id") == "C"), {})
 
-    _require(gate.get("id") == "C", "project must remain at Gate C")
-    _require(gate.get("status") == "completed", "Gate C must remain completed")
-    _require(gate.get("decision") == "FREEZE", "Gate C decision must remain FREEZE")
-    _require(next_transition.get("gate") == "D", "Gate D must remain only the next transition")
-    _require(github.get("paused_issues") == [331], "Relation issue #331 must remain paused")
+    _require(gate_c.get("status") == "completed", "Gate C history must remain completed")
+    _require(gate_c.get("decision") == "FREEZE", "Gate C history must retain FREEZE")
+    _require(gate.get("id") == "D", "current project gate must be D")
+    _require(gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
+    _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
+    _require(331 in github.get("deferred_issues", []), "Relation issue #331 must remain deferred")
     _require(capability.get("globe") == "non_public_r_and_d", "Globe must remain non-public")
     _require(capability.get("world_slice") == "gate_c_frozen_non_public", "World Slice must remain frozen/non-public")
 
@@ -104,8 +107,8 @@ def _validate_project_boundary(project_state: dict[str, Any], extension: dict[st
     _require(boundary.get("current_status") == "completed", "v2 Gate C status drift")
     _require(boundary.get("current_decision") == "FREEZE", "v2 Gate C decision drift")
     _require(boundary.get("next_gate") == "D", "v2 next gate drift")
-    _require(boundary.get("next_gate_opened") is False, "v2 must not open Gate D")
-    _require(boundary.get("paused_relation_issue") == 331, "v2 must preserve paused #331")
+    _require(boundary.get("next_gate_opened") is False, "v2 contour must not be the action that opened Gate D")
+    _require(boundary.get("paused_relation_issue") == 331, "v2 must preserve the #331 Relation gate")
 
     rules = extension.get("rules", {})
     for key in (
@@ -443,7 +446,7 @@ def main() -> int:
         f"{summary['world_sources']} sources, {summary['claims']} Claims, "
         f"{summary['evidence_links']} EvidenceLinks, {summary['uncertainties']} Uncertainties, "
         f"{summary['uncertainty_targets']} uncertainty targets, {summary['slice_layers']} slice layers; "
-        "all v2 extension tables remain empty and Gate D remains unopened"
+        "all v2 extension tables remain empty; this preflight did not open Gate D"
     )
     return 0
 

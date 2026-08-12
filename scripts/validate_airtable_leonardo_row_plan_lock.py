@@ -62,8 +62,11 @@ def validate() -> dict[str, Any]:
 
     gate = project_state.get("gate", {})
     next_transition = project_state.get("next_transition", {})
-    _require(gate.get("id") == "C" and gate.get("status") == "completed" and gate.get("decision") == "FREEZE", "Gate C boundary drift")
-    _require(next_transition.get("gate") == "D", "Gate D must remain only the next transition")
+    completed_gates = project_state.get("completed_gates", [])
+    gate_c = next((item for item in completed_gates if item.get("id") == "C"), {})
+    _require(gate_c.get("status") == "completed" and gate_c.get("decision") == "FREEZE", "Gate C history drift")
+    _require(gate.get("id") == "D" and gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
+    _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
 
     plan = builder.build_plan()
     digest = builder._digest(plan)
@@ -93,7 +96,7 @@ def validate() -> dict[str, Any]:
     _require(authorization.get("historical_rows_authorized") is False, "historical rows must remain unauthorized at lock stage")
     _require(authorization.get("independent_mapping_review_required") is True, "independent mapping review must remain required")
     _require(authorization.get("round_trip_parity_required_after_write") is True, "round-trip parity requirement missing")
-    _require(authorization.get("gate_d_opened") is False, "row-plan lock must not open Gate D")
+    _require(authorization.get("gate_d_opened") is False, "row-plan contour must not be the action that opened Gate D")
 
     isolation = lock.get("legacy_isolation", {})
     _require(isolation.get("KnowledgeObjects.layers") == "must_remain_empty", "legacy Layers isolation drift")

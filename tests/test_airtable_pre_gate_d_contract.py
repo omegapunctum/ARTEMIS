@@ -39,15 +39,18 @@ def test_alignment_document_preserves_storage_and_gate_boundaries() -> None:
     assert "reverse direction is prohibited" in text
 
 
-def test_project_state_remains_gate_c_freeze_with_gate_d_only_next() -> None:
+def test_project_state_retains_gate_c_freeze_and_opens_gate_d_separately() -> None:
     state = json.loads(PROJECT_STATE.read_text(encoding="utf-8"))
 
-    assert state["gate"]["id"] == "C"
-    assert state["gate"]["status"] == "completed"
-    assert state["gate"]["decision"] == "FREEZE"
+    gate_c = state["completed_gates"][0]
+    assert gate_c["id"] == "C"
+    assert gate_c["status"] == "completed"
+    assert gate_c["decision"] == "FREEZE"
+    assert state["gate"]["id"] == "D"
+    assert state["gate"]["status"] == "in_progress"
     assert state["next_transition"]["gate"] == "D"
     assert state["capability"]["globe"] == "non_public_r_and_d"
-    assert state["github"]["paused_issues"] == [331]
+    assert 331 in state["github"]["deferred_issues"]
 
 
 def test_legacy_audit_entrypoint_uses_canonical_semantic_gate() -> None:
