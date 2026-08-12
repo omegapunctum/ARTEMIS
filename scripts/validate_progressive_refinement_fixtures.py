@@ -241,6 +241,43 @@ def temporal_semantic_envelope(extent: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def temporal_members(extent: dict[str, Any]) -> list[dict[str, Any]]:
+    primary = {
+        key: value
+        for key, value in extent.items()
+        if key not in {"alternatives", "basis_claim_refs", "certainty", "normalization_state", "calendar"}
+    }
+    return [primary, *extent["alternatives"]]
+
+
+def temporal_member_subset(child: dict[str, Any], parent: dict[str, Any]) -> bool:
+    child_start = parse_day(child["start"], "temporal subset child.start")
+    child_end = parse_day(child["end"], "temporal subset child.end")
+    parent_start = parse_day(parent["start"], "temporal subset parent.start")
+    parent_end = parse_day(parent["end"], "temporal subset parent.end")
+    if parent_start is not None:
+        if child_start is None or child_start < parent_start:
+            return False
+        if child_start == parent_start and child["start_inclusive"] and not parent["start_inclusive"]:
+            return False
+    if parent_end is not None:
+        if child_end is None or child_end > parent_end:
+            return False
+        if child_end == parent_end and child["end_inclusive"] and not parent["end_inclusive"]:
+            return False
+    qualifier_narrowing = {
+        "exact": {"exact"},
+        "approximate": {"approximate", "exact"},
+        "not_before": {"not_before", "exact"},
+        "not_after": {"not_after", "exact"},
+        "unknown": {"unknown"},
+    }
+    return (
+        child["start_qualifier"] in qualifier_narrowing[parent["start_qualifier"]]
+        and child["end_qualifier"] in qualifier_narrowing[parent["end_qualifier"]]
+    )
+
+
 def canonical_sha256(value: Any) -> str:
     payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
@@ -404,6 +441,16 @@ def validate_acceptance_binding(
         fail("pending acceptance decision cannot claim a decision or frozen revision")
 
 
+def validate_capability_prohibitions(decision: dict[str, Any]) -> None:
+    prohibited = (
+        "runtime_migration_authorized",
+        "airtable_historical_write_authorized",
+        "public_capability_change",
+    )
+    if any(decision.get(field) is not False for field in prohibited):
+        fail("progressive refinement decision cannot authorize runtime, Airtable or public capability changes")
+
+
 def validate_review_envelope() -> dict[str, Any]:
     request = read_json(REVIEW_REQUEST_PATH)
     registry = read_json(REVIEW_REGISTRY_PATH)
@@ -412,6 +459,7 @@ def validate_review_envelope() -> dict[str, Any]:
     validate_schema(registry, read_json(REVIEW_REGISTRY_SCHEMA_PATH))
     decision = read_json(ACCEPTANCE_DECISION_PATH)
     validate_schema(decision, read_json(ACCEPTANCE_DECISION_SCHEMA_PATH))
+    validate_capability_prohibitions(decision)
     tracks = request["required_tracks"]
 
     digest = reviewed_content_sha256(request)
@@ -463,6 +511,9 @@ def validate_review_envelope() -> dict[str, Any]:
     def frozen_loader(raw_path: str) -> bytes:
         return git_output("show", f"{frozen_commit}:{raw_path}")
 
+    request_ref = REVIEW_REQUEST_PATH.relative_to(ROOT).as_posix()
+    if frozen_loader(request_ref) != REVIEW_REQUEST_PATH.read_bytes():
+        fail("review request identity/scope does not match the frozen commit")
     if reviewed_content_sha256(request, frozen_loader) != digest:
         fail("frozen commit does not contain the reviewed content digest")
 
@@ -618,6 +669,18 @@ def validate_revision_semantics(
         old_start, old_end = validate_time_extent(predecessor_assertion["valid_time"], f"{predecessor['id']}.valid_time")
         new_start, new_end = validate_time_extent(assertion["valid_time"], f"{revision_id}.valid_time")
         if dimension == "temporal":
+            if (
+                assertion["valid_time"]["calendar"],
+                assertion["valid_time"]["normalization_state"],
+            ) != (
+                predecessor_assertion["valid_time"]["calendar"],
+                predecessor_assertion["valid_time"]["normalization_state"],
+            ):
+                fail(f"{revision_id} temporal refinement must keep the predecessor calendar profile")
+            parent_members = temporal_members(predecessor_assertion["valid_time"])
+            for child_member in temporal_members(assertion["valid_time"]):
+                if not any(temporal_member_subset(child_member, parent_member) for parent_member in parent_members):
+                    fail(f"{revision_id} temporal possible set is not contained by its predecessor")
             if None in {old_start, old_end, new_start, new_end}:
                 fail(f"{revision_id} temporal refine requires finite bounds")
             assert old_start is not None and old_end is not None and new_start is not None and new_end is not None

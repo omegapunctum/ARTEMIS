@@ -23,6 +23,7 @@ from scripts.validate_progressive_refinement_fixtures import (
     package_semantic_payload,
     safe_metadata_path,
     validate_acceptance_binding,
+    validate_capability_prohibitions,
     validate_package,
     validate_review_artifact,
     validate_time_extent,
@@ -116,6 +117,29 @@ def test_review_scope_rejects_review_metadata() -> None:
     request["review_scope"].append("fixtures/world_model/refinement/v1/review_registry.json")
     with pytest.raises(RefinementValidationError, match="review metadata"):
         reviewed_content_sha256(request)
+
+
+def test_review_request_identity_and_scope_are_frozen_by_exact_bytes() -> None:
+    validator_source = (
+        ROOT / "scripts" / "validate_progressive_refinement_fixtures.py"
+    ).read_text(encoding="utf-8")
+    assert 'frozen_loader(request_ref) != REVIEW_REQUEST_PATH.read_bytes()' in validator_source
+    assert "review request identity/scope does not match the frozen commit" in validator_source
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["runtime_migration_authorized", "airtable_historical_write_authorized", "public_capability_change"],
+)
+def test_capability_prohibitions_are_enforced_by_reviewed_validator(field: str) -> None:
+    decision = {
+        "runtime_migration_authorized": False,
+        "airtable_historical_write_authorized": False,
+        "public_capability_change": False,
+    }
+    decision[field] = True
+    with pytest.raises(RefinementValidationError, match="cannot authorize runtime, Airtable or public"):
+        validate_capability_prohibitions(decision)
 
 
 def test_review_registry_rejects_content_digest_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -325,7 +349,32 @@ def test_rejects_false_temporal_refinement(tmp_path: Path) -> None:
     item["normalized_assertion"]["valid_time"]["end"] = "1502-07-31"
     item["normalized_assertion"]["value"]["start"] = "1502-07-31"
     item["normalized_assertion"]["value"]["end"] = "1502-07-31"
-    assert_rejected(tmp_path, package, "temporal possible set is not strictly narrower")
+    assert_rejected(tmp_path, package, "temporal possible set")
+
+
+def test_temporal_refinement_cannot_change_calendar_profile(tmp_path: Path) -> None:
+    package = load_package()
+    extent = revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]
+    extent["calendar"] = "source_native_unresolved"
+    extent["normalization_state"] = "unresolved"
+    assert_rejected(tmp_path, package, "must keep the predecessor calendar profile")
+
+
+def test_temporal_refinement_alternatives_must_stay_in_predecessor_possible_set(tmp_path: Path) -> None:
+    package = load_package()
+    revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]["alternatives"] = [{
+        "id": "alternative-outside-predecessor",
+        "kind": "instant",
+        "start": "1600-01-01",
+        "end": "1600-01-01",
+        "start_inclusive": True,
+        "end_inclusive": True,
+        "start_qualifier": "exact",
+        "end_qualifier": "exact",
+        "precision": "day",
+        "basis_claim_refs": ["claim-leo-time-refined"],
+    }]
+    assert_rejected(tmp_path, package, "possible set is not contained by its predecessor")
 
 
 def test_rejects_false_spatial_refinement(tmp_path: Path) -> None:

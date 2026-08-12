@@ -82,6 +82,16 @@ The round-3 candidate closes all four paths with controlled-corruption tests. Ea
 retained as history and do not count toward round 3; acceptance still requires two fresh independent
 reviews on one new exact commit/digest.
 
+Round 3 froze commit `3d0062a87b04599d4e3dcf3be2ff94770c850eaa` with reviewed-content
+digest `848254c2dbd3d789f947c07b4d120d9b89b98639f09b95adedf479e6aa22c27b`.
+Both tracks returned `CHANGES_REQUIRED`: temporal refinement did not constrain calendar profiles or
+alternatives to the predecessor possible set, and mutable control metadata could replace review
+scope/reviewer slots or authorize runtime/Airtable/public changes after review.
+
+Round 4 binds the exact review request bytes to the frozen commit, enforces all capability
+prohibitions in reviewed validator code, and validates the full temporal possible-set subset. The
+round-3 artifacts remain immutable history and do not count toward round 4.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration
