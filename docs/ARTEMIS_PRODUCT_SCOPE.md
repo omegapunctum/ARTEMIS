@@ -84,10 +84,10 @@ ARTEMIS развивается **от общего к частному**. Тек
 
 Это правило экономит curation/research budget, но **не ослабляет accuracy, provenance, uncertainty или evidence requirements**.
 
-The proposed append-only recording/refinement mechanism is scoped by issue `#377` and
-`PROGRESSIVE_REFINEMENT_CONTRACT.md`. Until that contour is independently accepted, Gate D must
-consume the frozen Gate C fidelity and must not implement mutable precision updates as if they were
-lossless knowledge revisions.
+The append-only recording/refinement mechanism is scoped by issue `#377` and
+`PROGRESSIVE_REFINEMENT_CONTRACT.md`; its exact lifecycle is owned by the contract/registry. Gate D
+must consume the frozen Gate C fidelity, and mutable precision/history behavior requires a separate
+implementation authorization even after contract acceptance.
 
 ## 4. Обязательный interface scope
 

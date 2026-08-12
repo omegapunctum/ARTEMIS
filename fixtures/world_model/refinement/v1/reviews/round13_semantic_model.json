@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 13,
+  "review_id": "refinement-v1-round13-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r13",
+  "reviewer_instance_id": "semantic-r13-canonical-routing-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r13",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "7076e79e9c8915ac9f16faad4e7cfbcdee4bb56e",
+  "frozen_tree": "1f12a870c9b5c741a7c9d1d31aee983a9dffa9f9",
+  "reviewed_content_sha256": "9234431ce6e302b06d4a513d05fa89bb9dad10fbfe1978c191133b37ce3665ca",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 1,
+  "findings": [
+    {"finding_id": "REF-SEM-R13-001", "severity": "material", "status": "open", "summary": "The canonical #377 routing corpus remained incomplete: product scope and fixture README were absent from scope and retained candidate-only status wording; Foundation Index retained candidate-owner wording."},
+    {"finding_id": "REF-SEM-R13-002", "severity": "informational", "status": "accepted", "summary": "The remediated operating-system, priorities, work-registry and decision text correctly delegated lifecycle and preserved Gate D/capability boundaries."},
+    {"finding_id": "REF-SEM-R13-003", "severity": "informational", "status": "accepted", "summary": "Remote binding, semantic and ledger locks, prior artifacts, protected scopes and ten workflows remained intact."}
+  ],
+  "commands": [
+    "verify remote head, tree and digest",
+    "globally inspect current #377 routing corpus and review scope",
+    "verify semantic/ledger/source locks and prior artifacts",
+    "verify protected scopes and workflow conclusions",
+    "git diff --check"
+  ],
+  "conclusion": "Round 13 remains CHANGES_REQUIRED until Product Scope and the fixture README are lifecycle-neutral and frozen with the rest of the current #377 routing corpus."
+}

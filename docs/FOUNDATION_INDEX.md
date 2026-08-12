@@ -141,7 +141,7 @@ The active v1.0 file is part of the immutable #329 READY review scope. Foundatio
 For executable temporal/spatial uncertainty normalization and query behavior, the scoped owner is `UNCERTAINTY_SEMANTICS_CONTRACT.md`. It extends the immutable #329 base; it does not redefine core object identity or runtime schemas.
 
 For append-only coarse-to-fine Claim/reconstruction lineage, valid-time versus record-time
-separation and deterministic current-frontier behavior, the scoped candidate owner is
+separation and deterministic current-frontier behavior, the scoped owner is
 `PROGRESSIVE_REFINEMENT_CONTRACT.md`. Its contract/registry owns the exact lifecycle; neither
 candidate nor accepted status can by itself authorize runtime/storage migration.
 

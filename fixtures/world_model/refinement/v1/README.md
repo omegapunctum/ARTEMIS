@@ -1,6 +1,6 @@
 # ARTEMIS progressive refinement fixtures v1
 
-Status: `REVIEW_REQUIRED`.
+Lifecycle: exact candidate/READY status is owned by `review_registry.json` and the contract.
 
 Issue: [#377](https://github.com/omegapunctum/ARTEMIS/issues/377).
 
@@ -32,11 +32,11 @@ python -m pytest -q tests/test_progressive_refinement_fixtures.py
 ## Independent review
 
 `review_request.json` freezes the two review tracks and the exact reviewed-file scope.
-`review_registry.json` stays fail-closed with no reviews until both independent read-only tasks bind
-one remote commit and one computed content digest. Review artifacts must validate against
-`review_artifact.schema.json`; green CI alone cannot change the package to `READY`.
-Round-1 through round-5 `CHANGES_REQUIRED` artifacts remain immutable review history. Round 6 uses
-new pre-issued reviewer instances and must independently verify the remediated frozen revision.
+`review_registry.json` stays fail-closed in candidate state and binds both independent read-only
+tasks to one remote commit and one computed content digest before READY. Review artifacts must
+validate against `review_artifact.schema.json`; green CI alone cannot change package lifecycle.
+All prior round artifacts remain immutable review history; only the two pre-issued slots in the
+current request can satisfy the active review round.
 
 ## Boundary
 

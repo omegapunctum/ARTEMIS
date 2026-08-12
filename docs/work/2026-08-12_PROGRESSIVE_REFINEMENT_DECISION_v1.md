@@ -192,6 +192,15 @@ encoded a permanent candidate state.
 Round 13 makes the remaining current routing corpus lifecycle-neutral and includes all of it in the
 frozen review scope. Round-12 artifacts remain immutable history and do not count toward new reviews.
 
+Round 13 froze commit `7076e79e9c8915ac9f16faad4e7cfbcdee4bb56e` with reviewed-content
+digest `9234431ce6e302b06d4a513d05fa89bb9dad10fbfe1978c191133b37ce3665ca`.
+Validator-integrity returned `READY`; semantic-model returned `CHANGES_REQUIRED` because product
+scope and fixture README were still outside scope with candidate-only wording, and Foundation Index
+retained one candidate-owner label.
+
+Round 14 neutralizes and freezes those final current #377 documents. Round-13 artifacts remain
+immutable history and do not count toward new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration
