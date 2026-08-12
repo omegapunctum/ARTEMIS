@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.1.
-- Дата: 2026-08-09.
+- Версия: 3.2.
+- Дата: 2026-08-12.
 - Active vertical: `Life in Context` Globe MVP / issue `#355`.
 - Thematic baseline retained: `Architecture Atlas`.
 - North Star: `ARTEMIS_CONCEPT.md`.
@@ -66,6 +66,22 @@ ARTEMIS Life in Context — **source-aware synchronized Globe/timeline/layer exp
 - explicit spatial, temporal and corpus uncertainty.
 
 Каждый included element должен служить validation hypothesis. Полнота эпохи не является целью.
+
+### 3.1 Progressive fidelity / достаточная точность
+
+ARTEMIS развивается **от общего к частному**. Текущий gate требует не максимальной возможной детализации, а минимальной достаточной fidelity, которая честно поддерживает validation hypothesis и пользовательский сценарий.
+
+Правила:
+
+- source-native precision и raw/source values сохраняются, если они доступны и полезны для provenance;
+- исследовательская и curation работа не обязана добиваться более тонкой temporal/spatial granularity, если это не меняет material product or validation semantics;
+- более высокая точность приоритетна только когда она меняет identity, ordering, overlap/co-presence, geometry, relation interpretation, пользовательское понимание или gate decision;
+- hour-level reconstruction движения исторического объекта не является требованием текущего Globe MVP, если day/month/year/range/unknown precision уже достаточна для сценария;
+- UI/runtime может показывать более крупный масштаб времени/пространства, чем хранится в source-native metadata, но не может показывать более точное значение, чем подтверждено данными;
+- последующая revision может уточнять время, место или geometry без смены object identity и без переписывания истории evidence;
+- coarse current scope никогда не разрешает invented exactness: неизвестное остаётся неизвестным, а отсутствие точного route не заполняется правдоподобной линией.
+
+Это правило экономит curation/research budget, но **не ослабляет accuracy, provenance, uncertainty или evidence requirements**.
 
 ## 4. Обязательный interface scope
 
