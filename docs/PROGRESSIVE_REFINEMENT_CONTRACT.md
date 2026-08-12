@@ -3,9 +3,9 @@
 ## Status
 
 - Type: scoped canonical extension candidate.
-- Version: 1.0-draft.
+- Version: 1.0.
 - Date: 2026-08-12.
-- Status: `REVIEW_REQUIRED` under issue `#377`.
+- Status: `READY` under issue `#377`.
 - Extends: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `EPISTEMIC_CONTRACT.md` and `ENTITY_MODEL.md`.
 - Owns: non-destructive coarse-to-fine knowledge refinement, revision lineage and deterministic current-view semantics.
 - Does not own: core object identity, relation semantics, runtime/database schema, Airtable authority, historical readiness or public capability.

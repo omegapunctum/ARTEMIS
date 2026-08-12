@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "status": "REVIEW_REQUIRED",
+  "status": "READY",
   "issue": 377,
   "pull_request": 378,
   "current_round": 10,
@@ -10,8 +10,8 @@
     "validator-integrity"
   ],
   "required_independence_method": "separate_agent_task_read_only",
-  "frozen_commit": null,
-  "frozen_tree": null,
+  "frozen_commit": "c2eabcf30165ee6670790defbda16af562690490",
+  "frozen_tree": "921b84d4321954145e9b760b49812fefd35326b9",
   "reviewed_content_sha256": "36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8",
   "prior_reviews": [
     {
@@ -285,5 +285,36 @@
       "artifact_sha256": "d3d6e7a19b63bb9bf195dd396140fa66bcbe6393b2ff942768ea4f21f854cda7"
     }
   ],
-  "reviews": []
+  "reviews": [
+    {
+      "review_round": 10,
+      "review_id": "refinement-v1-round10-semantic-model",
+      "reviewer_id": "codex-semantic-model-reviewer-r10",
+      "reviewer_instance_id": "semantic-r10-git-context-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r10",
+      "track": "semantic-model",
+      "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "c2eabcf30165ee6670790defbda16af562690490",
+      "frozen_tree": "921b84d4321954145e9b760b49812fefd35326b9",
+      "reviewed_content_sha256": "36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8",
+      "decision": "READY",
+      "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round10_semantic_model.json",
+      "artifact_sha256": "5a28afac2d1dc686f099a05f12b8efa915f7091b34b30be401333b634b5ea55d"
+    },
+    {
+      "review_round": 10,
+      "review_id": "refinement-v1-round10-validator-integrity",
+      "reviewer_id": "codex-validator-integrity-reviewer-r10",
+      "reviewer_instance_id": "validator-r10-git-context-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r10",
+      "track": "validator-integrity",
+      "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "c2eabcf30165ee6670790defbda16af562690490",
+      "frozen_tree": "921b84d4321954145e9b760b49812fefd35326b9",
+      "reviewed_content_sha256": "36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8",
+      "decision": "READY",
+      "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round10_validator_integrity.json",
+      "artifact_sha256": "6960b78af427d34943fb41cb95b97ca09adbeb2b0abb097d8e14055a7e164479"
+    }
+  ]
 }
