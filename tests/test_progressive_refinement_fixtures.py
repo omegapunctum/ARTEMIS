@@ -252,8 +252,8 @@ def test_candidate_is_routed_as_review_required_not_capability() -> None:
 
 
 def test_required_ci_guards_are_wired() -> None:
-    etl = (ROOT / ".github" / "workflows" / "etl.yml").read_text(encoding="utf-8")
-    release = (ROOT / ".github" / "workflows" / "release-gate.yml").read_text(encoding="utf-8")
-    for workflow in (etl, release):
-        assert "python scripts/validate_progressive_refinement_fixtures.py" in workflow
-        assert "pytest -q tests/test_progressive_refinement_fixtures.py" in workflow
+    workflow = (
+        ROOT / ".github" / "workflows" / "progressive-refinement.yml"
+    ).read_text(encoding="utf-8")
+    assert "python scripts/validate_progressive_refinement_fixtures.py" in workflow
+    assert "pytest -q tests/test_progressive_refinement_fixtures.py" in workflow

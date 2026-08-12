@@ -1,0 +1,39 @@
+name: Progressive Refinement Contract
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/progressive-refinement.yml"
+      - "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+      - "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
+      - "fixtures/world_model/refinement/v1/**"
+      - "scripts/validate_progressive_refinement_fixtures.py"
+      - "tests/test_progressive_refinement_fixtures.py"
+  pull_request:
+    paths:
+      - ".github/workflows/progressive-refinement.yml"
+      - "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+      - "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
+      - "fixtures/world_model/refinement/v1/**"
+      - "scripts/validate_progressive_refinement_fixtures.py"
+      - "tests/test_progressive_refinement_fixtures.py"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate progressive refinement contract candidate
+        run: |
+          python scripts/validate_progressive_refinement_fixtures.py
+          pytest -q tests/test_progressive_refinement_fixtures.py
