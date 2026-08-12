@@ -111,6 +111,22 @@ after freeze.
 Round 6 canonicalizes merged temporal unions before strictness comparison and preserves
 `prior_reviews` exactly from the frozen registry. Round-5 artifacts remain immutable history.
 
+Round 6 froze commit `080be920cf5a37c2e40aa282f066adc64491d076` with reviewed-content
+digest `55520f88d419bff63159370f19c038f2ba901ea67563d5dfa99cac54b58954c6`.
+Both tracks returned `CHANGES_REQUIRED`:
+
+- semantic-model: exact normalized assertions were not bound to the unchanged Source/Claim locator,
+  and duplicated temporal precision fields could diverge;
+- validator-integrity: a READY descendant could change non-metadata paths, an exclusive instant
+  could become an empty set, a non-temporal correction could move to another valid time, lifecycle
+  headers could contradict the package/registry, and review/finding identifiers were not unique.
+
+Round 7 binds every normalized assertion digest to its source locator, enforces one temporal
+precision and non-empty temporal sets, preserves valid time for non-temporal successor operations,
+restricts the post-freeze descendant to an exact metadata/lifecycle allowlist, reconciles lifecycle
+state and closes review/finding identifier uniqueness. Round-6 artifacts remain immutable negative
+history and do not count toward the new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

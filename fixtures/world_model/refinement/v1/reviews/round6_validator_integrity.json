@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 6,
+  "review_id": "refinement-v1-round6-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer-r6",
+  "reviewer_instance_id": "validator-r6-union-audit-remediation-20260812",
+  "review_task_path": "/root/refinement_validator_review_r6",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "080be920cf5a37c2e40aa282f066adc64491d076",
+  "frozen_tree": "6254cafeaf18bf8de6d052a6c391e4b9aecdb500",
+  "reviewed_content_sha256": "55520f88d419bff63159370f19c038f2ba901ea67563d5dfa99cac54b58954c6",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 1,
+  "open_material": 4,
+  "findings": [
+    {
+      "finding_id": "VI-R6-001",
+      "severity": "critical",
+      "status": "resolved",
+      "summary": "Review request and all control schemas remain byte-bound to the frozen commit, capability prohibitions remain enforced by reviewed code and prior negative review history is append-only."
+    },
+    {
+      "finding_id": "VI-R6-002",
+      "severity": "material",
+      "status": "resolved",
+      "summary": "Temporal union comparison, exact frozen Git identity, semantic locks, referential closure, safe paths, artifact counters and acceptance binding remain fail-closed."
+    },
+    {
+      "finding_id": "VI-R6-003",
+      "severity": "critical",
+      "status": "open",
+      "summary": "A legitimate READY descendant is not restricted to metadata-only changed paths. Content outside review_scope can change after freeze, including unreviewed capability or governance text, without invalidating canonical READY."
+    },
+    {
+      "finding_id": "VI-R6-004",
+      "severity": "material",
+      "status": "open",
+      "summary": "An instant with equal finite bounds and exclusive inclusivity can collapse to an empty temporal possible set without rejection."
+    },
+    {
+      "finding_id": "VI-R6-005",
+      "severity": "material",
+      "status": "open",
+      "summary": "A spatial correction can move to a different valid-time world state inside the same atomic target series because valid-time invariance is enforced only for spatial refine."
+    },
+    {
+      "finding_id": "VI-R6-006",
+      "severity": "material",
+      "status": "open",
+      "summary": "Progressive refinement contract lifecycle headers can contradict package and review-registry READY state."
+    },
+    {
+      "finding_id": "VI-R6-007",
+      "severity": "material",
+      "status": "open",
+      "summary": "Review identifiers are not required to be unique across prior and current registry entries."
+    },
+    {
+      "finding_id": "VI-R6-008",
+      "severity": "minor",
+      "status": "open",
+      "summary": "Finding identifiers are not required to be unique within one review artifact."
+    }
+  ],
+  "commands": [
+    "verify PR #378 remote head, exact frozen commit and tree",
+    "independently recompute normalized review-scope SHA-256",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python scripts/validate_progressive_refinement_fixtures.py --require-ready",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "construct metadata-only READY descendant and append an out-of-scope capability change",
+    "controlled empty exclusive-instant mutation",
+    "controlled spatial-correction valid-time mutation",
+    "controlled lifecycle contradiction and duplicate review/finding identifiers",
+    "verify 10 successful GitHub workflows on the frozen commit"
+  ],
+  "conclusion": "The frozen Git and reviewed-content envelope retains the earlier control-plane protections, but one critical post-freeze path and four material validation gaps remain. The validator-integrity decision remains CHANGES_REQUIRED."
+}

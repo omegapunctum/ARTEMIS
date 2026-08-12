@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 6,
+  "review_id": "refinement-v1-round6-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r6",
+  "reviewer_instance_id": "semantic-r6-union-audit-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r6",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "080be920cf5a37c2e40aa282f066adc64491d076",
+  "frozen_tree": "6254cafeaf18bf8de6d052a6c391e4b9aecdb500",
+  "reviewed_content_sha256": "55520f88d419bff63159370f19c038f2ba901ea67563d5dfa99cac54b58954c6",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 2,
+  "findings": [
+    {
+      "finding_id": "REF-SEM-001",
+      "severity": "material",
+      "status": "open",
+      "summary": "The source locator reproduces the source-native expression and Claim text but is not cryptographically or structurally bound to the exact normalized assertion. A normalized exact day can move from 8 to 9 August with recomputed semantic locks while the cited source and Claim remain unchanged."
+    },
+    {
+      "finding_id": "REF-SEM-008",
+      "severity": "material",
+      "status": "open",
+      "summary": "The duplicate top-level normalized assertion precision and valid_time.precision representations can diverge. A temporal precision-only refinement can be driven by one field while the other remains coarser."
+    },
+    {
+      "finding_id": "REF-SEM-009",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "Full temporal-union strictness, universal and split alternatives, open and inclusivity narrowing, spatial temporal-envelope invariance, atomic target uniqueness, replay behavior and capability boundaries are preserved on the exact frozen candidate."
+    }
+  ],
+  "commands": [
+    "verify PR #378 remote head, exact frozen commit and tree",
+    "independently recompute normalized review-scope SHA-256",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "controlled normalized-day drift with recomputed ledger and package locks",
+    "controlled divergence of normalized assertion precision and valid_time precision",
+    "verify 10 successful GitHub workflows on the frozen commit"
+  ],
+  "conclusion": "The exact frozen candidate preserves the earlier temporal-set and lineage remediations, but normalized assertions are not yet bound to unchanged source evidence and duplicated temporal precision fields can disagree. The semantic-model decision remains CHANGES_REQUIRED."
+}

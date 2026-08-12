@@ -24,7 +24,9 @@ from scripts.validate_progressive_refinement_fixtures import (
     safe_metadata_path,
     validate_acceptance_binding,
     validate_capability_prohibitions,
+    validate_lifecycle_consistency,
     validate_package,
+    validate_ready_descendant_paths,
     validate_review_artifact,
     validate_time_extent,
     reviewed_content_sha256,
@@ -43,6 +45,15 @@ def revision(package: dict, revision_id: str) -> dict:
 
 def claim(package: dict, claim_id: str) -> dict:
     return next(item for item in package["claims"] if item["id"] == claim_id)
+
+
+def mark_revision_evidence_unreviewed(package: dict, revision_id: str) -> None:
+    item = revision(package, revision_id)
+    claim_item = claim(package, item["claim_ref"])
+    claim_item["evidence_state"] = "missing"
+    for evidence_ref in item["evidence_link_refs"]:
+        evidence = next(value for value in package["evidence_links"] if value["id"] == evidence_ref)
+        evidence["review_state"] = "draft"
 
 
 def refresh_lock(package: dict) -> None:
@@ -88,7 +99,7 @@ def test_fixture_validates() -> None:
     assert summary["evidence_links"] == 14
     assert summary["uncertainties"] == 5
     assert summary["ledger_sha256"] == "bc134ee6566eab73e8741f749652418ed847c0cb7245713d9f649a4532a640ab"
-    assert summary["semantic_sha256"] == "6c3122c3566857f02d66e15e4ebbe322aa1c9547e07b4bc423df92dea288d9cd"
+    assert summary["semantic_sha256"] == "078a73a7826363b46d4b6c06e4d2d1253a48532ee0e99de209aae745fcb5eb2a"
 
 
 def test_require_ready_fails_closed() -> None:
@@ -173,6 +184,18 @@ def test_ready_artifact_rejects_open_findings_even_when_counters_are_zero() -> N
         validate_review_artifact(artifact, schema, "adversarial")
 
 
+def test_review_artifact_rejects_duplicate_finding_ids() -> None:
+    schema = json.loads(REVIEW_ARTIFACT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    artifact = json.loads(
+        (ROOT / "fixtures/world_model/refinement/v1/reviews/round5_validator_integrity.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    artifact["findings"][1]["finding_id"] = artifact["findings"][0]["finding_id"]
+    with pytest.raises(RefinementValidationError, match="finding_id values must be unique"):
+        validate_review_artifact(artifact, schema, "adversarial")
+
+
 def test_review_artifact_path_rejects_traversal() -> None:
     with pytest.raises(RefinementValidationError, match="unsafe path"):
         safe_metadata_path(
@@ -240,6 +263,22 @@ def test_source_locator_reproduces_raw_value_and_claim(tmp_path: Path) -> None:
         validate_package(path, SCHEMA_PATH)
 
 
+def test_source_locator_binds_exact_normalized_assertion(tmp_path: Path) -> None:
+    package = load_package()
+    item = revision(package, "revision-leo-time-refined")["normalized_assertion"]
+    item["valid_time"]["start"] = "1502-08-09"
+    item["valid_time"]["end"] = "1502-08-09"
+    item["value"]["start"] = "1502-08-09"
+    item["value"]["end"] = "1502-08-09"
+    assert_rejected(tmp_path, package, "locator does not bind the exact normalized assertion")
+
+
+def test_temporal_precision_representations_must_agree(tmp_path: Path) -> None:
+    package = load_package()
+    revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]["precision"] = "month"
+    assert_rejected(tmp_path, package, "temporal precision representations must agree")
+
+
 def test_temporal_envelope_supports_open_bounds_and_alternatives() -> None:
     basis = ["claim-leo-time-coarse"]
     start, end = validate_time_extent(
@@ -274,6 +313,16 @@ def test_temporal_envelope_supports_open_bounds_and_alternatives() -> None:
         "temporal-test",
     )
     assert start is not None and end is None
+
+
+def test_temporal_extent_rejects_empty_exclusive_instant() -> None:
+    extent = copy.deepcopy(
+        revision(load_package(), "revision-leo-time-refined")["normalized_assertion"]["valid_time"]
+    )
+    extent["start_inclusive"] = False
+    extent["end_inclusive"] = False
+    with pytest.raises(RefinementValidationError, match="non-empty temporal possible set"):
+        validate_time_extent(extent, "exclusive-instant")
 
 
 def test_rejects_duplicate_atomic_target_series(tmp_path: Path) -> None:
@@ -445,6 +494,7 @@ def test_temporal_refinement_allows_open_start_to_finite_narrowing(tmp_path: Pat
         "start_qualifier": "unknown",
     })
     revision(package, "revision-leo-time-coarse")["normalized_assertion"]["value"]["start"] = None
+    mark_revision_evidence_unreviewed(package, "revision-leo-time-coarse")
     path = write_package(tmp_path, package)
     validate_package(path, SCHEMA_PATH)
 
@@ -460,6 +510,7 @@ def test_temporal_refinement_allows_equal_single_interval_with_finer_precision(t
         refined[field] = coarse[field]
     value = revision(package, "revision-leo-time-refined")["normalized_assertion"]["value"]
     value["start"], value["end"] = refined["start"], refined["end"]
+    mark_revision_evidence_unreviewed(package, "revision-leo-time-refined")
     path = write_package(tmp_path, package)
     validate_package(path, SCHEMA_PATH)
 
@@ -479,6 +530,7 @@ def test_temporal_refinement_allows_same_bounds_with_narrower_inclusivity(tmp_pa
     })
     value = revision(package, "revision-leo-time-refined")["normalized_assertion"]["value"]
     value["start"], value["end"] = refined["start"], refined["end"]
+    mark_revision_evidence_unreviewed(package, "revision-leo-time-refined")
     path = write_package(tmp_path, package)
     validate_package(path, SCHEMA_PATH)
 
@@ -520,6 +572,16 @@ def test_spatial_refinement_cannot_mutate_temporal_envelope(
     if field == "calendar":
         extent["normalization_state"] = "unresolved"
     assert_rejected(tmp_path, package, "cannot change the valid_time envelope")
+
+
+def test_non_temporal_correction_cannot_move_to_another_valid_time(tmp_path: Path) -> None:
+    package = load_package()
+    item = revision(package, "revision-range-1900-refined")
+    item["operation"] = "correct"
+    extent = item["normalized_assertion"]["valid_time"]
+    extent["start"] = "1901-01-01"
+    extent["end"] = "1901-12-31"
+    assert_rejected(tmp_path, package, "spatial correct cannot change the valid_time envelope")
 
 
 def test_rejects_orphan_predecessor(tmp_path: Path) -> None:
@@ -684,3 +746,33 @@ def test_required_ci_guards_are_wired() -> None:
     assert "pytest -q tests/test_progressive_refinement_fixtures.py" in workflow
     assert 'fetch-depth: 0' in workflow
     assert 'requirements.txt' in workflow
+
+
+def test_ready_descendant_rejects_any_path_outside_exact_metadata_allowlist() -> None:
+    allowed = {
+        "fixtures/world_model/refinement/v1/review_registry.json",
+        "fixtures/world_model/refinement/v1/acceptance_decision.json",
+    }
+    validate_ready_descendant_paths(sorted(allowed), allowed)
+    with pytest.raises(RefinementValidationError, match="non-metadata changes"):
+        validate_ready_descendant_paths(
+            [*sorted(allowed), "docs/PROJECT_TRUTH.md"], allowed
+        )
+
+
+def test_lifecycle_consistency_rejects_package_registry_contradiction() -> None:
+    validate_lifecycle_consistency("REVIEW_REQUIRED", "REVIEW_REQUIRED")
+    with pytest.raises(RefinementValidationError, match="lifecycle states are inconsistent"):
+        validate_lifecycle_consistency("READY", "REVIEW_REQUIRED")
+
+
+def test_review_registry_rejects_duplicate_review_ids(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry["prior_reviews"].append(copy.deepcopy(registry["prior_reviews"][0]))
+    path = tmp_path / "review_registry.json"
+    path.write_text(json.dumps(registry), encoding="utf-8")
+    monkeypatch.setattr(refinement_validator, "REVIEW_REGISTRY_PATH", path)
+    with pytest.raises(RefinementValidationError, match="review_id values must be unique"):
+        refinement_validator.validate_review_envelope()

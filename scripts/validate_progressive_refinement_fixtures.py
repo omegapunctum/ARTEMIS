@@ -173,6 +173,11 @@ def validate_time_extent(extent: dict[str, Any], label: str) -> tuple[datetime |
             fail(f"{label}.{side} open bound must use inclusive=null and qualifier=unknown")
         if bound is not None and (not isinstance(inclusive, bool) or qualifier == "unknown"):
             fail(f"{label}.{side} finite bound requires inclusivity and a non-unknown qualifier")
+    if start is not None and end is not None:
+        lower = start.toordinal() + (0 if extent["start_inclusive"] else 1)
+        upper = end.toordinal() - (0 if extent["end_inclusive"] else 1)
+        if lower > upper:
+            fail(f"{label} must represent a non-empty temporal possible set")
     if extent["certainty"] == "unknown" and kind != "unknown":
         fail(f"{label} unknown certainty requires unknown kind")
     if kind == "unknown" and extent["certainty"] != "unknown":
@@ -426,6 +431,9 @@ def validate_review_artifact(
     )
     if artifact["open_critical"] != open_critical or artifact["open_material"] != open_material:
         fail(f"{label} finding counters do not match findings[]")
+    finding_ids = [item["finding_id"] for item in artifact["findings"]]
+    if len(finding_ids) != len(set(finding_ids)):
+        fail(f"{label} finding_id values must be unique")
     if artifact["decision"] == "READY" and (open_critical or open_material):
         fail(f"{label} READY decision retains open critical/material findings")
 
@@ -484,6 +492,34 @@ def validate_capability_prohibitions(decision: dict[str, Any]) -> None:
         fail("progressive refinement decision cannot authorize runtime, Airtable or public capability changes")
 
 
+def validate_ready_descendant_paths(changed_paths: list[str], allowed_paths: set[str]) -> None:
+    unauthorized = sorted(set(changed_paths) - allowed_paths)
+    if unauthorized:
+        fail(f"READY descendant contains non-metadata changes: {', '.join(unauthorized)}")
+
+
+def validate_lifecycle_consistency(package_status: str, registry_status: str) -> None:
+    contract = (ROOT / "docs" / "PROGRESSIVE_REFINEMENT_CONTRACT.md").read_text(encoding="utf-8")
+    version_lines = [line for line in contract.splitlines() if line.startswith("- Version: ")]
+    status_lines = [line for line in contract.splitlines() if line.startswith("- Status: ")]
+    if len(version_lines) != 1 or len(status_lines) != 1:
+        fail("progressive refinement contract lifecycle headers are ambiguous")
+    ready = registry_status == "READY"
+    expected_package = "READY" if ready else "REVIEW_REQUIRED"
+    expected_version = "- Version: 1.0." if ready else "- Version: 1.0-draft."
+    expected_status = (
+        "- Status: `READY` under issue `#377`."
+        if ready
+        else "- Status: `REVIEW_REQUIRED` under issue `#377`."
+    )
+    if (
+        package_status != expected_package
+        or version_lines[0] != expected_version
+        or status_lines[0] != expected_status
+    ):
+        fail("package, registry and contract lifecycle states are inconsistent")
+
+
 def validate_review_envelope() -> dict[str, Any]:
     request = read_json(REVIEW_REQUEST_PATH)
     registry = read_json(REVIEW_REGISTRY_PATH)
@@ -511,6 +547,11 @@ def validate_review_envelope() -> dict[str, Any]:
     ]
     if {artifact["track"] for artifact in prior_artifacts} != set(tracks):
         fail("prior review history must preserve both independent tracks")
+
+    all_review_entries = [*registry["prior_reviews"], *registry["reviews"]]
+    review_ids = [entry["review_id"] for entry in all_review_entries]
+    if len(review_ids) != len(set(review_ids)):
+        fail("review_id values must be unique across review history")
 
     status = registry.get("status")
     reviews = registry.get("reviews")
@@ -564,6 +605,16 @@ def validate_review_envelope() -> dict[str, Any]:
         fail("prior review audit history does not match the frozen commit")
     if reviewed_content_sha256(request, frozen_loader) != digest:
         fail("frozen commit does not contain the reviewed content digest")
+
+    allowed_descendant_paths = {
+        PACKAGE_PATH.relative_to(ROOT).as_posix(),
+        (ROOT / "docs" / "PROGRESSIVE_REFINEMENT_CONTRACT.md").relative_to(ROOT).as_posix(),
+        REVIEW_REGISTRY_PATH.relative_to(ROOT).as_posix(),
+        ACCEPTANCE_DECISION_PATH.relative_to(ROOT).as_posix(),
+        *(review["artifact_ref"] for review in reviews),
+    }
+    changed_paths = git_output("diff", "--name-only", f"{frozen_commit}..HEAD").decode().splitlines()
+    validate_ready_descendant_paths(changed_paths, allowed_descendant_paths)
 
     seen_tracks: set[str] = set()
     reviewer_ids: set[str] = set()
@@ -683,6 +734,8 @@ def validate_revision_semantics(
             fail(f"{revision_id} normalized precision is finer than source-native precision")
 
         validate_time_extent(assertion["valid_time"], f"{revision_id}.valid_time")
+        if dimension == "temporal" and normalized_precision != assertion["valid_time"]["precision"]:
+            fail(f"{revision_id} temporal precision representations must agree")
         value = assertion["value"]
         expected_kind = {
             "temporal": "temporal_extent",
@@ -708,12 +761,22 @@ def validate_revision_semantics(
             if mode != "unknown_route" and geometry is None:
                 fail(f"{revision_id} {mode} requires explicit geometry")
 
+        predecessor_assertion = None
+        if operation in {"refine", "correct", "add_alternative"}:
+            predecessor = revisions[revision["predecessor_refs"][0]]
+            predecessor_assertion = predecessor["normalized_assertion"]
+            if predecessor_assertion is None:
+                fail(f"{revision_id} cannot follow a withdrawn/null predecessor")
+            if (
+                dimension != "temporal"
+                and temporal_semantic_envelope(assertion["valid_time"])
+                != temporal_semantic_envelope(predecessor_assertion["valid_time"])
+            ):
+                fail(f"{revision_id} {dimension} {operation} cannot change the valid_time envelope")
+
         if operation != "refine":
             continue
-        predecessor = revisions[revision["predecessor_refs"][0]]
-        predecessor_assertion = predecessor["normalized_assertion"]
-        if predecessor_assertion is None:
-            fail(f"{revision_id} cannot refine a withdrawn/null predecessor")
+        assert predecessor_assertion is not None
         old_start, old_end = validate_time_extent(predecessor_assertion["valid_time"], f"{predecessor['id']}.valid_time")
         new_start, new_end = validate_time_extent(assertion["valid_time"], f"{revision_id}.valid_time")
         if dimension == "temporal":
@@ -742,8 +805,6 @@ def validate_revision_semantics(
             if union_is_equal and not precision_only_refinement:
                 fail(f"{revision_id} false refine: temporal possible set is not strictly narrower")
         elif dimension == "spatial":
-            if temporal_semantic_envelope(assertion["valid_time"]) != temporal_semantic_envelope(predecessor_assertion["valid_time"]):
-                fail(f"{revision_id} spatial refinement cannot change the valid_time envelope")
             child = bbox(assertion["value"], f"{revision_id}.value")
             parent = bbox(predecessor_assertion["value"], f"{predecessor['id']}.value")
             if not strict_bbox_subset(child, parent):
@@ -890,14 +951,24 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
     for evidence in evidence_links.values():
         claim_item = claims[evidence["claim_ref"]]
         revision = revisions[claim_item["revision_ref"]]
-        marker = (
+        base_marker = (
             f"## {evidence['locator']}\n\n"
             f"raw: `{revision['source_value']['raw']}`\n\n"
             f"claim: {claim_item['statement']}\n"
         )
         source_text = source_texts[evidence["source_ref"]]
-        if source_text.count(f"## {evidence['locator']}\n") != 1 or marker not in source_text:
+        if source_text.count(f"## {evidence['locator']}\n") != 1 or base_marker not in source_text:
             fail(f"{evidence['id']} locator does not reproduce its source-native value and Claim")
+        reviewed_support = (
+            evidence["review_state"] == "reviewed"
+            and evidence["relation_to_claim"] == "supports"
+        )
+        full_marker = (
+            f"{base_marker}\n"
+            f"normalized_assertion_sha256: `{canonical_sha256(revision['normalized_assertion'])}`\n"
+        )
+        if reviewed_support and full_marker not in source_text:
+            fail(f"{evidence['id']} locator does not bind the exact normalized assertion")
 
     for uncertainty in uncertainties.values():
         if uncertainty["revision_ref"] not in revisions:
@@ -957,6 +1028,7 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
         fail("withdrawal scenario must not remain in the current value frontier")
 
     review = validate_review_envelope()
+    validate_lifecycle_consistency(package["status"], review["review_status"])
     return {
         "status": package["status"],
         "series": len(series),

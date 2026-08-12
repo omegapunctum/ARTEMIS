@@ -11,7 +11,7 @@
       "type": "synthetic_fixture_source",
       "historical_authority": false,
       "artifact_ref": "fixtures/world_model/refinement/v1/sources/synthetic-travel-notebook.md",
-      "artifact_sha256": "79070e05b2eca4a26f5ee9fd569f736f63da4f1f5e060754b3924d0261a318e3"
+      "artifact_sha256": "2f35e6946839c9dee6378a0461359d3fed899c44c9b8cdf0da7a79717cf02c64"
     },
     {
       "id": "source-synthetic-range-atlas",
@@ -19,7 +19,7 @@
       "type": "synthetic_fixture_source",
       "historical_authority": false,
       "artifact_ref": "fixtures/world_model/refinement/v1/sources/synthetic-range-atlas.md",
-      "artifact_sha256": "ae13dbad5ed2f4d9f44c051d293a51f71efda6ffef89e212a21c13f13cd346af"
+      "artifact_sha256": "316eda11cd670f4993c2dbe4d038d402df812fd957fa4df062cc2ba420bd0944"
     }
   ],
   "claims": [
@@ -1262,6 +1262,6 @@
         "revision-label-withdrawn"
       ]
     },
-    "semantic_sha256": "6c3122c3566857f02d66e15e4ebbe322aa1c9547e07b4bc423df92dea288d9cd"
+    "semantic_sha256": "078a73a7826363b46d4b6c06e4d2d1253a48532ee0e99de209aae745fcb5eb2a"
   }
 }

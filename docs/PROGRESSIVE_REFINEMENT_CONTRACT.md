@@ -114,7 +114,10 @@ Every value-bearing revision preserves:
 
 A reviewed supporting EvidenceLink must resolve to a checked-in or otherwise immutable Source
 artifact, a reproducible Claim-level locator and the exact source-native expression used by the
-revision. Reference closure without locator reproduction is not sufficient for `supported`.
+revision. The locator must also bind the canonical SHA-256 of the exact normalized assertion,
+including `null` for withdrawal, so changing a normalized day, boundary or value cannot remain
+attached to unchanged source/Claim evidence. Reference closure without locator reproduction and
+assertion binding is not sufficient for `supported`.
 
 Normalization may retain or coarsen precision. It may not produce a value finer than the source
 and evidence support. A source saying “August 1502” cannot normalize to a day. A regional range map
@@ -168,6 +171,10 @@ Open-to-finite and inclusivity narrowing are valid set reductions; equal single-
 a strictly finer supported precision.
 The validator canonicalizes and merges the interval union before testing strictness; splitting one
 unchanged predecessor interval across primary and alternative members is not a refinement.
+The top-level temporal precision and the precision carried by `valid_time` are one semantic value
+and must agree exactly. A finite primary or alternative interval must represent a non-empty set;
+an exclusive instant or another inclusivity combination that removes every represented day is
+invalid rather than an empty refinement.
 
 The temporal envelope carries the accepted #330 semantics rather than reducing them to two dates:
 calendar/normalization state, exact or qualified bounds, inclusivity, open-start/open-end/unknown
@@ -208,6 +215,11 @@ Two cases must remain distinct:
 A coarse ecological range may start as a fuzzy area. Later evidence may narrow that same
 valid-time reconstruction or add an alternative. A real range shift is encoded as another temporal
 State/Region version, not as refinement lineage across valid times.
+
+For every non-temporal target, `refine`, `correct` and `add_alternative` preserve the predecessor's
+full `valid_time` semantic envelope. A correction to a spatial value may move the geometry, but it
+cannot silently move that geometry to another world state; that requires a different atomic
+valid-time target/series.
 
 ## 7. Deterministic current view
 
@@ -338,6 +350,12 @@ The request, registry, review-artifact and acceptance-decision schemas are also 
 frozen commit, preventing post-review introduction of new authorization fields or relaxed controls.
 The completed envelope also preserves `prior_reviews` exactly from the frozen registry, so negative
 review history and its artifact bindings cannot be erased during the metadata-only READY transition.
+Every `review_id` across prior and current registry entries is unique, and every review artifact has
+unique `finding_id` values. Package, registry and contract lifecycle headers must resolve to one
+state: a non-READY registry keeps the package/contract `REVIEW_REQUIRED`, while `READY` requires all
+three to transition together. After content freeze, the descendant may change only the exact
+package/contract lifecycle files, registry, acceptance decision and the two pre-issued current review
+artifacts; any other changed path invalidates READY even when it was outside `review_scope`.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

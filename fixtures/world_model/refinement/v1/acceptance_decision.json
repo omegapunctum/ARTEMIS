@@ -6,7 +6,7 @@
   "decision": null,
   "frozen_commit": null,
   "frozen_tree": null,
-  "reviewed_content_sha256": "55520f88d419bff63159370f19c038f2ba901ea67563d5dfa99cac54b58954c6",
+  "reviewed_content_sha256": "7878b28eb43c7e38ef1d2ed43c726110003426b54c88988a19153878316b938f",
   "review_registry_ref": "fixtures/world_model/refinement/v1/review_registry.json",
   "runtime_migration_authorized": false,
   "airtable_historical_write_authorized": false,

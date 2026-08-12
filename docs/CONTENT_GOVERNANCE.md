@@ -196,7 +196,10 @@ claimed and reviewed.
 
 For a refinement candidate, technical validation additionally checks immutable lineage, stable
 target identity, valid-time/record-time separation, source-native precision and the prohibition on
-normalized precision finer than its evidence.
+normalized precision finer than its evidence. A supporting locator must reproduce the source-native
+expression, atomic Claim and canonical digest of the normalized assertion. Temporal precision
+projections must agree, and every temporal primary/alternative member must represent a non-empty
+possible set.
 
 Результат:
 - pass technical validation;
@@ -265,6 +268,10 @@ must preserve:
 - source or governance basis;
 - impact on confidence/uncertainty;
 - whether public artifact must be regenerated.
+
+For a non-temporal atomic target, a correction preserves the predecessor's full `valid_time`
+envelope. Correcting geometry, route or label and moving it to another world-time state are two
+different proposals and require separate target/revision treatment.
 
 ### 4.8 Deprecation / archival
 
