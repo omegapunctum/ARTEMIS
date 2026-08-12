@@ -102,6 +102,15 @@ Round 5 evaluates strictness over the full temporal union and byte-binds all fou
 schemas to the frozen commit. Round-4 artifacts remain immutable history and do not count toward
 the new reviews.
 
+Round 5 froze commit `efb7b21ed4e62bb038701c79eda4769ad3e9eef9` with reviewed-content
+digest `e9f60c26b458c5be14451b4f899f69751e8261c72865d1535c4d894637bf1e33`.
+Both tracks returned `CHANGES_REQUIRED`: pairwise member containment still accepted an unchanged
+union split across primary/alternative members, and prior negative review history could be erased
+after freeze.
+
+Round 6 canonicalizes merged temporal unions before strictness comparison and preserves
+`prior_reviews` exactly from the frozen registry. Round-5 artifacts remain immutable history.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

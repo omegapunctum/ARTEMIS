@@ -130,6 +130,8 @@ def test_review_request_identity_and_scope_are_frozen_by_exact_bytes() -> None:
     assert "REVIEW_ARTIFACT_SCHEMA_PATH," in validator_source
     assert "ACCEPTANCE_DECISION_SCHEMA_PATH," in validator_source
     assert "review control schema does not match the frozen commit" in validator_source
+    assert 'registry["prior_reviews"] != frozen_registry.get("prior_reviews")' in validator_source
+    assert "prior review audit history does not match the frozen commit" in validator_source
 
 
 @pytest.mark.parametrize(
@@ -401,6 +403,35 @@ def test_temporal_refinement_rejects_unchanged_universal_alternative(tmp_path: P
     coarse["alternatives"] = [copy.deepcopy(universal)]
     universal["basis_claim_refs"] = ["claim-leo-time-refined"]
     refined["alternatives"] = [universal]
+    assert_rejected(tmp_path, package, "possible set is not strictly narrower")
+
+
+def test_temporal_refinement_rejects_split_members_with_unchanged_union(tmp_path: Path) -> None:
+    package = load_package()
+    refined = revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]
+    refined.update({
+        "kind": "closed_interval",
+        "start": "1502-08-01",
+        "end": "1502-08-08",
+        "start_inclusive": True,
+        "end_inclusive": True,
+        "start_qualifier": "approximate",
+        "end_qualifier": "approximate",
+        "alternatives": [{
+            "id": "alternative-restores-predecessor-union",
+            "kind": "closed_interval",
+            "start": "1502-08-08",
+            "end": "1502-08-31",
+            "start_inclusive": True,
+            "end_inclusive": True,
+            "start_qualifier": "approximate",
+            "end_qualifier": "approximate",
+            "precision": "day",
+            "basis_claim_refs": ["claim-leo-time-refined"],
+        }],
+    })
+    value = revision(package, "revision-leo-time-refined")["normalized_assertion"]["value"]
+    value["start"], value["end"] = refined["start"], refined["end"]
     assert_rejected(tmp_path, package, "possible set is not strictly narrower")
 
 

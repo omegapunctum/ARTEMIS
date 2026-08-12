@@ -166,6 +166,8 @@ Strictness is evaluated over the union of the primary interval and all alternati
 primary bounds. A retained universal/unknown alternative therefore prevents a false narrowing.
 Open-to-finite and inclusivity narrowing are valid set reductions; equal single-member sets require
 a strictly finer supported precision.
+The validator canonicalizes and merges the interval union before testing strictness; splitting one
+unchanged predecessor interval across primary and alternative members is not a refinement.
 
 The temporal envelope carries the accepted #330 semantics rather than reducing them to two dates:
 calendar/normalization state, exact or qualified bounds, inclusivity, open-start/open-end/unknown
@@ -334,6 +336,8 @@ scope nor pre-issued reviewer identity can change after content freeze. Capabili
 enforced directly by reviewed validator code, independent of mutable control-schema wording.
 The request, registry, review-artifact and acceptance-decision schemas are also byte-bound to the
 frozen commit, preventing post-review introduction of new authorization fields or relaxed controls.
+The completed envelope also preserves `prior_reviews` exactly from the frozen registry, so negative
+review history and its artifact bindings cannot be erased during the metadata-only READY transition.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

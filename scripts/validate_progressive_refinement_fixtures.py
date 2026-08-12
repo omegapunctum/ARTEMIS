@@ -283,6 +283,34 @@ def temporal_member_subset(child: dict[str, Any], parent: dict[str, Any]) -> boo
     return start_qualifier_subset and end_qualifier_subset
 
 
+def temporal_union_segments(members: list[dict[str, Any]]) -> list[tuple[int | None, int | None]]:
+    segments: list[tuple[int | None, int | None]] = []
+    for member in members:
+        start = parse_day(member["start"], "temporal union start")
+        end = parse_day(member["end"], "temporal union end")
+        lower = None if start is None else start.toordinal() + (0 if member["start_inclusive"] else 1)
+        upper = None if end is None else end.toordinal() - (0 if member["end_inclusive"] else 1)
+        if lower is not None and upper is not None and lower > upper:
+            continue
+        segments.append((lower, upper))
+    segments.sort(key=lambda item: (float("-inf") if item[0] is None else item[0], float("inf") if item[1] is None else item[1]))
+    merged: list[tuple[int | None, int | None]] = []
+    for lower, upper in segments:
+        if not merged:
+            merged.append((lower, upper))
+            continue
+        previous_lower, previous_upper = merged[-1]
+        touches = previous_upper is None or lower is None or lower <= previous_upper + 1
+        if not touches:
+            merged.append((lower, upper))
+            continue
+        merged[-1] = (
+            previous_lower,
+            None if previous_upper is None or upper is None else max(previous_upper, upper),
+        )
+    return merged
+
+
 def canonical_sha256(value: Any) -> str:
     payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
@@ -528,6 +556,12 @@ def validate_review_envelope() -> dict[str, Any]:
         control_schema_ref = control_schema_path.relative_to(ROOT).as_posix()
         if frozen_loader(control_schema_ref) != control_schema_path.read_bytes():
             fail(f"review control schema does not match the frozen commit: {control_schema_ref}")
+    registry_ref = REVIEW_REGISTRY_PATH.relative_to(ROOT).as_posix()
+    frozen_registry = json.loads(
+        frozen_loader(registry_ref).decode("utf-8"), object_pairs_hook=_reject_duplicate_pairs
+    )
+    if registry["prior_reviews"] != frozen_registry.get("prior_reviews"):
+        fail("prior review audit history does not match the frozen commit")
     if reviewed_content_sha256(request, frozen_loader) != digest:
         fail("frozen commit does not contain the reviewed content digest")
 
@@ -696,19 +730,16 @@ def validate_revision_semantics(
             for child_member in child_members:
                 if not any(temporal_member_subset(child_member, parent_member) for parent_member in parent_members):
                     fail(f"{revision_id} temporal possible set is not contained by its predecessor")
-            predecessor_contained_by_child = all(
-                any(temporal_member_subset(parent_member, child_member) for child_member in child_members)
-                for parent_member in parent_members
-            )
+            union_is_equal = temporal_union_segments(parent_members) == temporal_union_segments(child_members)
             old_rank = precision_rank(
                 predecessor_assertion["precision"], dimension, f"{predecessor['id']}.normalized_assertion"
             )
             precision_only_refinement = (
                 len(parent_members) == len(child_members) == 1
-                and predecessor_contained_by_child
+                and union_is_equal
                 and normalized_rank > old_rank
             )
-            if predecessor_contained_by_child and not precision_only_refinement:
+            if union_is_equal and not precision_only_refinement:
                 fail(f"{revision_id} false refine: temporal possible set is not strictly narrower")
         elif dimension == "spatial":
             if temporal_semantic_envelope(assertion["valid_time"]) != temporal_semantic_envelope(predecessor_assertion["valid_time"]):
