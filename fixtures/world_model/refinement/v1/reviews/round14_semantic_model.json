@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0", "package_id": "artemis-progressive-refinement-v1", "review_round": 14,
+  "review_id": "refinement-v1-round14-semantic-model", "reviewer_id": "codex-semantic-model-reviewer-r14",
+  "reviewer_instance_id": "semantic-r14-complete-routing-remediation-20260812", "review_task_path": "/root/refinement_semantic_review_r14",
+  "track": "semantic-model", "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "b3e91d0e6773dae80ab57f214d468c72049f89f8", "frozen_tree": "a311440045ea6840b0b4bcddf7881a822b68c1af",
+  "reviewed_content_sha256": "05c9a952047f4542f21700e4e725f28b49be1a614e0d0907234aaf3720400038",
+  "decision": "CHANGES_REQUIRED", "open_critical": 0, "open_material": 1,
+  "findings": [
+    {"finding_id": "REF-SEM-R14-001", "severity": "material", "status": "open", "summary": "Metadata-only READY left candidate-specific Type, Active foundation maintenance and active review round wording in the frozen routing corpus."},
+    {"finding_id": "REF-SEM-R14-002", "severity": "informational", "status": "accepted", "summary": "All 12 current #377 documents were uniquely frozen; prior semantic, Gate D, capability and protected-scope boundaries remained intact."}
+  ],
+  "commands": ["verify remote head/tree/digest", "enumerate all current #377 documents", "simulate metadata-only READY lifecycle truth", "run validator and 76 tests", "verify workflows and protected scopes"],
+  "conclusion": "Round 14 is CHANGES_REQUIRED until the final candidate-only routing phrases are neutralized."
+}

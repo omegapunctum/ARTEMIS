@@ -3,7 +3,7 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
-  "current_round": 14,
+  "current_round": 15,
   "required_review_count": 2,
   "required_tracks": [
     "semantic-model",
@@ -12,7 +12,7 @@
   "required_independence_method": "separate_agent_task_read_only",
   "frozen_commit": null,
   "frozen_tree": null,
-  "reviewed_content_sha256": "05c9a952047f4542f21700e4e725f28b49be1a614e0d0907234aaf3720400038",
+  "reviewed_content_sha256": "88aec7b00ce5cb23ad628942e9c19b37ee857fc687ce6ef7c7687ef38e8078ec",
   "prior_reviews": [
     {
       "review_round": 1,
@@ -403,6 +403,22 @@
       "decision": "READY",
       "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round13_validator_integrity.json",
       "artifact_sha256": "5ac9493f12cad683aed7552c1bde5f5e116cebeb32cf2b17e1a541cc8f8d18e8"
+    },
+    {
+      "review_round": 14, "review_id": "refinement-v1-round14-semantic-model",
+      "reviewer_id": "codex-semantic-model-reviewer-r14", "reviewer_instance_id": "semantic-r14-complete-routing-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r14", "track": "semantic-model", "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "b3e91d0e6773dae80ab57f214d468c72049f89f8", "frozen_tree": "a311440045ea6840b0b4bcddf7881a822b68c1af",
+      "reviewed_content_sha256": "05c9a952047f4542f21700e4e725f28b49be1a614e0d0907234aaf3720400038", "decision": "CHANGES_REQUIRED",
+      "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round14_semantic_model.json", "artifact_sha256": "50cfb8a96eb5818b02c5319e0bd0e269b0418e1206b0501bc28d76530316436f"
+    },
+    {
+      "review_round": 14, "review_id": "refinement-v1-round14-validator-integrity",
+      "reviewer_id": "codex-validator-integrity-reviewer-r14", "reviewer_instance_id": "validator-r14-complete-routing-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r14", "track": "validator-integrity", "independence_method": "separate_agent_task_read_only",
+      "frozen_commit": "b3e91d0e6773dae80ab57f214d468c72049f89f8", "frozen_tree": "a311440045ea6840b0b4bcddf7881a822b68c1af",
+      "reviewed_content_sha256": "05c9a952047f4542f21700e4e725f28b49be1a614e0d0907234aaf3720400038", "decision": "READY",
+      "artifact_ref": "fixtures/world_model/refinement/v1/reviews/round14_validator_integrity.json", "artifact_sha256": "ace1c7070d9cb291e72de677687673d3fd3f17962b49193d0d4077ccbb425b40"
     }
   ],
   "reviews": []

@@ -46,7 +46,7 @@ Completed:
 - #329 / PR #336 — reviewed World Model fixtures;
 - #330 / PR #337 — reviewed uncertainty semantics.
 
-Active foundation maintenance:
+Foundation maintenance:
 
 - #377 — progressive refinement/source-native fidelity contract; exact lifecycle is owned by its
   contract/registry, and runtime/storage still requires separate authorization for mutable knowledge refinement.

@@ -36,7 +36,7 @@ python -m pytest -q tests/test_progressive_refinement_fixtures.py
 tasks to one remote commit and one computed content digest before READY. Review artifacts must
 validate against `review_artifact.schema.json`; green CI alone cannot change package lifecycle.
 All prior round artifacts remain immutable review history; only the two pre-issued slots in the
-current request can satisfy the active review round.
+registry-designated request can satisfy its declared review round.
 
 ## Boundary
 

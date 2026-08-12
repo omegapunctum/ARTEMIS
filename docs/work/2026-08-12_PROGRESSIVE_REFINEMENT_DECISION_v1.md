@@ -14,7 +14,7 @@ The project can represent uncertainty and alternatives but lacks one executable 
 mechanism for progressively refining atomic knowledge without erasing evidence or confusing world
 change with knowledge revision.
 
-## Proposed decision
+## Decision model
 
 Adopt `docs/PROGRESSIVE_REFINEMENT_CONTRACT.md` as a scoped semantic extension with:
 
@@ -199,6 +199,14 @@ scope and fixture README were still outside scope with candidate-only wording, a
 retained one candidate-owner label.
 
 Round 14 neutralizes and freezes those final current #377 documents. Round-13 artifacts remain
+immutable history and do not count toward new reviews.
+
+Round 14 froze commit `b3e91d0e6773dae80ab57f214d468c72049f89f8` with reviewed-content
+digest `05c9a952047f4542f21700e4e725f28b49be1a614e0d0907234aaf3720400038`.
+Validator-integrity returned `READY`; semantic-model returned `CHANGES_REQUIRED` for three remaining
+candidate-only labels in the contract, phases and fixture README.
+
+Round 15 removes those labels without changing semantic behavior. Round-14 artifacts remain
 immutable history and do not count toward new reviews.
 
 ## Rollback

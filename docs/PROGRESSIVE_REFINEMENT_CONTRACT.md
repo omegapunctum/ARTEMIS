@@ -2,7 +2,7 @@
 
 ## Status
 
-- Type: scoped canonical extension candidate.
+- Type: scoped canonical extension.
 - Version: 1.0-draft.
 - Date: 2026-08-12.
 - Status: `REVIEW_REQUIRED` under issue `#377`.
