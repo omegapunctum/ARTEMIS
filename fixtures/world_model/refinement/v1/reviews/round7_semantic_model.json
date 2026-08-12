@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 7,
+  "review_id": "refinement-v1-round7-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r7",
+  "reviewer_instance_id": "semantic-r7-evidence-lifecycle-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r7",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "a26e5029c1994e02f88c2feeabae2cb5851cf21b",
+  "frozen_tree": "3a8bc5883739f5c15ec69322e3d0c0c93e297ffe",
+  "reviewed_content_sha256": "7878b28eb43c7e38ef1d2ed43c726110003426b54c88988a19153878316b938f",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 2,
+  "findings": [
+    {"finding_id": "REF-SEM-001", "severity": "material", "status": "resolved", "summary": "Exact normalized-assertion binding rejects controlled day and competing-alternative geometry drift against unchanged Source/Claim locators; withdrawal remains normalized_assertion=null."},
+    {"finding_id": "REF-SEM-008", "severity": "material", "status": "open", "summary": "Primary normalized_assertion.precision and valid_time.precision agree, but alternatives[].precision is unconstrained. An exact-day alternative was accepted while source and primary assertion remained month-level."},
+    {"finding_id": "REF-SEM-010", "severity": "material", "status": "open", "summary": "The locator omits source_value.precision. Relabelling the unchanged raw expression August 1502 from month to day with recomputed semantic locks was accepted against unchanged Source/Claim/locator evidence."},
+    {"finding_id": "REF-SEM-009", "severity": "informational", "status": "accepted", "summary": "Temporal-union strictness, non-empty sets, non-temporal valid-time preservation, append-only lineage, alternatives, capability prohibitions and frozen foundation boundaries remain intact."}
+  ],
+  "commands": [
+    "verify remote PR head, branch, commit and tree",
+    "independently recompute normalized review digest",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "controlled normalized-day, alternative-geometry and withdrawal mutations",
+    "controlled alternative-precision and source-value-precision mutations with recomputed locks",
+    "git diff --check"
+  ],
+  "conclusion": "Round 7 closes the prior exact normalized assertion gap and preserves the other semantic boundaries, but alternative precision and source-native precision remain insufficiently bound. The semantic-model decision is CHANGES_REQUIRED."
+}

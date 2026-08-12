@@ -197,9 +197,9 @@ claimed and reviewed.
 For a refinement candidate, technical validation additionally checks immutable lineage, stable
 target identity, valid-time/record-time separation, source-native precision and the prohibition on
 normalized precision finer than its evidence. A supporting locator must reproduce the source-native
-expression, atomic Claim and canonical digest of the normalized assertion. Temporal precision
-projections must agree, and every temporal primary/alternative member must represent a non-empty
-possible set.
+expression, atomic Claim and canonical digests of the complete source value/precision and normalized
+assertion. Temporal precision projections must agree, alternatives cannot exceed their source or
+top-level precision, and every temporal primary/alternative member must represent a non-empty set.
 
 Результат:
 - pass technical validation;

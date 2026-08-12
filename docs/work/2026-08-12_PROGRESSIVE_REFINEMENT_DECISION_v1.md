@@ -127,6 +127,21 @@ restricts the post-freeze descendant to an exact metadata/lifecycle allowlist, r
 state and closes review/finding identifier uniqueness. Round-6 artifacts remain immutable negative
 history and do not count toward the new reviews.
 
+Round 7 froze commit `a26e5029c1994e02f88c2feeabae2cb5851cf21b` with reviewed-content
+digest `7878b28eb43c7e38ef1d2ed43c726110003426b54c88988a19153878316b938f`.
+Both tracks returned `CHANGES_REQUIRED`:
+
+- semantic-model: temporal alternative precision could exceed source/top-level support, and the
+  locator did not bind the complete source-native value/precision;
+- validator-integrity: staged, unstaged, untracked or ignored worktree bytes were outside the
+  committed-diff allowlist, and control metadata could be committed as a symlink to an external
+  mutable payload.
+
+Round 8 binds both source and normalized payloads at the locator, constrains every temporal
+alternative precision, requires a completely clean checkout for canonical READY and verifies every
+allowed lifecycle/control path as a committed regular `100644` blob. Round-7 artifacts remain
+immutable negative history and do not count toward new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

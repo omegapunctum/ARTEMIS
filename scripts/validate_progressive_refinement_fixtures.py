@@ -406,6 +406,11 @@ def safe_metadata_path(raw_path: str, directory: Path, label: str) -> Path:
     return path
 
 
+def require_regular_repo_file(path: Path, label: str) -> None:
+    if not path.is_file() or path.is_symlink() or not path.resolve().is_relative_to(ROOT.resolve()):
+        fail(f"{label} must be a regular in-repository file")
+
+
 def git_output(*args: str) -> bytes:
     result = subprocess.run(
         ["git", *args], cwd=ROOT, capture_output=True, check=False
@@ -413,6 +418,30 @@ def git_output(*args: str) -> bytes:
     if result.returncode != 0:
         fail(f"git {' '.join(args)} failed")
     return result.stdout
+
+
+def validate_clean_state(status_output: str, all_other_files: str) -> None:
+    if status_output.strip() or all_other_files.strip():
+        fail("READY validation requires a clean index/worktree with no untracked or ignored files")
+
+
+def validate_clean_checkout() -> None:
+    validate_clean_state(
+        git_output("status", "--porcelain=v1", "--untracked-files=all").decode(),
+        git_output("ls-files", "--others").decode(),
+    )
+
+
+def validate_git_blob_entry(raw_path: str, entry: str) -> None:
+    parts = entry.strip().split(None, 3)
+    if len(parts) != 4 or parts[0] != "100644" or parts[1] != "blob" or parts[3] != raw_path:
+        fail(f"READY metadata path must be a committed regular 100644 blob: {raw_path}")
+
+
+def require_head_regular_blob(raw_path: str) -> None:
+    path = ROOT / raw_path
+    require_regular_repo_file(path, raw_path)
+    validate_git_blob_entry(raw_path, git_output("ls-tree", "HEAD", "--", raw_path).decode())
 
 
 def validate_review_artifact(
@@ -521,6 +550,16 @@ def validate_lifecycle_consistency(package_status: str, registry_status: str) ->
 
 
 def validate_review_envelope() -> dict[str, Any]:
+    for path, label in (
+        (REVIEW_REQUEST_PATH, "review request"),
+        (REVIEW_REQUEST_SCHEMA_PATH, "review request schema"),
+        (REVIEW_REGISTRY_PATH, "review registry"),
+        (REVIEW_REGISTRY_SCHEMA_PATH, "review registry schema"),
+        (REVIEW_ARTIFACT_SCHEMA_PATH, "review artifact schema"),
+        (ACCEPTANCE_DECISION_PATH, "acceptance decision"),
+        (ACCEPTANCE_DECISION_SCHEMA_PATH, "acceptance decision schema"),
+    ):
+        require_regular_repo_file(path, label)
     request = read_json(REVIEW_REQUEST_PATH)
     registry = read_json(REVIEW_REGISTRY_PATH)
     artifact_schema = read_json(REVIEW_ARTIFACT_SCHEMA_PATH)
@@ -615,6 +654,9 @@ def validate_review_envelope() -> dict[str, Any]:
     }
     changed_paths = git_output("diff", "--name-only", f"{frozen_commit}..HEAD").decode().splitlines()
     validate_ready_descendant_paths(changed_paths, allowed_descendant_paths)
+    validate_clean_checkout()
+    for raw_path in sorted(allowed_descendant_paths):
+        require_head_regular_blob(raw_path)
 
     seen_tracks: set[str] = set()
     reviewer_ids: set[str] = set()
@@ -736,6 +778,13 @@ def validate_revision_semantics(
         validate_time_extent(assertion["valid_time"], f"{revision_id}.valid_time")
         if dimension == "temporal" and normalized_precision != assertion["valid_time"]["precision"]:
             fail(f"{revision_id} temporal precision representations must agree")
+        if dimension == "temporal":
+            for alternative in assertion["valid_time"]["alternatives"]:
+                alternative_rank = precision_rank(
+                    alternative["precision"], dimension, f"{revision_id}.valid_time alternative"
+                )
+                if alternative_rank > source_rank or alternative_rank > normalized_rank:
+                    fail(f"{revision_id} temporal alternative precision exceeds source/top-level support")
         value = assertion["value"]
         expected_kind = {
             "temporal": "temporal_extent",
@@ -965,10 +1014,11 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
         )
         full_marker = (
             f"{base_marker}\n"
+            f"source_value_sha256: `{canonical_sha256(revision['source_value'])}`\n\n"
             f"normalized_assertion_sha256: `{canonical_sha256(revision['normalized_assertion'])}`\n"
         )
         if reviewed_support and full_marker not in source_text:
-            fail(f"{evidence['id']} locator does not bind the exact normalized assertion")
+            fail(f"{evidence['id']} locator does not bind the exact source value and normalized assertion")
 
     for uncertainty in uncertainties.values():
         if uncertainty["revision_ref"] not in revisions:

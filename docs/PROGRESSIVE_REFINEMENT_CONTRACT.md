@@ -114,10 +114,11 @@ Every value-bearing revision preserves:
 
 A reviewed supporting EvidenceLink must resolve to a checked-in or otherwise immutable Source
 artifact, a reproducible Claim-level locator and the exact source-native expression used by the
-revision. The locator must also bind the canonical SHA-256 of the exact normalized assertion,
-including `null` for withdrawal, so changing a normalized day, boundary or value cannot remain
-attached to unchanged source/Claim evidence. Reference closure without locator reproduction and
-assertion binding is not sufficient for `supported`.
+revision. The locator must also bind canonical SHA-256 values for the complete `source_value`
+(raw expression plus declared precision) and the exact normalized assertion, including `null` for
+withdrawal. Changing either source-native precision or a normalized day, boundary or value cannot
+remain attached to unchanged source/Claim evidence. Reference closure without locator reproduction
+and both bindings is not sufficient for `supported`.
 
 Normalization may retain or coarsen precision. It may not produce a value finer than the source
 and evidence support. A source saying “August 1502” cannot normalize to a day. A regional range map
@@ -175,6 +176,9 @@ The top-level temporal precision and the precision carried by `valid_time` are o
 and must agree exactly. A finite primary or alternative interval must represent a non-empty set;
 an exclusive instant or another inclusivity combination that removes every represented day is
 invalid rather than an empty refinement.
+Within one revision, every temporal alternative must be no finer than both the source-native and
+top-level temporal precision. A materially finer alternative requires its own atomic Claim/source
+and `add_alternative` revision rather than borrowing a coarser revision's evidence.
 
 The temporal envelope carries the accepted #330 semantics rather than reducing them to two dates:
 calendar/normalization state, exact or qualified bounds, inclusivity, open-start/open-end/unknown
@@ -356,6 +360,9 @@ state: a non-READY registry keeps the package/contract `REVIEW_REQUIRED`, while 
 three to transition together. After content freeze, the descendant may change only the exact
 package/contract lifecycle files, registry, acceptance decision and the two pre-issued current review
 artifacts; any other changed path invalidates READY even when it was outside `review_scope`.
+Canonical READY validation runs only on a clean Git index/worktree with no untracked or ignored
+files. Every allowed lifecycle/control path must resolve to a regular in-repository `100644` Git
+blob; symlinks and external mutable payloads are invalid.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

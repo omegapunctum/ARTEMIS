@@ -25,6 +25,8 @@ from scripts.validate_progressive_refinement_fixtures import (
     validate_acceptance_binding,
     validate_capability_prohibitions,
     validate_lifecycle_consistency,
+    validate_clean_state,
+    validate_git_blob_entry,
     validate_package,
     validate_ready_descendant_paths,
     validate_review_artifact,
@@ -99,7 +101,7 @@ def test_fixture_validates() -> None:
     assert summary["evidence_links"] == 14
     assert summary["uncertainties"] == 5
     assert summary["ledger_sha256"] == "bc134ee6566eab73e8741f749652418ed847c0cb7245713d9f649a4532a640ab"
-    assert summary["semantic_sha256"] == "078a73a7826363b46d4b6c06e4d2d1253a48532ee0e99de209aae745fcb5eb2a"
+    assert summary["semantic_sha256"] == "742dd8007da20fe558a7e3422641281c47f0aae6e4c4821ee4ccd28587b923a7"
 
 
 def test_require_ready_fails_closed() -> None:
@@ -166,6 +168,7 @@ def test_review_registry_rejects_content_digest_drift(tmp_path: Path, monkeypatc
     path = tmp_path / "review_registry.json"
     path.write_text(json.dumps(registry), encoding="utf-8")
     monkeypatch.setattr(refinement_validator, "REVIEW_REGISTRY_PATH", path)
+    monkeypatch.setattr(refinement_validator, "require_regular_repo_file", lambda *_: None)
     with pytest.raises(RefinementValidationError, match="content digest"):
         refinement_validator.validate_review_envelope()
 
@@ -270,13 +273,37 @@ def test_source_locator_binds_exact_normalized_assertion(tmp_path: Path) -> None
     item["valid_time"]["end"] = "1502-08-09"
     item["value"]["start"] = "1502-08-09"
     item["value"]["end"] = "1502-08-09"
-    assert_rejected(tmp_path, package, "locator does not bind the exact normalized assertion")
+    assert_rejected(tmp_path, package, "locator does not bind the exact source value and normalized assertion")
 
 
 def test_temporal_precision_representations_must_agree(tmp_path: Path) -> None:
     package = load_package()
     revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]["precision"] = "month"
     assert_rejected(tmp_path, package, "temporal precision representations must agree")
+
+
+def test_source_locator_binds_complete_source_value(tmp_path: Path) -> None:
+    package = load_package()
+    revision(package, "revision-leo-time-coarse")["source_value"]["precision"] = "day"
+    assert_rejected(tmp_path, package, "locator does not bind the exact source value and normalized assertion")
+
+
+def test_temporal_alternative_precision_cannot_exceed_source_or_top_level(tmp_path: Path) -> None:
+    package = load_package()
+    extent = revision(package, "revision-leo-time-coarse")["normalized_assertion"]["valid_time"]
+    extent["alternatives"] = [{
+        "id": "alternative-unsupported-day",
+        "kind": "instant",
+        "start": "1502-08-08",
+        "end": "1502-08-08",
+        "start_inclusive": True,
+        "end_inclusive": True,
+        "start_qualifier": "exact",
+        "end_qualifier": "exact",
+        "precision": "day",
+        "basis_claim_refs": ["claim-leo-time-coarse"],
+    }]
+    assert_rejected(tmp_path, package, "alternative precision exceeds source/top-level support")
 
 
 def test_temporal_envelope_supports_open_bounds_and_alternatives() -> None:
@@ -760,6 +787,34 @@ def test_ready_descendant_rejects_any_path_outside_exact_metadata_allowlist() ->
         )
 
 
+@pytest.mark.parametrize(
+    ("status_output", "other_files"),
+    [
+        (" M docs/PROJECT_TRUTH.md\n", ""),
+        ("M  docs/PROJECT_TRUTH.md\n", ""),
+        ("?? docs/UNREVIEWED_CAPABILITY.md\n", "docs/UNREVIEWED_CAPABILITY.md\n"),
+        ("", "ignored/unreviewed-capability.md\n"),
+    ],
+)
+def test_ready_checkout_rejects_staged_unstaged_untracked_and_ignored_files(
+    status_output: str, other_files: str
+) -> None:
+    with pytest.raises(RefinementValidationError, match="clean index/worktree"):
+        validate_clean_state(status_output, other_files)
+
+
+def test_ready_metadata_requires_regular_git_blob_mode() -> None:
+    validate_git_blob_entry(
+        "fixtures/world_model/refinement/v1/review_registry.json",
+        "100644 blob abcdef\tfixtures/world_model/refinement/v1/review_registry.json\n",
+    )
+    with pytest.raises(RefinementValidationError, match="committed regular 100644 blob"):
+        validate_git_blob_entry(
+            "fixtures/world_model/refinement/v1/review_registry.json",
+            "120000 blob abcdef\tfixtures/world_model/refinement/v1/review_registry.json\n",
+        )
+
+
 def test_lifecycle_consistency_rejects_package_registry_contradiction() -> None:
     validate_lifecycle_consistency("REVIEW_REQUIRED", "REVIEW_REQUIRED")
     with pytest.raises(RefinementValidationError, match="lifecycle states are inconsistent"):
@@ -774,5 +829,6 @@ def test_review_registry_rejects_duplicate_review_ids(
     path = tmp_path / "review_registry.json"
     path.write_text(json.dumps(registry), encoding="utf-8")
     monkeypatch.setattr(refinement_validator, "REVIEW_REGISTRY_PATH", path)
+    monkeypatch.setattr(refinement_validator, "require_regular_repo_file", lambda *_: None)
     with pytest.raises(RefinementValidationError, match="review_id values must be unique"):
         refinement_validator.validate_review_envelope()
