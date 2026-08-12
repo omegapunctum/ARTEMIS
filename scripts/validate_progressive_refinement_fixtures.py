@@ -225,6 +225,22 @@ def strict_bbox_subset(child: tuple[float, float, float, float], parent: tuple[f
     return contained and child != parent
 
 
+def temporal_semantic_envelope(extent: dict[str, Any]) -> dict[str, Any]:
+    """Return temporal meaning while excluding revision-local provenance links."""
+    return {
+        key: (
+            [
+                {item_key: item_value for item_key, item_value in alternative.items() if item_key != "basis_claim_refs"}
+                for alternative in value
+            ]
+            if key == "alternatives"
+            else value
+        )
+        for key, value in extent.items()
+        if key != "basis_claim_refs"
+    }
+
+
 def canonical_sha256(value: Any) -> str:
     payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
@@ -244,14 +260,31 @@ def normalized_review_bytes(raw_path: str, content: bytes) -> bytes:
         return json.dumps(package, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     if raw_path == "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md":
         text = content.decode("utf-8")
-        text = re.sub(r"^- Version: .+$", "- Version: 1.0-review-candidate.", text, count=1, flags=re.MULTILINE)
-        text = re.sub(
-            r"^- Status: .+$",
-            "- Status: `REVIEW_REQUIRED` under issue `#377`.",
-            text,
-            count=1,
-            flags=re.MULTILINE,
-        )
+        approved_headers = {
+            "version": {
+                "- Version: 1.0-draft.",
+                "- Version: 1.0.",
+            },
+            "status": {
+                "- Status: `REVIEW_REQUIRED` under issue `#377`.",
+                "- Status: `READY` under issue `#377`.",
+            },
+        }
+        lines = text.splitlines(keepends=True)
+        for label, prefix, replacement in (
+            ("version", "- Version: ", "- Version: 1.0-review-candidate."),
+            ("status", "- Status: ", "- Status: `REVIEW_REQUIRED` under issue `#377`."),
+        ):
+            matches = [index for index, line in enumerate(lines) if line.rstrip("\r\n").startswith(prefix)]
+            if len(matches) != 1:
+                fail(f"progressive refinement contract must contain exactly one {label} header")
+            index = matches[0]
+            raw_line = lines[index].rstrip("\r\n")
+            if raw_line not in approved_headers[label]:
+                fail(f"progressive refinement contract has an unauthorized {label} header")
+            newline = lines[index][len(raw_line):]
+            lines[index] = replacement + newline
+        text = "".join(lines)
         return text.encode("utf-8")
     return content
 
@@ -350,6 +383,27 @@ def validate_review_entry(
     return artifact
 
 
+def validate_acceptance_binding(
+    decision: dict[str, Any],
+    registry_status: str,
+    frozen_commit: str | None,
+    frozen_tree: str | None,
+) -> None:
+    if registry_status == "REVIEW_REQUIRED":
+        if decision["status"] != "PENDING" or decision["decision"] is not None:
+            fail("REVIEW_REQUIRED registry requires a pending acceptance decision")
+        if decision["frozen_commit"] is not None or decision["frozen_tree"] is not None:
+            fail("pending acceptance decision cannot claim a frozen revision")
+        return
+    if decision["status"] == "DECIDED":
+        if decision["decision"] is None:
+            fail("DECIDED acceptance artifact requires ACCEPT, NARROW or REJECT")
+        if (decision["frozen_commit"], decision["frozen_tree"]) != (frozen_commit, frozen_tree):
+            fail("acceptance decision does not bind the frozen revision")
+    elif decision["decision"] is not None or decision["frozen_commit"] is not None or decision["frozen_tree"] is not None:
+        fail("pending acceptance decision cannot claim a decision or frozen revision")
+
+
 def validate_review_envelope() -> dict[str, Any]:
     request = read_json(REVIEW_REQUEST_PATH)
     registry = read_json(REVIEW_REGISTRY_PATH)
@@ -382,10 +436,7 @@ def validate_review_envelope() -> dict[str, Any]:
     if status == "REVIEW_REQUIRED":
         if registry.get("frozen_commit") is not None or registry.get("frozen_tree") is not None or reviews:
             fail("REVIEW_REQUIRED registry cannot claim a frozen review or completed reviews")
-        if decision["status"] != "PENDING" or decision["decision"] is not None:
-            fail("REVIEW_REQUIRED registry requires a pending acceptance decision")
-        if decision["frozen_commit"] is not None or decision["frozen_tree"] is not None:
-            fail("pending acceptance decision cannot claim a frozen revision")
+        validate_acceptance_binding(decision, status, None, None)
         return {
             "review_status": status,
             "reviewed_content_sha256": digest,
@@ -437,11 +488,10 @@ def validate_review_envelope() -> dict[str, Any]:
         fail("reviews must use distinct reviewers/instances and cover both required tracks")
     if status == "READY" and any(review["decision"] != "READY" for review in reviews):
         fail("READY registry requires two READY decisions")
+    validate_acceptance_binding(decision, status, frozen_commit, frozen_tree)
     if status == "READY":
         if decision["status"] != "DECIDED" or decision["decision"] != "ACCEPT":
             fail("READY registry requires an explicit ACCEPT decision")
-        if (decision["frozen_commit"], decision["frozen_tree"]) != (frozen_commit, frozen_tree):
-            fail("acceptance decision does not bind the frozen revision")
     elif decision["status"] == "DECIDED" and decision["decision"] == "ACCEPT":
         fail("ACCEPT decision requires READY registry status")
     return {
@@ -574,8 +624,8 @@ def validate_revision_semantics(
             if not (new_start >= old_start and new_end <= old_end and (new_start, new_end) != (old_start, old_end)):
                 fail(f"{revision_id} false refine: temporal possible set is not strictly narrower")
         elif dimension == "spatial":
-            if (new_start, new_end) != (old_start, old_end):
-                fail(f"{revision_id} spatial refinement cannot change valid_time")
+            if temporal_semantic_envelope(assertion["valid_time"]) != temporal_semantic_envelope(predecessor_assertion["valid_time"]):
+                fail(f"{revision_id} spatial refinement cannot change the valid_time envelope")
             child = bbox(assertion["value"], f"{revision_id}.value")
             parent = bbox(predecessor_assertion["value"], f"{predecessor['id']}.value")
             if not strict_bbox_subset(child, parent):
@@ -702,6 +752,8 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
             fail(f"{evidence['id']} references unknown Claim")
         if evidence["source_ref"] not in sources:
             fail(f"{evidence['id']} references unknown Source")
+        if evidence["id"] not in claims[evidence["claim_ref"]]["evidence_link_refs"]:
+            fail(f"{evidence['id']} is detached from its Claim")
 
     source_texts: dict[str, str] = {}
     for source in sources.values():
@@ -732,6 +784,10 @@ def validate_package(package_path: Path = PACKAGE_PATH, schema_path: Path = SCHE
     for uncertainty in uncertainties.values():
         if uncertainty["revision_ref"] not in revisions:
             fail(f"{uncertainty['id']} references unknown revision")
+        uncertainty_revision = revisions[uncertainty["revision_ref"]]
+        uncertainty_claim = claims[uncertainty_revision["claim_ref"]]
+        if uncertainty["id"] not in uncertainty_revision["uncertainty_refs"] or uncertainty["id"] not in uncertainty_claim["uncertainty_refs"]:
+            fail(f"{uncertainty['id']} is detached from its revision/Claim")
 
     for revision in revisions.values():
         claim = claims.get(revision["claim_ref"])

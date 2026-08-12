@@ -68,8 +68,19 @@ Both independent tracks returned `CHANGES_REQUIRED`:
   lock, canonical require-ready scope and executable final decision.
 
 The structured round-1 artifacts are retained under
-`fixtures/world_model/refinement/v1/reviews/`. They do not count toward round 2. A corrected
-candidate requires two fresh independent reviews on one new exact commit/digest.
+`fixtures/world_model/refinement/v1/reviews/`.
+
+Round 2 froze commit `f9ae1e9a362d7827cf0dc48fc68435df6c853362` with reviewed-content
+digest `fb54684ae9f710e2e148baea7800928ff433c8915dd50e023c0f1e5444fcb840`.
+Both tracks again returned `CHANGES_REQUIRED`, with no critical findings and four material findings:
+
+- semantic-model: the full temporal envelope was not invariant during spatial refinement;
+- validator-integrity: lifecycle normalization was too broad, EvidenceLink/Uncertainty closure
+  could be detached, and `NARROW`/`REJECT` could omit the frozen revision binding.
+
+The round-3 candidate closes all four paths with controlled-corruption tests. Earlier artifacts are
+retained as history and do not count toward round 3; acceptance still requires two fresh independent
+reviews on one new exact commit/digest.
 
 ## Rollback
 

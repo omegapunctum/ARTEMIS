@@ -22,6 +22,7 @@ from scripts.validate_progressive_refinement_fixtures import (
     canonical_sha256,
     package_semantic_payload,
     safe_metadata_path,
+    validate_acceptance_binding,
     validate_package,
     validate_review_artifact,
     validate_time_extent,
@@ -150,6 +151,18 @@ def test_review_artifact_path_rejects_traversal() -> None:
         )
 
 
+@pytest.mark.parametrize("outcome", ["NARROW", "REJECT"])
+def test_decided_non_accept_outcome_must_bind_frozen_revision(outcome: str) -> None:
+    decision = {
+        "status": "DECIDED",
+        "decision": outcome,
+        "frozen_commit": None,
+        "frozen_tree": None,
+    }
+    with pytest.raises(RefinementValidationError, match="does not bind the frozen revision"):
+        validate_acceptance_binding(decision, "REVIEWS_COMPLETE", "a" * 40, "b" * 40)
+
+
 def test_review_digest_allows_only_normalized_lifecycle_status_transition() -> None:
     request = json.loads(REVIEW_REQUEST_PATH.read_text(encoding="utf-8"))
     baseline = reviewed_content_sha256(request)
@@ -168,6 +181,23 @@ def test_review_digest_allows_only_normalized_lifecycle_status_transition() -> N
         return content
 
     assert reviewed_content_sha256(request, loader) == baseline
+
+
+def test_review_digest_rejects_semantic_text_appended_to_lifecycle_header() -> None:
+    request = json.loads(REVIEW_REQUEST_PATH.read_text(encoding="utf-8"))
+
+    def loader(raw_path: str) -> bytes:
+        content = (ROOT / raw_path).read_bytes()
+        if raw_path == "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md":
+            return content.replace(
+                b"- Status: `REVIEW_REQUIRED` under issue `#377`.",
+                b"- Status: `REVIEW_REQUIRED` under issue `#377`; runtime export authorized.",
+                1,
+            )
+        return content
+
+    with pytest.raises(RefinementValidationError, match="unauthorized status header"):
+        reviewed_content_sha256(request, loader)
 
 
 def test_source_locator_reproduces_raw_value_and_claim(tmp_path: Path) -> None:
@@ -240,6 +270,21 @@ def test_rejects_evidence_history_erasure_even_with_recomputed_locks(tmp_path: P
         validate_package(path, SCHEMA_PATH)
 
 
+def test_rejects_detached_evidence_even_with_recomputed_locks(tmp_path: Path) -> None:
+    package = load_package()
+    claim(package, "claim-leo-route-unknown")["evidence_link_refs"] = []
+    revision(package, "revision-leo-route-unknown")["evidence_link_refs"] = []
+    claim(package, "claim-leo-route-unknown")["evidence_state"] = "missing"
+    assert_rejected(tmp_path, package, "detached from its Claim")
+
+
+def test_rejects_detached_uncertainty_even_with_recomputed_locks(tmp_path: Path) -> None:
+    package = load_package()
+    revision(package, "revision-leo-time-coarse")["uncertainty_refs"] = []
+    claim(package, "claim-leo-time-coarse")["uncertainty_refs"] = []
+    assert_rejected(tmp_path, package, "detached from its revision/Claim")
+
+
 def test_require_ready_rejects_custom_package(tmp_path: Path) -> None:
     path = write_package(tmp_path, load_package())
     result = subprocess.run(
@@ -289,6 +334,37 @@ def test_rejects_false_spatial_refinement(tmp_path: Path) -> None:
         3.0, 44.0, 18.0, 53.0
     ]
     assert_rejected(tmp_path, package, "spatial possible set is not strictly narrower")
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("start_inclusive", False),
+        ("start_qualifier", "not_before"),
+        ("calendar", "source_native_unresolved"),
+        ("alternatives", [{
+            "id": "alternative-material-temporal-envelope",
+            "kind": "closed_interval",
+            "start": "1900-01-01",
+            "end": "1900-12-31",
+            "start_inclusive": True,
+            "end_inclusive": True,
+            "start_qualifier": "exact",
+            "end_qualifier": "exact",
+            "precision": "day",
+            "basis_claim_refs": ["claim-range-1900-refined"],
+        }]),
+    ],
+)
+def test_spatial_refinement_cannot_mutate_temporal_envelope(
+    tmp_path: Path, field: str, value: object
+) -> None:
+    package = load_package()
+    extent = revision(package, "revision-range-1900-refined")["normalized_assertion"]["valid_time"]
+    extent[field] = value
+    if field == "calendar":
+        extent["normalization_state"] = "unresolved"
+    assert_rejected(tmp_path, package, "cannot change the valid_time envelope")
 
 
 def test_rejects_orphan_predecessor(tmp_path: Path) -> None:

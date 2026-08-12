@@ -315,6 +315,12 @@ Acceptance requires:
 - one machine-validated decision artifact: `ACCEPT`, `NARROW` or `REJECT`, bound to the same frozen
   commit/tree, reviewed-content digest and review registry.
 
+Lifecycle normalization is limited to the exact approved version/status header values. It cannot
+hide extra authorization or semantic text. Every EvidenceLink and Uncertainty is bidirectionally
+reachable from its Claim/revision, and a refinement in one dimension cannot mutate another
+dimension's full semantic envelope (including calendar, inclusivity, qualifiers and alternatives).
+All decided outcomes, including `NARROW` and `REJECT`, bind the frozen commit and tree.
+
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.
 
