@@ -763,8 +763,8 @@ def test_candidate_is_routed_by_lifecycle_not_capability() -> None:
     registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
     assert f"Status: `{registry['status']}` under issue `#377`" in contract
     assert "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md" in foundation
-    assert "Issue #377 is active foundation maintenance with `REVIEW_REQUIRED` fixtures" in truth
-    assert "#377 as active foundation maintenance" in agents
+    assert "Issue #377 is foundation maintenance whose exact lifecycle is owned" in truth
+    assert "#377 as foundation maintenance whose exact lifecycle is owned" in agents
     assert "Public capability impact: none" in decision
 
 

@@ -48,8 +48,8 @@ Completed:
 
 Active foundation maintenance:
 
-- #377 — progressive refinement/source-native fidelity contract; `REVIEW_REQUIRED` and required
-  before runtime/storage implements mutable knowledge refinement.
+- #377 — progressive refinement/source-native fidelity contract; exact lifecycle is owned by its
+  contract/registry, and runtime/storage still requires separate authorization for mutable knowledge refinement.
 
 Deferred:
 
@@ -89,8 +89,8 @@ Deferred:
 
 - **ACTIVE / IN PROGRESS** under #355; opened separately after the Gate C freeze;
 - consume the frozen repository package directly; #371/#373 Airtable import/review are deferred and no historical write is authorized;
-- read/render work may proceed over the frozen package, but editable precision/history behavior is
-  blocked on #377 acceptance; #377 does not change Gate D lifecycle state;
+- read/render work may proceed over the frozen package, but editable precision/history behavior
+  requires the recorded #377 decision plus separate implementation authorization; #377 does not change Gate D lifecycle state;
 - consume World Model → Explorer State → Render Projection;
 - synchronize time, layers and selection;
 - expose sources, uncertainty, alternatives, coverage and projection losses;

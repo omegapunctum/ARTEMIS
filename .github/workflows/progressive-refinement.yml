@@ -44,7 +44,7 @@ jobs:
       - name: Validate progressive refinement contract candidate
         run: |
           python scripts/validate_progressive_refinement_fixtures.py
-          pytest -q tests/test_progressive_refinement_fixtures.py
           if grep -q '"status": "READY"' fixtures/world_model/refinement/v1/package.json; then
             python scripts/validate_progressive_refinement_fixtures.py --require-ready
           fi
+          pytest -q tests/test_progressive_refinement_fixtures.py

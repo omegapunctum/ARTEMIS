@@ -174,6 +174,15 @@ Round 11 makes the frozen harness lifecycle-aware and reserves clean-check enfor
 canonical `--require-ready`. Round-10 READY artifacts remain immutable audit history; acceptance is
 reopened until the same frozen test suite passes both before and after the metadata-only transition.
 
+Round 11 froze commit `96b9719feecb2fad571431a1c7009974d227fe7a` with reviewed-content
+digest `a7f8b29d0f5abf1252a6e5122599a8482a67ec29a5f52c83634a25595d4fd6e4`.
+Both tracks returned `CHANGES_REQUIRED`: canonical routing docs still asserted permanent
+`REVIEW_REQUIRED`, and the workflow ran canonical cleanliness after pytest created ignored caches.
+
+Round 12 puts lifecycle-neutral routing docs inside the frozen review scope and runs canonical
+`--require-ready` before pytest. Round-11 negative artifacts remain immutable history and do not
+count toward the new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

@@ -372,6 +372,10 @@ acceptance, while the same frozen tests also validate a metadata-only READY desc
 assuming that the package must remain permanently `REVIEW_REQUIRED`. Only explicit canonical
 `--require-ready` invokes checkout cleanliness, so pytest's own ignored cache cannot alter ordinary
 fixture-unit semantics.
+Lifecycle routing documents use status-neutral language and delegate the exact candidate/READY state
+to this contract and registry. That routing corpus is inside the frozen review scope, so a later
+metadata-only READY transition cannot leave stale canonical status claims or rewrite the routing
+boundary after review.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

@@ -61,7 +61,7 @@ North Star не является release promise. Backend code не являет
 |---|---|
 | `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` | Reviewed temporal/spatial/change/coverage/reconstruction semantics; immutable #329 review dependency until separately re-reviewed |
 | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` | Scoped #330 normalization, filtering and projection profile |
-| `docs/PROGRESSIVE_REFINEMENT_CONTRACT.md` | Draft #377 non-destructive coarse-to-fine revision semantics; `REVIEW_REQUIRED`, not accepted capability |
+| `docs/PROGRESSIVE_REFINEMENT_CONTRACT.md` | #377 non-destructive coarse-to-fine revision semantics; exact lifecycle owned by its contract/registry, never runtime capability by itself |
 | `docs/ENTITY_MODEL.md` | Knowledge/research/runtime/context entity types |
 | `docs/EPISTEMIC_CONTRACT.md` | Claim/Evidence/uncertainty/inference semantics |
 | `docs/CONTENT_GOVERNANCE.md` | Candidate intake, review, progressive correction/withdrawal and publish trust |
@@ -96,10 +96,10 @@ Historical:
 - `docs/work/2026-07-26_CONCEPT_LOCK_V2.md` — `SUPERSEDED`, retained for rationale/history.
 - Gate A architecture module package — completed Architecture Layer fixtures, not active v3 validation.
 
-The active foundation-maintenance decision is issue `#377` /
-`docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md`. It remains `REVIEW_REQUIRED`, does not
-consume the Gate D product WIP slot and cannot authorize runtime/data migration or capability
-change. Working lifecycle authority remains `docs/work/README.md`.
+The foundation-maintenance decision is issue `#377` /
+`docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md`; exact status is owned by the refinement
+contract/registry. It does not consume the Gate D product WIP slot and cannot by itself authorize
+runtime/data migration or capability change. Working lifecycle authority remains `docs/work/README.md`.
 
 ## 5. Reading order
 
@@ -142,8 +142,8 @@ For executable temporal/spatial uncertainty normalization and query behavior, th
 
 For append-only coarse-to-fine Claim/reconstruction lineage, valid-time versus record-time
 separation and deterministic current-frontier behavior, the scoped candidate owner is
-`PROGRESSIVE_REFINEMENT_CONTRACT.md`. Until issue #377 completes its independent review path, the
-file and fixtures remain `REVIEW_REQUIRED` and cannot authorize runtime/storage migration.
+`PROGRESSIVE_REFINEMENT_CONTRACT.md`. Its contract/registry owns the exact lifecycle; neither
+candidate nor accepted status can by itself authorize runtime/storage migration.
 
 Examples:
 
@@ -240,7 +240,7 @@ Active product gate:
 Foundation status:
 
 4. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
-5. Issue `#377`: Progressive Refinement Contract v1 — **IN PROGRESS / REVIEW_REQUIRED**; no product-gate or capability change.
+5. Issue `#377`: Progressive Refinement Contract v1 — **FOUNDATION MAINTENANCE**; exact lifecycle in its contract/registry, no product-gate or capability change.
 
 Deferred/gated:
 

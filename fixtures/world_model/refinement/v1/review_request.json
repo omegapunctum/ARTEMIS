@@ -3,7 +3,7 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
-  "review_round": 11,
+  "review_round": 12,
   "required_tracks": [
     "semantic-model",
     "validator-integrity"
@@ -11,19 +11,23 @@
   "independence_method": "separate_agent_task_read_only",
   "review_slots": [
     {
-      "reviewer_id": "codex-semantic-model-reviewer-r11",
-      "reviewer_instance_id": "semantic-r11-ready-harness-remediation-20260812",
-      "review_task_path": "/root/refinement_semantic_review_r11",
+      "reviewer_id": "codex-semantic-model-reviewer-r12",
+      "reviewer_instance_id": "semantic-r12-lifecycle-routing-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r12",
       "track": "semantic-model"
     },
     {
-      "reviewer_id": "codex-validator-integrity-reviewer-r11",
-      "reviewer_instance_id": "validator-r11-ready-harness-remediation-20260812",
-      "review_task_path": "/root/refinement_validator_review_r11",
+      "reviewer_id": "codex-validator-integrity-reviewer-r12",
+      "reviewer_instance_id": "validator-r12-lifecycle-routing-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r12",
       "track": "validator-integrity"
     }
   ],
   "review_scope": [
+    "AGENTS.md",
+    "docs/PROJECT_TRUTH.md",
+    "docs/FOUNDATION_INDEX.md",
+    "docs/PROJECT_PHASES.md",
     "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md",
     "docs/CONTENT_GOVERNANCE.md",
     "docs/DEVELOPMENT_OPERATING_SYSTEM.md",

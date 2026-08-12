@@ -12,7 +12,7 @@
     "status": {"const": "REVIEW_REQUIRED"},
     "issue": {"const": 377},
     "pull_request": {"const": 378},
-    "review_round": {"const": 11},
+    "review_round": {"const": 12},
     "required_tracks": {"const": ["semantic-model", "validator-integrity"]},
     "independence_method": {"const": "separate_agent_task_read_only"},
     "review_slots": {
@@ -26,7 +26,7 @@
         "properties": {
           "reviewer_id": {"type": "string", "minLength": 1},
           "reviewer_instance_id": {"type": "string", "minLength": 1},
-          "review_task_path": {"type": "string", "pattern": "^/root/refinement_[a-z0-9_]+_r11$"},
+          "review_task_path": {"type": "string", "pattern": "^/root/refinement_[a-z0-9_]+_r12$"},
           "track": {"enum": ["semantic-model", "validator-integrity"]}
         }
       }

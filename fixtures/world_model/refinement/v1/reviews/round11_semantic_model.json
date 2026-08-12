@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 11,
+  "review_id": "refinement-v1-round11-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r11",
+  "reviewer_instance_id": "semantic-r11-ready-harness-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r11",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "96b9719feecb2fad571431a1c7009974d227fe7a",
+  "frozen_tree": "bcb836a93627baebc9043eb5ddd279d74ec2f809",
+  "reviewed_content_sha256": "a7f8b29d0f5abf1252a6e5122599a8482a67ec29a5f52c83634a25595d4fd6e4",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 1,
+  "findings": [
+    {"finding_id": "REF-SEM-R11-001", "severity": "material", "status": "open", "summary": "A metadata-only READY descendant remained canonically contradictory because PROJECT_TRUTH, FOUNDATION_INDEX, PROJECT_PHASES and AGENTS still asserted permanent REVIEW_REQUIRED status outside the lifecycle allowlist."},
+    {"finding_id": "REF-SEM-R11-002", "severity": "informational", "status": "accepted", "summary": "Package/schema/source semantics, semantic lock, temporal/source binding, lineage, alternatives, replay, route, correction and withdrawal behavior remain intact."},
+    {"finding_id": "REF-SEM-R11-003", "severity": "informational", "status": "accepted", "summary": "Round-10 READY artifacts and protected #329/#330, Gate C, project state, runtime, frontend and data scopes remain immutable."}
+  ],
+  "commands": [
+    "verify remote head, tree and reviewed-content digest",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/validate_world_model_fixtures.py",
+    "python scripts/validate_uncertainty_fixtures.py",
+    "python scripts/release_check.py",
+    "inspect canonical lifecycle routing in candidate and metadata-only READY descendant",
+    "verify protected scopes and git diff --check"
+  ],
+  "conclusion": "The refinement model remains semantically sound, but contradictory canonical routing language prevents semantic-model READY in round 11."
+}

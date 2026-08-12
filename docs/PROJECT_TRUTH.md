@@ -210,18 +210,19 @@ Completed/deferred Airtable data-governance evidence now includes:
 - #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
 - #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
-Issue #377 is active foundation maintenance with `REVIEW_REQUIRED` fixtures; it does not consume the
-product-gate WIP slot or change current capability. Gate D remains explicitly open under #355 as
-the sole active product gate. It may read/render the frozen Gate C package, but no runtime/storage
-behavior may claim lossless mutable refinement until #377 is independently accepted. There is no
-active Airtable import issue.
+Issue #377 is foundation maintenance whose exact lifecycle is owned by
+`PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It does not consume the product-gate
+WIP slot or change current capability. Gate D remains explicitly open under #355 as the sole active
+product gate. It may read/render the frozen Gate C package, but contract acceptance alone does not
+authorize runtime/storage mutation, Airtable writes or public capability. There is no active Airtable
+import issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
 Для активного Gate D primary order:
 
 1. preserve the explicit Gate D opening contract under #355;
-2. accept, narrow or reject #377 before implementing editable precision/history behavior;
+2. honor the recorded #377 lifecycle decision and require a separate implementation authorization before editable precision/history behavior;
 3. build the synchronized Globe/timeline/layers experience directly from the frozen Gate C boundary through shared contracts;
 4. preserve the current 2D renderer as public baseline, parity target and rollback path;
 5. collect semantic, UX, accessibility and representative performance evidence;
