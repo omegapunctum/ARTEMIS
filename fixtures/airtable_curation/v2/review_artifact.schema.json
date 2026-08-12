@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.local/schemas/airtable-leonardo-mapping-review-v1.json",
+  "title": "ARTEMIS Leonardo Airtable mapping review artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "review_id",
+    "reviewer_id",
+    "reviewer_instance_id",
+    "track",
+    "independence_method",
+    "reviewed_row_plan_sha256",
+    "reviewed_pr_head",
+    "started_at",
+    "completed_at",
+    "decision",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "review_id": {"type": "string", "minLength": 1},
+    "reviewer_id": {"type": "string", "minLength": 1},
+    "reviewer_instance_id": {"type": "string", "minLength": 1},
+    "track": {"const": "mapping-integrity"},
+    "independence_method": {"const": "separate_agent_task_read_only"},
+    "reviewed_row_plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reviewed_pr_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "decision": {"enum": ["READY", "CHANGES_REQUIRED"]},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "severity", "status", "summary", "evidence"],
+        "properties": {
+          "finding_id": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["critical", "material", "minor"]},
+          "status": {"enum": ["open", "resolved"]},
+          "summary": {"type": "string", "minLength": 1},
+          "evidence": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "notes": {"type": "string"}
+  }
+}

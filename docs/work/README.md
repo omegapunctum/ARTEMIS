@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-10.
+- Updated: 2026-08-11.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,23 +13,28 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
+| `2026-08-11_LEONARDO_AIRTABLE_SHADOW_IMPORT_v1.md` | #371 active pre-Gate-D data-governance preflight for deterministic Gate C shadow import and round-trip parity | exact-head preflight, frozen row plan, controlled live import/readback and round-trip parity; then close #371 without opening Gate D |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D/E evidence and one explicit next decision after a separately opened Gate D |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-There is currently no active foundation-maintenance or Airtable data-governance decision. Foundation/data maintenance is not a second product vertical and does not consume the one-product-gate WIP slot; any new change must be opened explicitly through its own decision record.
+There is currently no active foundation-maintenance decision. #371 is active Airtable/World Model data-governance maintenance, not a second product vertical, and does not consume the one-product-gate WIP slot. It may not open Gate D or change public capability.
 
 #366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. #368 / PR #369 completed the six-table empty non-authoritative shadow schema plus executable contract/snapshot validation. Neither opened Gate D, imported the frozen Gate C package or changed the Architecture Atlas public export authority.
 
-The accepted Airtable working/evidence chain is:
+#371 / draft PR #372 is the explicit next pre-Gate-D data-governance contour. Its preflight resolves three storage blockers without historical row writes: World Model layer identity moves to shadow-only `SliceLayers`, frozen source identity/rights move to shadow-only `WorldSources`, and many-target Uncertainty storage uses `UncertaintyTargets` without cloning the 11 canonical Uncertainty identities. The original six #368 tables and the three #371 extension tables remain empty during this preflight stage.
+
+The accepted/current Airtable working/evidence chain is:
 
 - `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md` — compatibility boundary and architecture decision;
 - `airtable/2026-08-10_AIRTABLE_CURATION_SCHEMA_PLAN_v1.json` — proposal-only schema plan;
 - `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` — completed live empty schema implementation/evidence;
-- `fixtures/airtable_curation/v1/` + `scripts/validate_airtable_curation_schema.py` — executable schema evidence and guard.
+- `fixtures/airtable_curation/v1/` + `scripts/validate_airtable_curation_schema.py` — completed #368 executable schema evidence and guard;
+- `2026-08-11_LEONARDO_AIRTABLE_SHADOW_IMPORT_v1.md` — active #371 preflight/mapping decision;
+- `fixtures/airtable_curation/v2/` + `scripts/validate_airtable_leonardo_shadow_preflight.py` — active lossless mapping/schema-extension evidence and fail-closed preflight.
 
-No real Gate C Airtable import is active. A future import/round-trip parity contour must be opened explicitly and must first resolve the Gate C layer-ID/per-slice-role mismatch without silently contaminating the legacy public-source `Layers` table.
+No real Gate C historical row import is active yet. #371 currently authorizes schema/mapping preflight only. Historical writes remain prohibited until the exact-head preflight is green and a deterministic normalized row plan is frozen and reviewed.
 
 Active execution rule for the Globe MVP:
 

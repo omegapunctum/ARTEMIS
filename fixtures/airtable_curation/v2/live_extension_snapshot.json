@@ -1,0 +1,86 @@
+{
+  "snapshot_version": "2.0.0",
+  "captured_at": "2026-08-11",
+  "base_id": "appHmf8ubeUF9nfkO",
+  "authoritative": false,
+  "historical_records_present": false,
+  "record_counts_verified_zero": true,
+  "field_extensions": [
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "slice_layers", "id": "fldo2NLQvg4MWux5k", "type": "multipleRecordLinks", "linked_table_id": "tblwhHRmSNz3rglFG"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "source_spatial_mode", "id": "fldPe8HJ7vUVh6jX9", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "source_curation_state", "id": "fldEX4Lcs7Vkc1Ju7", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "source_temporal_value", "id": "fldGBrV6ghg4TcDLS", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "source_temporal_precision", "id": "fldtJKB50v0qbbXGb", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "temporal_assertion_status", "id": "fldDSnKuy4sNba0wH", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "table_id": "tblffBsDcOZ0HOLfw", "name": "world_sources", "id": "fldFir1amIYU4ZYYx", "type": "multipleRecordLinks", "linked_table_id": "tbl7I4XNC8bayxmn9"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_kind", "id": "fldnCq9aTOPDlMzg0", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_spatial_mode", "id": "fldyVmbfV1JXQqRC3", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_temporal_value", "id": "flda8saGHonyVXPCg", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "source_temporal_precision", "id": "fld2ZBCsh0C6f9CFR", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "temporal_assertion_status", "id": "fldBNLfCk2wNde7n4", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "geometry_status", "id": "fldZV8TTZn7sFSoDF", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "alternative_group_id", "id": "fldObnNMindAMKQT1", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "alternative_kind", "id": "fld6yxgp7nGamgftg", "type": "singleLineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "reconstruction_question", "id": "fldlXh4hGLzQmTVzg", "type": "multilineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "interpretation", "id": "fldt5SNFKxD9GSE2g", "type": "multilineText"},
+    {"table": "ObjectParts", "table_id": "tblBH9L9ZcYe8MU6Z", "name": "world_sources", "id": "fldlBPAHLeKJbFIhV", "type": "multipleRecordLinks", "linked_table_id": "tbl7I4XNC8bayxmn9"},
+    {"table": "Claims", "table_id": "tblOeuGE19Vbg3XLh", "name": "confidence_basis", "id": "fldvnsvLWjKwSj7fy", "type": "multilineText"},
+    {"table": "EvidenceLinks", "table_id": "tblGqSgg3PBndArk5", "name": "world_source", "id": "fld4MIoqmmYl78FVz", "type": "multipleRecordLinks", "linked_table_id": "tbl7I4XNC8bayxmn9"},
+    {"table": "Uncertainties", "table_id": "tbl370NEfV6TtYiM2", "name": "basis_kind", "id": "fldtlGfVL8Mtoa4Y7", "type": "singleLineText"},
+    {"table": "Uncertainties", "table_id": "tbl370NEfV6TtYiM2", "name": "basis_claims", "id": "fldikU6MzquDacUOk", "type": "multipleRecordLinks", "linked_table_id": "tblOeuGE19Vbg3XLh"}
+  ],
+  "tables": [
+    {
+      "name": "SliceLayers",
+      "id": "tblwhHRmSNz3rglFG",
+      "record_count": 0,
+      "fields": [
+        {"name": "id", "id": "fldj6cFsCft5x2xL5", "type": "singleLineText"},
+        {"name": "world_slice", "id": "fld5M3LiW19L07VzO", "type": "multipleRecordLinks", "linked_table_id": "tblBug0vkNAI8DO1R"},
+        {"name": "layer_id", "id": "fldG5cF0VXRgEwYC7", "type": "singleLineText"},
+        {"name": "label", "id": "flddXE2Htdpf3Ba7E", "type": "singleLineText"},
+        {"name": "role", "id": "flddpHxFJ5cWUtM6o", "type": "singleSelect", "choices": ["primary_trajectory", "local_context", "change_context", "global_context"]},
+        {"name": "review_state", "id": "fldaXbmdKoknyfVRo", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
+        {"name": "notes", "id": "fldiJQD3amxpm1FNG", "type": "multilineText"}
+      ]
+    },
+    {
+      "name": "UncertaintyTargets",
+      "id": "tbl2xnhOXcubQHnpM",
+      "record_count": 0,
+      "fields": [
+        {"name": "id", "id": "fldeaPo8e9Wmq5Mfi", "type": "singleLineText"},
+        {"name": "uncertainty", "id": "fldkDdrF1WRVGzJqv", "type": "multipleRecordLinks", "linked_table_id": "tbl370NEfV6TtYiM2"},
+        {"name": "knowledge_object", "id": "fldUx9lEcecKMdhuh", "type": "multipleRecordLinks", "linked_table_id": "tblffBsDcOZ0HOLfw"},
+        {"name": "object_part", "id": "fldgXzonGrtnmZj1j", "type": "multipleRecordLinks", "linked_table_id": "tblBH9L9ZcYe8MU6Z"},
+        {"name": "claim", "id": "fld4dJMoW9ukusmFV", "type": "multipleRecordLinks", "linked_table_id": "tblOeuGE19Vbg3XLh"},
+        {"name": "review_state", "id": "fld8FZiCRQuxQ2VcB", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
+        {"name": "notes", "id": "fld7fHn1XjVFoTkCw", "type": "multilineText"}
+      ]
+    },
+    {
+      "name": "WorldSources",
+      "id": "tbl7I4XNC8bayxmn9",
+      "record_count": 0,
+      "fields": [
+        {"name": "id", "id": "fldviMx9BRY5feLIp", "type": "singleLineText"},
+        {"name": "title", "id": "fldlBgCfwMzt6K584", "type": "singleLineText"},
+        {"name": "organization", "id": "fld3TyvTtO8xkW6gr", "type": "singleLineText"},
+        {"name": "source_type", "id": "fldcRLAz9mBjQXto3", "type": "singleLineText"},
+        {"name": "url", "id": "fldsfDclROBGmqhPs", "type": "url"},
+        {"name": "locator", "id": "fld46aB64qaAkHEFG", "type": "multilineText"},
+        {"name": "curation_state", "id": "fldU6L6VjxiuGMZdp", "type": "singleLineText"},
+        {"name": "access_status", "id": "fldP6HDT4POdyKh6y", "type": "singleLineText"},
+        {"name": "data_or_text_use", "id": "fldyamlH1F197FDfb", "type": "singleLineText"},
+        {"name": "media_reuse", "id": "fldPOt0J87l90AAxW", "type": "singleLineText"},
+        {"name": "derived_geometry_use", "id": "fld7cFBE7TG6JT5OF", "type": "singleLineText"},
+        {"name": "license", "id": "fldRVW7ttyLPUZZgR", "type": "singleLineText"},
+        {"name": "attribution", "id": "fldZVXIUpjVmSApTH", "type": "multilineText"},
+        {"name": "review_state", "id": "fldM6ez0XDul9Uq4v", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
+        {"name": "notes", "id": "fldKxYR82b028RwJ4", "type": "multilineText"},
+        {"name": "intended_claims", "id": "fldgRAWb1qiD8kdTO", "type": "multipleRecordLinks", "linked_table_id": "tblOeuGE19Vbg3XLh"},
+        {"name": "default_relation_to_claim", "id": "fldI1tmZvsXNV0wHf", "type": "singleLineText"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "status": "REVIEW_REQUIRED",
+  "issue": 371,
+  "row_plan_sha256": "ff63b8ed036ec79ac73e11c2eb4d3cad22b69b0e5a361c23cef767c5c5ac83f1",
+  "row_plan_lock_ref": "fixtures/airtable_curation/v2/row_plan_lock.json",
+  "required_review_count": 1,
+  "required_track": "mapping-integrity",
+  "required_independence_method": "separate_agent_task_read_only",
+  "reviews": [],
+  "write_gate": {
+    "ready_required_before_historical_write": true,
+    "historical_rows_authorized": false,
+    "gate_d_opened": false
+  }
+}

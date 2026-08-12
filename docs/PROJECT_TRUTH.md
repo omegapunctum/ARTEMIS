@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-08-10.
+- Дата фиксации: 2026-08-11.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -29,7 +29,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
 - Foundation v3.1 / #363 / PR #364 is completed; Gate D is still only the next product gate and has not been opened by the Foundation decision or by Airtable data-governance work.
-- An empty, non-authoritative Airtable World Model **shadow curation schema** exists under #368 as pre-Gate-D data-governance evidence. It is not read by the public exporter, contains no Gate C historical records and does not change product capability.
+- #368 established the original six-table empty/non-authoritative Airtable World Model shadow schema. #371 / draft PR #372 extends that preflight surface with three additional empty shadow-only tables plus parity fields, but **no Gate C historical row has been written** and product capability is unchanged.
 
 ## 2. Что доступно публично
 
@@ -99,11 +99,11 @@ Migration preflight и release gate подтверждают current backend cap
 
 ### Airtable World Model shadow curation schema
 
-После #366 / PR #367 существующие восемь Airtable tables явно зафиксированы как Architecture Atlas compatibility/public-projection curation, а не как Foundation v3 semantic owner. Canonical current export остаётся:
+После #366 / PR #367 существующие восемь legacy Airtable tables явно зафиксированы как Architecture Atlas compatibility/public-projection curation, а не как Foundation v3 semantic owner. Canonical current export остаётся:
 
 `legacy Airtable tables → scripts/export_airtable.py → semantic data gate → checked-in public data/*`.
 
-Под #368 создан отдельный **empty/non-authoritative shadow schema** из шести таблиц:
+#368 / PR #369 создал исходный **empty/non-authoritative shadow schema** из шести таблиц:
 
 - `WorldSlices`;
 - `KnowledgeObjects`;
@@ -112,23 +112,33 @@ Migration preflight и release gate подтверждают current backend cap
 - `EvidenceLinks`;
 - `Uncertainties`.
 
-Фактическая граница этого shadow contour:
+#371 / draft PR #372 выполняет отдельный pre-Gate-D **schema/mapping preflight** для frozen Leonardo Gate C package. В live Airtable дополнительно существуют три shadow-only таблицы, также проверенные с `0` records:
 
-- все шесть таблиц проверены с `0` records после создания;
-- `Sources` переиспользуется только как стабильный provenance registry;
-- `Layers` переиспользуется только как display/query grouping;
-- `Media` остаётся presentation/rights subsystem;
+- `SliceLayers` — exact per-WorldSlice layer identity/role без записи Gate C слоёв в legacy public-source `Layers`;
+- `WorldSources` — lossless World Model source/rights registry без записи Leonardo Sources в legacy public `Sources`;
+- `UncertaintyTargets` — storage junction для many-target `Uncertainty.target_refs[]` без клонирования 11 исходных Uncertainty identities.
+
+Дополнительные parity/provenance fields в `KnowledgeObjects`, `ObjectParts`, `Claims`, `EvidenceLinks` и `Uncertainties` сохраняют source temporal tokens, source/reconstruction metadata, Claim confidence basis, Uncertainty basis и WorldSource refs. Эти поля являются storage representation, а не новой semantic ontology.
+
+Фактическая граница shadow contour на 2026-08-11:
+
+- все шесть исходных #368 tables по-прежнему проходят `--require-empty` с `0` historical records;
+- все три #371 extension tables проверены с `0` records;
+- legacy `KnowledgeObjects.layers` должен оставаться пустым для Gate C shadow import; World Model layer roles идут через `SliceLayers`;
+- legacy `EvidenceLinks.source` должен оставаться пустым для Gate C shadow import; Claim-specific evidence идёт через `EvidenceLinks.world_source → WorldSources`;
+- legacy Architecture Atlas `Layers`, `Sources`, `Media`, exporter и checked-in public `data/*` не изменены этим contour;
 - новый Relation table не создавался, пока #331 paused;
-- shadow tables не читаются текущим `export_airtable.py` и не являются source of truth для public `data/*`;
-- live schema snapshot и executable contract находятся в `fixtures/airtable_curation/v1/`;
-- `scripts/validate_airtable_curation_schema.py --require-empty` fail-closed проверяет schema/lifecycle boundary;
+- live schema evidence v1 остаётся в `fixtures/airtable_curation/v1/`; #371 extensions/mapping/row-plan evidence находятся в `fixtures/airtable_curation/v2/`;
+- `scripts/validate_airtable_leonardo_shadow_preflight.py` fail-closed проверяет frozen package, schema extensions, ref closure, unknown-route/geometry-withheld semantics и Gate C/Gate D boundary;
+- deterministic semantic-ID row-plan builder воспроизводит ровно **154 candidate rows**: 1 WorldSlice, 4 SliceLayers, 10 WorldSources, 17 KnowledgeObjects, 11 ObjectParts, 22 Claims, 38 EvidenceLinks, 11 Uncertainties и 40 UncertaintyTargets;
+- этот row plan frozen отдельным lock с SHA-256 `ff63b8ed036ec79ac73e11c2eb4d3cad22b69b0e5a361c23cef767c5c5ac83f1` и проверяется Release Discipline;
+- **row-plan lock не является разрешением на historical write**: `historical_rows_authorized=false`, independent mapping review остаётся обязательным до первой записи;
 - Airtable автоматически создаёт inverse-link fields; они являются storage implementation detail, а не новыми семантическими Relations;
-- Airtable UI сам по себе не гарантирует Claim/Evidence/Uncertainty cardinalities, поэтому реальные записи нельзя импортировать до отдельного row-level validator/import contract;
-- record-time `dateTime` fields в shadow schema используют Airtable display timezone `Europe/London`; это не историческое valid time и не меняет temporal semantics World Model.
+- record-time `dateTime` fields используют Airtable display timezone `Europe/London`; это не historical valid time и не меняет temporal semantics World Model.
 
-Наличие этой schema означает только, что ARTEMIS теперь имеет проверяемую editorial storage shape для будущей curation. Оно **не** означает наличие World Model corpus в Airtable, readiness historical data, Gate D start или public capability.
+Наличие девяти empty shadow tables, deterministic mapping и frozen row plan означает только, что ARTEMIS имеет проверяемую editorial storage/preflight форму для будущего controlled import. Оно **не** означает наличие World Model corpus в Airtable, historical readiness, round-trip parity, Gate D start или public capability.
 
-Gate C historical curation package остаётся отдельным от public Airtable export и от пустого shadow schema:
+Gate C historical curation package остаётся отдельным от public Airtable export и от пустого shadow storage:
 
 - #332/#360 / PR #362 froze Leonardo-in-Romagna 1502 as a non-public World Slice boundary;
 - 17 candidate objects, 10 Sources, 22 atomic Claims, 38 EvidenceLinks and 11 provenance-bearing Uncertainties are bound to the frozen reviewed revision;
@@ -136,15 +146,16 @@ Gate C historical curation package остаётся отдельным от publ
 - three inter-place routes remain unknown with no invented geometry;
 - Duchy of Romagna Region states remain geometry-withheld where evidence/rights do not support a boundary;
 - this package is reviewed as a **Gate C boundary**, not promoted to public/READY historical product data;
-- none of these Gate C historical records has been imported into the Airtable shadow schema at the #368 schema stage.
+- none of the 154 planned shadow rows has been written at the #371 row-plan-lock stage.
 
-До отдельной promotion/runtime decision public dataset остаётся Architecture Atlas pilot, Gate C package — non-public frozen input, а Airtable World Model tables — empty shadow curation infrastructure.
+До отдельной controlled-import + readback + round-trip parity decision public dataset остаётся Architecture Atlas pilot, Gate C package — non-public frozen authority, а Airtable World Model tables — empty non-authoritative shadow infrastructure.
 
 ## 5. Что не считается реализованным продуктом
 
 - universal spatial-temporal knowledge-model runtime;
 - public/product-ready Life in Context World Slice and synchronized explorer;
 - Airtable World Model shadow schema as a historical corpus, canonical storage authority or product capability;
+- frozen 154-row Airtable plan as imported data, round-trip parity evidence or historical readiness;
 - Gate C package integrated into Airtable as a validated shadow copy;
 - Gate C package integrated into the Globe runtime as a complete Gate D experience;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
@@ -173,13 +184,14 @@ Gate C historical curation package остаётся отдельным от publ
 8. Globe MVP может стать shadow product, если он обойдёт shared World Model / Explorer State / Render Projection или преждевременно войдёт в public Pages.
 9. Long-term attractor может быть ошибочно воспринят как permission to implement AI/VR/universal corpus before gates; Foundation v3.1 explicitly forbids this.
 10. `World Model` wording can drift back toward objective-digital-twin claims unless the knowledge-vs-world boundary remains explicit.
-11. Empty Airtable World Model schema может стать competing semantic/storage authority, если реальные данные начнут вноситься вручную до deterministic import/export + row-level validation + round-trip parity against the frozen repository package.
+11. Airtable World Model schema может стать competing semantic/storage authority, если данные начнут вноситься вручную в обход deterministic import/export + row-level validation + round-trip parity against the frozen repository package.
+12. Frozen 154-row plan может быть ошибочно принят за completed import evidence; поэтому live historical write остаётся fail-closed до отдельного independent mapping review и последующего readback/parity proof.
 
 ## 7. Текущий operational verdict
 
 ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D not opened**.
 
-Current public runtime and public data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation. Airtable now additionally contains an empty non-authoritative World Model curation shadow schema, but this is data-governance infrastructure, not a new product/runtime capability.
+Current public runtime and public data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation. Airtable additionally contains nine empty non-authoritative World Model shadow tables plus a deterministic/frozen Leonardo row plan, but this is data-governance infrastructure and preflight evidence, not a new product/runtime or historical-corpus capability.
 
 Reviewed/accepted foundation evidence includes:
 
@@ -189,14 +201,15 @@ Reviewed/accepted foundation evidence includes:
 - #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews;
 - #363 / PR #364 Foundation v3.1 Attractor refinement — accepted with all required repository workflows green on its merge candidate.
 
-Pre-Gate-D data-governance evidence now includes:
+Pre-Gate-D data-governance evidence/work now includes:
 
 - #366 / PR #367 — legacy Airtable boundary/schema truth and canonical audit path aligned;
-- #368 — empty, executable, non-authoritative Airtable World Model shadow schema; no Gate C historical import and no public export authority.
+- #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
+- #371 / draft PR #372 — active lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; historical writes remain unauthorized pending independent mapping review.
 
-There is currently no active foundation-maintenance issue. #368 is data-governance maintenance and is not a second product vertical. The next **product** transition remains Gate D, but it must be opened explicitly under #355; neither Airtable schema creation nor any future shadow-import parity work may open it by implication.
+There is currently no active foundation-maintenance issue. #371 is active data-governance maintenance and is not a second product vertical. The next **product** transition remains Gate D, but it must be opened explicitly under #355; Airtable schema, mapping, import or parity work may not open it by implication.
 
-До explicit Gate D допустимы только bounded maintenance/evidence шаги, которые не меняют product capability. Для Airtable следующий потенциальный шаг после acceptance #368 — отдельный non-authoritative Gate C shadow-import + round-trip parity contour с row-level validation. Он также не является Gate D.
+До explicit Gate D допустимы bounded maintenance/evidence шаги, которые не меняют product capability. Для #371 следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
 Когда product execution возобновится через явный Gate D transition, primary order остаётся:
 
@@ -208,7 +221,7 @@ There is currently no active foundation-maintenance issue. #368 is data-governan
 
 Issue #331 is paused outside this critical path. Until it is accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
-The superseded #323–#325 path and PR #314 remain closed. Passing fixtures, storage schemas or Foundation documents prove neither public capability nor user value.
+The superseded #323–#325 path and PR #314 remain closed. Passing fixtures, storage schemas, row plans or Foundation documents prove neither public capability nor user value.
 
 ## 8. Правило честного описания
 

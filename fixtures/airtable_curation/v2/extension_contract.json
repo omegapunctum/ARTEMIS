@@ -1,0 +1,116 @@
+{
+  "schema_version": "2.0.0",
+  "status": "SHADOW_IMPORT_PREFLIGHT_V2",
+  "authoritative": false,
+  "issue": 371,
+  "extends": "fixtures/airtable_curation/v1/schema_contract.json",
+  "semantic_owner": "docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md",
+  "frozen_package": "fixtures/world_slices/leonardo_romagna_1502/v1",
+  "gate_boundary": {
+    "current_gate": "C",
+    "current_status": "completed",
+    "current_decision": "FREEZE",
+    "next_gate": "D",
+    "next_gate_opened": false,
+    "paused_relation_issue": 331
+  },
+  "rules": {
+    "historical_records_allowed": false,
+    "preflight_only": true,
+    "airtable_authority": false,
+    "public_export_authority": false,
+    "legacy_layers_write_allowed": false,
+    "legacy_sources_write_allowed": false,
+    "relations_write_allowed": false,
+    "geometry_invention_allowed": false,
+    "airtable_inverse_link_fields_allowed": true
+  },
+  "legacy_isolation": {
+    "KnowledgeObjects.layers": {
+      "linked_table": "Layers",
+      "required_for_gate_c_import": "empty",
+      "reason": "Legacy Architecture Atlas Layers are public-projection grouping and cannot own frozen World Model layer identity."
+    },
+    "EvidenceLinks.source": {
+      "linked_table": "Sources",
+      "required_for_gate_c_import": "empty",
+      "reason": "Legacy Architecture Atlas Sources are read by the public exporter and their enum cannot losslessly represent the frozen Gate C source registry."
+    }
+  },
+  "field_extensions": [
+    {"table": "KnowledgeObjects", "name": "slice_layers", "type": "multipleRecordLinks", "linked_table": "SliceLayers"},
+    {"table": "KnowledgeObjects", "name": "source_spatial_mode", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "source_curation_state", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "source_temporal_value", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "source_temporal_precision", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "temporal_assertion_status", "type": "singleLineText"},
+    {"table": "KnowledgeObjects", "name": "world_sources", "type": "multipleRecordLinks", "linked_table": "WorldSources"},
+    {"table": "ObjectParts", "name": "source_kind", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "source_spatial_mode", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "source_temporal_value", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "source_temporal_precision", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "temporal_assertion_status", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "geometry_status", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "alternative_group_id", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "alternative_kind", "type": "singleLineText"},
+    {"table": "ObjectParts", "name": "reconstruction_question", "type": "multilineText"},
+    {"table": "ObjectParts", "name": "interpretation", "type": "multilineText"},
+    {"table": "ObjectParts", "name": "world_sources", "type": "multipleRecordLinks", "linked_table": "WorldSources"},
+    {"table": "Claims", "name": "confidence_basis", "type": "multilineText"},
+    {"table": "EvidenceLinks", "name": "world_source", "type": "multipleRecordLinks", "linked_table": "WorldSources", "cardinality": "exactly_one"},
+    {"table": "Uncertainties", "name": "basis_kind", "type": "singleLineText"},
+    {"table": "Uncertainties", "name": "basis_claims", "type": "multipleRecordLinks", "linked_table": "Claims"}
+  ],
+  "tables": [
+    {
+      "name": "SliceLayers",
+      "role": "shadow-only per-WorldSlice display/query layer identity and role",
+      "fields": [
+        {"name": "id", "type": "singleLineText"},
+        {"name": "world_slice", "type": "multipleRecordLinks", "linked_table": "WorldSlices", "cardinality": "exactly_one"},
+        {"name": "layer_id", "type": "singleLineText"},
+        {"name": "label", "type": "singleLineText"},
+        {"name": "role", "type": "singleSelect", "choices": ["primary_trajectory", "local_context", "change_context", "global_context"]},
+        {"name": "review_state", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
+        {"name": "notes", "type": "multilineText"}
+      ]
+    },
+    {
+      "name": "UncertaintyTargets",
+      "role": "storage junction preserving one frozen Uncertainty identity across many target_refs",
+      "target_cardinality": "exactly_one_of_knowledge_object_object_part_claim",
+      "fields": [
+        {"name": "id", "type": "singleLineText"},
+        {"name": "uncertainty", "type": "multipleRecordLinks", "linked_table": "Uncertainties", "cardinality": "exactly_one"},
+        {"name": "knowledge_object", "type": "multipleRecordLinks", "linked_table": "KnowledgeObjects", "cardinality": "zero_or_one"},
+        {"name": "object_part", "type": "multipleRecordLinks", "linked_table": "ObjectParts", "cardinality": "zero_or_one"},
+        {"name": "claim", "type": "multipleRecordLinks", "linked_table": "Claims", "cardinality": "zero_or_one"},
+        {"name": "review_state", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
+        {"name": "notes", "type": "multilineText"}
+      ]
+    },
+    {
+      "name": "WorldSources",
+      "role": "lossless shadow-only source/provenance registry isolated from public Architecture Atlas Sources",
+      "fields": [
+        {"name": "id", "type": "singleLineText"},
+        {"name": "title", "type": "singleLineText"},
+        {"name": "organization", "type": "singleLineText"},
+        {"name": "source_type", "type": "singleLineText"},
+        {"name": "url", "type": "url"},
+        {"name": "locator", "type": "multilineText"},
+        {"name": "curation_state", "type": "singleLineText"},
+        {"name": "access_status", "type": "singleLineText"},
+        {"name": "data_or_text_use", "type": "singleLineText"},
+        {"name": "media_reuse", "type": "singleLineText"},
+        {"name": "derived_geometry_use", "type": "singleLineText"},
+        {"name": "license", "type": "singleLineText"},
+        {"name": "attribution", "type": "multilineText"},
+        {"name": "review_state", "type": "singleSelect", "choices": ["draft", "reviewed", "rejected"]},
+        {"name": "notes", "type": "multilineText"},
+        {"name": "intended_claims", "type": "multipleRecordLinks", "linked_table": "Claims"},
+        {"name": "default_relation_to_claim", "type": "singleLineText"}
+      ]
+    }
+  ]
+}

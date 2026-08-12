@@ -56,6 +56,18 @@ jobs:
             tests/test_airtable_pre_gate_d_contract.py \
             tests/test_airtable_curation_schema.py
 
+      - name: Validate Leonardo Airtable shadow-import preflight
+        run: |
+          python scripts/validate_airtable_leonardo_shadow_preflight.py
+          python scripts/build_airtable_leonardo_shadow_plan.py
+          python scripts/validate_airtable_leonardo_row_plan_lock.py
+          python scripts/validate_airtable_leonardo_mapping_review.py
+          pytest -q \
+            tests/test_airtable_leonardo_shadow_preflight.py \
+            tests/test_airtable_leonardo_shadow_plan.py \
+            tests/test_airtable_leonardo_row_plan_lock.py \
+            tests/test_airtable_leonardo_mapping_review.py
+
       - name: Run concept and repository governance guards
         run: |
           pytest -q \
