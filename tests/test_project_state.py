@@ -23,40 +23,20 @@ def _state() -> dict:
     return json.loads(STATE_PATH.read_text(encoding="utf-8"))
 
 
-def _in_progress_state() -> dict:
+def _historical_gate_c_payload() -> dict:
     state = _state()
-    state["gate"]["status"] = "in_progress"
-    state["gate"].pop("decision", None)
-    state["gate"].pop("evidence", None)
-    state["github"]["active_issues"] = [332, 360, 355]
-    state["github"]["completed_issues"] = [
-        issue for issue in state["github"]["completed_issues"] if issue not in {332, 360}
-    ]
-    state["capability"]["world_slice"] = "scope_curation"
-    state["blockers"] = ["Gate C review evidence is not complete"]
-    state["next_transition"] = {"gate": "C", "condition": "Complete Gate C review."}
+    state["gate"] = copy.deepcopy(state["completed_gates"][0])
+    state["next_transition"] = {"gate": "D", "condition": "Recorded Gate C transition."}
     return state
 
 
-def _completed_state_without_evidence() -> dict:
-    state = _in_progress_state()
-    state["gate"]["status"] = "completed"
-    state["gate"]["decision"] = "FREEZE"
-    state["github"]["active_issues"] = [355]
-    state["github"]["completed_issues"].extend([332, 360])
-    state["capability"]["world_slice"] = "gate_c_frozen_non_public"
-    state["blockers"] = []
-    state["next_transition"] = {"gate": "D", "condition": "Begin Gate D."}
-    return state
-
-
-def test_current_project_state_is_valid_and_single_gate() -> None:
+def test_current_project_state_opens_one_gate_d_vertical() -> None:
     state = _state()
     assert validate_project_state() == {
-        "gate": "C",
-        "gate_status": state["gate"]["status"],
+        "gate": "D",
+        "gate_status": "in_progress",
         "active_issue_count": len(state["github"]["active_issues"]),
-        "blocker_count": len(state["blockers"]),
+        "blocker_count": 0,
     }
 
 
@@ -70,29 +50,57 @@ def test_gate_c_finalization_evidence_ref_is_pinned() -> None:
     assert actual_tree == GATE_C_FINALIZATION_TREE
 
 
-def test_active_issue_cannot_also_be_paused() -> None:
+def test_completed_gate_c_history_cannot_be_dropped() -> None:
     state = _state()
-    state["github"]["paused_issues"].append(332)
-    with pytest.raises(ProjectStateError, match="active and paused"):
+    state["completed_gates"] = []
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
         validate_project_state(state)
 
 
-def test_gate_c_cannot_drop_delivery_issue() -> None:
-    state = _in_progress_state()
-    state["github"]["active_issues"].remove(360)
-    with pytest.raises(ProjectStateError, match="requires active delivery issues"):
+def test_completed_gate_c_history_cannot_drop_evidence() -> None:
+    state = _state()
+    state["completed_gates"][0].pop("evidence")
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
         validate_project_state(state)
 
 
-def test_unfinished_gate_cannot_claim_decision() -> None:
-    state = _in_progress_state()
-    state["gate"]["decision"] = "FREEZE"
-    with pytest.raises(ProjectStateError, match="unfinished gate"):
+def test_issue_lifecycle_sets_cannot_overlap() -> None:
+    state = _state()
+    state["github"]["deferred_issues"].append(355)
+    with pytest.raises(ProjectStateError, match="active/deferred overlap"):
+        validate_project_state(state)
+
+
+def test_relation_issue_must_be_deferred_before_relations() -> None:
+    state = _state()
+    state["github"]["deferred_issues"].remove(331)
+    with pytest.raises(ProjectStateError, match="relation issue #331 must remain deferred"):
+        validate_project_state(state)
+
+
+def test_gate_d_decision_set_cannot_drift() -> None:
+    state = _state()
+    state["gate"]["allowed_decisions"] = ["FREEZE", "NARROW", "REJECT"]
+    with pytest.raises(ProjectStateError, match="Gate D decision set drift"):
+        validate_project_state(state)
+
+
+def test_gate_e_cannot_open_before_gate_d_decision() -> None:
+    state = _state()
+    state["next_transition"]["gate"] = "E"
+    with pytest.raises(ProjectStateError, match="Gate E cannot open"):
+        validate_project_state(state)
+
+
+def test_blocked_gate_d_requires_named_blocker() -> None:
+    state = _state()
+    state["gate"]["status"] = "blocked"
+    with pytest.raises(ProjectStateError, match="must name at least one blocker"):
         validate_project_state(state)
 
 
 def test_public_globe_promotion_is_rejected() -> None:
-    state = copy.deepcopy(_state())
+    state = _state()
     state["capability"]["globe"] = "public"
     with pytest.raises(ProjectStateError, match="schema validation failed"):
         validate_project_state(state)
@@ -101,30 +109,6 @@ def test_public_globe_promotion_is_rejected() -> None:
 def test_empty_payload_is_validated_instead_of_reloading_current_state() -> None:
     with pytest.raises(ProjectStateError, match="schema validation failed"):
         validate_project_state({})
-
-
-def test_completed_gate_c_cannot_bypass_frozen_review_evidence() -> None:
-    state = _completed_state_without_evidence()
-
-    with pytest.raises(ProjectStateError, match="schema validation failed"):
-        validate_project_state(state)
-
-
-def test_completed_gate_c_cannot_keep_blockers() -> None:
-    state = _state()
-    state["gate"]["status"] = "completed"
-    state["gate"]["decision"] = "FREEZE"
-    state["gate"]["evidence"] = {
-        "frozen_commit": "a" * 40,
-        "frozen_tree": "b" * 40,
-        "frozen_content_digest": "c" * 64,
-        "review_registry_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json",
-        "gate_decision_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json",
-        "review_cost_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json",
-    }
-
-    with pytest.raises(ProjectStateError, match="schema validation failed"):
-        validate_project_state(state)
 
 
 def test_nonexistent_frozen_commit_is_rejected_by_git() -> None:
@@ -192,17 +176,16 @@ def test_reviewed_content_digest_rejects_revision_without_scope_files() -> None:
         _reviewed_content_digest(empty_tree)
 
 
-def test_narrow_cannot_close_the_old_frozen_scope() -> None:
-    state = _state()
+def test_historical_narrow_cannot_close_the_old_frozen_scope() -> None:
+    state = _historical_gate_c_payload()
     state["gate"]["decision"] = "NARROW"
     with pytest.raises(ProjectStateError, match="new in-progress Gate C revision"):
         _validate_completed_gate_transition(state)
 
 
-def test_reject_cannot_advance_to_gate_d() -> None:
-    state = _state()
+def test_historical_reject_cannot_advance_to_gate_d() -> None:
+    state = _historical_gate_c_payload()
     state["gate"]["decision"] = "REJECT"
     state["capability"]["world_slice"] = "gate_c_rejected_non_public"
-    state["next_transition"]["gate"] = "D"
     with pytest.raises(ProjectStateError, match="transition to STOP"):
         _validate_completed_gate_transition(state)

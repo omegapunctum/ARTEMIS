@@ -98,7 +98,17 @@ def build_plan() -> dict[str, Any]:
     mapping = _load(MAPPING)
 
     slice_id = selection["slice_id"]
-    gate_evidence = project_state["gate"]["evidence"]
+    completed_gate_c = next(
+        (
+            gate
+            for gate in project_state["completed_gates"]
+            if gate.get("id") == "C" and gate.get("status") == "completed"
+        ),
+        None,
+    )
+    if completed_gate_c is None:
+        raise ValueError("project_state must preserve completed Gate C evidence")
+    gate_evidence = completed_gate_c["evidence"]
     source_registry = {source["source_id"]: source for source in sources_doc["sources"]}
     objects = {obj["object_id"]: obj for obj in selection["candidate_objects"]}
     claims = {claim["claim_id"]: claim for claim in claims_doc["claims"]}

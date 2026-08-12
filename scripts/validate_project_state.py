@@ -267,6 +267,23 @@ def _validate_cost_append_only(cost: dict, frozen_commit: str, reviews: list[dic
         raise ProjectStateError("final curation cost may append only the two bound review activities")
 
 
+def _validate_completed_gate_history(payload: dict) -> None:
+    completed_gates = payload["completed_gates"]
+    if len(completed_gates) != 1 or completed_gates[0].get("id") != "C":
+        raise ProjectStateError("completed gate history must retain exactly the accepted Gate C record")
+    gate_c = completed_gates[0]
+    historical_payload = {
+        **payload,
+        "gate": gate_c,
+        "next_transition": {
+            "gate": gate_c["next_gate"],
+            "condition": "Recorded Gate C transition.",
+        },
+    }
+    _validate_completed_gate_transition(historical_payload)
+    _validate_gate_c_evidence(historical_payload)
+
+
 def validate_project_state(state: dict | None = None) -> dict:
     payload = _load(STATE_PATH) if state is None else state
     schema = _load(SCHEMA_PATH)
@@ -284,27 +301,53 @@ def validate_project_state(state: dict | None = None) -> dict:
     gate = payload["gate"]
     active = set(payload["github"]["active_issues"])
     paused = set(payload["github"]["paused_issues"])
+    deferred = set(payload["github"]["deferred_issues"])
+    superseded = set(payload["github"]["superseded_issues"])
     completed = set(payload["github"]["completed_issues"])
-    if active & paused or active & completed or paused & completed:
-        raise ProjectStateError("an issue cannot be active and paused or completed at the same time")
+    lifecycle_sets = {
+        "active": active,
+        "paused": paused,
+        "deferred": deferred,
+        "superseded": superseded,
+        "completed": completed,
+    }
+    lifecycle_names = tuple(lifecycle_sets)
+    for index, left_name in enumerate(lifecycle_names):
+        for right_name in lifecycle_names[index + 1 :]:
+            overlap = lifecycle_sets[left_name] & lifecycle_sets[right_name]
+            if overlap:
+                raise ProjectStateError(
+                    f"issue lifecycle sets {left_name}/{right_name} overlap: {sorted(overlap)}"
+                )
     if payload["active_vertical"]["issue"] not in active:
         raise ProjectStateError("active vertical issue must be present in active_issues")
-    if 331 not in paused:
-        raise ProjectStateError("relation issue #331 must remain paused before documented Relations")
-    if gate["id"] == "C" and gate["status"] != "completed" and not {332, 360}.issubset(active):
-        raise ProjectStateError("Gate C requires active delivery issues #332 and #360")
-    if gate["status"] != "completed" and ({"decision", "evidence"} & set(gate)):
-        raise ProjectStateError("an unfinished gate cannot publish a decision or completion evidence")
+    if 331 not in deferred:
+        raise ProjectStateError("relation issue #331 must remain deferred before documented Relations")
+    if paused:
+        raise ProjectStateError("the Gate D opening snapshot must not retain stale paused issues")
     if payload["capability"]["globe"] != "non_public_r_and_d":
         raise ProjectStateError("the current Globe must remain non-public R&D")
 
-    if gate["status"] == "completed":
-        if gate["id"] != "C":
-            raise ProjectStateError("this transition validator currently closes only Gate C")
-        if not {332, 360}.issubset(completed) or {332, 360} & active:
-            raise ProjectStateError("completed Gate C must move delivery issues #332 and #360 to completed_issues")
-        _validate_completed_gate_transition(payload)
-        _validate_gate_c_evidence(payload)
+    _validate_completed_gate_history(payload)
+    if not {332, 360}.issubset(completed) or {332, 360} & active:
+        raise ProjectStateError("completed Gate C must remain in completed issue history")
+
+    if gate["id"] != "D":
+        raise ProjectStateError("project_state v1.1 currently opens only Gate D")
+    if gate["status"] not in {"in_progress", "blocked"}:
+        raise ProjectStateError("Gate D must be in_progress or blocked")
+    if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
+        raise ProjectStateError("Gate D decision set drift")
+    if payload["next_transition"]["gate"] != "D":
+        raise ProjectStateError("Gate E cannot open before a completed Gate D decision")
+    if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
+        raise ProjectStateError("Gate D must begin from the frozen non-public Gate C World Slice")
+    if 333 not in superseded or 334 not in deferred:
+        raise ProjectStateError("legacy #333/#334 lifecycle must be superseded/deferred under #355")
+    if not {371, 373}.issubset(deferred):
+        raise ProjectStateError("Airtable import/review must remain deferred outside Gate D")
+    if gate["status"] == "blocked" and not payload["blockers"]:
+        raise ProjectStateError("a blocked Gate D must name at least one blocker")
 
     for relative in payload["canonical_refs"]:
         if not (ROOT / relative).is_file():

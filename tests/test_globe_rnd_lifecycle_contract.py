@@ -45,7 +45,7 @@ def test_parity_is_completed_recovery_foundation() -> None:
     assert "Completed recovery: issue `#344` / PR `#351`" in decision
 
 
-def test_relation_semantics_are_paused_but_fail_closed() -> None:
+def test_relation_semantics_are_deferred_but_fail_closed() -> None:
     priorities = _text(PRIORITIES)
     phases = _text(PHASES)
     truth = _text(TRUTH)
@@ -54,7 +54,7 @@ def test_relation_semantics_are_paused_but_fail_closed() -> None:
 
     for text in (priorities, phases, truth, master, decision):
         assert "#331" in text
-        assert "paus" in text.lower()
+        assert "defer" in text.lower()
 
     assert "documented Relation predicates" in priorities
     assert "only derived proximity/co-presence" in truth

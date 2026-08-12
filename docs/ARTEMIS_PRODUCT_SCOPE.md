@@ -6,6 +6,7 @@
 - Версия: 3.2.
 - Дата: 2026-08-12.
 - Active vertical: `Life in Context` Globe MVP / issue `#355`.
+- Current gate: Gate D `Source-aware Globe experience` — `in_progress`, non-public.
 - Thematic baseline retained: `Architecture Atlas`.
 - North Star: `ARTEMIS_CONCEPT.md`.
 - Current reality: `PROJECT_TRUTH.md`.

@@ -25,7 +25,7 @@ def test_shadow_schema_validator_passes_with_empty_tables() -> None:
     assert module.validate(require_empty=True) == {"tables": 6, "fields": 75, "records": 0}
 
 
-def test_shadow_schema_is_non_authoritative_and_pre_gate_d() -> None:
+def test_shadow_schema_is_non_authoritative_and_did_not_open_gate_d() -> None:
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     state = json.loads(PROJECT_STATE.read_text(encoding="utf-8"))
 
@@ -38,11 +38,14 @@ def test_shadow_schema_is_non_authoritative_and_pre_gate_d() -> None:
     assert contract["gate_boundary"]["next_gate_opened"] is False
     assert contract["gate_boundary"]["paused_relation_issue"] == 331
 
-    assert state["gate"]["id"] == "C"
-    assert state["gate"]["status"] == "completed"
-    assert state["gate"]["decision"] == "FREEZE"
+    gate_c = state["completed_gates"][0]
+    assert gate_c["id"] == "C"
+    assert gate_c["status"] == "completed"
+    assert gate_c["decision"] == "FREEZE"
+    assert state["gate"]["id"] == "D"
+    assert state["gate"]["status"] == "in_progress"
     assert state["next_transition"]["gate"] == "D"
-    assert state["github"]["paused_issues"] == [331]
+    assert 331 in state["github"]["deferred_issues"]
 
 
 def test_live_snapshot_contains_only_empty_shadow_tables() -> None:

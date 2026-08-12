@@ -1,9 +1,9 @@
-# ARTEMIS — Development Operating System v1.2
+# ARTEMIS — Development Operating System v1.3
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.2.
+- Version: 1.3.
 - Date: 2026-08-12.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
@@ -142,8 +142,8 @@ Baseline failures must be named and reproducible; they cannot be used to hide a 
 
 The active product vertical is `Life in Context / Globe MVP` under issue `#355`.
 
-Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the non-public Leonardo-in-Romagna source/semantic boundary. `docs/project_state.json` points to Gate D as the next transition, but Gate D is not in progress yet.
+Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the non-public Leonardo-in-Romagna source/semantic boundary. `docs/project_state.json` v1.1 preserves that exact completed-gate evidence and records Gate D as **in progress** under #355.
 
 Foundation v3.1 Attractor refinement (`#363` / PR `#364`) is **completed**. Its accepted rules now belong to the canonical owners and executable guards; there is no active foundation-maintenance issue at this moment.
 
-Issue `#331` remains paused, so documented Relation predicates are prohibited. Issue `#335` remains gated, so AI runtime and AI view-action implementation are not active work. The public runtime remains the root 2D Architecture Atlas until a later explicit promotion decision.
+Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated, so AI runtime and AI view-action implementation are not active work. The public runtime remains the root 2D Architecture Atlas until a later explicit promotion decision.

@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-12",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -12,31 +12,44 @@
     "id": "4.8",
     "status": "active"
   },
-  "gate": {
-    "id": "C",
-    "label": "Leonardo-in-Romagna real World Slice boundary",
-    "status": "completed",
-    "allowed_decisions": ["FREEZE", "NARROW", "REJECT"],
-    "decision": "FREEZE",
-    "evidence": {
-      "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
-      "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
-      "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
-      "review_registry_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json",
-      "gate_decision_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json",
-      "review_cost_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"
+  "completed_gates": [
+    {
+      "id": "C",
+      "label": "Leonardo-in-Romagna real World Slice boundary",
+      "status": "completed",
+      "allowed_decisions": ["FREEZE", "NARROW", "REJECT"],
+      "decision": "FREEZE",
+      "next_gate": "D",
+      "evidence": {
+        "frozen_commit": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52",
+        "frozen_tree": "757fc3d0701e825e865ceeec401d233484f066b7",
+        "reviewed_content_digest": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca",
+        "review_registry_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json",
+        "gate_decision_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json",
+        "review_cost_ref": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"
+      }
     }
+  ],
+  "gate": {
+    "id": "D",
+    "label": "Source-aware Globe experience",
+    "status": "in_progress",
+    "allowed_decisions": ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]
   },
   "work_in_progress_limit": 1,
   "github": {
     "active_issues": [355],
-    "paused_issues": [331],
-    "completed_issues": [332, 360],
+    "paused_issues": [],
+    "deferred_issues": [331, 334, 371, 373],
+    "superseded_issues": [333],
+    "completed_issues": [332, 360, 374],
     "completed_prerequisites": [
       "#329 / PR #336 — reviewed World Model fixtures",
       "#330 / PR #337 — reviewed uncertainty semantics",
       "#344 / PR #351 — cross-renderer semantic parity",
-      "PRs #356–#357 — governance and Release Discipline recovery"
+      "PRs #356–#357 — governance and Release Discipline recovery",
+      "#371 / PR #372 — fail-closed Airtable schema/mapping preflight; no historical write",
+      "#374 / PR #375 — progressive fidelity policy"
     ]
   },
   "capability": {
@@ -51,11 +64,12 @@
     "docs/PROJECT_TRUTH.md",
     "docs/PROJECT_PHASES.md",
     "docs/PRIORITIES.md",
-    "docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md"
+    "docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md",
+    "docs/work/2026-08-12_GATE_D_OPENING_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Begin the source-aware Globe experience only from the frozen non-public Gate C boundary; historical Claims remain draft and public promotion remains prohibited."
+    "condition": "Complete the bounded source-aware Globe experience and record ADVANCE_TO_GATE_E, NARROW or REJECT; only ADVANCE_TO_GATE_E may open Gate E."
   }
 }

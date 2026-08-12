@@ -1,9 +1,9 @@
-# ARTEMIS — PRIORITIES v6.3
+# ARTEMIS — PRIORITIES v6.4
 
 ## Статус
 
 - Тип: canonical active priorities.
-- Дата: 2026-08-09.
+- Дата: 2026-08-12.
 - Active cycle: Globe MVP.
 - Active primary issue: GitHub issue `#355`.
 - Completed recovery foundation: issue `#344` / PR `#351`.
@@ -15,7 +15,7 @@ The active product decision is recorded in `docs/work/2026-08-09_GLOBE_MVP_PROMO
 
 ### P0.1 Lifecycle recovery
 
-- keep PR #338 closed as superseded and issue #331 explicitly `PAUSED`;
+- keep PR #338 closed as superseded and issue #331 explicitly `DEFERRED`;
 - preserve #331 as the required gate before documented Relation predicates enter a real World Slice/runtime;
 - correct the incomplete governance merge from PR #354;
 - make canonical owners, agent routing and executable lifecycle guards agree on #355;
@@ -45,7 +45,7 @@ Required content:
 
 The initial candidate is the bounded Leonardo / Life in Context slice delivered through #332, while #355 owns the active cross-cutting vertical.
 
-The former marker `Active Gate C delivery: #332/#360` is superseded. Gate C is completed by a `FREEZE` decision for #332/#360. The non-public Leonardo-in-Romagna boundary covers 8 August–31 December 1502 with institutional source candidates, pinned university-press locators, explicit unknown-route segments, temporal geometry-withheld Region states, known gaps and measured preparation/review cost. Two independent reviews on one Git-bound revision are `READY` with zero unresolved critical/material findings. The Claims and EvidenceLinks remain draft rather than READY historical data; the separate Cesena wall-survey folio Claim remains rejected from the supported set. Gate D is next but has not started in this decision.
+The former marker `Active Gate C delivery: #332/#360` is superseded. Gate C is completed by a `FREEZE` decision for #332/#360. The non-public Leonardo-in-Romagna boundary covers 8 August–31 December 1502 with institutional source candidates, pinned university-press locators, explicit unknown-route segments, temporal geometry-withheld Region states, known gaps and measured preparation/review cost. Two independent reviews on one Git-bound revision are `READY` with zero unresolved critical/material findings. The Claims and EvidenceLinks remain draft rather than READY historical data; the separate Cesena wall-survey folio Claim remains rejected from the supported set. Gate D is now in progress under #355 and consumes this frozen package without upgrading its historical readiness.
 
 Until #331 is accepted, the slice may expose derived proximity/co-presence only. It must not publish documented encounter, interaction, influence or causal predicates.
 
@@ -118,12 +118,13 @@ PR #354 attempted to close the lifecycle but merged only a workflow change and a
 
 These assets do not prove a public Globe, historical terrain coverage, a real Foundation v3 corpus or user value.
 
-## Paused and frozen work
+## Deferred and frozen work
 
-Paused:
+Deferred:
 
 - #331 relation predicates, reactivated before documented Relations enter the real slice/runtime;
-- standalone #332 → #333 → #334 sequencing; their dataset/explorer/validation goals are incorporated into the #355 vertical where relevant.
+- #334 validation work until Gate E; #333 is superseded by the #355 Gate D contour;
+- #371/#373 Airtable historical import and independent mapping review; the merged preflight remains fail-closed with empty tables and `historical_rows_authorized=false`.
 
 Frozen:
 
@@ -141,8 +142,8 @@ Security, compatibility and critical reliability maintenance remain allowed.
 ## Execution order
 
 1. Preserve the completed governance, Release Discipline and #344 parity foundations.
-2. Freeze and curate the first real bounded World Slice through #332 within #355.
-3. Build the source-aware Globe MVP through shared contracts.
+2. Freeze and curate the first real bounded World Slice through #332 within #355 — completed/FREEZE.
+3. Build the source-aware Globe MVP through shared contracts — active Gate D.
 4. Validate semantic, UX, accessibility and performance behavior.
 5. Record one explicit next decision.
 

@@ -106,13 +106,15 @@ Current operational truth:
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
 4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
 5. Preserve accepted Foundation v3.1 / #363 / PR #364 attractor and governance rules; #363 is completed, not active maintenance.
-6. Gate D — source-aware Globe experience — is the next product gate, but it is **not currently opened/in progress**.
-7. When Gate D is separately opened under #355, build from the frozen World Slice through Explorer State and Render Projection.
+6. Gate D — source-aware Globe experience — is **currently in progress** under #355 as a non-public product contour.
+7. Build from the frozen World Slice through Explorer State and Render Projection; do not require or imply an Airtable historical import.
 8. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
 9. Collect semantic, UX, accessibility and performance evidence before any promotion decision.
 10. Record one explicit promotion/iterate/narrow/stop decision before public deployment.
 
-Issue #331 is `PAUSED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until then, only derived proximity/co-presence is allowed.
+Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
+
+Issues #371/#373 are deferred outside the Gate D critical path. Their merged mapping preflight remains fail-closed: nine Airtable shadow tables are empty and `historical_rows_authorized=false`.
 
 Issue #335 source-bound AI contract remains `GATED / NOT ACTIVE`.
 
@@ -139,7 +141,7 @@ Frozen or gated at product scale:
 
 Security/compatibility maintenance remains allowed.
 
-The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Gate C completion and Foundation v3.1 acceptance do not start Gate D or make Globe public.
+The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Gate D has now been opened separately; this does not make Globe public or open Gate E.
 
 ## 7. Attractor decision test
 

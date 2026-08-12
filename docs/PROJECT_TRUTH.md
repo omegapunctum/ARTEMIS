@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-08-11.
+- Дата фиксации: 2026-08-12.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -28,8 +28,8 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
-- Foundation v3.1 / #363 / PR #364 is completed; Gate D is still only the next product gate and has not been opened by the Foundation decision or by Airtable data-governance work.
-- #368 established the original six-table empty/non-authoritative Airtable World Model shadow schema. #371 / draft PR #372 extends that preflight surface with three additional empty shadow-only tables plus parity fields, but **no Gate C historical row has been written** and product capability is unchanged.
+- Foundation v3.1 / #363 / PR #364 is completed. Gate D is now separately opened and in progress under #355; that lifecycle transition does not change public capability or historical readiness.
+- #368 established the original six-table empty/non-authoritative Airtable World Model shadow schema. Merged PR #372 extends that preflight surface with three additional empty shadow-only tables plus parity fields, but **no Gate C historical row has been written**. Issues #371/#373 are deferred outside the Gate D critical path.
 
 ## 2. Что доступно публично
 
@@ -112,7 +112,7 @@ Migration preflight и release gate подтверждают current backend cap
 - `EvidenceLinks`;
 - `Uncertainties`.
 
-#371 / draft PR #372 выполняет отдельный pre-Gate-D **schema/mapping preflight** для frozen Leonardo Gate C package. В live Airtable дополнительно существуют три shadow-only таблицы, также проверенные с `0` records:
+Merged PR #372 завершил отдельный **schema/mapping preflight** для frozen Leonardo Gate C package. В live Airtable дополнительно существуют три shadow-only таблицы, также проверенные с `0` records:
 
 - `SliceLayers` — exact per-WorldSlice layer identity/role без записи Gate C слоёв в legacy public-source `Layers`;
 - `WorldSources` — lossless World Model source/rights registry без записи Leonardo Sources в legacy public `Sources`;
@@ -120,14 +120,14 @@ Migration preflight и release gate подтверждают current backend cap
 
 Дополнительные parity/provenance fields в `KnowledgeObjects`, `ObjectParts`, `Claims`, `EvidenceLinks` и `Uncertainties` сохраняют source temporal tokens, source/reconstruction metadata, Claim confidence basis, Uncertainty basis и WorldSource refs. Эти поля являются storage representation, а не новой semantic ontology.
 
-Фактическая граница shadow contour на 2026-08-11:
+Фактическая граница shadow contour на 2026-08-12:
 
 - все шесть исходных #368 tables по-прежнему проходят `--require-empty` с `0` historical records;
 - все три #371 extension tables проверены с `0` records;
 - legacy `KnowledgeObjects.layers` должен оставаться пустым для Gate C shadow import; World Model layer roles идут через `SliceLayers`;
 - legacy `EvidenceLinks.source` должен оставаться пустым для Gate C shadow import; Claim-specific evidence идёт через `EvidenceLinks.world_source → WorldSources`;
 - legacy Architecture Atlas `Layers`, `Sources`, `Media`, exporter и checked-in public `data/*` не изменены этим contour;
-- новый Relation table не создавался, пока #331 paused;
+- новый Relation table не создавался; #331 deferred;
 - live schema evidence v1 остаётся в `fixtures/airtable_curation/v1/`; #371 extensions/mapping/row-plan evidence находятся в `fixtures/airtable_curation/v2/`;
 - `scripts/validate_airtable_leonardo_shadow_preflight.py` fail-closed проверяет frozen package, schema extensions, ref closure, unknown-route/geometry-withheld semantics и Gate C/Gate D boundary;
 - deterministic semantic-ID row-plan builder воспроизводит ровно **154 candidate rows**: 1 WorldSlice, 4 SliceLayers, 10 WorldSources, 17 KnowledgeObjects, 11 ObjectParts, 22 Claims, 38 EvidenceLinks, 11 Uncertainties и 40 UncertaintyTargets;
@@ -136,19 +136,19 @@ Migration preflight и release gate подтверждают current backend cap
 - Airtable автоматически создаёт inverse-link fields; они являются storage implementation detail, а не новыми семантическими Relations;
 - record-time `dateTime` fields используют Airtable display timezone `Europe/London`; это не historical valid time и не меняет temporal semantics World Model.
 
-Наличие девяти empty shadow tables, deterministic mapping и frozen row plan означает только, что ARTEMIS имеет проверяемую editorial storage/preflight форму для будущего controlled import. Оно **не** означает наличие World Model corpus в Airtable, historical readiness, round-trip parity, Gate D start или public capability.
+Наличие девяти empty shadow tables, deterministic mapping и frozen row plan означает только, что ARTEMIS имеет проверяемую editorial storage/preflight форму для возможного будущего controlled import. Оно **не** означает наличие World Model corpus в Airtable, historical readiness, round-trip parity, Gate D evidence или public capability.
 
 Gate C historical curation package остаётся отдельным от public Airtable export и от пустого shadow storage:
 
 - #332/#360 / PR #362 froze Leonardo-in-Romagna 1502 as a non-public World Slice boundary;
 - 17 candidate objects, 10 Sources, 22 atomic Claims, 38 EvidenceLinks and 11 provenance-bearing Uncertainties are bound to the frozen reviewed revision;
-- no documented Relations are stored while #331 remains paused;
+- no documented Relations are stored while #331 remains deferred;
 - three inter-place routes remain unknown with no invented geometry;
 - Duchy of Romagna Region states remain geometry-withheld where evidence/rights do not support a boundary;
 - this package is reviewed as a **Gate C boundary**, not promoted to public/READY historical product data;
 - none of the 154 planned shadow rows has been written at the #371 row-plan-lock stage.
 
-До отдельной controlled-import + readback + round-trip parity decision public dataset остаётся Architecture Atlas pilot, Gate C package — non-public frozen authority, а Airtable World Model tables — empty non-authoritative shadow infrastructure.
+Public dataset остаётся Architecture Atlas pilot, Gate C package — non-public frozen authority, а Airtable World Model tables — empty non-authoritative shadow infrastructure. #371/#373 import/review work is deferred; Gate D consumes the repository package directly.
 
 ## 5. Что не считается реализованным продуктом
 
@@ -189,7 +189,7 @@ Gate C historical curation package остаётся отдельным от publ
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D not opened**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress and non-public**.
 
 Current public runtime and public data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation. Airtable additionally contains nine empty non-authoritative World Model shadow tables plus a deterministic/frozen Leonardo row plan, but this is data-governance infrastructure and preflight evidence, not a new product/runtime or historical-corpus capability.
 
@@ -201,25 +201,25 @@ Reviewed/accepted foundation evidence includes:
 - #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews;
 - #363 / PR #364 Foundation v3.1 Attractor refinement — accepted with all required repository workflows green on its merge candidate.
 
-Pre-Gate-D data-governance evidence/work now includes:
+Completed/deferred Airtable data-governance evidence now includes:
 
 - #366 / PR #367 — legacy Airtable boundary/schema truth and canonical audit path aligned;
 - #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
-- #371 / draft PR #372 — active lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; historical writes remain unauthorized pending independent mapping review.
+- #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
-There is currently no active foundation-maintenance issue. #371 is active data-governance maintenance and is not a second product vertical. The next **product** transition remains Gate D, but it must be opened explicitly under #355; Airtable schema, mapping, import or parity work may not open it by implication.
+There is currently no active foundation-maintenance or Airtable import issue. Gate D is explicitly open under #355 as the sole active product gate; Airtable schema, mapping, import or parity work did not open it by implication and is not a prerequisite for the current implementation.
 
-До explicit Gate D допустимы bounded maintenance/evidence шаги, которые не меняют product capability. Для #371 следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
+#371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
-Когда product execution возобновится через явный Gate D transition, primary order остаётся:
+Для активного Gate D primary order:
 
-1. explicitly open Gate D under #355 with a bounded source-aware Globe experience contract;
-2. build the synchronized Globe/timeline/layers experience from the frozen Gate C boundary through shared contracts;
+1. preserve the explicit Gate D opening contract under #355;
+2. build the synchronized Globe/timeline/layers experience directly from the frozen Gate C boundary through shared contracts;
 3. preserve the current 2D renderer as public baseline, parity target and rollback path;
 4. collect semantic, UX, accessibility and representative performance evidence;
 5. record one promotion/iterate/narrow/stop decision before public deployment.
 
-Issue #331 is paused outside this critical path. Until it is accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
+Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
 The superseded #323–#325 path and PR #314 remain closed. Passing fixtures, storage schemas, row plans or Foundation documents prove neither public capability nor user value.
 

@@ -10,7 +10,7 @@ The long-term attractor is an explorable spatial-temporal model of human knowled
 
 Foundation v3 restored space and time as core coordinates. Foundation v3.1, accepted in PR `#364`, clarifies the attractor, one-semantic-core/many-domains/many-interfaces rule and future AI exploration boundary without changing current capability. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations when permitted, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
 
-The public runtime does **not** yet implement the Foundation target. A browser-executed MapLibre Globe R&D artifact exists, and issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the non-public Leonardo-in-Romagna 1502 World Slice boundary; Gate D is the next product gate but has not started. The Globe is not public or product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
+The public runtime does **not** yet implement the Foundation target. A browser-executed MapLibre Globe R&D artifact exists, and issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the non-public Leonardo-in-Romagna 1502 World Slice boundary; Gate D is now in progress as a non-public source-aware Globe experience. The Globe is not public or product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -28,7 +28,7 @@ ARTEMIS currently combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The current operational state is **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D not opened**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
+The current operational state is **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress and non-public**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 

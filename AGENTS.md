@@ -48,11 +48,12 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Active work is issue `#355`: build the first source-aware Globe MVP vertical. Issue `#332` is the active Gate C delivery for the first real bounded World Slice.
+Active work is issue `#355`: Gate D builds the first source-aware Globe experience from the frozen Gate C package. Gate C delivery `#332` / `#360` is completed/FREEZE.
 
 - preserve #329 / PR #336 World Model fixtures and #330 / PR #337 uncertainty semantics as reviewed READY foundations;
 - preserve completed #344 / PR #351 cross-renderer parity as a required green foundation;
-- keep #331 `PAUSED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is accepted;
+- keep #331 `DEFERRED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is explicitly reopened and accepted;
+- keep #371/#373 deferred and the nine Airtable World Model tables empty; the merged mapping preflight does not authorize historical writes;
 - use one World Model → Explorer State → Render Projection path for both 2D and Globe;
 - keep the current root 2D MapLibre runtime as the public baseline and rollback path;
 - keep Globe artifacts non-public until a separate promotion decision;
@@ -60,7 +61,7 @@ Active work is issue `#355`: build the first source-aware Globe MVP vertical. Is
 - do not create a framework/backend/repository rewrite without a demonstrated blocker;
 - security, compatibility and critical maintenance remain allowed.
 
-The current active artifact is the non-public Leonardo-in-Romagna 1502 scope package under `fixtures/world_slices/leonardo_romagna_1502/v1/`. It is a curation boundary, not READY historical data. Do not add route or Region geometry until the package's evidence, rights and independent-review gaps are closed.
+The current Gate D input is the non-public Leonardo-in-Romagna 1502 scope package under `fixtures/world_slices/leonardo_romagna_1502/v1/`. It is a frozen curation boundary, not READY historical data. Do not add route or Region geometry until the package's evidence, rights and independent-review gaps are closed.
 
 ## Verification
 
