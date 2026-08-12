@@ -35,7 +35,7 @@ python -m pytest -q tests/test_progressive_refinement_fixtures.py
 `review_registry.json` stays fail-closed with no reviews until both independent read-only tasks bind
 one remote commit and one computed content digest. Review artifacts must validate against
 `review_artifact.schema.json`; green CI alone cannot change the package to `READY`.
-Round-1 through round-3 `CHANGES_REQUIRED` artifacts remain immutable review history. Round 4 uses
+Round-1 through round-4 `CHANGES_REQUIRED` artifacts remain immutable review history. Round 5 uses
 new pre-issued reviewer instances and must independently verify the remediated frozen revision.
 
 ## Boundary

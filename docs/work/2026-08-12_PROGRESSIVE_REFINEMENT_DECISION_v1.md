@@ -92,6 +92,16 @@ Round 4 binds the exact review request bytes to the frozen commit, enforces all 
 prohibitions in reviewed validator code, and validates the full temporal possible-set subset. The
 round-3 artifacts remain immutable history and do not count toward round 4.
 
+Round 4 froze commit `0aa4a7a72ff672004d1be9e38e781ab09b395929` with reviewed-content
+digest `1f7ca23d70da78127636a5c506684cc99cd65e7b432ae742402922f70161d02d`.
+Both tracks returned `CHANGES_REQUIRED`: the temporal union could remain universal through an
+unchanged unknown alternative while the primary narrowed, open/inclusivity/precision-only
+narrowing was mishandled, and mutable control schemas could introduce a new authorization field.
+
+Round 5 evaluates strictness over the full temporal union and byte-binds all four review control
+schemas to the frozen commit. Round-4 artifacts remain immutable history and do not count toward
+the new reviews.
+
 ## Rollback
 
 Before acceptance, close #377 and remove the draft extension/fixtures. No runtime or data migration

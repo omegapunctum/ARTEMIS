@@ -162,6 +162,10 @@ Executable subset validation covers the primary interval and every explicit alte
 open bounds, inclusivity and qualified-bound direction. Every refined member must be contained by
 at least one predecessor member, and the calendar/normalization profile remains identical. A new
 alternative outside the predecessor possible set is `add_alternative`, not `refine`.
+Strictness is evaluated over the union of the primary interval and all alternatives, not only the
+primary bounds. A retained universal/unknown alternative therefore prevents a false narrowing.
+Open-to-finite and inclusivity narrowing are valid set reductions; equal single-member sets require
+a strictly finer supported precision.
 
 The temporal envelope carries the accepted #330 semantics rather than reducing them to two dates:
 calendar/normalization state, exact or qualified bounds, inclusivity, open-start/open-end/unknown
@@ -328,6 +332,8 @@ All decided outcomes, including `NARROW` and `REJECT`, bind the frozen commit an
 The review request itself is byte-identical to the copy in the frozen commit, so neither reviewed
 scope nor pre-issued reviewer identity can change after content freeze. Capability prohibitions are
 enforced directly by reviewed validator code, independent of mutable control-schema wording.
+The request, registry, review-artifact and acceptance-decision schemas are also byte-bound to the
+frozen commit, preventing post-review introduction of new authorization fields or relaxed controls.
 
 Changes after `READY` require a new version and review. Runtime or storage implementation requires a
 separate migration decision.

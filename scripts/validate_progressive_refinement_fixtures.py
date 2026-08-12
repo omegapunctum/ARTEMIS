@@ -272,10 +272,15 @@ def temporal_member_subset(child: dict[str, Any], parent: dict[str, Any]) -> boo
         "not_after": {"not_after", "exact"},
         "unknown": {"unknown"},
     }
-    return (
-        child["start_qualifier"] in qualifier_narrowing[parent["start_qualifier"]]
-        and child["end_qualifier"] in qualifier_narrowing[parent["end_qualifier"]]
+    start_qualifier_subset = (
+        parent_start is None
+        or child["start_qualifier"] in qualifier_narrowing[parent["start_qualifier"]]
     )
+    end_qualifier_subset = (
+        parent_end is None
+        or child["end_qualifier"] in qualifier_narrowing[parent["end_qualifier"]]
+    )
+    return start_qualifier_subset and end_qualifier_subset
 
 
 def canonical_sha256(value: Any) -> str:
@@ -514,6 +519,15 @@ def validate_review_envelope() -> dict[str, Any]:
     request_ref = REVIEW_REQUEST_PATH.relative_to(ROOT).as_posix()
     if frozen_loader(request_ref) != REVIEW_REQUEST_PATH.read_bytes():
         fail("review request identity/scope does not match the frozen commit")
+    for control_schema_path in (
+        REVIEW_REQUEST_SCHEMA_PATH,
+        REVIEW_REGISTRY_SCHEMA_PATH,
+        REVIEW_ARTIFACT_SCHEMA_PATH,
+        ACCEPTANCE_DECISION_SCHEMA_PATH,
+    ):
+        control_schema_ref = control_schema_path.relative_to(ROOT).as_posix()
+        if frozen_loader(control_schema_ref) != control_schema_path.read_bytes():
+            fail(f"review control schema does not match the frozen commit: {control_schema_ref}")
     if reviewed_content_sha256(request, frozen_loader) != digest:
         fail("frozen commit does not contain the reviewed content digest")
 
@@ -678,13 +692,23 @@ def validate_revision_semantics(
             ):
                 fail(f"{revision_id} temporal refinement must keep the predecessor calendar profile")
             parent_members = temporal_members(predecessor_assertion["valid_time"])
-            for child_member in temporal_members(assertion["valid_time"]):
+            child_members = temporal_members(assertion["valid_time"])
+            for child_member in child_members:
                 if not any(temporal_member_subset(child_member, parent_member) for parent_member in parent_members):
                     fail(f"{revision_id} temporal possible set is not contained by its predecessor")
-            if None in {old_start, old_end, new_start, new_end}:
-                fail(f"{revision_id} temporal refine requires finite bounds")
-            assert old_start is not None and old_end is not None and new_start is not None and new_end is not None
-            if not (new_start >= old_start and new_end <= old_end and (new_start, new_end) != (old_start, old_end)):
+            predecessor_contained_by_child = all(
+                any(temporal_member_subset(parent_member, child_member) for child_member in child_members)
+                for parent_member in parent_members
+            )
+            old_rank = precision_rank(
+                predecessor_assertion["precision"], dimension, f"{predecessor['id']}.normalized_assertion"
+            )
+            precision_only_refinement = (
+                len(parent_members) == len(child_members) == 1
+                and predecessor_contained_by_child
+                and normalized_rank > old_rank
+            )
+            if predecessor_contained_by_child and not precision_only_refinement:
                 fail(f"{revision_id} false refine: temporal possible set is not strictly narrower")
         elif dimension == "spatial":
             if temporal_semantic_envelope(assertion["valid_time"]) != temporal_semantic_envelope(predecessor_assertion["valid_time"]):

@@ -125,6 +125,11 @@ def test_review_request_identity_and_scope_are_frozen_by_exact_bytes() -> None:
     ).read_text(encoding="utf-8")
     assert 'frozen_loader(request_ref) != REVIEW_REQUEST_PATH.read_bytes()' in validator_source
     assert "review request identity/scope does not match the frozen commit" in validator_source
+    assert "REVIEW_REQUEST_SCHEMA_PATH," in validator_source
+    assert "REVIEW_REGISTRY_SCHEMA_PATH," in validator_source
+    assert "REVIEW_ARTIFACT_SCHEMA_PATH," in validator_source
+    assert "ACCEPTANCE_DECISION_SCHEMA_PATH," in validator_source
+    assert "review control schema does not match the frozen commit" in validator_source
 
 
 @pytest.mark.parametrize(
@@ -375,6 +380,76 @@ def test_temporal_refinement_alternatives_must_stay_in_predecessor_possible_set(
         "basis_claim_refs": ["claim-leo-time-refined"],
     }]
     assert_rejected(tmp_path, package, "possible set is not contained by its predecessor")
+
+
+def test_temporal_refinement_rejects_unchanged_universal_alternative(tmp_path: Path) -> None:
+    package = load_package()
+    universal = {
+        "id": "alternative-unknown-universal",
+        "kind": "unknown",
+        "start": None,
+        "end": None,
+        "start_inclusive": None,
+        "end_inclusive": None,
+        "start_qualifier": "unknown",
+        "end_qualifier": "unknown",
+        "precision": "unknown",
+        "basis_claim_refs": ["claim-leo-time-coarse"],
+    }
+    coarse = revision(package, "revision-leo-time-coarse")["normalized_assertion"]["valid_time"]
+    refined = revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]
+    coarse["alternatives"] = [copy.deepcopy(universal)]
+    universal["basis_claim_refs"] = ["claim-leo-time-refined"]
+    refined["alternatives"] = [universal]
+    assert_rejected(tmp_path, package, "possible set is not strictly narrower")
+
+
+def test_temporal_refinement_allows_open_start_to_finite_narrowing(tmp_path: Path) -> None:
+    package = load_package()
+    coarse = revision(package, "revision-leo-time-coarse")["normalized_assertion"]["valid_time"]
+    coarse.update({
+        "kind": "open_start_interval",
+        "start": None,
+        "start_inclusive": None,
+        "start_qualifier": "unknown",
+    })
+    revision(package, "revision-leo-time-coarse")["normalized_assertion"]["value"]["start"] = None
+    path = write_package(tmp_path, package)
+    validate_package(path, SCHEMA_PATH)
+
+
+def test_temporal_refinement_allows_equal_single_interval_with_finer_precision(tmp_path: Path) -> None:
+    package = load_package()
+    coarse = revision(package, "revision-leo-time-coarse")["normalized_assertion"]["valid_time"]
+    refined = revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]
+    for field in (
+        "kind", "start", "end", "start_inclusive", "end_inclusive",
+        "start_qualifier", "end_qualifier",
+    ):
+        refined[field] = coarse[field]
+    value = revision(package, "revision-leo-time-refined")["normalized_assertion"]["value"]
+    value["start"], value["end"] = refined["start"], refined["end"]
+    path = write_package(tmp_path, package)
+    validate_package(path, SCHEMA_PATH)
+
+
+def test_temporal_refinement_allows_same_bounds_with_narrower_inclusivity(tmp_path: Path) -> None:
+    package = load_package()
+    coarse = revision(package, "revision-leo-time-coarse")["normalized_assertion"]["valid_time"]
+    refined = revision(package, "revision-leo-time-refined")["normalized_assertion"]["valid_time"]
+    refined.update({
+        "kind": "closed_interval",
+        "start": coarse["start"],
+        "end": coarse["end"],
+        "start_inclusive": False,
+        "end_inclusive": coarse["end_inclusive"],
+        "start_qualifier": coarse["start_qualifier"],
+        "end_qualifier": coarse["end_qualifier"],
+    })
+    value = revision(package, "revision-leo-time-refined")["normalized_assertion"]["value"]
+    value["start"], value["end"] = refined["start"], refined["end"]
+    path = write_package(tmp_path, package)
+    validate_package(path, SCHEMA_PATH)
 
 
 def test_rejects_false_spatial_refinement(tmp_path: Path) -> None:

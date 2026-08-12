@@ -3,7 +3,7 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
-  "review_round": 4,
+  "review_round": 5,
   "required_tracks": [
     "semantic-model",
     "validator-integrity"
@@ -11,15 +11,15 @@
   "independence_method": "separate_agent_task_read_only",
   "review_slots": [
     {
-      "reviewer_id": "codex-semantic-model-reviewer-r4",
-      "reviewer_instance_id": "semantic-r4-control-plane-remediation-20260812",
-      "review_task_path": "/root/refinement_semantic_review_r4",
+      "reviewer_id": "codex-semantic-model-reviewer-r5",
+      "reviewer_instance_id": "semantic-r5-set-algebra-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r5",
       "track": "semantic-model"
     },
     {
-      "reviewer_id": "codex-validator-integrity-reviewer-r4",
-      "reviewer_instance_id": "validator-r4-control-plane-remediation-20260812",
-      "review_task_path": "/root/refinement_validator_review_r4",
+      "reviewer_id": "codex-validator-integrity-reviewer-r5",
+      "reviewer_instance_id": "validator-r5-set-algebra-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r5",
       "track": "validator-integrity"
     }
   ],
