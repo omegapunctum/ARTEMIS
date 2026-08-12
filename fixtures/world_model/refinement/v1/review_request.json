@@ -3,7 +3,7 @@
   "status": "REVIEW_REQUIRED",
   "issue": 377,
   "pull_request": 378,
-  "review_round": 12,
+  "review_round": 13,
   "required_tracks": [
     "semantic-model",
     "validator-integrity"
@@ -11,15 +11,15 @@
   "independence_method": "separate_agent_task_read_only",
   "review_slots": [
     {
-      "reviewer_id": "codex-semantic-model-reviewer-r12",
-      "reviewer_instance_id": "semantic-r12-lifecycle-routing-remediation-20260812",
-      "review_task_path": "/root/refinement_semantic_review_r12",
+      "reviewer_id": "codex-semantic-model-reviewer-r13",
+      "reviewer_instance_id": "semantic-r13-canonical-routing-remediation-20260812",
+      "review_task_path": "/root/refinement_semantic_review_r13",
       "track": "semantic-model"
     },
     {
-      "reviewer_id": "codex-validator-integrity-reviewer-r12",
-      "reviewer_instance_id": "validator-r12-lifecycle-routing-remediation-20260812",
-      "review_task_path": "/root/refinement_validator_review_r12",
+      "reviewer_id": "codex-validator-integrity-reviewer-r13",
+      "reviewer_instance_id": "validator-r13-canonical-routing-remediation-20260812",
+      "review_task_path": "/root/refinement_validator_review_r13",
       "track": "validator-integrity"
     }
   ],
@@ -28,9 +28,12 @@
     "docs/PROJECT_TRUTH.md",
     "docs/FOUNDATION_INDEX.md",
     "docs/PROJECT_PHASES.md",
+    "docs/PRIORITIES.md",
     "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md",
     "docs/CONTENT_GOVERNANCE.md",
     "docs/DEVELOPMENT_OPERATING_SYSTEM.md",
+    "docs/work/README.md",
+    "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md",
     "fixtures/world_model/refinement/v1/package.json",
     "fixtures/world_model/refinement/v1/schema.json",
     "fixtures/world_model/refinement/v1/sources/synthetic-travel-notebook.md",

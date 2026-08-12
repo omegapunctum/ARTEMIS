@@ -62,11 +62,12 @@ Execution rules:
 
 This is a resource-allocation rule, not a relaxation of accuracy. ARTEMIS may be intentionally coarse at a given stage, but it must not be falsely precise.
 
-Issue `#377` adds the proposed executable knowledge-refinement mechanism for this rule. Until its
-contract and fixtures reach `READY`, no adapter may assume that an in-place field update preserves
-revision history. The proposed mechanism keeps object identity stable, separates valid time from
-record time and appends atomic `refine`, `correct`, `add_alternative` or `withdraw` revisions. It
-does not change Gate D state or authorize storage/runtime migration.
+Issue `#377` defines the executable knowledge-refinement mechanism for this rule; its exact lifecycle
+is owned by the contract/registry. No adapter may assume that an in-place field update preserves
+revision history without a separate implementation authorization. The mechanism keeps object
+identity stable, separates valid time from record time and appends atomic `refine`, `correct`,
+`add_alternative` or `withdraw` revisions. It does not change Gate D state or authorize
+storage/runtime migration.
 
 ## 4. Documentation classes
 
@@ -161,8 +162,9 @@ Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the n
 
 Foundation v3.1 Attractor refinement (`#363` / PR `#364`) is **completed**. Its accepted rules now belong to the canonical owners and executable guards.
 
-Progressive Refinement (`#377`) is the active foundation-maintenance issue. It is
-`REVIEW_REQUIRED`, does not consume the product-gate WIP slot and may not modify `project_state`,
-the frozen Gate C package, Airtable historical rows, Globe runtime or public capability.
+Progressive Refinement (`#377`) is foundation maintenance whose exact lifecycle is owned by its
+contract/registry. It does not consume the product-gate WIP slot and may not by itself modify
+`project_state`, the frozen Gate C package, Airtable historical rows, Globe runtime or public
+capability.
 
 Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated, so AI runtime and AI view-action implementation are not active work. The public runtime remains the root 2D Architecture Atlas until a later explicit promotion decision.

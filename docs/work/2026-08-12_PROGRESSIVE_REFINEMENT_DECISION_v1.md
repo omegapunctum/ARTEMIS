@@ -3,7 +3,7 @@
 ## Status
 
 - Issue: `#377`.
-- Lifecycle: `IN PROGRESS / REVIEW_REQUIRED`.
+- Lifecycle: exact candidate/READY state is owned by the contract and review registry.
 - Decision target: `ACCEPT | NARROW | REJECT`.
 - Product gate impact: none; Gate D remains in progress under `#355`.
 - Public capability impact: none.
@@ -182,6 +182,15 @@ Both tracks returned `CHANGES_REQUIRED`: canonical routing docs still asserted p
 Round 12 puts lifecycle-neutral routing docs inside the frozen review scope and runs canonical
 `--require-ready` before pytest. Round-11 negative artifacts remain immutable history and do not
 count toward the new reviews.
+
+Round 12 froze commit `3c72acebcd8263b4ed6b5755fa2e91d484da5a58` with reviewed-content
+digest `18c27bee1ca018f94150162a5244ac2dedac7c4c9856e4cf01dc37778a2fdaef`.
+Validator-integrity returned `READY`; semantic-model returned `CHANGES_REQUIRED` because additional
+canonical routing text in the operating system, priorities, work registry and decision header still
+encoded a permanent candidate state.
+
+Round 13 makes the remaining current routing corpus lifecycle-neutral and includes all of it in the
+frozen review scope. Round-12 artifacts remain immutable history and do not count toward new reviews.
 
 ## Rollback
 
