@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "package_id": "artemis-progressive-refinement-v1",
   "fixture_mode": "synthetic_contract_fixture",
-  "status": "REVIEW_REQUIRED",
+  "status": "READY",
   "created_at": "2026-08-10T00:00:00Z",
   "sources": [
     {
