@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 11,
+  "review_id": "refinement-v1-round11-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer-r11",
+  "reviewer_instance_id": "validator-r11-ready-harness-remediation-20260812",
+  "review_task_path": "/root/refinement_validator_review_r11",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "96b9719feecb2fad571431a1c7009974d227fe7a",
+  "frozen_tree": "bcb836a93627baebc9043eb5ddd279d74ec2f809",
+  "reviewed_content_sha256": "a7f8b29d0f5abf1252a6e5122599a8482a67ec29a5f52c83634a25595d4fd6e4",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 1,
+  "findings": [
+    {"finding_id": "VI-R11-001", "severity": "material", "status": "open", "summary": "The checked-in READY workflow order runs pytest before canonical --require-ready; pytest-created ignored caches then make the canonical clean-check fail even though the unchanged 76-test suite passes in both lifecycle states."},
+    {"finding_id": "VI-R11-002", "severity": "informational", "status": "accepted", "summary": "Exact frozen binding, a legitimate six-path READY/ACCEPT descendant and lifecycle-aware 76-test execution in both states were independently verified."},
+    {"finding_id": "VI-R11-003", "severity": "informational", "status": "resolved", "summary": "Prior metadata allowlist, history, lifecycle, acceptance, identifier, Git-context, byte, mode and capability controls remain fail closed."}
+  ],
+  "commands": [
+    "verify remote head, tree, digest and workflow runs",
+    "run candidate validator, 76-test suite and Release Check",
+    "construct and validate metadata-only READY/ACCEPT descendant",
+    "run unchanged 76 tests under READY",
+    "replay exact workflow command order under READY",
+    "verify allowed paths, regular blobs, prior history and capability bindings",
+    "verify protected scopes and git diff --check"
+  ],
+  "conclusion": "Round 11 supports both lifecycle states, but its workflow order blocks a legitimate READY transition after pytest dirties ignored cache paths. Validator-integrity remains CHANGES_REQUIRED."
+}

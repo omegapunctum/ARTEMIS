@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 10,
+  "review_id": "refinement-v1-round10-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer-r10",
+  "reviewer_instance_id": "validator-r10-git-context-remediation-20260812",
+  "review_task_path": "/root/refinement_validator_review_r10",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "c2eabcf30165ee6670790defbda16af562690490",
+  "frozen_tree": "921b84d4321954145e9b760b49812fefd35326b9",
+  "reviewed_content_sha256": "36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8",
+  "decision": "READY",
+  "open_critical": 0,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "VI-R10-001", "severity": "critical", "status": "resolved", "summary": "VI-R9-001 is closed. Repository-changing caller Git variables no longer redirect validation, and trustworthy command-scoped core settings are applied."},
+    {"finding_id": "VI-R10-002", "severity": "critical", "status": "resolved", "summary": "Direct NUL-safe HEAD-tree verification rejects same-size/same-mtime tracked-byte edits, while lstat-based comparison rejects tracked executable-mode drift."},
+    {"finding_id": "VI-R10-003", "severity": "informational", "status": "accepted", "summary": "The remote frozen commit, tree and replayed reviewed-content digest are exact, and a legitimate metadata-only READY/ACCEPT descendant passes canonical validation."},
+    {"finding_id": "VI-R10-004", "severity": "informational", "status": "resolved", "summary": "Prior dirty-state, committed allowlist, frozen control/history, lifecycle, acceptance, identifier and capability controls remain fail closed."},
+    {"finding_id": "VI-R10-005", "severity": "informational", "status": "accepted", "summary": "All 76 focused tests, Release Check and all 10 pull-request workflow runs pass; protected scopes and ancestry remain intact."}
+  ],
+  "commands": [
+    "verify remote pull-request head, branch, commit, tree and ancestry",
+    "independently replay reviewed-content SHA-256",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "construct and validate legitimate metadata-only READY/ACCEPT descendant",
+    "confirm caller Git context cannot redirect dirty-state validation",
+    "confirm direct HEAD-tree hashing rejects same-size/same-mtime byte drift",
+    "confirm lstat rejects tracked executable-mode drift",
+    "retest dirty state, frozen controls/history, lifecycle, acceptance and capability boundaries",
+    "verify 10 pull-request workflow runs, protected scopes and git diff --check"
+  ],
+  "conclusion": "The targeted Git-context regressions are closed, a legitimate READY/ACCEPT transition succeeds, prior controls remain effective, and validator-integrity is READY with no open critical or material findings."
+}

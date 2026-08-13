@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 12,
+  "review_id": "refinement-v1-round12-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r12",
+  "reviewer_instance_id": "semantic-r12-lifecycle-routing-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r12",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "3c72acebcd8263b4ed6b5755fa2e91d484da5a58",
+  "frozen_tree": "2e17ef3ddc90b72de07f96fa6dbdc63db501a4b0",
+  "reviewed_content_sha256": "18c27bee1ca018f94150162a5244ac2dedac7c4c9856e4cf01dc37778a2fdaef",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 1,
+  "findings": [
+    {"finding_id": "REF-SEM-R12-001", "severity": "material", "status": "open", "summary": "Lifecycle routing was only partially neutral: DEVELOPMENT_OPERATING_SYSTEM, the working decision header and work registry still asserted a permanent candidate/active state that a metadata-only READY descendant could not update."},
+    {"finding_id": "REF-SEM-R12-002", "severity": "informational", "status": "accepted", "summary": "The explicitly remediated routing documents correctly delegated status and preserved Gate D and capability boundaries."},
+    {"finding_id": "REF-SEM-R12-003", "severity": "informational", "status": "accepted", "summary": "The refinement semantic core, semantic lock, focused tests and protected scopes remained intact."}
+  ],
+  "commands": [
+    "verify remote head, tree and reviewed-content digest",
+    "inspect candidate and metadata-only READY lifecycle routing corpus",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "verify protected scopes and git diff --check"
+  ],
+  "conclusion": "Round 12 preserves the semantic model but still leaves canonical lifecycle contradictions outside the metadata-only READY allowlist. Semantic-model remains CHANGES_REQUIRED."
+}

@@ -19,7 +19,16 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
-There is currently no active foundation-maintenance or Airtable import decision. #371/#373 are deferred; they do not consume the one-product-gate WIP slot. Gate D is active under #355 and does not change public capability.
+## Foundation lifecycle records
+
+| Document | Role | Authority |
+|---|---|---|
+| `2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md` | #377 foundation-only coarse-to-fine knowledge refinement lifecycle record | exact status and decision recorded by its contract/registry; no capability authorization |
+
+Issue #377 is foundation maintenance whose exact lifecycle is owned by its contract/registry and
+does not consume the one-product-gate WIP slot. Candidate or accepted status cannot by itself change
+Gate D state, runtime, public capability, Airtable data or the frozen Leonardo package.
+#371/#373 remain deferred.
 
 #366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. #368 / PR #369 completed the six-table empty non-authoritative shadow schema plus executable contract/snapshot validation. Neither opened Gate D, imported the frozen Gate C package or changed the Architecture Atlas public export authority.
 

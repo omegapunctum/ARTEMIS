@@ -1,9 +1,9 @@
-# ARTEMIS — Development Operating System v1.3
+# ARTEMIS — Development Operating System v1.4
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.3.
+- Version: 1.4.
 - Date: 2026-08-12.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
@@ -62,6 +62,13 @@ Execution rules:
 
 This is a resource-allocation rule, not a relaxation of accuracy. ARTEMIS may be intentionally coarse at a given stage, but it must not be falsely precise.
 
+Issue `#377` defines the executable knowledge-refinement mechanism for this rule; its exact lifecycle
+is owned by the contract/registry. No adapter may assume that an in-place field update preserves
+revision history without a separate implementation authorization. The mechanism keeps object
+identity stable, separates valid time from record time and appends atomic `refine`, `correct`,
+`add_alternative` or `withdraw` revisions. It does not change Gate D state or authorize
+storage/runtime migration.
+
 ## 4. Documentation classes
 
 | Class | Purpose | Registry |
@@ -85,6 +92,15 @@ A document name or old status header cannot make it active.
 | ChatGPT | Orchestration, analysis and execution; never durable project truth by itself |
 
 New tools are introduced only when their information flow, owner and synchronization rule are named.
+
+The default knowledge-promotion chain is:
+
+`Drive research originals → authorized curated corpus intake → versioned GitHub contract/evidence → controlled runtime/export projection`
+
+This is a responsibility flow, not an automatic synchronization promise. A stage may be skipped
+when the active decision deliberately uses a frozen repository fixture/package, as Gate D currently
+does. No Drive file, Airtable row, AI output or runtime edit becomes canonical merely by existing;
+promotion requires the owner contract, review state and write/release gate for that contour.
 
 ## 6. Gate transition contract
 
@@ -144,6 +160,11 @@ The active product vertical is `Life in Context / Globe MVP` under issue `#355`.
 
 Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the non-public Leonardo-in-Romagna source/semantic boundary. `docs/project_state.json` v1.1 preserves that exact completed-gate evidence and records Gate D as **in progress** under #355.
 
-Foundation v3.1 Attractor refinement (`#363` / PR `#364`) is **completed**. Its accepted rules now belong to the canonical owners and executable guards; there is no active foundation-maintenance issue at this moment.
+Foundation v3.1 Attractor refinement (`#363` / PR `#364`) is **completed**. Its accepted rules now belong to the canonical owners and executable guards.
+
+Progressive Refinement (`#377`) is foundation maintenance whose exact lifecycle is owned by its
+contract/registry. It does not consume the product-gate WIP slot and may not by itself modify
+`project_state`, the frozen Gate C package, Airtable historical rows, Globe runtime or public
+capability.
 
 Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated, so AI runtime and AI view-action implementation are not active work. The public runtime remains the root 2D Architecture Atlas until a later explicit promotion decision.

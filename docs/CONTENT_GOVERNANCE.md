@@ -7,6 +7,8 @@
 - Роль: фиксирует правила доверия к данным, источникам, UGC, модерации и публикации content в ARTEMIS
 - Назначение: определить, как candidate content становится trusted/canonical content и какие данные не могут попасть в public knowledge layer без проверки
 - Scope: source policy, content lifecycle, validation, moderation, UGC promotion, uncertainty, corrections, public publish boundaries
+- Progressive refinement owner: `PROGRESSIVE_REFINEMENT_CONTRACT.md` defines append-only revision
+  semantics; this document owns the intake, review and promotion workflow around those revisions.
 
 ---
 
@@ -152,6 +154,35 @@ Candidate content заносится в рабочий контур.
 - claim kind/origin/review/confidence/evidence/uncertainty where known;
 - required review notes.
 
+Intake also records the active decision target and the minimum material temporal/spatial fidelity
+needed for that decision. Coarse, approximate, range-based or unknown values are valid candidate
+inputs when they preserve the source-native expression and make the uncertainty explicit. Intake
+must not create a day, point, path or boundary merely because the storage/UI supports one.
+
+### 4.2.1 Progressive intake and promotion path
+
+The controlled path is:
+
+`source/research artifact → candidate intake → atomic Claim/revision → epistemic review → accepted ledger revision → deterministic current frontier → separately authorized export/publication`
+
+System responsibilities do not collapse along that path:
+
+- Google Drive may retain research originals, GIS/media and validation material;
+- Airtable may hold curated corpus records only when the corresponding lifecycle explicitly
+  authorizes the schema/write contour;
+- GitHub owns versioned contracts, fixtures, review evidence, decisions and development truth;
+- runtime/public artifacts consume only an authorized versioned package or controlled export;
+- ChatGPT/AI may discover sources or propose candidate revisions, but is neither Source nor a
+  silent canonical writer.
+
+For the current #377 contour, the executable fixture and review evidence live in GitHub. The nine
+Airtable World Model shadow tables remain empty and no historical write is authorized.
+
+When the target already has an accepted revision series, intake must classify the proposal as
+`refine`, `correct`, `add_alternative` or `withdraw`; a generic field update is not an allowed
+semantic operation. Object identity and unrelated dimensions remain unchanged unless separately
+claimed and reviewed.
+
 ### 4.3 Technical validation
 
 Проверяется:
@@ -162,6 +193,13 @@ Candidate content заносится в рабочий контур.
 - layer/category;
 - allowed enums;
 - public artifact compatibility.
+
+For a refinement candidate, technical validation additionally checks immutable lineage, stable
+target identity, valid-time/record-time separation, source-native precision and the prohibition on
+normalized precision finer than its evidence. A supporting locator must reproduce the source-native
+expression, atomic Claim and canonical digests of the complete source value/precision and normalized
+assertion. Temporal precision projections must agree, alternatives cannot exceed their source or
+top-level precision, and every temporal primary/alternative member must represent a non-empty set.
 
 Результат:
 - pass technical validation;
@@ -222,12 +260,18 @@ Rules:
 
 Published content may be corrected.
 
-Corrections should preserve:
+Corrections are appended as a `correct` revision under
+`PROGRESSIVE_REFINEMENT_CONTRACT.md`; an accepted assertion is never edited in place. Corrections
+must preserve:
 - what changed;
 - why it changed;
 - source or governance basis;
 - impact on confidence/uncertainty;
 - whether public artifact must be regenerated.
+
+For a non-temporal atomic target, a correction preserves the predecessor's full `valid_time`
+envelope. Correcting geometry, route or label and moving it to another world-time state are two
+different proposals and require separate target/revision treatment.
 
 ### 4.8 Deprecation / archival
 
@@ -238,7 +282,8 @@ Content may be deprecated if:
 - interpretation is superseded;
 - content no longer fits scope.
 
-Deprecated content should not silently disappear if traceability is important.
+Accepted content is withdrawn or superseded through an append-only revision. It must not silently
+disappear from the ledger even when it is absent from the current frontier or public projection.
 
 ---
 

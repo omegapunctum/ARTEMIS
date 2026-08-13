@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 8,
+  "review_id": "refinement-v1-round8-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer-r8",
+  "reviewer_instance_id": "validator-r8-source-worktree-remediation-20260812",
+  "review_task_path": "/root/refinement_validator_review_r8",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "01544ead1fb0e58bbd62fcab30b88fa55f841ddf",
+  "frozen_tree": "a43456ab1aecb668ad1a755d0ea1f5ef6ff6073e",
+  "reviewed_content_sha256": "09dfac0aef6571a3b07894400320db24d97e8f5dbdde41af58d7b4cf807970ff",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 1,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "VI-R8-001", "severity": "critical", "status": "open", "summary": "Canonical READY can ignore modified tracked files hidden by Git index flags. Both assume-unchanged and skip-worktree concealed governance/control changes from status and ls-files --others while --require-ready returned READY."},
+    {"finding_id": "VI-R8-002", "severity": "critical", "status": "resolved", "summary": "Ordinary staged, unstaged, untracked and ignored files are now rejected by canonical READY validation."},
+    {"finding_id": "VI-R8-003", "severity": "critical", "status": "resolved", "summary": "Committed mode-120000 external metadata symlinks and mode-100755 control files are rejected; allowed READY paths must be in-repository regular 100644 blobs."},
+    {"finding_id": "VI-R8-004", "severity": "informational", "status": "resolved", "summary": "A legitimate synthetic READY/ACCEPT descendant passes, while out-of-scope changes, reviewed-content rename/deletion, unrelated ancestry, frozen request/schema/history drift, lifecycle contradictions, duplicate review IDs and acceptance-binding drift fail closed."},
+    {"finding_id": "VI-R8-005", "severity": "informational", "status": "resolved", "summary": "Capability prohibitions, nonempty primary/alternative temporal sets and non-temporal valid_time preservation remain enforced."}
+  ],
+  "commands": [
+    "verify remote PR head, commit, tree and reviewed-content digest",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "construct legitimate synthetic READY/ACCEPT descendant and run canonical --require-ready",
+    "dirty-state probes for staged, unstaged, untracked and ignored paths",
+    "mode-120000 external symlink and mode-100755 control-file probes",
+    "assume-unchanged and skip-worktree governance/control mutation probes",
+    "retest committed allowlist, ancestry, frozen controls, lifecycle, duplicate IDs and acceptance binding"
+  ],
+  "conclusion": "Round 8 closes ordinary dirty-worktree and symlink attacks, but index visibility flags can still conceal unreviewed tracked bytes. Validator-integrity remains CHANGES_REQUIRED."
+}

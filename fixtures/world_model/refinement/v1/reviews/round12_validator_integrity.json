@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 12,
+  "review_id": "refinement-v1-round12-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer-r12",
+  "reviewer_instance_id": "validator-r12-lifecycle-routing-remediation-20260812",
+  "review_task_path": "/root/refinement_validator_review_r12",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "3c72acebcd8263b4ed6b5755fa2e91d484da5a58",
+  "frozen_tree": "2e17ef3ddc90b72de07f96fa6dbdc63db501a4b0",
+  "reviewed_content_sha256": "18c27bee1ca018f94150162a5244ac2dedac7c4c9856e4cf01dc37778a2fdaef",
+  "decision": "READY",
+  "open_critical": 0,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "VI-R12-001", "severity": "material", "status": "resolved", "summary": "The workflow executes canonical --require-ready before pytest; the exact order passes on a legitimate metadata-only READY/ACCEPT descendant with the unchanged 76-test suite."},
+    {"finding_id": "VI-R12-002", "severity": "informational", "status": "accepted", "summary": "Remote binding and independent current/frozen digest replay are exact."},
+    {"finding_id": "VI-R12-003", "severity": "informational", "status": "accepted", "summary": "The legitimate descendant changed only six 100644 lifecycle/review blobs; prior history and all integrity/capability controls remained intact."}
+  ],
+  "commands": [
+    "verify remote head, tree, digest and 10 workflow runs",
+    "run candidate validator, 76 tests and Release Check",
+    "construct legitimate metadata-only READY/ACCEPT descendant",
+    "replay exact READY workflow order",
+    "verify allowlist, prior history, lifecycle, acceptance and capability controls",
+    "verify protected scopes and git diff --check"
+  ],
+  "conclusion": "Round 12 resolves the READY workflow-order defect without weakening lifecycle integrity. Validator-integrity is READY."
+}

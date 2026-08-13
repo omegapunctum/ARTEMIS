@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 1,
+  "review_id": "refinement-v1-round1-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer",
+  "reviewer_instance_id": "codex-semantic-model-20260812-a95859964506-r1",
+  "review_task_path": "/root/refinement_semantic_review",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "ba1b1846cd926ad83923ae8a7908a1c21b4d3e03",
+  "frozen_tree": "e31e50f40ecde6fea2706bf97d03dacf8b0d2049",
+  "reviewed_content_sha256": "6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 3,
+  "findings": [
+    {
+      "finding_id": "REF-SEM-001",
+      "severity": "material",
+      "status": "open",
+      "summary": "Source-native fidelity was not reproducible because synthetic Sources lacked checked-in artifacts and claim-level locators were opaque tokens."
+    },
+    {
+      "finding_id": "REF-SEM-002",
+      "severity": "material",
+      "status": "open",
+      "summary": "The refinement temporal envelope could not preserve the open, qualified, inclusive/exclusive and alternative semantics accepted in #330."
+    },
+    {
+      "finding_id": "REF-SEM-003",
+      "severity": "material",
+      "status": "open",
+      "summary": "The validator did not enforce one unique series per atomic subject and target key or target-key/dimension consistency."
+    },
+    {
+      "finding_id": "REF-SEM-004",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "The concrete scenarios correctly distinguished refinement, correction, alternatives, withdrawal, world-state change and unknown route semantics."
+    },
+    {
+      "finding_id": "REF-SEM-005",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "Governance routing preserved Gate D and frozen contract/data boundaries and retained the material-decision stop rule."
+    }
+  ],
+  "commands": [
+    "verify remote PR #378 head",
+    "recompute review-scope digest",
+    "inspect contract, governance, package, schema and validator",
+    "run refinement validator and focused tests"
+  ],
+  "conclusion": "Three material semantic gaps prevent READY; the reviewed candidate otherwise preserves the intended Gate D and capability boundaries."
+}

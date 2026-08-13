@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 2,
+  "review_id": "refinement-v1-round2-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r2",
+  "reviewer_instance_id": "semantic-r2-ba1-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r2",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "f9ae1e9a362d7827cf0dc48fc68435df6c853362",
+  "frozen_tree": "9661c6b0c3ed8cc41304b40afaceb7b8900e6f93",
+  "reviewed_content_sha256": "fb54684ae9f710e2e148baea7800928ff433c8915dd50e023c0f1e5444fcb840",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 1,
+  "findings": [
+    {
+      "finding_id": "REF-SEM-001",
+      "severity": "material",
+      "status": "resolved",
+      "summary": "Frozen checked-in synthetic Source artifacts now carry verified SHA-256 bindings, and every reviewed supporting EvidenceLink reproducibly binds its unique locator to the revision's exact source-native raw expression and atomic Claim statement."
+    },
+    {
+      "finding_id": "REF-SEM-002",
+      "severity": "material",
+      "status": "open",
+      "summary": "The #330 temporal envelope is representable, but refinement does not preserve it fail-closed: full-package adversarial validation accepted a spatial refine whose bounds stayed equal while start_inclusive changed from true to false and start_qualifier changed from approximate to not_before. Calendar, inclusivity, qualifiers and alternatives are not compared as part of valid-time equality/subset semantics, so an unrelated dimension refinement can silently alter or discard material temporal meaning."
+    },
+    {
+      "finding_id": "REF-SEM-003",
+      "severity": "material",
+      "status": "resolved",
+      "summary": "The validator rejects multiple series for one atomic (subject_ref,target_key), enforces target-key/dimension compatibility, and validates each revision value family against the declared series dimension."
+    },
+    {
+      "finding_id": "REF-SEM-004",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "Valid time and record time remain distinct; deterministic replay, correction, alternatives, withdrawal, world-state separation, fuzzy ranges and geometry-null unknown routes preserve the intended semantic scenarios."
+    },
+    {
+      "finding_id": "REF-SEM-005",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "The intake/promotion chain, material-fidelity stop rule, Gate D and public-runtime boundaries, empty Airtable historical-write boundary, and frozen #329/#330/Gate C packages remain explicitly preserved."
+    }
+  ],
+  "commands": [
+    "git ls-remote origin refs/pull/378/head refs/heads/agent/progressive-refinement-v1",
+    "git fetch --no-write-fetch-head origin refs/pull/378/head",
+    "git show -s --format=%H%n%T f9ae1e9a362d7827cf0dc48fc68435df6c853362",
+    "independently recompute normalized review_scope SHA-256 from frozen git show blobs",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "adversarial full-package validation with changed spatial-refinement valid_time inclusivity and qualifier"
+  ],
+  "conclusion": "Remote PR head, frozen tree and reviewed-content digest are verified; the validator, 35 focused tests and release check pass. REF-SEM-001 and REF-SEM-003 are resolved, but REF-SEM-002 remains materially open because unrelated-dimension refinement can silently change accepted #330 temporal-envelope semantics."
+}

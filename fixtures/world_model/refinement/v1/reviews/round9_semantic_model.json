@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 9,
+  "review_id": "refinement-v1-round9-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r9",
+  "reviewer_instance_id": "semantic-r9-index-visibility-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r9",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "d3cae310ba63a547063ea856cf5153dc50f40edc",
+  "frozen_tree": "f44323fd4b62304067509cfe531ac11756abb319",
+  "reviewed_content_sha256": "b81fb1072ef1ce727525f3affe322116945244c4127bb2a12c11821bf8e6b239",
+  "decision": "READY",
+  "open_critical": 0,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "REF-SEM-R9-001", "severity": "informational", "status": "accepted", "summary": "Complete source_value and exact normalized_assertion hashes remain bound at every reviewed locator. Precision relabelling and assertion drift fail closed."},
+    {"finding_id": "REF-SEM-R9-002", "severity": "informational", "status": "accepted", "summary": "Temporal alternatives cannot exceed source-native or top-level precision. Nonempty possible sets, containment, strict merged-union narrowing and calendar-profile preservation remain enforced."},
+    {"finding_id": "REF-SEM-R9-003", "severity": "informational", "status": "accepted", "summary": "Valid-time and record-time remain separate. Append-only lineage and operation semantics preserve competing alternatives and reject orphan, future and cross-series predecessors."},
+    {"finding_id": "REF-SEM-R9-004", "severity": "informational", "status": "accepted", "summary": "Claim, EvidenceLink, Source/locator and Uncertainty closure remains intact. The unknown-route case remains geometry-null, and evidence/history removal or detachment fails closed."},
+    {"finding_id": "REF-SEM-R9-005", "severity": "informational", "status": "accepted", "summary": "Round 9 changes only index-visibility validation and lifecycle metadata. Frozen #329/#330, Gate C, project state, runtime, frontend and public data remain untouched with no capability authorization."}
+  ],
+  "commands": [
+    "verify remote PR head, commit, tree and reviewed-content digest",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "focused semantic mutation set",
+    "python scripts/release_check.py",
+    "git diff --check",
+    "verify protected scopes against PR base and round-8 tree"
+  ],
+  "conclusion": "Round-8 semantic READY remains intact after the index-visibility remediation. The frozen round-9 revision is READY for the semantic-model track."
+}

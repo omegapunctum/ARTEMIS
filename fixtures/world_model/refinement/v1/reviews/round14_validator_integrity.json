@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0", "package_id": "artemis-progressive-refinement-v1", "review_round": 14,
+  "review_id": "refinement-v1-round14-validator-integrity", "reviewer_id": "codex-validator-integrity-reviewer-r14",
+  "reviewer_instance_id": "validator-r14-complete-routing-remediation-20260812", "review_task_path": "/root/refinement_validator_review_r14",
+  "track": "validator-integrity", "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "b3e91d0e6773dae80ab57f214d468c72049f89f8", "frozen_tree": "a311440045ea6840b0b4bcddf7881a822b68c1af",
+  "reviewed_content_sha256": "05c9a952047f4542f21700e4e725f28b49be1a614e0d0907234aaf3720400038",
+  "decision": "READY", "open_critical": 0, "open_material": 0,
+  "findings": [
+    {"finding_id": "VI-R14-001", "severity": "informational", "status": "accepted", "summary": "Exact remote binding, candidate validation, Release Check and ten workflows were green."},
+    {"finding_id": "VI-R14-002", "severity": "informational", "status": "accepted", "summary": "Legitimate six-path READY/ACCEPT replay passed the exact workflow order."},
+    {"finding_id": "VI-R14-003", "severity": "informational", "status": "accepted", "summary": "Complete routing scope, prior history, lifecycle, Git and capability controls remained intact."}
+  ],
+  "commands": ["verify remote binding", "run candidate validator/tests/release", "verify ten workflows", "replay six-path READY workflow", "verify history and controls"],
+  "conclusion": "Round 14 validator-integrity is READY with no open critical or material findings."
+}

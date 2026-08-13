@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 1,
+  "review_id": "refinement-v1-round1-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer",
+  "reviewer_instance_id": "validator-integrity-6c01c74f-ba1b1846",
+  "review_task_path": "/root/refinement_validator_review",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "ba1b1846cd926ad83923ae8a7908a1c21b4d3e03",
+  "frozen_tree": "e31e50f40ecde6fea2706bf97d03dacf8b0d2049",
+  "reviewed_content_sha256": "6afc829a0f2bf6cb8fe9f8bacdb586da882627f11da7f61e59dec00b8a3e6afc",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 2,
+  "open_material": 5,
+  "findings": [
+    {
+      "finding_id": "VI-001",
+      "severity": "critical",
+      "status": "open",
+      "summary": "READY counters were not reconciled against open critical/material findings in the artifact."
+    },
+    {
+      "finding_id": "VI-002",
+      "severity": "critical",
+      "status": "open",
+      "summary": "Frozen commit/tree and reviewer independence metadata were not bound to Git history and pre-issued review slots."
+    },
+    {
+      "finding_id": "VI-003",
+      "severity": "material",
+      "status": "open",
+      "summary": "Artifact paths permitted traversal and request/registry metadata lacked complete schema validation."
+    },
+    {
+      "finding_id": "VI-004",
+      "severity": "material",
+      "status": "open",
+      "summary": "The raw review digest made a legitimate metadata-only transition from REVIEW_REQUIRED to READY impossible."
+    },
+    {
+      "finding_id": "VI-005",
+      "severity": "material",
+      "status": "open",
+      "summary": "The ledger lock did not protect complete Claim, EvidenceLink, Uncertainty, Source and series history."
+    },
+    {
+      "finding_id": "VI-006",
+      "severity": "material",
+      "status": "open",
+      "summary": "Custom package/schema validation could be combined with unrelated canonical review evidence in require-ready mode."
+    },
+    {
+      "finding_id": "VI-007",
+      "severity": "material",
+      "status": "open",
+      "summary": "The final ACCEPT, NARROW or REJECT decision and its frozen revision binding were not executable."
+    },
+    {
+      "finding_id": "VI-008",
+      "severity": "minor",
+      "status": "open",
+      "summary": "The dedicated workflow did not trigger when requirements.txt changed."
+    },
+    {
+      "finding_id": "VI-009",
+      "severity": "informational",
+      "status": "accepted",
+      "summary": "Existing semantic corruption tests and frozen #329/#330 isolation passed."
+    }
+  ],
+  "commands": [
+    "verify remote PR #378 head and all review-scope bytes",
+    "run validator, require-ready and focused tests",
+    "attempt READY with counters/findings mismatch and fake frozen commit",
+    "attempt path traversal and complete-history erasure"
+  ],
+  "conclusion": "Two critical and five material fail-open paths prevent READY despite the passing semantic corruption checks and correct frozen package isolation."
+}

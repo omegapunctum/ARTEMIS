@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "issue": 377,
+  "pull_request": 378,
+  "status": "DECIDED",
+  "decision": "ACCEPT",
+  "frozen_commit": "b17bceb11289cb1fbea1d73e48b520ec27f6c7e3",
+  "frozen_tree": "a506f4072df14ea550094877ac2086496d87dea2",
+  "reviewed_content_sha256": "88aec7b00ce5cb23ad628942e9c19b37ee857fc687ce6ef7c7687ef38e8078ec",
+  "review_registry_ref": "fixtures/world_model/refinement/v1/review_registry.json",
+  "runtime_migration_authorized": false,
+  "airtable_historical_write_authorized": false,
+  "public_capability_change": false
+}

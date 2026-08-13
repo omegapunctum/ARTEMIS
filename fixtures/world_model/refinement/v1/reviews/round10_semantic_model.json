@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 10,
+  "review_id": "refinement-v1-round10-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r10",
+  "reviewer_instance_id": "semantic-r10-git-context-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r10",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "c2eabcf30165ee6670790defbda16af562690490",
+  "frozen_tree": "921b84d4321954145e9b760b49812fefd35326b9",
+  "reviewed_content_sha256": "36d43c6a20bd362667322c37a6738f9cc05f1c147eb8f6042ddcff3a5a2359d8",
+  "decision": "READY",
+  "open_critical": 0,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "REF-SEM-R10-001", "severity": "informational", "status": "accepted", "summary": "Remote PR head, commit, tree, independently calculated reviewed-content digest and pre-issued reviewer identity match the frozen request."},
+    {"finding_id": "REF-SEM-R10-002", "severity": "informational", "status": "accepted", "summary": "Complete source_value and exact normalized_assertion bindings remain enforced; precision relabelling, assertion drift and evidence/history detachment fail closed."},
+    {"finding_id": "REF-SEM-R10-003", "severity": "informational", "status": "accepted", "summary": "Temporal alternative precision, nonempty sets, containment, merged-union strictness, open bounds, inclusivity narrowing and calendar-profile preservation remain enforced."},
+    {"finding_id": "REF-SEM-R10-004", "severity": "informational", "status": "accepted", "summary": "Valid-time/record-time separation, append-only lineage, operations, replay and deterministic frontier preserve competing alternatives and reject invalid predecessors."},
+    {"finding_id": "REF-SEM-R10-005", "severity": "informational", "status": "accepted", "summary": "Unknown routes remain geometry-null; Claim/EvidenceLink/Source/locator/Uncertainty closure, later-world-state separation, correction and withdrawal semantics remain intact."},
+    {"finding_id": "REF-SEM-R10-006", "severity": "informational", "status": "accepted", "summary": "Round 10 changes only Git-context/worktree-byte validation and lifecycle metadata; frozen #329/#330, Gate C, project state, runtime, frontend and data remain unchanged with no capability authorization."}
+  ],
+  "commands": [
+    "verify GitHub PR head and remote commit tree",
+    "independently calculate reviewed-content SHA-256",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "run focused refinement/project-state/attractor/Globe lifecycle suite",
+    "python scripts/validate_world_model_fixtures.py",
+    "python scripts/validate_uncertainty_fixtures.py",
+    "python scripts/release_check.py",
+    "verify protected-scope diffs and git diff --check"
+  ],
+  "conclusion": "The prior semantic READY remains intact after the round-10 Git-context/worktree-byte remediation. The frozen round-10 revision is READY for the semantic-model track."
+}

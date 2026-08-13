@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.example/schemas/progressive-refinement-acceptance-decision-v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "issue", "pull_request", "status", "decision", "frozen_commit",
+    "frozen_tree", "reviewed_content_sha256", "review_registry_ref", "runtime_migration_authorized",
+    "airtable_historical_write_authorized", "public_capability_change"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "issue": {"const": 377},
+    "pull_request": {"const": 378},
+    "status": {"enum": ["PENDING", "DECIDED"]},
+    "decision": {"type": ["string", "null"], "enum": [null, "ACCEPT", "NARROW", "REJECT"]},
+    "frozen_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "frozen_tree": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "reviewed_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "review_registry_ref": {"const": "fixtures/world_model/refinement/v1/review_registry.json"},
+    "runtime_migration_authorized": {"const": false},
+    "airtable_historical_write_authorized": {"const": false},
+    "public_capability_change": {"const": false}
+  }
+}

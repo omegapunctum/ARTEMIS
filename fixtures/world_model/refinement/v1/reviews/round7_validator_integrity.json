@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 7,
+  "review_id": "refinement-v1-round7-validator-integrity",
+  "reviewer_id": "codex-validator-integrity-reviewer-r7",
+  "reviewer_instance_id": "validator-r7-evidence-lifecycle-remediation-20260812",
+  "review_task_path": "/root/refinement_validator_review_r7",
+  "track": "validator-integrity",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "a26e5029c1994e02f88c2feeabae2cb5851cf21b",
+  "frozen_tree": "3a8bc5883739f5c15ec69322e3d0c0c93e297ffe",
+  "reviewed_content_sha256": "7878b28eb43c7e38ef1d2ed43c726110003426b54c88988a19153878316b938f",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 2,
+  "open_material": 0,
+  "findings": [
+    {"finding_id": "VI-R7-001", "severity": "critical", "status": "open", "summary": "Canonical --require-ready ignores index/worktree state. Staged, unstaged and untracked capability/governance bytes can be present while committed-diff validation reports READY."},
+    {"finding_id": "VI-R7-002", "severity": "critical", "status": "open", "summary": "The metadata allowlist does not require review_registry.json or acceptance_decision.json to be regular Git blobs. A committed mode-120000 review-registry symlink to an external mutable JSON payload passed canonical READY."},
+    {"finding_id": "VI-R7-003", "severity": "informational", "status": "resolved", "summary": "The committed regular-file allowlist rejects out-of-scope modifications, rename, deletion and malicious merge ancestry."},
+    {"finding_id": "VI-R7-004", "severity": "informational", "status": "resolved", "summary": "Empty exclusive instants and recursively empty alternatives fail."},
+    {"finding_id": "VI-R7-005", "severity": "informational", "status": "resolved", "summary": "Spatial refine/add_alternative and literal correct preserve predecessor valid_time."},
+    {"finding_id": "VI-R7-006", "severity": "informational", "status": "resolved", "summary": "Lifecycle contradictions and duplicate review/finding identifiers fail closed."}
+  ],
+  "commands": [
+    "verify remote PR head, branch, commit and tree",
+    "independently recompute normalized review digest",
+    "construct legitimate synthetic READY/ACCEPT descendant",
+    "python scripts/validate_progressive_refinement_fixtures.py --require-ready",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "controlled staged, unstaged, untracked and ignored-path attacks",
+    "controlled mode-120000 review-registry symlink attack",
+    "retest frozen request/schema/history/capability/acceptance protections"
+  ],
+  "conclusion": "Round 7 closes the earlier committed-path and lifecycle findings, but canonical READY can ignore non-HEAD worktree bytes and can externalize control metadata through a symlink. The validator-integrity decision is CHANGES_REQUIRED."
+}

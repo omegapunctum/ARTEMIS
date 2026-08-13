@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "artemis-progressive-refinement-v1",
+  "review_round": 3,
+  "review_id": "refinement-v1-round3-semantic-model",
+  "reviewer_id": "codex-semantic-model-reviewer-r3",
+  "reviewer_instance_id": "semantic-r3-final-remediation-20260812",
+  "review_task_path": "/root/refinement_semantic_review_r3",
+  "track": "semantic-model",
+  "independence_method": "separate_agent_task_read_only",
+  "frozen_commit": "3d0062a87b04599d4e3dcf3be2ff94770c850eaa",
+  "frozen_tree": "5890612a704476447167503931d8d9fe222545d4",
+  "reviewed_content_sha256": "848254c2dbd3d789f947c07b4d120d9b89b98639f09b95adedf479e6aa22c27b",
+  "decision": "CHANGES_REQUIRED",
+  "open_critical": 0,
+  "open_material": 1,
+  "findings": [
+    {"finding_id": "REF-SEM-001", "severity": "material", "status": "resolved", "summary": "Checked-in synthetic Source artifacts retain exact SHA-256 bindings, and every supporting EvidenceLink reproducibly resolves its unique locator to the revision's source-native raw expression and atomic Claim statement."},
+    {"finding_id": "REF-SEM-002", "severity": "material", "status": "resolved", "summary": "Full-package adversarial mutations changing spatial refinement valid-time inclusivity, qualifiers, calendar/normalization state or alternatives are now rejected as temporal-envelope changes, while a revision-local basis_claim_refs addition remains accepted as intended."},
+    {"finding_id": "REF-SEM-003", "severity": "material", "status": "resolved", "summary": "The validator still enforces exactly one series per atomic subject_ref/target_key pair, target-key/dimension compatibility and dimension-appropriate revision value families."},
+    {"finding_id": "REF-SEM-004", "severity": "informational", "status": "accepted", "summary": "Valid time and record time remain distinct; deterministic replay, correction, unresolved alternatives, withdrawal, separate ecological world states, fuzzy ranges and geometry-null unknown routes preserve the intended semantic scenarios."},
+    {"finding_id": "REF-SEM-005", "severity": "informational", "status": "accepted", "summary": "The documented intake/promotion and minimum-fidelity stop paths remain coherent, while Gate D, public runtime, empty Airtable historical-write authority, project_state.json and the frozen #329/#330/Gate C packages remain unchanged."},
+    {"finding_id": "REF-SEM-006", "severity": "material", "status": "open", "summary": "Temporal refinement still validates only its primary start/end bounds. Controlled full-package mutations with recomputed ledger and semantic locks were accepted when revision-leo-time-refined changed from proleptic_gregorian/normalized to source_native_unresolved/unresolved, and when it added a 1600-01-01 alternative outside the predecessor's August 1502 possible set. This violates the contract's same-calendar profile and full possible-set subset requirements and leaves accepted #330 alternative semantics fail-open."}
+  ],
+  "commands": [
+    "GitHub connector: fetch PR #378 and commit 3d0062a87b04599d4e3dcf3be2ff94770c850eaa",
+    "git ls-remote origin refs/pull/378/head refs/heads/agent/progressive-refinement-v1",
+    "git fetch --depth=1 origin 3d0062a87b04599d4e3dcf3be2ff94770c850eaa",
+    "git show -s --format=%H%n%T 3d0062a87b04599d4e3dcf3be2ff94770c850eaa",
+    "independently recompute normalized review_scope SHA-256 from frozen checkout bytes",
+    "python scripts/validate_progressive_refinement_fixtures.py",
+    "python -m pytest -q tests/test_progressive_refinement_fixtures.py",
+    "python scripts/release_check.py",
+    "controlled spatial-refinement temporal-envelope mutations for inclusivity, qualifier, calendar, alternatives and revision-local basis Claims with recomputed locks",
+    "controlled temporal-refinement calendar-profile and out-of-predecessor alternative mutations with recomputed locks",
+    "git diff --quiet 54d725ea28751828c18139b98e2d3a610f01b202..3d0062a87b04599d4e3dcf3be2ff94770c850eaa -- fixtures/world_model/v1 fixtures/world_model/uncertainty/v1 fixtures/world_slices/leonardo_romagna_1502/v1 docs/project_state.json",
+    "git diff --check 54d725ea28751828c18139b98e2d3a610f01b202..3d0062a87b04599d4e3dcf3be2ff94770c850eaa",
+    "GitHub connector: verify 10 pull-request workflow runs completed successfully on the frozen commit"
+  ],
+  "conclusion": "The remote PR head, frozen tree and reviewed-content digest are exact; all 10 GitHub workflows, the fixture validator, 44 focused tests and release check pass. The round-2 spatial temporal-envelope defect is resolved, but temporal refine still accepts a changed calendar profile and an alternative outside its predecessor's possible set, so the candidate is not READY."
+}
