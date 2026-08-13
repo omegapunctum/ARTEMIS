@@ -635,9 +635,32 @@ def build_projection(
         layers = set(_uniq(process.get("layer_refs") or []))
         if layers and not layers.intersection(active_layers):
             continue
-        if temporal_membership(process.get("temporal_extent"), state) is None:
+        process_membership = temporal_membership(process.get("temporal_extent"), state)
+        if process_membership is None:
             continue
-        for stage in process.get("stages", []):
+        stages = process.get("stages", [])
+        if not stages:
+            item, item_losses = _make_item(
+                role="process_stage",
+                object_ref=str(process["id"]),
+                object_type="Process",
+                subobject_ref=None,
+                membership=process_membership,
+                layer_refs=process.get("layer_refs") or [],
+                claim_refs=process.get("claim_refs") or [],
+                uncertainty_refs=process.get("uncertainty_refs") or [],
+                spatial_extent=process.get("spatial_extent"),
+                semantic_flags=_semantic_flags(
+                    process_mode=str(process.get("process_mode") or "") or None
+                ),
+                world=world,
+                state=state,
+                geometry_records=geometry_records,
+                claims=claims,
+                evidence=evidence,
+            )
+            add(item, item_losses)
+        for stage in stages:
             membership = temporal_membership(stage.get("temporal_extent"), state)
             if membership is None:
                 continue
@@ -710,11 +733,41 @@ def build_projection(
             ):
                 continue
 
+            spatial_extent = version.get("spatial_extent") or {}
+            if not isinstance(spatial_extent.get("geometry"), dict):
+                item, item_losses = _make_item(
+                    role="region_geometry",
+                    object_ref=str(region["id"]),
+                    object_type="Region",
+                    subobject_ref=str(version["id"]),
+                    membership=membership,
+                    layer_refs=region.get("layer_refs") or [],
+                    claim_refs=version.get("claim_refs") or [],
+                    uncertainty_refs=_uniq(
+                        (region.get("uncertainty_refs") or [])
+                        + (version.get("uncertainty_refs") or [])
+                    ),
+                    spatial_extent=spatial_extent,
+                    semantic_flags=_semantic_flags(
+                        reconstruction_mode=str(
+                            version.get("reconstruction_mode") or "unknown"
+                        ),
+                        is_primary=bool(version.get("is_primary")),
+                    ),
+                    world=world,
+                    state=state,
+                    geometry_records=geometry_records,
+                    claims=claims,
+                    evidence=evidence,
+                )
+                add(item, item_losses)
+                continue
+
             geometry_ref = _ensure_geometry_record(
                 geometry_records,
                 owner_ref=str(region["id"]),
                 owner_subobject_ref=str(version["id"]),
-                spatial_extent=version["spatial_extent"],
+                spatial_extent=spatial_extent,
                 origin_kind="region_geometry_version",
                 claim_refs=version.get("claim_refs") or [],
                 uncertainty_refs=_uniq(

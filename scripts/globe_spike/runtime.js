@@ -81,6 +81,15 @@
     }
   }
 
+  function safeSourceHref(value) {
+    try {
+      const url = new URL(String(value || ''), window.location.href);
+      return ['http:', 'https:'].includes(url.protocol) ? url.href : null;
+    } catch (_error) {
+      return null;
+    }
+  }
+
   function semanticProperties(primitive) {
     return {
       item_id: primitive.item_id,
@@ -328,9 +337,14 @@
     setText('primitive-count', (data.globe.primitives || []).length);
     setText(
       'corpus-status',
-      data.knowledge.historical_corpus_ready
-        ? 'reviewed historical corpus'
-        : 'synthetic contract fixture · not historical evidence'
+      data.knowledge.corpus_status_label
+        || (data.knowledge.historical_corpus_ready
+          ? 'reviewed historical corpus'
+          : 'candidate package · historical readiness not established')
+    );
+    setText(
+      'boundary-status',
+      `Earth surface and graticule are synthetic present-day renderer context. Semantic input: ${data.knowledge.corpus_status_label || 'status unavailable'}. No historical geometry, real terrain, satellite imagery, coastline history, provider token, or public promotion is implied.`
     );
     setText('deferred-types', (data.knowledge.deferred_object_types || []).join(', ') || 'none');
 
@@ -440,9 +454,10 @@
         const source = sourceById.get(evidence.source_id);
         const row = document.createElement('div');
         row.className = 'evidence-row';
-        if (source) {
+        const sourceHref = source ? safeSourceHref(source.artifact_uri || source.uri) : null;
+        if (source && sourceHref) {
           const link = document.createElement('a');
-          link.href = source.artifact_uri || source.uri;
+          link.href = sourceHref;
           link.target = '_blank';
           link.rel = 'noopener';
           link.textContent = source.title || source.id;
@@ -583,9 +598,19 @@
     byId('view-global')?.addEventListener('click', () => {
       map.flyTo({ center: [10, 15], zoom: 0.8, pitch: 0, bearing: 0, duration: 900 });
     });
-    byId('view-basin')?.addEventListener('click', () => {
-      map.flyTo({ center: [10.6, 50.0], zoom: 4.2, pitch: 38, bearing: -12, duration: 900 });
-    });
+    const focusSlice = () => {
+      const intent = runtime.data?.state?.view_intent || {};
+      if (intent.kind === 'bounds' && Array.isArray(intent.bbox) && intent.bbox.length === 4) {
+        map.fitBounds(
+          [[intent.bbox[0], intent.bbox[1]], [intent.bbox[2], intent.bbox[3]]],
+          { padding: 40, duration: 900 }
+        );
+        return;
+      }
+      map.flyTo({ center: [10, 15], zoom: 0.8, pitch: 0, bearing: 0, duration: 900 });
+    };
+    runtime.focusSlice = focusSlice;
+    byId('view-slice')?.addEventListener('click', focusSlice);
     byId('toggle-alternatives')?.addEventListener('click', (event) => {
       runtime.alternativesVisible = !runtime.alternativesVisible;
       for (const layerId of ALTERNATIVE_LAYER_IDS) {

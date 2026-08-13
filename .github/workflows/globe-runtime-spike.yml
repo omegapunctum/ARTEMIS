@@ -74,7 +74,7 @@ jobs:
           curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS Globe R&D Spike"
           curl -fsS http://127.0.0.1:8123/build-meta.json | python -m json.tool >/dev/null
           curl -fsS http://127.0.0.1:8123/knowledge-index.json | python -m json.tool >/dev/null
-          curl -fsS http://127.0.0.1:8123/sources/field-notebook-alpha.md | grep -F "LOCATOR[alpha-encounter]"
+          curl -fsS http://127.0.0.1:8123/knowledge-index.json | grep -F "Printed p. 16"
 
       - name: Execute Globe artifact in headless browser
         run: |
@@ -113,12 +113,12 @@ jobs:
           # These values are injected dynamically by runtime.js. Terrain status is
           # set only inside MapLibre's map `load` handler, so it proves the browser
           # executed the pinned engine and loaded the globe style/layers.
-          grep -F "world-slice-fixture-basin-v1" /tmp/artemis-globe-dom.html
-          grep -F "explorer-state-1504-local-global" /tmp/artemis-globe-dom.html
-          grep -F "uncertainty-trajectory-route" /tmp/artemis-globe-dom.html
-          grep -F "LOCATOR[alpha-encounter]" /tmp/artemis-globe-dom.html
-          grep -F "Synthetic field notebook alpha" /tmp/artemis-globe-dom.html
-          grep -F "synthetic contract fixture · not historical evidence" /tmp/artemis-globe-dom.html
+          grep -F "world-slice-leonardo-romagna-1502-v1" /tmp/artemis-globe-dom.html
+          grep -F "explorer-state-leonardo-romagna-1502-gate-d" /tmp/artemis-globe-dom.html
+          grep -F "uncertainty-trajectory-route-gaps" /tmp/artemis-globe-dom.html
+          grep -F "Manuscript L folio 78r" /tmp/artemis-globe-dom.html
+          grep -F "Cronologia vinciana" /tmp/artemis-globe-dom.html
+          grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" /tmp/artemis-globe-dom.html
           grep -F "Terrain: capability path ready" /tmp/artemis-globe-dom.html
           grep -F "engine: MapLibre GL JS" /tmp/artemis-globe-dom.html
           grep -F "maplibregl-canvas" /tmp/artemis-globe-dom.html
@@ -129,7 +129,7 @@ jobs:
           grep -F 'id="startup-ms"' /tmp/artemis-globe-dom.html
           grep -F 'id="frame-sample"' /tmp/artemis-globe-dom.html
 
-          # Capture renderer-local Basin camera evidence from a second browser run.
+          # Capture renderer-local World Slice camera evidence from a second browser run.
           # Camera is deliberately outside Explorer State / World Model semantics.
           timeout 45s "$BROWSER" \
             --headless=new \
@@ -142,7 +142,7 @@ jobs:
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
             --screenshot=/tmp/artemis-globe-browser.png \
-            'http://127.0.0.1:8124/?view=basin' \
+            'http://127.0.0.1:8124/?view=slice' \
             >/tmp/artemis-globe-screenshot.log \
             2>&1
           test -s /tmp/artemis-globe-browser.png

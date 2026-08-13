@@ -3,16 +3,16 @@
 ## Status
 
 - Type: working R&D runbook.
-- Updated: 2026-08-09.
-- Issues: #343 engine spike; #358 source-aware Globe MVP inspector.
+- Updated: 2026-08-13.
+- Issues: #343 engine spike; #358 source-aware inspector; #355 Gate D real-slice vertical.
 - Runtime: generated static artifact only.
 - Public capability: no.
 
 ## 1. Purpose
 
-This runbook reproduces and manually verifies the bounded #343 3D Earth prototype and its #358 source-aware inspector without changing the current ARTEMIS public runtime.
+This runbook reproduces and manually verifies the bounded #343 3D Earth prototype and its #358 source-aware inspector over the frozen Leonardo Gate C package for #355, without changing the current ARTEMIS public runtime.
 
-The spike consumes merged World Model / Explorer State / Render Projection / Geospatial Asset contracts and generates a separate static directory.
+The default build adapts the frozen, non-public `fixtures/world_slices/leonardo_romagna_1502/v1/` package into a read-only World Model-compatible view, then consumes the shared Explorer State / Render Projection / Geospatial Asset contracts. It preserves draft/rejected Claim states, withheld geometry, unresolved routes, `promotion_allowed=false`, and the accepted #377 read-only runtime boundary.
 
 ## 2. Build
 
@@ -41,7 +41,7 @@ The output directory must contain:
 - `capability-path.geojson`;
 - `engine-evaluation.json`;
 - `knowledge-index.json`;
-- `sources/` with checksum-verified local source artifacts referenced by the World Model package;
+- optional `sources/` only when a selected package contains checksum-pinned local source artifacts;
 - `build-meta.json`;
 - `README.txt`.
 
@@ -59,7 +59,7 @@ Open:
 http://127.0.0.1:8080/
 ```
 
-Default spike behavior requires network access only for the pinned MapLibre GL JS 5.24.0 engine files from unpkg. Historical/semantic fixture data and synthetic Earth context are local generated files.
+Default spike behavior requires network access for the pinned MapLibre GL JS 5.24.0 engine files from unpkg. Frozen semantic records and synthetic Earth context are generated locally; source links remain the exact external registry URLs and are not treated as archived evidence.
 
 No ARTEMIS backend is required.
 
@@ -70,17 +70,16 @@ On successful load:
 - the canvas is an interactive globe, not a flat public compatibility map;
 - the banner says `ARTEMIS · Source-aware 3D Globe MVP` and explicitly says the renderer is experimental/non-public;
 - the inspector displays the World Slice, Explorer State, selected time, Render Projection ID and honest corpus status;
-- semantic points/Regions come from `globe-projection.json` generated from the merged Render Projection contract;
-- primary and alternative `region-fixture-basin` reconstructions are visibly distinguishable;
-- the `Alternatives` control can hide/show the alternative Region without changing World Model state;
-- the unresolved list contains keyboard-operable semantic records, including the Mara Vale trajectory gap with `uncertainty-trajectory-route` and no geometry;
+- `globe-projection.json` contains zero historical primitives because Gate C authorizes no coordinates or Region polygons;
+- both `region-duchy-romagna-context` alternatives remain separately inspectable and unresolved;
+- the unresolved list contains keyboard-operable real semantic records, including three Leonardo trajectory gaps with `uncertainty-trajectory-route-gaps` and no geometry;
 - the dashed capability path is visibly labelled as renderer capability only and is not historical knowledge;
 - terrain status states that the default terrain fixture is synthetic/no live DEM;
 - attribution shows the synthetic fixture attribution required by the #342 manifest.
 
 ## 5. Picking acceptance
 
-Click a semantic point or Region.
+Choose a semantic record from the unresolved list. The default frozen package intentionally has no clickable historical map geometry.
 
 The inspector must resolve the selected projection item through `knowledge-index.json` and display canonical:
 
@@ -92,7 +91,7 @@ The inspector must resolve the selected projection item through `knowledge-index
 - spatial/projection status;
 - Claim ID, statement, review/confidence/evidence state;
 - EvidenceLink relation/strength/review state and repeatable locator;
-- Source title, copied artifact URI and review state;
+- Source title, exact registry URI and candidate review state;
 - material Uncertainty description/effect/alternatives;
 - projection loss, when present.
 
@@ -102,7 +101,7 @@ Expected result:
 
 - the same inspector opens without inventing geometry;
 - its Claim/Evidence/Source/Uncertainty closure is identical to the neutral projection refs;
-- a local source link resolves to the checksum-verified copied artifact.
+- an external source link retains the exact registered HTTPS URI and opens with `noopener` protection.
 
 Click the dashed capability path.
 
@@ -110,17 +109,17 @@ Expected result:
 
 - the inspector explicitly says this is renderer capability geometry;
 - no World Model object ID is returned;
-- it cannot be interpreted as the Mara Vale route.
+- it cannot be interpreted as Leonardo's route.
 
 ## 6. Uncertainty acceptance
 
 The spike passes only if all are true:
 
-1. `trajectory-mara-vale / trajectory-segment-gap` remains unresolved;
-2. no line connects its documented endpoints as historical movement;
-3. primary and alternative Region reconstructions both remain available;
-4. alternative reconstruction styling is distinguishable;
-5. `event-workshop-arrival` remains `possible_active` rather than exact `active` where represented in projection state;
+1. all three `trajectory-leonardo-romagna-1502` inferred gaps remain unresolved;
+2. no line connects the four named-place presence contexts as historical movement;
+3. both Region reconstruction alternatives remain separately inspectable with null geometry and no silent winner;
+4. all 22 Claims retain their exact `draft` or `rejected` Gate C review state;
+5. the selected interval remains 8 August–31 December 1502 without sharpening per-object precision;
 6. corpus/geometry absence is not presented as historical absence.
 
 ## 7. Terrain acceptance
@@ -167,9 +166,9 @@ The spike must fail visibly when:
 - projection contracts fail during build;
 - a projected Claim, EvidenceLink, Source or Uncertainty ref cannot be resolved;
 - an EvidenceLink escapes the projected Claim/Source closure or lacks a locator;
-- a copied local source checksum differs from its reviewed package checksum;
-- a required point/Region fixture disappears;
-- the reviewed trajectory gap acquires geometry;
+- a selected package's copied local source checksum differs from its reviewed package checksum;
+- a frozen Leonardo canonical object, Region alternative, Claim/Evidence/Source/Uncertainty ref disappears;
+- any Leonardo trajectory gap or Region alternative acquires geometry;
 - provider/terrain manifest becomes invalid.
 
 It must not silently fall back to `data/features.geojson`, `/api/*`, or the current public 2D runtime.
@@ -185,12 +184,20 @@ It must not silently fall back to `data/features.geojson`, `/api/*`, or the curr
 5. runtime contract tests;
 6. static HTTP serving smoke test;
 7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL;
-8. assertions that the browser DOM contains the canonical World Slice/Explorer State, source title + repeatable locator, honest fixture status, unresolved trajectory uncertainty, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
+8. assertions that the browser DOM contains the Leonardo World Slice/Explorer State, source title + repeatable locator, honest frozen-candidate status, unresolved trajectory uncertainty, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
 9. upload of the generated artifact `artemis-globe-runtime-spike` for inspection.
 
 The headless gate proves that the pinned MapLibre engine executes in a browser and reaches its map `load` path with the generated semantic data. It does not replace human visual/interaction review, and it intentionally does not fail on hosted-runner `idle`/rAF timing because those values are not a production SLO.
 
 Manual browser inspection remains useful for interaction feel, visual legibility and real-device performance evidence.
+
+The synthetic contract fixture remains available only as a renderer regression input:
+
+```bash
+python scripts/build_globe_spike.py --dataset contract_fixture --output /tmp/artemis-globe-contract-fixture
+```
+
+That mode may render the fictional explicit point and Region polygons. It is not the default Gate D content path.
 
 ## 11. Exit decision
 
