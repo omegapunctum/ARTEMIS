@@ -48,6 +48,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
         "projection.json",
         "globe-projection.json",
         "explorer-state.json",
+        "explorer-views.json",
         "geospatial-assets.json",
         "synthetic-earth-context.geojson",
         "capability-path.geojson",
@@ -62,6 +63,8 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["public_pages_entrypoint"] is False
     assert metadata["capability_path_is_semantic"] is False
     assert metadata["knowledge_record_count"] == metadata["semantic_item_count"]
+    assert metadata["explorer_view_count"] == 96
+    assert metadata["temporal_preset_count"] == 6
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
 
@@ -81,6 +84,74 @@ def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path
     assert globe["projection_id"] == projection["projection_id"]
     assert globe["source"]["explorer_state_ref"] == state["state_id"]
     assert globe["vertical_semantics"] == "not_modeled"
+
+
+def test_precomputed_views_use_source_native_time_and_projection_semantics(tmp_path: Path) -> None:
+    output = tmp_path / "globe-spike"
+    build_spike(output)
+    views = _load(output / "explorer-views.json")
+    knowledge = _load(output / "knowledge-index.json")
+
+    assert [preset["preset_id"] for preset in views["temporal_presets"]] == [
+        "full-slice",
+        "rimini-1502-08-08",
+        "cesena-1502-08-10",
+        "patent-1502-08-18",
+        "cesenatico-1502-09-06",
+        "imola-autumn-1502",
+    ]
+    assert views["temporal_presets"][-1]["temporal_selection"] == {
+        "mode": "interval",
+        "start": "1502-09",
+        "end": "1502-11",
+        "precision": "month",
+        "calendar": "proleptic_gregorian",
+    }
+    assert len(views["layer_options"]) == 4
+    assert len(views["views"]) == 6 * (2 ** 4)
+
+    knowledge_ids = {record["item_id"] for record in knowledge["records"]}
+    for view in views["views"]:
+        state = view["state"]
+        projection = view["projection"]
+        globe = view["globe"]
+        assert state["active_layer_refs"] == view["active_layer_refs"]
+        assert projection["source"]["explorer_state_ref"] == state["state_id"]
+        assert projection["temporal_selection"] == state["temporal_selection"]
+        assert globe["source"]["explorer_state_ref"] == state["state_id"]
+        assert projection["geometries"] == []
+        assert globe["primitives"] == []
+        assert {item["item_id"] for item in projection["items"]} <= knowledge_ids
+        assert "Relation" in projection["deferred_object_types"]
+
+    empty_layer_views = [view for view in views["views"] if not view["active_layer_refs"]]
+    assert len(empty_layer_views) == 6
+    assert all(view["projection"]["items"] == [] for view in empty_layer_views)
+
+
+def test_temporal_views_change_membership_without_invented_intermediate_dates(tmp_path: Path) -> None:
+    output = tmp_path / "globe-spike"
+    build_spike(output)
+    views = _load(output / "explorer-views.json")
+    all_layers = {option["layer_ref"] for option in views["layer_options"]}
+
+    def object_refs(preset_id: str) -> set[str]:
+        view = next(
+            item for item in views["views"]
+            if item["temporal_preset_id"] == preset_id
+            and set(item["active_layer_refs"]) == all_layers
+        )
+        return {item["object_ref"] for item in view["projection"]["items"]}
+
+    rimini = object_refs("rimini-1502-08-08")
+    cesena = object_refs("cesena-1502-08-10")
+    autumn = object_refs("imola-autumn-1502")
+    assert "event-leonardo-rimini-note" in rimini
+    assert "event-leonardo-rimini-note" not in cesena
+    assert "event-leonardo-cesena-survey" in cesena
+    assert "event-leonardo-imola-map-context" in autumn
+    assert "event-leonardo-imola-map-context" not in rimini
+    assert "event-ottoman-turkmen-displacement-1502" in rimini & cesena & autumn
 
 
 def test_default_adapter_preserves_frozen_gate_c_boundary_without_geometry() -> None:
@@ -208,6 +279,7 @@ def test_spike_source_does_not_read_public_compatibility_data_or_backend() -> No
     assert "/api/" not in combined
     assert "globe-projection.json" in runtime_source
     assert "explorer-state.json" in runtime_source
+    assert "explorer-views.json" in runtime_source
     assert "geospatial-assets.json" in runtime_source
     assert "knowledge-index.json" in runtime_source
     assert "queryRenderedFeatures" in runtime_source
@@ -300,6 +372,21 @@ def test_unresolved_items_are_keyboard_inspectable_through_knowledge_index() -> 
     assert 'aria-live="polite"' in html_source
 
 
+def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
+
+    assert 'id="temporal-preset" type="range"' in html_source
+    assert 'id="layer-controls"' in html_source
+    assert 'role="status" aria-live="polite"' in html_source
+    assert "applySemanticView" in runtime_source
+    assert "runtime.viewByKey.get" in runtime_source
+    assert "semanticSource.setData(globePrimitivesToGeoJson(next.globe))" in runtime_source
+    assert "updateCanonicalSelection(projectionItem)" in runtime_source
+    assert "Selection cleared: the object is outside the active time/layer projection." in runtime_source
+    assert "prefers-reduced-motion: reduce" in runtime_source
+
+
 def test_maplibre_v5_semantic_layers_use_expression_geometry_type_filters() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
 
@@ -364,3 +451,4 @@ def test_build_metadata_is_semantically_reproducible(tmp_path: Path) -> None:
     assert _load(first / "projection.json") == _load(second / "projection.json")
     assert _load(first / "globe-projection.json") == _load(second / "globe-projection.json")
     assert _load(first / "knowledge-index.json") == _load(second / "knowledge-index.json")
+    assert _load(first / "explorer-views.json") == _load(second / "explorer-views.json")

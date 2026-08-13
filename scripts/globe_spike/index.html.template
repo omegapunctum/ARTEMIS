@@ -43,6 +43,19 @@
         </dl>
       </section>
 
+      <section aria-labelledby="explorer-controls-title">
+        <h2 id="explorer-controls-title">Synchronized Explorer</h2>
+        <div class="explorer-control">
+          <label for="temporal-preset">Contract-pinned time selection</label>
+          <input id="temporal-preset" type="range" min="0" max="0" step="1" value="0" aria-describedby="temporal-preset-value interaction-status" />
+          <output id="temporal-preset-value" for="temporal-preset">Loading…</output>
+        </div>
+        <fieldset id="layer-controls" class="layer-controls">
+          <legend>Active semantic layers</legend>
+        </fieldset>
+        <p id="interaction-status" class="hint" role="status" aria-live="polite">Loading deterministic Explorer views…</p>
+      </section>
+
       <section>
         <h2>Semantic render</h2>
         <div id="semantic-summary" class="summary-grid"></div>

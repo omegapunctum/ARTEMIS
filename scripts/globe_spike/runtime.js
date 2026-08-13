@@ -5,6 +5,7 @@
     projection: './projection.json',
     globe: './globe-projection.json',
     state: './explorer-state.json',
+    views: './explorer-views.json',
     assets: './geospatial-assets.json',
     context: './synthetic-earth-context.geojson',
     capabilityPath: './capability-path.geojson',
@@ -28,7 +29,12 @@
   const runtime = {
     map: null,
     data: null,
+    viewIndex: null,
+    viewByKey: new Map(),
     knowledgeByItem: new Map(),
+    selectedItemId: null,
+    activeTemporalPresetId: null,
+    activeLayerRefs: [],
     alternativesVisible: true,
     performance: {
       startupToIdleMs: null,
@@ -79,6 +85,22 @@
     } catch (_error) {
       return [value];
     }
+  }
+
+  function cloneJson(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function viewKey(temporalPresetId, layerRefs) {
+    return `${temporalPresetId}|${[...(layerRefs || [])].sort().join(',')}`;
+  }
+
+  function currentProjectionItem(itemId) {
+    return (runtime.data?.projection?.items || []).find((item) => item.item_id === itemId) || null;
+  }
+
+  function cameraDuration() {
+    return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 900;
   }
 
   function safeSourceHref(value) {
@@ -386,6 +408,7 @@
       row.className = 'unresolved-item';
       if (segmentKind === 'inferred_gap') row.dataset.kind = 'trajectory-gap';
       row.dataset.itemId = item.item_id;
+      row.setAttribute('aria-pressed', String(item.item_id === runtime.selectedItemId));
       row.setAttribute('aria-label', `Inspect unresolved ${item.object_type} ${item.object_ref}`);
 
       appendText(row, 'strong', `${item.object_type} · ${item.object_ref}`);
@@ -541,17 +564,57 @@
     addProjectionLosses(card, record);
   }
 
+  function updateCanonicalSelection(item) {
+    const state = runtime.data?.state;
+    if (!state || !item) return;
+    state.selection.primary_object_ref = item.object_ref;
+    state.selection.selected_object_refs = [item.object_ref];
+    if (item.object_type === 'Trajectory') {
+      state.active_focus.trajectory_ref = item.object_ref;
+      state.active_focus.trajectory_segment_ref = item.subobject_ref;
+    }
+    if (item.object_type === 'Region') {
+      state.active_focus.region_ref = item.object_ref;
+      state.active_focus.region_geometry_ref = item.subobject_ref;
+    }
+  }
+
+  function clearCanonicalSelection(message = 'No semantic object selected.') {
+    runtime.selectedItemId = null;
+    if (runtime.data?.state?.selection) {
+      runtime.data.state.selection.primary_object_ref = null;
+      runtime.data.state.selection.selected_object_refs = [];
+    }
+    const card = byId('selection-card');
+    if (card) {
+      card.classList.add('empty');
+      card.removeAttribute('data-item-id');
+      card.textContent = message;
+    }
+  }
+
   function selectKnowledgeItem(itemId, options = {}) {
     const record = runtime.knowledgeByItem.get(itemId);
-    if (!record) {
+    const projectionItem = currentProjectionItem(itemId);
+    if (!record || !projectionItem) {
       const card = byId('selection-card');
       if (card) {
         card.classList.remove('empty');
-        card.textContent = `No knowledge-index record exists for ${itemId}.`;
+        card.textContent = `No active projection record exists for ${itemId}.`;
       }
       return;
     }
-    renderKnowledgeRecord(record);
+    const losses = (runtime.data.projection.losses || []).filter((loss) => loss.item_id === itemId);
+    runtime.selectedItemId = itemId;
+    updateCanonicalSelection(projectionItem);
+    renderKnowledgeRecord({
+      ...record,
+      temporal_membership: projectionItem.temporal_membership,
+      spatial_status: projectionItem.spatial_status,
+      semantic_flags: projectionItem.semantic_flags,
+      projection_losses: losses
+    });
+    renderUnresolved(runtime.data.projection);
     if (options.focus) byId('selection-card')?.focus({ preventScroll: false });
   }
 
@@ -575,6 +638,93 @@
     card.textContent = 'Renderer capability path selected. This geometry has no World Model object_ref and cannot be resolved as historical knowledge.';
   }
 
+  function syncExplorerControls() {
+    const presets = runtime.viewIndex?.temporal_presets || [];
+    const presetIndex = Math.max(0, presets.findIndex(
+      (preset) => preset.preset_id === runtime.activeTemporalPresetId
+    ));
+    const range = byId('temporal-preset');
+    if (range) range.value = String(presetIndex);
+    setText('temporal-preset-value', presets[presetIndex]?.label || runtime.activeTemporalPresetId);
+    for (const input of document.querySelectorAll('#layer-controls input[type="checkbox"]')) {
+      input.checked = runtime.activeLayerRefs.includes(input.value);
+    }
+  }
+
+  function applySemanticView(temporalPresetId, layerRefs, options = {}) {
+    const next = runtime.viewByKey.get(viewKey(temporalPresetId, layerRefs));
+    if (!next) throw new Error(`No deterministic Explorer view for ${temporalPresetId}`);
+
+    const priorSelection = runtime.selectedItemId;
+    runtime.activeTemporalPresetId = next.temporal_preset_id;
+    runtime.activeLayerRefs = [...next.active_layer_refs];
+    runtime.data.state = cloneJson(next.state);
+    runtime.data.projection = next.projection;
+    runtime.data.globe = next.globe;
+
+    const semanticSource = runtime.map?.getSource?.('artemis-semantic');
+    if (semanticSource?.setData) semanticSource.setData(globePrimitivesToGeoJson(next.globe));
+
+    renderSharedState(runtime.data);
+    renderUnresolved(next.projection);
+    syncExplorerControls();
+
+    const itemIds = new Set((next.projection.items || []).map((item) => item.item_id));
+    if (priorSelection && itemIds.has(priorSelection)) {
+      selectKnowledgeItem(priorSelection);
+    } else if (options.initial) {
+      const primaryObjectRef = next.state.selection?.primary_object_ref;
+      const primaryItem = (next.projection.items || []).find(
+        (item) => item.object_ref === primaryObjectRef
+      );
+      if (primaryItem) selectKnowledgeItem(primaryItem.item_id);
+      else clearCanonicalSelection();
+    } else if (priorSelection) {
+      clearCanonicalSelection('Selection cleared: the object is outside the active time/layer projection.');
+    } else {
+      clearCanonicalSelection();
+    }
+
+    const status = byId('interaction-status');
+    if (status) {
+      status.textContent = `${next.projection.items.length} projected records · ${runtime.activeLayerRefs.length} active layers · selection and picking synchronized.`;
+    }
+    document.documentElement.dataset.artemisTemporalPreset = temporalPresetId;
+    document.documentElement.dataset.artemisLayerCount = String(runtime.activeLayerRefs.length);
+    return next;
+  }
+
+  function renderExplorerControls() {
+    const presets = runtime.viewIndex?.temporal_presets || [];
+    const range = byId('temporal-preset');
+    if (range) {
+      range.max = String(Math.max(0, presets.length - 1));
+      range.disabled = presets.length < 2;
+      range.addEventListener('input', (event) => {
+        const preset = presets[Number(event.currentTarget.value)];
+        if (preset) applySemanticView(preset.preset_id, runtime.activeLayerRefs);
+      });
+    }
+
+    const layers = byId('layer-controls');
+    if (layers) {
+      for (const option of runtime.viewIndex.layer_options || []) {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.value = option.layer_ref;
+        input.addEventListener('change', () => {
+          const active = [...layers.querySelectorAll('input:checked')].map((node) => node.value);
+          applySemanticView(runtime.activeTemporalPresetId, active);
+        });
+        const span = document.createElement('span');
+        span.textContent = option.label;
+        label.append(input, span);
+        layers.append(label);
+      }
+    }
+  }
+
   function bindPicking(map) {
     map.on('click', (event) => {
       const semantic = map.queryRenderedFeatures(event.point, { layers: SEMANTIC_LAYER_IDS });
@@ -596,18 +746,18 @@
 
   function bindControls(map) {
     byId('view-global')?.addEventListener('click', () => {
-      map.flyTo({ center: [10, 15], zoom: 0.8, pitch: 0, bearing: 0, duration: 900 });
+      map.flyTo({ center: [10, 15], zoom: 0.8, pitch: 0, bearing: 0, duration: cameraDuration() });
     });
     const focusSlice = () => {
       const intent = runtime.data?.state?.view_intent || {};
       if (intent.kind === 'bounds' && Array.isArray(intent.bbox) && intent.bbox.length === 4) {
         map.fitBounds(
           [[intent.bbox[0], intent.bbox[1]], [intent.bbox[2], intent.bbox[3]]],
-          { padding: 40, duration: 900 }
+          { padding: 40, duration: cameraDuration() }
         );
         return;
       }
-      map.flyTo({ center: [10, 15], zoom: 0.8, pitch: 0, bearing: 0, duration: 900 });
+      map.flyTo({ center: [10, 15], zoom: 0.8, pitch: 0, bearing: 0, duration: cameraDuration() });
     };
     runtime.focusSlice = focusSlice;
     byId('view-slice')?.addEventListener('click', focusSlice);
@@ -645,10 +795,11 @@
   async function main() {
     if (!window.maplibregl) throw new Error('MapLibre GL JS 5.24.0 failed to load. Network access to the pinned engine CDN is required for this R&D artifact.');
 
-    const [projection, globe, state, assets, context, capabilityPath, engineEvaluation, knowledge, meta] = await Promise.all([
+    const [projection, globe, state, views, assets, context, capabilityPath, engineEvaluation, knowledge, meta] = await Promise.all([
       loadJson(FILES.projection),
       loadJson(FILES.globe),
       loadJson(FILES.state),
+      loadJson(FILES.views),
       loadJson(FILES.assets),
       loadJson(FILES.context),
       loadJson(FILES.capabilityPath),
@@ -658,14 +809,28 @@
     ]);
 
     runtime.data = { projection, globe, state, assets, context, capabilityPath, engineEvaluation, knowledge, meta };
+    runtime.viewIndex = views;
+    runtime.viewByKey = new Map((views.views || []).map((view) => [
+      viewKey(view.temporal_preset_id, view.active_layer_refs),
+      view
+    ]));
     runtime.knowledgeByItem = new Map((knowledge.records || []).map((record) => [record.item_id, record]));
     runtime.selectItem = (itemId) => selectKnowledgeItem(itemId, { focus: true });
-    renderSharedState(runtime.data);
-    renderUnresolved(projection);
+    runtime.selectView = (presetId, layerRefs) => applySemanticView(presetId, layerRefs || runtime.activeLayerRefs);
+    renderExplorerControls();
     renderAttribution(assets);
-    const primaryObjectRef = state.selection?.primary_object_ref;
-    const primaryRecord = (knowledge.records || []).find((record) => record.object_ref === primaryObjectRef);
-    if (primaryRecord) renderKnowledgeRecord(primaryRecord);
+
+    const params = new URLSearchParams(window.location.search);
+    const defaultView = (views.views || []).find((view) => view.view_id === views.default_view_id);
+    if (!defaultView) throw new Error(`Default Explorer view does not resolve: ${views.default_view_id}`);
+    const requestedPreset = params.get('time') || defaultView.temporal_preset_id;
+    const requestedLayers = params.has('layers')
+      ? params.get('layers').split(',').filter(Boolean)
+      : defaultView.active_layer_refs;
+    const initialView = runtime.viewByKey.get(viewKey(requestedPreset, requestedLayers)) || defaultView;
+    applySemanticView(initialView.temporal_preset_id, initialView.active_layer_refs, { initial: true });
+    const requestedItem = params.get('item');
+    if (requestedItem) selectKnowledgeItem(requestedItem);
     setText('engine-status', `engine: MapLibre GL JS ${window.maplibregl.version || '5.24.0'} · R&D`);
 
     const map = new maplibregl.Map({
@@ -689,7 +854,7 @@
     map.on('load', () => {
       if (typeof map.setProjection === 'function') map.setProjection({ type: 'globe' });
       addContextLayers(map, context);
-      addSemanticLayers(map, globe);
+      addSemanticLayers(map, runtime.data.globe);
       addCapabilityPath(map, capabilityPath);
       configureTerrainPath(map, assets);
       bindPicking(map);
