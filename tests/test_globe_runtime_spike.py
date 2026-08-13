@@ -4,12 +4,14 @@ from pathlib import Path
 
 from scripts.build_globe_spike import (
     CAPABILITY_PATH,
+    DEFAULT_DATASET,
     ENGINE_EVALUATION_PATH,
     EXPECTED_ENGINE,
     ROOT,
     WORLD_PATH,
     build_spike,
 )
+from scripts.build_leonardo_gate_d_inputs import build_gate_d_inputs
 
 
 RUNTIME_JS = ROOT / "scripts" / "globe_spike" / "runtime.js"
@@ -60,7 +62,8 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["public_pages_entrypoint"] is False
     assert metadata["capability_path_is_semantic"] is False
     assert metadata["knowledge_record_count"] == metadata["semantic_item_count"]
-    assert (output / "sources").is_dir()
+    assert metadata["semantic_dataset"] == DEFAULT_DATASET
+    assert not (output / "sources").exists()
 
 
 def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path: Path) -> None:
@@ -80,9 +83,70 @@ def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path
     assert globe["vertical_semantics"] == "not_modeled"
 
 
+def test_default_adapter_preserves_frozen_gate_c_boundary_without_geometry() -> None:
+    world, state = build_gate_d_inputs()
+
+    object_ids = {
+        item["id"]
+        for collection in ("entities", "events", "states", "processes", "trajectories", "regions")
+        for item in world[collection]
+    }
+    assert len(object_ids) == 17
+    assert len(world["claims"]) == 22
+    assert len(world["evidence_links"]) == 38
+    assert len(world["sources"]) == 10
+    assert len(world["uncertainties"]) == 11
+    assert {item["review_state"] for item in world["claims"]} == {"draft", "rejected"}
+    assert world["relations"] == []
+    assert world["derived_observations"] == []
+    assert world["historical_corpus_ready"] is False
+    assert world["promotion_allowed"] is False
+    assert world["gate_c_decision"]["decision"] == "FREEZE"
+    assert world["gate_c_decision"]["promotion_allowed"] is False
+    assert state["world_slice_ref"] == "world-slice-leonardo-romagna-1502-v1"
+    assert state["dataset_identity"] == world["world_slice"]["dataset_identity"]
+    assert state["temporal_selection"] == {
+        "mode": "interval",
+        "start": "1502-08-08",
+        "end": "1502-12-31",
+        "precision": "day",
+        "calendar": "proleptic_gregorian",
+    }
+
+
+def test_default_projection_keeps_real_slice_geometry_withheld(tmp_path: Path) -> None:
+    output = tmp_path / "globe-spike"
+    metadata = build_spike(output)
+    projection = _load(output / "projection.json")
+    globe = _load(output / "globe-projection.json")
+
+    assert metadata["semantic_dataset"] == "leonardo_gate_c"
+    assert metadata["semantic_item_count"] == 24
+    assert metadata["globe_primitive_count"] == 0
+    assert projection["geometries"] == []
+    assert globe["primitives"] == []
+    assert all(
+        item["spatial_status"] != "resolved" for item in projection["items"]
+    )
+    assert any(
+        item["object_ref"] == "process-leonardo-romagna-surveying"
+        and item["subobject_ref"] is None
+        and item["spatial_status"] == "unresolved"
+        for item in projection["items"]
+    )
+    region_items = [
+        item for item in projection["items"] if item["object_type"] == "Region"
+    ]
+    assert {item["subobject_ref"] for item in region_items} == {
+        "region-version-borgia-romagna-1502",
+        "region-version-documented-place-only-1502",
+    }
+    assert all(item["spatial_status"] == "unresolved" for item in region_items)
+
+
 def test_globe_payload_contains_explicit_point_and_region_alternatives(tmp_path: Path) -> None:
     output = tmp_path / "globe-spike"
-    build_spike(output)
+    build_spike(output, dataset="contract_fixture")
     globe = _load(output / "globe-projection.json")
 
     primitives = globe["primitives"]
@@ -113,13 +177,14 @@ def test_reviewed_trajectory_gap_remains_unresolved_and_uncertain(tmp_path: Path
     gap = next(
         item
         for item in projection["items"]
-        if item["object_ref"] == "trajectory-mara-vale"
-        and item["subobject_ref"] == "trajectory-segment-gap"
+        if item["object_ref"] == "trajectory-leonardo-romagna-1502"
+        and item["subobject_ref"] == "segment-rimini-cesena-gap"
     )
     assert gap["spatial_status"] == "unresolved"
     assert gap["geometry_refs"] == []
-    assert "uncertainty-trajectory-route" in gap["uncertainty_refs"]
-    assert metadata["trajectory_gap"]["geometry_refs"] == []
+    assert "uncertainty-trajectory-route-gaps" in gap["uncertainty_refs"]
+    assert len(metadata["trajectory_gaps"]) == 3
+    assert all(item["geometry_refs"] == [] for item in metadata["trajectory_gaps"])
 
 
 def test_capability_path_cannot_be_mistaken_for_world_model_knowledge() -> None:
@@ -155,12 +220,17 @@ def test_knowledge_index_closes_projection_refs_without_fabrication(tmp_path: Pa
     projection = _load(output / "projection.json")
     knowledge = _load(output / "knowledge-index.json")
 
-    assert knowledge["fixture_mode"] == "synthetic_contract_fixture"
+    assert knowledge["fixture_mode"] == "frozen_gate_c_candidate_package"
     assert knowledge["historical_corpus_ready"] is False
+    assert knowledge["promotion_allowed"] is False
     assert "Relation" in knowledge["deferred_object_types"]
     assert {record["item_id"] for record in knowledge["records"]} == {
         item["item_id"] for item in projection["items"]
     }
+    assert len({ref for record in knowledge["records"] for ref in record["claim_refs"]}) == 22
+    assert len(
+        {ref for record in knowledge["records"] for ref in record["evidence_link_refs"]}
+    ) == 38
 
     projected = {item["item_id"]: item for item in projection["items"]}
     for record in knowledge["records"]:
@@ -190,20 +260,21 @@ def test_primary_selection_exposes_claim_source_and_repeatable_locator(tmp_path:
     record = next(
         item
         for item in knowledge["records"]
-        if item["object_ref"] == "event-documented-workshop-meeting"
+        if item["object_ref"] == "event-leonardo-rimini-note"
     )
 
-    assert record["label"] == "Workshop meeting"
-    assert record["claims"][0]["statement"].startswith("The synthetic register records")
-    assert record["evidence_links"][0]["locator"] == "LOCATOR[alpha-encounter]"
-    assert record["sources"][0]["title"] == "Synthetic field notebook alpha"
-    assert record["sources"][0]["artifact_uri"] == "./sources/field-notebook-alpha.md"
-    assert record["projection_losses"][0]["reason"] == "named_place_without_resolved_geometry"
+    assert record["label"] == "Leonardo records the dated Rimini observation"
+    assert record["claims"][0]["review_state"] == "draft"
+    assert record["claims"][0]["statement"].startswith("Leonardo recorded an observation")
+    assert "Manuscript L folio 78r" in record["evidence_links"][0]["locator"]
+    assert record["sources"][0]["title"] == "Cronologia vinciana (1502–1503)"
+    assert record["sources"][0]["artifact_uri"].startswith("https://press.uniurb.it/")
+    assert record["projection_losses"][0]["reason"] == "unknown_spatial_extent"
 
 
 def test_local_source_artifacts_are_copied_with_reviewed_checksums(tmp_path: Path) -> None:
     output = tmp_path / "globe-spike"
-    metadata = build_spike(output)
+    metadata = build_spike(output, dataset="contract_fixture")
     world = _load(WORLD_PATH)
 
     expected_checksums = {}

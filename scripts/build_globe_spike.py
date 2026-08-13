@@ -17,6 +17,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.build_leonardo_gate_d_inputs import (  # noqa: E402
+    SLICE_ROOT as LEONARDO_SLICE_ROOT,
+    build_gate_d_inputs,
+)
 from scripts.build_render_projection_fixtures import build_all  # noqa: E402
 from scripts.validate_geospatial_assets import validate_manifest  # noqa: E402
 
@@ -31,8 +35,10 @@ EARTH_CONTEXT_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "synthetic_ear
 CAPABILITY_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "capability_path.geojson"
 TEMPLATE_DIR = ROOT / "scripts" / "globe_spike"
 
-SPIKE_ID = "artemis-globe-runtime-spike-v1"
+SPIKE_ID = "artemis-globe-gate-d-review-v1"
 EXPECTED_ENGINE = "maplibre-gl-js-5.24.0"
+DEFAULT_DATASET = "leonardo_gate_c"
+DATASET_CHOICES = {DEFAULT_DATASET, "contract_fixture"}
 REQUIRED_OUTPUT_FILES = {
     "index.html",
     "runtime.js",
@@ -181,6 +187,17 @@ def _terrain_runtime_status(manifest: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _load_semantic_inputs(
+    dataset: str,
+) -> tuple[dict[str, Any], dict[str, Any], Path]:
+    if dataset == DEFAULT_DATASET:
+        world, state = build_gate_d_inputs()
+        return world, state, LEONARDO_SLICE_ROOT
+    if dataset == "contract_fixture":
+        return _load(WORLD_PATH), _load(STATE_PATH), WORLD_PATH.parent
+    raise SpikeBuildError(f"unknown semantic dataset: {dataset!r}")
+
+
 def _index_by_id(values: Any, *, label: str) -> dict[str, dict[str, Any]]:
     if not isinstance(values, list):
         raise SpikeBuildError(f"World Model {label} must be a list")
@@ -321,7 +338,14 @@ def _build_knowledge_index(
         "world_slice_ref": world["world_slice"]["id"],
         "projection_id": projection["projection_id"],
         "fixture_mode": world.get("fixture_mode"),
-        "historical_corpus_ready": world.get("fixture_mode") != "synthetic_contract_fixture",
+        "historical_corpus_ready": world.get("historical_corpus_ready") is True,
+        "corpus_status_label": world.get("corpus_status_label")
+        or (
+            "synthetic contract fixture · not historical evidence"
+            if world.get("fixture_mode") == "synthetic_contract_fixture"
+            else "candidate package · historical readiness not established"
+        ),
+        "promotion_allowed": world.get("promotion_allowed") is True,
         "deferred_object_types": copy.deepcopy(
             projection.get("deferred_object_types", [])
         ),
@@ -330,9 +354,9 @@ def _build_knowledge_index(
 
 
 def _copy_local_sources(
-    world: dict[str, Any], output: Path
+    world: dict[str, Any], output: Path, *, source_root: Path
 ) -> dict[str, str]:
-    source_root = WORLD_PATH.parent.resolve()
+    source_root = source_root.resolve()
     copied: dict[str, str] = {}
     for source in world.get("sources", []):
         source_id = str(source.get("id") or "")
@@ -359,9 +383,8 @@ def _copy_local_sources(
     return copied
 
 
-def build_spike(output: Path) -> dict[str, Any]:
-    world = _load(WORLD_PATH)
-    state = _load(STATE_PATH)
+def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, Any]:
+    world, state, source_root = _load_semantic_inputs(dataset)
     projection_schema = _load(PROJECTION_SCHEMA_PATH)
     asset_manifest = _load(ASSET_MANIFEST_PATH)
     asset_schema = _load(ASSET_SCHEMA_PATH)
@@ -385,39 +408,48 @@ def build_spike(output: Path) -> dict[str, Any]:
     if globe_adapter.get("vertical_semantics") != "not_modeled":
         raise SpikeBuildError("#343 must not introduce World Model vertical history")
 
-    trajectory_gap = next(
-        (
-            item
-            for item in projection.get("items", [])
-            if item.get("object_ref") == "trajectory-mara-vale"
-            and item.get("subobject_ref") == "trajectory-segment-gap"
-        ),
-        None,
-    )
-    if trajectory_gap is None or trajectory_gap.get("spatial_status") != "unresolved":
-        raise SpikeBuildError("reviewed trajectory gap must remain unresolved in the spike")
-    if trajectory_gap.get("geometry_refs"):
-        raise SpikeBuildError("reviewed trajectory gap must not acquire geometry")
+    trajectory_gaps = [
+        item
+        for item in projection.get("items", [])
+        if item.get("semantic_flags", {}).get("segment_kind") == "inferred_gap"
+    ]
+    if not trajectory_gaps:
+        raise SpikeBuildError("runtime dataset must expose at least one trajectory gap")
+    if any(
+        item.get("spatial_status") != "unresolved" or item.get("geometry_refs")
+        for item in trajectory_gaps
+    ):
+        raise SpikeBuildError("trajectory gaps must remain unresolved and geometry-free")
 
-    primary_region = any(
-        primitive.get("object_ref") == "region-fixture-basin"
-        and primitive.get("subobject_ref") == "region-geometry-v2"
-        for primitive in globe_adapter.get("primitives", [])
-    )
-    alternative_region = any(
-        primitive.get("object_ref") == "region-fixture-basin"
-        and primitive.get("subobject_ref") == "region-geometry-v2-alternative"
-        for primitive in globe_adapter.get("primitives", [])
-    )
-    explicit_point = any(
-        primitive.get("object_ref") == "event-far-observation"
-        and primitive.get("primitive_kind") == "cartographic_point"
-        for primitive in globe_adapter.get("primitives", [])
-    )
-    if not (primary_region and alternative_region and explicit_point):
-        raise SpikeBuildError(
-            "Globe adapter lacks required explicit point + primary/alternative Region evidence"
-        )
+    if dataset == "contract_fixture":
+        required_primitives = {
+            ("event-far-observation", None),
+            ("region-fixture-basin", "region-geometry-v2"),
+            ("region-fixture-basin", "region-geometry-v2-alternative"),
+        }
+        actual_primitives = {
+            (item.get("object_ref"), item.get("subobject_ref"))
+            for item in globe_adapter.get("primitives", [])
+        }
+        if not required_primitives.issubset(actual_primitives):
+            raise SpikeBuildError("contract fixture lost required renderer primitives")
+    else:
+        if world.get("historical_corpus_ready") is not False:
+            raise SpikeBuildError("Gate D package must remain not historical-ready")
+        if world.get("promotion_allowed") is not False:
+            raise SpikeBuildError("Gate D package must remain non-promotable")
+        if projection.get("geometries") or globe_adapter.get("primitives"):
+            raise SpikeBuildError("frozen Gate C package must remain geometry-free")
+        region_items = [
+            item for item in projection.get("items", []) if item.get("object_type") == "Region"
+        ]
+        if {item.get("subobject_ref") for item in region_items} != {
+            "region-version-borgia-romagna-1502",
+            "region-version-documented-place-only-1502",
+        }:
+            raise SpikeBuildError("Gate C Region alternatives were not preserved")
+        if any(item.get("spatial_status") != "unresolved" for item in region_items):
+            raise SpikeBuildError("Gate C Region alternatives must remain unresolved")
 
     knowledge_index = _build_knowledge_index(world, projection)
 
@@ -437,12 +469,15 @@ def build_spike(output: Path) -> dict[str, Any]:
     _write_json(output / "capability-path.geojson", capability_path)
     _write_json(output / "engine-evaluation.json", evaluation)
     _write_json(output / "knowledge-index.json", knowledge_index)
-    copied_source_sha256 = _copy_local_sources(world, output)
+    copied_source_sha256 = _copy_local_sources(
+        world, output, source_root=source_root
+    )
 
     metadata = {
         "schema_version": "1.0.0",
         "spike_id": SPIKE_ID,
-        "build_contract_date": "2026-08-09",
+        "build_contract_date": "2026-08-13",
+        "semantic_dataset": dataset,
         "engine_id": selected_engine["engine_id"],
         "engine_family": selected_engine["engine_family"],
         "world_slice_ref": state["world_slice_ref"],
@@ -454,13 +489,16 @@ def build_spike(output: Path) -> dict[str, Any]:
         "unresolved_item_count": len(
             [item for item in projection.get("items", []) if item.get("spatial_status") == "unresolved"]
         ),
-        "trajectory_gap": {
-            "object_ref": trajectory_gap["object_ref"],
-            "subobject_ref": trajectory_gap["subobject_ref"],
-            "spatial_status": trajectory_gap["spatial_status"],
-            "geometry_refs": trajectory_gap["geometry_refs"],
-            "uncertainty_refs": trajectory_gap["uncertainty_refs"],
-        },
+        "trajectory_gaps": [
+            {
+                "object_ref": item["object_ref"],
+                "subobject_ref": item["subobject_ref"],
+                "spatial_status": item["spatial_status"],
+                "geometry_refs": item["geometry_refs"],
+                "uncertainty_refs": item["uncertainty_refs"],
+            }
+            for item in trajectory_gaps
+        ],
         "terrain": _terrain_runtime_status(asset_manifest),
         "capability_path_is_semantic": False,
         "backend_required": False,
@@ -483,14 +521,16 @@ def build_spike(output: Path) -> dict[str, Any]:
     _write_json(output / "build-meta.json", metadata)
 
     (output / "README.txt").write_text(
-        "ARTEMIS source-aware Globe R&D artifact (issues #343 and #358)\n\n"
+        "ARTEMIS source-aware Globe Gate D review artifact (#355)\n\n"
         "This directory is generated. It is not the public ARTEMIS runtime.\n"
         "Serve it with any static HTTP server, for example:\n\n"
         f"  python -m http.server 8080 --directory {output}\n\n"
         "Then open http://127.0.0.1:8080/ in a browser.\n"
         "Network access is required only to load the pinned MapLibre GL JS engine from unpkg.\n"
         "The default Earth context/terrain fixtures are synthetic and local.\n"
-        "The source-aware inspector resolves only reviewed package references and copied source locators.\n",
+        "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
+        "Its Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
+        "The inspector resolves only package-derived canonical references, sources, locators and uncertainty.\n",
         encoding="utf-8",
     )
 
@@ -509,10 +549,16 @@ def main() -> int:
         default=ROOT / "build" / "globe-spike",
         help="generated artifact directory (default: build/globe-spike)",
     )
+    parser.add_argument(
+        "--dataset",
+        choices=sorted(DATASET_CHOICES),
+        default=DEFAULT_DATASET,
+        help="semantic input package (default: frozen Leonardo Gate C package)",
+    )
     args = parser.parse_args()
 
     try:
-        metadata = build_spike(args.output.resolve())
+        metadata = build_spike(args.output.resolve(), dataset=args.dataset)
         print(
             "[PASS] Globe runtime spike build: "
             f"engine={metadata['engine_id']}; "

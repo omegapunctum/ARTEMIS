@@ -22,7 +22,7 @@
 
       <div id="globe-controls" role="group" aria-label="Globe controls">
         <button id="view-global" type="button">Global</button>
-        <button id="view-basin" type="button">Fixture Basin</button>
+        <button id="view-slice" type="button">World Slice</button>
         <button id="toggle-alternatives" type="button" aria-pressed="true">Alternatives: on</button>
       </div>
 
@@ -75,7 +75,7 @@
 
       <section class="boundary-note">
         <h2>Boundary</h2>
-        <p>Earth surface and graticule are synthetic context. The current package is a reviewed synthetic contract fixture, not a historical corpus. No real terrain, satellite imagery, historical coastline or provider token is used by default.</p>
+        <p id="boundary-status">Loading semantic and renderer boundary…</p>
       </section>
     </aside>
   </main>
@@ -87,7 +87,7 @@
   <script>
     (() => {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('view') !== 'basin') return;
+      if (params.get('view') !== 'slice') return;
 
       let attempts = 0;
       const timer = window.setInterval(() => {
@@ -97,16 +97,11 @@
           map
           && typeof map.getLayer === 'function'
           && map.getLayer('artemis-region-primary-fill')
-          && typeof map.jumpTo === 'function'
+          && typeof window.__ARTEMIS_GLOBE_SPIKE?.focusSlice === 'function'
         ) {
           window.clearInterval(timer);
-          map.jumpTo({
-            center: [10.5, 50.0],
-            zoom: 3.2,
-            pitch: 0,
-            bearing: 0
-          });
-          document.documentElement.dataset.artemisCamera = 'fixture-basin';
+          window.__ARTEMIS_GLOBE_SPIKE.focusSlice();
+          document.documentElement.dataset.artemisCamera = 'world-slice';
           return;
         }
         if (attempts >= 150) window.clearInterval(timer);
