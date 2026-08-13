@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import itertools
 import json
 import shutil
 import sys
@@ -46,6 +47,7 @@ REQUIRED_OUTPUT_FILES = {
     "projection.json",
     "globe-projection.json",
     "explorer-state.json",
+    "explorer-views.json",
     "geospatial-assets.json",
     "synthetic-earth-context.geojson",
     "capability-path.geojson",
@@ -54,6 +56,75 @@ REQUIRED_OUTPUT_FILES = {
     "build-meta.json",
     "README.txt",
 }
+
+LEONARDO_TEMPORAL_PRESETS = (
+    {
+        "preset_id": "full-slice",
+        "label": "Full review interval · 8 Aug–31 Dec 1502",
+        "temporal_selection": {
+            "mode": "interval",
+            "start": "1502-08-08",
+            "end": "1502-12-31",
+            "precision": "day",
+            "calendar": "proleptic_gregorian",
+        },
+    },
+    {
+        "preset_id": "rimini-1502-08-08",
+        "label": "Rimini source date · 8 Aug 1502",
+        "temporal_selection": {
+            "mode": "instant",
+            "start": "1502-08-08",
+            "end": "1502-08-08",
+            "precision": "day",
+            "calendar": "proleptic_gregorian",
+        },
+    },
+    {
+        "preset_id": "cesena-1502-08-10",
+        "label": "Cesena source date · 10 Aug 1502",
+        "temporal_selection": {
+            "mode": "instant",
+            "start": "1502-08-10",
+            "end": "1502-08-10",
+            "precision": "day",
+            "calendar": "proleptic_gregorian",
+        },
+    },
+    {
+        "preset_id": "patent-1502-08-18",
+        "label": "Borgia patent source date · 18 Aug 1502",
+        "temporal_selection": {
+            "mode": "instant",
+            "start": "1502-08-18",
+            "end": "1502-08-18",
+            "precision": "day",
+            "calendar": "proleptic_gregorian",
+        },
+    },
+    {
+        "preset_id": "cesenatico-1502-09-06",
+        "label": "Cesenatico source date · 6 Sep 1502",
+        "temporal_selection": {
+            "mode": "instant",
+            "start": "1502-09-06",
+            "end": "1502-09-06",
+            "precision": "day",
+            "calendar": "proleptic_gregorian",
+        },
+    },
+    {
+        "preset_id": "imola-autumn-1502",
+        "label": "Imola source interval · Sep–Nov 1502",
+        "temporal_selection": {
+            "mode": "interval",
+            "start": "1502-09",
+            "end": "1502-11",
+            "precision": "month",
+            "calendar": "proleptic_gregorian",
+        },
+    },
+)
 
 
 class SpikeBuildError(ValueError):
@@ -383,8 +454,108 @@ def _copy_local_sources(
     return copied
 
 
+def _layer_subsets(layer_refs: list[str]) -> list[list[str]]:
+    """Return every deterministic visibility combination for precomputed views."""
+
+    return [
+        list(combination)
+        for size in range(len(layer_refs) + 1)
+        for combination in itertools.combinations(layer_refs, size)
+    ]
+
+
+def _build_explorer_views(
+    *,
+    world: dict[str, Any],
+    base_state: dict[str, Any],
+    projection_schema: dict[str, Any],
+    dataset: str,
+) -> dict[str, Any]:
+    """Precompute semantic views so the renderer never reinterprets time/layers."""
+
+    layer_options = [
+        {"layer_ref": layer["id"], "label": layer.get("label") or layer["id"]}
+        for layer in world.get("layers", [])
+    ]
+    layer_refs = [option["layer_ref"] for option in layer_options]
+    temporal_presets = (
+        copy.deepcopy(list(LEONARDO_TEMPORAL_PRESETS))
+        if dataset == DEFAULT_DATASET
+        else [
+            {
+                "preset_id": "fixture-selection",
+                "label": "Contract fixture selection",
+                "temporal_selection": copy.deepcopy(
+                    base_state["temporal_selection"]
+                ),
+            }
+        ]
+    )
+    subsets = _layer_subsets(layer_refs)
+    all_layers = sorted(layer_refs)
+    views: list[dict[str, Any]] = []
+    default_view_id: str | None = None
+
+    for preset in temporal_presets:
+        for active_layers in subsets:
+            state = copy.deepcopy(base_state)
+            sorted_layers = sorted(active_layers)
+            layer_mask = "".join(
+                "1" if layer_ref in sorted_layers else "0"
+                for layer_ref in layer_refs
+            )
+            view_id = f"explorer-view-{preset['preset_id']}-layers-{layer_mask}"
+            state["temporal_selection"] = copy.deepcopy(
+                preset["temporal_selection"]
+            )
+            state["active_layer_refs"] = sorted_layers
+            if not (
+                preset["preset_id"] == temporal_presets[0]["preset_id"]
+                and sorted_layers == all_layers
+            ):
+                state["state_id"] = f"{base_state['state_id']}--{preset['preset_id']}--{layer_mask}"
+
+            projection, _maplibre, globe = build_all(
+                world, state, projection_schema
+            )
+            if dataset == DEFAULT_DATASET and (
+                projection.get("geometries") or globe.get("primitives")
+            ):
+                raise SpikeBuildError(
+                    "precomputed Gate D views must preserve withheld geometry"
+                )
+            views.append(
+                {
+                    "view_id": view_id,
+                    "temporal_preset_id": preset["preset_id"],
+                    "active_layer_refs": sorted_layers,
+                    "state": state,
+                    "projection": projection,
+                    "globe": globe,
+                }
+            )
+            if (
+                preset["preset_id"] == temporal_presets[0]["preset_id"]
+                and sorted_layers == all_layers
+            ):
+                default_view_id = view_id
+
+    if default_view_id is None:
+        raise SpikeBuildError("explorer view index has no default view")
+    return {
+        "schema_version": "1.0.0",
+        "index_id": f"explorer-view-index:{base_state['state_id']}",
+        "default_view_id": default_view_id,
+        "temporal_presets": temporal_presets,
+        "layer_options": layer_options,
+        "views": sorted(views, key=lambda value: value["view_id"]),
+    }
+
+
 def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, Any]:
     world, state, source_root = _load_semantic_inputs(dataset)
+    state = copy.deepcopy(state)
+    state["active_layer_refs"] = sorted(state.get("active_layer_refs") or [])
     projection_schema = _load(PROJECTION_SCHEMA_PATH)
     asset_manifest = _load(ASSET_MANIFEST_PATH)
     asset_schema = _load(ASSET_SCHEMA_PATH)
@@ -401,6 +572,12 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
 
     projection, _maplibre_adapter, globe_adapter = build_all(
         world, state, projection_schema
+    )
+    explorer_views = _build_explorer_views(
+        world=world,
+        base_state=state,
+        projection_schema=projection_schema,
+        dataset=dataset,
     )
 
     if "Relation" not in projection.get("deferred_object_types", []):
@@ -452,6 +629,21 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
             raise SpikeBuildError("Gate C Region alternatives must remain unresolved")
 
     knowledge_index = _build_knowledge_index(world, projection)
+    knowledge_item_ids = {
+        record["item_id"] for record in knowledge_index["records"]
+    }
+    missing_view_records = sorted(
+        {
+            item["item_id"]
+            for view in explorer_views["views"]
+            for item in view["projection"].get("items", [])
+        }
+        - knowledge_item_ids
+    )
+    if missing_view_records:
+        raise SpikeBuildError(
+            f"precomputed views escape master knowledge closure: {missing_view_records}"
+        )
 
     if output.exists():
         shutil.rmtree(output)
@@ -464,6 +656,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
     _write_json(output / "projection.json", projection)
     _write_json(output / "globe-projection.json", globe_adapter)
     _write_json(output / "explorer-state.json", state)
+    _write_json(output / "explorer-views.json", explorer_views)
     _write_json(output / "geospatial-assets.json", asset_manifest)
     _write_json(output / "synthetic-earth-context.geojson", earth_context)
     _write_json(output / "capability-path.geojson", capability_path)
@@ -486,6 +679,8 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
         "semantic_item_count": len(projection.get("items", [])),
         "globe_primitive_count": len(globe_adapter.get("primitives", [])),
         "knowledge_record_count": len(knowledge_index["records"]),
+        "explorer_view_count": len(explorer_views["views"]),
+        "temporal_preset_count": len(explorer_views["temporal_presets"]),
         "unresolved_item_count": len(
             [item for item in projection.get("items", []) if item.get("spatial_status") == "unresolved"]
         ),
@@ -516,6 +711,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
             "neutral_projection": _sha(projection),
             "globe_projection": _sha(globe_adapter),
             "knowledge_index": _sha(knowledge_index),
+            "explorer_views": _sha(explorer_views),
         },
     }
     _write_json(output / "build-meta.json", metadata)
@@ -530,6 +726,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
         "The default Earth context/terrain fixtures are synthetic and local.\n"
         "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
         "Its Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
+        "Time/layer controls switch only among precomputed Explorer State and Render Projection packages.\n"
         "The inspector resolves only package-derived canonical references, sources, locators and uncertainty.\n",
         encoding="utf-8",
     )

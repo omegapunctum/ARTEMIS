@@ -73,6 +73,7 @@ jobs:
           sleep 1
           curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS Globe R&D Spike"
           curl -fsS http://127.0.0.1:8123/build-meta.json | python -m json.tool >/dev/null
+          curl -fsS http://127.0.0.1:8123/explorer-views.json | python -m json.tool >/dev/null
           curl -fsS http://127.0.0.1:8123/knowledge-index.json | python -m json.tool >/dev/null
           curl -fsS http://127.0.0.1:8123/knowledge-index.json | grep -F "Printed p. 16"
 
@@ -142,10 +143,33 @@ jobs:
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
             --screenshot=/tmp/artemis-globe-browser.png \
-            'http://127.0.0.1:8124/?view=slice' \
+            'http://127.0.0.1:8124/?view=slice&time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey' \
             >/tmp/artemis-globe-screenshot.log \
             2>&1
           test -s /tmp/artemis-globe-browser.png
+
+          timeout 45s "$BROWSER" \
+            --headless=new \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader \
+            --run-all-compositor-stages-before-draw \
+            --virtual-time-budget=10000 \
+            --dump-dom \
+            'http://127.0.0.1:8124/?time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey' \
+            >/tmp/artemis-globe-interaction-dom.html \
+            2>/tmp/artemis-globe-interaction-browser.log
+          if grep -Fq "ARTEMIS Globe spike failed:" /tmp/artemis-globe-interaction-dom.html; then
+            cat /tmp/artemis-globe-interaction-dom.html >&2
+            cat /tmp/artemis-globe-interaction-browser.log >&2 || true
+            exit 1
+          fi
+          grep -F 'data-artemis-temporal-preset="cesena-1502-08-10"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-layer-count="2"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'event-leonardo-cesena-survey' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'Cesena source date' /tmp/artemis-globe-interaction-dom.html
 
       - name: Upload generated Globe artifact
         uses: actions/upload-artifact@v4
