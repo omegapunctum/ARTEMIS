@@ -56,8 +56,8 @@ Active work is issue `#355`: Gate D builds the first source-aware Globe experien
 - keep #331 `DEFERRED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is explicitly reopened and accepted;
 - keep #371/#373 deferred and the nine Airtable World Model tables empty; the merged mapping preflight does not authorize historical writes;
 - use one World Model → Explorer State → Render Projection path for both 2D and Globe;
-- keep the current root 2D MapLibre runtime as the default public baseline and rollback path;
-- allow only the explicitly authorized generated `/globe/` public R&D preview; do not describe it as product-ready or create another Globe route;
+- keep the current root 2D MapLibre runtime as the public baseline and rollback path;
+- keep Globe artifacts non-public until a separate promotion decision;
 - use MapLibre as the leading MVP engine unless measured evidence justifies a Cesium comparison;
 - do not create a framework/backend/repository rewrite without a demonstrated blocker;
 - security, compatibility and critical maintenance remain allowed.

@@ -216,7 +216,7 @@ A reviewed executable contract cannot be changed merely to make identity-level w
 - Architecture Atlas is a thematic layer;
 - AI is future/source-bound, not Source and not a silent canonical writer;
 - future AI view/query actions must be visible, reversible and separate from knowledge mutation;
-- the bounded Globe MVP may be an active and publicly reviewable interface surface without becoming a second semantic core or a product-readiness claim;
+- the bounded Globe MVP may be an active interface surface without becoming a second semantic core or a public capability claim;
 - personal knowledge context is future/private and not current canonical entity scope;
 - VR/AR and production-scale dynamic Earth remain future surfaces;
 - attractor guides architecture but does not authorize implementation scope;
@@ -235,7 +235,7 @@ Completed product gate:
 
 Active product gate:
 
-3. Gate D — source-aware Globe experience. It is **in progress** under #355; `/globe/` is an explicitly labelled public R&D review preview over the frozen Gate C package, not a Gate D exit or product promotion.
+3. Gate D — source-aware Globe experience. It is **in progress** under #355 as a non-public contour over the frozen Gate C package.
 
 Foundation status:
 

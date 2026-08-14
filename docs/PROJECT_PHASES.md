@@ -1,4 +1,4 @@
-# ARTEMIS — PROJECT PHASES v6.8
+# ARTEMIS — PROJECT PHASES v6.7
 
 ## Статус
 
@@ -8,7 +8,7 @@
 - Active primary issue: **#355**.
 - Completed Gate C delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
 - Completed recovery foundation: **#344 / PR #351**.
-- Public runtime: 2D MapLibre remains default/rollback; generated `/globe/` is available as a labelled R&D review preview.
+- Public runtime: unchanged 2D MapLibre baseline.
 
 Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`; активное решение принадлежит `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
@@ -105,7 +105,7 @@ Deferred:
 ### Gate E — Evidence and decision
 
 - deferred until Gate D exit evidence exists; issue #334 is not active during Gate D;
-- provide a reproducible review artifact; public `/globe/` access is allowed only with explicit R&D/candidate labeling;
+- provide a reproducible non-public preview/review artifact;
 - compare against the current 2D same-content baseline where useful;
 - test contextual understanding and semantic literacy rather than visual novelty alone;
 - record one result: continue generated R&D, promote to maintained experimental app, narrow/rework, or stop/rethink.
@@ -124,14 +124,14 @@ Accepted executable foundations:
 - #344 / PR #351 — cross-renderer semantic parity;
 - #345 / PR #352 — repository/runtime/CI boundary.
 
-The generated Globe spike remains R&D evidence. Its `/globe/` review route is publicly reachable, but it is still the implementation seed for #355 rather than a product-ready surface.
+The generated Globe spike remains R&D evidence. It is the implementation seed for #355, not a public product surface.
 
 ## Current repository/runtime boundary
 
-Until Gate E and a later product promotion explicitly advance the Globe:
+Until Gate E explicitly promotes the Globe:
 
-- root `index.html` remains the default public Pages app and rollback path;
-- generated Globe artifacts remain disposable; `/globe/` is the only authorized public R&D preview route;
+- root `index.html` remains the only public Pages app;
+- generated Globe artifacts stay non-public and disposable;
 - public MapLibre 4.7.1 remains unchanged;
 - the Globe spike may pin MapLibre 5.24.0 in isolation;
 - an `apps/globe/` move requires a separate maintained-application decision;

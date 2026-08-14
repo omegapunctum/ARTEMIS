@@ -9,6 +9,9 @@ MASTER = ROOT / "docs" / "ARTEMIS_MASTER_PROMPT.md"
 SCOPE = ROOT / "docs" / "ARTEMIS_PRODUCT_SCOPE.md"
 WORK_REGISTRY = ROOT / "docs" / "work" / "README.md"
 DECISION = ROOT / "docs" / "work" / "2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md"
+PUBLIC_REVIEW_DECISION = (
+    ROOT / "docs" / "work" / "2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md"
+)
 WORLD_SLICE_SCOPE = ROOT / "docs" / "work" / "2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md"
 
 
@@ -63,15 +66,14 @@ def test_relation_semantics_are_deferred_but_fail_closed() -> None:
 
 def test_globe_is_primary_development_surface_with_bounded_public_review_only() -> None:
     priorities = _text(PRIORITIES)
-    truth = _text(TRUTH)
-    scope = _text(SCOPE)
     decision = _text(DECISION)
+    public_review = _text(PUBLIC_REVIEW_DECISION)
 
     assert "Globe is the primary interface-development surface" in priorities
-    assert "public R&D preview" in truth
-    assert "не является product-ready Globe" in truth
-    assert "bounded public R&D preview" in scope
     assert "labelled generated R&D review preview" in decision
+    assert "publish the generated Globe" in public_review
+    assert "experimental R&D, not a product-ready capability" in public_review
+    assert "The root 2D Architecture Atlas remains the default and rollback entrypoint" in public_review
 
 
 def test_one_semantic_core_and_2d_rollback_are_preserved() -> None:

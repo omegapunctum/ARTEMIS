@@ -85,8 +85,8 @@ The Concept-level clarification is compatible with the existing v1.0 contract be
 
 Current implementation remains unchanged:
 
-- public default runtime: root 2D Architecture Atlas baseline and rollback entrypoint;
-- Globe: explicitly authorized public R&D preview at `/globe/`, not a promoted product capability;
+- public runtime: root 2D Architecture Atlas baseline;
+- Globe: non-public R&D/MVP surface;
 - Gate C: completed/FREEZE;
 - Gate D: next product gate, not started here;
 - AI generation/runtime: gated;

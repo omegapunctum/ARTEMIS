@@ -1,4 +1,4 @@
-# ARTEMIS — PRIORITIES v6.9
+# ARTEMIS — PRIORITIES v6.8
 
 ## Статус
 
@@ -7,7 +7,7 @@
 - Active cycle: Globe MVP.
 - Active primary issue: GitHub issue `#355`.
 - Completed recovery foundation: issue `#344` / PR `#351`.
-- Current public baseline: root 2D MapLibre runtime plus a separate labelled `/globe/` R&D review preview; no product-ready Globe promotion is implied.
+- Current public baseline: root 2D MapLibre runtime; no public Globe promotion is implied.
 
 The active product decision is recorded in `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
@@ -76,7 +76,7 @@ Completed Gate D increments:
 - PR #382 provides pinned bundled Natural Earth 1:110m Land `present_day_context` plus provenance, attribution, temporal-role, licensing, cache and secret policy while terrain remains synthetic/non-live;
 - PR #383 provides desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes; all six triggered workflows passed;
 - PR #385 replaces premature virtual-time screenshots with same-page wall-clock CDP capture, requires non-zero loaded/rendered Natural Earth features and restores legible hosted desktop/tablet/mobile Earth context; all six triggered workflows passed;
-- the generated artifact remains Gate D R&D evidence; a public review preview is authorized without closing Gate D.
+- the generated artifact remains non-public and Gate D remains open.
 
 Remaining Gate D work:
 
@@ -97,7 +97,7 @@ MapLibre GL JS remains the leading MVP engine. CesiumJS comparison requires a me
 
 Before Gate D exit:
 
-- preserve the reproducible generated review artifact from PRs #379–#385 and its bounded `/globe/` public review deployment;
+- preserve the reproducible non-public generated review artifact from PRs #379–#385;
 - verify semantic parity on the bounded frozen corpus;
 - collect real-device/browser, accessibility and performance evidence;
 - preserve the completed #382 provider availability/licensing/attribution/cache/security boundary and evaluate any future live provider separately;
@@ -137,7 +137,7 @@ PR #354 attempted to close the lifecycle but merged only a workflow change and a
 - mutable ResearchSlice v2 backend compatibility;
 - fail-closed Pages API configuration.
 
-These assets and the public review URL do not prove a product-ready Globe, historical terrain coverage, a READY Foundation v3 corpus or user value.
+These assets do not prove a public Globe, historical terrain coverage, a real Foundation v3 corpus or user value.
 
 ## Deferred and frozen work
 
@@ -151,7 +151,7 @@ Frozen:
 
 - generative AI;
 - automatic causal/counterfactual engine;
-- product-ready/default Globe promotion before Gate D/Gate E evidence; the labelled R&D preview is allowed;
+- public production Globe before promotion evidence;
 - universal or photorealistic historical terrain reconstruction;
 - VR/AR;
 - universal corpus;

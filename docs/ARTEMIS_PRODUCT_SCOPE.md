@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.4.
-- Дата: 2026-08-14.
+- Версия: 3.3.
+- Дата: 2026-08-12.
 - Active vertical: `Life in Context` Globe MVP / issue `#355`.
-- Current gate: Gate D `Source-aware Globe experience` — `in_progress`; a bounded public R&D preview is available at `/globe/`, without product promotion.
+- Current gate: Gate D `Source-aware Globe experience` — `in_progress`, non-public.
 - Thematic baseline retained: `Architecture Atlas`.
 - North Star: `ARTEMIS_CONCEPT.md`.
 - Current reality: `PROJECT_TRUTH.md`.
