@@ -187,8 +187,17 @@ async function main() {
     throw error;
   } finally {
     cdp?.close();
-    if (browser.exitCode === null) browser.kill('SIGTERM');
-    await rm(profileDirectory, { recursive: true, force: true });
+    if (browser.exitCode === null) {
+      const browserExited = new Promise((resolve) => browser.once('exit', resolve));
+      browser.kill('SIGTERM');
+      await Promise.race([browserExited, delay(2000)]);
+    }
+    await rm(profileDirectory, {
+      recursive: true,
+      force: true,
+      maxRetries: 5,
+      retryDelay: 100
+    });
   }
 }
 
