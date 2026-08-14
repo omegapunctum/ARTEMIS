@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-07-26-v13-runtime-capabilities';
+const CACHE_VERSION = '2026-08-14-v14-mobile-status-dismiss';
 const STATIC_CACHE = `artemis-static-${CACHE_VERSION}`;
 const DATA_CACHE = `artemis-data-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `artemis-runtime-${CACHE_VERSION}`;

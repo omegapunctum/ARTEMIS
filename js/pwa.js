@@ -1,5 +1,7 @@
 import { clearError, setOfflineState, showSystemMessage, notifyConnectivityState } from './ux.js';
 
+const INSTALL_HINT_DISMISSED_SESSION_KEY = 'artemis_install_hint_dismissed';
+
 let deferredPrompt = null;
 let installDismissed = false;
 let updateDismissed = false;
@@ -45,16 +47,16 @@ function setupInstallPrompt() {
     showSystemMessage('ARTEMIS installed', { variant: 'success' });
   });
 
-  if (!supportsInstallPrompt() && shouldShowIosInstallHint()) {
+  if (!supportsInstallPrompt() && shouldShowIosInstallHint() && !isInstallHintDismissed()) {
     window.setTimeout(() => {
-      if (!iosFallbackShown && !isStandaloneMode()) {
+      if (!iosFallbackShown && !isStandaloneMode() && !isInstallHintDismissed()) {
         iosFallbackShown = true;
         showBanner({
           key: 'install-hint',
           variant: 'info',
-          message: 'Add to Home Screen may be available in your browser menu',
+          message: 'Добавление на главный экран доступно в меню браузера',
           actions: [
-            { label: 'Dismiss', onClick: () => removeBanner('install-hint') }
+            { label: 'Закрыть', onClick: dismissInstallHint }
           ]
         });
       }
@@ -271,6 +273,23 @@ function removeBanner(key) {
   const banner = host?.querySelector(`[data-banner-key="${key}"]`);
   if (banner) banner.remove();
   if (activeBannerKey === key) activeBannerKey = '';
+}
+
+function dismissInstallHint() {
+  try {
+    window.sessionStorage.setItem(INSTALL_HINT_DISMISSED_SESSION_KEY, '1');
+  } catch (_error) {
+    // Storage can be unavailable in private/restricted browsing; dismissal still works in-page.
+  }
+  removeBanner('install-hint');
+}
+
+function isInstallHintDismissed() {
+  try {
+    return window.sessionStorage.getItem(INSTALL_HINT_DISMISSED_SESSION_KEY) === '1';
+  } catch (_error) {
+    return false;
+  }
 }
 
 function isStandaloneMode() {

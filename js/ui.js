@@ -4178,7 +4178,7 @@ function updateResearchContextBar(elements, state) {
 function updateStatus(elements, state, map) {
   if (!elements.statusMessage) return;
   if (!isDebugTelemetryMode()) {
-    elements.statusMessage.textContent = 'Карта готова';
+    elements.statusMessage.textContent = '';
     return;
   }
   const diagnostics = getMapBuildDiagnostics(map);

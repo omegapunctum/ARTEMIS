@@ -374,6 +374,7 @@
 
     initPWA();
 
+    const statusPanel = document.getElementById('status');
     const statusMessage = document.getElementById('status-message');
     const statusError = document.getElementById('status-error');
     const statusLoading = document.getElementById('status-loading');
@@ -403,10 +404,11 @@
     })();
 
     // Обновляет строку состояния приложения без лишнего шума.
-    function setStatus(message, { error = false, loading = true } = {}) {
-      const statusKey = `${message}|${error ? '1' : '0'}|${loading ? '1' : '0'}`;
+    function setStatus(message, { error = false, loading = true, visible = true } = {}) {
+      const statusKey = `${message}|${error ? '1' : '0'}|${loading ? '1' : '0'}|${visible ? '1' : '0'}`;
       if (statusKey === lastRuntimeStatusKey) return;
       lastRuntimeStatusKey = statusKey;
+      if (statusPanel) statusPanel.hidden = !visible;
       statusMessage.textContent = message;
       statusLoading.hidden = !loading;
       statusError.hidden = !error;
@@ -423,7 +425,10 @@
       const appReady = runtimeReadiness.dataReady && runtimeReadiness.mapReady && runtimeReadiness.uiReady;
       if (appReady) {
         hideGlobalDataLoading();
-        setStatus('Карта готова', { loading: false });
+        setStatus(DEBUG_TELEMETRY_STATUS ? runtimeReadiness.readyMessage : '', {
+          loading: false,
+          visible: DEBUG_TELEMETRY_STATUS
+        });
         return;
       }
       const loadingMessage = runtimeReadiness.dataReady ? 'Загрузка карты...' : 'Загрузка данных...';
