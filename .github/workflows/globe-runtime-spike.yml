@@ -16,6 +16,7 @@ on:
       - "tests/test_globe_runtime_spike.py"
       - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
       - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
+      - "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md"
       - ".github/workflows/globe-runtime-spike.yml"
       - "requirements.txt"
   pull_request:
@@ -33,6 +34,7 @@ on:
       - "tests/test_globe_runtime_spike.py"
       - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
       - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
+      - "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md"
       - ".github/workflows/globe-runtime-spike.yml"
       - "requirements.txt"
 
@@ -91,72 +93,158 @@ jobs:
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           sleep 1
 
+          COMMON_BROWSER_ARGS=(
+            --headless=new
+            --no-sandbox
+            --disable-dev-shm-usage
+            --use-gl=angle
+            --use-angle=swiftshader
+            --enable-unsafe-swiftshader
+            --run-all-compositor-stages-before-draw
+          )
+          PROFILE_SPECS=(
+            "desktop:1440:900:desktop:false"
+            "tablet:1024:768:tablet:false"
+            "mobile:390:844:mobile:true"
+          )
+          PROFILE_URL='http://127.0.0.1:8124/?view=slice&time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey'
+
+          for SPEC in "${PROFILE_SPECS[@]}"; do
+            IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"
+            EXTRA_ARGS=()
+            if [ "$REDUCED_MOTION" = "true" ]; then
+              EXTRA_ARGS+=(--force-prefers-reduced-motion=reduce)
+            fi
+
+            timeout 45s "$BROWSER" \
+              "${COMMON_BROWSER_ARGS[@]}" \
+              "${EXTRA_ARGS[@]}" \
+              --virtual-time-budget=15000 \
+              --window-size="$WIDTH,$HEIGHT" \
+              --dump-dom \
+              "$PROFILE_URL" \
+              > "/tmp/artemis-globe-browser-$PROFILE-dom.html" \
+              2> "/tmp/artemis-globe-browser-$PROFILE.log"
+
+            if grep -Fq "ARTEMIS Globe spike failed:" "/tmp/artemis-globe-browser-$PROFILE-dom.html"; then
+              cat "/tmp/artemis-globe-browser-$PROFILE-dom.html" >&2
+              cat "/tmp/artemis-globe-browser-$PROFILE.log" >&2 || true
+              exit 1
+            fi
+
+            # These values are injected only after MapLibre's map `load` handler.
+            grep -F 'data-artemis-runtime-ready="true"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "data-artemis-viewport-profile=\"$PROFILE\"" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "data-artemis-layout-mode=\"$LAYOUT\"" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "data-artemis-viewport-width=\"$WIDTH\"" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "data-artemis-viewport-height=\"$HEIGHT\"" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "data-artemis-reduced-motion=\"$REDUCED_MOTION\"" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F 'data-artemis-horizontal-overflow="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F 'data-artemis-unnamed-control-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F 'data-artemis-undersized-target-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "world-slice-leonardo-romagna-1502-v1" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "engine: MapLibre GL JS" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F "maplibregl-canvas" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+
+            timeout 45s "$BROWSER" \
+              "${COMMON_BROWSER_ARGS[@]}" \
+              "${EXTRA_ARGS[@]}" \
+              --virtual-time-budget=10000 \
+              --window-size="$WIDTH,$HEIGHT" \
+              --screenshot="/tmp/artemis-globe-browser-$PROFILE.png" \
+              "$PROFILE_URL" \
+              > "/tmp/artemis-globe-browser-$PROFILE-screenshot.log" \
+              2>&1
+            test -s "/tmp/artemis-globe-browser-$PROFILE.png"
+          done
+
+          # Turn the three DOM probes into one machine-readable evidence artifact.
+          # Timing remains diagnostic: virtual-time headless scheduling is not a SLO.
+          python - <<'PY'
+          import json
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          artifact = Path("/tmp/artemis-globe-spike")
+          contract = json.loads((artifact / "acceptance-profiles.json").read_text())
+          thresholds = contract["thresholds"]
+
+          class RootAttributes(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.attributes = None
+
+              def handle_starttag(self, tag, attrs):
+                  if tag == "html" and self.attributes is None:
+                      self.attributes = dict(attrs)
+
+          results = []
+          for expected in contract["profiles"]:
+              profile_id = expected["profile_id"]
+              parser = RootAttributes()
+              parser.feed(Path(f"/tmp/artemis-globe-browser-{profile_id}-dom.html").read_text())
+              attrs = parser.attributes or {}
+
+              def value(name):
+                  return attrs[f"data-artemis-{name}"]
+
+              actual = {
+                  "profile_id": value("viewport-profile"),
+                  "layout_mode": value("layout-mode"),
+                  "viewport_css_px": {
+                      "width": int(value("viewport-width")),
+                      "height": int(value("viewport-height")),
+                  },
+                  "prefers_reduced_motion": value("reduced-motion") == "true",
+                  "horizontal_overflow_css_px": int(value("horizontal-overflow")),
+                  "unnamed_interactive_control_count": int(value("unnamed-control-count")),
+                  "undersized_target_count": int(value("undersized-target-count")),
+                  "globe_css_px": {
+                      "width": int(value("globe-width")),
+                      "height": int(value("globe-height")),
+                  },
+                  "diagnostic_startup_to_idle_ms": value("startup-to-idle-ms"),
+                  "diagnostic_average_frame_ms": value("average-frame-ms"),
+              }
+              assert actual["profile_id"] == profile_id
+              assert actual["layout_mode"] == expected["expected_layout_mode"]
+              assert actual["viewport_css_px"] == expected["viewport_css_px"]
+              assert actual["prefers_reduced_motion"] is expected["prefers_reduced_motion"]
+              assert actual["horizontal_overflow_css_px"] <= thresholds["max_horizontal_overflow_css_px"]
+              assert actual["unnamed_interactive_control_count"] <= thresholds["max_unnamed_interactive_controls"]
+              assert actual["undersized_target_count"] == 0
+              assert actual["globe_css_px"]["width"] >= thresholds["min_globe_width_css_px"]
+              assert actual["globe_css_px"]["height"] >= thresholds["min_globe_height_css_px"]
+              results.append(actual)
+
+          evidence = {
+              "schema_version": "1.0.0",
+              "evidence_scope": contract["evidence_scope"],
+              "browser_engine": "hosted-runner Chrome/Chromium with SwiftShader",
+              "checks": results,
+              "limitations": contract["limitations"],
+          }
+          Path("/tmp/artemis-globe-browser-evidence.json").write_text(
+              json.dumps(evidence, indent=2) + "\n"
+          )
+          PY
+
+          # Preserve the original semantic and source-chain smoke assertions on the
+          # desktop profile while the new profile loop checks layout/accessibility.
+          DESKTOP_DOM=/tmp/artemis-globe-browser-desktop-dom.html
+          grep -F "explorer-state-leonardo-romagna-1502-gate-d" "$DESKTOP_DOM"
+          grep -F "uncertainty-trajectory-route-gaps" "$DESKTOP_DOM"
+          grep -F "Manuscript L folio 78r" "$DESKTOP_DOM"
+          grep -F "Cronologia vinciana" "$DESKTOP_DOM"
+          grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" "$DESKTOP_DOM"
+          grep -F "Terrain: capability path ready" "$DESKTOP_DOM"
+          grep -F 'id="startup-ms"' "$DESKTOP_DOM"
+          grep -F 'id="frame-sample"' "$DESKTOP_DOM"
+
           timeout 45s "$BROWSER" \
-            --headless=new \
-            --no-sandbox \
-            --disable-dev-shm-usage \
-            --use-gl=angle \
-            --use-angle=swiftshader \
-            --enable-unsafe-swiftshader \
-            --run-all-compositor-stages-before-draw \
-            --virtual-time-budget=15000 \
-            --dump-dom \
-            http://127.0.0.1:8124/ \
-            > /tmp/artemis-globe-dom.html \
-            2> /tmp/artemis-globe-browser.log
-
-          if grep -Fq "ARTEMIS Globe spike failed:" /tmp/artemis-globe-dom.html; then
-            cat /tmp/artemis-globe-dom.html >&2
-            cat /tmp/artemis-globe-browser.log >&2 || true
-            exit 1
-          fi
-
-          # These values are injected dynamically by runtime.js. Terrain status is
-          # set only inside MapLibre's map `load` handler, so it proves the browser
-          # executed the pinned engine and loaded the globe style/layers.
-          grep -F "world-slice-leonardo-romagna-1502-v1" /tmp/artemis-globe-dom.html
-          grep -F "explorer-state-leonardo-romagna-1502-gate-d" /tmp/artemis-globe-dom.html
-          grep -F "uncertainty-trajectory-route-gaps" /tmp/artemis-globe-dom.html
-          grep -F "Manuscript L folio 78r" /tmp/artemis-globe-dom.html
-          grep -F "Cronologia vinciana" /tmp/artemis-globe-dom.html
-          grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" /tmp/artemis-globe-dom.html
-          grep -F "Terrain: capability path ready" /tmp/artemis-globe-dom.html
-          grep -F "engine: MapLibre GL JS" /tmp/artemis-globe-dom.html
-          grep -F "maplibregl-canvas" /tmp/artemis-globe-dom.html
-
-          # `idle` and rAF timing are diagnostic values for a normal browser. Hosted
-          # headless virtual-time scheduling is not a production performance SLO and
-          # is intentionally not used as a pass/fail condition here.
-          grep -F 'id="startup-ms"' /tmp/artemis-globe-dom.html
-          grep -F 'id="frame-sample"' /tmp/artemis-globe-dom.html
-
-          # Capture renderer-local World Slice camera evidence from a second browser run.
-          # Camera is deliberately outside Explorer State / World Model semantics.
-          timeout 45s "$BROWSER" \
-            --headless=new \
-            --no-sandbox \
-            --disable-dev-shm-usage \
-            --use-gl=angle \
-            --use-angle=swiftshader \
-            --enable-unsafe-swiftshader \
-            --run-all-compositor-stages-before-draw \
+            "${COMMON_BROWSER_ARGS[@]}" \
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
-            --screenshot=/tmp/artemis-globe-browser.png \
-            'http://127.0.0.1:8124/?view=slice&time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey' \
-            >/tmp/artemis-globe-screenshot.log \
-            2>&1
-          test -s /tmp/artemis-globe-browser.png
-
-          timeout 45s "$BROWSER" \
-            --headless=new \
-            --no-sandbox \
-            --disable-dev-shm-usage \
-            --use-gl=angle \
-            --use-angle=swiftshader \
-            --enable-unsafe-swiftshader \
-            --run-all-compositor-stages-before-draw \
-            --virtual-time-budget=10000 \
             --dump-dom \
             'http://127.0.0.1:8124/?time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey' \
             >/tmp/artemis-globe-interaction-dom.html \
@@ -177,6 +265,8 @@ jobs:
           name: artemis-globe-runtime-spike
           path: |
             /tmp/artemis-globe-spike
-            /tmp/artemis-globe-browser.png
+            /tmp/artemis-globe-browser-evidence.json
+            /tmp/artemis-globe-browser-*-dom.html
+            /tmp/artemis-globe-browser-*.png
           if-no-files-found: error
           retention-days: 7

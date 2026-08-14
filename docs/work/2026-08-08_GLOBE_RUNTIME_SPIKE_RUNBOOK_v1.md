@@ -41,6 +41,7 @@ The output directory must contain:
 - `earth-context.geojson` (bundled Natural Earth 1:110m Land v4.0.0 present-day context);
 - `capability-path.geojson`;
 - `engine-evaluation.json`;
+- `acceptance-profiles.json` (pinned desktop/tablet/mobile hosted-browser contract);
 - `knowledge-index.json`;
 - optional `sources/` only when a selected package contains checksum-pinned local source artifacts;
 - `build-meta.json`;
@@ -198,14 +199,15 @@ It must not silently fall back to `data/features.geojson`, `/api/*`, or the curr
 4. static Globe artifact build;
 5. runtime contract tests;
 6. static HTTP serving smoke test;
-7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL;
-8. assertions that the browser DOM contains the Leonardo World Slice/Explorer State, source title + repeatable locator, honest frozen-candidate status, unresolved trajectory uncertainty, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
-9. a second browser execution pinned to the Cesena temporal preset, two active layers and the Cesena canonical item, proving URL-restorable time/layer/selection synchronization;
-10. upload of the generated artifact `artemis-globe-runtime-spike` for inspection.
+7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL at pinned desktop (`1440×900`), tablet (`1024×768`) and mobile (`390×844`) profiles;
+8. layout-mode, horizontal-overflow, globe-size, interactive-control accessible-name, 24 CSS px target-size and mobile reduced-motion assertions defined by `acceptance-profiles.json`;
+9. assertions that the browser DOM contains the Leonardo World Slice/Explorer State, source title + repeatable locator, honest frozen-candidate status, unresolved trajectory uncertainty, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
+10. URL-restorable Cesena temporal preset, two-layer and canonical selection checks;
+11. upload of the generated runtime, three screenshots, DOM snapshots and `artemis-globe-browser-evidence.json` for inspection.
 
-The headless gate proves that the pinned MapLibre engine executes in a browser and reaches its map `load` path with the generated semantic data. It does not replace human visual/interaction review, and it intentionally does not fail on hosted-runner `idle`/rAF timing because those values are not a production SLO.
+The headless gate proves that the pinned MapLibre engine executes in a browser and reaches its map `load` path with the generated semantic data across the three deterministic viewport profiles. It does not replace human visual/interaction review or a complete WCAG audit, and it intentionally does not fail on hosted-runner `idle`/rAF timing because those values are not a production SLO.
 
-Manual browser inspection remains useful for interaction feel, visual legibility and real-device performance evidence.
+Manual browser inspection remains required for interaction feel, visual legibility, assistive-technology review and real-device performance evidence. See `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` for the evidence boundary and remaining Gate D decision work.
 
 The synthetic contract fixture remains available only as a renderer regression input:
 

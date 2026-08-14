@@ -10,6 +10,8 @@ html, body {
 * { box-sizing: border-box; }
 button, input, output { font: inherit; }
 button { cursor: pointer; }
+button { min-width: 24px; min-height: 24px; }
+input[type="range"] { min-height: 24px; }
 
 #app {
   display: grid;
@@ -203,6 +205,13 @@ button { cursor: pointer; }
   #globe-shell { min-height: 55vh; }
   #inspector { height: auto; border-left: 0; border-top: 1px solid #1c2a3d; }
   #attribution-status { max-width: 65%; }
+}
+
+@media (min-width: 821px) and (max-width: 1100px) {
+  #app { grid-template-columns: minmax(0, 1fr) 320px; }
+  #inspector { padding: 14px; }
+  #spike-banner { gap: 10px; }
+  #attribution-status { max-width: 48%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
