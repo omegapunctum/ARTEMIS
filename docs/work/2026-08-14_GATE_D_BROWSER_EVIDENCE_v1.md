@@ -23,7 +23,7 @@ The acceptance contract is versioned at `fixtures/globe_runtime/v1/gate_d_accept
 | tablet | 1024 × 768 CSS px | compact two-column tablet | default | DOM + screenshot |
 | mobile | 500 × 844 CSS px | stacked mobile | forced `reduce` | DOM + screenshot |
 
-Each profile uses one browser process for both DOM and screenshot capture, so the DOM assertions and pixels describe the same runtime. It must reach the MapLibre `load` path and prove:
+Each profile uses one browser process and a dependency-free Chrome DevTools Protocol capture driver for both DOM and screenshot capture. The driver waits on wall-clock MapLibre visual readiness, so the DOM assertions and pixels describe the same runtime. It must reach the MapLibre `load` path and prove:
 
 1. the requested browser-window width and expected layout mode match; the actual CSS viewport is recorded because headless Chrome may reserve browser chrome from the requested outer height;
 2. the globe remains at least 320 × 320 CSS px;
@@ -36,7 +36,7 @@ Each profile uses one browser process for both DOM and screenshot capture, so th
 9. URL-pinned time, layer and selection state remains restorable.
 10. the bundled Earth-context source has loaded and at least one Natural Earth land/coastline feature is queryable in the rendered viewport before the screenshot is accepted.
 
-Startup-to-idle and animation-frame values are retained in the evidence artifact as diagnostics only. They are never pass/fail thresholds under hosted headless virtual-time scheduling.
+Startup-to-idle and animation-frame values are retained in the evidence artifact as diagnostics only. They are never pass/fail thresholds under hosted-runner wall-clock scheduling.
 
 Chrome 150 clamps the hosted headless browser-window width to 500 CSS px. This still exercises the actual mobile breakpoint and stacked layout, but it does not substitute for the required 390 CSS px real-device review.
 

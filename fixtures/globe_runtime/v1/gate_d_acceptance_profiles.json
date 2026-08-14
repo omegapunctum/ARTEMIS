@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "evidence_scope": "hosted_headless_chromium",
   "layout_breakpoints_css_px": {
     "mobile_max_width": 820,
@@ -48,7 +48,7 @@
     "Hosted headless Chromium with SwiftShader is representative browser evidence, not a real-device performance baseline.",
     "Hosted Chrome 150 clamps headless browser-window width to 500 CSS px; narrower 390 CSS px phone coverage remains a real-device review requirement.",
     "DOM-level accessible-name, target-size, overflow, landmark and reduced-motion checks are not a complete WCAG audit.",
-    "Startup and frame metrics are diagnostic only and are not pass/fail thresholds under virtual-time scheduling.",
+    "Startup and frame metrics are diagnostic only and are not pass/fail thresholds under hosted-runner wall-clock scheduling.",
     "Public promotion still requires explicit Gate D exit review; this profile contract does not open Gate E."
   ]
 }

@@ -111,21 +111,18 @@ jobs:
 
           for SPEC in "${PROFILE_SPECS[@]}"; do
             IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"
-            EXTRA_ARGS=()
-            if [ "$REDUCED_MOTION" = "true" ]; then
-              EXTRA_ARGS+=(--force-prefers-reduced-motion=reduce)
-            fi
             RUN_URL="$PROFILE_URL&profile=$PROFILE"
 
-            timeout 45s "$BROWSER" \
-              "${COMMON_BROWSER_ARGS[@]}" \
-              "${EXTRA_ARGS[@]}" \
-              --virtual-time-budget=15000 \
-              --window-size="$WIDTH,$HEIGHT" \
-              --dump-dom \
-              --screenshot="/tmp/artemis-globe-browser-$PROFILE.png" \
-              "$RUN_URL" \
-              > "/tmp/artemis-globe-browser-$PROFILE-dom.html" \
+            timeout 45s node scripts/capture_globe_browser_evidence.mjs \
+              --browser "$BROWSER" \
+              --url "$RUN_URL" \
+              --width "$WIDTH" \
+              --height "$HEIGHT" \
+              --reduced-motion "$REDUCED_MOTION" \
+              --timeout-ms 30000 \
+              --dom "/tmp/artemis-globe-browser-$PROFILE-dom.html" \
+              --screenshot "/tmp/artemis-globe-browser-$PROFILE.png" \
+              > "/tmp/artemis-globe-browser-$PROFILE-capture.json" \
               2> "/tmp/artemis-globe-browser-$PROFILE.log"
 
             if grep -Fq "ARTEMIS Globe spike failed:" "/tmp/artemis-globe-browser-$PROFILE-dom.html"; then
@@ -155,7 +152,7 @@ jobs:
           done
 
           # Turn the three DOM probes into one machine-readable evidence artifact.
-          # Timing remains diagnostic: virtual-time headless scheduling is not a SLO.
+          # Timing remains diagnostic: hosted-runner wall-clock scheduling is not a SLO.
           python - <<'PY'
           import json
           from html.parser import HTMLParser
@@ -224,7 +221,7 @@ jobs:
               results.append(actual)
 
           evidence = {
-              "schema_version": "1.0.0",
+              "schema_version": "1.1.0",
               "evidence_scope": contract["evidence_scope"],
               "browser_engine": "hosted-runner Chrome/Chromium with SwiftShader",
               "checks": results,
