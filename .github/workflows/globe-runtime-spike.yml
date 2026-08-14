@@ -113,7 +113,7 @@ jobs:
             IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"
             RUN_URL="$PROFILE_URL&profile=$PROFILE"
 
-            timeout 45s node scripts/capture_globe_browser_evidence.mjs \
+            if ! timeout 45s node scripts/capture_globe_browser_evidence.mjs \
               --browser "$BROWSER" \
               --url "$RUN_URL" \
               --width "$WIDTH" \
@@ -123,7 +123,10 @@ jobs:
               --dom "/tmp/artemis-globe-browser-$PROFILE-dom.html" \
               --screenshot "/tmp/artemis-globe-browser-$PROFILE.png" \
               > "/tmp/artemis-globe-browser-$PROFILE-capture.json" \
-              2> "/tmp/artemis-globe-browser-$PROFILE.log"
+              2> "/tmp/artemis-globe-browser-$PROFILE.log"; then
+              cat "/tmp/artemis-globe-browser-$PROFILE.log" >&2 || true
+              exit 1
+            fi
 
             if grep -Fq "ARTEMIS Globe spike failed:" "/tmp/artemis-globe-browser-$PROFILE-dom.html"; then
               cat "/tmp/artemis-globe-browser-$PROFILE-dom.html" >&2
