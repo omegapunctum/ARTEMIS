@@ -42,7 +42,12 @@
       averageFrameMs: null,
       estimatedFps: null
     },
-    acceptanceEvidence: null
+    acceptanceEvidence: null,
+    visualReadiness: {
+      ready: false,
+      contextSourceFeatureCount: 0,
+      contextRenderedFeatureCount: 0
+    }
   };
   window.__ARTEMIS_GLOBE_SPIKE = runtime;
 
@@ -184,6 +189,9 @@
       },
       startup_to_idle_ms: runtime.performance.startupToIdleMs,
       average_frame_ms: runtime.performance.averageFrameMs,
+      visual_render_ready: runtime.visualReadiness.ready,
+      context_source_feature_count: runtime.visualReadiness.contextSourceFeatureCount,
+      context_rendered_feature_count: runtime.visualReadiness.contextRenderedFeatureCount,
       limitations: contract.limitations || []
     };
 
@@ -206,6 +214,48 @@
     root.dataset.artemisAverageFrameMs = runtime.performance.averageFrameMs === null
       ? 'diagnostic-only-pending'
       : runtime.performance.averageFrameMs.toFixed(1);
+    root.dataset.artemisVisualReady = String(runtime.visualReadiness.ready);
+    root.dataset.artemisContextSourceFeatureCount = String(runtime.visualReadiness.contextSourceFeatureCount);
+    root.dataset.artemisContextRenderedFeatureCount = String(runtime.visualReadiness.contextRenderedFeatureCount);
+  }
+
+  function verifyEarthContextRender(map, contract) {
+    const root = document.documentElement;
+    let renderProbePending = false;
+
+    const probe = () => {
+      if (runtime.visualReadiness.ready || renderProbePending) return;
+      if (!map.getSource('artemis-earth-context') || !map.isSourceLoaded('artemis-earth-context')) return;
+
+      const sourceFeatures = map.querySourceFeatures('artemis-earth-context');
+      runtime.visualReadiness.contextSourceFeatureCount = sourceFeatures.length;
+      if (!sourceFeatures.length) {
+        collectAcceptanceEvidence(contract);
+        return;
+      }
+
+      renderProbePending = true;
+      map.once('render', () => {
+        renderProbePending = false;
+        const renderedFeatures = map.queryRenderedFeatures({
+          layers: ['artemis-present-day-land', 'artemis-present-day-coastline']
+        });
+        runtime.visualReadiness.contextRenderedFeatureCount = renderedFeatures.length;
+        runtime.visualReadiness.ready = renderedFeatures.length > 0;
+        collectAcceptanceEvidence(contract);
+        if (!runtime.visualReadiness.ready) {
+          map.triggerRepaint();
+          window.requestAnimationFrame(probe);
+        }
+      });
+      map.triggerRepaint();
+    };
+
+    root.dataset.artemisVisualReady = 'false';
+    map.on('sourcedata', (event) => {
+      if (event.sourceId === 'artemis-earth-context') probe();
+    });
+    window.requestAnimationFrame(probe);
   }
 
   function safeSourceHref(value) {
@@ -961,6 +1011,7 @@
 
     map.on('load', () => {
       if (typeof map.setProjection === 'function') map.setProjection({ type: 'globe' });
+      verifyEarthContextRender(map, acceptanceProfiles);
       addContextLayers(map, context);
       addSemanticLayers(map, runtime.data.globe);
       addCapabilityPath(map, capabilityPath);

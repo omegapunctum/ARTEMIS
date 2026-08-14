@@ -418,6 +418,7 @@ def test_gate_d_browser_acceptance_contract_fails_closed_on_profile_drift() -> N
 def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     style_source = (ROOT / "scripts" / "globe_spike" / "style.css").read_text(encoding="utf-8")
+    workflow_source = (ROOT / ".github" / "workflows" / "globe-runtime-spike.yml").read_text(encoding="utf-8")
 
     assert "collectAcceptanceEvidence" in runtime_source
     assert "artemisRuntimeReady" in runtime_source
@@ -433,6 +434,11 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
     assert 'input[type="range"] { min-height: 24px; }' in style_source
     assert "#globe-controls { left: 16px; right: 16px; bottom: 94px; flex-wrap: wrap; }" in style_source
+    assert "verifyEarthContextRender" in runtime_source
+    assert "querySourceFeatures('artemis-earth-context')" in runtime_source
+    assert "contextRenderedFeatureCount" in runtime_source
+    assert 'data-artemis-visual-ready="true"' in workflow_source
+    assert '--dump-dom \\\n              --screenshot=' in workflow_source
 
 
 def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:

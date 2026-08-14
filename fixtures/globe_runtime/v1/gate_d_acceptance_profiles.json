@@ -10,6 +10,8 @@
     "min_interactive_target_css_px": 24,
     "max_unnamed_interactive_controls": 0,
     "max_overlay_collision_count": 0,
+    "min_context_source_feature_count": 1,
+    "min_context_rendered_feature_count": 1,
     "min_globe_width_css_px": 320,
     "min_globe_height_css_px": 320
   },

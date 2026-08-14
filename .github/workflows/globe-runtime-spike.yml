@@ -123,6 +123,7 @@ jobs:
               --virtual-time-budget=15000 \
               --window-size="$WIDTH,$HEIGHT" \
               --dump-dom \
+              --screenshot="/tmp/artemis-globe-browser-$PROFILE.png" \
               "$RUN_URL" \
               > "/tmp/artemis-globe-browser-$PROFILE-dom.html" \
               2> "/tmp/artemis-globe-browser-$PROFILE.log"
@@ -143,19 +144,13 @@ jobs:
             grep -F 'data-artemis-unnamed-control-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F 'data-artemis-undersized-target-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F 'data-artemis-overlay-collision-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F 'data-artemis-visual-ready="true"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -E 'data-artemis-context-source-feature-count="[1-9][0-9]*"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -E 'data-artemis-context-rendered-feature-count="[1-9][0-9]*"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F "world-slice-leonardo-romagna-1502-v1" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F "engine: MapLibre GL JS" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F "maplibregl-canvas" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
 
-            timeout 45s "$BROWSER" \
-              "${COMMON_BROWSER_ARGS[@]}" \
-              "${EXTRA_ARGS[@]}" \
-              --virtual-time-budget=10000 \
-              --window-size="$WIDTH,$HEIGHT" \
-              --screenshot="/tmp/artemis-globe-browser-$PROFILE.png" \
-              "$RUN_URL" \
-              > "/tmp/artemis-globe-browser-$PROFILE-screenshot.log" \
-              2>&1
             test -s "/tmp/artemis-globe-browser-$PROFILE.png"
           done
 
@@ -202,6 +197,9 @@ jobs:
                   "unnamed_interactive_control_count": int(value("unnamed-control-count")),
                   "undersized_target_count": int(value("undersized-target-count")),
                   "overlay_collision_count": int(value("overlay-collision-count")),
+                  "visual_render_ready": value("visual-ready") == "true",
+                  "context_source_feature_count": int(value("context-source-feature-count")),
+                  "context_rendered_feature_count": int(value("context-rendered-feature-count")),
                   "globe_css_px": {
                       "width": int(value("globe-width")),
                       "height": int(value("globe-height")),
@@ -218,6 +216,9 @@ jobs:
               assert actual["unnamed_interactive_control_count"] <= thresholds["max_unnamed_interactive_controls"]
               assert actual["undersized_target_count"] == 0
               assert actual["overlay_collision_count"] <= thresholds["max_overlay_collision_count"]
+              assert actual["visual_render_ready"] is True
+              assert actual["context_source_feature_count"] >= thresholds["min_context_source_feature_count"]
+              assert actual["context_rendered_feature_count"] >= thresholds["min_context_rendered_feature_count"]
               assert actual["globe_css_px"]["width"] >= thresholds["min_globe_width_css_px"]
               assert actual["globe_css_px"]["height"] >= thresholds["min_globe_height_css_px"]
               results.append(actual)
