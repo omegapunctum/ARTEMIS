@@ -32,6 +32,7 @@ PROJECTION_SCHEMA_PATH = ROOT / "fixtures" / "render_projection" / "v1" / "schem
 ASSET_MANIFEST_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "gate_d_runtime.json"
 ASSET_SCHEMA_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "schema.json"
 ENGINE_EVALUATION_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "engine_evaluation.json"
+ACCEPTANCE_PROFILES_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "gate_d_acceptance_profiles.json"
 EARTH_CONTEXT_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "natural_earth_110m_land.geojson"
 CAPABILITY_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "capability_path.geojson"
 TEMPLATE_DIR = ROOT / "scripts" / "globe_spike"
@@ -52,6 +53,7 @@ REQUIRED_OUTPUT_FILES = {
     "earth-context.geojson",
     "capability-path.geojson",
     "engine-evaluation.json",
+    "acceptance-profiles.json",
     "knowledge-index.json",
     "build-meta.json",
     "README.txt",
@@ -196,6 +198,56 @@ def _validate_engine_evaluation(evaluation: dict[str, Any]) -> dict[str, Any]:
             f"selected engine has non-pass required criteria: {failures}"
         )
     return selected
+
+
+def _validate_acceptance_profiles(contract: dict[str, Any]) -> None:
+    profiles = contract.get("profiles")
+    if not isinstance(profiles, list) or not profiles:
+        raise SpikeBuildError("browser acceptance contract must contain profiles")
+    profile_ids = [profile.get("profile_id") for profile in profiles]
+    if profile_ids != ["desktop", "tablet", "mobile"]:
+        raise SpikeBuildError(
+            "browser acceptance profiles must remain ordered desktop/tablet/mobile"
+        )
+    if len(set(profile_ids)) != len(profile_ids):
+        raise SpikeBuildError("browser acceptance profile ids must be unique")
+
+    expected_layouts = {"desktop", "tablet", "mobile"}
+    for profile in profiles:
+        viewport = profile.get("browser_window_css_px") or {}
+        if not all(
+            isinstance(viewport.get(axis), int) and viewport[axis] > 0
+            for axis in ("width", "height")
+        ):
+            raise SpikeBuildError(
+                f"browser profile {profile.get('profile_id')!r} has invalid viewport"
+            )
+        if profile.get("expected_layout_mode") not in expected_layouts:
+            raise SpikeBuildError(
+                f"browser profile {profile.get('profile_id')!r} has invalid layout mode"
+            )
+        if not isinstance(profile.get("prefers_reduced_motion"), bool):
+            raise SpikeBuildError(
+                f"browser profile {profile.get('profile_id')!r} lacks motion preference"
+            )
+
+    thresholds = contract.get("thresholds") or {}
+    required_thresholds = {
+        "max_horizontal_overflow_css_px",
+        "min_interactive_target_css_px",
+        "max_unnamed_interactive_controls",
+        "max_overlay_collision_count",
+        "min_globe_width_css_px",
+        "min_globe_height_css_px",
+    }
+    if set(thresholds) != required_thresholds or any(
+        not isinstance(value, int) or value < 0 for value in thresholds.values()
+    ):
+        raise SpikeBuildError("browser acceptance thresholds are incomplete or invalid")
+    if profiles[-1]["prefers_reduced_motion"] is not True:
+        raise SpikeBuildError("mobile browser profile must exercise reduced motion")
+    if not contract.get("limitations"):
+        raise SpikeBuildError("browser acceptance contract must disclose limitations")
 
 
 def _validate_capability_path(path_fixture: dict[str, Any]) -> None:
@@ -598,6 +650,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
     asset_manifest = _load(ASSET_MANIFEST_PATH)
     asset_schema = _load(ASSET_SCHEMA_PATH)
     evaluation = _load(ENGINE_EVALUATION_PATH)
+    acceptance_profiles = _load(ACCEPTANCE_PROFILES_PATH)
     earth_context = _load(EARTH_CONTEXT_PATH)
     capability_path = _load(CAPABILITY_PATH)
 
@@ -605,6 +658,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
     if asset_errors:
         raise SpikeBuildError("invalid geospatial asset manifest: " + "; ".join(asset_errors))
     selected_engine = _validate_engine_evaluation(evaluation)
+    _validate_acceptance_profiles(acceptance_profiles)
     _validate_capability_path(capability_path)
     _validate_earth_context(earth_context, asset_manifest)
 
@@ -699,6 +753,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
     _write_json(output / "earth-context.geojson", earth_context)
     _write_json(output / "capability-path.geojson", capability_path)
     _write_json(output / "engine-evaluation.json", evaluation)
+    _write_json(output / "acceptance-profiles.json", acceptance_profiles)
     _write_json(output / "knowledge-index.json", knowledge_index)
     copied_source_sha256 = _copy_local_sources(
         world, output, source_root=source_root
@@ -737,11 +792,13 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
         "capability_path_is_semantic": False,
         "backend_required": False,
         "public_pages_entrypoint": False,
+        "browser_acceptance_profile_count": len(acceptance_profiles.get("profiles", [])),
         "input_sha256": {
             "world_model": _sha(world),
             "explorer_state": _sha(state),
             "geospatial_assets": _sha(asset_manifest),
             "engine_evaluation": _sha(evaluation),
+            "acceptance_profiles": _sha(acceptance_profiles),
             "earth_context": _sha(earth_context),
             "capability_path": _sha(capability_path),
             "source_documents": copied_source_sha256,

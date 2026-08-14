@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_scope": "hosted_headless_chromium",
+  "layout_breakpoints_css_px": {
+    "mobile_max_width": 820,
+    "tablet_max_width": 1100
+  },
+  "thresholds": {
+    "max_horizontal_overflow_css_px": 1,
+    "min_interactive_target_css_px": 24,
+    "max_unnamed_interactive_controls": 0,
+    "max_overlay_collision_count": 0,
+    "min_globe_width_css_px": 320,
+    "min_globe_height_css_px": 320
+  },
+  "profiles": [
+    {
+      "profile_id": "desktop",
+      "browser_window_css_px": {
+        "width": 1440,
+        "height": 900
+      },
+      "expected_layout_mode": "desktop",
+      "prefers_reduced_motion": false
+    },
+    {
+      "profile_id": "tablet",
+      "browser_window_css_px": {
+        "width": 1024,
+        "height": 768
+      },
+      "expected_layout_mode": "tablet",
+      "prefers_reduced_motion": false
+    },
+    {
+      "profile_id": "mobile",
+      "browser_window_css_px": {
+        "width": 500,
+        "height": 844
+      },
+      "expected_layout_mode": "mobile",
+      "prefers_reduced_motion": true
+    }
+  ],
+  "limitations": [
+    "Hosted headless Chromium with SwiftShader is representative browser evidence, not a real-device performance baseline.",
+    "Hosted Chrome 150 clamps headless browser-window width to 500 CSS px; narrower 390 CSS px phone coverage remains a real-device review requirement.",
+    "DOM-level accessible-name, target-size, overflow, landmark and reduced-motion checks are not a complete WCAG audit.",
+    "Startup and frame metrics are diagnostic only and are not pass/fail thresholds under virtual-time scheduling.",
+    "Public promotion still requires explicit Gate D exit review; this profile contract does not open Gate E."
+  ]
+}

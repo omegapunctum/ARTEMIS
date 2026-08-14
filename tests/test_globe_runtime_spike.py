@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from scripts.build_globe_spike import (
+    ACCEPTANCE_PROFILES_PATH,
     ASSET_MANIFEST_PATH,
     CAPABILITY_PATH,
     DEFAULT_DATASET,
@@ -12,6 +13,8 @@ from scripts.build_globe_spike import (
     ROOT,
     WORLD_PATH,
     build_spike,
+    _validate_acceptance_profiles,
+    SpikeBuildError,
 )
 from scripts.build_leonardo_gate_d_inputs import build_gate_d_inputs
 
@@ -55,6 +58,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
         "earth-context.geojson",
         "capability-path.geojson",
         "engine-evaluation.json",
+        "acceptance-profiles.json",
         "knowledge-index.json",
         "build-meta.json",
         "README.txt",
@@ -67,6 +71,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["knowledge_record_count"] == metadata["semantic_item_count"]
     assert metadata["explorer_view_count"] == 96
     assert metadata["temporal_preset_count"] == 6
+    assert metadata["browser_acceptance_profile_count"] == 3
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
 
@@ -372,6 +377,62 @@ def test_unresolved_items_are_keyboard_inspectable_through_knowledge_index() -> 
     assert 'id="selection-card"' in html_source
     assert 'tabindex="-1"' in html_source
     assert 'aria-live="polite"' in html_source
+
+
+def test_gate_d_browser_acceptance_profiles_are_bundled_and_reproducible(tmp_path: Path) -> None:
+    profiles = _load(ACCEPTANCE_PROFILES_PATH)
+    output = tmp_path / "globe-spike"
+    metadata = build_spike(output)
+
+    assert profiles["evidence_scope"] == "hosted_headless_chromium"
+    assert [profile["profile_id"] for profile in profiles["profiles"]] == [
+        "desktop",
+        "tablet",
+        "mobile",
+    ]
+    assert [profile["browser_window_css_px"] for profile in profiles["profiles"]] == [
+        {"width": 1440, "height": 900},
+        {"width": 1024, "height": 768},
+        {"width": 500, "height": 844},
+    ]
+    assert profiles["profiles"][-1]["prefers_reduced_motion"] is True
+    assert profiles["thresholds"]["min_interactive_target_css_px"] == 24
+    assert profiles["thresholds"]["max_unnamed_interactive_controls"] == 0
+    assert profiles["thresholds"]["max_overlay_collision_count"] == 0
+    assert _load(output / "acceptance-profiles.json") == profiles
+    assert metadata["input_sha256"]["acceptance_profiles"]
+
+
+def test_gate_d_browser_acceptance_contract_fails_closed_on_profile_drift() -> None:
+    profiles = _load(ACCEPTANCE_PROFILES_PATH)
+    profiles["profiles"][0]["profile_id"] = "wide"
+
+    try:
+        _validate_acceptance_profiles(profiles)
+    except SpikeBuildError as error:
+        assert "ordered desktop/tablet/mobile" in str(error)
+    else:
+        raise AssertionError("profile identity drift must fail closed")
+
+
+def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    style_source = (ROOT / "scripts" / "globe_spike" / "style.css").read_text(encoding="utf-8")
+
+    assert "collectAcceptanceEvidence" in runtime_source
+    assert "artemisRuntimeReady" in runtime_source
+    assert "artemisHorizontalOverflow" in runtime_source
+    assert "artemisUnnamedControlCount" in runtime_source
+    assert "artemisUndersizedTargetCount" in runtime_source
+    assert "artemisOverlayCollisionCount" in runtime_source
+    assert "artemisStartupRecorded" in runtime_source
+    assert "artemisStartupToIdleMs" in runtime_source
+    assert "artemisAverageFrameMs" in runtime_source
+    assert "button, input, a[href]" in runtime_source
+    assert 'input[type="range"]' in runtime_source
+    assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
+    assert 'input[type="range"] { min-height: 24px; }' in style_source
+    assert "#globe-controls { left: 16px; right: 16px; bottom: 94px; flex-wrap: wrap; }" in style_source
 
 
 def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:

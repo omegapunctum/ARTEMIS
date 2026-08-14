@@ -10,6 +10,7 @@
     context: './earth-context.geojson',
     capabilityPath: './capability-path.geojson',
     engineEvaluation: './engine-evaluation.json',
+    acceptanceProfiles: './acceptance-profiles.json',
     knowledge: './knowledge-index.json',
     meta: './build-meta.json'
   };
@@ -40,7 +41,8 @@
       startupToIdleMs: null,
       averageFrameMs: null,
       estimatedFps: null
-    }
+    },
+    acceptanceEvidence: null
   };
   window.__ARTEMIS_GLOBE_SPIKE = runtime;
 
@@ -101,6 +103,109 @@
 
   function cameraDuration() {
     return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 900;
+  }
+
+  function accessibleName(node) {
+    const ariaLabel = node.getAttribute('aria-label')?.trim();
+    if (ariaLabel) return ariaLabel;
+    const labelledBy = node.getAttribute('aria-labelledby');
+    if (labelledBy) {
+      const value = labelledBy
+        .split(/\s+/)
+        .map((id) => byId(id)?.textContent?.trim() || '')
+        .filter(Boolean)
+        .join(' ');
+      if (value) return value;
+    }
+    const labelText = [...(node.labels || [])]
+      .map((label) => label.textContent?.trim() || '')
+      .filter(Boolean)
+      .join(' ');
+    return labelText || node.textContent?.trim() || node.getAttribute('title')?.trim() || '';
+  }
+
+  function layoutMode(contract) {
+    const breakpoints = contract.layout_breakpoints_css_px || {};
+    if (window.innerWidth <= breakpoints.mobile_max_width) return 'mobile';
+    if (window.innerWidth <= breakpoints.tablet_max_width) return 'tablet';
+    return 'desktop';
+  }
+
+  function collectAcceptanceEvidence(contract) {
+    const root = document.documentElement;
+    const thresholds = contract.thresholds || {};
+    const mode = layoutMode(contract);
+    const requestedProfileId = new URLSearchParams(window.location.search).get('profile');
+    const profile = (contract.profiles || []).find((candidate) => (
+      candidate.profile_id === requestedProfileId
+    )) || (contract.profiles || []).find((candidate) => (
+      candidate.browser_window_css_px?.width === window.innerWidth
+      && candidate.expected_layout_mode === mode
+    ));
+    const interactive = [...document.querySelectorAll('button, input, a[href]')];
+    const unnamed = interactive.filter((node) => !accessibleName(node));
+    const measuredTargets = [...document.querySelectorAll('button, input[type="range"]')];
+    const minTarget = Number(thresholds.min_interactive_target_css_px || 24);
+    const undersized = measuredTargets.filter((node) => {
+      const rect = node.getBoundingClientRect();
+      return rect.width < minTarget || rect.height < minTarget;
+    });
+    const globeRect = byId('globe-shell')?.getBoundingClientRect();
+    const overlayRects = ['globe-controls', 'terrain-status', 'attribution-status']
+      .map((id) => byId(id)?.getBoundingClientRect())
+      .filter((rect) => rect && rect.width > 0 && rect.height > 0);
+    let overlayCollisions = 0;
+    for (let left = 0; left < overlayRects.length; left += 1) {
+      for (let right = left + 1; right < overlayRects.length; right += 1) {
+        const a = overlayRects[left];
+        const b = overlayRects[right];
+        const overlapWidth = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const overlapHeight = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (overlapWidth > 1 && overlapHeight > 1) overlayCollisions += 1;
+      }
+    }
+    const horizontalOverflow = Math.max(0, root.scrollWidth - root.clientWidth);
+    const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+
+    runtime.acceptanceEvidence = {
+      evidence_scope: contract.evidence_scope,
+      profile_id: profile?.profile_id || 'unmatched',
+      layout_mode: mode,
+      expected_layout_mode: profile?.expected_layout_mode || null,
+      viewport_css_px: { width: window.innerWidth, height: window.innerHeight },
+      reduced_motion: reducedMotion,
+      horizontal_overflow_css_px: horizontalOverflow,
+      unnamed_interactive_control_count: unnamed.length,
+      undersized_target_count: undersized.length,
+      overlay_collision_count: overlayCollisions,
+      globe_css_px: {
+        width: Math.round(globeRect?.width || 0),
+        height: Math.round(globeRect?.height || 0)
+      },
+      startup_to_idle_ms: runtime.performance.startupToIdleMs,
+      average_frame_ms: runtime.performance.averageFrameMs,
+      limitations: contract.limitations || []
+    };
+
+    root.dataset.artemisRuntimeReady = 'true';
+    root.dataset.artemisViewportProfile = runtime.acceptanceEvidence.profile_id;
+    root.dataset.artemisLayoutMode = mode;
+    root.dataset.artemisViewportWidth = String(window.innerWidth);
+    root.dataset.artemisViewportHeight = String(window.innerHeight);
+    root.dataset.artemisReducedMotion = String(reducedMotion);
+    root.dataset.artemisHorizontalOverflow = String(horizontalOverflow);
+    root.dataset.artemisUnnamedControlCount = String(unnamed.length);
+    root.dataset.artemisUndersizedTargetCount = String(undersized.length);
+    root.dataset.artemisOverlayCollisionCount = String(overlayCollisions);
+    root.dataset.artemisGlobeWidth = String(runtime.acceptanceEvidence.globe_css_px.width);
+    root.dataset.artemisGlobeHeight = String(runtime.acceptanceEvidence.globe_css_px.height);
+    root.dataset.artemisStartupRecorded = String(runtime.performance.startupToIdleMs !== null);
+    root.dataset.artemisStartupToIdleMs = runtime.performance.startupToIdleMs === null
+      ? 'diagnostic-only-pending'
+      : runtime.performance.startupToIdleMs.toFixed(1);
+    root.dataset.artemisAverageFrameMs = runtime.performance.averageFrameMs === null
+      ? 'diagnostic-only-pending'
+      : runtime.performance.averageFrameMs.toFixed(1);
   }
 
   function safeSourceHref(value) {
@@ -789,6 +894,7 @@
       runtime.performance.averageFrameMs = average;
       runtime.performance.estimatedFps = average > 0 ? 1000 / average : null;
       setText('frame-sample', `${average.toFixed(1)} ms/frame · ~${runtime.performance.estimatedFps.toFixed(0)} FPS`);
+      collectAcceptanceEvidence(runtime.data.acceptanceProfiles);
     }
     requestAnimationFrame(tick);
   }
@@ -796,7 +902,7 @@
   async function main() {
     if (!window.maplibregl) throw new Error('MapLibre GL JS 5.24.0 failed to load. Network access to the pinned engine CDN is required for this R&D artifact.');
 
-    const [projection, globe, state, views, assets, context, capabilityPath, engineEvaluation, knowledge, meta] = await Promise.all([
+    const [projection, globe, state, views, assets, context, capabilityPath, engineEvaluation, acceptanceProfiles, knowledge, meta] = await Promise.all([
       loadJson(FILES.projection),
       loadJson(FILES.globe),
       loadJson(FILES.state),
@@ -805,11 +911,12 @@
       loadJson(FILES.context),
       loadJson(FILES.capabilityPath),
       loadJson(FILES.engineEvaluation),
+      loadJson(FILES.acceptanceProfiles),
       loadJson(FILES.knowledge),
       loadJson(FILES.meta)
     ]);
 
-    runtime.data = { projection, globe, state, assets, context, capabilityPath, engineEvaluation, knowledge, meta };
+    runtime.data = { projection, globe, state, assets, context, capabilityPath, engineEvaluation, acceptanceProfiles, knowledge, meta };
     runtime.viewIndex = views;
     runtime.viewByKey = new Map((views.views || []).map((view) => [
       viewKey(view.temporal_preset_id, view.active_layer_refs),
@@ -860,10 +967,13 @@
       configureTerrainPath(map, assets);
       bindPicking(map);
       bindControls(map);
+      collectAcceptanceEvidence(acceptanceProfiles);
+      window.addEventListener('resize', () => collectAcceptanceEvidence(acceptanceProfiles));
 
       map.once('idle', () => {
         runtime.performance.startupToIdleMs = performance.now() - startedAt;
         setText('startup-ms', `${runtime.performance.startupToIdleMs.toFixed(0)} ms`);
+        collectAcceptanceEvidence(acceptanceProfiles);
         sampleFrames();
       });
     });
