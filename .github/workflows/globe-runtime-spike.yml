@@ -236,7 +236,7 @@ jobs:
           DESKTOP_DOM=/tmp/artemis-globe-browser-desktop-dom.html
           grep -F "explorer-state-leonardo-romagna-1502-gate-d" "$DESKTOP_DOM"
           grep -F "uncertainty-trajectory-route-gaps" "$DESKTOP_DOM"
-          grep -F "Manuscript L folio 78r" "$DESKTOP_DOM"
+          grep -F "Manuscript L folio 46v" "$DESKTOP_DOM"
           grep -F "Cronologia vinciana" "$DESKTOP_DOM"
           grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" "$DESKTOP_DOM"
           grep -F "Terrain: capability path ready" "$DESKTOP_DOM"
