@@ -1400,8 +1400,12 @@
   box-shadow: var(--shadow-medium);
 }
 
-.app-system-message {
+.app-system-message,
+.app-system-banner {
   pointer-events: auto;
+}
+
+.app-system-message {
   animation: toast-enter var(--motion-soft) var(--ease-standard) both;
 }
 
