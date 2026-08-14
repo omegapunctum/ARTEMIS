@@ -1,9 +1,9 @@
-# ARTEMIS — PROJECT PHASES v6.5
+# ARTEMIS — PROJECT PHASES v6.6
 
 ## Статус
 
 - Тип: canonical operational phases document.
-- Дата: 2026-08-12.
+- Дата: 2026-08-14.
 - Активная фаза: **4.8 Globe MVP vertical / real World Slice**.
 - Active primary issue: **#355**.
 - Completed Gate C delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
@@ -96,7 +96,10 @@ Deferred:
 - expose sources, uncertainty, alternatives, coverage and projection losses;
 - preserve unresolved trajectories without invented lines;
 - treat modern terrain/imagery as contextual geospatial assets;
-- verify desktop/mobile/accessibility and representative performance.
+- completed increments #379/#380 consume the frozen package and synchronize time/layers/selection/inspector;
+- completed #382 selects pinned bundled Natural Earth `present_day_context` while keeping historical geometry withheld and terrain synthetic/non-live;
+- completed #383 exercises desktop/tablet/hosted-mobile Chromium layout, reduced-motion, accessible-name, target-size, overflow and overlay evidence;
+- remaining: normal-browser real desktop and 390 CSS px mobile review, assistive technology, representative non-virtual performance and one explicit Gate D exit decision.
 
 ### Gate E — Evidence and decision
 

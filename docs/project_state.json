@@ -53,7 +53,9 @@
       "PR #376 — explicit Gate D opening; no public capability change",
       "#377 / PR #378 — accepted Progressive Refinement Contract; no runtime/storage authorization",
       "PR #379 — frozen Gate C package consumed through the shared semantic projection path",
-      "PR #380 — synchronized Gate D time/layers/selection/inspector interaction increment"
+      "PR #380 — synchronized Gate D time/layers/selection/inspector interaction increment",
+      "PR #382 — pinned bundled Natural Earth present-day context and provider policy; no historical geometry or live terrain",
+      "PR #383 — deterministic desktop/tablet/hosted-mobile browser evidence and responsive overlay checks/fixes"
     ]
   },
   "capability": {
@@ -69,7 +71,9 @@
     "docs/PROJECT_PHASES.md",
     "docs/PRIORITIES.md",
     "docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md",
-    "docs/work/2026-08-12_GATE_D_OPENING_v1.md"
+    "docs/work/2026-08-12_GATE_D_OPENING_v1.md",
+    "docs/work/2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md",
+    "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md"
   ],
   "blockers": [],
   "next_transition": {
