@@ -29,6 +29,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - PR `#380` adds 96 deterministic Explorer views from six source-native temporal presets and all 16 combinations of four semantic layers, plus synchronized timeline/layers, canonical selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior. This is a completed Gate D interaction increment, not a completed Gate D experience or public promotion.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
+- PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
@@ -210,6 +211,7 @@ Reviewed/accepted foundation evidence includes:
 - PR #380 — synchronized time/layers/selection/inspector interaction increment with 96 deterministic Explorer views and all six PR workflows green;
 - PR #382 — pinned bundled Natural Earth physical-land context with explicit provider/licensing/temporal-role boundary and all seven PR workflows green;
 - PR #383 — desktop/tablet/hosted-mobile browser evidence, zero measured overflow/name/target/overlay failures and all six triggered PR workflows green.
+- PR #385 — same-page wall-clock CDP visual-readiness evidence with non-zero Natural Earth source/render counts, legible reviewed hosted screenshots and all six triggered workflows green.
 
 Completed/deferred Airtable data-governance evidence now includes:
 
@@ -233,7 +235,7 @@ issue.
 2. preserve the accepted #377 contract and require a separate implementation authorization before editable precision/history behavior;
 3. preserve the merged #379/#380 frozen-package adapter and synchronized time/layers/selection/inspector increments;
 4. preserve the merged #382 Natural Earth provider/attribution/temporal-role/licensing/cache/secret boundary without presenting modern context as historical truth;
-5. preserve the current 2D renderer as public baseline, parity target and rollback path while completing normal-browser real desktop, 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence after #383;
+5. preserve the current 2D renderer as public baseline, parity target and rollback path while completing normal-browser real desktop, 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence after the hosted #383/#385 increments;
 6. record exactly one Gate D decision — `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` — before any Gate E work or public deployment.
 
 Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
