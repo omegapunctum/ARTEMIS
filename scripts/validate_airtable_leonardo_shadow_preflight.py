@@ -99,7 +99,10 @@ def _validate_project_boundary(project_state: dict[str, Any], extension: dict[st
     _require(gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
     _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
     _require(331 in github.get("deferred_issues", []), "Relation issue #331 must remain deferred")
-    _require(capability.get("globe") == "non_public_r_and_d", "Globe must remain non-public")
+    _require(
+        capability.get("globe") == "public_r_and_d_preview",
+        "Globe must remain a bounded public R&D preview",
+    )
     _require(capability.get("world_slice") == "gate_c_frozen_non_public", "World Slice must remain frozen/non-public")
 
     boundary = extension.get("gate_boundary", {})

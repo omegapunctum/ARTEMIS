@@ -7,13 +7,15 @@
 - Active vertical: `Life in Context / source-aware Globe MVP`.
 - Owner issue: `#355`.
 - Gate: `D / in_progress`.
-- Public capability change: none.
+- Public capability change: amended 2026-08-14 for a labelled `/globe/` R&D review preview only; no product or historical-content promotion.
+
+`2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md` is the later explicit deployment decision. It changes review reachability without reopening Gate C or closing Gate D.
 
 ## 1. Decision
 
 Open Gate D as the single active product gate.
 
-Gate D builds one bounded, non-public source-aware Globe experience from the already frozen Leonardo-in-Romagna 1502 World Slice. It does not reopen Gate C, promote the historical Claims, publish the Globe or create a second data model.
+Gate D builds one bounded source-aware Globe experience from the already frozen Leonardo-in-Romagna 1502 World Slice. It does not reopen Gate C, promote the historical Claims or create a second data model. The generated experience may now be viewed through the labelled public R&D preview.
 
 The only permitted semantic path is:
 
@@ -66,13 +68,13 @@ The bounded experience must provide:
 9. Earth context with explicit provider, attribution, temporal role, licensing and secret/cache policy;
 10. executable 2D/Globe semantic parity;
 11. representative desktop/mobile, keyboard, focus, reduced-motion, accessibility and performance evidence;
-12. a reproducible non-public preview or generated review artifact.
+12. a reproducible generated review artifact, optionally served through the authorized `/globe/` R&D preview.
 
 ## 5. Implementation boundary
 
 - Start from the generated MapLibre Globe artifact and accepted renderer-neutral contracts.
 - Keep root `index.html` and the current 2D Architecture Atlas as the public baseline and rollback path.
-- Keep Globe work non-public and isolated until a separate promotion decision.
+- Keep Globe work isolated and generated; public exposure is limited to the explicit `/globe/` R&D review decision.
 - Do not move to `apps/globe/` unless evidence supports a maintained experimental application.
 - Do not switch to Cesium without a measured MapLibre blocker.
 - Do not create a new backend, framework or historical dataset merely for interface convenience.
@@ -89,7 +91,7 @@ Issue #331 is deferred, not implemented. Before its contract is separately accep
 
 ## 7. Out of scope
 
-- public Globe deployment or public data promotion;
+- product-ready/default Globe deployment or promotion of draft candidate content as accepted historical truth;
 - historical Airtable import and round-trip execution;
 - documented Relation predicates;
 - exact route or Region geometry reconstruction;
@@ -116,5 +118,5 @@ Required exit evidence:
 - relevant release, repository-boundary, geospatial and parity checks pass on exact head;
 - no critical semantic loss or invented precision remains;
 - known UX/accessibility/performance gaps and implementation cost are recorded;
-- current capability wording remains non-public and truthful;
+- current capability wording remains explicitly R&D/candidate-state and truthful;
 - #355 and `docs/project_state.json` record the same decision.

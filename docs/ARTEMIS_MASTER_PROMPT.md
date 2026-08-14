@@ -106,11 +106,11 @@ Current operational truth:
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
 4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
 5. Preserve accepted Foundation v3.1 / #363 / PR #364 attractor and governance rules; #363 is completed, not active maintenance.
-6. Gate D — source-aware Globe experience — is **currently in progress** under #355 as a non-public product contour.
+6. Gate D — source-aware Globe experience — is **currently in progress** under #355; `/globe/` is an explicitly authorized public R&D review surface, not a promoted product capability.
 7. Build from the frozen World Slice through Explorer State and Render Projection; do not require or imply an Airtable historical import.
 8. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
 9. Collect semantic, UX, accessibility and performance evidence before any promotion decision.
-10. Record one explicit promotion/iterate/narrow/stop decision before public deployment.
+10. Record one explicit promotion/iterate/narrow/stop decision before any product promotion; bounded public review access does not satisfy that exit decision.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 

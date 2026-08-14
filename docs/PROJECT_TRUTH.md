@@ -18,14 +18,14 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 Важно:
 
 - Foundation documentation не реализует world model runtime;
-- текущий public runtime остаётся статическим Architecture Atlas;
+- default public runtime остаётся статическим Architecture Atlas; сайт дополнительно предоставляет явно маркированный Globe R&D preview;
 - real Life in Context synchronized multi-layer experience ещё не доступен публично;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
 - generative AI, causal/counterfactual runtime, personal knowledge model, VR/AR and universal corpus remain frozen/future;
 - **A real executable 3D Globe R&D artifact exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
-- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface. The selected Gate D Earth context is a pinned, bundled Natural Earth present-day layer, not historical geography or a public/live provider capability.
-- PR `#379` integrates the frozen Gate C package into the generated non-public Globe artifact through the shared World Model → Explorer State → Render Projection path. It preserves `0` authorized historical geometries/primitives, all withheld Region alternatives and all unknown-route gaps.
+- The Globe is publicly reachable at `/globe/` as **R&D EVIDENCE, NOT A PRODUCT-READY CAPABILITY**. The selected Gate D Earth context is a pinned, bundled Natural Earth present-day layer, not historical geography or a public/live provider capability.
+- PR `#379` integrates the frozen Gate C package into the generated Globe artifact through the shared World Model → Explorer State → Render Projection path. It preserves `0` authorized historical geometries/primitives, all withheld Region alternatives and all unknown-route gaps.
 - PR `#380` adds 96 deterministic Explorer views from six source-native temporal presets and all 16 combinations of four semantic layers, plus synchronized timeline/layers, canonical selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior. This is a completed Gate D interaction increment, not a completed Gate D experience or public promotion.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
@@ -45,6 +45,10 @@ GitHub Pages публикует статический runtime:
 - фильтры, поиск, выбор периода и карточку объекта;
 - PWA/static behavior в границах текущего service worker;
 - интерфейсные entry points, не требующие backend API.
+- отдельный `/globe/` public R&D preview, детерминированно собираемый из frozen Gate C package;
+- ссылку `3D Globe · R&D` из desktop и compact navigation текущей 2D-карты.
+
+Globe preview публично доступен для review, но не является product-ready Globe или принятым historical corpus. Он сохраняет draft/rejected Claims, `promotion_allowed=false`, нулевое количество разрешённых historical primitives, withheld route/Region geometry, present-day-only Natural Earth context и synthetic/non-live terrain. Preview не использует backend, credentials или Airtable historical rows.
 
 GitHub Pages не исполняет FastAPI. Без отдельно настроенного `ARTEMIS_API_BASE` публичный сайт не предоставляет рабочие auth, Research Slices, Stories, Courses, uploads и moderation API.
 
@@ -164,7 +168,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 - Gate C package integrated into Airtable as a validated shadow copy;
 - a complete Gate D experience with normal-browser real desktop and 390 CSS px mobile evidence, assistive-technology review, representative non-virtual performance observations and an explicit Gate D exit decision;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
-- public/product 3D Globe, production dynamic terrain or VR experience; #355 changes active development scope, not current public capability;
+- product-ready 3D Globe, production dynamic terrain or VR experience; доступный `/globe/` остаётся R&D preview без Gate D exit или product validation;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
 - полноценные guided Stories и Courses;
@@ -186,7 +190,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
 6. Backend-complete mutable Slice v2 может быть ошибочно принят за target immutable research model.
 7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
-8. Globe MVP может стать shadow product, если он обойдёт shared World Model / Explorer State / Render Projection или преждевременно войдёт в public Pages.
+8. Globe preview может быть ошибочно принят за готовый продукт, если потеряет R&D labeling, shared World Model / Explorer State / Render Projection boundary или honest candidate-state disclosures.
 9. Long-term attractor может быть ошибочно воспринят как permission to implement AI/VR/universal corpus before gates; Foundation v3.1 explicitly forbids this.
 10. `World Model` wording can drift back toward objective-digital-twin claims unless the knowledge-vs-world boundary remains explicit.
 11. Airtable World Model schema может стать competing semantic/storage authority, если данные начнут вноситься вручную в обход deterministic import/export + row-level validation + round-trip parity against the frozen repository package.
@@ -195,9 +199,9 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress and non-public**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress / public R&D Globe preview**.
 
-Current public runtime and public data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation. Airtable additionally contains nine empty non-authoritative World Model shadow tables plus a deterministic/frozen Leonardo row plan, but this is data-governance infrastructure and preflight evidence, not a new product/runtime or historical-corpus capability.
+The root 2D runtime and public ETL data remain the Architecture Atlas baseline. The site additionally exposes the deterministic Globe review artifact at `/globe/`; this changes review access, not historical readiness or product validation. Foundation contracts remain substantially ahead of public implementation. Airtable additionally contains nine empty non-authoritative World Model shadow tables plus a deterministic/frozen Leonardo row plan, but this is data-governance infrastructure and preflight evidence, not a new canonical corpus.
 
 Reviewed/accepted foundation evidence includes:
 
@@ -235,7 +239,7 @@ issue.
 2. preserve the accepted #377 contract and require a separate implementation authorization before editable precision/history behavior;
 3. preserve the merged #379/#380 frozen-package adapter and synchronized time/layers/selection/inspector increments;
 4. preserve the merged #382 Natural Earth provider/attribution/temporal-role/licensing/cache/secret boundary without presenting modern context as historical truth;
-5. preserve the current 2D renderer as public baseline, parity target and rollback path while completing normal-browser real desktop, 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence after the hosted #383/#385 increments;
+5. preserve the current 2D renderer as default public baseline, parity target and rollback path while using the labelled `/globe/` preview to complete normal-browser real desktop, 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence after the hosted #383/#385 increments;
 6. record exactly one Gate D decision — `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` — before any Gate E work or public deployment.
 
 Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
@@ -249,7 +253,7 @@ README, UI, issues, release notes и публичные материалы об�
 - `PUBLIC NOW` — работает на опубликованном URL;
 - `BACKEND-AVAILABLE` — реализовано, но требует отдельного runtime/configuration;
 - `PILOT` — существует, но недостаточно подтверждено данными или пользователями;
-- `R&D` — bounded experimental architecture/runtime work that is not a public capability promise;
+- `R&D` — bounded experimental architecture/runtime work; it may be publicly reviewable when labelled, but is not a product-capability promise;
 - `SHADOW` — non-authoritative storage/curation/evidence contour, not public capability and not canonical historical corpus;
 - `CONCEPT TARGET` — утверждено концептуально, но не реализовано;
 - `FUTURE` — концепция или запланированный слой.

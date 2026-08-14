@@ -325,8 +325,8 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("relation issue #331 must remain deferred before documented Relations")
     if paused:
         raise ProjectStateError("the Gate D opening snapshot must not retain stale paused issues")
-    if payload["capability"]["globe"] != "non_public_r_and_d":
-        raise ProjectStateError("the current Globe must remain non-public R&D")
+    if payload["capability"]["globe"] != "public_r_and_d_preview":
+        raise ProjectStateError("the current Globe must remain a bounded public R&D preview")
 
     _validate_completed_gate_history(payload)
     if not {332, 360}.issubset(completed) or {332, 360} & active:

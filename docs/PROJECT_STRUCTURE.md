@@ -26,7 +26,7 @@
 - canonical domain/world-model semantics имеют одного владельца и не дублируются по renderer-веткам;
 - несколько явно зарегистрированных presentation runtimes допустимы, если они используют общий World Model / Explorer State / projection boundary;
 - новый renderer не может создавать скрытый backend, отдельную historical truth или competing data core;
-- до promotion experimental runtime не считается public entrypoint и не должен попадать в production artifact случайно.
+- experimental runtime может попасть в production artifact только через отдельно зарегистрированный, явно маркированный public R&D preview; случайная публикация запрещена.
 
 ---
 
@@ -89,6 +89,7 @@
 | Слой | Entry point |
 |---|---|
 | Current public 2D frontend | `index.html` |
+| Public Globe R&D preview | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
 | Backend | `app/main.py` |
 | ETL | `scripts/export_airtable.py` |
 | Release check | `scripts/release_check.py` |
@@ -105,8 +106,8 @@
 - backend, ETL, release-check и documentation registries не получают competing entrypoints;
 - presentation runtimes являются отдельным классом: несколько renderer entrypoints допустимы только после явной регистрации и при общей domain/state/projection семантике;
 - наличие второго renderer не разрешает второй World Model, второй historical source of truth или второй backend;
-- current `index.html` остаётся единственным public frontend entrypoint до отдельного promotion decision;
-- experimental Globe runtime under #339–#345 не считается public entrypoint до #345/promotion gate;
+- current `index.html` остаётся default public frontend entrypoint и rollback path;
+- generated `/globe/` является отдельно зарегистрированным public R&D preview, но не maintained app или product-ready capability;
 - Explorer State validator is a validation entrypoint, not a frontend/backend runtime entrypoint;
 - working Explorer State ownership remains in `docs/work/README.md`; it is not promoted into the canonical owner registry by this structure document;
 - legacy-слои не могут становиться скрытым альтернативным runtime.
@@ -161,7 +162,7 @@ js/
 - measured baseline, selector-owner matrix, staged target tree and recovery rules зафиксированы в `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
 
 Renderer expansion rule:
-- Globe/future renderer code должен находиться за explicit experimental/runtime boundary до promotion;
+- Globe/future renderer code должен находиться за explicit experimental/runtime boundary; Pages получает только deterministic generated preview;
 - renderer-neutral selected time/layers/object state не должен принадлежать MapLibre или Globe engine objects;
 - render adapters получают World Model / World Slice data через явную projection boundary;
 - engine-specific camera, GPU resources, tile caches, hover/picking buffers и visual transitions остаются renderer-local;
@@ -401,7 +402,7 @@ docs/reference/
 - renderer-specific historical data forks (`*_2d`, `*_3d` or equivalent) that can drift semantically;
 - renderer-owned `zoom/pitch/bearing/camera/viewer/scene` state promoted into the semantic Explorer State contract;
 - authoritative persisted `visible_object_ids` instead of deterministic derivation from World Slice + Explorer State;
-- experimental Globe assets/dependencies silently entering the public Pages artifact before promotion;
+- experimental Globe assets/dependencies entering the public Pages artifact outside the explicit `--public-preview` build and `/globe/` route;
 - использование terrain/imagery provider metadata как substitute for historical provenance.
 
 Документационные нарушения:

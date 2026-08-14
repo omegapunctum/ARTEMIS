@@ -32,6 +32,7 @@ def _historical_gate_c_payload() -> dict:
 
 def test_current_project_state_opens_one_gate_d_vertical() -> None:
     state = _state()
+    assert state["capability"]["globe"] == "public_r_and_d_preview"
     assert validate_project_state() == {
         "gate": "D",
         "gate_status": "in_progress",

@@ -186,7 +186,7 @@ Vertical получает право на следующую реализаци�
 5. Evidence supports the model; it does not replace the experience.
 6. Uncertainty is visible and spatial-temporal.
 7. Small complete World Slice before corpus breadth.
-8. Generated/non-public Globe evidence first; public deployment only after a separate promotion decision.
+8. Generated Globe evidence first; bounded public R&D review access requires a separate explicit decision and does not itself promote the Globe to a product capability.
 9. Globe is the active interface candidate, but value must come from shared spatial-temporal semantics rather than decorative 3D.
 10. AI/VR and production-scale dynamic Earth remain separate gates.
 11. Current truth is never inferred from the North Star.

@@ -67,6 +67,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["engine_id"] == EXPECTED_ENGINE
     assert metadata["backend_required"] is False
     assert metadata["public_pages_entrypoint"] is False
+    assert metadata["deployment_mode"] == "isolated_review_artifact"
     assert metadata["capability_path_is_semantic"] is False
     assert metadata["knowledge_record_count"] == metadata["semantic_item_count"]
     assert metadata["explorer_view_count"] == 96
@@ -74,6 +75,21 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["browser_acceptance_profile_count"] == 3
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
+
+
+def test_builder_marks_public_review_preview_without_changing_semantics(tmp_path: Path) -> None:
+    output = tmp_path / "public-globe-preview"
+    metadata = build_spike(output, public_preview=True)
+    index = (output / "index.html").read_text(encoding="utf-8")
+
+    assert metadata["public_pages_entrypoint"] is True
+    assert metadata["deployment_mode"] == "public_r_and_d_preview"
+    assert metadata["backend_required"] is False
+    assert metadata["semantic_dataset"] == DEFAULT_DATASET
+    assert "Публичный R&D-preview" in index
+    assert 'href="../"' in index
+    assert "{{PUBLIC_PREVIEW_STATUS}}" not in index
+    assert "{{PUBLIC_PREVIEW_NAV}}" not in index
 
 
 def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path: Path) -> None:

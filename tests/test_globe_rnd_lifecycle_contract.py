@@ -61,17 +61,17 @@ def test_relation_semantics_are_deferred_but_fail_closed() -> None:
     assert "only derived proximity/co-presence is allowed" in master
 
 
-def test_globe_is_primary_development_surface_but_not_public_capability() -> None:
+def test_globe_is_primary_development_surface_with_bounded_public_review_only() -> None:
     priorities = _text(PRIORITIES)
     truth = _text(TRUTH)
     scope = _text(SCOPE)
     decision = _text(DECISION)
 
     assert "Globe is the primary interface-development surface" in priorities
-    assert "there is no public ARTEMIS Globe product surface" in truth
-    assert "R&D EVIDENCE, NOT PUBLIC CAPABILITY" in truth
-    assert "The Globe is not public or product-validated" not in scope  # current truth owns runtime wording.
-    assert "Public capability change: none" in decision
+    assert "public R&D preview" in truth
+    assert "не является product-ready Globe" in truth
+    assert "bounded public R&D preview" in scope
+    assert "labelled generated R&D review preview" in decision
 
 
 def test_one_semantic_core_and_2d_rollback_are_preserved() -> None:

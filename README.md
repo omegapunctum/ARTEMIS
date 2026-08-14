@@ -10,7 +10,7 @@ The long-term attractor is an explorable spatial-temporal model of human knowled
 
 Foundation v3 restored space and time as core coordinates. Foundation v3.1, accepted in PR `#364`, clarifies the attractor, one-semantic-core/many-domains/many-interfaces rule and future AI exploration boundary without changing current capability. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations when permitted, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
 
-The public runtime does **not** yet implement the Foundation target. A browser-executed MapLibre Globe R&D artifact exists, and issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the non-public Leonardo-in-Romagna 1502 World Slice boundary; Gate D is now in progress as a non-public source-aware Globe experience. The Globe is not public or product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
+The public runtime does **not** yet implement the Foundation target. A browser-executed MapLibre Globe is available on the existing site as a clearly labelled `/globe/` R&D review preview, and issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the Leonardo-in-Romagna 1502 candidate boundary; Gate D is in progress. Public review access does not make the Globe or its draft/rejected historical content product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -28,16 +28,16 @@ ARTEMIS currently combines:
 - batch public publish pipeline
 - progressive web app (PWA)
 
-The current operational state is **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress and non-public**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
+The current operational state is **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress / public Globe R&D preview**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 
 | Status | Meaning | Current examples |
 |---|---|---|
-| `PUBLIC NOW` | Works on GitHub Pages without backend execution | map, timeline/filter/detail baseline, checked-in `data/*` |
+| `PUBLIC NOW` | Works on GitHub Pages without backend execution | 2D map baseline, timeline/filter/detail, checked-in `data/*`, labelled `/globe/` R&D preview |
 | `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
 | `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
-| `R&D` | Executable experimental evidence, not a public capability | generated MapLibre 5.24.0 Globe spike and renderer contracts |
+| `R&D` | Executable experimental evidence; may be publicly reviewable but is not product readiness | generated MapLibre 5.24.0 Globe preview and renderer contracts |
 | `CONCEPT TARGET` | Defined but not implemented in public runtime | spatial-temporal knowledge model, Life in Context, State/Process/Trajectory/Region |
 | `FUTURE` | Not an active product capability | source-bound AI/exploration actions, personal knowledge, causal/counterfactual runtime, production-scale dynamic Earth, VR/AR |
 
