@@ -644,7 +644,12 @@ def _build_explorer_views(
     }
 
 
-def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, Any]:
+def build_spike(
+    output: Path,
+    *,
+    dataset: str = DEFAULT_DATASET,
+    public_preview: bool = False,
+) -> dict[str, Any]:
     world, state, source_root = _load_semantic_inputs(dataset)
     state = copy.deepcopy(state)
     state["active_layer_refs"] = sorted(state.get("active_layer_refs") or [])
@@ -743,7 +748,23 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
         shutil.rmtree(output)
     output.mkdir(parents=True, exist_ok=True)
 
-    shutil.copyfile(TEMPLATE_DIR / "index.html.template", output / "index.html")
+    template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
+    preview_status = (
+        "Публичный R&D-preview — экспериментальная поверхность, не готовый продукт"
+        if public_preview
+        else "Generated review artifact — not a public capability"
+    )
+    preview_nav = (
+        '<a class="preview-nav-link" href="../">← 2D-карта</a>'
+        if public_preview
+        else ""
+    )
+    (output / "index.html").write_text(
+        template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status).replace(
+            "{{PUBLIC_PREVIEW_NAV}}", preview_nav
+        ),
+        encoding="utf-8",
+    )
     shutil.copyfile(TEMPLATE_DIR / "runtime.js", output / "runtime.js")
     shutil.copyfile(TEMPLATE_DIR / "style.css", output / "style.css")
 
@@ -793,7 +814,10 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
         "earth_context": _earth_context_runtime_status(earth_context, asset_manifest),
         "capability_path_is_semantic": False,
         "backend_required": False,
-        "public_pages_entrypoint": False,
+        "public_pages_entrypoint": public_preview,
+        "deployment_mode": (
+            "public_r_and_d_preview" if public_preview else "isolated_review_artifact"
+        ),
         "browser_acceptance_profile_count": len(acceptance_profiles.get("profiles", [])),
         "input_sha256": {
             "world_model": _sha(world),
@@ -814,10 +838,15 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
     }
     _write_json(output / "build-meta.json", metadata)
 
+    runtime_boundary = (
+        "This generated directory is deployed as a public R&D preview. It is not a product-ready ARTEMIS capability.\n"
+        if public_preview
+        else "This directory is generated. It is not the public ARTEMIS runtime.\n"
+    )
     (output / "README.txt").write_text(
         "ARTEMIS source-aware Globe Gate D review artifact (#355)\n\n"
-        "This directory is generated. It is not the public ARTEMIS runtime.\n"
-        "Serve it with any static HTTP server, for example:\n\n"
+        + runtime_boundary
+        + "Serve it with any static HTTP server, for example:\n\n"
         f"  python -m http.server 8080 --directory {output}\n\n"
         "Then open http://127.0.0.1:8080/ in a browser.\n"
         "Network access is required only to load the pinned MapLibre GL JS engine from unpkg.\n"
@@ -851,10 +880,19 @@ def main() -> int:
         default=DEFAULT_DATASET,
         help="semantic input package (default: frozen Leonardo Gate C package)",
     )
+    parser.add_argument(
+        "--public-preview",
+        action="store_true",
+        help="mark the generated artifact as a public R&D preview entrypoint",
+    )
     args = parser.parse_args()
 
     try:
-        metadata = build_spike(args.output.resolve(), dataset=args.dataset)
+        metadata = build_spike(
+            args.output.resolve(),
+            dataset=args.dataset,
+            public_preview=args.public_preview,
+        )
         print(
             "[PASS] Globe runtime spike build: "
             f"engine={metadata['engine_id']}; "

@@ -100,6 +100,21 @@ jobs:
             cp "$file" "pages_artifact/$file"
           done
 
+      - name: Build public Globe R&D preview
+        run: |
+          python scripts/build_globe_spike.py \
+            --public-preview \
+            --output pages_artifact/globe
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          metadata = json.loads(Path("pages_artifact/globe/build-meta.json").read_text())
+          assert metadata["public_pages_entrypoint"] is True
+          assert metadata["deployment_mode"] == "public_r_and_d_preview"
+          assert metadata["backend_required"] is False
+          PY
+
       - name: Generate public runtime configuration
         env:
           ARTEMIS_API_BASE: ${{ vars.ARTEMIS_API_BASE }}

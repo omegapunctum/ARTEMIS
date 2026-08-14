@@ -6,7 +6,7 @@
 - Date: 2026-08-14.
 - Owner issue: #355.
 - Runtime: isolated generated Globe artifact only.
-- Public capability: no.
+- Public capability: deterministic R&D preview reachability is separately authorized; this evidence still proves no product readiness.
 - Gate E: closed until explicit `ADVANCE_TO_GATE_E`.
 
 ## 1. Decision supported
@@ -49,7 +49,7 @@ The automated evidence is not:
 - a real iOS, Android, tablet or desktop-device run;
 - a cross-engine Firefox/Safari result;
 - a production performance SLO or capacity baseline;
-- authorization to add historical geometry, a live terrain provider, backend services or a public Globe route;
+- authorization to add historical geometry, a live terrain provider, backend services or any public Globe route beyond the bounded `/globe/` R&D preview;
 - a Gate D exit decision or permission to open Gate E.
 
 ## 4. Remaining Gate D review
@@ -62,7 +62,7 @@ Before an explicit Gate D exit decision, the owner must review the uploaded prof
 4. whether the MapLibre path exposes a measured blocker that justifies a bounded CesiumJS comparison;
 5. the explicit promote/hold decision, rollback boundary and canonical truth synchronization.
 
-Absent a measured blocker, MapLibre remains the selected Gate D candidate. The current public runtime remains the root 2D MapLibre application.
+Absent a measured blocker, MapLibre remains the selected Gate D candidate. The root 2D MapLibre application remains the default public runtime and rollback path; `/globe/` is a separate review preview.
 
 ## 5. Semantic and data boundaries
 

@@ -121,7 +121,10 @@ def _validate_gate_boundary(contract: dict[str, Any], project_state: dict[str, A
     _require(gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
     _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
     _require(331 in github.get("deferred_issues", []), "Relation issue #331 must remain deferred")
-    _require(capability.get("globe") == "non_public_r_and_d", "Globe must remain non-public R&D")
+    _require(
+        capability.get("globe") == "public_r_and_d_preview",
+        "Globe must remain a bounded public R&D preview",
+    )
 
     boundary = contract.get("gate_boundary", {})
     _require(boundary.get("current_gate") == "C", "contract current_gate must be C")

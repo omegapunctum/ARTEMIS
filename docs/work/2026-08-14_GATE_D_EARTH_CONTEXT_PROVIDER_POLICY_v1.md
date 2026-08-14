@@ -5,7 +5,7 @@
 - Type: active Gate D implementation policy and review evidence.
 - Date: 2026-08-14.
 - Issues: #355; follows the merged #342 Geospatial Asset Manifest contract.
-- Runtime: generated, non-public Globe review artifact only.
+- Runtime: generated Globe review artifact; may be served only through the authorized labelled `/globe/` R&D preview.
 - Historical authority: none.
 
 ## Decision
@@ -68,7 +68,7 @@ The synthetic terrain asset remains only a non-live adapter fixture. This decisi
 This increment supplies the real Earth-context/provider-policy evidence required by Gate D. It does not:
 
 - open Gate E;
-- make the Globe public;
+- make the Globe product-ready or authorize a public route beyond the bounded R&D preview;
 - promote the Leonardo package;
 - authorize historical geometry;
 - change Airtable or import any historical rows;

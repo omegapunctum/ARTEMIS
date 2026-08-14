@@ -16,6 +16,7 @@ on:
       - "docs/work/2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md"
       - "docs/work/README.md"
       - ".github/workflows/globe-*.yml"
+      - ".github/workflows/pages.yml"
       - "tests/test_globe_repository_boundary.py"
   pull_request:
     paths:
@@ -32,6 +33,7 @@ on:
       - "docs/work/2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md"
       - "docs/work/README.md"
       - ".github/workflows/globe-*.yml"
+      - ".github/workflows/pages.yml"
       - "tests/test_globe_repository_boundary.py"
 
 jobs:

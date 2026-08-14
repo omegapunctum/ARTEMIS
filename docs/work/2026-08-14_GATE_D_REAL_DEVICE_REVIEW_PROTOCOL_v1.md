@@ -6,8 +6,8 @@
 - Date: 2026-08-14.
 - Owner issue: `#355`.
 - Evidence status: `PENDING` until every mandatory run is recorded.
-- Runtime: isolated generated Globe artifact only.
-- Public capability change: none.
+- Runtime: isolated generated Globe artifact, locally or through the exact `/globe/` R&D preview build.
+- Public capability change: review reachability only; no product promotion.
 - Gate E: closed until an explicit Gate D `ADVANCE_TO_GATE_E` decision.
 
 ## 1. Purpose
@@ -40,7 +40,7 @@ Before testing, record all of the following. A run without exact artifact identi
 | Reviewer | Stable non-sensitive reviewer identifier |
 | Network condition | Connection type and whether throttling was used |
 
-Use a local HTTP server or another non-public review surface. Do not add a public Pages route. Do not include credentials, private research notes or personal data in screenshots, logs or recordings.
+Use the exact generated Pages R&D preview or a reproducible local build. No additional public route is authorized. Do not include credentials, private research notes or personal data in screenshots, logs or recordings.
 
 ## 3. Mandatory environment matrix
 
@@ -59,9 +59,9 @@ For every mandatory run:
 
 1. Start from a fresh browser profile or record all extensions and custom settings.
 2. Record `navigator.userAgent`, `window.innerWidth`, `window.innerHeight`, `devicePixelRatio` and the WebGL renderer/vendor exposed by the browser.
-3. Load the exact non-public artifact and wait for `data-artemis-visual-ready="true"`.
+3. Load the exact generated artifact or `/globe/` preview and wait for `data-artemis-visual-ready="true"`.
 4. Confirm that present-day land/coastlines are visibly legible and that the runtime reports non-zero Earth-context source and rendered feature counts.
-5. Confirm the artifact is labelled non-public/R&D and Natural Earth is identified as `present_day_context`, not historical geography.
+5. Confirm the artifact is labelled R&D/not product-ready and Natural Earth is identified as `present_day_context`, not historical geography.
 6. Record console errors, WebGL warnings, failed network requests and any browser fallback.
 7. Keep the frozen Leonardo boundary unchanged: 8 August–31 December 1502; Claims draft/rejected; unknown routes unresolved; Region geometry withheld.
 

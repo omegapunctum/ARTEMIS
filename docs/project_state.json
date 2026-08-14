@@ -61,7 +61,7 @@
   },
   "capability": {
     "public_runtime": "2d_architecture_atlas_baseline",
-    "globe": "non_public_r_and_d",
+    "globe": "public_r_and_d_preview",
     "world_slice": "gate_c_frozen_non_public"
   },
   "canonical_refs": [
@@ -74,7 +74,9 @@
     "docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md",
     "docs/work/2026-08-12_GATE_D_OPENING_v1.md",
     "docs/work/2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md",
-    "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md"
+    "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md",
+    "docs/work/2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md",
+    "docs/work/2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md"
   ],
   "blockers": [],
   "next_transition": {

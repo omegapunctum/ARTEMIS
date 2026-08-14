@@ -7,7 +7,9 @@
 - Issue: #345.
 - Parent R&D track: #339.
 - Dependencies: #340–#344 completed.
-- Decision status: R&D boundary only; no public Globe promotion.
+- Decision status: amended 2026-08-14 to allow a generated public R&D review preview; no maintained-app or product promotion.
+
+The amendment is owned by `2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md`. It changes reachability only: the root 2D runtime remains the default and rollback entrypoint, while `/globe/` is a labelled review surface.
 
 ## 1. Decision
 
@@ -39,10 +41,11 @@ geospatial infrastructure contract
 └── scripts/validate_geospatial_assets.py
 
 generated / disposable runtime
-└── build/globe-spike/ or CI artifact only
+├── build/globe-spike/ or CI artifact
+└── pages_artifact/globe/ during deterministic Pages deployment only
 ```
 
-`index.html` remains the only public frontend entrypoint.
+The root `index.html` remains the default public frontend entrypoint. The generated `/globe/` route is an additional public R&D preview, not a maintained application or product surface.
 
 The Globe spike remains a **generated experimental artifact**, not a second checked-in public application.
 
@@ -81,7 +84,7 @@ Rules:
 
 - remains current public Pages runtime;
 - remains MapLibre GL JS 4.7.1 until a separate upgrade decision;
-- does not import or link the Globe spike;
+- links to the bounded generated Globe preview as `3D Globe · R&D`;
 - service worker / PWA manifest do not pre-cache or advertise the Globe spike;
 - `data/features.geojson` remains the current public 2D compatibility projection, not the Foundation v3 World Model.
 
@@ -110,13 +113,15 @@ The builder output may exist only as:
 
 - local `build/globe-spike/` (or an explicitly supplied temporary output directory);
 - GitHub Actions artifact;
+- `pages_artifact/globe/` produced during the canonical Pages deployment with `--public-preview`;
 - another disposable review artifact explicitly approved by #345 successor governance.
 
-Generated output must not be committed as canonical content or copied into root Pages artifacts by the R&D workflow.
+Generated output must not be committed as canonical content. The dedicated R&D workflow remains review-only; only the canonical Pages workflow may generate the labelled preview.
 
 Required metadata:
 
-- `public_pages_entrypoint=false`;
+- `public_pages_entrypoint=false` for local/CI review artifacts and `true` only for the explicit Pages preview build;
+- `deployment_mode=isolated_review_artifact | public_r_and_d_preview`;
 - `backend_required=false` for the current spike;
 - World Slice / Explorer State / projection IDs;
 - engine identity;
@@ -126,14 +131,16 @@ Required metadata:
 
 ## 5. GitHub Pages boundary
 
-Until an explicit promotion decision:
+After the explicit public-review-preview decision:
 
-- root `index.html` is the only Pages app entrypoint;
+- root `index.html` remains the default and rollback Pages app;
+- `/globe/` is permitted only as a visibly labelled generated R&D preview;
 - Globe R&D workflows must not call `actions/deploy-pages`, `actions/upload-pages-artifact`, `peaceiris/actions-gh-pages` or equivalent publishing actions;
 - Globe artifact upload uses generic `actions/upload-artifact` for review only;
+- the canonical `pages.yml` workflow alone may build the preview into `pages_artifact/globe/`;
 - root `manifest.json` must not advertise the Globe runtime;
 - root `sw.js` must not cache Globe spike files;
-- public navigation must not link to the generated spike;
+- public navigation may link only to the bounded `./globe/` preview with an R&D label;
 - private provider credentials must never be exposed to Pages.
 
 This is a hard boundary, not a naming convention.
@@ -262,10 +269,10 @@ World Model truth may remain outside JavaScript packages; packaging must not red
 
 ## 12. Cleanup / lifecycle rule
 
-The R&D Globe source may remain in `main` after #345 as executable architecture evidence, provided:
+The R&D Globe source may remain in `main` after #345 as executable architecture evidence and a generated public review preview, provided:
 
 - dedicated CI stays green;
-- it remains non-public;
+- public reachability remains limited to the labelled `/globe/` preview and is not described as product readiness;
 - dependencies are pinned/reviewable;
 - generated artifacts remain disposable;
 - it does not become an unmaintained shadow product.

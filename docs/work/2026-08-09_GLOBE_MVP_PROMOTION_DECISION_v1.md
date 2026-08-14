@@ -8,7 +8,9 @@
 - Completed recovery: issue `#344` / PR `#351`.
 - Completed Gate C delivery: issues `#332` / `#360` and `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`.
 - Active Gate D contract: `2026-08-12_GATE_D_OPENING_v1.md`.
-- Public capability change: none.
+- Public capability change: amended 2026-08-14 to allow a labelled generated R&D review preview; no maintained-app or product promotion.
+
+The amendment is recorded in `2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md`. It allows `/globe/` review access while preserving every Gate D exit, provider, accessibility, performance, rollback and product-validation requirement below.
 
 ## 1. Decision
 
