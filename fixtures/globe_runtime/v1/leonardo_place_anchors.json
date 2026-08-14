@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "gate-d-leonardo-place-anchors-v1",
+  "coordinate_reference": "EPSG:4326",
+  "semantic_role": "present_day_settlement_reference",
+  "source": {
+    "source_id": "source-wikidata-place-anchors",
+    "title": "Wikidata settlement coordinate locations",
+    "organization": "Wikimedia Foundation / Wikidata community",
+    "source_type": "open_structured_data",
+    "url": "https://www.wikidata.org/",
+    "locator": "P625 coordinate location on Q13369, Q6662, Q99937 and Q50195",
+    "retrieved_at": "2026-08-14",
+    "curation_state": "verified_contextual_reference",
+    "rights": {
+      "access_status": "accessible",
+      "data_or_text_use": "permitted",
+      "media_reuse": "not_applicable",
+      "derived_geometry_use": "permitted",
+      "license": "CC0-1.0",
+      "attribution": "Wikidata contributors; structured data available under CC0 1.0"
+    }
+  },
+  "uncertainty": {
+    "uncertainty_id": "uncertainty-place-anchor-historical-position",
+    "dimension": "spatial_precision",
+    "description": "Each coordinate is a present-day reference point for the named settlement, not an evidenced position of Leonardo, an event, a route, a historical footprint, or a political boundary in 1502.",
+    "effect": "The renderer may place a named-settlement anchor and settlement-level presence segment at this point, but exact position within the settlement remains unknown and route gaps remain geometry-free."
+  },
+  "anchors": [
+    {
+      "anchor_id": "anchor-rimini-present-day-settlement",
+      "place_ref": "place-rimini",
+      "label": "Rimini",
+      "source_id": "source-wikidata-place-anchors",
+      "source_entity_id": "Q13369",
+      "source_uri": "https://www.wikidata.org/wiki/Q13369",
+      "claim_id": "claim-rimini-present-day-settlement-anchor",
+      "evidence_link_id": "evidence-rimini-wikidata-coordinate",
+      "geometry": {"type": "Point", "coordinates": [12.5683333333, 44.0594444444]},
+      "spatial_precision": "named_settlement",
+      "historical_location_precision": "exact_position_within_named_settlement_unknown",
+      "semantic_role": "present_day_settlement_reference",
+      "uncertainty_ref": "uncertainty-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-cesena-present-day-settlement",
+      "place_ref": "place-cesena",
+      "label": "Cesena",
+      "source_id": "source-wikidata-place-anchors",
+      "source_entity_id": "Q6662",
+      "source_uri": "https://www.wikidata.org/wiki/Q6662",
+      "claim_id": "claim-cesena-present-day-settlement-anchor",
+      "evidence_link_id": "evidence-cesena-wikidata-coordinate",
+      "geometry": {"type": "Point", "coordinates": [12.2333333333, 44.1333333333]},
+      "spatial_precision": "named_settlement",
+      "historical_location_precision": "exact_position_within_named_settlement_unknown",
+      "semantic_role": "present_day_settlement_reference",
+      "uncertainty_ref": "uncertainty-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-cesenatico-present-day-settlement",
+      "place_ref": "place-cesenatico",
+      "label": "Cesenatico",
+      "source_id": "source-wikidata-place-anchors",
+      "source_entity_id": "Q99937",
+      "source_uri": "https://www.wikidata.org/wiki/Q99937",
+      "claim_id": "claim-cesenatico-present-day-settlement-anchor",
+      "evidence_link_id": "evidence-cesenatico-wikidata-coordinate",
+      "geometry": {"type": "Point", "coordinates": [12.4006893889, 44.2011896944]},
+      "spatial_precision": "named_settlement",
+      "historical_location_precision": "exact_position_within_named_settlement_unknown",
+      "semantic_role": "present_day_settlement_reference",
+      "uncertainty_ref": "uncertainty-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-imola-present-day-settlement",
+      "place_ref": "place-imola",
+      "label": "Imola",
+      "source_id": "source-wikidata-place-anchors",
+      "source_entity_id": "Q50195",
+      "source_uri": "https://www.wikidata.org/wiki/Q50195",
+      "claim_id": "claim-imola-present-day-settlement-anchor",
+      "evidence_link_id": "evidence-imola-wikidata-coordinate",
+      "geometry": {"type": "Point", "coordinates": [11.7147222222, 44.3530555556]},
+      "spatial_precision": "named_settlement",
+      "historical_location_precision": "exact_position_within_named_settlement_unknown",
+      "semantic_role": "present_day_settlement_reference",
+      "uncertainty_ref": "uncertainty-place-anchor-historical-position"
+    }
+  ]
+}

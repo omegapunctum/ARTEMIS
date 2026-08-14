@@ -19,6 +19,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 real Earth-context selection, provenance, license, cache and secret boundary | replaced only by a reviewed provider decision or archived with Gate D |
 | `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` | #355 deterministic desktop/tablet/hosted-mobile browser evidence and explicit limitations | replaced by normal-browser/real-device/assistive-technology evidence or archived with Gate D |
 | `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | #355 physical desktop/390px mobile/assistive-technology/non-virtual-performance evidence protocol; evidence remains pending | completed evidence record plus one Gate D decision, or archived after `NARROW`/`REJECT` |
+| `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with Gate D |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
@@ -55,15 +56,16 @@ Active execution rule for the Globe MVP:
 - Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public input;
 - Gate D is separately opened and active under #355; Gate C completion and Foundation v3.1 did not open it by implication;
 - the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
-- it remains generated/non-public and must not create another root/Pages entrypoint before a separate promotion decision;
+- it is published only at the explicitly labelled `/globe/` R&D review route; this does not make it a product-ready capability, and root 2D remains the default/rollback entrypoint;
 - MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
 - the reviewed unknown Trajectory gaps remain unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
 - the default Gate D review artifact uses pinned Natural Earth physical geography as real `present_day_context`; it cannot be described as historical geography, while synthetic terrain remains non-live and cannot imply production provider readiness;
 - live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
-- the MVP decision does not make 3D Globe a current public capability;
+- the MVP decision and `/globe/` review publication do not make 3D Globe a product-ready capability;
 - #331 is deferred but becomes blocking before documented Relation predicates enter the real corpus/runtime;
 - the completed #344 parity contract remains a fail-closed promotion gate for every runtime change;
 - the Leonardo-in-Romagna 1502 Gate C package is frozen with two independent READY reviews, but its historical Claims remain draft, Region/route geometry remains withheld where unsupported and `promotion_allowed=false`.
+- the separate Gate D place-anchor overlay may resolve only four present-day named-settlement points with source, rights and uncertainty closure; it cannot create exact historical positions, routes, boundaries, Relations or Airtable rows.
 
 Accepted Attractor-refinement rule from #363 / PR #364:
 

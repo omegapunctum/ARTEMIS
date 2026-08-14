@@ -134,7 +134,13 @@
         "geometry": {"$ref": "#/$defs/geojsonGeometry"},
         "owner_ref": {"$ref": "#/$defs/id"},
         "owner_subobject_ref": {"$ref": "#/$defs/nullableId"},
-        "origin_kind": {"enum": ["explicit_spatial_extent", "region_geometry_version"]},
+        "origin_kind": {
+          "enum": [
+            "explicit_spatial_extent",
+            "region_geometry_version",
+            "place_reference_anchor"
+          ]
+        },
         "spatial_precision": {"type": "string", "minLength": 1},
         "reconstruction_mode": {"type": ["string", "null"]},
         "is_primary": {"type": ["boolean", "null"]},

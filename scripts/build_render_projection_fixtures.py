@@ -254,6 +254,18 @@ def _region_index(world: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {str(region["id"]): region for region in world.get("regions", [])}
 
 
+def _place_anchor_index(world: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    anchors: dict[str, dict[str, Any]] = {}
+    for anchor in world.get("place_anchors", []):
+        place_ref = str(anchor.get("place_ref") or "")
+        if not place_ref:
+            raise ProjectionError("place anchor lacks place_ref")
+        if place_ref in anchors:
+            raise ProjectionError(f"duplicate place anchor for {place_ref}")
+        anchors[place_ref] = anchor
+    return anchors
+
+
 def _ensure_geometry_record(
     geometry_records: dict[str, dict[str, Any]],
     *,
@@ -403,7 +415,25 @@ def _resolve_spatial_extent(
             return "resolved", refs, None, []
         reason = "region_has_no_temporally_resolved_geometry"
     elif kind == "named_place" and place_ref:
-        reason = "named_place_without_resolved_geometry"
+        anchor = _place_anchor_index(world).get(place_ref)
+        if anchor is None:
+            reason = "named_place_without_resolved_geometry"
+        else:
+            anchor_extent = {
+                "geometry": copy.deepcopy(anchor["geometry"]),
+                "precision": anchor["spatial_precision"],
+                "basis_claim_refs": [anchor["claim_id"]],
+            }
+            ref = _ensure_geometry_record(
+                geometry_records,
+                owner_ref=place_ref,
+                owner_subobject_ref=None,
+                spatial_extent=anchor_extent,
+                origin_kind="place_reference_anchor",
+                claim_refs=[anchor["claim_id"]],
+                uncertainty_refs=[anchor["uncertainty_ref"]],
+            )
+            return "resolved", [ref], place_ref, []
     elif kind == "unknown":
         reason = "unknown_spatial_extent"
     elif kind in {"multiple_regions", "multiple_places", "composite_scope"}:
@@ -438,8 +468,22 @@ def _make_item(
     evidence: dict[str, list[dict[str, Any]]],
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     item_id = _item_id(role, object_ref, subobject_ref)
+    anchor_claim_refs: list[str] = []
+    anchor_uncertainty_refs: list[str] = []
+    if (
+        spatial_extent
+        and spatial_extent.get("kind") == "named_place"
+        and spatial_extent.get("place_ref")
+    ):
+        anchor = _place_anchor_index(world).get(str(spatial_extent["place_ref"]))
+        if anchor is not None:
+            anchor_claim_refs = [str(anchor["claim_id"])]
+            anchor_uncertainty_refs = [str(anchor["uncertainty_ref"])]
     normalized_claims, normalized_uncertainty, evidence_refs, source_refs = _epistemic_refs(
-        claim_refs, uncertainty_refs, claims, evidence
+        [*claim_refs, *anchor_claim_refs],
+        [*uncertainty_refs, *anchor_uncertainty_refs],
+        claims,
+        evidence,
     )
     spatial_status, geometry_refs, place_ref, losses = _resolve_spatial_extent(
         spatial_extent,
@@ -556,7 +600,7 @@ def build_projection(
             layer_refs=entity.get("layer_refs") or [],
             claim_refs=entity.get("claim_refs") or [],
             uncertainty_refs=entity.get("uncertainty_refs") or [],
-            spatial_extent=None,
+            spatial_extent=entity.get("spatial_extent"),
             semantic_flags=_semantic_flags(),
             world=world,
             state=state,
@@ -564,8 +608,10 @@ def build_projection(
             claims=claims,
             evidence=evidence,
         )
-
-        if str(entity.get("entity_kind") or "") == "Place":
+        if (
+            str(entity.get("entity_kind") or "") == "Place"
+            and not entity.get("spatial_extent")
+        ):
             item["spatial_status"] = "unresolved"
             item["place_ref"] = entity_id
             item_losses = [
@@ -601,6 +647,7 @@ def build_projection(
             claims=claims,
             evidence=evidence,
         )
+
         add(item, item_losses)
 
     for state_obj in world.get("states", []):

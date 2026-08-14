@@ -18,18 +18,20 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 Важно:
 
 - Foundation documentation не реализует world model runtime;
-- текущий public runtime остаётся статическим Architecture Atlas;
-- real Life in Context synchronized multi-layer experience ещё не доступен публично;
+- root public runtime остаётся статическим Architecture Atlas и default/rollback entrypoint;
+- `/globe/` доступен как явно маркированный experimental R&D review preview, а не product-ready capability;
+- real validated Life in Context synchronized multi-layer experience ещё не доступен как продукт;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
 - generative AI, causal/counterfactual runtime, personal knowledge model, VR/AR and universal corpus remain frozen/future;
-- **A real executable 3D Globe R&D artifact exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
-- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface. The selected Gate D Earth context is a pinned, bundled Natural Earth present-day layer, not historical geography or a public/live provider capability.
-- PR `#379` integrates the frozen Gate C package into the generated non-public Globe artifact through the shared World Model → Explorer State → Render Projection path. It preserves `0` authorized historical geometries/primitives, all withheld Region alternatives and all unknown-route gaps.
+- **A real executable 3D Globe R&D artifact exists** and uses MapLibre GL JS `5.24.0` in isolation; the root public runtime remains MapLibre GL JS `4.7.1`.
+- PR `#389` publishes that generated artifact at `/globe/` only as a labelled **experimental R&D review preview, not a product-ready capability**. Root 2D remains the default and rollback entrypoint. The selected Gate D Earth context is a pinned, bundled Natural Earth present-day layer, not historical geography or a public/live provider capability.
+- PR `#379` integrated the frozen Gate C package into the then non-public generated Globe artifact through the shared World Model → Explorer State → Render Projection path. It preserved `0` authorized historical geometries/primitives, all withheld Region alternatives and all unknown-route gaps.
 - PR `#380` adds 96 deterministic Explorer views from six source-native temporal presets and all 16 combinations of four semantic layers, plus synchronized timeline/layers, canonical selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior. This is a completed Gate D interaction increment, not a completed Gate D experience or public promotion.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
 - PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
+- The Gate D place-anchor overlay resolves Rimini, Cesena, Cesenatico and Imola only as CC0 present-day `named_settlement` reference points. Each point carries a Claim, EvidenceLink locator, Source/rights record and material spatial-precision Uncertainty. It does not modify the frozen Gate C package, claim an exact Leonardo/event position, connect a route or create a Region boundary.
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
@@ -45,6 +47,7 @@ GitHub Pages публикует статический runtime:
 - фильтры, поиск, выбор периода и карточку объекта;
 - PWA/static behavior в границах текущего service worker;
 - интерфейсные entry points, не требующие backend API.
+- `/globe/` as an explicitly labelled generated experimental R&D review route; it is not the default entrypoint or a product-readiness claim.
 
 GitHub Pages не исполняет FastAPI. Без отдельно настроенного `ARTEMIS_API_BASE` публичный сайт не предоставляет рабочие auth, Research Slices, Stories, Courses, uploads и moderation API.
 
@@ -164,7 +167,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 - Gate C package integrated into Airtable as a validated shadow copy;
 - a complete Gate D experience with normal-browser real desktop and 390 CSS px mobile evidence, assistive-technology review, representative non-virtual performance observations and an explicit Gate D exit decision;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
-- public/product 3D Globe, production dynamic terrain or VR experience; #355 changes active development scope, not current public capability;
+- product-ready 3D Globe, production dynamic terrain or VR experience; `/globe/` is only a bounded public R&D review route;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
 - полноценные guided Stories и Courses;
@@ -195,9 +198,9 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress and non-public**.
+ARTEMIS находится в состоянии **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress / bounded public R&D preview**.
 
-Current public runtime and public data remain the Architecture Atlas baseline. Foundation contracts are substantially ahead of public implementation. Airtable additionally contains nine empty non-authoritative World Model shadow tables plus a deterministic/frozen Leonardo row plan, but this is data-governance infrastructure and preflight evidence, not a new product/runtime or historical-corpus capability.
+Root 2D and its public data remain the Architecture Atlas baseline/default/rollback surface. `/globe/` is a generated labelled R&D review preview, not a product-ready capability. Foundation contracts are substantially ahead of public implementation. Airtable additionally contains nine empty non-authoritative World Model shadow tables plus a deterministic/frozen Leonardo row plan, but this is data-governance infrastructure and preflight evidence, not a new product/runtime or historical-corpus capability.
 
 Reviewed/accepted foundation evidence includes:
 
@@ -207,11 +210,13 @@ Reviewed/accepted foundation evidence includes:
 - #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews;
 - #363 / PR #364 Foundation v3.1 Attractor refinement — accepted with all required repository workflows green on its merge candidate;
 - #377 / PR #378 Progressive Refinement Contract v1 — accepted foundation evidence without runtime/storage capability change;
-- PR #379 — frozen Gate C package consumed by the generated non-public Globe artifact through the shared semantic path;
+- PR #379 — frozen Gate C package consumed by the initially non-public generated Globe artifact through the shared semantic path;
 - PR #380 — synchronized time/layers/selection/inspector interaction increment with 96 deterministic Explorer views and all six PR workflows green;
 - PR #382 — pinned bundled Natural Earth physical-land context with explicit provider/licensing/temporal-role boundary and all seven PR workflows green;
 - PR #383 — desktop/tablet/hosted-mobile browser evidence, zero measured overflow/name/target/overlay failures and all six triggered PR workflows green.
 - PR #385 — same-page wall-clock CDP visual-readiness evidence with non-zero Natural Earth source/render counts, legible reviewed hosted screenshots and all six triggered workflows green.
+- PR #389 — bounded `/globe/` public R&D review publication with root 2D preserved as default/rollback and no Gate D exit claim.
+- Gate D place-anchor overlay — four Wikidata/CC0 present-day named-settlement points with provenance and uncertainty closure; no exact historical positions, routes or boundaries.
 
 Completed/deferred Airtable data-governance evidence now includes:
 
@@ -223,8 +228,8 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by
 `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but
 does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current
 capability. Gate D remains explicitly open under #355 as the sole active product gate. The runtime
-may read/render the frozen Gate C package, but contract acceptance does not authorize
-runtime/storage mutation, Airtable writes or public capability. There is no active Airtable import
+may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize
+runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import
 issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
@@ -234,9 +239,9 @@ issue.
 1. preserve the explicit Gate D opening contract under #355;
 2. preserve the accepted #377 contract and require a separate implementation authorization before editable precision/history behavior;
 3. preserve the merged #379/#380 frozen-package adapter and synchronized time/layers/selection/inspector increments;
-4. preserve the merged #382 Natural Earth provider/attribution/temporal-role/licensing/cache/secret boundary without presenting modern context as historical truth;
-5. preserve the current 2D renderer as public baseline, parity target and rollback path while completing normal-browser real desktop, 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence after the hosted #383/#385 increments;
-6. record exactly one Gate D decision — `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` — before any Gate E work or public deployment.
+4. preserve the merged #382 Natural Earth boundary, #389 bounded public R&D route and the four-place source/rights/uncertainty anchor overlay without presenting modern context as historical truth;
+5. preserve the current 2D renderer as public baseline/default/rollback path while completing normal-browser real desktop, 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence after the hosted #383/#385 increments;
+6. record exactly one Gate D decision — `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` — before any Gate E work or product-ready promotion.
 
 Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
@@ -249,7 +254,7 @@ README, UI, issues, release notes и публичные материалы об�
 - `PUBLIC NOW` — работает на опубликованном URL;
 - `BACKEND-AVAILABLE` — реализовано, но требует отдельного runtime/configuration;
 - `PILOT` — существует, но недостаточно подтверждено данными или пользователями;
-- `R&D` — bounded experimental architecture/runtime work that is not a public capability promise;
+- `R&D` — bounded experimental architecture/runtime work that may be publicly reviewable but is not a product-readiness promise;
 - `SHADOW` — non-authoritative storage/curation/evidence contour, not public capability and not canonical historical corpus;
 - `CONCEPT TARGET` — утверждено концептуально, но не реализовано;
 - `FUTURE` — концепция или запланированный слой.

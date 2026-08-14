@@ -585,13 +585,16 @@
   }
 
   function addIdentityRows(host, record) {
+    const geometry = (record.geometries || [])[0] || null;
     const rows = [
       ['object_ref', record.object_ref],
       ['subobject_ref', record.subobject_ref || '—'],
       ['type', record.object_type],
       ['role', record.render_role],
       ['temporal', record.temporal_membership],
-      ['spatial', record.spatial_status]
+      ['spatial', record.spatial_status],
+      ['geometry role', geometry?.origin_kind || '—'],
+      ['spatial precision', geometry?.spatial_precision || '—']
     ];
     const dl = document.createElement('dl');
     dl.className = 'identity-list';

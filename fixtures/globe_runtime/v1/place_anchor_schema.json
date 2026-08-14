@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artemis.local/schemas/globe-runtime/place-anchor-registry-v1.json",
+  "title": "ARTEMIS Gate D place anchor registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_id",
+    "coordinate_reference",
+    "semantic_role",
+    "source",
+    "uncertainty",
+    "anchors"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "registry_id": {"type": "string", "minLength": 1},
+    "coordinate_reference": {"const": "EPSG:4326"},
+    "semantic_role": {"const": "present_day_settlement_reference"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "title",
+        "organization",
+        "source_type",
+        "url",
+        "locator",
+        "retrieved_at",
+        "curation_state",
+        "rights"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "organization": {"type": "string", "minLength": 1},
+        "source_type": {"const": "open_structured_data"},
+        "url": {"type": "string", "format": "uri"},
+        "locator": {"type": "string", "minLength": 1},
+        "retrieved_at": {"type": "string", "format": "date"},
+        "curation_state": {"const": "verified_contextual_reference"},
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "access_status",
+            "data_or_text_use",
+            "media_reuse",
+            "derived_geometry_use",
+            "license",
+            "attribution"
+          ],
+          "properties": {
+            "access_status": {"const": "accessible"},
+            "data_or_text_use": {"const": "permitted"},
+            "media_reuse": {"const": "not_applicable"},
+            "derived_geometry_use": {"const": "permitted"},
+            "license": {"const": "CC0-1.0"},
+            "attribution": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uncertainty_id", "dimension", "description", "effect"],
+      "properties": {
+        "uncertainty_id": {"type": "string", "minLength": 1},
+        "dimension": {"const": "spatial_precision"},
+        "description": {"type": "string", "minLength": 1},
+        "effect": {"type": "string", "minLength": 1}
+      }
+    },
+    "anchors": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "anchor_id",
+          "place_ref",
+          "label",
+          "source_id",
+          "source_entity_id",
+          "source_uri",
+          "claim_id",
+          "evidence_link_id",
+          "geometry",
+          "spatial_precision",
+          "historical_location_precision",
+          "semantic_role",
+          "uncertainty_ref"
+        ],
+        "properties": {
+          "anchor_id": {"type": "string", "minLength": 1},
+          "place_ref": {"type": "string", "pattern": "^place-[a-z0-9-]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "source_id": {"type": "string", "minLength": 1},
+          "source_entity_id": {"type": "string", "pattern": "^Q[1-9][0-9]*$"},
+          "source_uri": {"type": "string", "format": "uri"},
+          "claim_id": {"type": "string", "minLength": 1},
+          "evidence_link_id": {"type": "string", "minLength": 1},
+          "geometry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "coordinates"],
+            "properties": {
+              "type": {"const": "Point"},
+              "coordinates": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "prefixItems": [
+                  {"type": "number", "minimum": -180, "maximum": 180},
+                  {"type": "number", "minimum": -90, "maximum": 90}
+                ]
+              }
+            }
+          },
+          "spatial_precision": {"const": "named_settlement"},
+          "historical_location_precision": {
+            "const": "exact_position_within_named_settlement_unknown"
+          },
+          "semantic_role": {"const": "present_day_settlement_reference"},
+          "uncertainty_ref": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
