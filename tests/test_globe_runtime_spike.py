@@ -393,7 +393,7 @@ def test_gate_d_browser_acceptance_profiles_are_bundled_and_reproducible(tmp_pat
     assert [profile["browser_window_css_px"] for profile in profiles["profiles"]] == [
         {"width": 1440, "height": 900},
         {"width": 1024, "height": 768},
-        {"width": 390, "height": 844},
+        {"width": 500, "height": 844},
     ]
     assert profiles["profiles"][-1]["prefers_reduced_motion"] is True
     assert profiles["thresholds"]["min_interactive_target_css_px"] == 24

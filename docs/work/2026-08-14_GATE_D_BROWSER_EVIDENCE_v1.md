@@ -21,7 +21,7 @@ The acceptance contract is versioned at `fixtures/globe_runtime/v1/gate_d_accept
 |---|---:|---|---|---|
 | desktop | 1440 × 900 CSS px | two-column desktop | default | DOM + screenshot |
 | tablet | 1024 × 768 CSS px | compact two-column tablet | default | DOM + screenshot |
-| mobile | 390 × 844 CSS px | stacked mobile | forced `reduce` | DOM + screenshot |
+| mobile | 500 × 844 CSS px | stacked mobile | forced `reduce` | DOM + screenshot |
 
 Each profile must reach the MapLibre `load` path and prove:
 
@@ -35,6 +35,8 @@ Each profile must reach the MapLibre `load` path and prove:
 8. URL-pinned time, layer and selection state remains restorable.
 
 Startup-to-idle and animation-frame values are retained in the evidence artifact as diagnostics only. They are never pass/fail thresholds under hosted headless virtual-time scheduling.
+
+Chrome 150 clamps the hosted headless browser-window width to 500 CSS px. This still exercises the actual mobile breakpoint and stacked layout, but it does not substitute for the required 390 CSS px real-device review.
 
 ## 3. What this does not prove
 
@@ -52,7 +54,7 @@ The automated evidence is not:
 
 Before an explicit Gate D exit decision, the owner must review the uploaded profile screenshots/DOM/evidence and record:
 
-1. at least one real desktop and one real mobile interaction pass, including keyboard navigation and visual legibility;
+1. at least one real desktop and one 390 CSS px real mobile interaction pass, including keyboard navigation and visual legibility;
 2. representative browser/OS versions and any WebGL warnings;
 3. startup/interaction observations as evidence, without converting hosted headless timing into an SLO;
 4. whether the MapLibre path exposes a measured blocker that justifies a bounded CesiumJS comparison;

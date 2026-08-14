@@ -34,7 +34,7 @@
     {
       "profile_id": "mobile",
       "browser_window_css_px": {
-        "width": 390,
+        "width": 500,
         "height": 844
       },
       "expected_layout_mode": "mobile",
@@ -43,6 +43,7 @@
   ],
   "limitations": [
     "Hosted headless Chromium with SwiftShader is representative browser evidence, not a real-device performance baseline.",
+    "Hosted Chrome 150 clamps headless browser-window width to 500 CSS px; narrower 390 CSS px phone coverage remains a real-device review requirement.",
     "DOM-level accessible-name, target-size, overflow, landmark and reduced-motion checks are not a complete WCAG audit.",
     "Startup and frame metrics are diagnostic only and are not pass/fail thresholds under virtual-time scheduling.",
     "Public promotion still requires explicit Gate D exit review; this profile contract does not open Gate E."

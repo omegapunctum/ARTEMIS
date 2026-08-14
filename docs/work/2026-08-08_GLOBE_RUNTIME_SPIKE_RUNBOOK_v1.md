@@ -199,7 +199,7 @@ It must not silently fall back to `data/features.geojson`, `/api/*`, or the curr
 4. static Globe artifact build;
 5. runtime contract tests;
 6. static HTTP serving smoke test;
-7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL at pinned desktop (`1440×900`), tablet (`1024×768`) and mobile (`390×844`) browser-window profiles, while recording each actual CSS viewport;
+7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL at pinned desktop (`1440×900`), tablet (`1024×768`) and hosted-mobile (`500×844`, Chrome headless minimum) browser-window profiles, while recording each actual CSS viewport;
 8. layout-mode, horizontal-overflow, globe-size, interactive-control accessible-name, 24 CSS px target-size and mobile reduced-motion assertions defined by `acceptance-profiles.json`;
 9. assertions that the browser DOM contains the Leonardo World Slice/Explorer State, source title + repeatable locator, honest frozen-candidate status, unresolved trajectory uncertainty, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
 10. URL-restorable Cesena temporal preset, two-layer and canonical selection checks;

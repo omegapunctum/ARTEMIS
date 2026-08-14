@@ -105,7 +105,7 @@ jobs:
           PROFILE_SPECS=(
             "desktop:1440:900:desktop:false"
             "tablet:1024:768:tablet:false"
-            "mobile:390:844:mobile:true"
+            "mobile:500:844:mobile:true"
           )
           PROFILE_URL='http://127.0.0.1:8124/?view=slice&time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey'
 
