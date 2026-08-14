@@ -2,6 +2,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.build_globe_spike import (
     ACCEPTANCE_PROFILES_PATH,
     ASSET_MANIFEST_PATH,
@@ -17,6 +19,7 @@ from scripts.build_globe_spike import (
     SpikeBuildError,
 )
 from scripts.build_leonardo_gate_d_inputs import build_gate_d_inputs
+from scripts import build_leonardo_gate_d_inputs as gate_d_inputs
 
 
 RUNTIME_JS = ROOT / "scripts" / "globe_spike" / "runtime.js"
@@ -142,8 +145,16 @@ def test_precomputed_views_use_source_native_time_and_projection_semantics(tmp_p
         assert projection["source"]["explorer_state_ref"] == state["state_id"]
         assert projection["temporal_selection"] == state["temporal_selection"]
         assert globe["source"]["explorer_state_ref"] == state["state_id"]
-        assert projection["geometries"] == []
-        assert globe["primitives"] == []
+        assert all(
+            geometry["origin_kind"] == "place_reference_anchor"
+            and geometry["spatial_precision"] == "named_settlement"
+            and geometry["geometry"]["type"] == "Point"
+            for geometry in projection["geometries"]
+        )
+        assert all(
+            primitive["primitive_kind"] == "cartographic_point"
+            for primitive in globe["primitives"]
+        )
         assert {item["item_id"] for item in projection["items"]} <= knowledge_ids
         assert "Relation" in projection["deferred_object_types"]
 
@@ -177,7 +188,7 @@ def test_temporal_views_change_membership_without_invented_intermediate_dates(tm
     assert "event-ottoman-turkmen-displacement-1502" in rimini & cesena & autumn
 
 
-def test_default_adapter_preserves_frozen_gate_c_boundary_without_geometry() -> None:
+def test_default_adapter_preserves_frozen_gate_c_boundary_with_context_overlay() -> None:
     world, state = build_gate_d_inputs()
 
     object_ids = {
@@ -186,13 +197,18 @@ def test_default_adapter_preserves_frozen_gate_c_boundary_without_geometry() -> 
         for item in world[collection]
     }
     assert len(object_ids) == 17
-    assert len(world["claims"]) == 22
-    assert len(world["evidence_links"]) == 38
-    assert len(world["sources"]) == 10
-    assert len(world["uncertainties"]) == 11
+    assert len(world["claims"]) == 26
+    assert len(world["evidence_links"]) == 42
+    assert len(world["sources"]) == 11
+    assert len(world["uncertainties"]) == 12
+    assert len(world["place_anchors"]) == 4
+    assert world["gate_d_context_overlay_ref"] == "gate-d-leonardo-place-anchors-v1"
     assert {item["review_state"] for item in world["claims"]} == {"draft", "rejected"}
     assert world["relations"] == []
     assert world["derived_observations"] == []
+    assert world["corpus_status_label"] == (
+        "frozen Gate C candidate package · non-public · draft/rejected Claims"
+    )
     assert world["historical_corpus_ready"] is False
     assert world["promotion_allowed"] is False
     assert world["gate_c_decision"]["decision"] == "FREEZE"
@@ -208,7 +224,34 @@ def test_default_adapter_preserves_frozen_gate_c_boundary_without_geometry() -> 
     }
 
 
-def test_default_projection_keeps_real_slice_geometry_withheld(tmp_path: Path) -> None:
+def test_place_anchor_registry_is_fail_closed_and_source_bound(tmp_path: Path, monkeypatch) -> None:
+    registry = _load(gate_d_inputs.PLACE_ANCHOR_PATH)
+    assert {anchor["place_ref"] for anchor in registry["anchors"]} == {
+        "place-rimini",
+        "place-cesena",
+        "place-cesenatico",
+        "place-imola",
+    }
+    assert registry["coordinate_reference"] == "EPSG:4326"
+    assert registry["source"]["rights"]["license"] == "CC0-1.0"
+    assert all(
+        anchor["spatial_precision"] == "named_settlement"
+        and anchor["historical_location_precision"]
+        == "exact_position_within_named_settlement_unknown"
+        and anchor["semantic_role"] == "present_day_settlement_reference"
+        for anchor in registry["anchors"]
+    )
+
+    invalid = json.loads(json.dumps(registry))
+    invalid["anchors"] = invalid["anchors"][:-1]
+    invalid_path = tmp_path / "invalid-place-anchors.json"
+    invalid_path.write_text(json.dumps(invalid), encoding="utf-8")
+    monkeypatch.setattr(gate_d_inputs, "PLACE_ANCHOR_PATH", invalid_path)
+    with pytest.raises(gate_d_inputs.GateDInputError, match="place anchor registry"):
+        gate_d_inputs.build_gate_d_inputs()
+
+
+def test_default_projection_resolves_only_named_settlement_anchors(tmp_path: Path) -> None:
     output = tmp_path / "globe-spike"
     metadata = build_spike(output)
     projection = _load(output / "projection.json")
@@ -216,11 +259,32 @@ def test_default_projection_keeps_real_slice_geometry_withheld(tmp_path: Path) -
 
     assert metadata["semantic_dataset"] == "leonardo_gate_c"
     assert metadata["semantic_item_count"] == 24
-    assert metadata["globe_primitive_count"] == 0
-    assert projection["geometries"] == []
-    assert globe["primitives"] == []
+    assert metadata["globe_primitive_count"] == 8
+    assert metadata["place_anchor_geometry_count"] == 4
+    assert len(projection["geometries"]) == 4
+    assert {
+        geometry["owner_ref"] for geometry in projection["geometries"]
+    } == {"place-rimini", "place-cesena", "place-cesenatico", "place-imola"}
     assert all(
-        item["spatial_status"] != "resolved" for item in projection["items"]
+        geometry["origin_kind"] == "place_reference_anchor"
+        and geometry["spatial_precision"] == "named_settlement"
+        and geometry["geometry"]["type"] == "Point"
+        for geometry in projection["geometries"]
+    )
+    assert all(
+        primitive["primitive_kind"] == "cartographic_point"
+        for primitive in globe["primitives"]
+    )
+    leonardo_events = [
+        item
+        for item in projection["items"]
+        if item["object_type"] == "Event"
+        and item["object_ref"].startswith("event-leonardo-")
+    ]
+    assert leonardo_events
+    assert all(
+        item["spatial_status"] == "unresolved" and item["geometry_refs"] == []
+        for item in leonardo_events
     )
     assert any(
         item["object_ref"] == "process-leonardo-romagna-surveying"
@@ -322,10 +386,10 @@ def test_knowledge_index_closes_projection_refs_without_fabrication(tmp_path: Pa
     assert {record["item_id"] for record in knowledge["records"]} == {
         item["item_id"] for item in projection["items"]
     }
-    assert len({ref for record in knowledge["records"] for ref in record["claim_refs"]}) == 22
+    assert len({ref for record in knowledge["records"] for ref in record["claim_refs"]}) == 26
     assert len(
         {ref for record in knowledge["records"] for ref in record["evidence_link_refs"]}
-    ) == 38
+    ) == 42
 
     projected = {item["item_id"]: item for item in projection["items"]}
     for record in knowledge["records"]:
@@ -346,6 +410,18 @@ def test_knowledge_index_closes_projection_refs_without_fabrication(tmp_path: Pa
             assert link["claim_id"] in record["claim_refs"]
             assert link["source_id"] in record["source_refs"]
             assert link["locator"].strip()
+
+    rimini = next(
+        record
+        for record in knowledge["records"]
+        if record["item_id"] == "rp:entity_context:place-rimini"
+    )
+    assert rimini["spatial_status"] == "resolved"
+    assert rimini["geometries"][0]["origin_kind"] == "place_reference_anchor"
+    assert rimini["geometries"][0]["spatial_precision"] == "named_settlement"
+    assert "claim-rimini-present-day-settlement-anchor" in rimini["claim_refs"]
+    assert "source-wikidata-place-anchors" in rimini["source_refs"]
+    assert "uncertainty-place-anchor-historical-position" in rimini["uncertainty_refs"]
 
 
 def test_primary_selection_exposes_claim_source_and_repeatable_locator(tmp_path: Path) -> None:

@@ -406,6 +406,10 @@ def _build_knowledge_index(
     uncertainties = _index_by_id(
         world.get("uncertainties", []), label="uncertainties"
     )
+    geometries = {
+        str(geometry["geometry_ref"]): geometry
+        for geometry in projection.get("geometries", [])
+    }
     losses_by_item: dict[str, list[dict[str, Any]]] = {}
     for loss in projection.get("losses", []):
         if not isinstance(loss, dict) or not isinstance(loss.get("item_id"), str):
@@ -432,6 +436,7 @@ def _build_knowledge_index(
         evidence_refs = list(item.get("evidence_link_refs") or [])
         source_refs = list(item.get("source_refs") or [])
         uncertainty_refs = list(item.get("uncertainty_refs") or [])
+        geometry_refs = list(item.get("geometry_refs") or [])
 
         missing_claims = sorted(set(claim_refs) - set(claims))
         missing_evidence = sorted(set(evidence_refs) - set(evidence_links))
@@ -442,6 +447,11 @@ def _build_knowledge_index(
                 f"knowledge closure failed for {item_id}: "
                 f"claims={missing_claims}; evidence={missing_evidence}; "
                 f"sources={missing_sources}; uncertainties={missing_uncertainties}"
+            )
+        missing_geometries = sorted(set(geometry_refs) - set(geometries))
+        if missing_geometries:
+            raise SpikeBuildError(
+                f"knowledge closure failed for {item_id}: geometries={missing_geometries}"
             )
 
         embedded_evidence = [copy.deepcopy(evidence_links[ref]) for ref in evidence_refs]
@@ -484,6 +494,9 @@ def _build_knowledge_index(
                 "sources": embedded_sources,
                 "uncertainties": [
                     copy.deepcopy(uncertainties[ref]) for ref in uncertainty_refs
+                ],
+                "geometries": [
+                    copy.deepcopy(geometries[ref]) for ref in geometry_refs
                 ],
                 "projection_losses": copy.deepcopy(losses_by_item.get(item_id, [])),
             }
@@ -610,12 +623,8 @@ def _build_explorer_views(
             projection, _maplibre, globe = build_all(
                 world, state, projection_schema
             )
-            if dataset == DEFAULT_DATASET and (
-                projection.get("geometries") or globe.get("primitives")
-            ):
-                raise SpikeBuildError(
-                    "precomputed Gate D views must preserve withheld geometry"
-                )
+            if dataset == DEFAULT_DATASET:
+                _assert_gate_d_place_anchor_projection(projection, globe)
             views.append(
                 {
                     "view_id": view_id,
@@ -642,6 +651,30 @@ def _build_explorer_views(
         "layer_options": layer_options,
         "views": sorted(views, key=lambda value: value["view_id"]),
     }
+
+
+def _assert_gate_d_place_anchor_projection(
+    projection: dict[str, Any], globe: dict[str, Any]
+) -> None:
+    geometry_by_ref = {
+        str(geometry.get("geometry_ref")): geometry
+        for geometry in projection.get("geometries", [])
+    }
+    for geometry in geometry_by_ref.values():
+        if geometry.get("origin_kind") != "place_reference_anchor":
+            raise SpikeBuildError(
+                "Gate D projection may resolve only present-day place reference anchors"
+            )
+        if geometry.get("spatial_precision") != "named_settlement":
+            raise SpikeBuildError("place reference anchor lost named-settlement precision")
+        if geometry.get("geometry", {}).get("type") != "Point":
+            raise SpikeBuildError("place reference anchor must remain a Point")
+
+    for primitive in globe.get("primitives", []):
+        if primitive.get("geometry_ref") not in geometry_by_ref:
+            raise SpikeBuildError("Globe primitive escapes Gate D place anchor geometry")
+        if primitive.get("primitive_kind") != "cartographic_point":
+            raise SpikeBuildError("Gate D place anchor primitive must remain a point")
 
 
 def build_spike(
@@ -714,8 +747,17 @@ def build_spike(
             raise SpikeBuildError("Gate D package must remain not historical-ready")
         if world.get("promotion_allowed") is not False:
             raise SpikeBuildError("Gate D package must remain non-promotable")
-        if projection.get("geometries") or globe_adapter.get("primitives"):
-            raise SpikeBuildError("frozen Gate C package must remain geometry-free")
+        _assert_gate_d_place_anchor_projection(projection, globe_adapter)
+        resolved_anchor_places = {
+            geometry.get("owner_ref") for geometry in projection.get("geometries", [])
+        }
+        if resolved_anchor_places != {
+            "place-rimini",
+            "place-cesena",
+            "place-cesenatico",
+            "place-imola",
+        }:
+            raise SpikeBuildError("Gate D projection must resolve exactly four place anchors")
         region_items = [
             item for item in projection.get("items", []) if item.get("object_type") == "Region"
         ]
@@ -800,6 +842,13 @@ def build_spike(
         "unresolved_item_count": len(
             [item for item in projection.get("items", []) if item.get("spatial_status") == "unresolved"]
         ),
+        "place_anchor_geometry_count": len(
+            [
+                geometry
+                for geometry in projection.get("geometries", [])
+                if geometry.get("origin_kind") == "place_reference_anchor"
+            ]
+        ),
         "trajectory_gaps": [
             {
                 "object_ref": item["object_ref"],
@@ -853,7 +902,8 @@ def build_spike(
         "Earth context is the bundled Natural Earth 1:110m Land v4.0.0 present-day reference layer.\n"
         "It is real physical-geography context, not historical reconstruction; terrain remains synthetic/non-live.\n"
         "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
-        "Its Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
+        "Its historical Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
+        "Four CC0 Wikidata points are present-day named-settlement reference anchors only; exact historical position remains unknown.\n"
         "Time/layer controls switch only among precomputed Explorer State and Render Projection packages.\n"
         "The inspector resolves only package-derived canonical references, sources, locators and uncertainty.\n",
         encoding="utf-8",

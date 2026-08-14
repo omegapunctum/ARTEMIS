@@ -8,7 +8,7 @@
 - Active primary issue: **#355**.
 - Completed Gate C delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
 - Completed recovery foundation: **#344 / PR #351**.
-- Public runtime: unchanged 2D MapLibre baseline.
+- Public runtime: root 2D MapLibre baseline/default plus explicitly labelled `/globe/` R&D review preview.
 
 Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`; активное решение принадлежит `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
@@ -100,12 +100,14 @@ Deferred:
 - completed #382 selects pinned bundled Natural Earth `present_day_context` while keeping historical geometry withheld and terrain synthetic/non-live;
 - completed #383 exercises desktop/tablet/hosted-mobile Chromium layout, reduced-motion, accessible-name, target-size, overflow and overlay evidence;
 - completed #385 makes hosted screenshots fail closed on actual Earth-context rendering and captures DOM/PNG from the same wall-clock CDP page;
+- completed #389 publishes the generated artifact at `/globe/` only as experimental R&D review while root 2D remains default/rollback;
+- the place-anchor increment adds four CC0 present-day `named_settlement` reference points with inspector provenance and material uncertainty, without exact historical positions, routes, boundaries, Relations or Airtable writes;
 - remaining: normal-browser real desktop and 390 CSS px mobile review, assistive technology, representative non-virtual performance and one explicit Gate D exit decision.
 
 ### Gate E — Evidence and decision
 
 - deferred until Gate D exit evidence exists; issue #334 is not active during Gate D;
-- provide a reproducible non-public preview/review artifact;
+- preserve the reproducible labelled public R&D preview/review artifact without representing it as product-ready;
 - compare against the current 2D same-content baseline where useful;
 - test contextual understanding and semantic literacy rather than visual novelty alone;
 - record one result: continue generated R&D, promote to maintained experimental app, narrow/rework, or stop/rethink.
@@ -128,10 +130,10 @@ The generated Globe spike remains R&D evidence. It is the implementation seed fo
 
 ## Current repository/runtime boundary
 
-Until Gate E explicitly promotes the Globe:
+Until a later product-promotion decision explicitly promotes the Globe:
 
-- root `index.html` remains the only public Pages app;
-- generated Globe artifacts stay non-public and disposable;
+- root `index.html` remains the default public Pages app and rollback entrypoint;
+- `/globe/` may publish only the generated, explicitly labelled experimental R&D review preview;
 - public MapLibre 4.7.1 remains unchanged;
 - the Globe spike may pin MapLibre 5.24.0 in isolation;
 - an `apps/globe/` move requires a separate maintained-application decision;

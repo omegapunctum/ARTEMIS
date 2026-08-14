@@ -7,7 +7,7 @@
 - Active cycle: Globe MVP.
 - Active primary issue: GitHub issue `#355`.
 - Completed recovery foundation: issue `#344` / PR `#351`.
-- Current public baseline: root 2D MapLibre runtime; no public Globe promotion is implied.
+- Current public baseline and default entrypoint: root 2D MapLibre runtime. `/globe/` is an explicitly labelled public R&D review preview, not a product-ready Globe promotion.
 
 The active product decision is recorded in `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
@@ -76,7 +76,8 @@ Completed Gate D increments:
 - PR #382 provides pinned bundled Natural Earth 1:110m Land `present_day_context` plus provenance, attribution, temporal-role, licensing, cache and secret policy while terrain remains synthetic/non-live;
 - PR #383 provides desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes; all six triggered workflows passed;
 - PR #385 replaces premature virtual-time screenshots with same-page wall-clock CDP capture, requires non-zero loaded/rendered Natural Earth features and restores legible hosted desktop/tablet/mobile Earth context; all six triggered workflows passed;
-- the generated artifact remains non-public and Gate D remains open.
+- PR #389 publishes the same generated artifact at `/globe/` as an experimental R&D review preview while preserving root 2D as default/rollback; Gate D remains open;
+- the place-anchor increment resolves Rimini, Cesena, Cesenatico and Imola only as CC0 present-day `named_settlement` reference points, keeps their provenance/uncertainty inspectable and preserves all route/Region geometry gaps.
 
 Remaining Gate D work:
 
@@ -97,7 +98,8 @@ MapLibre GL JS remains the leading MVP engine. CesiumJS comparison requires a me
 
 Before Gate D exit:
 
-- preserve the reproducible non-public generated review artifact from PRs #379–#385;
+- preserve the reproducible generated review artifact from PRs #379–#385 and the bounded public R&D route from PR #389;
+- preserve source/rights/uncertainty closure for the four place anchors without inventing exact historical positions, routes or boundaries;
 - verify semantic parity on the bounded frozen corpus;
 - collect real-device/browser, accessibility and performance evidence;
 - preserve the completed #382 provider availability/licensing/attribution/cache/security boundary and evaluate any future live provider separately;
@@ -110,7 +112,7 @@ Record exactly one result:
 - `NARROW`;
 - `REJECT`.
 
-Only `ADVANCE_TO_GATE_E` opens #334 participant evidence work. Public promotion remains a separate later decision.
+Only `ADVANCE_TO_GATE_E` opens #334 participant evidence work. Promotion from labelled R&D preview to product-ready Globe remains a separate later decision.
 
 ## Accepted renderer foundations
 
@@ -164,8 +166,8 @@ Security, compatibility and critical reliability maintenance remain allowed.
 
 1. Preserve the completed governance, Release Discipline and #344 parity foundations.
 2. Freeze and curate the first real bounded World Slice through #332 within #355 — completed/FREEZE.
-3. Preserve the completed #379/#380 frozen-package and synchronized-interaction increments.
-4. Complete Earth-context policy plus desktop/mobile, accessibility and representative performance evidence.
+3. Preserve the completed #379/#380 frozen-package and synchronized-interaction increments, #389 bounded public R&D route and the source-bound four-place anchor overlay.
+4. Complete normal-browser/physical-device desktop and 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence.
 5. Record exactly one Gate D decision: `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT`.
 
 ## Completion rule

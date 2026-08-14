@@ -16,6 +16,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -26,6 +28,12 @@ CLAIMS_PATH = SLICE_ROOT / "claims_manifest.json"
 SOURCES_PATH = SLICE_ROOT / "source_registry.json"
 COVERAGE_PATH = SLICE_ROOT / "coverage_manifest.json"
 DECISION_PATH = SLICE_ROOT / "gate_c_decision.json"
+PLACE_ANCHOR_PATH = (
+    ROOT / "fixtures" / "globe_runtime" / "v1" / "leonardo_place_anchors.json"
+)
+PLACE_ANCHOR_SCHEMA_PATH = (
+    ROOT / "fixtures" / "globe_runtime" / "v1" / "place_anchor_schema.json"
+)
 
 CALENDAR = "proleptic_gregorian"
 LOCAL_OBJECT_IDS = {
@@ -72,6 +80,140 @@ def _load(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise GateDInputError(f"{path} must contain a JSON object")
     return value
+
+
+def _load_place_anchor_registry() -> dict[str, Any]:
+    registry = _load(PLACE_ANCHOR_PATH)
+    schema = _load(PLACE_ANCHOR_SCHEMA_PATH)
+    errors = sorted(
+        Draft202012Validator(schema).iter_errors(registry),
+        key=lambda error: list(error.absolute_path),
+    )
+    if errors:
+        details = "; ".join(
+            f"{'.'.join(str(part) for part in error.absolute_path) or '<root>'}: "
+            f"{error.message}"
+            for error in errors
+        )
+        raise GateDInputError(f"invalid Gate D place anchor registry: {details}")
+
+    anchors = registry["anchors"]
+    expected_places = {"place-rimini", "place-cesena", "place-cesenatico", "place-imola"}
+    place_refs = [str(anchor["place_ref"]) for anchor in anchors]
+    if set(place_refs) != expected_places or len(place_refs) != len(set(place_refs)):
+        raise GateDInputError(
+            "Gate D place anchor registry must close exactly the four reviewed settlements"
+        )
+
+    source_id = registry["source"]["source_id"]
+    uncertainty_id = registry["uncertainty"]["uncertainty_id"]
+    identities: set[str] = set()
+    for anchor in anchors:
+        for key in ("anchor_id", "claim_id", "evidence_link_id"):
+            identity = str(anchor[key])
+            if identity in identities:
+                raise GateDInputError(f"duplicate Gate D place anchor identity: {identity}")
+            identities.add(identity)
+        if anchor["source_id"] != source_id:
+            raise GateDInputError(f"{anchor['anchor_id']}: source_id escapes registry source")
+        if anchor["uncertainty_ref"] != uncertainty_id:
+            raise GateDInputError(
+                f"{anchor['anchor_id']}: uncertainty_ref escapes registry uncertainty"
+            )
+        if not str(anchor["source_uri"]).endswith("/" + str(anchor["source_entity_id"])):
+            raise GateDInputError(
+                f"{anchor['anchor_id']}: source URI does not close its Wikidata entity ID"
+            )
+    return registry
+
+
+def _adapt_place_anchor_overlay(
+    registry: dict[str, Any],
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    dict[str, Any],
+    dict[str, Any],
+]:
+    source = registry["source"]
+    uncertainty = registry["uncertainty"]
+    anchors = sorted(registry["anchors"], key=lambda item: item["place_ref"])
+    claims: list[dict[str, Any]] = []
+    evidence_links: list[dict[str, Any]] = []
+    target_refs: list[str] = []
+
+    for anchor in anchors:
+        longitude, latitude = anchor["geometry"]["coordinates"]
+        target_refs.append(anchor["claim_id"])
+        claims.append(
+            {
+                "id": anchor["claim_id"],
+                "type": "Claim",
+                "statement": (
+                    f"Wikidata P625 supplies the present-day named-settlement reference "
+                    f"point for {anchor['label']} at {latitude}, {longitude} (WGS84). "
+                    "This is not an exact historical location."
+                ),
+                "target_refs": [anchor["place_ref"]],
+                "claim_kind": "contextual_reference",
+                "origin": "gate_d_reference_overlay",
+                "review_state": "draft",
+                "confidence": "source_bound",
+                "confidence_basis": (
+                    "The coordinate is bound to a specific Wikidata entity and may be "
+                    "used only at named-settlement precision."
+                ),
+                "evidence_state": "linked_open_data",
+                "evidence_link_refs": [anchor["evidence_link_id"]],
+                "uncertainty_refs": [anchor["uncertainty_ref"]],
+            }
+        )
+        evidence_links.append(
+            {
+                "id": anchor["evidence_link_id"],
+                "type": "EvidenceLink",
+                "claim_id": anchor["claim_id"],
+                "source_id": anchor["source_id"],
+                "locator": (
+                    f"{anchor['source_entity_id']} · P625 coordinate location · "
+                    f"{anchor['source_uri']}"
+                ),
+                "relation_to_claim": "supports_contextual_reference",
+                "evidence_strength": "direct_structured_value",
+                "review_state": "verified_contextual_reference",
+                "reviewer": None,
+            }
+        )
+
+    adapted_source = {
+        "id": source["source_id"],
+        "type": "Source",
+        "title": source["title"],
+        "source_type": source["source_type"],
+        "uri": source["url"],
+        "review_state": source["curation_state"],
+        "registry_locator": source["locator"],
+        "organization": source["organization"],
+        "relation_to_claim": "supports_contextual_reference",
+        "intended_claims": [anchor["claim_id"] for anchor in anchors],
+        "retrieved_at": source["retrieved_at"],
+        "rights": copy.deepcopy(source["rights"]),
+    }
+    adapted_uncertainty = {
+        "id": uncertainty["uncertainty_id"],
+        "type": "Uncertainty",
+        "dimension": uncertainty["dimension"],
+        "description": uncertainty["description"],
+        "effect": uncertainty["effect"],
+        "basis_kind": "gate_d_place_anchor_registry",
+        "basis": registry["registry_id"],
+        "basis_claim_refs": sorted(target_refs),
+        "review_state": "draft",
+        "target_refs": sorted(target_refs),
+        "subject_or_claim_ref": sorted(target_refs)[0],
+        "alternatives": [],
+    }
+    return claims, evidence_links, adapted_source, adapted_uncertainty
 
 
 def _index(rows: Any, key: str, label: str) -> dict[str, dict[str, Any]]:
@@ -349,6 +491,7 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     sources_package = _load(SOURCES_PATH)
     coverage = _load(COVERAGE_PATH)
     decision = _load(DECISION_PATH)
+    place_anchor_registry = _load_place_anchor_registry()
     _assert_frozen_boundary(selection, claims_package, decision)
 
     candidates = _index(selection["candidate_objects"], "object_id", "candidate objects")
@@ -372,6 +515,32 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         )
     for collection in adapted.values():
         collection.sort(key=lambda item: item["id"])
+
+    anchor_by_place = {
+        str(anchor["place_ref"]): anchor
+        for anchor in place_anchor_registry["anchors"]
+    }
+    for entity in adapted["entities"]:
+        if entity.get("entity_kind") != "Place":
+            continue
+        anchor = anchor_by_place.get(str(entity["id"]))
+        if anchor is None:
+            raise GateDInputError(f"Place lacks Gate D reference anchor: {entity['id']}")
+        if entity.get("label") != anchor.get("label"):
+            raise GateDInputError(
+                f"Place anchor label drift for {entity['id']}: "
+                f"{anchor.get('label')!r} != {entity.get('label')!r}"
+            )
+        entity["spatial_extent"] = {
+            "kind": "named_place",
+            "place_ref": entity["id"],
+            "precision": anchor["spatial_precision"],
+            "basis_claim_refs": [anchor["claim_id"]],
+        }
+
+    anchor_claims, anchor_evidence, anchor_source, anchor_uncertainty = (
+        _adapt_place_anchor_overlay(place_anchor_registry)
+    )
 
     identity = {
         "kind": "frozen_gate_c_repository_package",
@@ -421,7 +590,7 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
                 "kind": "composite_scope",
                 "region_refs": ["region-duchy-romagna-context"],
                 "place_refs": place_refs,
-                "precision": "named_places_only_geometry_withheld",
+                "precision": "named_places_with_present_day_reference_anchors",
                 "basis_claim_refs": [],
             },
             "included_layer_refs": [layer["id"] for layer in layer_rows],
@@ -439,22 +608,42 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         },
         "layers": layer_rows,
         **adapted,
+        "place_anchors": copy.deepcopy(place_anchor_registry["anchors"]),
+        "gate_d_context_overlay_ref": place_anchor_registry["registry_id"],
         "relations": [],
         "derived_observations": [],
         "claims": sorted(
-            (_adapt_claim(claim) for claim in claims_package["claims"]),
+            [
+                *(_adapt_claim(claim) for claim in claims_package["claims"]),
+                *anchor_claims,
+            ],
             key=lambda item: item["id"],
         ),
         "evidence_links": sorted(
-            (_adapt_evidence(link) for link in claims_package["evidence_links"]),
+            [
+                *(
+                    _adapt_evidence(link)
+                    for link in claims_package["evidence_links"]
+                ),
+                *anchor_evidence,
+            ],
             key=lambda item: item["id"],
         ),
         "sources": sorted(
-            (_adapt_source(source) for source in sources_package["sources"]),
+            [
+                *(_adapt_source(source) for source in sources_package["sources"]),
+                anchor_source,
+            ],
             key=lambda item: item["id"],
         ),
         "uncertainties": sorted(
-            (_adapt_uncertainty(value) for value in claims_package["uncertainties"]),
+            [
+                *(
+                    _adapt_uncertainty(value)
+                    for value in claims_package["uncertainties"]
+                ),
+                anchor_uncertainty,
+            ],
             key=lambda item: item["id"],
         ),
         "synchronized_views": [],
