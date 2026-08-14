@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-08-12.
+- Дата фиксации: 2026-08-14.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -24,7 +24,9 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
 - generative AI, causal/counterfactual runtime, personal knowledge model, VR/AR and universal corpus remain frozen/future;
 - **A real executable 3D Globe R&D artifact exists** and uses MapLibre GL JS `5.24.0` in isolation; the current public runtime remains MapLibre GL JS `4.7.1`.
-- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface, no Gate C historical World Slice integrated into that runtime and no production terrain/provider decision.
+- The artifact is **R&D EVIDENCE, NOT PUBLIC CAPABILITY**: there is no public ARTEMIS Globe product surface and no production Earth-context/provider decision.
+- PR `#379` integrates the frozen Gate C package into the generated non-public Globe artifact through the shared World Model → Explorer State → Render Projection path. It preserves `0` authorized historical geometries/primitives, all withheld Region alternatives and all unknown-route gaps.
+- PR `#380` adds 96 deterministic Explorer views from six source-native temporal presets and all 16 combinations of four semantic layers, plus synchronized timeline/layers, canonical selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior. This is a completed Gate D interaction increment, not a completed Gate D experience or public promotion.
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
@@ -157,7 +159,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 - Airtable World Model shadow schema as a historical corpus, canonical storage authority or product capability;
 - frozen 154-row Airtable plan as imported data, round-trip parity evidence or historical readiness;
 - Gate C package integrated into Airtable as a validated shadow copy;
-- Gate C package integrated into the Globe runtime as a complete Gate D experience;
+- a complete Gate D experience with production Earth context, representative desktop/mobile/accessibility/performance evidence and an explicit Gate D exit decision;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
 - public/product 3D Globe, production dynamic terrain or VR experience; #355 changes active development scope, not current public capability;
 - production-hardened multi-node backend;
@@ -186,9 +188,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 10. `World Model` wording can drift back toward objective-digital-twin claims unless the knowledge-vs-world boundary remains explicit.
 11. Airtable World Model schema может стать competing semantic/storage authority, если данные начнут вноситься вручную в обход deterministic import/export + row-level validation + round-trip parity against the frozen repository package.
 12. Frozen 154-row plan может быть ошибочно принят за completed import evidence; поэтому live historical write остаётся fail-closed до отдельного independent mapping review и последующего readback/parity proof.
-13. Progressive fidelity может остаться только рекомендацией по расходованию ресурсов: без #377
-    storage/adapter способен перезаписать приблизительное утверждение, смешать valid time с record
-    time или потерять альтернативы/evidence history.
+13. Accepted #377 / PR #378 refinement semantics can be mistaken for runtime/storage capability. No mutable precision/history behavior is authorized until a separate implementation decision preserves append-only lineage, valid-time/record-time separation, alternatives and evidence history.
 
 ## 7. Текущий operational verdict
 
@@ -202,7 +202,10 @@ Reviewed/accepted foundation evidence includes:
 - #330 / PR #337 uncertainty semantics — READY;
 - #339–#345 / PRs #346–#352 renderer-neutral Globe foundations — accepted;
 - #332/#360 / PR #362 Gate C World Slice boundary — FREEZE with two independent READY reviews;
-- #363 / PR #364 Foundation v3.1 Attractor refinement — accepted with all required repository workflows green on its merge candidate.
+- #363 / PR #364 Foundation v3.1 Attractor refinement — accepted with all required repository workflows green on its merge candidate;
+- #377 / PR #378 Progressive Refinement Contract v1 — accepted foundation evidence without runtime/storage capability change;
+- PR #379 — frozen Gate C package consumed by the generated non-public Globe artifact through the shared semantic path;
+- PR #380 — synchronized time/layers/selection/inspector interaction increment with 96 deterministic Explorer views and all six PR workflows green.
 
 Completed/deferred Airtable data-governance evidence now includes:
 
@@ -211,22 +214,23 @@ Completed/deferred Airtable data-governance evidence now includes:
 - #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
 Issue #377 is foundation maintenance whose exact lifecycle is owned by
-`PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It does not consume the product-gate
-WIP slot or change current capability. Gate D remains explicitly open under #355 as the sole active
-product gate. It may read/render the frozen Gate C package, but contract acceptance alone does not
-authorize runtime/storage mutation, Airtable writes or public capability. There is no active Airtable
-import issue.
+`PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but
+does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current
+capability. Gate D remains explicitly open under #355 as the sole active product gate. The runtime
+may read/render the frozen Gate C package, but contract acceptance does not authorize
+runtime/storage mutation, Airtable writes or public capability. There is no active Airtable import
+issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
 Для активного Gate D primary order:
 
 1. preserve the explicit Gate D opening contract under #355;
-2. honor the recorded #377 lifecycle decision and require a separate implementation authorization before editable precision/history behavior;
-3. build the synchronized Globe/timeline/layers experience directly from the frozen Gate C boundary through shared contracts;
-4. preserve the current 2D renderer as public baseline, parity target and rollback path;
-5. collect semantic, UX, accessibility and representative performance evidence;
-6. record one promotion/iterate/narrow/stop decision before public deployment.
+2. preserve the accepted #377 contract and require a separate implementation authorization before editable precision/history behavior;
+3. preserve the merged #379/#380 frozen-package adapter and synchronized time/layers/selection/inspector increments;
+4. complete the Earth-context provider, attribution, temporal-role, licensing, cache and secret policy without presenting modern context as historical truth;
+5. preserve the current 2D renderer as public baseline, parity target and rollback path while collecting desktop/mobile, accessibility and representative performance evidence;
+6. record exactly one Gate D decision — `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` — before any Gate E work or public deployment.
 
 Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 
