@@ -384,6 +384,7 @@ def test_gate_d_browser_acceptance_profiles_are_bundled_and_reproducible(tmp_pat
     output = tmp_path / "globe-spike"
     metadata = build_spike(output)
 
+    assert profiles["schema_version"] == "1.1.0"
     assert profiles["evidence_scope"] == "hosted_headless_chromium"
     assert [profile["profile_id"] for profile in profiles["profiles"]] == [
         "desktop",
@@ -418,6 +419,8 @@ def test_gate_d_browser_acceptance_contract_fails_closed_on_profile_drift() -> N
 def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     style_source = (ROOT / "scripts" / "globe_spike" / "style.css").read_text(encoding="utf-8")
+    workflow_source = (ROOT / ".github" / "workflows" / "globe-runtime-spike.yml").read_text(encoding="utf-8")
+    capture_source = (ROOT / "scripts" / "capture_globe_browser_evidence.mjs").read_text(encoding="utf-8")
 
     assert "collectAcceptanceEvidence" in runtime_source
     assert "artemisRuntimeReady" in runtime_source
@@ -433,6 +436,15 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
     assert 'input[type="range"] { min-height: 24px; }' in style_source
     assert "#globe-controls { left: 16px; right: 16px; bottom: 94px; flex-wrap: wrap; }" in style_source
+    assert "verifyEarthContextRender" in runtime_source
+    assert "querySourceFeatures('artemis-earth-context')" in runtime_source
+    assert "contextRenderedFeatureCount" in runtime_source
+    assert 'data-artemis-visual-ready="true"' in workflow_source
+    assert "capture_globe_browser_evidence.mjs" in workflow_source
+    assert "--virtual-time-budget=15000" not in workflow_source
+    assert "Page.captureScreenshot" in capture_source
+    assert "waitForVisualReadiness" in capture_source
+    assert "artemisContextRenderedFeatureCount" in capture_source
 
 
 def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:
