@@ -55,7 +55,8 @@
       "PR #379 — frozen Gate C package consumed through the shared semantic projection path",
       "PR #380 — synchronized Gate D time/layers/selection/inspector interaction increment",
       "PR #382 — pinned bundled Natural Earth present-day context and provider policy; no historical geometry or live terrain",
-      "PR #383 — deterministic desktop/tablet/hosted-mobile browser evidence and responsive overlay checks/fixes"
+      "PR #383 — deterministic desktop/tablet/hosted-mobile browser evidence and responsive overlay checks/fixes",
+      "PR #385 — same-page wall-clock CDP capture with fail-closed loaded/rendered Earth-context evidence"
     ]
   },
   "capability": {

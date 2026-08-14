@@ -1,4 +1,4 @@
-# ARTEMIS — PRIORITIES v6.7
+# ARTEMIS — PRIORITIES v6.8
 
 ## Статус
 
@@ -75,12 +75,13 @@ Completed Gate D increments:
 - PR #380 provides 96 deterministic Explorer views from six source-native temporal presets × 16 semantic-layer combinations, with synchronized timeline, layers, selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior;
 - PR #382 provides pinned bundled Natural Earth 1:110m Land `present_day_context` plus provenance, attribution, temporal-role, licensing, cache and secret policy while terrain remains synthetic/non-live;
 - PR #383 provides desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes; all six triggered workflows passed;
+- PR #385 replaces premature virtual-time screenshots with same-page wall-clock CDP capture, requires non-zero loaded/rendered Natural Earth features and restores legible hosted desktop/tablet/mobile Earth context; all six triggered workflows passed;
 - the generated artifact remains non-public and Gate D remains open.
 
 Remaining Gate D work:
 
-- normal-browser real desktop and 390 CSS px mobile interaction/visual evidence, including diagnosis of the low Earth-context contrast seen in hosted SwiftShader screenshots;
-- assistive-technology review and representative non-virtual performance observations; hosted virtual-time metrics remain diagnostic only;
+- normal-browser real desktop and 390 CSS px mobile interaction/visual evidence; hosted 500 px evidence remains non-equivalent to a real-device pass;
+- assistive-technology review and representative non-virtual performance observations; hosted wall-clock metrics remain diagnostic only;
 - one explicit Gate D exit decision.
 
 The current 2D renderer remains:
@@ -96,7 +97,7 @@ MapLibre GL JS remains the leading MVP engine. CesiumJS comparison requires a me
 
 Before Gate D exit:
 
-- preserve the reproducible non-public generated review artifact from PRs #379–#383;
+- preserve the reproducible non-public generated review artifact from PRs #379–#385;
 - verify semantic parity on the bounded frozen corpus;
 - collect real-device/browser, accessibility and performance evidence;
 - preserve the completed #382 provider availability/licensing/attribution/cache/security boundary and evaluate any future live provider separately;

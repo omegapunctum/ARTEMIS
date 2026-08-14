@@ -1,4 +1,4 @@
-# ARTEMIS — PROJECT PHASES v6.6
+# ARTEMIS — PROJECT PHASES v6.7
 
 ## Статус
 
@@ -99,6 +99,7 @@ Deferred:
 - completed increments #379/#380 consume the frozen package and synchronize time/layers/selection/inspector;
 - completed #382 selects pinned bundled Natural Earth `present_day_context` while keeping historical geometry withheld and terrain synthetic/non-live;
 - completed #383 exercises desktop/tablet/hosted-mobile Chromium layout, reduced-motion, accessible-name, target-size, overflow and overlay evidence;
+- completed #385 makes hosted screenshots fail closed on actual Earth-context rendering and captures DOM/PNG from the same wall-clock CDP page;
 - remaining: normal-browser real desktop and 390 CSS px mobile review, assistive technology, representative non-virtual performance and one explicit Gate D exit decision.
 
 ### Gate E — Evidence and decision
