@@ -151,6 +151,19 @@
       return rect.width < minTarget || rect.height < minTarget;
     });
     const globeRect = byId('globe-shell')?.getBoundingClientRect();
+    const overlayRects = ['globe-controls', 'terrain-status', 'attribution-status']
+      .map((id) => byId(id)?.getBoundingClientRect())
+      .filter((rect) => rect && rect.width > 0 && rect.height > 0);
+    let overlayCollisions = 0;
+    for (let left = 0; left < overlayRects.length; left += 1) {
+      for (let right = left + 1; right < overlayRects.length; right += 1) {
+        const a = overlayRects[left];
+        const b = overlayRects[right];
+        const overlapWidth = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const overlapHeight = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (overlapWidth > 1 && overlapHeight > 1) overlayCollisions += 1;
+      }
+    }
     const horizontalOverflow = Math.max(0, root.scrollWidth - root.clientWidth);
     const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
 
@@ -164,6 +177,7 @@
       horizontal_overflow_css_px: horizontalOverflow,
       unnamed_interactive_control_count: unnamed.length,
       undersized_target_count: undersized.length,
+      overlay_collision_count: overlayCollisions,
       globe_css_px: {
         width: Math.round(globeRect?.width || 0),
         height: Math.round(globeRect?.height || 0)
@@ -182,6 +196,7 @@
     root.dataset.artemisHorizontalOverflow = String(horizontalOverflow);
     root.dataset.artemisUnnamedControlCount = String(unnamed.length);
     root.dataset.artemisUndersizedTargetCount = String(undersized.length);
+    root.dataset.artemisOverlayCollisionCount = String(overlayCollisions);
     root.dataset.artemisGlobeWidth = String(runtime.acceptanceEvidence.globe_css_px.width);
     root.dataset.artemisGlobeHeight = String(runtime.acceptanceEvidence.globe_css_px.height);
     root.dataset.artemisStartupRecorded = String(runtime.performance.startupToIdleMs !== null);

@@ -142,6 +142,7 @@ jobs:
             grep -F 'data-artemis-horizontal-overflow="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F 'data-artemis-unnamed-control-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F 'data-artemis-undersized-target-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
+            grep -F 'data-artemis-overlay-collision-count="0"' "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F "world-slice-leonardo-romagna-1502-v1" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F "engine: MapLibre GL JS" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
             grep -F "maplibregl-canvas" "/tmp/artemis-globe-browser-$PROFILE-dom.html"
@@ -200,6 +201,7 @@ jobs:
                   "horizontal_overflow_css_px": int(value("horizontal-overflow")),
                   "unnamed_interactive_control_count": int(value("unnamed-control-count")),
                   "undersized_target_count": int(value("undersized-target-count")),
+                  "overlay_collision_count": int(value("overlay-collision-count")),
                   "globe_css_px": {
                       "width": int(value("globe-width")),
                       "height": int(value("globe-height")),
@@ -215,6 +217,7 @@ jobs:
               assert actual["horizontal_overflow_css_px"] <= thresholds["max_horizontal_overflow_css_px"]
               assert actual["unnamed_interactive_control_count"] <= thresholds["max_unnamed_interactive_controls"]
               assert actual["undersized_target_count"] == 0
+              assert actual["overlay_collision_count"] <= thresholds["max_overlay_collision_count"]
               assert actual["globe_css_px"]["width"] >= thresholds["min_globe_width_css_px"]
               assert actual["globe_css_px"]["height"] >= thresholds["min_globe_height_css_px"]
               results.append(actual)

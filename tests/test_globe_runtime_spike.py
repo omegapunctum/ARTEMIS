@@ -398,6 +398,7 @@ def test_gate_d_browser_acceptance_profiles_are_bundled_and_reproducible(tmp_pat
     assert profiles["profiles"][-1]["prefers_reduced_motion"] is True
     assert profiles["thresholds"]["min_interactive_target_css_px"] == 24
     assert profiles["thresholds"]["max_unnamed_interactive_controls"] == 0
+    assert profiles["thresholds"]["max_overlay_collision_count"] == 0
     assert _load(output / "acceptance-profiles.json") == profiles
     assert metadata["input_sha256"]["acceptance_profiles"]
 
@@ -423,6 +424,7 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "artemisHorizontalOverflow" in runtime_source
     assert "artemisUnnamedControlCount" in runtime_source
     assert "artemisUndersizedTargetCount" in runtime_source
+    assert "artemisOverlayCollisionCount" in runtime_source
     assert "artemisStartupRecorded" in runtime_source
     assert "artemisStartupToIdleMs" in runtime_source
     assert "artemisAverageFrameMs" in runtime_source
@@ -430,6 +432,7 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert 'input[type="range"]' in runtime_source
     assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
     assert 'input[type="range"] { min-height: 24px; }' in style_source
+    assert "#globe-controls { left: 16px; right: 16px; bottom: 94px; flex-wrap: wrap; }" in style_source
 
 
 def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:

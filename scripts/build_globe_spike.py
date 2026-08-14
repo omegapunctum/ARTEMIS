@@ -236,6 +236,7 @@ def _validate_acceptance_profiles(contract: dict[str, Any]) -> None:
         "max_horizontal_overflow_css_px",
         "min_interactive_target_css_px",
         "max_unnamed_interactive_controls",
+        "max_overlay_collision_count",
         "min_globe_width_css_px",
         "min_globe_height_css_px",
     }

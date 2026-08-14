@@ -30,9 +30,10 @@ Each profile must reach the MapLibre `load` path and prove:
 3. document-level horizontal overflow is at most 1 CSS px;
 4. interactive buttons, inputs and links have a programmatically discoverable name;
 5. measured buttons and range input are at least 24 × 24 CSS px;
-6. the mobile profile observes `prefers-reduced-motion: reduce`;
-7. the frozen Leonardo World Slice, source-aware inspector, uncertainty boundary and MapLibre canvas remain present;
-8. URL-pinned time, layer and selection state remains restorable.
+6. globe controls, terrain status and attribution overlays do not collide;
+7. the mobile profile observes `prefers-reduced-motion: reduce`;
+8. the frozen Leonardo World Slice, source-aware inspector, uncertainty boundary and MapLibre canvas remain present;
+9. URL-pinned time, layer and selection state remains restorable.
 
 Startup-to-idle and animation-frame values are retained in the evidence artifact as diagnostics only. They are never pass/fail thresholds under hosted headless virtual-time scheduling.
 
