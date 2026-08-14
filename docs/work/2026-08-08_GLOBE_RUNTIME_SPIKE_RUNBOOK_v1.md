@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working R&D runbook.
-- Updated: 2026-08-13.
+- Updated: 2026-08-14.
 - Issues: #343 engine spike; #358 source-aware inspector; #355 Gate D real-slice vertical.
 - Runtime: generated static artifact only.
 - Public capability: no.
@@ -38,7 +38,7 @@ The output directory must contain:
 - `explorer-state.json`;
 - `explorer-views.json` (precomputed time/layer Explorer State + projection packages);
 - `geospatial-assets.json`;
-- `synthetic-earth-context.geojson`;
+- `earth-context.geojson` (bundled Natural Earth 1:110m Land v4.0.0 present-day context);
 - `capability-path.geojson`;
 - `engine-evaluation.json`;
 - `knowledge-index.json`;
@@ -60,7 +60,7 @@ Open:
 http://127.0.0.1:8080/
 ```
 
-Default spike behavior requires network access for the pinned MapLibre GL JS 5.24.0 engine files from unpkg. Frozen semantic records and synthetic Earth context are generated locally; source links remain the exact external registry URLs and are not treated as archived evidence.
+Default spike behavior requires network access for the pinned MapLibre GL JS 5.24.0 engine files from unpkg. Frozen semantic records and the pinned Natural Earth context are generated/copied locally; Earth context needs no runtime network or secret. Source links remain the exact external registry URLs and are not treated as archived evidence.
 
 No ARTEMIS backend is required.
 
@@ -76,8 +76,9 @@ On successful load:
 - both `region-duchy-romagna-context` alternatives remain separately inspectable and unresolved;
 - the unresolved list contains keyboard-operable real semantic records, including three Leonardo trajectory gaps with `uncertainty-trajectory-route-gaps` and no geometry;
 - the dashed capability path is visibly labelled as renderer capability only and is not historical knowledge;
+- real generalized Natural Earth land is visible only as `present_day_context`, carries no World Model identity and is not presented as valid 1502 coastline geometry;
 - terrain status states that the default terrain fixture is synthetic/no live DEM;
-- attribution shows the synthetic fixture attribution required by the #342 manifest.
+- attribution shows both voluntary Natural Earth attribution and the synthetic terrain warning required by the #342 manifest.
 
 ## 5. Picking acceptance
 
@@ -137,6 +138,8 @@ The spike passes only if all are true:
 ## 7. Terrain acceptance
 
 The default spike does **not** prove real-world terrain data quality.
+
+It does include a real, pinned Natural Earth physical-land context layer under the separate provider policy in `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md`. That layer proves globe-scale Earth orientation only, not elevation, local coastline accuracy or historical validity.
 
 It proves:
 

@@ -3,8 +3,10 @@ import json
 from pathlib import Path
 
 from scripts.build_globe_spike import (
+    ASSET_MANIFEST_PATH,
     CAPABILITY_PATH,
     DEFAULT_DATASET,
+    EARTH_CONTEXT_PATH,
     ENGINE_EVALUATION_PATH,
     EXPECTED_ENGINE,
     ROOT,
@@ -50,7 +52,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
         "explorer-state.json",
         "explorer-views.json",
         "geospatial-assets.json",
-        "synthetic-earth-context.geojson",
+        "earth-context.geojson",
         "capability-path.geojson",
         "engine-evaluation.json",
         "knowledge-index.json",
@@ -419,24 +421,58 @@ def test_runtime_contains_terrain_capability_path_but_no_live_provider_is_select
     assert metadata["terrain"]["status"] == "synthetic_or_nonlive_provider"
 
 
-def test_synthetic_context_has_attribution_and_no_world_model_identity(tmp_path: Path) -> None:
+def test_real_earth_context_is_bundled_and_remains_nonhistorical(tmp_path: Path) -> None:
     output = tmp_path / "globe-spike"
-    build_spike(output)
-    context = _load(output / "synthetic-earth-context.geojson")
+    metadata = build_spike(output)
+    context = _load(output / "earth-context.geojson")
     manifest = _load(output / "geospatial-assets.json")
+    context_asset = next(
+        asset
+        for asset in manifest["assets"]
+        if asset["asset_id"] == "asset-natural-earth-110m-land-v4"
+    )
 
+    assert ASSET_MANIFEST_PATH.name == "gate_d_runtime.json"
+    assert EARTH_CONTEXT_PATH.name == "natural_earth_110m_land.geojson"
+    assert manifest["manifest_mode"] == "runtime_configuration"
+    assert context["artemis_context"] == {
+        "semantic_role": "present_day_context",
+        "asset_ref": "asset-natural-earth-110m-land-v4",
+        "capability_only": True,
+        "historical_validity": None,
+        "source_repository": "nvkelso/natural-earth-vector",
+        "source_commit_sha": "ca96624a56bd078437bca8184e78163e5039ad19",
+        "source_blob_sha": "04811d72fff2701ec67587e30ad8942675b511e3",
+        "source_path": "geojson/ne_110m_land.geojson",
+        "retrieved_at": "2026-08-14",
+    }
+    assert len(context["features"]) == 127
     assert all(
         feature["properties"].get("capability_only") is True
         for feature in context["features"]
     )
     assert all(
-        "object_ref" not in feature["properties"]
+        feature["properties"].get("semantic_role") == "present_day_context"
+        and feature["properties"].get("asset_ref") == context_asset["asset_id"]
+        and "object_ref" not in feature["properties"]
+        and "world_model_object_ref" not in feature["properties"]
         for feature in context["features"]
     )
-    assert all(
-        asset["licensing"]["attribution_text"]
-        for asset in manifest["assets"]
-    )
+    assert context_asset["provenance"]["provenance_kind"] == "open_dataset"
+    assert context_asset["temporal_semantics"]["world_model_claim_refs"] == []
+    assert context_asset["licensing"]["license_id"] == "PUBLIC-DOMAIN"
+    assert context_asset["runtime_policy"]["network_required"] is False
+    assert context_asset["runtime_policy"]["secret_required"] is False
+    assert metadata["earth_context"] == {
+        "asset_ref": "asset-natural-earth-110m-land-v4",
+        "provider_id": "provider-natural-earth-bundled-vector",
+        "real_dataset_selected": True,
+        "status": "bundled_real_vector_context",
+        "semantic_role": "present_day_context",
+        "network_required": False,
+        "secret_required": False,
+    }
+    assert all(asset["licensing"]["attribution_text"] for asset in manifest["assets"])
 
 
 def test_build_metadata_is_semantically_reproducible(tmp_path: Path) -> None:

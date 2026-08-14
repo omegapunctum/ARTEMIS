@@ -6,10 +6,11 @@ This directory is executable contract evidence for issue #342.
 
 - `schema.json` — strict Geospatial Asset Manifest JSON Schema v1.
 - `manifest.json` — synthetic terrain + imagery context fixture.
+- `gate_d_runtime.json` — runtime configuration selecting the bundled Natural Earth land layer while keeping terrain synthetic/non-live.
 
 ## Fixture status
 
-The manifest is deliberately synthetic.
+The contract fixture in `manifest.json` is deliberately synthetic. The separate Gate D runtime profile applies the same schema and validator to a pinned real physical-geography dataset under `docs/work/2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md`.
 
 It does **not**:
 
@@ -19,7 +20,7 @@ It does **not**:
 - provide historical terrain, coastline or imagery;
 - create World Model facts.
 
-The fixture exists only to test provider separation, coordinate/vertical metadata, licensing, cache/runtime rules and the distinction between present-day context and historical reconstruction.
+The synthetic fixture exists only to test provider separation, coordinate/vertical metadata, licensing, cache/runtime rules and the distinction between present-day context and historical reconstruction. The Gate D runtime profile does not convert Natural Earth data into historical truth.
 
 ## Semantic boundary
 

@@ -392,6 +392,8 @@ Without those conditions it remains context/analysis, not historical reconstruct
 
 The executable v1 manifest is synthetic and tests the infrastructure contract only.
 
+The later Gate D runtime profile in `fixtures/geospatial_assets/v1/gate_d_runtime.json` applies this contract to a pinned Natural Earth physical-land layer. That provider decision is owned by `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md`; it does not change the synthetic status or purpose of the original executable contract fixture.
+
 It must not:
 
 - imply endorsement of a real provider;

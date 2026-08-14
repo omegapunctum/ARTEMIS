@@ -6,6 +6,7 @@ This directory contains R&D-only inputs for issue #343.
 
 - `engine_evaluation.json` — executable engine comparison for the first Globe spike.
 - `synthetic_earth_context.geojson` — local synthetic sphere/context surface and graticule.
+- `natural_earth_110m_land.geojson` — pinned real Natural Earth land context for the Gate D review artifact; never historical geometry.
 - `capability_path.geojson` — explicit non-semantic LineString used only to prove renderer polyline capability.
 
 ## Critical boundary
@@ -36,7 +37,7 @@ The build output is generated outside the checked-in public runtime and includes
 - Globe adapter JSON;
 - Explorer State;
 - geospatial asset manifest;
-- synthetic Earth context;
+- bundled Natural Earth present-day physical-geography context;
 - non-semantic capability path;
 - static HTML/CSS/JS runtime;
 - deterministic build metadata.

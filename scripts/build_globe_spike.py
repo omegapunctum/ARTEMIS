@@ -29,10 +29,10 @@ from scripts.validate_geospatial_assets import validate_manifest  # noqa: E402
 WORLD_PATH = ROOT / "fixtures" / "world_model" / "v1" / "package.json"
 STATE_PATH = ROOT / "fixtures" / "explorer_state" / "v1" / "state-1504-local-global.json"
 PROJECTION_SCHEMA_PATH = ROOT / "fixtures" / "render_projection" / "v1" / "schema.json"
-ASSET_MANIFEST_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "manifest.json"
+ASSET_MANIFEST_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "gate_d_runtime.json"
 ASSET_SCHEMA_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "schema.json"
 ENGINE_EVALUATION_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "engine_evaluation.json"
-EARTH_CONTEXT_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "synthetic_earth_context.geojson"
+EARTH_CONTEXT_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "natural_earth_110m_land.geojson"
 CAPABILITY_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "capability_path.geojson"
 TEMPLATE_DIR = ROOT / "scripts" / "globe_spike"
 
@@ -49,7 +49,7 @@ REQUIRED_OUTPUT_FILES = {
     "explorer-state.json",
     "explorer-views.json",
     "geospatial-assets.json",
-    "synthetic-earth-context.geojson",
+    "earth-context.geojson",
     "capability-path.geojson",
     "engine-evaluation.json",
     "knowledge-index.json",
@@ -219,19 +219,57 @@ def _validate_capability_path(path_fixture: dict[str, Any]) -> None:
 
 
 def _validate_earth_context(context: dict[str, Any], manifest: dict[str, Any]) -> None:
-    asset_ids = {str(asset["asset_id"]) for asset in manifest.get("assets", [])}
+    assets = {str(asset["asset_id"]): asset for asset in manifest.get("assets", [])}
+    context_meta = context.get("artemis_context") or {}
+    context_asset_ref = context_meta.get("asset_ref")
+    if context_meta.get("capability_only") is not True:
+        raise SpikeBuildError("Earth context collection must be capability_only")
+    if context_meta.get("semantic_role") != "present_day_context":
+        raise SpikeBuildError("Earth context collection must be present_day_context")
+    if context_meta.get("historical_validity") is not None:
+        raise SpikeBuildError("Earth context cannot declare historical validity")
+    if context_asset_ref not in assets:
+        raise SpikeBuildError(f"Earth context references unknown asset: {context_asset_ref}")
+    context_asset = assets[context_asset_ref]
+    if context_asset.get("semantic_role") != "present_day_context":
+        raise SpikeBuildError("Earth context asset must remain present_day_context")
+    if context_asset.get("provenance", {}).get("provenance_kind") == "synthetic_fixture":
+        raise SpikeBuildError("Gate D Earth context must resolve to a real dataset")
+
     features = context.get("features")
     if not isinstance(features, list) or not features:
-        raise SpikeBuildError("synthetic Earth context must contain features")
+        raise SpikeBuildError("Earth context must contain features")
     for feature in features:
         properties = feature.get("properties") or {}
         if properties.get("capability_only") is not True:
-            raise SpikeBuildError("all synthetic Earth context features must be capability_only")
+            raise SpikeBuildError("all Earth context features must be capability_only")
+        if properties.get("semantic_role") != "present_day_context":
+            raise SpikeBuildError("all Earth context features must be present_day_context")
         if "object_ref" in properties or "world_model_object_ref" in properties:
             raise SpikeBuildError("Earth context must not carry World Model object identity")
         asset_ref = properties.get("asset_ref")
-        if asset_ref and asset_ref not in asset_ids:
+        if asset_ref != context_asset_ref:
+            raise SpikeBuildError("Earth context feature asset_ref must match the collection")
+        if asset_ref not in assets:
             raise SpikeBuildError(f"Earth context references unknown asset: {asset_ref}")
+
+
+def _earth_context_runtime_status(
+    context: dict[str, Any], manifest: dict[str, Any]
+) -> dict[str, Any]:
+    asset_ref = context["artemis_context"]["asset_ref"]
+    asset = next(asset for asset in manifest["assets"] if asset["asset_id"] == asset_ref)
+    provider = asset["provider"]
+    return {
+        "asset_ref": asset_ref,
+        "provider_id": provider["provider_id"],
+        "real_dataset_selected": asset["provenance"]["provenance_kind"]
+        != "synthetic_fixture",
+        "status": "bundled_real_vector_context",
+        "semantic_role": asset["semantic_role"],
+        "network_required": asset["runtime_policy"]["network_required"],
+        "secret_required": asset["runtime_policy"]["secret_required"],
+    }
 
 
 def _terrain_runtime_status(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -658,7 +696,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
     _write_json(output / "explorer-state.json", state)
     _write_json(output / "explorer-views.json", explorer_views)
     _write_json(output / "geospatial-assets.json", asset_manifest)
-    _write_json(output / "synthetic-earth-context.geojson", earth_context)
+    _write_json(output / "earth-context.geojson", earth_context)
     _write_json(output / "capability-path.geojson", capability_path)
     _write_json(output / "engine-evaluation.json", evaluation)
     _write_json(output / "knowledge-index.json", knowledge_index)
@@ -695,6 +733,7 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
             for item in trajectory_gaps
         ],
         "terrain": _terrain_runtime_status(asset_manifest),
+        "earth_context": _earth_context_runtime_status(earth_context, asset_manifest),
         "capability_path_is_semantic": False,
         "backend_required": False,
         "public_pages_entrypoint": False,
@@ -723,7 +762,8 @@ def build_spike(output: Path, *, dataset: str = DEFAULT_DATASET) -> dict[str, An
         f"  python -m http.server 8080 --directory {output}\n\n"
         "Then open http://127.0.0.1:8080/ in a browser.\n"
         "Network access is required only to load the pinned MapLibre GL JS engine from unpkg.\n"
-        "The default Earth context/terrain fixtures are synthetic and local.\n"
+        "Earth context is the bundled Natural Earth 1:110m Land v4.0.0 present-day reference layer.\n"
+        "It is real physical-geography context, not historical reconstruction; terrain remains synthetic/non-live.\n"
         "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
         "Its Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
         "Time/layer controls switch only among precomputed Explorer State and Render Projection packages.\n"
