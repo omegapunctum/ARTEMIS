@@ -568,10 +568,7 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "status": "gate_d_read_only_adapter",
         "fixture_mode": "frozen_gate_c_candidate_package",
         "historical_corpus_ready": False,
-        "corpus_status_label": (
-            "frozen Gate C candidate package · draft/rejected historical Claims · "
-            "Gate D present-day settlement anchors"
-        ),
+        "corpus_status_label": "frozen Gate C candidate package · non-public · draft/rejected Claims",
         "promotion_allowed": False,
         "record_time": decision["decided_at"],
         "world_slice": {

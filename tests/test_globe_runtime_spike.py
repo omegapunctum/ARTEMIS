@@ -206,6 +206,9 @@ def test_default_adapter_preserves_frozen_gate_c_boundary_with_context_overlay()
     assert {item["review_state"] for item in world["claims"]} == {"draft", "rejected"}
     assert world["relations"] == []
     assert world["derived_observations"] == []
+    assert world["corpus_status_label"] == (
+        "frozen Gate C candidate package · non-public · draft/rejected Claims"
+    )
     assert world["historical_corpus_ready"] is False
     assert world["promotion_allowed"] is False
     assert world["gate_c_decision"]["decision"] == "FREEZE"
