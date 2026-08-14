@@ -1,9 +1,9 @@
-# ARTEMIS — PRIORITIES v6.5
+# ARTEMIS — PRIORITIES v6.6
 
 ## Статус
 
 - Тип: canonical active priorities.
-- Дата: 2026-08-12.
+- Дата: 2026-08-14.
 - Active cycle: Globe MVP.
 - Active primary issue: GitHub issue `#355`.
 - Completed recovery foundation: issue `#344` / PR `#351`.
@@ -53,10 +53,10 @@ Until #331 is accepted, the slice may expose derived proximity/co-presence only.
 
 The Globe is the primary interface-development surface for this cycle.
 
-Foundation dependency #377 owns the append-only refinement contract lifecycle. Gate D may continue
-to read and render the frozen Gate C package, but write/edit/refinement behavior requires both the
-recorded contract decision and a separate implementation authorization. This does not reopen Gate C
-or change `project_state`.
+Completed #377 / PR #378 owns the accepted append-only refinement contract. Gate D may continue to
+read and render the frozen Gate C package, but write/edit/refinement behavior still requires a
+separate implementation authorization. Contract acceptance did not reopen Gate C or change
+`project_state` capability.
 
 Required interaction:
 
@@ -69,6 +69,18 @@ Required interaction:
 - modern terrain/imagery shown as attributed context, not timeless historical truth;
 - desktop/mobile/accessibility and representative performance checks.
 
+Completed Gate D increments:
+
+- PR #379 consumes the frozen Leonardo package directly through World Model → Explorer State → Render Projection and keeps all historical geometry withheld;
+- PR #380 provides 96 deterministic Explorer views from six source-native temporal presets × 16 semantic-layer combinations, with synchronized timeline, layers, selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior;
+- all six PR #380 workflows passed; the generated artifact remains non-public and Gate D remains open.
+
+Remaining Gate D work:
+
+- production Earth-context/provider decision with explicit attribution, temporal role, licensing, cache and secret policy;
+- representative desktop/mobile/browser, accessibility and performance evidence;
+- one explicit Gate D exit decision.
+
 The current 2D renderer remains:
 
 - the public compatibility baseline;
@@ -78,23 +90,24 @@ The current 2D renderer remains:
 
 MapLibre GL JS remains the leading MVP engine. CesiumJS comparison requires a measured blocker in terrain, 3D Tiles, precision, scene complexity or performance.
 
-## P3 — Evidence and one decision
+## P3 — Gate D closeout evidence and one decision
 
-Before any public promotion:
+Before Gate D exit:
 
-- provide a reproducible non-public preview or generated review artifact;
-- run task-based review focused on contextual understanding, not visual novelty;
-- verify semantic parity on the promoted corpus;
+- preserve the reproducible non-public generated review artifact from PRs #379–#380;
+- verify semantic parity on the bounded frozen corpus;
 - collect real-device/browser, accessibility and performance evidence;
 - review provider availability, cost, licensing, attribution, cache and security;
-- define rollback and current-truth/release changes.
+- define rollback and current-truth/release implications;
+- prepare the Gate E task protocol, but do not run participant validation before `ADVANCE_TO_GATE_E`.
 
 Record exactly one result:
 
-- continue as generated R&D evidence;
-- promote to a maintained experimental app;
-- narrow/rework the vertical;
-- stop/rethink.
+- `ADVANCE_TO_GATE_E`;
+- `NARROW`;
+- `REJECT`.
+
+Only `ADVANCE_TO_GATE_E` opens #334 participant evidence work. Public promotion remains a separate later decision.
 
 ## Accepted renderer foundations
 
@@ -148,9 +161,9 @@ Security, compatibility and critical reliability maintenance remain allowed.
 
 1. Preserve the completed governance, Release Discipline and #344 parity foundations.
 2. Freeze and curate the first real bounded World Slice through #332 within #355 — completed/FREEZE.
-3. Build the source-aware Globe MVP through shared contracts — active Gate D.
-4. Validate semantic, UX, accessibility and performance behavior.
-5. Record one explicit next decision.
+3. Preserve the completed #379/#380 frozen-package and synchronized-interaction increments.
+4. Complete Earth-context policy plus desktop/mobile, accessibility and representative performance evidence.
+5. Record exactly one Gate D decision: `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT`.
 
 ## Completion rule
 
