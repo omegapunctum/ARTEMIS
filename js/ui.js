@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 54873)
-Total output lines: 5000
-
 import { loadLayers, loadRelations, getRecentFeatures } from './data.js';
 import { updateMapData, setLayerLookup, focusFeatureOnMap, getMapFeatureCount, getMapBuildDiagnostics, setMapFeatureClickHandler, setMapFeatureHoverHandler, setMapLayerFilter, setSelectedFeatureId, setHoveredFeatureId, setMapDisplayMode, getMapThemeOptions, getMapTheme, setMapTheme } from './map.js';
 import { debounce, createInlineStateBlock } from './ux.js';
@@ -2162,7 +2159,426 @@ function renderSlicesPanel(elements, state, map) {
       deleteBtn.textContent = 'Удалить';
       deleteBtn.addEventListener('click', async () => {
         const sliceTitleForDelete = String(slice?.title || '').trim();
-        cons…4873 tokens truncated…nst timelineMode = snapshot.timelineMode === 'point' ? 'point' : 'range';
+        const ok = window.confirm(sliceTitleForDelete ? `Удалить срез «${sliceTitleForDelete}»?` : 'Удалить исследовательский срез?');
+        if (!ok) return;
+        try {
+          const deletedSliceId = String(slice?.id || '').trim();
+          await deleteResearchSlice(deletedSliceId);
+          if (deletedSliceId && deletedSliceId === String(state.sliceOpenedId || '').trim()) {
+            state.sliceOpenedId = '';
+            state.sliceOpenedTitle = '';
+            state.sliceOpenedRaw = null;
+            state.sliceOpenedAnnotationPlan = null;
+            state.sharedSliceReadOnly = false;
+          }
+          await ensureResearchSlicesLoaded(state, { force: true });
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage('Срез удалён', { variant: 'success', timeout: 2200 });
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось удалить срез.').message, { variant: 'warning', timeout: 3200 });
+        }
+      });
+
+      actions.append(compareToggleBtn, openBtn, shareBtn, revokeShareBtn, deleteBtn);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+    savedSection.appendChild(list);
+  }
+  panel.appendChild(savedSection);
+
+  const storiesSection = document.createElement('section');
+  storiesSection.className = 'panel-stack slice-workzone slice-secondary-workzone';
+  storiesSection.dataset.researchZone = 'stories';
+  const storiesToggle = document.createElement('details');
+  storiesToggle.className = 'slice-secondary-disclosure';
+  const storiesSummary = document.createElement('summary');
+  storiesSummary.className = 'status-summary';
+  const storiesCount = Array.isArray(state.stories) ? state.stories.length : 0;
+  const coursesCount = Array.isArray(state.courses) ? state.courses.length : 0;
+  storiesSummary.textContent = `Нарративные инструменты · Истории: ${storiesCount} · Курсы: ${coursesCount}`;
+  storiesToggle.appendChild(storiesSummary);
+  const storiesInner = document.createElement('div');
+  storiesInner.className = 'panel-stack';
+
+  const availableSliceRows = Array.isArray(state.researchSlices) ? state.researchSlices : [];
+  const availableSliceMap = new Map(
+    availableSliceRows
+      .map((slice) => [String(slice?.id || '').trim(), slice])
+      .filter(([id]) => id)
+  );
+  state.storyDraftSliceIds = (Array.isArray(state.storyDraftSliceIds) ? state.storyDraftSliceIds : []).filter((id) => availableSliceMap.has(id));
+
+  const storyForm = document.createElement('form');
+  storyForm.className = 'panel-stack';
+  storyForm.noValidate = true;
+
+  const storyTitleInput = document.createElement('input');
+  storyTitleInput.type = 'text';
+  storyTitleInput.name = 'story_title';
+  storyTitleInput.maxLength = 180;
+  storyTitleInput.placeholder = 'Название Story';
+  storyTitleInput.required = true;
+
+  const storyDescInput = document.createElement('textarea');
+  storyDescInput.name = 'story_description';
+  storyDescInput.maxLength = 4000;
+  storyDescInput.rows = 2;
+  storyDescInput.placeholder = 'Описание (опционально)';
+
+  const pickerTitle = document.createElement('p');
+  pickerTitle.className = 'status-summary';
+  pickerTitle.textContent = 'Выберите минимум 2 slices:';
+  storyForm.append(storyTitleInput, storyDescInput, pickerTitle);
+
+  const pickerList = document.createElement('div');
+  pickerList.className = 'panel-stack';
+  availableSliceRows.forEach((slice) => {
+    const sliceId = String(slice?.id || '').trim();
+    if (!sliceId) return;
+    const row = document.createElement('label');
+    row.className = 'status-summary';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = state.storyDraftSliceIds.includes(sliceId);
+    checkbox.addEventListener('change', () => {
+      const next = new Set(state.storyDraftSliceIds || []);
+      if (checkbox.checked) next.add(sliceId);
+      else next.delete(sliceId);
+      state.storyDraftSliceIds = [...next];
+      renderSlicesPanel(elements, state, map);
+    });
+    const titleText = document.createElement('span');
+    titleText.textContent = ` ${String(slice?.title || 'Без названия')}`;
+    row.append(checkbox, titleText);
+    pickerList.appendChild(row);
+  });
+  storyForm.appendChild(pickerList);
+
+  if (state.storyDraftSliceIds.length) {
+    const orderedTitle = document.createElement('p');
+    orderedTitle.className = 'status-summary';
+    orderedTitle.textContent = `Порядок шагов (${state.storyDraftSliceIds.length})`;
+    storyForm.appendChild(orderedTitle);
+    const orderedList = document.createElement('div');
+    orderedList.className = 'panel-stack';
+    state.storyDraftSliceIds.forEach((sliceId, index) => {
+      const row = document.createElement('div');
+      row.className = 'panel-action-row';
+      const label = document.createElement('span');
+      label.textContent = `${index + 1}. ${String(availableSliceMap.get(sliceId)?.title || sliceId)}`;
+      const upBtn = document.createElement('button');
+      upBtn.type = 'button';
+      upBtn.className = 'ui-button ui-button-secondary';
+      upBtn.textContent = '↑';
+      upBtn.disabled = index === 0;
+      upBtn.addEventListener('click', () => {
+        if (index === 0) return;
+        const next = [...state.storyDraftSliceIds];
+        [next[index - 1], next[index]] = [next[index], next[index - 1]];
+        state.storyDraftSliceIds = next;
+        renderSlicesPanel(elements, state, map);
+      });
+      const downBtn = document.createElement('button');
+      downBtn.type = 'button';
+      downBtn.className = 'ui-button ui-button-secondary';
+      downBtn.textContent = '↓';
+      downBtn.disabled = index === state.storyDraftSliceIds.length - 1;
+      downBtn.addEventListener('click', () => {
+        if (index >= state.storyDraftSliceIds.length - 1) return;
+        const next = [...state.storyDraftSliceIds];
+        [next[index], next[index + 1]] = [next[index + 1], next[index]];
+        state.storyDraftSliceIds = next;
+        renderSlicesPanel(elements, state, map);
+      });
+      row.append(label, upBtn, downBtn);
+      orderedList.appendChild(row);
+    });
+    storyForm.appendChild(orderedList);
+  }
+
+  const createStoryBtn = document.createElement('button');
+  createStoryBtn.type = 'submit';
+  createStoryBtn.className = 'ui-button ui-button-primary';
+  createStoryBtn.textContent = 'Создать Story';
+  createStoryBtn.disabled = state.storyDraftSliceIds.length < 2 || state.storiesLoading;
+  storyForm.appendChild(createStoryBtn);
+
+  storyForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    try {
+      const payload = buildStoryPayload({
+        title: storyTitleInput.value,
+        description: storyDescInput.value,
+        sliceIds: state.storyDraftSliceIds
+      });
+      await createStory(payload);
+      state.storyDraftSliceIds = [];
+      showUiSystemMessage('Story сохранена', { variant: 'success', timeout: 2200 });
+      await ensureStoriesLoaded(state, { force: true });
+      renderSlicesPanel(elements, state, map);
+    } catch (error) {
+      showUiSystemMessage(normalizeAppError(error, 'Не удалось сохранить story.').message, { variant: 'warning', timeout: 3200 });
+    }
+  });
+  storiesInner.appendChild(storyForm);
+
+  if (state.currentStory && Array.isArray(state.currentStory.slice_ids) && state.currentStory.slice_ids.length) {
+    const storyModeSurface = document.createElement('section');
+    storyModeSurface.className = 'story-mode-surface';
+    const storyModeHead = document.createElement('div');
+    storyModeHead.className = 'story-mode-head';
+    const storyModeBadge = document.createElement('span');
+    storyModeBadge.className = 'ui-badge story-mode-badge';
+    storyModeBadge.textContent = 'Story mode';
+    const storyModeTitle = document.createElement('strong');
+    storyModeTitle.className = 'story-mode-title';
+    const storyTitleRaw = String(state.currentStory.title || 'Story');
+    storyModeTitle.textContent = storyTitleRaw;
+    storyModeHead.append(storyModeBadge, storyModeTitle);
+    storyModeSurface.appendChild(storyModeHead);
+
+    const playback = document.createElement('div');
+    playback.className = 'panel-action-row story-playback-controls';
+    const storySteps = state.currentStory.slice_ids.length;
+    const storyStep = clampStoryStepIndex(state.currentStory, state.currentStoryStepIndex) + 1;
+    const stepStateLabel = resolveStoryStepStateLabel(storyStep, storySteps);
+    const { stepTitle: stepTitleRaw, stepNarrative: stepNarrativeRaw } = resolveStoryStepNarrative(state.currentStory, state.currentStoryStepIndex);
+    const openedSliceTitle = String(state.sliceOpenedTitle || '').trim();
+    const stepDisplayTitle = stepTitleRaw || openedSliceTitle || `Шаг ${storyStep}`;
+    const storyStepStateLine = document.createElement('p');
+    storyStepStateLine.className = 'status-summary story-mode-state';
+    storyStepStateLine.textContent = stepStateLabel;
+    storyModeSurface.appendChild(storyStepStateLine);
+    const storyStepSummary = document.createElement('p');
+    storyStepSummary.className = 'status-summary story-mode-step';
+    storyStepSummary.textContent = `Шаг ${storyStep} из ${storySteps}`;
+    storyModeSurface.appendChild(storyStepSummary);
+    const storyStepTitleLine = document.createElement('p');
+    storyStepTitleLine.className = 'story-mode-step-title';
+    storyStepTitleLine.textContent = stepDisplayTitle;
+    storyModeSurface.appendChild(storyStepTitleLine);
+    const storyContextLine = document.createElement('p');
+    storyContextLine.className = 'status-summary story-mode-context';
+    const storyDescription = String(state.currentStory.description || '').trim();
+    if (stepNarrativeRaw) {
+      storyContextLine.textContent = truncateText(stepNarrativeRaw.replace(/\s+/g, ' '), 220);
+    } else if (storyDescription) {
+      storyContextLine.textContent = truncateText(storyDescription.replace(/\s+/g, ' '), 220);
+    } else if (openedSliceTitle) {
+      storyContextLine.textContent = `Текущий фокус: ${truncateText(openedSliceTitle, 120)}.`;
+    } else {
+      storyContextLine.textContent = 'Пошаговый story-режим активен: используйте «Назад/Далее» для навигации.';
+    }
+    storyModeSurface.appendChild(storyContextLine);
+
+    const stepLabel = document.createElement('span');
+    stepLabel.className = 'status-summary story-playback-hint';
+    stepLabel.textContent = 'Навигация по шагам';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.className = 'ui-button ui-button-secondary';
+    prevBtn.textContent = 'Назад';
+    prevBtn.disabled = storyStep <= 1;
+    prevBtn.addEventListener('click', async () => {
+      state.currentStoryStepIndex = clampStoryStepIndex(state.currentStory, state.currentStoryStepIndex - 1);
+      await applyCurrentStoryStep(state, elements, map);
+      renderSlicesPanel(elements, state, map);
+    });
+
+    const nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.className = 'ui-button ui-button-secondary';
+    nextBtn.textContent = 'Далее';
+    nextBtn.disabled = storyStep >= storySteps;
+    nextBtn.addEventListener('click', async () => {
+      state.currentStoryStepIndex = clampStoryStepIndex(state.currentStory, state.currentStoryStepIndex + 1);
+      await applyCurrentStoryStep(state, elements, map);
+      renderSlicesPanel(elements, state, map);
+    });
+
+    const exitBtn = document.createElement('button');
+    exitBtn.type = 'button';
+    exitBtn.className = 'ui-button ui-button-secondary';
+    exitBtn.textContent = 'Выйти из Story';
+    exitBtn.addEventListener('click', () => {
+      exitStoryMode(state, elements, map);
+      renderSlicesPanel(elements, state, map);
+    });
+
+    playback.append(stepLabel, prevBtn, nextBtn, exitBtn);
+    storyModeSurface.appendChild(playback);
+    storiesInner.appendChild(storyModeSurface);
+  }
+
+  if (state.storiesLoading) {
+    storiesInner.appendChild(createInlineStateBlock({
+      variant: 'info',
+      title: 'Загрузка историй',
+      message: 'Загрузка историй…'
+    }));
+  } else if (state.storiesError) {
+    storiesInner.appendChild(createInlineStateBlock({
+      variant: 'warning',
+      title: 'Истории недоступны',
+      message: state.storiesError
+    }));
+  } else if (Array.isArray(state.stories) && state.stories.length) {
+    const storiesList = document.createElement('div');
+    storiesList.className = 'courses-list';
+    state.stories.forEach((story) => {
+      const item = document.createElement('article');
+      item.className = 'course-item';
+      const itemTitle = document.createElement('strong');
+      itemTitle.className = 'course-item-title';
+      itemTitle.textContent = String(story?.title || 'Без названия');
+      const meta = document.createElement('p');
+      meta.className = 'status-summary';
+      const stamp = String(story?.updated_at || '').trim();
+      meta.textContent = `${Number(story?.step_count || 0)} шагов${stamp ? ` · ${stamp.slice(0, 10)}` : ''}`;
+      const actions = document.createElement('div');
+      actions.className = 'panel-action-row';
+
+      const openBtn = document.createElement('button');
+      openBtn.type = 'button';
+      openBtn.className = 'ui-button ui-button-secondary';
+      openBtn.textContent = 'Открыть Story';
+      openBtn.addEventListener('click', async () => {
+        try {
+          if (!state.currentStory) {
+            captureStoryModeEntrySnapshot(state, map);
+          }
+          const detail = await getStory(String(story?.id || ''));
+          state.currentStory = detail;
+          state.currentStoryStepIndex = 0;
+          await applyCurrentStoryStep(state, elements, map);
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage('Story открыта', { variant: 'success', timeout: 2200 });
+        } catch (error) {
+          if (!state.currentStory) {
+            state.storyModeEntrySnapshot = null;
+          }
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось открыть story.').message, { variant: 'warning', timeout: 3200 });
+        }
+      });
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'ui-button ui-button-danger';
+      deleteBtn.textContent = 'Удалить';
+      deleteBtn.addEventListener('click', async () => {
+        const ok = window.confirm('Удалить story?');
+        if (!ok) return;
+        try {
+          await deleteStory(String(story?.id || ''));
+          if (state.currentStory && String(state.currentStory.id || '') === String(story?.id || '')) {
+            exitStoryMode(state, elements, map);
+          }
+          await ensureStoriesLoaded(state, { force: true });
+          renderSlicesPanel(elements, state, map);
+          showUiSystemMessage('Story удалена', { variant: 'success', timeout: 2200 });
+        } catch (error) {
+          showUiSystemMessage(normalizeAppError(error, 'Не удалось удалить story.').message, { variant: 'warning', timeout: 3200 });
+        }
+      });
+
+      actions.append(openBtn, deleteBtn);
+      item.append(itemTitle, meta, actions);
+      storiesList.appendChild(item);
+    });
+    storiesInner.appendChild(storiesList);
+  }
+
+  storiesToggle.appendChild(storiesInner);
+  storiesSection.appendChild(storiesToggle);
+  panel.appendChild(storiesSection);
+}
+
+function applyResearchSliceContext(rawSlice, state, elements, map) {
+  const restored = normalizeSliceForRestore(rawSlice);
+  const restoredFeatureIds = Array.isArray(restored.featureIds)
+    ? restored.featureIds.map((id) => resolveFeatureCanonicalId(state, id)).filter(Boolean)
+    : [];
+  state.sliceSelectionSet = new Set(restoredFeatureIds);
+  if (restored.mode === 'point') {
+    setTimelineMode(elements, state, 'point', { commit: false });
+    applyTimelineRange(elements, state, {
+      start: restored.start ?? state.currentStartYear,
+      end: restored.start ?? state.currentStartYear,
+      snap: false,
+      commit: false
+    });
+  } else {
+    setTimelineMode(elements, state, 'range', { commit: false });
+    applyTimelineRange(elements, state, {
+      start: restored.start ?? state.currentStartYear,
+      end: restored.end ?? state.currentEndYear,
+      snap: false,
+      commit: false
+    });
+  }
+
+  if (Array.isArray(restored.enabledLayerIds) && restored.enabledLayerIds.length) {
+    state.enabledLayerIds = new Set(restored.enabledLayerIds);
+  }
+  if (Array.isArray(restored.activeQuickLayerIds) && restored.activeQuickLayerIds.length) {
+    state.activeQuickLayerIds = new Set(restored.activeQuickLayerIds);
+  }
+
+  state.applyState?.();
+
+  if (restored.center && Number.isFinite(Number(restored.zoom))) {
+    map.flyTo({ center: restored.center, zoom: Number(restored.zoom), essential: true });
+  }
+
+  const restoredPrimaryId = restored.selectedFeatureId
+    || (Array.isArray(restored.featureIds) && restored.featureIds.length ? restored.featureIds[0] : null);
+  if (restoredPrimaryId) {
+    const feature = getFeatureById(state, restoredPrimaryId);
+    if (feature) {
+      selectFeature(state, elements, map, feature, { centerOnMap: false, openDetail: true, scrollCard: true });
+    }
+  }
+}
+
+async function applyCurrentStoryStep(state, elements, map) {
+  if (!state.currentStory) return;
+  const sliceId = resolveStoryStepSliceId(state.currentStory, state.currentStoryStepIndex);
+  if (!sliceId) return;
+  const rawSlice = await getResearchSlice(sliceId);
+  applyResearchSliceContext(rawSlice, state, elements, map);
+}
+
+function captureStoryModeEntrySnapshot(state, map) {
+  if (!state || state.storyModeEntrySnapshot) return;
+  const center = map?.getCenter?.();
+  const lng = Number(center?.lng);
+  const lat = Number(center?.lat);
+  const zoom = Number(map?.getZoom?.());
+  const hasViewport = Number.isFinite(lng) && Number.isFinite(lat) && Number.isFinite(zoom);
+  const detailFeatureId = String(state.detailOpenFeatureId || '').trim() || null;
+  state.storyModeEntrySnapshot = {
+    timelineMode: state.timelineMode === 'point' ? 'point' : 'range',
+    start: Number.isFinite(Number(state.currentStartYear)) ? Number(state.currentStartYear) : null,
+    end: Number.isFinite(Number(state.currentEndYear)) ? Number(state.currentEndYear) : null,
+    enabledLayerIds: [...new Set(Array.from(state.enabledLayerIds || []).map((id) => String(id || '').trim()).filter(Boolean))],
+    activeQuickLayerIds: [...new Set(Array.from(state.activeQuickLayerIds || []).map((id) => String(id || '').trim()).filter(Boolean))],
+    selectedFeatureId: String(state.selectedFeatureId || '').trim() || null,
+    detailFeatureId,
+    sliceOpenedId: String(state.sliceOpenedId || '').trim(),
+    sliceOpenedTitle: String(state.sliceOpenedTitle || '').trim(),
+    sliceOpenedAnnotationPlan: state.sliceOpenedAnnotationPlan || null,
+    viewport: hasViewport ? { center: [lng, lat], zoom } : null
+  };
+}
+
+function restoreStoryModeEntrySnapshot(state, elements, map) {
+  const snapshot = state?.storyModeEntrySnapshot;
+  state.storyModeEntrySnapshot = null;
+  if (!snapshot || typeof snapshot !== 'object') return false;
+
+  const timelineMode = snapshot.timelineMode === 'point' ? 'point' : 'range';
   setTimelineMode(elements, state, timelineMode, { commit: false });
   const fallbackStart = Number.isFinite(Number(state.currentStartYear)) ? Number(state.currentStartYear) : null;
   const fallbackEnd = Number.isFinite(Number(state.currentEndYear)) ? Number(state.currentEndYear) : fallbackStart;
@@ -4582,3 +4998,270 @@ function buildPreviewDetailContent(state, elements, map, feature, props) {
       labelNode.className = 'detail-meta-label';
       labelNode.textContent = 'Источник';
       const valueNode = document.createElement('span');
+      valueNode.className = 'detail-meta-value';
+      if (sourceUrl) {
+        const link = document.createElement('a');
+        link.className = 'detail-action-link';
+        link.textContent = sourceDomain || 'Источник';
+        setSafeLink(link, sourceUrl);
+        valueNode.appendChild(link);
+      } else {
+        valueNode.textContent = sourceDomain;
+      }
+      provenanceRow.append(labelNode, valueNode);
+      block.appendChild(provenanceRow);
+    }
+  });
+  detail.appendChild(factBlock);
+
+  const relationBlock = buildEpistemicBlock('relation', (block) => {
+    appendDocumentedRelationItems(block, state, elements, map, documentedRelations);
+  });
+  detail.appendChild(relationBlock);
+
+  const similarityBlock = buildEpistemicBlock('similarity', (block) => {
+    appendSimilarityItems(block, state, elements, map, similarityResults);
+  });
+  detail.appendChild(similarityBlock);
+
+  const interpretationBlock = buildEpistemicBlock('interpretation', (block) => {
+    const text = document.createElement('p');
+    text.className = 'detail-description detail-description-preview';
+    text.textContent = description || 'Интерпретация пока отсутствует.';
+    if (!description) text.classList.add('is-empty');
+    block.appendChild(text);
+  });
+  detail.appendChild(interpretationBlock);
+
+  const aiBlock = buildEpistemicBlock('ai', (block) => {
+    const hint = document.createElement('p');
+    hint.className = 'detail-empty';
+    hint.textContent = 'Перед сравнением откройте полную карточку и проверьте контекст.';
+    block.appendChild(hint);
+  });
+  detail.appendChild(aiBlock);
+
+  detail.appendChild(buildActionZonesSection({
+    onSaveSlice: () => elements.researchSliceSaveBtn?.click(),
+    onAddToResearch: () => addFeatureToDraftSliceFromDetail(state, elements, map, featureId),
+    onCompare: () => elements.researchSliceCompareBtn?.click(),
+    onExplain: () => {
+      document.dispatchEvent(new CustomEvent('artemis:detail-expand-request', { detail: { featureId, feature } }));
+      showDetailPanel(state, elements, map, feature, { mode: 'full', force: true });
+    }
+  }));
+
+  return detail;
+}
+
+function buildFullDetailContent(state, elements, map, props, feature) {
+  const featureId = getFeatureUiId(feature);
+  const documentedRelations = getDocumentedRelations(state, feature, 3);
+  const similarityResults = getSimilarityResults(state, feature, 3);
+  const layerLabel = state.layerLookup.get(String(props.layer_id || '').trim()) || String(props.layer_id || '').trim();
+  const dateLabel = formatRangeLabel(props.date_start, props.date_end);
+  const title = getPrimaryTitle(props);
+  const secondaryTitle = String(props.name_en || '').trim();
+  const description = String(props.description || props.title_short || '').trim();
+  const hasBriefDescription = description && description.length < 96;
+  const sourceUrl = normalizeSafeUrl(String(props.source_url || '').trim());
+  const sourceDomain = extractDomain(sourceUrl);
+  const confidenceLabel = getConfidenceLabel(props.coordinates_confidence);
+  const coordinatesLabel = formatCoordinates(feature?.geometry?.coordinates);
+  const licenseLabel = String(props.license || props.licence || props.rights || '').trim();
+
+  const detail = document.createElement('article');
+  detail.className = 'detail-content detail-content-full detail-panel-body-inner';
+  detail.dataset.mode = 'full';
+
+  detail.appendChild(buildPreviewHeaderSection(props, title, layerLabel, dateLabel));
+  if (secondaryTitle && secondaryTitle !== title) {
+    const secondary = document.createElement('p');
+    secondary.className = 'detail-subtitle';
+    secondary.textContent = secondaryTitle;
+    detail.lastElementChild?.appendChild(secondary);
+  }
+  detail.appendChild(buildSliceContextSection(state));
+
+  const factBlock = buildEpistemicBlock('fact', (block) => {
+    appendMetaRow(block, 'Период', dateLabel || 'Не указано');
+    if (layerLabel) appendMetaRow(block, 'Категория', layerLabel);
+    if (coordinatesLabel) appendMetaRow(block, 'Местоположение', coordinatesLabel);
+    if (confidenceLabel) appendMetaRow(block, 'Точность', confidenceLabel);
+    if (sourceDomain) appendMetaRow(block, 'Источник', sourceDomain);
+    if (licenseLabel) appendMetaRow(block, 'Лицензия', licenseLabel);
+    if (sourceUrl) {
+      const sourceRow = document.createElement('div');
+      sourceRow.className = 'detail-meta-row detail-source-link-row';
+      const sourceLabel = document.createElement('span');
+      sourceLabel.className = 'detail-meta-label';
+      sourceLabel.textContent = 'Источник';
+      const sourceValue = document.createElement('span');
+      sourceValue.className = 'detail-meta-value';
+      const link = document.createElement('a');
+      link.className = 'detail-action-link';
+      link.textContent = 'Открыть источник';
+      setSafeLink(link, sourceUrl);
+      sourceValue.appendChild(link);
+      sourceRow.append(sourceLabel, sourceValue);
+      block.appendChild(sourceRow);
+    }
+  });
+  detail.appendChild(factBlock);
+
+  const relationBlock = buildEpistemicBlock('relation', (block) => {
+    appendDocumentedRelationItems(block, state, elements, map, documentedRelations);
+  });
+  detail.appendChild(relationBlock);
+
+  const similarityBlock = buildEpistemicBlock('similarity', (block) => {
+    appendSimilarityItems(block, state, elements, map, similarityResults);
+  });
+  detail.appendChild(similarityBlock);
+
+  const interpretationBlock = buildEpistemicBlock('interpretation', (block) => {
+    const descriptionNode = document.createElement('p');
+    descriptionNode.className = 'detail-description';
+    descriptionNode.textContent = description || 'Интерпретация пока отсутствует.';
+    if (!description) descriptionNode.classList.add('is-empty');
+    block.appendChild(descriptionNode);
+    if (hasBriefDescription) {
+      const descriptionHint = document.createElement('p');
+      descriptionHint.className = 'detail-description-note';
+      descriptionHint.textContent = 'Короткая заметка: используйте как редакторский контекст.';
+      block.appendChild(descriptionHint);
+    }
+  });
+  detail.appendChild(interpretationBlock);
+
+  const aiBlock = buildEpistemicBlock('ai', (block) => {
+    const aiHint = document.createElement('p');
+    aiHint.className = 'detail-empty';
+    aiHint.textContent = 'Сначала сверяйте с якорем среза и проверяйте пересечение периода.';
+    block.appendChild(aiHint);
+  });
+  detail.appendChild(aiBlock);
+
+  detail.appendChild(buildActionZonesSection({
+    onSaveSlice: () => elements.researchSliceSaveBtn?.click(),
+    onAddToResearch: () => addFeatureToDraftSliceFromDetail(state, elements, map, featureId),
+    onCompare: () => elements.researchSliceCompareBtn?.click(),
+    onExplain: () => {
+      const interpretation = detail.querySelector('.detail-epistemic-interpretation');
+      interpretation?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      interpretation?.classList.add('is-highlighted');
+      window.setTimeout(() => interpretation?.classList.remove('is-highlighted'), 1300);
+    }
+  }));
+
+  return detail;
+}
+
+function updateFilterFeedback(elements, state) {
+  const total = getActiveFiltersCount(state);
+  [elements.filtersBtn, elements.layersBtn].forEach((button) => {
+    if (!button) return;
+    button.dataset.activeCount = total > 0 ? String(total) : '';
+    button.classList.toggle('has-active-filters', total > 0);
+  });
+  if (elements.layersBtn) {
+    elements.layersBtn.classList.toggle('is-layer-engaged', hasLayerCustomization(state));
+  }
+  if (elements.layersEntryHelper) {
+    if (hasLayerCustomization(state)) {
+      elements.layersEntryHelper.textContent = 'Слои изменены';
+      elements.layersEntryHelper.classList.add('is-visited');
+    } else {
+      elements.layersEntryHelper.textContent = total > 0 ? 'Есть активные ограничения' : 'Выберите, что показывать на карте.';
+      elements.layersEntryHelper.classList.remove('is-visited');
+    }
+  }
+}
+
+function getActiveFiltersCount(state) {
+  const yearMin = Number(state.yearBounds?.min ?? state.currentStartYear);
+  const yearMax = Number(state.yearBounds?.max ?? state.currentEndYear);
+  const hasTimelineFilter = state.currentStartYear !== yearMin || state.currentEndYear !== yearMax;
+  return Number(Boolean(state.search))
+    + Number(state.confidenceFilter !== 'all')
+    + Number(hasLayerCustomization(state))
+    + Number(hasQuickLayerCustomization(state))
+    + Number(hasTimelineFilter);
+}
+
+function hasQuickLayerCustomization(state) {
+  if (!(state?.defaultQuickLayerIds instanceof Set) || !(state?.activeQuickLayerIds instanceof Set)) return false;
+  if (state.defaultQuickLayerIds.size !== state.activeQuickLayerIds.size) return true;
+  for (const id of state.defaultQuickLayerIds) {
+    if (!state.activeQuickLayerIds.has(id)) return true;
+  }
+  return false;
+}
+
+function hasLayerCustomization(state) {
+  if (!(state?.defaultEnabledLayerIds instanceof Set) || !(state?.enabledLayerIds instanceof Set)) return false;
+  if (state.defaultEnabledLayerIds.size !== state.enabledLayerIds.size) return true;
+  for (const id of state.defaultEnabledLayerIds) {
+    if (!state.enabledLayerIds.has(id)) return true;
+  }
+  return false;
+}
+
+function buildResultFeedbackLabel(state) {
+  const constraints = [];
+  if (state.search) constraints.push(`поиск: «${state.search}»`);
+  if (hasLayerCustomization(state)) constraints.push('слои');
+  if (hasQuickLayerCustomization(state)) constraints.push('категории');
+  if (state.confidenceFilter !== 'all') constraints.push(`точность координат: ${state.confidenceFilter}`);
+  const yearMin = Number(state.yearBounds?.min ?? state.currentStartYear);
+  const yearMax = Number(state.yearBounds?.max ?? state.currentEndYear);
+  if (state.currentStartYear !== yearMin || state.currentEndYear !== yearMax) {
+    if (state.timelineMode === 'point' || state.currentStartYear === state.currentEndYear) {
+      constraints.push(`точка ${state.currentStartYear}`);
+    } else {
+      constraints.push(`период ${state.currentStartYear}—${state.currentEndYear}`);
+    }
+  }
+  const suffix = constraints.length ? ` · Ограничения: ${constraints.join(', ')}` : '';
+  return `${state.filteredFeatures.length} объектов в ленте и на карте${suffix}`;
+}
+
+function buildEmptyStateContext(state, elements) {
+  if (!state?.applyState) {
+    return { title: 'Ничего не найдено', message: 'Измените фильтры, поиск или период на таймлайне.', actionLabel: '', onAction: null };
+  }
+  if (!state.enabledLayerIds.size) {
+    return {
+      title: 'Все слои выключены',
+      message: 'Включите хотя бы один слой, чтобы увидеть объекты.',
+      actionLabel: 'Восстановить слои',
+      onAction: () => {
+        restoreDefaultLayers(state);
+        state.applyState?.();
+        showUiSystemMessage('Слои восстановлены по умолчанию', { variant: 'success', timeout: 2200 });
+      }
+    };
+  }
+  if (state.search) {
+    return {
+      title: 'Ничего не найдено',
+      message: `По запросу «${state.search}» ничего не найдено. Измените поиск, фильтры или период.`,
+      actionLabel: 'Очистить поиск',
+      onAction: () => {
+        clearSearchState(elements, state, { closePanel: false, notify: false });
+        state.applyState?.();
+        showUiSystemMessage('Поиск очищен', { variant: 'success', timeout: 2000 });
+      }
+    };
+  }
+  return {
+    title: 'Ничего не найдено',
+    message: 'Текущий период или фильтры не показывают объекты. Измените период на таймлайне или сбросьте ограничения.',
+    actionLabel: 'Сбросить ограничения',
+    onAction: () => {
+      resetExploreConstraints(elements, state);
+      state.applyState?.();
+      showUiSystemMessage('Ограничения сброшены', { variant: 'success', timeout: 2200 });
+    }
+  };
+}
