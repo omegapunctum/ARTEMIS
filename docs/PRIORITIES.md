@@ -1,4 +1,4 @@
-# ARTEMIS — PRIORITIES v6.6
+# ARTEMIS — PRIORITIES v6.7
 
 ## Статус
 
@@ -73,12 +73,14 @@ Completed Gate D increments:
 
 - PR #379 consumes the frozen Leonardo package directly through World Model → Explorer State → Render Projection and keeps all historical geometry withheld;
 - PR #380 provides 96 deterministic Explorer views from six source-native temporal presets × 16 semantic-layer combinations, with synchronized timeline, layers, selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior;
-- all six PR #380 workflows passed; the generated artifact remains non-public and Gate D remains open.
+- PR #382 provides pinned bundled Natural Earth 1:110m Land `present_day_context` plus provenance, attribution, temporal-role, licensing, cache and secret policy while terrain remains synthetic/non-live;
+- PR #383 provides desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes; all six triggered workflows passed;
+- the generated artifact remains non-public and Gate D remains open.
 
 Remaining Gate D work:
 
-- production Earth-context/provider decision with explicit attribution, temporal role, licensing, cache and secret policy;
-- representative desktop/mobile/browser, accessibility and performance evidence;
+- normal-browser real desktop and 390 CSS px mobile interaction/visual evidence, including diagnosis of the low Earth-context contrast seen in hosted SwiftShader screenshots;
+- assistive-technology review and representative non-virtual performance observations; hosted virtual-time metrics remain diagnostic only;
 - one explicit Gate D exit decision.
 
 The current 2D renderer remains:
@@ -94,10 +96,10 @@ MapLibre GL JS remains the leading MVP engine. CesiumJS comparison requires a me
 
 Before Gate D exit:
 
-- preserve the reproducible non-public generated review artifact from PRs #379–#380;
+- preserve the reproducible non-public generated review artifact from PRs #379–#383;
 - verify semantic parity on the bounded frozen corpus;
 - collect real-device/browser, accessibility and performance evidence;
-- review provider availability, cost, licensing, attribution, cache and security;
+- preserve the completed #382 provider availability/licensing/attribution/cache/security boundary and evaluate any future live provider separately;
 - define rollback and current-truth/release implications;
 - prepare the Gate E task protocol, but do not run participant validation before `ADVANCE_TO_GATE_E`.
 
