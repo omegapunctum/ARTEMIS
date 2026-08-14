@@ -16,6 +16,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-08-12_GATE_D_OPENING_v1.md` | #355 active Gate D source-aware Globe contract | synchronized non-public experience and one Gate D exit decision: `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D evidence and one explicit next decision before Gate E |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
+| `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 real Earth-context selection, provenance, license, cache and secret boundary | replaced only by a reviewed provider decision or archived with Gate D |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 
@@ -55,7 +56,7 @@ Active execution rule for the Globe MVP:
 - it remains generated/non-public and must not create another root/Pages entrypoint before a separate promotion decision;
 - MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
 - the reviewed unknown Trajectory gaps remain unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
-- synthetic Earth context/terrain fixtures cannot be described as real imagery, historical geography or production provider readiness;
+- the default Gate D review artifact uses pinned Natural Earth physical geography as real `present_day_context`; it cannot be described as historical geography, while synthetic terrain remains non-live and cannot imply production provider readiness;
 - live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
 - the MVP decision does not make 3D Globe a current public capability;
 - #331 is deferred but becomes blocking before documented Relation predicates enter the real corpus/runtime;

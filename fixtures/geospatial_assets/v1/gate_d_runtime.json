@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_id": "artemis-gate-d-earth-context-runtime-v1",
+  "manifest_mode": "runtime_configuration",
+  "assets": [
+    {
+      "asset_id": "asset-natural-earth-110m-land-v4",
+      "label": "Natural Earth 1:110m Land v4.0.0",
+      "asset_kind": "vector_basemap",
+      "semantic_role": "present_day_context",
+      "provider": {
+        "provider_id": "provider-natural-earth-bundled-vector",
+        "adapter_kind": "static_local",
+        "endpoint_template": "fixture://globe_runtime/v1/natural_earth_110m_land.geojson",
+        "credential_mode": "none",
+        "credential_env": null
+      },
+      "spatial_reference": {
+        "horizontal_crs": "EPSG:4326",
+        "axis_order": "lon_lat",
+        "vertical_reference": {
+          "mode": "not_applicable",
+          "datum": null,
+          "unit": null,
+          "positive_direction": null
+        }
+      },
+      "coverage": {
+        "coverage_kind": "global",
+        "bbox_wgs84": [-180.0, -90.0, 180.0, 83.64513],
+        "min_resolution_m": null,
+        "max_resolution_m": null,
+        "min_lod": null,
+        "max_lod": null
+      },
+      "temporal_semantics": {
+        "mode": "current_context",
+        "reference_date": null,
+        "valid_from": null,
+        "valid_to": null,
+        "world_model_claim_refs": [],
+        "uncertainty_refs": [],
+        "reconstruction_method": null
+      },
+      "provenance": {
+        "provenance_kind": "open_dataset",
+        "publisher": "Natural Earth",
+        "dataset_name": "1:110m Land",
+        "dataset_version": "4.0.0",
+        "source_uri": "https://github.com/nvkelso/natural-earth-vector/blob/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson",
+        "retrieved_at": "2026-08-14",
+        "data_date": null
+      },
+      "licensing": {
+        "license_id": "PUBLIC-DOMAIN",
+        "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+        "attribution_text": "Natural Earth, 1:110m Land v4.0.0 (public domain).",
+        "attribution_required": false,
+        "redistribution": "allowed"
+      },
+      "cache_policy": {
+        "runtime_cache_allowed": true,
+        "offline_cache_allowed": true,
+        "cached_bytes_redistribution_allowed": true,
+        "max_age_seconds": null
+      },
+      "runtime_policy": {
+        "allowed_environments": ["development", "test", "staging", "production"],
+        "network_required": false,
+        "secret_required": false,
+        "public_pages_allowed": true,
+        "fallback_asset_ref": null,
+        "failure_mode": "fail_closed"
+      }
+    },
+    {
+      "asset_id": "asset-synthetic-present-terrain",
+      "label": "Synthetic terrain capability fixture",
+      "asset_kind": "terrain_elevation",
+      "semantic_role": "present_day_context",
+      "provider": {
+        "provider_id": "provider-synthetic-local-terrain",
+        "adapter_kind": "static_local",
+        "endpoint_template": "fixture://terrain/global",
+        "credential_mode": "none",
+        "credential_env": null
+      },
+      "spatial_reference": {
+        "horizontal_crs": "EPSG:4326",
+        "axis_order": "lon_lat",
+        "vertical_reference": {
+          "mode": "ellipsoidal_height",
+          "datum": "WGS84",
+          "unit": "meter",
+          "positive_direction": "up"
+        }
+      },
+      "coverage": {
+        "coverage_kind": "global",
+        "bbox_wgs84": [-180.0, -90.0, 180.0, 90.0],
+        "min_resolution_m": 30.0,
+        "max_resolution_m": 1000.0,
+        "min_lod": 0,
+        "max_lod": 12
+      },
+      "temporal_semantics": {
+        "mode": "current_context",
+        "reference_date": null,
+        "valid_from": null,
+        "valid_to": null,
+        "world_model_claim_refs": [],
+        "uncertainty_refs": [],
+        "reconstruction_method": null
+      },
+      "provenance": {
+        "provenance_kind": "synthetic_fixture",
+        "publisher": "ARTEMIS fixture suite",
+        "dataset_name": "Synthetic terrain capability fixture",
+        "dataset_version": "1.0.0",
+        "source_uri": "fixture://terrain/metadata",
+        "retrieved_at": "2026-08-08",
+        "data_date": null
+      },
+      "licensing": {
+        "license_id": "SYNTHETIC-FIXTURE",
+        "license_url": null,
+        "attribution_text": "Synthetic ARTEMIS terrain capability fixture; not real terrain data.",
+        "attribution_required": true,
+        "redistribution": "allowed"
+      },
+      "cache_policy": {
+        "runtime_cache_allowed": true,
+        "offline_cache_allowed": true,
+        "cached_bytes_redistribution_allowed": true,
+        "max_age_seconds": 3600
+      },
+      "runtime_policy": {
+        "allowed_environments": ["development", "test"],
+        "network_required": false,
+        "secret_required": false,
+        "public_pages_allowed": true,
+        "fallback_asset_ref": null,
+        "failure_mode": "fail_closed"
+      }
+    }
+  ]
+}

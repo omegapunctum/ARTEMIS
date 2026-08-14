@@ -7,7 +7,7 @@
     state: './explorer-state.json',
     views: './explorer-views.json',
     assets: './geospatial-assets.json',
-    context: './synthetic-earth-context.geojson',
+    context: './earth-context.geojson',
     capabilityPath: './capability-path.geojson',
     engineEvaluation: './engine-evaluation.json',
     knowledge: './knowledge-index.json',
@@ -181,26 +181,26 @@
   }
 
   function addContextLayers(map, context) {
-    map.addSource('artemis-synthetic-earth', { type: 'geojson', data: context });
+    map.addSource('artemis-earth-context', { type: 'geojson', data: context });
     map.addLayer({
-      id: 'artemis-synthetic-surface',
+      id: 'artemis-present-day-land',
       type: 'fill',
-      source: 'artemis-synthetic-earth',
+      source: 'artemis-earth-context',
       filter: ['==', ['get', 'semantic_role'], 'present_day_context'],
       paint: {
-        'fill-color': '#10243c',
-        'fill-opacity': 0.88
+        'fill-color': '#17334a',
+        'fill-opacity': 0.92
       }
     });
     map.addLayer({
-      id: 'artemis-graticule',
+      id: 'artemis-present-day-coastline',
       type: 'line',
-      source: 'artemis-synthetic-earth',
-      filter: ['==', ['get', 'kind'], 'graticule'],
+      source: 'artemis-earth-context',
+      filter: ['==', ['get', 'semantic_role'], 'present_day_context'],
       paint: {
-        'line-color': '#31577c',
-        'line-width': 0.8,
-        'line-opacity': 0.6
+        'line-color': '#4f7591',
+        'line-width': 0.7,
+        'line-opacity': 0.8
       }
     });
   }
@@ -352,6 +352,7 @@
 
   function renderSharedState(data) {
     const temporal = data.state.temporal_selection || {};
+    const contextAsset = (data.assets.assets || []).find((asset) => asset.asset_kind === 'vector_basemap');
     setText('world-slice', data.state.world_slice_ref);
     setText('explorer-state', data.state.state_id);
     setText('selected-time', temporal.start === temporal.end ? temporal.start : `${temporal.start} → ${temporal.end}`);
@@ -366,7 +367,7 @@
     );
     setText(
       'boundary-status',
-      `Earth surface and graticule are synthetic present-day renderer context. Semantic input: ${data.knowledge.corpus_status_label || 'status unavailable'}. No historical geometry, real terrain, satellite imagery, coastline history, provider token, or public promotion is implied.`
+      `Earth context: ${contextAsset?.label || 'bundled reference layer'} · real generalized physical geography · present_day_context only. Semantic input: ${data.knowledge.corpus_status_label || 'status unavailable'}. No historical coastline validity, historical geometry, real terrain, satellite imagery, provider token, or public promotion is implied.`
     );
     setText('deferred-types', (data.knowledge.deferred_object_types || []).join(', ') || 'none');
 

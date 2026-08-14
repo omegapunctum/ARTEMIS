@@ -10,6 +10,7 @@ from scripts.validate_geospatial_assets import (
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "manifest.json"
+GATE_D_RUNTIME_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "gate_d_runtime.json"
 SCHEMA_PATH = ROOT / "fixtures" / "geospatial_assets" / "v1" / "schema.json"
 WORLD_PATH = ROOT / "fixtures" / "world_model" / "v1" / "package.json"
 
@@ -43,6 +44,25 @@ def test_synthetic_manifest_is_valid_and_not_historical_truth() -> None:
         asset["temporal_semantics"]["world_model_claim_refs"] == []
         for asset in manifest["assets"]
     )
+
+
+def test_gate_d_runtime_selects_real_bundled_context_without_historical_claims() -> None:
+    manifest = _load(GATE_D_RUNTIME_PATH)
+    schema = _load(SCHEMA_PATH)
+    world = _load(WORLD_PATH)
+    assert validate_manifest(manifest, schema=schema, world=world) == []
+    assert manifest["manifest_mode"] == "runtime_configuration"
+
+    context = _asset(manifest, "asset-natural-earth-110m-land-v4")
+    assert context["semantic_role"] == "present_day_context"
+    assert context["provenance"]["provenance_kind"] == "open_dataset"
+    assert context["provider"]["adapter_kind"] == "static_local"
+    assert context["provider"]["credential_mode"] == "none"
+    assert context["runtime_policy"]["network_required"] is False
+    assert context["runtime_policy"]["secret_required"] is False
+    assert context["temporal_semantics"]["valid_from"] is None
+    assert context["temporal_semantics"]["valid_to"] is None
+    assert context["temporal_semantics"]["world_model_claim_refs"] == []
 
 
 def test_duplicate_asset_identity_is_rejected() -> None:
