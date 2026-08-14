@@ -15,7 +15,7 @@
   "profiles": [
     {
       "profile_id": "desktop",
-      "viewport_css_px": {
+      "browser_window_css_px": {
         "width": 1440,
         "height": 900
       },
@@ -24,7 +24,7 @@
     },
     {
       "profile_id": "tablet",
-      "viewport_css_px": {
+      "browser_window_css_px": {
         "width": 1024,
         "height": 768
       },
@@ -33,7 +33,7 @@
     },
     {
       "profile_id": "mobile",
-      "viewport_css_px": {
+      "browser_window_css_px": {
         "width": 390,
         "height": 844
       },

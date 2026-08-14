@@ -390,7 +390,7 @@ def test_gate_d_browser_acceptance_profiles_are_bundled_and_reproducible(tmp_pat
         "tablet",
         "mobile",
     ]
-    assert [profile["viewport_css_px"] for profile in profiles["profiles"]] == [
+    assert [profile["browser_window_css_px"] for profile in profiles["profiles"]] == [
         {"width": 1440, "height": 900},
         {"width": 1024, "height": 768},
         {"width": 390, "height": 844},

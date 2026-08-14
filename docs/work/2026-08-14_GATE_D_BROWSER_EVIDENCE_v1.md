@@ -11,13 +11,13 @@
 
 ## 1. Decision supported
 
-This evidence closes the reproducibility gap in the existing `Globe Runtime Spike Gate`: the same generated MapLibre artifact is now exercised at deterministic desktop, tablet and mobile viewport profiles. It does not create a second browser test system and does not promote the Globe runtime.
+This evidence closes the reproducibility gap in the existing `Globe Runtime Spike Gate`: the same generated MapLibre artifact is now exercised at deterministic desktop, tablet and mobile browser-window profiles. It does not create a second browser test system and does not promote the Globe runtime.
 
 The acceptance contract is versioned at `fixtures/globe_runtime/v1/gate_d_acceptance_profiles.json`. CI publishes one machine-readable `artemis-globe-browser-evidence.json` plus DOM snapshots and screenshots for all profiles.
 
 ## 2. Automated evidence
 
-| Profile | Viewport | Expected layout | Reduced motion | Evidence |
+| Profile | Requested browser window | Expected layout | Reduced motion | Evidence |
 |---|---:|---|---|---|
 | desktop | 1440 × 900 CSS px | two-column desktop | default | DOM + screenshot |
 | tablet | 1024 × 768 CSS px | compact two-column tablet | default | DOM + screenshot |
@@ -25,7 +25,7 @@ The acceptance contract is versioned at `fixtures/globe_runtime/v1/gate_d_accept
 
 Each profile must reach the MapLibre `load` path and prove:
 
-1. the requested viewport and expected layout mode match;
+1. the requested browser-window width and expected layout mode match; the actual CSS viewport is recorded because headless Chrome may reserve browser chrome from the requested outer height;
 2. the globe remains at least 320 × 320 CSS px;
 3. document-level horizontal overflow is at most 1 CSS px;
 4. interactive buttons, inputs and links have a programmatically discoverable name;

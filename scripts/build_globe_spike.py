@@ -214,7 +214,7 @@ def _validate_acceptance_profiles(contract: dict[str, Any]) -> None:
 
     expected_layouts = {"desktop", "tablet", "mobile"}
     for profile in profiles:
-        viewport = profile.get("viewport_css_px") or {}
+        viewport = profile.get("browser_window_css_px") or {}
         if not all(
             isinstance(viewport.get(axis), int) and viewport[axis] > 0
             for axis in ("width", "height")

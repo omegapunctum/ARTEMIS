@@ -135,9 +135,12 @@
     const root = document.documentElement;
     const thresholds = contract.thresholds || {};
     const mode = layoutMode(contract);
+    const requestedProfileId = new URLSearchParams(window.location.search).get('profile');
     const profile = (contract.profiles || []).find((candidate) => (
-      candidate.viewport_css_px?.width === window.innerWidth
-      && candidate.viewport_css_px?.height === window.innerHeight
+      candidate.profile_id === requestedProfileId
+    )) || (contract.profiles || []).find((candidate) => (
+      candidate.browser_window_css_px?.width === window.innerWidth
+      && candidate.expected_layout_mode === mode
     ));
     const interactive = [...document.querySelectorAll('button, input, a[href]')];
     const unnamed = interactive.filter((node) => !accessibleName(node));
