@@ -25,6 +25,7 @@ function parseArguments(argv) {
   values.height = Number(values.height);
   values.timeoutMs = Number(values['timeout-ms'] || 30000);
   values.reducedMotion = values['reduced-motion'] === 'true';
+  values.verifyUrlState = values['verify-url-state'] === 'true';
   if (![values.width, values.height, values.timeoutMs].every(Number.isFinite)) {
     throw new Error('Width, height and timeout must be finite numbers');
   }
@@ -140,6 +141,165 @@ async function waitForVisualReadiness(cdp, deadline) {
   throw new Error(`Timed out waiting for visual readiness: ${JSON.stringify(lastState)}`);
 }
 
+async function verifyUrlStateRestoration(cdp, deadline) {
+  const interaction = await evaluate(cdp, `(() => {
+    const runtime = window.__ARTEMIS_GLOBE_SPIKE;
+    const initialStatus = document.getElementById('temporal-map-status')?.textContent || '';
+    const initialTime = runtime.activeTemporalPresetId;
+    const initialLayers = [...runtime.activeLayerRefs];
+    const allLayers = (runtime.viewIndex.layer_options || []).map((option) => option.layer_ref);
+    runtime.selectView(initialTime, allLayers);
+    const region = (runtime.data.projection.items || []).find((item) => item.object_type === 'Region');
+    if (!region) throw new Error('All-layer view does not expose a Region alternative');
+    runtime.selectItem(region.item_id);
+    const regionDisclosure = document.getElementById('selection-card')?.textContent || '';
+    runtime.selectView(initialTime, initialLayers);
+
+    const range = document.getElementById('temporal-preset');
+    range.value = range.max;
+    range.dispatchEvent(new Event('input', { bubbles: true }));
+
+    const checkedLayers = [...document.querySelectorAll('#layer-controls input:checked')];
+    if (checkedLayers.length > 1) {
+      checkedLayers[0].checked = false;
+      checkedLayers[0].dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    const unresolved = document.querySelector('.unresolved-item');
+    if (!unresolved) throw new Error('No keyboard-accessible unresolved record is available');
+    const unresolvedDisclosure = unresolved.closest('details');
+    if (unresolvedDisclosure) unresolvedDisclosure.open = true;
+    if (unresolved.getClientRects().length === 0) {
+      throw new Error('Unresolved record did not become visibly keyboard-accessible');
+    }
+    unresolved.click();
+
+    const params = new URLSearchParams(window.location.search);
+    return {
+      initialStatus,
+      updatedStatus: document.getElementById('temporal-map-status')?.textContent || '',
+      regionDisclosure,
+      ariaValueText: range.getAttribute('aria-valuetext'),
+      expectedValueText: (runtime.viewIndex.temporal_presets || []).find(
+        (preset) => preset.preset_id === runtime.activeTemporalPresetId
+      )?.label || null,
+      time: runtime.activeTemporalPresetId,
+      layers: [...runtime.activeLayerRefs].sort(),
+      item: runtime.selectedItemId,
+      urlTime: params.get('time'),
+      urlLayers: (params.get('layers') || '').split(',').filter(Boolean).sort(),
+      urlItem: params.get('item')
+    };
+  })()`);
+
+  if (!interaction.time || !interaction.item) throw new Error(`Interaction did not select state: ${JSON.stringify(interaction)}`);
+  for (const requiredText of [
+    'Reconstruction alternatives',
+    'scholarly_reconstruction',
+    'analytical_model',
+    'Geometry withheld; not rendered.',
+    'Coverage / corpus limits'
+  ]) {
+    if (!interaction.regionDisclosure.includes(requiredText)) {
+      throw new Error(`Region inspector did not expose ${requiredText}`);
+    }
+  }
+  if (interaction.initialStatus === interaction.updatedStatus) {
+    throw new Error('Timeline interaction did not update the visible globe status');
+  }
+  if (!interaction.ariaValueText || interaction.ariaValueText !== interaction.expectedValueText) {
+    throw new Error('Timeline interaction did not expose a source-bound aria-valuetext');
+  }
+  if (interaction.urlTime !== interaction.time) throw new Error('Timeline state was not written to the URL');
+  if (JSON.stringify(interaction.urlLayers) !== JSON.stringify(interaction.layers)) {
+    throw new Error('Layer state was not written to the URL');
+  }
+  if (interaction.urlItem !== interaction.item) throw new Error('Selection state was not written to the URL');
+
+  await evaluate(cdp, "document.documentElement.dataset.artemisUrlTestReload = 'before'");
+  await cdp.send('Page.reload', { ignoreCache: false });
+  const reloadDeadline = Math.max(deadline, Date.now() + 30000);
+  while (Date.now() < reloadDeadline) {
+    const marker = await evaluate(
+      cdp,
+      "document.documentElement?.dataset?.artemisUrlTestReload || null"
+    ).catch(() => 'before');
+    if (marker !== 'before') break;
+    await delay(100);
+  }
+  await waitForVisualReadiness(cdp, reloadDeadline);
+  const restored = await evaluate(cdp, `(() => {
+    const runtime = window.__ARTEMIS_GLOBE_SPIKE;
+    return {
+      time: runtime.activeTemporalPresetId,
+      layers: [...runtime.activeLayerRefs].sort(),
+      item: runtime.selectedItemId,
+      cardItem: document.getElementById('selection-card')?.dataset.itemId || null
+    };
+  })()`);
+  if (JSON.stringify(restored) !== JSON.stringify({
+    time: interaction.time,
+    layers: interaction.layers,
+    item: interaction.item,
+    cardItem: interaction.item
+  })) {
+    throw new Error(`URL state did not survive reload: ${JSON.stringify({ interaction, restored })}`);
+  }
+
+  const invalidCanonical = await evaluate(cdp, `(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('time', 'invalid-time');
+    url.searchParams.set('layers', 'invalid-layer');
+    url.searchParams.set('item', 'invalid-item');
+    history.pushState({ invalid: true }, '', url);
+    window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
+    const runtime = window.__ARTEMIS_GLOBE_SPIKE;
+    const params = new URLSearchParams(window.location.search);
+    return {
+      time: runtime.activeTemporalPresetId,
+      layers: [...runtime.activeLayerRefs].sort(),
+      item: runtime.selectedItemId,
+      urlTime: params.get('time'),
+      urlLayers: (params.get('layers') || '').split(',').filter(Boolean).sort(),
+      urlItem: params.get('item')
+    };
+  })()`);
+  if (
+    invalidCanonical.urlTime !== invalidCanonical.time
+    || JSON.stringify(invalidCanonical.urlLayers) !== JSON.stringify(invalidCanonical.layers)
+    || invalidCanonical.urlItem !== invalidCanonical.item
+  ) {
+    throw new Error(`Invalid popstate URL was not canonicalized: ${JSON.stringify(invalidCanonical)}`);
+  }
+
+  await evaluate(cdp, 'history.back()');
+  let popstateRestored = null;
+  while (Date.now() < reloadDeadline) {
+    popstateRestored = await evaluate(cdp, `(() => {
+      const runtime = window.__ARTEMIS_GLOBE_SPIKE;
+      return {
+        time: runtime.activeTemporalPresetId,
+        layers: [...runtime.activeLayerRefs].sort(),
+        item: runtime.selectedItemId
+      };
+    })()`);
+    if (
+      popstateRestored.time === interaction.time
+      && JSON.stringify(popstateRestored.layers) === JSON.stringify(interaction.layers)
+      && popstateRestored.item === interaction.item
+    ) break;
+    await delay(100);
+  }
+  if (
+    popstateRestored.time !== interaction.time
+    || JSON.stringify(popstateRestored.layers) !== JSON.stringify(interaction.layers)
+    || popstateRestored.item !== interaction.item
+  ) {
+    throw new Error(`Back navigation did not restore Explorer State: ${JSON.stringify(popstateRestored)}`);
+  }
+  return { interaction, restored, invalidCanonical, popstateRestored };
+}
+
 async function main() {
   const options = parseArguments(process.argv);
   const profileDirectory = await mkdtemp(join(tmpdir(), 'artemis-chrome-profile-'));
@@ -181,7 +341,10 @@ async function main() {
     });
     await writeFile(options.dom, `${dom}\n`, 'utf8');
     await writeFile(options.screenshot, Buffer.from(capture.data, 'base64'));
-    process.stdout.write(`${JSON.stringify(readiness)}\n`);
+    const urlStateRestoration = options.verifyUrlState
+      ? await verifyUrlStateRestoration(cdp, deadline)
+      : null;
+    process.stdout.write(`${JSON.stringify({ ...readiness, urlStateRestoration })}\n`);
   } catch (error) {
     if (browserLog) process.stderr.write(browserLog);
     throw error;
