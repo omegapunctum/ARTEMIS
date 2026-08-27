@@ -112,14 +112,17 @@ jobs:
           for SPEC in "${PROFILE_SPECS[@]}"; do
             IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"
             RUN_URL="$PROFILE_URL&profile=$PROFILE"
+            VERIFY_URL_STATE=false
+            if [ "$PROFILE" = "desktop" ]; then VERIFY_URL_STATE=true; fi
 
-            if ! timeout 45s node scripts/capture_globe_browser_evidence.mjs \
+            if ! timeout 90s node scripts/capture_globe_browser_evidence.mjs \
               --browser "$BROWSER" \
               --url "$RUN_URL" \
               --width "$WIDTH" \
               --height "$HEIGHT" \
               --reduced-motion "$REDUCED_MOTION" \
-              --timeout-ms 30000 \
+              --verify-url-state "$VERIFY_URL_STATE" \
+              --timeout-ms 45000 \
               --dom "/tmp/artemis-globe-browser-$PROFILE-dom.html" \
               --screenshot "/tmp/artemis-globe-browser-$PROFILE.png" \
               > "/tmp/artemis-globe-browser-$PROFILE-capture.json" \
@@ -272,6 +275,7 @@ jobs:
           path: |
             /tmp/artemis-globe-spike
             /tmp/artemis-globe-browser-evidence.json
+            /tmp/artemis-globe-browser-*-capture.json
             /tmp/artemis-globe-browser-*-dom.html
             /tmp/artemis-globe-browser-*.png
           if-no-files-found: error

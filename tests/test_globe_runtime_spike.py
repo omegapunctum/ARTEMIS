@@ -91,6 +91,8 @@ def test_builder_marks_public_review_preview_without_changing_semantics(tmp_path
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert "Публичный R&D-preview" in index
     assert 'href="../"' in index
+    assert "К основной карте · Architecture Atlas" in index
+    assert "2D-карта" not in index
     assert "{{PUBLIC_PREVIEW_STATUS}}" not in index
     assert "{{PUBLIC_PREVIEW_NAV}}" not in index
 
@@ -523,7 +525,8 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "artemisStartupRecorded" in runtime_source
     assert "artemisStartupToIdleMs" in runtime_source
     assert "artemisAverageFrameMs" in runtime_source
-    assert "button, input, a[href]" in runtime_source
+    assert "button, input, a[href], summary" in runtime_source
+    assert "node.getClientRects().length > 0" in runtime_source
     assert 'input[type="range"]' in runtime_source
     assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
     assert 'input[type="range"] { min-height: 24px; }' in style_source
@@ -537,6 +540,11 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "Page.captureScreenshot" in capture_source
     assert "waitForVisualReadiness" in capture_source
     assert "artemisContextRenderedFeatureCount" in capture_source
+    assert "verifyUrlStateRestoration" in capture_source
+    assert "Invalid popstate URL was not canonicalized" in capture_source
+    assert "Back navigation did not restore Explorer State" in capture_source
+    assert '--verify-url-state "$VERIFY_URL_STATE"' in workflow_source
+    assert "/tmp/artemis-globe-browser-*-capture.json" in workflow_source
 
 
 def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:
@@ -552,6 +560,54 @@ def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> Non
     assert "updateCanonicalSelection(projectionItem)" in runtime_source
     assert "Selection cleared: the object is outside the active time/layer projection." in runtime_source
     assert "prefers-reduced-motion: reduce" in runtime_source
+
+
+def test_runtime_explains_time_invariant_geometry_and_hides_noop_controls() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
+
+    assert 'id="temporal-map-status"' in html_source
+    assert "only present-day named-settlement reference points are authorized" in runtime_source
+    assert "geometryIsTimeInvariant" in runtime_source
+    assert "range.setAttribute('aria-valuetext', presetLabel)" in runtime_source
+    assert 'id="toggle-alternatives"' in html_source
+    assert 'aria-pressed="true"' in html_source
+    assert 'alternative geometry" hidden' in html_source
+    assert "alternativeGeometryCount" in runtime_source
+    assert "control.hidden = count === 0" in runtime_source
+    assert "applyAlternativeLayerVisibility" in runtime_source
+    assert "state.epistemic_display.show_alternatives = runtime.alternativesVisible" not in runtime_source
+    assert "maplibregl.GlobeControl" not in runtime_source
+
+
+def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
+
+    assert "frozen repository review package" in html_source
+    assert "does not query Airtable live" in html_source
+    assert "Shared state and data boundary" in html_source
+    assert "Renderer and runtime diagnostics" in html_source
+    assert "knowledgeDisclosure" in runtime_source
+    assert "Claims & evidence" in runtime_source
+    assert "Material uncertainty" in runtime_source
+    assert "Projection loss" in runtime_source
+    assert "Reconstruction alternatives" in runtime_source
+    assert "Geometry withheld; not rendered." in runtime_source
+    assert "Coverage / corpus limits" in runtime_source
+    assert "Missing records or geometry must not be interpreted as historical absence." in runtime_source
+
+
+def test_runtime_persists_and_restores_explorer_state_in_url() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+
+    assert "function syncUrlState()" in runtime_source
+    assert "url.searchParams.set('time'" in runtime_source
+    assert "url.searchParams.set('layers'" in runtime_source
+    assert "url.searchParams.set('item'" in runtime_source
+    assert "window.history.replaceState" in runtime_source
+    assert "function restoreExplorerStateFromUrl()" in runtime_source
+    assert "window.addEventListener('popstate', restoreExplorerStateFromUrl)" in runtime_source
 
 
 def test_maplibre_v5_semantic_layers_use_expression_geometry_type_filters() -> None:

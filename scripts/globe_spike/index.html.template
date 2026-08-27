@@ -26,30 +26,20 @@
       <div id="globe-controls" role="group" aria-label="Globe controls">
         <button id="view-global" type="button">Global</button>
         <button id="view-slice" type="button">World Slice</button>
-        <button id="toggle-alternatives" type="button" aria-pressed="true">Alternatives: on</button>
+        <button id="toggle-alternatives" type="button" aria-pressed="true" title="Renderer-local visibility for already projected alternative geometry" hidden>Map display: alternative geometry shown</button>
       </div>
 
+      <div id="temporal-map-status" class="map-note temporal-map-note" role="status" aria-live="polite">Loading source-bound time view…</div>
       <div id="terrain-status" class="map-note"></div>
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>
 
     <aside id="inspector" aria-label="ARTEMIS globe spike inspector">
-      <section>
-        <h1>Shared state</h1>
-        <dl class="metrics">
-          <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
-          <div><dt>Explorer State</dt><dd id="explorer-state">—</dd></div>
-          <div><dt>Selected time</dt><dd id="selected-time">—</dd></div>
-          <div><dt>Projection</dt><dd id="projection-id">—</dd></div>
-          <div><dt>Corpus status</dt><dd id="corpus-status">—</dd></div>
-          <div><dt>Deferred types</dt><dd id="deferred-types">—</dd></div>
-        </dl>
-      </section>
-
       <section aria-labelledby="explorer-controls-title">
-        <h2 id="explorer-controls-title">Synchronized Explorer</h2>
+        <h1 id="explorer-controls-title">Synchronized Explorer</h1>
+        <p class="source-note">Data source: frozen repository review package. This preview does not query Airtable live.</p>
         <div class="explorer-control">
-          <label for="temporal-preset">Contract-pinned time selection</label>
+          <label for="temporal-preset">Source-bound date or interval</label>
           <input id="temporal-preset" type="range" min="0" max="0" step="1" value="0" aria-describedby="temporal-preset-value interaction-status" />
           <output id="temporal-preset-value" for="temporal-preset">Loading…</output>
         </div>
@@ -58,6 +48,21 @@
         </fieldset>
         <p id="interaction-status" class="hint" role="status" aria-live="polite">Loading deterministic Explorer views…</p>
       </section>
+
+      <details class="inspector-disclosure">
+        <summary>Shared state and data boundary</summary>
+        <div class="disclosure-body">
+          <dl class="metrics">
+            <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
+            <div><dt>Explorer State</dt><dd id="explorer-state">—</dd></div>
+            <div><dt>Selected time</dt><dd id="selected-time">—</dd></div>
+            <div><dt>Projection</dt><dd id="projection-id">—</dd></div>
+            <div><dt>Corpus status</dt><dd id="corpus-status">—</dd></div>
+            <div><dt>Deferred types</dt><dd id="deferred-types">—</dd></div>
+          </dl>
+          <p id="boundary-status" class="boundary-note">Loading semantic and renderer boundary…</p>
+        </div>
+      </details>
 
       <section>
         <h2>Semantic render</h2>
@@ -70,29 +75,22 @@
         <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">No semantic object selected.</div>
       </section>
 
-      <section>
-        <h2>Unresolved / uncertain</h2>
-        <div id="unresolved-list"></div>
-      </section>
+      <details class="inspector-disclosure">
+        <summary>Unresolved / uncertain · <span id="unresolved-count">0</span></summary>
+        <div id="unresolved-list" class="disclosure-body"></div>
+      </details>
 
-      <section>
-        <h2>Renderer capability path</h2>
-        <p class="warning">Dashed path is synthetic renderer-capability geometry only. It has no World Model object ID and is not historical knowledge.</p>
-      </section>
-
-      <section>
-        <h2>Runtime baseline</h2>
-        <dl class="metrics">
-          <div><dt>Startup → idle</dt><dd id="startup-ms">pending</dd></div>
-          <div><dt>Frame sample</dt><dd id="frame-sample">pending</dd></div>
-          <div><dt>Rendered semantic primitives</dt><dd id="primitive-count">—</dd></div>
-        </dl>
-      </section>
-
-      <section class="boundary-note">
-        <h2>Boundary</h2>
-        <p id="boundary-status">Loading semantic and renderer boundary…</p>
-      </section>
+      <details class="inspector-disclosure">
+        <summary>Renderer and runtime diagnostics</summary>
+        <div class="disclosure-body">
+          <p class="warning">The dashed path is synthetic renderer-capability geometry only. It has no World Model object ID and is not historical knowledge.</p>
+          <dl class="metrics">
+            <div><dt>Startup → idle</dt><dd id="startup-ms">pending</dd></div>
+            <div><dt>Frame sample</dt><dd id="frame-sample">pending</dd></div>
+            <div><dt>Rendered semantic primitives</dt><dd id="primitive-count">—</dd></div>
+          </dl>
+        </div>
+      </details>
     </aside>
   </main>
 

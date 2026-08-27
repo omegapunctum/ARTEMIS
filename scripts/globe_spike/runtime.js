@@ -102,6 +102,31 @@
     return `${temporalPresetId}|${[...(layerRefs || [])].sort().join(',')}`;
   }
 
+  function geometrySignature(globe) {
+    return JSON.stringify((globe?.primitives || []).map((primitive) => [
+      primitive.primitive_id,
+      primitive.primitive_kind,
+      primitive.coordinates
+    ]));
+  }
+
+  function alternativeGeometryCount(globe) {
+    return (globe?.primitives || []).filter((primitive) => (
+      primitive.render_role === 'region_geometry'
+      && primitive.geometry_is_primary === false
+    )).length;
+  }
+
+  function syncUrlState() {
+    if (!runtime.activeTemporalPresetId) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('time', runtime.activeTemporalPresetId);
+    url.searchParams.set('layers', [...runtime.activeLayerRefs].sort().join(','));
+    if (runtime.selectedItemId) url.searchParams.set('item', runtime.selectedItemId);
+    else url.searchParams.delete('item');
+    window.history.replaceState({ artemisExplorerState: true }, '', url);
+  }
+
   function currentProjectionItem(itemId) {
     return (runtime.data?.projection?.items || []).find((item) => item.item_id === itemId) || null;
   }
@@ -147,16 +172,18 @@
       candidate.browser_window_css_px?.width === window.innerWidth
       && candidate.expected_layout_mode === mode
     ));
-    const interactive = [...document.querySelectorAll('button, input, a[href]')];
+    const interactive = [...document.querySelectorAll('button, input, a[href], summary')]
+      .filter((node) => !node.hidden && node.getClientRects().length > 0);
     const unnamed = interactive.filter((node) => !accessibleName(node));
-    const measuredTargets = [...document.querySelectorAll('button, input[type="range"]')];
+    const measuredTargets = [...document.querySelectorAll('button, input[type="range"], summary')]
+      .filter((node) => !node.hidden && node.getClientRects().length > 0);
     const minTarget = Number(thresholds.min_interactive_target_css_px || 24);
     const undersized = measuredTargets.filter((node) => {
       const rect = node.getBoundingClientRect();
       return rect.width < minTarget || rect.height < minTarget;
     });
     const globeRect = byId('globe-shell')?.getBoundingClientRect();
-    const overlayRects = ['globe-controls', 'terrain-status', 'attribution-status']
+    const overlayRects = ['globe-controls', 'temporal-map-status', 'terrain-status', 'attribution-status']
       .map((id) => byId(id)?.getBoundingClientRect())
       .filter((rect) => rect && rect.width > 0 && rect.height > 0);
     let overlayCollisions = 0;
@@ -548,6 +575,49 @@
     }
   }
 
+  function renderTemporalStatus(view) {
+    const preset = (runtime.viewIndex?.temporal_presets || []).find(
+      (candidate) => candidate.preset_id === view.temporal_preset_id
+    );
+    const comparableViews = (runtime.viewIndex?.views || []).filter(
+      (candidate) => viewKey('', candidate.active_layer_refs) === viewKey('', view.active_layer_refs)
+    );
+    const signatures = new Set(comparableViews.map((candidate) => geometrySignature(candidate.globe)));
+    const geometryIsTimeInvariant = comparableViews.length > 1 && signatures.size === 1;
+    const recordCount = (view.projection.items || []).length;
+    const primitiveCount = (view.globe.primitives || []).length;
+    const base = `${preset?.label || view.temporal_preset_id}. ${recordCount} records in the semantic projection.`;
+    const explanation = geometryIsTimeInvariant
+      ? ' The globe geometry is unchanged across these source-bound dates: only present-day named-settlement reference points are authorized; exact historical positions, routes and Region boundaries remain unknown.'
+      : ` ${primitiveCount} authorized spatial primitives are visible for this time/layer view.`;
+    setText('temporal-map-status', `${base}${explanation}`);
+    document.documentElement.dataset.artemisTemporalGeometryChanged = String(!geometryIsTimeInvariant);
+  }
+
+  function updateAlternativeGeometryControl(globe) {
+    const control = byId('toggle-alternatives');
+    if (!control) return;
+    const count = alternativeGeometryCount(globe);
+    control.hidden = count === 0;
+    control.disabled = count === 0;
+    control.setAttribute('aria-pressed', String(runtime.alternativesVisible));
+    control.textContent = `Map display: alternative geometry ${runtime.alternativesVisible ? 'shown' : 'hidden'} (${count})`;
+    document.documentElement.dataset.artemisAlternativeGeometryCount = String(count);
+  }
+
+  function applyAlternativeLayerVisibility(map) {
+    if (!map) return;
+    for (const layerId of ALTERNATIVE_LAYER_IDS) {
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(
+          layerId,
+          'visibility',
+          runtime.alternativesVisible ? 'visible' : 'none'
+        );
+      }
+    }
+  }
+
   function renderUnresolved(projection) {
     const host = byId('unresolved-list');
     if (!host) return;
@@ -555,6 +625,7 @@
 
     const lossByItem = new Map((projection.losses || []).map((loss) => [loss.item_id, loss]));
     const unresolved = (projection.items || []).filter((item) => item.spatial_status === 'unresolved');
+    setText('unresolved-count', unresolved.length);
 
     for (const item of unresolved) {
       const loss = lossByItem.get(item.item_id);
@@ -596,6 +667,10 @@
       ['geometry role', geometry?.origin_kind || '—'],
       ['spatial precision', geometry?.spatial_precision || '—']
     ];
+    if (record.semantic_flags?.reconstruction_mode) {
+      rows.push(['reconstruction', record.semantic_flags.reconstruction_mode]);
+      rows.push(['primary geometry', String(record.semantic_flags.is_primary === true)]);
+    }
     const dl = document.createElement('dl');
     dl.className = 'identity-list';
     for (const [key, value] of rows) {
@@ -605,10 +680,18 @@
     host.append(dl);
   }
 
+  function knowledgeDisclosure(host, label, count) {
+    const section = document.createElement('details');
+    section.className = 'knowledge-section knowledge-disclosure';
+    const summary = document.createElement('summary');
+    summary.textContent = `${label} · ${count}`;
+    section.append(summary);
+    host.append(section);
+    return section;
+  }
+
   function addEvidence(host, record) {
-    const section = document.createElement('section');
-    section.className = 'knowledge-section';
-    appendText(section, 'h3', 'Claims & evidence');
+    const section = knowledgeDisclosure(host, 'Claims & evidence', (record.claims || []).length);
     const evidenceByClaim = new Map();
     for (const evidence of record.evidence_links || []) {
       const rows = evidenceByClaim.get(evidence.claim_id) || [];
@@ -666,13 +749,10 @@
       }
       section.append(group);
     }
-    host.append(section);
   }
 
   function addUncertainties(host, record) {
-    const section = document.createElement('section');
-    section.className = 'knowledge-section';
-    appendText(section, 'h3', 'Material uncertainty');
+    const section = knowledgeDisclosure(host, 'Material uncertainty', (record.uncertainties || []).length);
     if (!(record.uncertainties || []).length) {
       appendText(section, 'p', 'No material uncertainty is referenced by this projection item.', 'empty-note');
     }
@@ -688,13 +768,90 @@
       }
       section.append(card);
     }
-    host.append(section);
+  }
+
+  function addReconstructionAlternatives(host, record) {
+    if (record.object_type !== 'Region') return;
+    const alternatives = (runtime.data?.projection?.items || []).filter((item) => (
+      item.object_type === 'Region'
+      && item.object_ref === record.object_ref
+      && item.semantic_flags?.reconstruction_mode
+    ));
+    if (!alternatives.length) return;
+
+    const section = knowledgeDisclosure(host, 'Reconstruction alternatives', alternatives.length);
+    const allGeometryWithheld = alternatives.every((alternative) => (
+      !(alternative.geometry_refs || []).length || alternative.spatial_status === 'unresolved'
+    ));
+    appendText(
+      section,
+      'p',
+      allGeometryWithheld
+        ? 'These are separate source-bound interpretations. No variant has authorized geometry, so none is drawn as a Region boundary.'
+        : 'These are separate source-bound interpretations. Geometry availability is reported per variant; the map control appears when toggleable alternative geometry is present.',
+      'empty-note'
+    );
+    for (const alternative of alternatives) {
+      const geometryAvailable = (alternative.geometry_refs || []).length > 0
+        && alternative.spatial_status !== 'unresolved';
+      const card = document.createElement('article');
+      card.className = 'alternative-card';
+      appendText(
+        card,
+        'strong',
+        `${alternative.subobject_ref}${alternative.item_id === record.item_id ? ' · selected' : ''}`
+      );
+      appendText(
+        card,
+        'p',
+        `${alternative.semantic_flags.reconstruction_mode} · primary=${alternative.semantic_flags.is_primary === true} · spatial=${alternative.spatial_status}`,
+        'record-meta'
+      );
+      appendText(
+        card,
+        'p',
+        geometryAvailable
+          ? `Geometry available (${alternative.geometry_refs.length} reference${alternative.geometry_refs.length === 1 ? '' : 's'}); rendered by its semantic layer.`
+          : 'Geometry withheld; not rendered.',
+        geometryAvailable ? 'record-meta' : 'warning'
+      );
+      section.append(card);
+    }
+  }
+
+  function addCoverage(host) {
+    const coverage = runtime.data?.projection?.coverage || {};
+    const policy = coverage.coverage_policy || {};
+    const exclusions = policy.known_exclusion_ids || [];
+    const section = knowledgeDisclosure(host, 'Coverage / corpus limits', exclusions.length);
+    appendText(
+      section,
+      'p',
+      'The corpus is explicitly incomplete. Missing records or geometry must not be interpreted as historical absence.',
+      'warning'
+    );
+    const dl = document.createElement('dl');
+    dl.className = 'identity-list';
+    for (const [key, value] of [
+      ['corpus completeness', policy.corpus_completeness || 'unavailable'],
+      ['absence semantics', policy.absence_semantics || 'unavailable'],
+      ['source scope', policy.source_scope || 'unavailable'],
+      ['coverage manifest', coverage.coverage_manifest_ref || 'unavailable']
+    ]) {
+      appendText(dl, 'dt', key);
+      appendText(dl, 'dd', value);
+    }
+    section.append(dl);
+    if (exclusions.length) {
+      const list = document.createElement('ul');
+      list.className = 'coverage-list';
+      for (const exclusion of exclusions) appendText(list, 'li', exclusion);
+      section.append(list);
+    }
   }
 
   function addProjectionLosses(host, record) {
-    const section = document.createElement('section');
-    section.className = 'knowledge-section';
-    appendText(section, 'h3', 'Projection loss');
+    const section = knowledgeDisclosure(host, 'Projection loss', (record.projection_losses || []).length);
     if (!(record.projection_losses || []).length) {
       appendText(section, 'p', 'No projection loss is recorded for this item.', 'empty-note');
     }
@@ -706,7 +863,6 @@
         'loss-card'
       );
     }
-    host.append(section);
   }
 
   function renderKnowledgeRecord(record) {
@@ -720,6 +876,8 @@
     addIdentityRows(card, record);
     addEvidence(card, record);
     addUncertainties(card, record);
+    addReconstructionAlternatives(card, record);
+    addCoverage(card);
     addProjectionLosses(card, record);
   }
 
@@ -738,7 +896,7 @@
     }
   }
 
-  function clearCanonicalSelection(message = 'No semantic object selected.') {
+  function clearCanonicalSelection(message = 'No semantic object selected.', options = {}) {
     runtime.selectedItemId = null;
     if (runtime.data?.state?.selection) {
       runtime.data.state.selection.primary_object_ref = null;
@@ -750,17 +908,17 @@
       card.removeAttribute('data-item-id');
       card.textContent = message;
     }
+    for (const row of document.querySelectorAll('.unresolved-item[aria-pressed="true"]')) {
+      row.setAttribute('aria-pressed', 'false');
+    }
+    if (options.syncUrl !== false) syncUrlState();
   }
 
   function selectKnowledgeItem(itemId, options = {}) {
     const record = runtime.knowledgeByItem.get(itemId);
     const projectionItem = currentProjectionItem(itemId);
     if (!record || !projectionItem) {
-      const card = byId('selection-card');
-      if (card) {
-        card.classList.remove('empty');
-        card.textContent = `No active projection record exists for ${itemId}.`;
-      }
+      clearCanonicalSelection(`No active projection record exists for ${itemId}.`, options);
       return;
     }
     const losses = (runtime.data.projection.losses || []).filter((loss) => loss.item_id === itemId);
@@ -775,6 +933,7 @@
     });
     renderUnresolved(runtime.data.projection);
     if (options.focus) byId('selection-card')?.focus({ preventScroll: false });
+    if (options.syncUrl !== false) syncUrlState();
   }
 
   function renderSelection(properties) {
@@ -783,18 +942,13 @@
       selectKnowledgeItem(itemId, { focus: true });
       return;
     }
-    const card = byId('selection-card');
-    if (card) {
-      card.classList.remove('empty');
-      card.textContent = 'Rendered feature has no semantic item_id and cannot be resolved.';
-    }
+    clearCanonicalSelection('Rendered feature has no semantic item_id and cannot be resolved.');
   }
 
   function renderCapabilitySelection() {
-    const card = byId('selection-card');
-    if (!card) return;
-    card.classList.remove('empty');
-    card.textContent = 'Renderer capability path selected. This geometry has no World Model object_ref and cannot be resolved as historical knowledge.';
+    clearCanonicalSelection(
+      'Renderer capability path selected. This geometry has no World Model object_ref and cannot be resolved as historical knowledge.'
+    );
   }
 
   function syncExplorerControls() {
@@ -803,8 +957,12 @@
       (preset) => preset.preset_id === runtime.activeTemporalPresetId
     ));
     const range = byId('temporal-preset');
-    if (range) range.value = String(presetIndex);
-    setText('temporal-preset-value', presets[presetIndex]?.label || runtime.activeTemporalPresetId);
+    const presetLabel = presets[presetIndex]?.label || runtime.activeTemporalPresetId;
+    if (range) {
+      range.value = String(presetIndex);
+      range.setAttribute('aria-valuetext', presetLabel);
+    }
+    setText('temporal-preset-value', presetLabel);
     for (const input of document.querySelectorAll('#layer-controls input[type="checkbox"]')) {
       input.checked = runtime.activeLayerRefs.includes(input.value);
     }
@@ -825,23 +983,29 @@
     if (semanticSource?.setData) semanticSource.setData(globePrimitivesToGeoJson(next.globe));
 
     renderSharedState(runtime.data);
+    renderTemporalStatus(next);
     renderUnresolved(next.projection);
     syncExplorerControls();
+    updateAlternativeGeometryControl(next.globe);
+    applyAlternativeLayerVisibility(runtime.map);
 
     const itemIds = new Set((next.projection.items || []).map((item) => item.item_id));
     if (priorSelection && itemIds.has(priorSelection)) {
-      selectKnowledgeItem(priorSelection);
+      selectKnowledgeItem(priorSelection, { syncUrl: false });
     } else if (options.initial) {
       const primaryObjectRef = next.state.selection?.primary_object_ref;
       const primaryItem = (next.projection.items || []).find(
         (item) => item.object_ref === primaryObjectRef
       );
-      if (primaryItem) selectKnowledgeItem(primaryItem.item_id);
-      else clearCanonicalSelection();
+      if (primaryItem) selectKnowledgeItem(primaryItem.item_id, { syncUrl: false });
+      else clearCanonicalSelection('No semantic object selected.', { syncUrl: false });
     } else if (priorSelection) {
-      clearCanonicalSelection('Selection cleared: the object is outside the active time/layer projection.');
+      clearCanonicalSelection(
+        'Selection cleared: the object is outside the active time/layer projection.',
+        { syncUrl: false }
+      );
     } else {
-      clearCanonicalSelection();
+      clearCanonicalSelection('No semantic object selected.', { syncUrl: false });
     }
 
     const status = byId('interaction-status');
@@ -850,7 +1014,26 @@
     }
     document.documentElement.dataset.artemisTemporalPreset = temporalPresetId;
     document.documentElement.dataset.artemisLayerCount = String(runtime.activeLayerRefs.length);
+    if (options.syncUrl !== false) syncUrlState();
     return next;
+  }
+
+  function restoreExplorerStateFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const defaultView = (runtime.viewIndex?.views || []).find(
+      (view) => view.view_id === runtime.viewIndex.default_view_id
+    );
+    if (!defaultView) return;
+    const requestedPreset = params.get('time') || defaultView.temporal_preset_id;
+    const requestedLayers = params.has('layers')
+      ? params.get('layers').split(',').filter(Boolean)
+      : defaultView.active_layer_refs;
+    const view = runtime.viewByKey.get(viewKey(requestedPreset, requestedLayers)) || defaultView;
+    applySemanticView(view.temporal_preset_id, view.active_layer_refs, { syncUrl: false });
+    const requestedItem = params.get('item');
+    if (requestedItem) selectKnowledgeItem(requestedItem, { syncUrl: false });
+    else clearCanonicalSelection('No semantic object selected.', { syncUrl: false });
+    syncUrlState();
   }
 
   function renderExplorerControls() {
@@ -922,13 +1105,9 @@
     byId('view-slice')?.addEventListener('click', focusSlice);
     byId('toggle-alternatives')?.addEventListener('click', (event) => {
       runtime.alternativesVisible = !runtime.alternativesVisible;
-      for (const layerId of ALTERNATIVE_LAYER_IDS) {
-        if (map.getLayer(layerId)) {
-          map.setLayoutProperty(layerId, 'visibility', runtime.alternativesVisible ? 'visible' : 'none');
-        }
-      }
+      applyAlternativeLayerVisibility(map);
       event.currentTarget.setAttribute('aria-pressed', String(runtime.alternativesVisible));
-      event.currentTarget.textContent = `Alternatives: ${runtime.alternativesVisible ? 'on' : 'off'}`;
+      updateAlternativeGeometryControl(runtime.data?.globe);
     });
   }
 
@@ -989,9 +1168,11 @@
       ? params.get('layers').split(',').filter(Boolean)
       : defaultView.active_layer_refs;
     const initialView = runtime.viewByKey.get(viewKey(requestedPreset, requestedLayers)) || defaultView;
-    applySemanticView(initialView.temporal_preset_id, initialView.active_layer_refs, { initial: true });
+    applySemanticView(initialView.temporal_preset_id, initialView.active_layer_refs, { initial: true, syncUrl: false });
     const requestedItem = params.get('item');
-    if (requestedItem) selectKnowledgeItem(requestedItem);
+    if (requestedItem) selectKnowledgeItem(requestedItem, { syncUrl: false });
+    syncUrlState();
+    window.addEventListener('popstate', restoreExplorerStateFromUrl);
     setText('engine-status', `engine: MapLibre GL JS ${window.maplibregl.version || '5.24.0'} · R&D`);
 
     const map = new maplibregl.Map({
@@ -1006,7 +1187,6 @@
     });
     runtime.map = map;
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
-    if (maplibregl.GlobeControl) map.addControl(new maplibregl.GlobeControl(), 'top-left');
 
     map.on('error', (event) => {
       console.warn('[ARTEMIS:globe-spike] MapLibre runtime warning', event?.error || event);
@@ -1017,6 +1197,7 @@
       verifyEarthContextRender(map, acceptanceProfiles);
       addContextLayers(map, context);
       addSemanticLayers(map, runtime.data.globe);
+      applyAlternativeLayerVisibility(map);
       addCapabilityPath(map, capabilityPath);
       configureTerrainPath(map, assets);
       bindPicking(map);
