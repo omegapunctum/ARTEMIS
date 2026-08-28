@@ -797,7 +797,7 @@ def build_spike(
         else "Generated review artifact — not a public capability"
     )
     preview_nav = (
-        '<a class="preview-nav-link" href="../">К основной карте · Architecture Atlas</a>'
+        '<a class="preview-nav-link" href="../atlas/">Architecture Atlas · compatibility</a>'
         if public_preview
         else ""
     )

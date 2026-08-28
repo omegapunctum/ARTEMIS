@@ -35,26 +35,29 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert (ROOT / "docs" / "project_state.schema.json").is_file()
 
 
-def test_gate_d_is_active_after_gate_c_freeze_and_relation_contract_is_deferred() -> None:
+def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> None:
     priorities = _read("docs/PRIORITIES.md")
     phases = _read("docs/PROJECT_PHASES.md")
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: Globe MVP" in priorities
+    assert "Active cycle: Core Reset inside the Globe MVP vertical" in priorities
     assert "Active primary issue: GitHub issue `#355`" in priorities
-    assert "#330 uncertainty fixtures" in priorities
-    assert "P0.2 Cross-renderer semantic parity — COMPLETED" in priorities
-    assert "#331 relation predicates" in priorities
+    assert "Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte" in priorities
+    assert "#330 / PR #337 — uncertainty semantics" in priorities
+    assert "#344 / PR #351 — cross-renderer semantic parity" in priorities
+    assert "#331 documented Relation predicates" in priorities
+    assert "ITERATE" in priorities
+    assert "NARROW" in priorities
+    assert "STOP/RETHINK" in priorities
 
-    assert "Активная фаза: **4.8 Globe MVP vertical / real World Slice**" in phases
-    assert "Статус: **ACTIVE / ISSUE #355**" in phases
-    assert "SUPERSEDED BEFORE GATES B–E" in phases
-    assert "#330 / PR #337 — reviewed uncertainty semantics" in phases
-    assert "Completed recovery foundation" in phases
-    assert "Completed Gate C delivery" in phases
-    assert "#332/#360 / Leonardo-in-Romagna World Slice 1502" in phases
+    assert "Active phase: **4.8R — Core Reset / one Leonardo Globe product loop**" in phases
+    assert "Active issue: **#355**" in phases
+    assert "No historical artifact is deleted or reinterpreted by Core Reset" in phases
+    assert "#392 no longer blocks the read-only MVP critical path" in phases
+    assert "Gate C remains completed/FREEZE" in phases
 
+    assert "Core Reset / Gate C frozen / one primary public Leonardo research prototype" in truth
     assert "#330 / PR #337 uncertainty semantics — READY" in truth
     assert "Issue #331 is deferred" in truth
     assert "issue #355 remains the active product-facing MVP contour" in truth
@@ -62,13 +65,16 @@ def test_gate_d_is_active_after_gate_c_freeze_and_relation_contract_is_deferred(
     assert "Gate C is completed/FREEZE" in truth
     assert "Gate D is now separately opened and in progress under #355" in truth
     assert "does not change public capability" in truth
+    assert "finish Core Reset and keep one trustworthy required Core check" in truth
 
     assert "Active product vertical: Globe MVP / issue `#355`" in master_prompt
     assert "#344 / PR #351 semantic parity as a green renderer foundation" in master_prompt
     assert "Issue #331 is `DEFERRED`" in master_prompt
     assert "superseded #323–#325 path and PR #314 remain closed" in master_prompt
     assert "Gate D — source-aware Globe experience — is **currently in progress**" in master_prompt
-    assert "this does not make Globe public or open Gate E" in master_prompt
+    assert "root Core landing" in master_prompt
+    assert "2D Architecture Atlas at `/atlas/` as a compatibility surface" in master_prompt
+    assert "does not promote the prototype into a validated product capability or open Gate E" in master_prompt
 
 
 def test_globe_architecture_does_not_create_a_second_semantic_core() -> None:

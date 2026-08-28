@@ -2,7 +2,22 @@ name: Moderation Integration
 
 on:
   push:
+    paths:
+      - "app/moderation/**"
+      - "app/drafts/**"
+      - "app/auth/**"
+      - "tests/test_moderation_integration.py"
+      - "requirements.txt"
+      - ".github/workflows/moderation-integration.yml"
   pull_request:
+    paths:
+      - "app/moderation/**"
+      - "app/drafts/**"
+      - "app/auth/**"
+      - "tests/test_moderation_integration.py"
+      - "requirements.txt"
+      - ".github/workflows/moderation-integration.yml"
+  workflow_dispatch:
 
 jobs:
   moderation-integration:

@@ -114,7 +114,7 @@
       "additionalProperties": false,
       "required": ["public_runtime", "globe", "world_slice"],
       "properties": {
-        "public_runtime": {"const": "2d_architecture_atlas_baseline"},
+        "public_runtime": {"const": "core_landing_globe_primary_atlas_compatibility"},
         "globe": {"const": "public_r_and_d_preview"},
         "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]}
       }

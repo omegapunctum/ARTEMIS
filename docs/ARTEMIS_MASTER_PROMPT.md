@@ -102,15 +102,15 @@ Active product vertical: Globe MVP / issue `#355`.
 Current operational truth:
 
 1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations byte-for-byte where their READY review scope requires it.
-2. Preserve completed PRs #356–#357 lifecycle recovery and green Release Discipline Gate.
+2. Preserve completed PRs #356–#357 lifecycle recovery; the bounded `ARTEMIS Core Check` is the required signal, while the broad release check remains a compatibility diagnostic.
 3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
 4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
 5. Preserve accepted Foundation v3.1 / #363 / PR #364 attractor and governance rules; #363 is completed, not active maintenance.
 6. Gate D — source-aware Globe experience — is **currently in progress** under #355; `/globe/` is an explicitly authorized public R&D review surface, not a promoted product capability.
 7. Build from the frozen World Slice through Explorer State and Render Projection; do not require or imply an Airtable historical import.
-8. Keep the current 2D renderer as public baseline, same-content parity target and rollback path.
-9. Collect semantic, UX, accessibility and performance evidence before any promotion decision.
-10. Record one explicit promotion/iterate/narrow/stop decision before any product promotion; bounded public review access does not satisfy that exit decision.
+8. Publish the root Core landing, keep `/globe/` as the primary research prototype and preserve the 2D Architecture Atlas at `/atlas/` as a compatibility surface.
+9. Test one user-facing Leonardo exploration loop before opening backend, persistence, Airtable import or broader corpus work.
+10. Record one explicit `ITERATE`, `NARROW` or `STOP/RETHINK` decision before any infrastructure or product expansion; public prototype access does not itself prove user value.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 
@@ -141,7 +141,7 @@ Frozen or gated at product scale:
 
 Security/compatibility maintenance remains allowed.
 
-The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Gate D has now been opened separately; this does not make Globe public or open Gate E.
+The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Core Reset makes Globe the primary public research prototype; it does not promote the prototype into a validated product capability or open Gate E.
 
 ## 7. Attractor decision test
 

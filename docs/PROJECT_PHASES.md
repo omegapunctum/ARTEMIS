@@ -1,156 +1,93 @@
-# ARTEMIS — PROJECT PHASES v6.7
+# ARTEMIS — PROJECT PHASES v7.0
 
-## Статус
+## Status
 
-- Тип: canonical operational phases document.
-- Дата: 2026-08-14.
-- Активная фаза: **4.8 Globe MVP vertical / real World Slice**.
-- Active primary issue: **#355**.
-- Completed Gate C delivery: **#332/#360 / Leonardo-in-Romagna World Slice 1502**.
-- Completed recovery foundation: **#344 / PR #351**.
-- Public runtime: root 2D MapLibre baseline/default plus explicitly labelled `/globe/` R&D review preview.
+- Type: canonical operational phases document.
+- Date: 2026-08-28.
+- Active phase: **4.8R — Core Reset / one Leonardo Globe product loop**.
+- Active issue: **#355**.
+- Public surfaces: Core landing at `/`, Leonardo Globe at `/globe/`, frozen Architecture Atlas compatibility surface at `/atlas/`.
 
-Фазы определяют порядок исполнения. North Star принадлежит `ARTEMIS_CONCEPT.md`; активное решение принадлежит `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
+## Phase 0 — Preserved history
 
-## Принцип перехода
+The following work remains traceable but is not the active roadmap:
 
-Фаза закрывается только по exit evidence. Документ, schema, synthetic fixture или визуально работающий Globe сами по себе не подтверждают historical content quality, semantic parity, public capability or user value.
+- Architecture Atlas product and data pipeline;
+- FastAPI/auth/UGC/moderation/research compatibility platform;
+- Gate A/B recovery packages and repository-governance evidence;
+- Airtable World Model shadow schema and row plan;
+- accepted Progressive Refinement v1 review envelope.
 
-## Фазы 0–4 — Technical baseline [закрыты с ограничениями]
+No historical artifact is deleted or reinterpreted by Core Reset.
 
-Сохранены:
+## Phase 1 — ARTEMIS Core foundation [completed]
 
-- MapLibre/GeoJSON public map;
-- Airtable → ETL → `data/*`;
-- FastAPI backend baseline;
-- auth/UGC/moderation/research compatibility code;
-- release/workflow/documentation discipline;
-- PWA/UX baseline.
+Preserved:
 
-Ограничения принадлежат `PROJECT_TRUTH.md`.
+- source-aware spatial-temporal World Model;
+- Claim → EvidenceLink → Source/locator;
+- explicit uncertainty and coverage;
+- Event, State, Process, Trajectory and temporal Region;
+- Explorer State and Render Projection;
+- frozen Leonardo-in-Romagna 1502 boundary;
+- renderer parity and bounded MapLibre Globe runtime.
 
-## Фаза 4.5 — Concept v2 Architecture Atlas validation [остановлена]
+Passing these contracts proves representability and technical integrity, not product value.
 
-Статус: **SUPERSEDED BEFORE GATES B–E**.
+## Phase 2 — Core Reset [active]
 
-Завершённые Architecture Atlas artifacts сохраняются, но старый #323–#325 execution path не возобновляется.
+Exit conditions:
 
-## Фаза 4.6 — Foundation v3 [завершена]
+- one public entrypoint names Leonardo Globe as the active product surface;
+- Architecture Atlas is isolated as compatibility-only;
+- Pages and required CI do not depend on backend, Redis, moderation, Airtable or mutable review-routing documents;
+- #392 no longer blocks the read-only MVP critical path;
+- the frozen Gate C evidence and no-invented-geometry rules remain intact;
+- one reproducible public-preview build and the ARTEMIS Core regression set pass.
 
-Foundation v3 / PR #328 закрепила spatial-temporal world model, evidence, uncertainty, change objects and Life in Context as the first candidate vertical.
+Core Reset is a narrowing inside #355. Gate C remains completed/FREEZE; it is not
+reopened and no historical Claim is promoted.
 
-## Фаза 4.7 — World Model foundations [частично завершена]
+## Phase 3 — One complete exploration loop
 
-Completed:
+Deliver:
 
-- #329 / PR #336 — reviewed World Model fixtures;
-- #330 / PR #337 — reviewed uncertainty semantics.
+- time/interval choice;
+- synchronized semantic layers;
+- local/global context;
+- canonical selection;
+- source-aware inspector;
+- visible uncertainty, alternatives, coverage and projection loss;
+- URL restoration;
+- basic desktop/mobile/keyboard operability.
 
-Foundation maintenance:
+Do not add persistence, authoring, accounts, AI or another World Slice in this phase.
 
-- #377 — progressive refinement/source-native fidelity contract; exact lifecycle is owned by its
-  contract/registry, and runtime/storage still requires separate authorization for mutable knowledge refinement.
+## Phase 4 — Early value decision
 
-Deferred:
+Observe a small number of target users with the same content in the Globe and a
+non-synchronized baseline.
 
-- #331 — documented Relation predicate semantics; reopen before such predicates enter the corpus/runtime.
+Decision:
 
-#331 no longer blocks Globe infrastructure, time/layer synchronization or a real slice without documented Relations. It becomes blocking before documented encounter, interaction, influence or causal predicates enter the corpus/runtime. Derived proximity/co-presence remains separate meanwhile.
+- `ITERATE` — improve the same product loop;
+- `NARROW` — reduce content or interaction scope;
+- `STOP/RETHINK` — stop Globe expansion and revisit the hypothesis.
 
-## Фаза 4.8 — Globe MVP vertical
+This decision occurs before new backend/storage infrastructure.
 
-Статус: **ACTIVE / ISSUE #355**.
+## Phase 5 — One evidence-backed branch
 
-### Gate A — Repository recovery
+Only after `ITERATE`, open one branch:
 
-- completed in PRs #356–#357;
-- canonical owners agree on #355;
-- PR #338 remains closed and #331 deferred;
-- Release Discipline Gate is green.
+- curation/editorial storage;
+- persistence/sharing;
+- one additional World Slice;
+- a measured renderer/provider improvement.
 
-### Gate B — Cross-renderer parity
-
-- completed in #344 / PR #351;
-- selected-object / active-focus fixture drift is repaired;
-- time-boundary, identity, uncertainty, alternative reconstruction, evidence and projection-loss semantics are executable;
-- parity and required repository workflows passed before merge.
-
-### Gate C — Real World Slice
-
-- completed with `FREEZE` through #332/#360 and `docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`;
-- the analytical 8 August–31 December 1502 Romagna selection boundary is frozen without claiming historical content readiness;
-- one bounded source-aware slice is frozen as a non-public capability boundary;
-- include Event, State, Process, Trajectory and temporally changing Region;
-- bind Claims/EvidenceLinks/locators/uncertainty;
-- declare coverage, known gaps, geometry provenance, licensing and cost;
-- omit documented Relation predicates until #331 is accepted.
-
-### Gate D — Source-aware Globe experience
-
-- **ACTIVE / IN PROGRESS** under #355; opened separately after the Gate C freeze;
-- consume the frozen repository package directly; #371/#373 Airtable import/review are deferred and no historical write is authorized;
-- read/render work may proceed over the frozen package, but editable precision/history behavior
-  requires the recorded #377 decision plus separate implementation authorization; #377 does not change Gate D lifecycle state;
-- consume World Model → Explorer State → Render Projection;
-- synchronize time, layers and selection;
-- expose sources, uncertainty, alternatives, coverage and projection losses;
-- preserve unresolved trajectories without invented lines;
-- treat modern terrain/imagery as contextual geospatial assets;
-- completed increments #379/#380 consume the frozen package and synchronize time/layers/selection/inspector;
-- completed #382 selects pinned bundled Natural Earth `present_day_context` while keeping historical geometry withheld and terrain synthetic/non-live;
-- completed #383 exercises desktop/tablet/hosted-mobile Chromium layout, reduced-motion, accessible-name, target-size, overflow and overlay evidence;
-- completed #385 makes hosted screenshots fail closed on actual Earth-context rendering and captures DOM/PNG from the same wall-clock CDP page;
-- completed #389 publishes the generated artifact at `/globe/` only as experimental R&D review while root 2D remains default/rollback;
-- the place-anchor increment adds four CC0 present-day `named_settlement` reference points with inspector provenance and material uncertainty, without exact historical positions, routes, boundaries, Relations or Airtable writes;
-- remaining: normal-browser real desktop and 390 CSS px mobile review, assistive technology, representative non-virtual performance and one explicit Gate D exit decision.
-
-### Gate E — Evidence and decision
-
-- deferred until Gate D exit evidence exists; issue #334 is not active during Gate D;
-- preserve the reproducible labelled public R&D preview/review artifact without representing it as product-ready;
-- compare against the current 2D same-content baseline where useful;
-- test contextual understanding and semantic literacy rather than visual novelty alone;
-- record one result: continue generated R&D, promote to maintained experimental app, narrow/rework, or stop/rethink.
-
-Public promotion is a separate decision after provider/licensing/security/rollback/current-truth evidence.
-
-## Completed renderer foundations
-
-Accepted executable foundations:
-
-- #339 / PR #346 — renderer-neutral architecture;
-- #340 / PR #347 — shared Explorer State;
-- #341 / PR #348 — deterministic Render Projection;
-- #342 / PR #349 — geospatial asset/provider boundary;
-- #343 / PR #350 — MapLibre Globe runtime spike;
-- #344 / PR #351 — cross-renderer semantic parity;
-- #345 / PR #352 — repository/runtime/CI boundary.
-
-The generated Globe spike remains R&D evidence. It is the implementation seed for #355, not a public product surface.
-
-## Current repository/runtime boundary
-
-Until a later product-promotion decision explicitly promotes the Globe:
-
-- root `index.html` remains the default public Pages app and rollback entrypoint;
-- `/globe/` may publish only the generated, explicitly labelled experimental R&D review preview;
-- public MapLibre 4.7.1 remains unchanged;
-- the Globe spike may pin MapLibre 5.24.0 in isolation;
-- an `apps/globe/` move requires a separate maintained-application decision;
-- no renderer may own a separate historical model.
-
-## Independent future branches
-
-Still gated:
-
-- source-bound generative AI;
-- automatic causal/counterfactual engine;
-- universal or production-scale historical terrain;
-- broader World Slices beyond one evidence-backed decision;
-- institutional workflows;
-- VR/AR;
-- unrelated platform/framework scaling.
+Generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain future.
 
 ## Rule
 
-Update this document whenever the active phase, exit gate, dependency order, public capability or Globe promotion boundary changes.
+One active product loop, one required check and one next decision. Update this file
+only when that order changes.

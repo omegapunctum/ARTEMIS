@@ -90,8 +90,8 @@ def test_builder_marks_public_review_preview_without_changing_semantics(tmp_path
     assert metadata["backend_required"] is False
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert "Публичный R&D-preview" in index
-    assert 'href="../"' in index
-    assert "К основной карте · Architecture Atlas" in index
+    assert 'href="../atlas/"' in index
+    assert "Architecture Atlas · compatibility" in index
     assert "2D-карта" not in index
     assert "{{PUBLIC_PREVIEW_STATUS}}" not in index
     assert "{{PUBLIC_PREVIEW_NAV}}" not in index

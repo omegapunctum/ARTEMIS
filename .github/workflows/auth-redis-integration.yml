@@ -2,7 +2,22 @@ name: Auth Redis Integration
 
 on:
   push:
+    paths:
+      - "app/auth/**"
+      - "app/security/**"
+      - "app/main.py"
+      - "tests/test_auth_redis_*.py"
+      - "requirements.txt"
+      - ".github/workflows/auth-redis-integration.yml"
   pull_request:
+    paths:
+      - "app/auth/**"
+      - "app/security/**"
+      - "app/main.py"
+      - "tests/test_auth_redis_*.py"
+      - "requirements.txt"
+      - ".github/workflows/auth-redis-integration.yml"
+  workflow_dispatch:
 
 jobs:
   auth-redis-integration:

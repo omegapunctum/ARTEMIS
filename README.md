@@ -8,9 +8,9 @@ Its mission is to help people understand the world as an interconnected system�
 
 The long-term attractor is an explorable spatial-temporal model of human knowledge about the world in which people and future AI can traverse space, time, entities, events, states, processes, Claims, Evidence and Uncertainty as one connected cognitive environment. The attractor guides architecture; it does **not** authorize implementation scope.
 
-Foundation v3 restored space and time as core coordinates. Foundation v3.1, accepted in PR `#364`, clarifies the attractor, one-semantic-core/many-domains/many-interfaces rule and future AI exploration boundary without changing current capability. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations when permitted, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas remains the current public/technical baseline and a thematic layer.
+Foundation v3 restored space and time as core coordinates. Foundation v3.1, accepted in PR `#364`, clarifies the attractor, one-semantic-core/many-domains/many-interfaces rule and future AI exploration boundary without changing current capability. The first validation vertical is **Life in Context**: follow a historical person's trajectory while seeing local events, regional states, documented relations when permitted, mere co-presence and selected simultaneous events elsewhere. Architecture Atlas is preserved as a thematic compatibility surface rather than the active product identity.
 
-The public runtime does **not** yet implement the Foundation target. A browser-executed MapLibre Globe is available on the existing site as a clearly labelled `/globe/` R&D review preview, and issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the Leonardo-in-Romagna 1502 candidate boundary; Gate D is in progress. Public review access does not make the Globe or its draft/rejected historical content product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
+The public root is a small ARTEMIS Core landing. It routes the browser-executed Leonardo Globe at `/globe/` as the primary research prototype and preserves the former Architecture Atlas at `/atlas/` as compatibility-only. Issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the Leonardo-in-Romagna 1502 candidate boundary; Gate D is narrowed by Core Reset. Public access does not make the Globe or its draft/rejected historical content product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -18,23 +18,23 @@ This README is the **root documentation entrypoint and current baseline summary*
 
 ## Overview
 
-ARTEMIS currently combines:
-- curated architecture data (Airtable → ETL → GeoJSON)
-- interactive map visualization (MapLibre)
-- backend implementations for auth, UGC/moderation and research workflows
-- mutable ResearchSlice v2 compatibility runtime (backend-available, private/owner-only)
-- stories and courses as frozen thin orchestration layers
-- explain-context contract payloads without AI generation
-- batch public publish pipeline
-- progressive web app (PWA)
+The active ARTEMIS Core combines:
+- the frozen Leonardo-in-Romagna source/Claim/uncertainty package;
+- Explorer State and renderer-neutral Render Projection;
+- a static MapLibre Globe, timeline, layers, selection and source-aware inspector;
+- a backend-free GitHub Pages build.
 
-The current operational state is **controlled engineering prototype / Gate C frozen / Foundation v3.1 accepted / Gate D in progress / public Globe R&D preview**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
+Architecture Atlas, Airtable ETL, FastAPI, auth, UGC/moderation, Research Slices,
+Stories, Courses and PWA code remain preserved compatibility systems outside the
+active product critical path.
+
+The current operational state is **Core Reset / Gate C frozen / one public Leonardo Globe research prototype / user value not yet validated**. See `docs/PROJECT_TRUTH.md` for the authoritative boundary.
 
 ### Current capability boundary
 
 | Status | Meaning | Current examples |
 |---|---|---|
-| `PUBLIC NOW` | Works on GitHub Pages without backend execution | 2D map baseline, timeline/filter/detail, checked-in `data/*`, labelled `/globe/` R&D preview |
+| `PUBLIC NOW` | Works on GitHub Pages without backend execution | Core landing, primary `/globe/` research prototype, `/atlas/` compatibility surface |
 | `BACKEND-AVAILABLE` | Implemented in the repository but requires a separately deployed API | auth, slices, stories, courses, uploads, moderation |
 | `PILOT` | Exists but lacks sufficient content/user validation | architecture corpus, comparison/relation experience |
 | `R&D` | Executable experimental evidence; may be publicly reviewable but is not product readiness | generated MapLibre 5.24.0 Globe preview and renderer contracts |

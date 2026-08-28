@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-12.
+- Updated: 2026-08-28.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,12 +13,12 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-12_GATE_D_OPENING_v1.md` | #355 active Gate D source-aware Globe contract | synchronized non-public experience and one Gate D exit decision: `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT` |
+| `2026-08-12_GATE_D_OPENING_v1.md` | #355 historical Gate D opening plus current Core Reset narrowing | one complete Leonardo exploration loop and an early `ITERATE`, `NARROW` or `STOP/RETHINK` decision |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D evidence and one explicit next decision before Gate E |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 real Earth-context selection, provenance, license, cache and secret boundary | replaced only by a reviewed provider decision or archived with Gate D |
 | `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` | #355 deterministic desktop/tablet/hosted-mobile browser evidence and explicit limitations | replaced by normal-browser/real-device/assistive-technology evidence or archived with Gate D |
-| `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | #355 physical desktop/390px mobile/assistive-technology/non-virtual-performance evidence protocol; evidence remains pending | completed evidence record plus one Gate D decision, or archived after `NARROW`/`REJECT` |
+| `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only after the early value decision |
 | `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with Gate D |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
@@ -29,9 +29,9 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 |---|---|---|
 | `2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md` | #377 foundation-only coarse-to-fine knowledge refinement lifecycle record | exact status and decision recorded by its contract/registry; no capability authorization |
 
-Issue #377 is foundation maintenance whose exact lifecycle is owned by its contract/registry and
-does not consume the one-product-gate WIP slot. Candidate or accepted status cannot by itself change
-Gate D state, runtime, public capability, Airtable data or the frozen Leonardo package.
+Issue #377 is accepted historical foundation evidence. Issue #392 isolates the stale
+repository-wide READY envelope from mutable routing and from the read-only Core path. Editable
+refinement remains deferred.
 #371/#373 remain deferred.
 
 #366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. #368 / PR #369 completed the six-table empty non-authoritative shadow schema plus executable contract/snapshot validation. Neither opened Gate D, imported the frozen Gate C package or changed the Architecture Atlas public export authority.
@@ -56,7 +56,7 @@ Active execution rule for the Globe MVP:
 - Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public input;
 - Gate D is separately opened and active under #355; Gate C completion and Foundation v3.1 did not open it by implication;
 - the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
-- it is published only at the explicitly labelled `/globe/` R&D review route; this does not make it a product-ready capability, and root 2D remains the default/rollback entrypoint;
+- it is published at `/globe/` as the primary research prototype; the root is a Core landing and Architecture Atlas is compatibility-only at `/atlas/`;
 - MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
 - the reviewed unknown Trajectory gaps remain unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
 - the default Gate D review artifact uses pinned Natural Earth physical geography as real `present_day_context`; it cannot be described as historical geography, while synthetic terrain remains non-live and cannot imply production provider readiness;

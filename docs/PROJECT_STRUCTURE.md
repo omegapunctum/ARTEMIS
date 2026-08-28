@@ -2,7 +2,7 @@
 
 Статус: updated canonical project structure document.
 Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
-Дата обновления: 2026-08-08.
+Дата обновления: 2026-08-28.
 
 ---
 
@@ -59,13 +59,13 @@
 | Путь | Назначение | Статус |
 |---|---|---|
 | `.github/` | workflows, CI/CD, release/publish automation | системный |
-| `app/` | canonical backend runtime | основной |
-| `css/` | UI style system; current shared + override baseline pending owner-scoped migration | основной |
-| `data/` | canonical current public data layer + export diagnostics | основной |
+| `app/` | frozen backend compatibility runtime | compatibility |
+| `css/` | Architecture Atlas compatibility styles | compatibility |
+| `data/` | Architecture Atlas compatibility data + export diagnostics | compatibility |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
 | `fixtures/` | versioned executable contract fixtures; not public/runtime data | validation |
 | `icons/` | PWA assets | основной |
-| `js/` | current public frontend modules | основной |
+| `js/` | Architecture Atlas compatibility frontend modules | compatibility |
 | `scripts/` | ETL, import/export, audit, release and contract checks | основной |
 | `tests/` | automated checks | основной |
 | `AGENTS.md` | единый repository entrypoint для агентов; маршрутизирует к canonical owners | operational |
@@ -73,7 +73,7 @@
 | `sw.js` | service worker | основной |
 | `manifest.json` | PWA manifest | основной |
 
-Текущий root tree описывает public MapLibre baseline. Он не резервирует навсегда один frontend renderer. Любая новая top-level runtime/package структура (`apps/`, shared renderer packages или эквивалент) требует отдельного решения #345 и не должна появляться ad hoc.
+Source root retains the Architecture Atlas compatibility implementation. The Pages artifact maps it to `/atlas/`; public `/` is generated from `scripts/globe_spike/root-index.html`, and `/globe/` is generated from the shared semantic path.
 
 Дополнение по release/workflow layer:
 - structural and semantic release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`), `scripts/release_check.py` и `scripts/semantic_data_gate.py`;
@@ -88,8 +88,9 @@
 
 | Слой | Entry point |
 |---|---|
-| Current public 2D frontend | `index.html` |
-| Public Globe R&D preview | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
+| Public ARTEMIS Core landing | generated `/` from `scripts/globe_spike/root-index.html` |
+| Primary Leonardo Globe research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
+| Architecture Atlas compatibility frontend | source `index.html`, deployed at `/atlas/` |
 | Backend | `app/main.py` |
 | ETL | `scripts/export_airtable.py` |
 | Release check | `scripts/release_check.py` |
@@ -106,8 +107,9 @@
 - backend, ETL, release-check и documentation registries не получают competing entrypoints;
 - presentation runtimes являются отдельным классом: несколько renderer entrypoints допустимы только после явной регистрации и при общей domain/state/projection семантике;
 - наличие второго renderer не разрешает второй World Model, второй historical source of truth или второй backend;
-- current `index.html` остаётся default public frontend entrypoint и rollback path;
-- generated `/globe/` является отдельно зарегистрированным public R&D preview, но не maintained app или product-ready capability;
+- generated Core landing is the default public entrypoint;
+- generated `/globe/` is primary but remains explicitly non-product-validated;
+- source `index.html` is deployed under `/atlas/` as compatibility-only;
 - Explorer State validator is a validation entrypoint, not a frontend/backend runtime entrypoint;
 - working Explorer State ownership remains in `docs/work/README.md`; it is not promoted into the canonical owner registry by this structure document;
 - legacy-слои не могут становиться скрытым альтернативным runtime.
@@ -116,7 +118,7 @@
 
 ## 4. FRONTEND СЛОЙ
 
-Текущий public baseline:
+Compatibility Architecture Atlas source tree (published under `/atlas/`):
 
 ```text
 index.html

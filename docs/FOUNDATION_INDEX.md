@@ -235,12 +235,12 @@ Completed product gate:
 
 Active product gate:
 
-3. Gate D — source-aware Globe experience. It is **in progress** under #355 as a non-public contour over the frozen Gate C package.
+3. Gate D — source-aware Globe experience. It is narrowed by Core Reset under #355 to one public, explicitly non-product-validated, read-only Leonardo exploration loop.
 
 Foundation status:
 
 4. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
-5. Issue `#377`: Progressive Refinement Contract v1 — **FOUNDATION MAINTENANCE**; exact lifecycle in its contract/registry, no product-gate or capability change.
+5. Issue `#377`: Progressive Refinement Contract v1 — accepted historical foundation evidence. Issue #392 isolates its stale repository-wide READY envelope from the active Core path.
 
 Deferred/gated:
 

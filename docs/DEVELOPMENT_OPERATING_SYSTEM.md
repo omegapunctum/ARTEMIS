@@ -141,15 +141,15 @@ Foundation maintenance does not consume the one-product-gate WIP slot, but it al
 
 When a foundation-maintenance issue closes, the working decision record moves to completed evidence and canonical lifecycle owners must stop describing it as active.
 
-## 8. Pull-request core gate
+## 8. Pull-request core check
 
-Every decision PR must show:
+Every product PR must show:
 
 - intended file scope;
-- current gate and issue references;
+- the user-facing question and issue reference;
 - targeted checks while iterating;
-- the repository release/governance checks on exact head;
-- frozen review SHA when independent review is required;
+- ARTEMIS Core Check on the exact head;
+- frozen review identity only when reviewed semantic evidence changes;
 - no undocumented public capability change.
 
 Baseline failures must be named and reproducible; they cannot be used to hide a new regression.
@@ -162,9 +162,8 @@ Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the n
 
 Foundation v3.1 Attractor refinement (`#363` / PR `#364`) is **completed**. Its accepted rules now belong to the canonical owners and executable guards.
 
-Progressive Refinement (`#377`) is foundation maintenance whose exact lifecycle is owned by its
-contract/registry. It does not consume the product-gate WIP slot and may not by itself modify
-`project_state`, the frozen Gate C package, Airtable historical rows, Globe runtime or public
-capability.
+Progressive Refinement v1 (`#377`) remains accepted historical evidence. Its repository-wide READY
+envelope is manual under #392 because mutable routing documents cannot be an immutable product
+dependency. Editable knowledge behavior is deferred.
 
-Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated, so AI runtime and AI view-action implementation are not active work. The public runtime remains the root 2D Architecture Atlas until a later explicit promotion decision.
+Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated. Core Reset makes the root a small ARTEMIS entrypoint, routes Leonardo Globe as primary and retains Architecture Atlas only at `/atlas/`.

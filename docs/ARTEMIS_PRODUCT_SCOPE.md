@@ -3,11 +3,11 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.3.
-- Дата: 2026-08-12.
+- Версия: 3.4.
+- Дата: 2026-08-28.
 - Active vertical: `Life in Context` Globe MVP / issue `#355`.
-- Current gate: Gate D `Source-aware Globe experience` — `in_progress`, non-public.
-- Thematic baseline retained: `Architecture Atlas`.
+- Current increment: Core Reset inside Gate D — one public read-only Leonardo Globe loop.
+- Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
 - North Star: `ARTEMIS_CONCEPT.md`.
 - Current reality: `PROJECT_TRUTH.md`.
 - World-model authority: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
@@ -40,12 +40,12 @@ ARTEMIS Life in Context — **source-aware synchronized Globe/timeline/layer exp
 - зафиксировать migration disposition прежнего backlog;
 - не выполнять schema/runtime migration.
 
-### Globe MVP vertical
+### Globe MVP vertical / Core Reset
 
 - подготовить ограниченный Leonardo `World Slice`;
 - восстановить cross-renderer parity в #344 / PR #351;
 - реализовать synchronized Globe, timeline and layers через общий Explorer State / Render Projection;
-- сохранить 2D renderer как same-content baseline и rollback path;
+- сохранить Architecture Atlas только как compatibility surface, не как same-content Leonardo baseline;
 - проверить contextual understanding against same-content baseline;
 - записать decision.
 
@@ -92,7 +92,7 @@ implementation authorization even after contract acceptance.
 ## 4. Обязательный interface scope
 
 - 3D Globe as the primary MVP spatial surface;
-- 2D map as the public compatibility baseline, semantic parity target and rollback surface;
+- Architecture Atlas at `/atlas/` as a frozen compatibility surface;
 - compact synchronized timeline;
 - current time/time-range control;
 - layer visibility and legend;
@@ -123,7 +123,7 @@ Full canonical schema implementation is not required before the contract and fix
 
 Architecture Atlas:
 
-- remains public technical baseline;
+- remains a public compatibility surface at `/atlas/`;
 - remains an architecture thematic layer;
 - retains current Sources/Media/Relations and Gate A fixtures;
 - may supply buildings and context to Life in Context;
@@ -174,14 +174,14 @@ Capability labels:
 - `CONCEPT TARGET`;
 - `FUTURE`.
 
-The current public site remains Architecture Atlas baseline until a Life in Context implementation is merged and deployed.
+The public root is the ARTEMIS Core landing. It routes `/globe/` as the primary Leonardo research prototype and `/atlas/` as compatibility-only.
 
 The #355 decision and Concept v3 do not make:
 
-- Leonardo World Slice public;
+- Leonardo World Slice product-validated;
 - temporal Regions implemented;
 - AI available;
-- the Globe public or product-validated;
+- the Globe product-validated;
 - VR available;
 - world-scale coverage real.
 

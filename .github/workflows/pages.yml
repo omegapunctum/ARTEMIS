@@ -32,19 +32,30 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt pytest
+      - name: Install Core dependencies
+        run: pip install jsonschema==4.25.1 pytest
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: "24"
 
-      - name: Basic sanity check
-        run: echo "Deploy sanity check passed"
-
-      - name: Release check
-        run: python scripts/release_check.py
+      - name: Validate ARTEMIS Core
+        run: |
+          python scripts/validate_leonardo_world_slice.py
+          python scripts/validate_explorer_state_fixtures.py
+          python scripts/validate_geospatial_assets.py
+          pytest -q \
+            tests/test_core_reset_boundary.py \
+            tests/test_explorer_state_fixtures.py \
+            tests/test_geospatial_assets_contract.py \
+            tests/test_globe_repository_boundary.py \
+            tests/test_globe_rnd_lifecycle_contract.py \
+            tests/test_globe_runtime_spike.py \
+            tests/test_leonardo_world_slice.py \
+            tests/test_render_projection_contract.py \
+            tests/test_renderer_parity.py \
+            tests/test_uncertainty_fixtures.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
@@ -53,7 +64,8 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf pages_artifact
-          mkdir -p pages_artifact/{css,js,data,icons}
+          mkdir -p pages_artifact/atlas/{css,js,data,icons}
+          cp scripts/globe_spike/root-index.html pages_artifact/index.html
 
           required_files=(
             "index.html"
@@ -96,9 +108,21 @@ jobs:
               echo "Missing required artifact file: $file" >&2
               exit 1
             fi
-            mkdir -p "pages_artifact/$(dirname "$file")"
-            cp "$file" "pages_artifact/$file"
+            mkdir -p "pages_artifact/atlas/$(dirname "$file")"
+            cp "$file" "pages_artifact/atlas/$file"
           done
+
+          python - <<'PY'
+          from pathlib import Path
+
+          atlas_index = Path("pages_artifact/atlas/index.html")
+          atlas_index.write_text(
+              atlas_index.read_text(encoding="utf-8").replace(
+                  'href="./globe/"', 'href="../globe/"'
+              ),
+              encoding="utf-8",
+          )
+          PY
 
       - name: Build public Globe R&D preview
         run: |
@@ -120,8 +144,8 @@ jobs:
           ARTEMIS_API_BASE: ${{ vars.ARTEMIS_API_BASE }}
         run: |
           python scripts/generate_pages_runtime_config.py \
-            --output pages_artifact/deployment-config.js
-          node --check pages_artifact/deployment-config.js
+            --output pages_artifact/atlas/deployment-config.js
+          node --check pages_artifact/atlas/deployment-config.js
 
       - name: Upload static artifact
         uses: actions/upload-pages-artifact@v5

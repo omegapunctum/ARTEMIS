@@ -3,7 +3,30 @@ name: ETL Check
 on:
   push:
     branches: [ main ]
+    paths:
+      - "data/**"
+      - "fixtures/world_model/**"
+      - "scripts/export_airtable.py"
+      - "scripts/semantic_data_gate.py"
+      - "scripts/content_profile.py"
+      - "scripts/validate_world_model_fixtures.py"
+      - "scripts/validate_uncertainty_fixtures.py"
+      - "tests/test_world_model_fixtures.py"
+      - "tests/test_uncertainty_fixtures.py"
+      - "requirements.txt"
   pull_request:
+    paths:
+      - "data/**"
+      - "fixtures/world_model/**"
+      - "scripts/export_airtable.py"
+      - "scripts/semantic_data_gate.py"
+      - "scripts/content_profile.py"
+      - "scripts/validate_world_model_fixtures.py"
+      - "scripts/validate_uncertainty_fixtures.py"
+      - "tests/test_world_model_fixtures.py"
+      - "tests/test_uncertainty_fixtures.py"
+      - "requirements.txt"
+  workflow_dispatch:
 
 jobs:
   etl-test:

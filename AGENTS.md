@@ -26,7 +26,7 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 - Evidence is a required trust layer: Claim → EvidenceLink → Source/locator.
 - Co-presence, possible encounter, documented encounter, interaction, influence and causality are distinct.
 - Facts, observations, interpretations, inferences, hypotheses and counterfactuals are distinct.
-- Architecture Atlas is a preserved thematic layer and current technical/public baseline.
+- Architecture Atlas is a preserved thematic compatibility layer at `/atlas/`.
 - First validation vertical: `Life in Context`.
 - A bounded source-aware Globe MVP is active under #355; generative AI, causal/counterfactual runtime, VR/AR, universal corpus and production-scale dynamic Earth remain frozen.
 - Current ResearchSlice v2 is compatibility code; #323–#325 are not the active path.
@@ -48,29 +48,38 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Active work is issue `#355`: Gate D builds the first source-aware Globe experience from the frozen Gate C package. Gate C delivery `#332` / `#360` is completed/FREEZE.
+Active work is issue `#355`: Core Reset narrows Gate D to one read-only Leonardo Globe product loop over the frozen Gate C package. Gate C delivery `#332` / `#360` is completed/FREEZE.
 
 - preserve #329 / PR #336 World Model fixtures and #330 / PR #337 uncertainty semantics as reviewed READY foundations;
 - preserve completed #344 / PR #351 cross-renderer parity as a required green foundation;
-- treat #377 as foundation maintenance whose exact lifecycle is owned by the refinement contract/registry; Gate D may consume frozen data, but mutable precision/history behavior still requires an explicit implementation decision beyond contract acceptance;
+- preserve #377 as accepted historical foundation evidence; issue #392 keeps its repository-wide READY envelope manual and outside the read-only MVP critical path;
 - keep #331 `DEFERRED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is explicitly reopened and accepted;
 - keep #371/#373 deferred and the nine Airtable World Model tables empty; the merged mapping preflight does not authorize historical writes;
 - use one World Model → Explorer State → Render Projection path for both 2D and Globe;
-- keep the current root 2D MapLibre runtime as the public baseline and rollback path;
-- keep Globe artifacts non-public until a separate promotion decision;
+- use the root Core landing to route Leonardo Globe as the primary product surface;
+- preserve the former 2D MapLibre Architecture Atlas at `/atlas/` as compatibility-only;
+- keep the Globe explicitly labelled as a public research prototype, not product-validated historical truth;
 - use MapLibre as the leading MVP engine unless measured evidence justifies a Cesium comparison;
-- do not create a framework/backend/repository rewrite without a demonstrated blocker;
+- do not add backend, persistence, Airtable, UGC or framework infrastructure without evidence that the static read-only loop is insufficient;
 - security, compatibility and critical maintenance remain allowed.
 
 The current Gate D input is the non-public Leonardo-in-Romagna 1502 scope package under `fixtures/world_slices/leonardo_romagna_1502/v1/`. It is a frozen curation boundary, not READY historical data. Do not add route or Region geometry until the package's evidence, rights and independent-review gaps are closed.
 
 ## Verification
 
-Run the smallest relevant checks while iterating. Before handoff, run when a local checkout is available:
+Run the smallest relevant checks while iterating. The required product signal is the
+`ARTEMIS Core Check` workflow. Before handoff, build the public-preview artifact and
+run the bounded Core tests listed in `.github/workflows/release-gate.yml`.
+
+Legacy/backend/data work must additionally run its owned checks. The historical
+repository-wide suite is not a substitute for the Core signal and known #392 review-envelope
+failures must not be represented as product regressions.
+
+Useful compatibility checks remain:
 
 ```bash
-python scripts/release_check.py
-pytest -q
+python scripts/release_check.py  # Architecture Atlas/backend compatibility only
+pytest -q                       # broad suite; report known baseline failures honestly
 ```
 
 Documentation-only connector work must still verify:
