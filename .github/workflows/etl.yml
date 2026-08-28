@@ -14,7 +14,6 @@ on:
       - "tests/test_world_model_fixtures.py"
       - "tests/test_uncertainty_fixtures.py"
       - "requirements.txt"
-      - ".github/workflows/etl.yml"
   pull_request:
     paths:
       - "data/**"
@@ -27,7 +26,6 @@ on:
       - "tests/test_world_model_fixtures.py"
       - "tests/test_uncertainty_fixtures.py"
       - "requirements.txt"
-      - ".github/workflows/etl.yml"
   workflow_dispatch:
 
 jobs:

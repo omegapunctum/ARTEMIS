@@ -37,6 +37,7 @@ def test_legacy_integrations_are_path_scoped() -> None:
     assert '"app/auth/**"' in auth
     assert '"app/moderation/**"' in moderation
     assert '"data/**"' in etl
+    assert '".github/workflows/etl.yml"' not in etl
     assert "workflow_dispatch:" in auth
     assert "workflow_dispatch:" in moderation
     assert "workflow_dispatch:" in etl
