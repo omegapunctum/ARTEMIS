@@ -43,6 +43,7 @@ DEFAULT_DATASET = "leonardo_gate_c"
 DATASET_CHOICES = {DEFAULT_DATASET, "contract_fixture"}
 REQUIRED_OUTPUT_FILES = {
     "index.html",
+    "i18n.js",
     "runtime.js",
     "style.css",
     "projection.json",
@@ -792,21 +793,23 @@ def build_spike(
 
     template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
     preview_status = (
-        "Публичный R&D-preview — экспериментальная поверхность, не готовый продукт"
+        "Public R&D preview — experimental surface, not a finished product"
         if public_preview
         else "Generated review artifact — not a public capability"
     )
+    preview_i18n_key = "previewPublic" if public_preview else "previewGenerated"
     preview_nav = (
-        '<a class="preview-nav-link" href="../atlas/">Architecture Atlas · compatibility</a>'
+        '<a class="preview-nav-link" href="../atlas/" data-i18n="atlasCompat">Architecture Atlas · compatibility</a>'
         if public_preview
         else ""
     )
     (output / "index.html").write_text(
-        template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status).replace(
-            "{{PUBLIC_PREVIEW_NAV}}", preview_nav
-        ),
+        template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status)
+        .replace("{{PREVIEW_I18N_KEY}}", preview_i18n_key)
+        .replace("{{PUBLIC_PREVIEW_NAV}}", preview_nav),
         encoding="utf-8",
     )
+    shutil.copyfile(TEMPLATE_DIR / "i18n.js", output / "i18n.js")
     shutil.copyfile(TEMPLATE_DIR / "runtime.js", output / "runtime.js")
     shutil.copyfile(TEMPLATE_DIR / "style.css", output / "style.css")
 
@@ -827,6 +830,8 @@ def build_spike(
     metadata = {
         "schema_version": "1.0.0",
         "spike_id": SPIKE_ID,
+        "default_locale": "en",
+        "supported_locales": ["en", "ru"],
         "build_contract_date": "2026-08-13",
         "semantic_dataset": dataset,
         "engine_id": selected_engine["engine_id"],

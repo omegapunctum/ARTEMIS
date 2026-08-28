@@ -20,6 +20,9 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Foundation documentation не реализует world model runtime;
 - root public runtime является малой ARTEMIS Core landing page;
 - `/globe/` — primary public research prototype, явно не product-validated historical capability;
+- `/globe/` exposes deterministic English and Russian interface locales through
+  the shareable `lang=en|ru` URL state; canonical Claims, locators and Source
+  records remain source-language evidence rather than machine-translated truth;
 - `/atlas/` сохраняет прежний Architecture Atlas как compatibility-only surface;
 - real validated Life in Context synchronized multi-layer experience ещё не доступен как продукт;
 - Claim/Evidence discipline сохраняется как trust layer;
@@ -45,6 +48,7 @@ GitHub Pages публикует статический runtime:
 
 - root Core landing без runtime dependencies;
 - `/globe/` как primary Leonardo research prototype;
+- English/Russian Globe UI selection as presentation state, without changing the frozen semantic package;
 - `/atlas/` как frozen compatibility map с checked-in `data/*` и PWA behavior;
 - все три entry points не требуют backend API.
 

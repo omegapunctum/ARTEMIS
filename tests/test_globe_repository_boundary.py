@@ -8,6 +8,7 @@ PUBLIC_SERVICE_WORKER = ROOT / "sw.js"
 CORE_LANDING = ROOT / "scripts" / "globe_spike" / "root-index.html"
 GLOBE_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
 GLOBE_RUNTIME = ROOT / "scripts" / "globe_spike" / "runtime.js"
+GLOBE_I18N = ROOT / "scripts" / "globe_spike" / "i18n.js"
 GLOBE_BUILDER = ROOT / "scripts" / "build_globe_spike.py"
 GLOBE_WORKFLOW = ROOT / ".github" / "workflows" / "globe-runtime-spike.yml"
 PAGES_WORKFLOW = ROOT / ".github" / "workflows" / "pages.yml"
@@ -31,7 +32,8 @@ def test_architecture_atlas_source_stays_on_maplibre_4_and_links_preview() -> No
 
 def test_public_root_landing_routes_globe_primary_and_atlas_compatibility() -> None:
     landing = _text(CORE_LANDING)
-    assert 'href="./globe/"' in landing
+    assert 'href="./globe/?lang=ru"' in landing
+    assert 'href="./globe/?lang=en"' in landing
     assert 'href="./atlas/"' in landing
     assert "Globe — активный продуктовый контур" in landing
     assert "исследовательский прототип" in landing
@@ -43,6 +45,17 @@ def test_globe_engine_version_is_isolated_to_experimental_template() -> None:
     assert "maplibre-gl@5.24.0" in template
     assert "ARTEMIS Globe R&D Spike" in template
     assert "{{PUBLIC_PREVIEW_STATUS}}" in template
+
+
+def test_globe_localization_is_presentation_only_and_backend_free() -> None:
+    locale_source = _text(GLOBE_I18N)
+    runtime = _text(GLOBE_RUNTIME)
+
+    assert "window.__ARTEMIS_I18N" in locale_source
+    assert "presentationLabels" in locale_source
+    assert "lang=en|ru" not in runtime
+    assert "fetch(" not in locale_source
+    assert "/api/" not in locale_source
 
 
 def test_public_pwa_surfaces_do_not_advertise_or_cache_globe_spike() -> None:

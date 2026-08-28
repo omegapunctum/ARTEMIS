@@ -60,6 +60,35 @@ input[type="range"] { min-height: 24px; }
   pointer-events: auto;
 }
 
+.language-switcher {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.82);
+}
+
+.language-switcher button {
+  min-width: 40px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #a6b7cb;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.language-switcher button[aria-pressed="true"] {
+  background: #245ea8;
+  color: #fff;
+}
+
+.language-switcher button:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
 .preview-nav-link {
   border: 1px solid rgba(148, 163, 184, 0.45);
   border-radius: 999px;

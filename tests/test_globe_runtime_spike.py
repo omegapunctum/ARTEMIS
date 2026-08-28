@@ -23,6 +23,7 @@ from scripts import build_leonardo_gate_d_inputs as gate_d_inputs
 
 
 RUNTIME_JS = ROOT / "scripts" / "globe_spike" / "runtime.js"
+I18N_JS = ROOT / "scripts" / "globe_spike" / "i18n.js"
 HTML_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
 
 
@@ -51,6 +52,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
 
     expected = {
         "index.html",
+        "i18n.js",
         "runtime.js",
         "style.css",
         "projection.json",
@@ -89,12 +91,34 @@ def test_builder_marks_public_review_preview_without_changing_semantics(tmp_path
     assert metadata["deployment_mode"] == "public_r_and_d_preview"
     assert metadata["backend_required"] is False
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
-    assert "Публичный R&D-preview" in index
+    assert metadata["default_locale"] == "en"
+    assert metadata["supported_locales"] == ["en", "ru"]
+    assert "Public R&D preview" in index
+    assert 'data-i18n="previewPublic"' in index
     assert 'href="../atlas/"' in index
     assert "Architecture Atlas · compatibility" in index
     assert "2D-карта" not in index
     assert "{{PUBLIC_PREVIEW_STATUS}}" not in index
+    assert "{{PREVIEW_I18N_KEY}}" not in index
     assert "{{PUBLIC_PREVIEW_NAV}}" not in index
+
+
+def test_runtime_supports_shareable_english_and_russian_interface_locales() -> None:
+    runtime = RUNTIME_JS.read_text(encoding="utf-8")
+    locale_source = I18N_JS.read_text(encoding="utf-8")
+    template = HTML_TEMPLATE.read_text(encoding="utf-8")
+
+    assert "defaultLocale: 'en'" in locale_source
+    assert "supportedLocales: Object.freeze(['en', 'ru'])" in locale_source
+    assert "Синхронизированное исследование" in locale_source
+    assert "Неопределённое и неизвестное" in locale_source
+    assert "исходный язык материалов" in locale_source
+    assert "url.searchParams.set('lang', locale)" in runtime
+    assert "document.documentElement.lang = locale" in runtime
+    assert "presentLabel(option.label)" in runtime
+    assert 'data-locale="en"' in template
+    assert 'data-locale="ru"' in template
+    assert '<script src="./i18n.js"></script>' in template
 
 
 def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path: Path) -> None:
@@ -549,6 +573,7 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
 
 def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    locale_source = I18N_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-preset" type="range"' in html_source
@@ -558,21 +583,24 @@ def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> Non
     assert "runtime.viewByKey.get" in runtime_source
     assert "semanticSource.setData(globePrimitivesToGeoJson(next.globe))" in runtime_source
     assert "updateCanonicalSelection(projectionItem)" in runtime_source
-    assert "Selection cleared: the object is outside the active time/layer projection." in runtime_source
+    assert "Selection cleared: the object is outside the active time/layer projection." in locale_source
+    assert "t('selectionCleared')" in runtime_source
     assert "prefers-reduced-motion: reduce" in runtime_source
 
 
 def test_runtime_explains_time_invariant_geometry_and_hides_noop_controls() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    locale_source = I18N_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-map-status"' in html_source
-    assert "only present-day named-settlement reference points are authorized" in runtime_source
+    assert "only present-day named-settlement reference points are authorized" in locale_source
+    assert "t('temporalInvariant')" in runtime_source
     assert "geometryIsTimeInvariant" in runtime_source
     assert "range.setAttribute('aria-valuetext', presetLabel)" in runtime_source
     assert 'id="toggle-alternatives"' in html_source
     assert 'aria-pressed="true"' in html_source
-    assert 'alternative geometry" hidden' in html_source
+    assert 'data-i18n-title="alternativeTitle" hidden' in html_source
     assert "alternativeGeometryCount" in runtime_source
     assert "control.hidden = count === 0" in runtime_source
     assert "applyAlternativeLayerVisibility" in runtime_source
@@ -582,6 +610,7 @@ def test_runtime_explains_time_invariant_geometry_and_hides_noop_controls() -> N
 
 def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    locale_source = I18N_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert "frozen repository review package" in html_source
@@ -589,13 +618,15 @@ def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -
     assert "Shared state and data boundary" in html_source
     assert "Renderer and runtime diagnostics" in html_source
     assert "knowledgeDisclosure" in runtime_source
-    assert "Claims & evidence" in runtime_source
-    assert "Material uncertainty" in runtime_source
-    assert "Projection loss" in runtime_source
-    assert "Reconstruction alternatives" in runtime_source
-    assert "Geometry withheld; not rendered." in runtime_source
-    assert "Coverage / corpus limits" in runtime_source
-    assert "Missing records or geometry must not be interpreted as historical absence." in runtime_source
+    assert "Claims & evidence" in locale_source
+    assert "Material uncertainty" in locale_source
+    assert "Projection loss" in locale_source
+    assert "Reconstruction alternatives" in locale_source
+    assert "Geometry withheld; not rendered." in locale_source
+    assert "Coverage / corpus limits" in locale_source
+    assert "Missing records or geometry must not be interpreted as historical absence." in locale_source
+    assert "t('claimsEvidence')" in runtime_source
+    assert "t('uncertaintyTitle')" in runtime_source
 
 
 def test_runtime_persists_and_restores_explorer_state_in_url() -> None:

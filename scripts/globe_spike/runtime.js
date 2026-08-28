@@ -15,6 +15,65 @@
     meta: './build-meta.json'
   };
 
+  const I18N = window.__ARTEMIS_I18N || {
+    defaultLocale: 'en',
+    supportedLocales: ['en'],
+    messages: { en: {} },
+    presentationLabels: {},
+    enumLabels: {}
+  };
+  const requestedLocale = new URLSearchParams(window.location.search).get('lang');
+  const locale = I18N.supportedLocales.includes(requestedLocale)
+    ? requestedLocale
+    : I18N.defaultLocale;
+
+  function t(key, values = {}) {
+    const fallback = I18N.messages[I18N.defaultLocale]?.[key] || key;
+    const template = I18N.messages[locale]?.[key] || fallback;
+    return Object.entries(values).reduce(
+      (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),
+      template
+    );
+  }
+
+  function presentLabel(value) {
+    return I18N.presentationLabels[locale]?.[value] || value;
+  }
+
+  function presentEnum(value) {
+    if (value === null || value === undefined || value === '') return value;
+    return I18N.enumLabels[locale]?.[String(value)] || value;
+  }
+
+  function applyStaticTranslations() {
+    document.documentElement.lang = locale;
+    document.documentElement.dataset.artemisLocale = locale;
+    for (const node of document.querySelectorAll('[data-i18n]')) {
+      node.textContent = t(node.dataset.i18n);
+    }
+    for (const node of document.querySelectorAll('[data-i18n-aria-label]')) {
+      node.setAttribute('aria-label', t(node.dataset.i18nAriaLabel));
+    }
+    for (const node of document.querySelectorAll('[data-i18n-title]')) {
+      node.setAttribute('title', t(node.dataset.i18nTitle));
+    }
+    for (const button of document.querySelectorAll('[data-locale]')) {
+      button.setAttribute('aria-pressed', String(button.dataset.locale === locale));
+    }
+  }
+
+  function bindLocaleControls() {
+    for (const button of document.querySelectorAll('[data-locale]')) {
+      button.addEventListener('click', () => {
+        const nextLocale = button.dataset.locale;
+        if (!I18N.supportedLocales.includes(nextLocale) || nextLocale === locale) return;
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', nextLocale);
+        window.location.assign(url.href);
+      });
+    }
+  }
+
   const SEMANTIC_LAYER_IDS = [
     'artemis-points',
     'artemis-semantic-lines',
@@ -28,6 +87,7 @@
 
   const startedAt = performance.now();
   const runtime = {
+    locale,
     map: null,
     data: null,
     viewIndex: null,
@@ -72,7 +132,7 @@
     const node = byId('fatal-error');
     if (node) {
       node.hidden = false;
-      node.textContent = `ARTEMIS Globe spike failed:\n${String(error?.stack || error?.message || error)}`;
+      node.textContent = t('fatal', { error: String(error?.stack || error?.message || error) });
     }
     console.error('[ARTEMIS:globe-spike]', error);
   }
@@ -120,6 +180,7 @@
   function syncUrlState() {
     if (!runtime.activeTemporalPresetId) return;
     const url = new URL(window.location.href);
+    url.searchParams.set('lang', locale);
     url.searchParams.set('time', runtime.activeTemporalPresetId);
     url.searchParams.set('layers', [...runtime.activeLayerRefs].sort().join(','));
     if (runtime.selectedItemId) url.searchParams.set('item', runtime.selectedItemId);
@@ -502,7 +563,7 @@
     const terrain = (manifest.assets || []).find((asset) => asset.asset_kind === 'terrain_elevation');
     const node = byId('terrain-status');
     if (!terrain) {
-      if (node) node.textContent = 'Terrain: no terrain asset in manifest';
+      if (node) node.textContent = t('terrainNone');
       return;
     }
 
@@ -513,7 +574,7 @@
 
     if (!liveRasterDem) {
       if (node) {
-        node.textContent = `Terrain: capability path ready · ${terrain.asset_id} is synthetic/no live DEM`;
+        node.textContent = t('terrainSynthetic', { asset: terrain.asset_id });
       }
       return;
     }
@@ -524,7 +585,7 @@
       tileSize: 256
     });
     map.setTerrain({ source: 'artemis-terrain', exaggeration: 1 });
-    if (node) node.textContent = `Terrain: enabled from manifest asset ${terrain.asset_id}`;
+    if (node) node.textContent = t('terrainEnabled', { asset: terrain.asset_id });
   }
 
   function renderAttribution(manifest) {
@@ -542,22 +603,28 @@
     setText('primitive-count', (data.globe.primitives || []).length);
     setText(
       'corpus-status',
-      data.knowledge.corpus_status_label
+      presentLabel(data.knowledge.corpus_status_label)
         || (data.knowledge.historical_corpus_ready
-          ? 'reviewed historical corpus'
-          : 'candidate package · historical readiness not established')
+          ? t('reviewedCorpus')
+          : t('candidateCorpus'))
     );
     setText(
       'boundary-status',
-      `Earth context: ${contextAsset?.label || 'bundled reference layer'} · real generalized physical geography · present_day_context only. Semantic input: ${data.knowledge.corpus_status_label || 'status unavailable'}. No historical coastline validity, historical geometry, real terrain, satellite imagery, provider token, or public promotion is implied.`
+      t('boundaryStatus', {
+        context: presentLabel(contextAsset?.label) || t('bundledLayer'),
+        status: presentLabel(data.knowledge.corpus_status_label) || t('statusUnavailable')
+      })
     );
-    setText('deferred-types', (data.knowledge.deferred_object_types || []).join(', ') || 'none');
+    setText(
+      'deferred-types',
+      (data.knowledge.deferred_object_types || []).map(presentEnum).join(', ') || t('none')
+    );
 
     const cards = [
-      ['active', (data.projection.active_object_refs || []).length],
-      ['possible', (data.projection.possible_active_object_refs || []).length],
-      ['context', (data.projection.context_object_refs || []).length],
-      ['losses', (data.projection.losses || []).length]
+      [t('summaryActive'), (data.projection.active_object_refs || []).length],
+      [t('summaryPossible'), (data.projection.possible_active_object_refs || []).length],
+      [t('summaryContext'), (data.projection.context_object_refs || []).length],
+      [t('summaryLosses'), (data.projection.losses || []).length]
     ];
     const summary = byId('semantic-summary');
     if (summary) {
@@ -586,10 +653,13 @@
     const geometryIsTimeInvariant = comparableViews.length > 1 && signatures.size === 1;
     const recordCount = (view.projection.items || []).length;
     const primitiveCount = (view.globe.primitives || []).length;
-    const base = `${preset?.label || view.temporal_preset_id}. ${recordCount} records in the semantic projection.`;
+    const base = t('temporalBase', {
+      preset: presentLabel(preset?.label || view.temporal_preset_id),
+      records: recordCount
+    });
     const explanation = geometryIsTimeInvariant
-      ? ' The globe geometry is unchanged across these source-bound dates: only present-day named-settlement reference points are authorized; exact historical positions, routes and Region boundaries remain unknown.'
-      : ` ${primitiveCount} authorized spatial primitives are visible for this time/layer view.`;
+      ? t('temporalInvariant')
+      : t('temporalPrimitives', { count: primitiveCount });
     setText('temporal-map-status', `${base}${explanation}`);
     document.documentElement.dataset.artemisTemporalGeometryChanged = String(!geometryIsTimeInvariant);
   }
@@ -601,7 +671,10 @@
     control.hidden = count === 0;
     control.disabled = count === 0;
     control.setAttribute('aria-pressed', String(runtime.alternativesVisible));
-    control.textContent = `Map display: alternative geometry ${runtime.alternativesVisible ? 'shown' : 'hidden'} (${count})`;
+    control.textContent = t(
+      runtime.alternativesVisible ? 'alternativeShown' : 'alternativeHidden',
+      { count }
+    );
     document.documentElement.dataset.artemisAlternativeGeometryCount = String(count);
   }
 
@@ -636,40 +709,47 @@
       if (segmentKind === 'inferred_gap') row.dataset.kind = 'trajectory-gap';
       row.dataset.itemId = item.item_id;
       row.setAttribute('aria-pressed', String(item.item_id === runtime.selectedItemId));
-      row.setAttribute('aria-label', `Inspect unresolved ${item.object_type} ${item.object_ref}`);
+      row.setAttribute('aria-label', t('inspectUnresolved', {
+        type: presentEnum(item.object_type),
+        ref: item.object_ref
+      }));
 
-      appendText(row, 'strong', `${item.object_type} · ${item.object_ref}`);
+      appendText(row, 'strong', `${presentEnum(item.object_type)} · ${item.object_ref}`);
 
-      const uncertainty = (item.uncertainty_refs || []).join(', ') || 'none';
+      const uncertainty = (item.uncertainty_refs || []).join(', ') || t('none');
       appendText(
         row,
         'span',
-        `subobject=${item.subobject_ref || '—'} · reason=${loss?.reason || 'unresolved'} · uncertainty=${uncertainty}`
+        t('unresolvedMeta', {
+          subobject: item.subobject_ref || '—',
+          reason: presentEnum(loss?.reason) || t('unresolvedReason'),
+          uncertainty
+        })
       );
       row.addEventListener('click', () => selectKnowledgeItem(item.item_id, { focus: true }));
       host.append(row);
     }
 
     if (!unresolved.length) {
-      host.textContent = 'No unresolved semantic items in this projection.';
+      host.textContent = t('noUnresolved');
     }
   }
 
   function addIdentityRows(host, record) {
     const geometry = (record.geometries || [])[0] || null;
     const rows = [
-      ['object_ref', record.object_ref],
-      ['subobject_ref', record.subobject_ref || '—'],
-      ['type', record.object_type],
-      ['role', record.render_role],
-      ['temporal', record.temporal_membership],
-      ['spatial', record.spatial_status],
-      ['geometry role', geometry?.origin_kind || '—'],
-      ['spatial precision', geometry?.spatial_precision || '—']
+      [t('identityObject'), record.object_ref],
+      [t('identitySubobject'), record.subobject_ref || '—'],
+      [t('identityType'), presentEnum(record.object_type)],
+      [t('identityRole'), presentEnum(record.render_role)],
+      [t('identityTemporal'), presentEnum(record.temporal_membership)],
+      [t('identitySpatial'), presentEnum(record.spatial_status)],
+      [t('identityGeometryRole'), presentEnum(geometry?.origin_kind) || '—'],
+      [t('identitySpatialPrecision'), presentEnum(geometry?.spatial_precision) || '—']
     ];
     if (record.semantic_flags?.reconstruction_mode) {
-      rows.push(['reconstruction', record.semantic_flags.reconstruction_mode]);
-      rows.push(['primary geometry', String(record.semantic_flags.is_primary === true)]);
+      rows.push([t('identityReconstruction'), presentEnum(record.semantic_flags.reconstruction_mode)]);
+      rows.push([t('identityPrimaryGeometry'), presentEnum(String(record.semantic_flags.is_primary === true))]);
     }
     const dl = document.createElement('dl');
     dl.className = 'identity-list';
@@ -691,7 +771,7 @@
   }
 
   function addEvidence(host, record) {
-    const section = knowledgeDisclosure(host, 'Claims & evidence', (record.claims || []).length);
+    const section = knowledgeDisclosure(host, t('claimsEvidence'), (record.claims || []).length);
     const evidenceByClaim = new Map();
     for (const evidence of record.evidence_links || []) {
       const rows = evidenceByClaim.get(evidence.claim_id) || [];
@@ -701,7 +781,7 @@
     const sourceById = new Map((record.sources || []).map((source) => [source.id, source]));
 
     if (!(record.claims || []).length) {
-      appendText(section, 'p', 'No projected claims for this semantic item.', 'empty-note');
+      appendText(section, 'p', t('noClaims'), 'empty-note');
     }
     for (const claim of record.claims || []) {
       const group = document.createElement('article');
@@ -711,7 +791,11 @@
       appendText(
         group,
         'div',
-        `${claim.review_state} · confidence ${claim.confidence} · evidence ${claim.evidence_state}`,
+        t('claimMeta', {
+          review: presentEnum(claim.review_state),
+          confidence: presentEnum(claim.confidence),
+          evidence: presentEnum(claim.evidence_state)
+        }),
         'record-meta'
       );
 
@@ -742,7 +826,7 @@
         appendText(
           row,
           'span',
-          `${evidence.relation_to_claim} · ${evidence.evidence_strength} · ${evidence.review_state}`,
+          `${presentEnum(evidence.relation_to_claim)} · ${presentEnum(evidence.evidence_strength)} · ${presentEnum(evidence.review_state)}`,
           'record-meta'
         );
         group.append(row);
@@ -752,19 +836,21 @@
   }
 
   function addUncertainties(host, record) {
-    const section = knowledgeDisclosure(host, 'Material uncertainty', (record.uncertainties || []).length);
+    const section = knowledgeDisclosure(host, t('uncertaintyTitle'), (record.uncertainties || []).length);
     if (!(record.uncertainties || []).length) {
-      appendText(section, 'p', 'No material uncertainty is referenced by this projection item.', 'empty-note');
+      appendText(section, 'p', t('noUncertainty'), 'empty-note');
     }
     for (const uncertainty of record.uncertainties || []) {
       const card = document.createElement('article');
       card.className = 'uncertainty-card';
       appendText(card, 'div', uncertainty.id, 'record-id');
-      appendText(card, 'strong', uncertainty.dimension);
+      appendText(card, 'strong', presentEnum(uncertainty.dimension));
       appendText(card, 'p', uncertainty.description);
-      appendText(card, 'p', `Effect: ${uncertainty.effect}`, 'uncertainty-effect');
+      appendText(card, 'p', t('effect', { value: uncertainty.effect }), 'uncertainty-effect');
       if ((uncertainty.alternatives || []).length) {
-        appendText(card, 'p', `Alternatives: ${uncertainty.alternatives.join(' · ')}`, 'record-meta');
+        appendText(card, 'p', t('alternatives', {
+          value: uncertainty.alternatives.join(' · ')
+        }), 'record-meta');
       }
       section.append(card);
     }
@@ -779,7 +865,7 @@
     ));
     if (!alternatives.length) return;
 
-    const section = knowledgeDisclosure(host, 'Reconstruction alternatives', alternatives.length);
+    const section = knowledgeDisclosure(host, t('reconstructionAlternatives'), alternatives.length);
     const allGeometryWithheld = alternatives.every((alternative) => (
       !(alternative.geometry_refs || []).length || alternative.spatial_status === 'unresolved'
     ));
@@ -787,8 +873,8 @@
       section,
       'p',
       allGeometryWithheld
-        ? 'These are separate source-bound interpretations. No variant has authorized geometry, so none is drawn as a Region boundary.'
-        : 'These are separate source-bound interpretations. Geometry availability is reported per variant; the map control appears when toggleable alternative geometry is present.',
+        ? t('reconstructionWithheld')
+        : t('reconstructionAvailable'),
       'empty-note'
     );
     for (const alternative of alternatives) {
@@ -799,20 +885,27 @@
       appendText(
         card,
         'strong',
-        `${alternative.subobject_ref}${alternative.item_id === record.item_id ? ' · selected' : ''}`
+        `${alternative.subobject_ref}${alternative.item_id === record.item_id ? ` · ${t('selected')}` : ''}`
       );
       appendText(
         card,
         'p',
-        `${alternative.semantic_flags.reconstruction_mode} · primary=${alternative.semantic_flags.is_primary === true} · spatial=${alternative.spatial_status}`,
+        t('alternativeMeta', {
+          mode: presentEnum(alternative.semantic_flags.reconstruction_mode),
+          primary: presentEnum(String(alternative.semantic_flags.is_primary === true)),
+          spatial: presentEnum(alternative.spatial_status)
+        }),
         'record-meta'
       );
       appendText(
         card,
         'p',
         geometryAvailable
-          ? `Geometry available (${alternative.geometry_refs.length} reference${alternative.geometry_refs.length === 1 ? '' : 's'}); rendered by its semantic layer.`
-          : 'Geometry withheld; not rendered.',
+          ? t('geometryAvailable', {
+            count: alternative.geometry_refs.length,
+            references: t(alternative.geometry_refs.length === 1 ? 'referenceOne' : 'referenceMany')
+          })
+          : t('geometryWithheld'),
         geometryAvailable ? 'record-meta' : 'warning'
       );
       section.append(card);
@@ -823,20 +916,20 @@
     const coverage = runtime.data?.projection?.coverage || {};
     const policy = coverage.coverage_policy || {};
     const exclusions = policy.known_exclusion_ids || [];
-    const section = knowledgeDisclosure(host, 'Coverage / corpus limits', exclusions.length);
+    const section = knowledgeDisclosure(host, t('coverageTitle'), exclusions.length);
     appendText(
       section,
       'p',
-      'The corpus is explicitly incomplete. Missing records or geometry must not be interpreted as historical absence.',
+      t('incompleteCorpus'),
       'warning'
     );
     const dl = document.createElement('dl');
     dl.className = 'identity-list';
     for (const [key, value] of [
-      ['corpus completeness', policy.corpus_completeness || 'unavailable'],
-      ['absence semantics', policy.absence_semantics || 'unavailable'],
-      ['source scope', policy.source_scope || 'unavailable'],
-      ['coverage manifest', coverage.coverage_manifest_ref || 'unavailable']
+      [t('corpusCompleteness'), presentEnum(policy.corpus_completeness) || t('unavailable')],
+      [t('absenceSemantics'), presentEnum(policy.absence_semantics) || t('unavailable')],
+      [t('sourceScope'), presentEnum(policy.source_scope) || t('unavailable')],
+      [t('coverageManifest'), coverage.coverage_manifest_ref || t('unavailable')]
     ]) {
       appendText(dl, 'dt', key);
       appendText(dl, 'dd', value);
@@ -851,15 +944,15 @@
   }
 
   function addProjectionLosses(host, record) {
-    const section = knowledgeDisclosure(host, 'Projection loss', (record.projection_losses || []).length);
+    const section = knowledgeDisclosure(host, t('projectionLoss'), (record.projection_losses || []).length);
     if (!(record.projection_losses || []).length) {
-      appendText(section, 'p', 'No projection loss is recorded for this item.', 'empty-note');
+      appendText(section, 'p', t('noProjectionLoss'), 'empty-note');
     }
     for (const loss of record.projection_losses || []) {
       appendText(
         section,
         'p',
-        `${loss.loss_kind} · ${loss.reason} · ${loss.severity}`,
+        `${presentEnum(loss.loss_kind)} · ${presentEnum(loss.reason)} · ${presentEnum(loss.severity)}`,
         'loss-card'
       );
     }
@@ -871,7 +964,7 @@
     card.classList.remove('empty');
     card.innerHTML = '';
     card.dataset.itemId = record.item_id;
-    appendText(card, 'div', record.label, 'selection-title');
+    appendText(card, 'div', presentLabel(record.label), 'selection-title');
     appendText(card, 'div', record.item_id, 'record-id');
     addIdentityRows(card, record);
     addEvidence(card, record);
@@ -896,7 +989,7 @@
     }
   }
 
-  function clearCanonicalSelection(message = 'No semantic object selected.', options = {}) {
+  function clearCanonicalSelection(message = t('noSelection'), options = {}) {
     runtime.selectedItemId = null;
     if (runtime.data?.state?.selection) {
       runtime.data.state.selection.primary_object_ref = null;
@@ -918,7 +1011,7 @@
     const record = runtime.knowledgeByItem.get(itemId);
     const projectionItem = currentProjectionItem(itemId);
     if (!record || !projectionItem) {
-      clearCanonicalSelection(`No active projection record exists for ${itemId}.`, options);
+      clearCanonicalSelection(t('noActiveRecord', { item: itemId }), options);
       return;
     }
     const losses = (runtime.data.projection.losses || []).filter((loss) => loss.item_id === itemId);
@@ -942,12 +1035,12 @@
       selectKnowledgeItem(itemId, { focus: true });
       return;
     }
-    clearCanonicalSelection('Rendered feature has no semantic item_id and cannot be resolved.');
+    clearCanonicalSelection(t('renderedWithoutSemantic'));
   }
 
   function renderCapabilitySelection() {
     clearCanonicalSelection(
-      'Renderer capability path selected. This geometry has no World Model object_ref and cannot be resolved as historical knowledge.'
+      t('capabilitySelected')
     );
   }
 
@@ -957,7 +1050,7 @@
       (preset) => preset.preset_id === runtime.activeTemporalPresetId
     ));
     const range = byId('temporal-preset');
-    const presetLabel = presets[presetIndex]?.label || runtime.activeTemporalPresetId;
+    const presetLabel = presentLabel(presets[presetIndex]?.label || runtime.activeTemporalPresetId);
     if (range) {
       range.value = String(presetIndex);
       range.setAttribute('aria-valuetext', presetLabel);
@@ -998,19 +1091,22 @@
         (item) => item.object_ref === primaryObjectRef
       );
       if (primaryItem) selectKnowledgeItem(primaryItem.item_id, { syncUrl: false });
-      else clearCanonicalSelection('No semantic object selected.', { syncUrl: false });
+      else clearCanonicalSelection(t('noSelection'), { syncUrl: false });
     } else if (priorSelection) {
       clearCanonicalSelection(
-        'Selection cleared: the object is outside the active time/layer projection.',
+        t('selectionCleared'),
         { syncUrl: false }
       );
     } else {
-      clearCanonicalSelection('No semantic object selected.', { syncUrl: false });
+      clearCanonicalSelection(t('noSelection'), { syncUrl: false });
     }
 
     const status = byId('interaction-status');
     if (status) {
-      status.textContent = `${next.projection.items.length} projected records · ${runtime.activeLayerRefs.length} active layers · selection and picking synchronized.`;
+      status.textContent = t('interactionStatus', {
+        records: next.projection.items.length,
+        layers: runtime.activeLayerRefs.length
+      });
     }
     document.documentElement.dataset.artemisTemporalPreset = temporalPresetId;
     document.documentElement.dataset.artemisLayerCount = String(runtime.activeLayerRefs.length);
@@ -1032,7 +1128,7 @@
     applySemanticView(view.temporal_preset_id, view.active_layer_refs, { syncUrl: false });
     const requestedItem = params.get('item');
     if (requestedItem) selectKnowledgeItem(requestedItem, { syncUrl: false });
-    else clearCanonicalSelection('No semantic object selected.', { syncUrl: false });
+    else clearCanonicalSelection(t('noSelection'), { syncUrl: false });
     syncUrlState();
   }
 
@@ -1060,7 +1156,7 @@
           applySemanticView(runtime.activeTemporalPresetId, active);
         });
         const span = document.createElement('span');
-        span.textContent = option.label;
+        span.textContent = presentLabel(option.label);
         label.append(input, span);
         layers.append(label);
       }
@@ -1173,7 +1269,9 @@
     if (requestedItem) selectKnowledgeItem(requestedItem, { syncUrl: false });
     syncUrlState();
     window.addEventListener('popstate', restoreExplorerStateFromUrl);
-    setText('engine-status', `engine: MapLibre GL JS ${window.maplibregl.version || '5.24.0'} · R&D`);
+    setText('engine-status', t('engineStatus', {
+      version: window.maplibregl.version || '5.24.0'
+    }));
 
     const map = new maplibregl.Map({
       container: 'globe',
@@ -1214,5 +1312,7 @@
     });
   }
 
+  applyStaticTranslations();
+  bindLocaleControls();
   main().catch(fatal);
 })();

@@ -50,6 +50,7 @@ jobs:
             tests/test_explorer_state_fixtures.py \
             tests/test_geospatial_assets_contract.py \
             tests/test_globe_repository_boundary.py \
+            tests/test_globe_localization.py \
             tests/test_globe_rnd_lifecycle_contract.py \
             tests/test_globe_runtime_spike.py \
             tests/test_leonardo_world_slice.py \

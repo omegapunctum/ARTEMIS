@@ -1,93 +1,97 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>ARTEMIS Globe R&D Spike</title>
+  <title data-i18n="pageTitle">ARTEMIS Globe R&D Spike</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <main id="app">
-    <section id="globe-shell" aria-label="ARTEMIS experimental 3D globe">
+    <section id="globe-shell" aria-label="ARTEMIS experimental 3D globe" data-i18n-aria-label="globeAria">
       <div id="globe"></div>
       <header id="spike-banner">
         <div>
-          <strong>ARTEMIS · Source-aware 3D Globe MVP</strong>
-          <span>{{PUBLIC_PREVIEW_STATUS}}</span>
+          <strong data-i18n="bannerTitle">ARTEMIS · Source-aware 3D Globe MVP</strong>
+          <span data-i18n="{{PREVIEW_I18N_KEY}}">{{PUBLIC_PREVIEW_STATUS}}</span>
         </div>
         <div class="banner-actions">
+          <nav class="language-switcher" aria-label="Interface language" data-i18n-aria-label="languageNav">
+            <button type="button" data-locale="en" lang="en">EN</button>
+            <button type="button" data-locale="ru" lang="ru">RU</button>
+          </nav>
           {{PUBLIC_PREVIEW_NAV}}
-          <div id="engine-status" class="status-pill">engine: loading</div>
+          <div id="engine-status" class="status-pill" data-i18n="engineLoading">engine: loading</div>
         </div>
       </header>
 
-      <div id="globe-controls" role="group" aria-label="Globe controls">
-        <button id="view-global" type="button">Global</button>
-        <button id="view-slice" type="button">World Slice</button>
-        <button id="toggle-alternatives" type="button" aria-pressed="true" title="Renderer-local visibility for already projected alternative geometry" hidden>Map display: alternative geometry shown</button>
+      <div id="globe-controls" role="group" aria-label="Globe controls" data-i18n-aria-label="globeControls">
+        <button id="view-global" type="button" data-i18n="viewGlobal">Global</button>
+        <button id="view-slice" type="button" data-i18n="viewSlice">World Slice</button>
+        <button id="toggle-alternatives" type="button" aria-pressed="true" title="Renderer-local visibility for already projected alternative geometry" data-i18n-title="alternativeTitle" hidden>Map display: alternative geometry shown</button>
       </div>
 
-      <div id="temporal-map-status" class="map-note temporal-map-note" role="status" aria-live="polite">Loading source-bound time view…</div>
+      <div id="temporal-map-status" class="map-note temporal-map-note" role="status" aria-live="polite" data-i18n="temporalLoading">Loading source-bound time view…</div>
       <div id="terrain-status" class="map-note"></div>
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>
 
-    <aside id="inspector" aria-label="ARTEMIS globe spike inspector">
+    <aside id="inspector" aria-label="ARTEMIS globe inspector" data-i18n-aria-label="inspectorAria">
       <section aria-labelledby="explorer-controls-title">
-        <h1 id="explorer-controls-title">Synchronized Explorer</h1>
-        <p class="source-note">Data source: frozen repository review package. This preview does not query Airtable live.</p>
+        <h1 id="explorer-controls-title" data-i18n="explorerTitle">Synchronized Explorer</h1>
+        <p class="source-note" data-i18n="sourceNote">Data source: frozen repository review package. This preview does not query Airtable live.</p>
         <div class="explorer-control">
-          <label for="temporal-preset">Source-bound date or interval</label>
+          <label for="temporal-preset" data-i18n="temporalLabel">Source-bound date or interval</label>
           <input id="temporal-preset" type="range" min="0" max="0" step="1" value="0" aria-describedby="temporal-preset-value interaction-status" />
-          <output id="temporal-preset-value" for="temporal-preset">Loading…</output>
+          <output id="temporal-preset-value" for="temporal-preset" data-i18n="loading">Loading…</output>
         </div>
         <fieldset id="layer-controls" class="layer-controls">
-          <legend>Active semantic layers</legend>
+          <legend data-i18n="layerLegend">Active semantic layers</legend>
         </fieldset>
-        <p id="interaction-status" class="hint" role="status" aria-live="polite">Loading deterministic Explorer views…</p>
+        <p id="interaction-status" class="hint" role="status" aria-live="polite" data-i18n="interactionLoading">Loading deterministic Explorer views…</p>
       </section>
 
       <details class="inspector-disclosure">
-        <summary>Shared state and data boundary</summary>
+        <summary data-i18n="sharedBoundary">Shared state and data boundary</summary>
         <div class="disclosure-body">
           <dl class="metrics">
-            <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
-            <div><dt>Explorer State</dt><dd id="explorer-state">—</dd></div>
-            <div><dt>Selected time</dt><dd id="selected-time">—</dd></div>
-            <div><dt>Projection</dt><dd id="projection-id">—</dd></div>
-            <div><dt>Corpus status</dt><dd id="corpus-status">—</dd></div>
-            <div><dt>Deferred types</dt><dd id="deferred-types">—</dd></div>
+            <div><dt data-i18n="worldSlice">World Slice</dt><dd id="world-slice">—</dd></div>
+            <div><dt data-i18n="explorerState">Explorer State</dt><dd id="explorer-state">—</dd></div>
+            <div><dt data-i18n="selectedTime">Selected time</dt><dd id="selected-time">—</dd></div>
+            <div><dt data-i18n="projection">Projection</dt><dd id="projection-id">—</dd></div>
+            <div><dt data-i18n="corpusStatus">Corpus status</dt><dd id="corpus-status">—</dd></div>
+            <div><dt data-i18n="deferredTypes">Deferred types</dt><dd id="deferred-types">—</dd></div>
           </dl>
-          <p id="boundary-status" class="boundary-note">Loading semantic and renderer boundary…</p>
+          <p id="boundary-status" class="boundary-note" data-i18n="boundaryLoading">Loading semantic and renderer boundary…</p>
         </div>
       </details>
 
       <section>
-        <h2>Semantic render</h2>
+        <h2 data-i18n="semanticRender">Semantic render</h2>
         <div id="semantic-summary" class="summary-grid"></div>
-        <p class="hint">Pick a rendered object or choose an unresolved record. Both paths resolve the same canonical evidence chain.</p>
+        <p class="hint" data-i18n="pickHint">Pick a rendered object or choose an unresolved record. Both paths resolve the same canonical evidence chain.</p>
       </section>
 
       <section>
-        <h2>Selection</h2>
-        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">No semantic object selected.</div>
+        <h2 data-i18n="selection">Selection</h2>
+        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite" data-i18n="noSelection">No semantic object selected.</div>
       </section>
 
       <details class="inspector-disclosure">
-        <summary>Unresolved / uncertain · <span id="unresolved-count">0</span></summary>
+        <summary><span data-i18n="unresolvedTitle">Unresolved / uncertain</span> · <span id="unresolved-count">0</span></summary>
         <div id="unresolved-list" class="disclosure-body"></div>
       </details>
 
       <details class="inspector-disclosure">
-        <summary>Renderer and runtime diagnostics</summary>
+        <summary data-i18n="diagnostics">Renderer and runtime diagnostics</summary>
         <div class="disclosure-body">
-          <p class="warning">The dashed path is synthetic renderer-capability geometry only. It has no World Model object ID and is not historical knowledge.</p>
+          <p class="warning" data-i18n="capabilityWarning">The dashed path is synthetic renderer-capability geometry only. It has no World Model object ID and is not historical knowledge.</p>
           <dl class="metrics">
-            <div><dt>Startup → idle</dt><dd id="startup-ms">pending</dd></div>
-            <div><dt>Frame sample</dt><dd id="frame-sample">pending</dd></div>
-            <div><dt>Rendered semantic primitives</dt><dd id="primitive-count">—</dd></div>
+            <div><dt data-i18n="startupIdle">Startup → idle</dt><dd id="startup-ms" data-i18n="pending">pending</dd></div>
+            <div><dt data-i18n="frameSample">Frame sample</dt><dd id="frame-sample" data-i18n="pending">pending</dd></div>
+            <div><dt data-i18n="renderedPrimitives">Rendered semantic primitives</dt><dd id="primitive-count">—</dd></div>
           </dl>
         </div>
       </details>
@@ -97,6 +101,7 @@
   <div id="fatal-error" role="alert" hidden></div>
 
   <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script src="./i18n.js"></script>
   <script src="./runtime.js"></script>
   <script>
     (() => {
