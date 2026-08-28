@@ -95,10 +95,10 @@ implementation authorization even after contract acceptance.
 
 - 3D Globe as the primary MVP spatial surface;
 - Architecture Atlas at `/atlas/` as a frozen compatibility surface;
-- compact synchronized timeline with explicit `Range` and `Journey` modes;
-- selectable start/end or start/current stops at source-native precision;
-- interactive map stops and one concise place/date/activity card;
-- coarse trajectory presentation without invented route geometry;
+- compact synchronized calendar timeline with explicit `Range` and `Scrub` modes;
+- selectable start/end or start/current calendar values at an honest display granularity;
+- interactive presence markers and one concise place/date/activity card;
+- coarse trajectory presentation where a dashed chronological connector is explicitly not historical route geometry;
 - source/locator/uncertainty under progressive disclosure;
 - layer visibility and legend only after the primary path loop is understandable or inside advanced evidence views;
 - temporal Region/State rendering at an honest precision;
@@ -108,7 +108,7 @@ implementation authorization even after contract acceptance.
 - source/locator/uncertainty access;
 - save/share only if achievable without new backend dependency; otherwise local/session view state is enough for pilot.
 
-Map and timeline must control one shared model state. Two adjacent but unsynchronized widgets do not satisfy scope. A chronological stop sequence may be presented without a connecting line when route geometry is unknown.
+Map and timeline must control one shared model state. Two adjacent but unsynchronized widgets do not satisfy scope. `Range` uses temporal overlap; `Scrub` accumulates state from its chosen start. `Trajectory` remains the semantic authority, and a presentation-only chronological connector must remain distinguishable from unknown route geometry.
 
 ## 5. Knowledge and epistemic scope
 
@@ -210,8 +210,8 @@ Dataset gate:
 Experience gate:
 
 - map/timeline/selection share one state;
-- user can move either time mode and observe a meaningful change in visible stops;
-- selected stops explain place, time, activity and epistemic limits without opening a diagnostic wall of text;
+- user can move either time mode and observe a meaningful change in visible presences;
+- selected presences explain place, time, activity and epistemic limits without opening a diagnostic wall of text;
 - source/uncertainty is accessible;
 - required desktop/tablet/mobile states work.
 

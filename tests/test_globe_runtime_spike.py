@@ -14,6 +14,7 @@ from scripts.build_globe_spike import (
     EXPECTED_ENGINE,
     ROOT,
     WORLD_PATH,
+    _build_life_path_time_axis,
     build_spike,
     _validate_acceptance_profiles,
     SpikeBuildError,
@@ -28,6 +29,21 @@ HTML_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
 
 def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_life_path_time_axis_uses_years_for_whole_life_coverage() -> None:
+    presences = [
+        {"temporal": {"start": "1452", "end": "1452"}},
+        {"temporal": {"start": "1519", "end": "1519"}},
+    ]
+
+    axis = _build_life_path_time_axis(presences)
+
+    assert axis["axis_kind"] == "year"
+    assert axis["values"][0] == "1452"
+    assert axis["values"][-1] == "1519"
+    assert presences[0]["axis_start_index"] == 0
+    assert presences[1]["axis_end_index"] == 67
 
 
 def test_engine_evaluation_selects_maplibre_with_all_required_criteria_pass() -> None:
@@ -77,9 +93,10 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["explorer_view_count"] == 96
     assert metadata["temporal_preset_count"] == 6
     assert metadata["life_path_available"] is True
-    assert metadata["life_path_stop_count"] == 4
+    assert metadata["life_path_presence_count"] == 4
+    assert metadata["life_path_transition_count"] == 3
     assert metadata["life_path_view_count"] == 10
-    assert metadata["life_path_map_line_permitted"] is False
+    assert metadata["life_path_chronological_connector_enabled"] is True
     assert metadata["browser_acceptance_profile_count"] == 3
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
@@ -119,7 +136,7 @@ def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path
     assert globe["vertical_semantics"] == "not_modeled"
 
 
-def test_life_path_presentation_is_bounded_source_aware_and_geometry_free(tmp_path: Path) -> None:
+def test_life_path_presentation_is_calendar_scaled_and_route_geometry_free(tmp_path: Path) -> None:
     output = tmp_path / "globe-spike"
     build_spike(output)
     life_path = _load(output / "life-path.json")
@@ -127,27 +144,38 @@ def test_life_path_presentation_is_bounded_source_aware_and_geometry_free(tmp_pa
     assert life_path["available"] is True
     assert life_path["presentation_only"] is True
     assert life_path["subject_ref"] == "entity-leonardo-da-vinci"
+    assert life_path["trajectory_ref"] == "trajectory-leonardo-romagna-1502"
+    assert life_path["scope_status"] == "interaction_scaffold_not_complete_life"
     assert life_path["coverage"]["complete_life"] is False
     assert life_path["route_policy"] == {
         "status": "unknown_route",
         "geometry": None,
-        "map_line_permitted": False,
+        "historical_route_geometry_permitted": False,
+        "chronological_connector_permitted": True,
+        "chronological_connector_is_route": False,
     }
-    assert [step["place_ref"] for step in life_path["steps"]] == [
+    assert life_path["time_axis"]["axis_kind"] == "day"
+    assert life_path["time_axis"]["values"][0] == "1502-08-08"
+    assert life_path["time_axis"]["values"][-1] == "1502-11-30"
+    assert len(life_path["time_axis"]["values"]) == 115
+    assert [presence["place_ref"] for presence in life_path["presences"]] == [
         "place-rimini",
         "place-cesena",
         "place-cesenatico",
         "place-imola",
     ]
-    assert all(step["coordinate_role"] == "present_day_settlement_reference" for step in life_path["steps"])
-    assert all(step["historical_location_precision"] == "exact_position_within_named_settlement_unknown" for step in life_path["steps"])
-    assert all(step["duration_status"] == "not_established_in_current_corpus" for step in life_path["steps"])
-    assert sum(step["route_from_previous"] is not None for step in life_path["steps"]) == 3
-    assert all(
-        step["route_from_previous"] is None
-        or step["route_from_previous"]["geometry"] is None
-        for step in life_path["steps"]
-    )
+    assert all(presence["coordinate_role"] == "present_day_settlement_reference" for presence in life_path["presences"])
+    assert all(presence["historical_location_precision"] == "exact_position_within_named_settlement_unknown" for presence in life_path["presences"])
+    assert all("short_description" in presence for presence in life_path["presences"])
+    assert len(life_path["transitions"]) == 3
+    assert all(transition["route_status"] == "unknown_route" for transition in life_path["transitions"])
+    assert all(transition["route_geometry"] is None for transition in life_path["transitions"])
+    assert all(transition["presentation_connector"] == {
+        "semantic_role": "chronological_connection",
+        "style": "dashed",
+        "derived_from_presence_anchors": True,
+        "is_historical_route_geometry": False,
+    } for transition in life_path["transitions"])
     assert len(life_path["views"]) == 10
     assert life_path["default_view_id"] == "life-path-0-3"
 
@@ -253,6 +281,12 @@ def test_default_adapter_preserves_frozen_gate_c_boundary_with_context_overlay()
     assert world["promotion_allowed"] is False
     assert world["gate_c_decision"]["decision"] == "FREEZE"
     assert world["gate_c_decision"]["promotion_allowed"] is False
+    trajectory = next(
+        item
+        for item in world["trajectories"]
+        if item["id"] == "trajectory-leonardo-romagna-1502"
+    )
+    assert trajectory["subject_ref"] == "entity-leonardo-da-vinci"
     assert state["world_slice_ref"] == "world-slice-leonardo-romagna-1502-v1"
     assert state["dataset_identity"] == world["world_slice"]["dataset_identity"]
     assert state["temporal_selection"] == {
@@ -585,16 +619,16 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "/tmp/artemis-globe-browser-*-capture.json" in workflow_source
 
 
-def test_life_path_timeline_and_selection_use_precomputed_views() -> None:
+def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="range-start" type="range"' in html_source
     assert 'id="range-end" type="range"' in html_source
-    assert 'id="journey-start" type="range"' in html_source
-    assert 'id="journey-current" type="range"' in html_source
+    assert 'id="scrub-start" type="range"' in html_source
+    assert 'id="scrub-current" type="range"' in html_source
     assert 'id="mode-range"' in html_source
-    assert 'id="mode-journey"' in html_source
+    assert 'id="mode-scrub"' in html_source
     assert 'id="layer-controls"' not in html_source
     assert 'role="status" aria-live="polite"' in html_source
     assert "applySemanticView" in runtime_source
@@ -602,23 +636,27 @@ def test_life_path_timeline_and_selection_use_precomputed_views() -> None:
     assert "semanticSource.setData(globePrimitivesToGeoJson(next.globe))" in runtime_source
     assert "updateCanonicalSelection(projectionItem)" in runtime_source
     assert "function applyLifePathView" in runtime_source
-    assert "function selectLifePathStop" in runtime_source
+    assert "function selectLifePathPresence" in runtime_source
+    assert "function visibleLifePathPresences" in runtime_source
+    assert "presence.axis_start_index <= end" in runtime_source
     assert "prefers-reduced-motion: reduce" in runtime_source
 
 
-def test_runtime_removes_noop_controls_and_explains_unknown_routes() -> None:
+def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-map-status"' in html_source
-    assert "Exact routes between stops are unknown" in html_source
-    assert "no route line is drawn" in html_source
+    assert "Dashed links show chronology only" in html_source
+    assert "Exact routes remain unknown" in html_source
     assert 'id="toggle-alternatives"' not in html_source
     assert 'id="view-global"' not in html_source
     assert 'id="view-slice"' not in html_source
     assert "addCapabilityPath(map, capabilityPath)" in runtime_source
     assert "else addCapabilityPath(map, capabilityPath)" in runtime_source
     assert "addLifePathMarkers(map)" in runtime_source
+    assert "life-path-chronology-line" in runtime_source
+    assert "is_historical_route_geometry: false" in runtime_source
     assert "maplibregl.GlobeControl" not in runtime_source
 
 
@@ -647,7 +685,7 @@ def test_runtime_persists_and_restores_explorer_state_in_url() -> None:
     assert "url.searchParams.set('mode'" in runtime_source
     assert "url.searchParams.set('start'" in runtime_source
     assert "url.searchParams.set('end'" in runtime_source
-    assert "url.searchParams.set('stop'" in runtime_source
+    assert "url.searchParams.set('presence'" in runtime_source
     assert "url.searchParams.set('time'" in runtime_source
     assert "url.searchParams.set('layers'" in runtime_source
     assert "url.searchParams.set('item'" in runtime_source

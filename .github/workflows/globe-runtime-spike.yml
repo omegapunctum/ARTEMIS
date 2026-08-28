@@ -107,7 +107,7 @@ jobs:
             "tablet:1024:768:tablet:false"
             "mobile:500:844:mobile:true"
           )
-          PROFILE_URL='http://127.0.0.1:8124/?mode=range&start=stop-rimini-1502-08-08&end=stop-imola-autumn-1502&stop=stop-cesena-1502-08-10'
+          PROFILE_URL='http://127.0.0.1:8124/?mode=range&start=1502-08-08&end=1502-11-30&presence=presence-cesena-1502-08-10'
 
           for SPEC in "${PROFILE_SPECS[@]}"; do
             IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"
@@ -242,9 +242,10 @@ jobs:
           DESKTOP_DOM=/tmp/artemis-globe-browser-desktop-dom.html
           grep -F "explorer-state-leonardo-romagna-1502-gate-d" "$DESKTOP_DOM"
           grep -F "Leonardo Life Path" "$DESKTOP_DOM"
-          grep -F 'data-artemis-visible-stop-count="4"' "$DESKTOP_DOM"
+          grep -F 'data-artemis-visible-presence-count="4"' "$DESKTOP_DOM"
           grep -F "Leonardo documented in the Cesena survey context" "$DESKTOP_DOM"
-          grep -F "Route from the previous stop is unknown" "$DESKTOP_DOM"
+          grep -F "Chronological link only; exact route unknown" "$DESKTOP_DOM"
+          grep -F "Dashed links show chronology only" "$DESKTOP_DOM"
           grep -F "exact historical position unknown" "$DESKTOP_DOM"
           grep -F "Sources and uncertainty" "$DESKTOP_DOM"
           grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" "$DESKTOP_DOM"
@@ -257,7 +258,7 @@ jobs:
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
             --dump-dom \
-            'http://127.0.0.1:8124/?mode=journey&start=stop-cesena-1502-08-10&end=stop-cesenatico-1502-09-06&stop=stop-cesena-1502-08-10' \
+            'http://127.0.0.1:8124/?mode=scrub&start=1502-08-08&end=1502-08-10&presence=presence-cesena-1502-08-10' \
             >/tmp/artemis-globe-interaction-dom.html \
             2>/tmp/artemis-globe-interaction-browser.log
           if grep -Fq "ARTEMIS Globe spike failed:" /tmp/artemis-globe-interaction-dom.html; then
@@ -265,10 +266,10 @@ jobs:
             cat /tmp/artemis-globe-interaction-browser.log >&2 || true
             exit 1
           fi
-          grep -F 'data-artemis-path-mode="journey"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-path-start="1"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-path-end="2"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-visible-stop-count="2"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-mode="scrub"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-start="1502-08-08"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-end="1502-08-10"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-visible-presence-count="2"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'event-leonardo-cesena-survey' /tmp/artemis-globe-interaction-dom.html
           grep -F '1502-08-10' /tmp/artemis-globe-interaction-dom.html
 

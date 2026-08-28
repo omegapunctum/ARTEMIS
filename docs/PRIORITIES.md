@@ -20,8 +20,8 @@ The load-bearing path is:
 
 Required behavior:
 
-- two synchronized time modes: bounded `Range` and accumulated `Journey`;
-- visible stop selection shared by timeline, map and URL;
+- two synchronized calendar modes: interval-overlap `Range` and accumulated `Scrub`;
+- visible presence selection shared by timeline, map and URL;
 - Event, State, Process, Trajectory and Region semantics;
 - source, locator, uncertainty, coverage and projection-loss access;
 - explicit unknown routes and geometry-withheld alternatives;
@@ -32,7 +32,7 @@ The current bounded package remains honest:
 
 - Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte;
 - historical Claims remain draft/rejected;
-- no route or Region geometry is invented;
+- no route or Region geometry is invented; dashed presentation connectors mean chronology only and are not historical route geometry;
 - `historical_corpus_ready=false` and `promotion_allowed=false`;
 - four settlement coordinates are present-day source-bound reference anchors only.
 
@@ -55,23 +55,24 @@ read-only product loop is insufficient.
 
 The next product increment is one complete, deliberately coarse user journey:
 
-1. choose a time range and see every supported Leonardo stop inside it;
-2. switch to Journey and reveal the path progressively from a chosen start;
-3. select a stop from the map or sequence;
+1. choose a calendar range and see every supported Leonardo presence overlapping it;
+2. switch to Scrub and reveal the path progressively from a chosen calendar start;
+3. select a presence from the map or sequence;
 4. understand place, source-native date, principal activity and the duration/position/route limits;
 5. open sources and uncertainty only when needed and return to the same state through the URL.
 
 The current validation corpus is intentionally limited to Rimini, Cesena, Cesenatico and Imola in
-1502. Local/global context and broader layers remain later hypotheses; they do not precede proving
-that this primary life-path loop is understandable.
+1502. It is an interaction scaffold, not Leonardo's complete path. The next separate data increment
+may curate 6–10 major life presences over 1452–1519 only after this interaction is understandable.
+Local/global context and broader layers remain later hypotheses.
 
 After that increment, run a small observed validation against the same-content
 baseline. Do not wait for a second infrastructure gate before learning from users.
 
 Minimum decision evidence:
 
-- users can explain which stops are visible and why the set changes between time modes;
-- users can retrieve the concise meaning and epistemic limits of a selected stop;
+- users can explain which presences are visible and why the set changes between time modes;
+- users can retrieve the concise meaning and epistemic limits of a selected presence;
 - source and uncertainty displays do not cause systematic overclaim;
 - Globe value is not only visual novelty;
 - the curation and review cost remains bounded.

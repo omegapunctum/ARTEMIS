@@ -12,7 +12,7 @@ Foundation v3 restored space and time as core coordinates. Foundation v3.1, acce
 
 The public root is a small ARTEMIS Core landing. It routes the browser-executed Leonardo Globe at `/globe/` as the primary research prototype and preserves the former Architecture Atlas at `/atlas/` as compatibility-only. Issue #355 remains the source-aware Globe MVP product vertical. Gate C is completed/FREEZE for the Leonardo-in-Romagna 1502 candidate boundary; Gate D is narrowed by Core Reset. Public access does not make the Globe or its draft/rejected historical content product-validated; generative AI, personal knowledge, causal reasoning, VR/AR and universal coverage remain future/gated scope.
 
-The current default Globe loop is `Leonardo Life Path v0`: choose a bounded range or progressively reveal the four source-bound 1502 stops, then select a stop for a compact place/date/activity card. These present-day settlement anchors do not establish Leonardo's exact position, and no route line is drawn while movement geometry remains unknown.
+The current default Globe loop is a bounded `Leonardo Life Path` interaction scaffold: select a real calendar range or scrub forward from a chosen date, then select a documented presence for a compact place/date/activity card. Four Romagna presences are available today; they are not a complete biography. Dashed links express chronology only, while historical route geometry remains unknown.
 
 This README is the **root documentation entrypoint and current baseline summary**. Detailed normative rules belong to the relevant canonical documents listed in the documentation section below.
 
@@ -23,7 +23,7 @@ This README is the **root documentation entrypoint and current baseline summary*
 The active ARTEMIS Core combines:
 - the frozen Leonardo-in-Romagna source/Claim/uncertainty package;
 - Explorer State and renderer-neutral Render Projection;
-- a static MapLibre Globe with Range/Journey time controls, interactive stop markers and a source-aware compact card;
+- a static MapLibre Globe with calendar-based Range/Scrub controls, interactive presence markers and a source-aware compact card;
 - a backend-free GitHub Pages build.
 
 Architecture Atlas, Airtable ETL, FastAPI, auth, UGC/moderation, Research Slices,

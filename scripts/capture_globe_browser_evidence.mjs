@@ -145,20 +145,21 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   const interaction = await evaluate(cdp, `(() => {
     const runtime = window.__ARTEMIS_GLOBE_SPIKE;
     const initialStatus = document.getElementById('temporal-map-status')?.textContent || '';
-    const steps = runtime.data.lifePath.steps;
-    if (steps.length !== 4) throw new Error('Leonardo life path does not expose four stops');
-    document.getElementById('mode-journey')?.click();
-    const journeyStart = document.getElementById('journey-start');
-    const journeyCurrent = document.getElementById('journey-current');
-    if (!journeyStart || !journeyCurrent) throw new Error('Journey controls are unavailable');
-    journeyStart.value = '1';
-    journeyStart.dispatchEvent(new Event('input', { bubbles: true }));
-    journeyCurrent.value = '2';
-    journeyCurrent.dispatchEvent(new Event('input', { bubbles: true }));
+    const presences = runtime.data.lifePath.presences;
+    const axisValues = runtime.data.lifePath.time_axis.values;
+    if (presences.length !== 4) throw new Error('Leonardo life path does not expose four presences');
+    document.getElementById('mode-scrub')?.click();
+    const scrubStart = document.getElementById('scrub-start');
+    const scrubCurrent = document.getElementById('scrub-current');
+    if (!scrubStart || !scrubCurrent) throw new Error('Scrub controls are unavailable');
+    scrubStart.value = '0';
+    scrubStart.dispatchEvent(new Event('input', { bubbles: true }));
+    scrubCurrent.value = '2';
+    scrubCurrent.dispatchEvent(new Event('input', { bubbles: true }));
     const marker = [...document.querySelectorAll('.life-path-marker')].find(
-      (button) => button.getAttribute('aria-label')?.startsWith('Select Cesenatico,')
+      (button) => button.getAttribute('aria-label')?.startsWith('Select Cesena,')
     );
-    if (!marker || marker.hidden) throw new Error('Visible Cesenatico map marker is unavailable');
+    if (!marker || marker.hidden) throw new Error('Visible Cesena map marker is unavailable');
     marker.click();
 
     const params = new URLSearchParams(window.location.search);
@@ -167,44 +168,44 @@ async function verifyUrlStateRestoration(cdp, deadline) {
       updatedStatus: document.getElementById('temporal-map-status')?.textContent || '',
       cardText: document.getElementById('selection-card')?.textContent || '',
       mode: runtime.lifePathMode,
-      start: steps[runtime.lifePathStartIndex].stop_id,
-      end: steps[runtime.lifePathEndIndex].stop_id,
-      stop: runtime.selectedStopId,
+      start: axisValues[runtime.lifePathStartIndex],
+      end: axisValues[runtime.lifePathEndIndex],
+      presence: runtime.selectedPresenceId,
       item: runtime.selectedItemId,
-      visibleStopCount: Number(document.documentElement.dataset.artemisVisibleStopCount || 0),
+      visiblePresenceCount: Number(document.documentElement.dataset.artemisVisiblePresenceCount || 0),
       urlMode: params.get('mode'),
       urlStart: params.get('start'),
       urlEnd: params.get('end'),
-      urlStop: params.get('stop'),
+      urlPresence: params.get('presence'),
       urlItem: params.get('item')
     };
   })()`);
 
-  if (!interaction.mode || !interaction.stop || !interaction.item) {
+  if (!interaction.mode || !interaction.presence || !interaction.item) {
     throw new Error(`Interaction did not select life-path state: ${JSON.stringify(interaction)}`);
   }
   for (const requiredText of [
-    'Cesenatico',
-    'Leonardo records the Cesenatico port',
+    'Cesena',
+    'Leonardo documented in the Cesena survey context',
     'Not established in the current corpus',
     'exact historical position unknown',
     'Sources and uncertainty'
   ]) {
     if (!interaction.cardText.includes(requiredText)) {
-      throw new Error(`Life-path stop card did not expose ${requiredText}`);
+      throw new Error(`Life-path presence card did not expose ${requiredText}`);
     }
   }
   if (interaction.initialStatus === interaction.updatedStatus) {
     throw new Error('Timeline interaction did not update the visible globe status');
   }
-  if (interaction.visibleStopCount !== 2) {
-    throw new Error(`Journey mode did not reveal two accumulated stops: ${JSON.stringify(interaction)}`);
+  if (interaction.visiblePresenceCount !== 2) {
+    throw new Error(`Scrub mode did not reveal two accumulated presences: ${JSON.stringify(interaction)}`);
   }
   if (
     interaction.urlMode !== interaction.mode
     || interaction.urlStart !== interaction.start
     || interaction.urlEnd !== interaction.end
-    || interaction.urlStop !== interaction.stop
+    || interaction.urlPresence !== interaction.presence
     || interaction.urlItem !== interaction.item
   ) {
     throw new Error(`Life-path state was not written to the URL: ${JSON.stringify(interaction)}`);
@@ -224,25 +225,25 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   await waitForVisualReadiness(cdp, reloadDeadline);
   const restored = await evaluate(cdp, `(() => {
     const runtime = window.__ARTEMIS_GLOBE_SPIKE;
-    const steps = runtime.data.lifePath.steps;
+    const axisValues = runtime.data.lifePath.time_axis.values;
     return {
       mode: runtime.lifePathMode,
-      start: steps[runtime.lifePathStartIndex].stop_id,
-      end: steps[runtime.lifePathEndIndex].stop_id,
-      stop: runtime.selectedStopId,
+      start: axisValues[runtime.lifePathStartIndex],
+      end: axisValues[runtime.lifePathEndIndex],
+      presence: runtime.selectedPresenceId,
       item: runtime.selectedItemId,
       cardItem: document.getElementById('selection-card')?.dataset.itemId || null,
-      cardStop: document.getElementById('selection-card')?.dataset.stopId || null
+      cardPresence: document.getElementById('selection-card')?.dataset.presenceId || null
     };
   })()`);
   if (JSON.stringify(restored) !== JSON.stringify({
     mode: interaction.mode,
     start: interaction.start,
     end: interaction.end,
-    stop: interaction.stop,
+    presence: interaction.presence,
     item: interaction.item,
     cardItem: interaction.item,
-    cardStop: interaction.stop
+    cardPresence: interaction.presence
   })) {
     throw new Error(`URL state did not survive reload: ${JSON.stringify({ interaction, restored })}`);
   }
@@ -252,23 +253,23 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     url.searchParams.set('mode', 'invalid-mode');
     url.searchParams.set('start', 'invalid-start');
     url.searchParams.set('end', 'invalid-end');
-    url.searchParams.set('stop', 'invalid-stop');
+    url.searchParams.set('presence', 'invalid-presence');
     url.searchParams.set('item', 'invalid-item');
     history.pushState({ invalid: true }, '', url);
     window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
     const runtime = window.__ARTEMIS_GLOBE_SPIKE;
-    const steps = runtime.data.lifePath.steps;
+    const axisValues = runtime.data.lifePath.time_axis.values;
     const params = new URLSearchParams(window.location.search);
     return {
       mode: runtime.lifePathMode,
-      start: steps[runtime.lifePathStartIndex].stop_id,
-      end: steps[runtime.lifePathEndIndex].stop_id,
-      stop: runtime.selectedStopId,
+      start: axisValues[runtime.lifePathStartIndex],
+      end: axisValues[runtime.lifePathEndIndex],
+      presence: runtime.selectedPresenceId,
       item: runtime.selectedItemId,
       urlMode: params.get('mode'),
       urlStart: params.get('start'),
       urlEnd: params.get('end'),
-      urlStop: params.get('stop'),
+      urlPresence: params.get('presence'),
       urlItem: params.get('item')
     };
   })()`);
@@ -276,7 +277,7 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     invalidCanonical.urlMode !== invalidCanonical.mode
     || invalidCanonical.urlStart !== invalidCanonical.start
     || invalidCanonical.urlEnd !== invalidCanonical.end
-    || invalidCanonical.urlStop !== invalidCanonical.stop
+    || invalidCanonical.urlPresence !== invalidCanonical.presence
     || invalidCanonical.urlItem !== invalidCanonical.item
   ) {
     throw new Error(`Invalid popstate URL was not canonicalized: ${JSON.stringify(invalidCanonical)}`);
@@ -287,12 +288,12 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   while (Date.now() < reloadDeadline) {
     popstateRestored = await evaluate(cdp, `(() => {
       const runtime = window.__ARTEMIS_GLOBE_SPIKE;
-      const steps = runtime.data.lifePath.steps;
+      const axisValues = runtime.data.lifePath.time_axis.values;
       return {
         mode: runtime.lifePathMode,
-        start: steps[runtime.lifePathStartIndex].stop_id,
-        end: steps[runtime.lifePathEndIndex].stop_id,
-        stop: runtime.selectedStopId,
+        start: axisValues[runtime.lifePathStartIndex],
+        end: axisValues[runtime.lifePathEndIndex],
+        presence: runtime.selectedPresenceId,
         item: runtime.selectedItemId
       };
     })()`);
@@ -300,7 +301,7 @@ async function verifyUrlStateRestoration(cdp, deadline) {
       popstateRestored.mode === interaction.mode
       && popstateRestored.start === interaction.start
       && popstateRestored.end === interaction.end
-      && popstateRestored.stop === interaction.stop
+      && popstateRestored.presence === interaction.presence
       && popstateRestored.item === interaction.item
     ) break;
     await delay(100);
@@ -309,7 +310,7 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     popstateRestored.mode !== interaction.mode
     || popstateRestored.start !== interaction.start
     || popstateRestored.end !== interaction.end
-    || popstateRestored.stop !== interaction.stop
+    || popstateRestored.presence !== interaction.presence
     || popstateRestored.item !== interaction.item
   ) {
     throw new Error(`Back navigation did not restore Explorer State: ${JSON.stringify(popstateRestored)}`);

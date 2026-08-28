@@ -157,6 +157,12 @@ input[type="range"] { min-height: 30px; accent-color: #5fb8ff; }
 .range-row input { grid-column: 1 / -1; width: 100%; }
 .mode-help,
 .route-note { margin: 0 !important; color: #91a4b8; font-size: 12px; line-height: 1.45; }
+.route-note { display: flex; gap: 8px; align-items: center; }
+.route-swatch {
+  flex: 0 0 30px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #a8bed0 0 5px, transparent 5px 10px);
+}
 
 .path-status {
   margin: 12px 0 0 !important;

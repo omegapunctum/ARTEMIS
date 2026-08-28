@@ -35,7 +35,7 @@
     viewByKey: new Map(),
     knowledgeByItem: new Map(),
     selectedItemId: null,
-    selectedStopId: null,
+    selectedPresenceId: null,
     activeTemporalPresetId: null,
     activeLifePathViewId: null,
     activeLayerRefs: [],
@@ -127,17 +127,18 @@
   function syncUrlState() {
     const url = new URL(window.location.href);
     if (runtime.data?.lifePath?.available) {
-      const steps = runtime.data.lifePath.steps || [];
-      const start = steps[runtime.lifePathStartIndex];
-      const end = steps[runtime.lifePathEndIndex];
-      if (!start || !end) return;
+      const axisValues = runtime.data.lifePath.time_axis?.values || [];
+      const start = axisValues[runtime.lifePathStartIndex];
+      const end = axisValues[runtime.lifePathEndIndex];
+      if (start == null || end == null) return;
       url.searchParams.set('mode', runtime.lifePathMode);
-      url.searchParams.set('start', start.stop_id);
-      url.searchParams.set('end', end.stop_id);
+      url.searchParams.set('start', start);
+      url.searchParams.set('end', end);
       url.searchParams.delete('time');
       url.searchParams.delete('layers');
-      if (runtime.selectedStopId) url.searchParams.set('stop', runtime.selectedStopId);
-      else url.searchParams.delete('stop');
+      url.searchParams.delete('stop');
+      if (runtime.selectedPresenceId) url.searchParams.set('presence', runtime.selectedPresenceId);
+      else url.searchParams.delete('presence');
       if (runtime.selectedItemId) url.searchParams.set('item', runtime.selectedItemId);
       else url.searchParams.delete('item');
       window.history.replaceState({ artemisLifePathState: true }, '', url);
@@ -907,44 +908,76 @@
     addProjectionLosses(card, record);
   }
 
-  function formatStopTime(stop) {
-    const temporal = stop?.temporal || {};
+  function formatPresenceTime(presence) {
+    const temporal = presence?.temporal || {};
     if (!temporal.start) return 'Date unavailable';
     if (temporal.start === temporal.end) return temporal.start;
     return `${temporal.start} → ${temporal.end}`;
   }
 
-  function lifePathView(startIndex, endIndex) {
+  function lifePathAxisValues() {
+    return runtime.data?.lifePath?.time_axis?.values || [];
+  }
+
+  function formatAxisValue(index) {
+    return lifePathAxisValues()[index] || '—';
+  }
+
+  function selectedLifePathTemporalExtent() {
+    const start = formatAxisValue(runtime.lifePathStartIndex);
+    const end = formatAxisValue(runtime.lifePathEndIndex);
+    return {
+      mode: start === end ? 'instant' : 'interval',
+      start,
+      end,
+      precision: runtime.data?.lifePath?.time_axis?.axis_kind || 'unknown',
+      calendar: runtime.data?.lifePath?.time_axis?.calendar || 'proleptic_gregorian'
+    };
+  }
+
+  function visibleLifePathPresences() {
+    const start = runtime.lifePathStartIndex;
+    const end = runtime.lifePathEndIndex;
+    return (runtime.data?.lifePath?.presences || []).filter((presence) => (
+      presence.axis_start_index <= end && presence.axis_end_index >= start
+    ));
+  }
+
+  function canonicalLifePathView(presences = visibleLifePathPresences()) {
+    if (!presences.length) return null;
+    const first = Math.min(...presences.map((presence) => presence.index));
+    const last = Math.max(...presences.map((presence) => presence.index));
     return (runtime.data?.lifePath?.views || []).find((view) => (
-      view.start_index === startIndex && view.end_index === endIndex
+      view.start_index === first && view.end_index === last
     )) || null;
   }
 
-  function visibleLifePathSteps() {
-    const view = lifePathView(runtime.lifePathStartIndex, runtime.lifePathEndIndex);
-    const visibleIds = new Set(view?.visible_stop_ids || []);
-    return (runtime.data?.lifePath?.steps || []).filter((stop) => visibleIds.has(stop.stop_id));
+  function transitionToPresence(presenceId) {
+    return (runtime.data?.lifePath?.transitions || []).find(
+      (transition) => transition.to_presence_ref === presenceId
+    ) || null;
   }
 
-  function renderLifePathStop(stop) {
+  function renderLifePathPresence(presence) {
     const card = byId('selection-card');
-    if (!card || !stop) return;
-    const eventRecord = runtime.knowledgeByItem.get(stop.event_item_id);
-    const presenceRecord = runtime.knowledgeByItem.get(stop.presence_item_id);
+    if (!card || !presence) return;
+    const eventRecord = runtime.knowledgeByItem.get(presence.event_item_id);
+    const presenceRecord = runtime.knowledgeByItem.get(presence.presence_item_id);
+    const transition = transitionToPresence(presence.presence_id);
     card.classList.remove('empty');
     card.innerHTML = '';
-    card.dataset.itemId = stop.event_item_id;
-    card.dataset.stopId = stop.stop_id;
-    appendText(card, 'div', stop.place_label, 'stop-card-title');
-    appendText(card, 'div', formatStopTime(stop), 'stop-card-date');
-    appendText(card, 'p', stop.activity_label, 'stop-card-activity');
+    card.dataset.itemId = presence.event_item_id;
+    card.dataset.presenceId = presence.presence_id;
+    appendText(card, 'div', presence.place_label, 'stop-card-title');
+    appendText(card, 'div', formatPresenceTime(presence), 'stop-card-date');
+    appendText(card, 'p', presence.short_description, 'stop-card-activity');
 
     const facts = document.createElement('dl');
     facts.className = 'stop-fact-list';
     for (const [label, value] of [
       ['Duration', 'Not established in the current corpus'],
       ['Position', 'Named settlement; exact historical position unknown'],
-      ['Route', stop.route_from_previous ? 'Route from the previous stop is unknown' : 'First selected stop']
+      ['Route', transition ? 'Chronological link only; exact route unknown' : 'First documented presence']
     ]) {
       const row = document.createElement('div');
       appendText(row, 'dt', label);
@@ -976,25 +1009,29 @@
 
   function syncLifePathSelectionControls() {
     for (const button of document.querySelectorAll('.stop-sequence-item')) {
-      button.setAttribute('aria-pressed', String(button.dataset.stopId === runtime.selectedStopId));
+      button.setAttribute('aria-pressed', String(button.dataset.presenceId === runtime.selectedPresenceId));
     }
-    for (const [stopId, marker] of runtime.lifePathMarkers) {
-      marker.getElement().setAttribute('aria-pressed', String(stopId === runtime.selectedStopId));
+    for (const [presenceId, marker] of runtime.lifePathMarkers) {
+      marker.getElement().setAttribute('aria-pressed', String(presenceId === runtime.selectedPresenceId));
     }
   }
 
-  function selectLifePathStop(stopId, options = {}) {
-    const stop = (runtime.data?.lifePath?.steps || []).find((candidate) => candidate.stop_id === stopId);
-    if (!stop || !visibleLifePathSteps().some((candidate) => candidate.stop_id === stopId)) return;
-    runtime.selectedStopId = stop.stop_id;
-    runtime.selectedItemId = stop.event_item_id;
-    const projectionItem = currentProjectionItem(stop.event_item_id);
+  function selectLifePathPresence(presenceId, options = {}) {
+    const presence = (runtime.data?.lifePath?.presences || []).find(
+      (candidate) => candidate.presence_id === presenceId
+    );
+    if (!presence || !visibleLifePathPresences().some(
+      (candidate) => candidate.presence_id === presenceId
+    )) return;
+    runtime.selectedPresenceId = presence.presence_id;
+    runtime.selectedItemId = presence.event_item_id;
+    const projectionItem = currentProjectionItem(presence.event_item_id);
     if (projectionItem) updateCanonicalSelection(projectionItem);
-    renderLifePathStop(stop);
+    renderLifePathPresence(presence);
     syncLifePathSelectionControls();
     if (options.fly !== false && runtime.map) {
       runtime.map.flyTo({
-        center: stop.coordinates,
+        center: presence.coordinates,
         zoom: Math.max(runtime.map.getZoom(), 6.7),
         pitch: 25,
         duration: cameraDuration()
@@ -1007,40 +1044,69 @@
   function renderLifePathSequence() {
     const host = byId('path-sequence');
     if (!host) return;
-    const visibleIds = new Set(visibleLifePathSteps().map((stop) => stop.stop_id));
+    const visibleIds = new Set(visibleLifePathPresences().map((presence) => presence.presence_id));
     host.innerHTML = '';
-    for (const stop of runtime.data?.lifePath?.steps || []) {
+    for (const presence of runtime.data?.lifePath?.presences || []) {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'stop-sequence-item';
-      button.dataset.stopId = stop.stop_id;
+      button.dataset.presenceId = presence.presence_id;
       button.setAttribute('role', 'listitem');
-      button.setAttribute('aria-pressed', String(stop.stop_id === runtime.selectedStopId));
-      button.disabled = !visibleIds.has(stop.stop_id);
-      const number = appendText(button, 'span', stop.index + 1, 'stop-number');
+      button.setAttribute('aria-pressed', String(presence.presence_id === runtime.selectedPresenceId));
+      button.disabled = !visibleIds.has(presence.presence_id);
+      const number = appendText(button, 'span', presence.index + 1, 'stop-number');
       number.setAttribute('aria-hidden', 'true');
       const copy = document.createElement('span');
       copy.className = 'stop-copy';
-      appendText(copy, 'strong', stop.place_label);
-      appendText(copy, 'span', stop.activity_label);
-      appendText(button, 'span', formatStopTime(stop), 'stop-date');
+      appendText(copy, 'strong', presence.place_label);
+      appendText(copy, 'span', presence.short_description);
+      appendText(button, 'span', formatPresenceTime(presence), 'stop-date');
       button.insertBefore(copy, button.lastElementChild);
-      button.addEventListener('click', () => selectLifePathStop(stop.stop_id, { fly: true, focus: true }));
+      button.addEventListener('click', () => selectLifePathPresence(
+        presence.presence_id, { fly: true, focus: true }
+      ));
       host.append(button);
     }
   }
 
   function updateLifePathMarkers() {
-    const visibleIds = new Set(visibleLifePathSteps().map((stop) => stop.stop_id));
-    for (const [stopId, marker] of runtime.lifePathMarkers) {
-      marker.getElement().hidden = !visibleIds.has(stopId);
+    const visibleIds = new Set(visibleLifePathPresences().map((presence) => presence.presence_id));
+    for (const [presenceId, marker] of runtime.lifePathMarkers) {
+      marker.getElement().hidden = !visibleIds.has(presenceId);
     }
     syncLifePathSelectionControls();
   }
 
-  function focusVisibleLifePathStops() {
+  function lifePathConnectorGeoJson() {
+    const visible = new Map(visibleLifePathPresences().map(
+      (presence) => [presence.presence_id, presence]
+    ));
+    const features = [];
+    for (const transition of runtime.data?.lifePath?.transitions || []) {
+      const from = visible.get(transition.from_presence_ref);
+      const to = visible.get(transition.to_presence_ref);
+      if (!from || !to) continue;
+      features.push({
+        type: 'Feature',
+        properties: {
+          transition_id: transition.transition_id,
+          semantic_role: 'chronological_connection',
+          route_status: transition.route_status,
+          is_historical_route_geometry: false
+        },
+        geometry: { type: 'LineString', coordinates: [from.coordinates, to.coordinates] }
+      });
+    }
+    return { type: 'FeatureCollection', features };
+  }
+
+  function updateLifePathConnectors() {
+    runtime.map?.getSource?.('life-path-chronology')?.setData(lifePathConnectorGeoJson());
+  }
+
+  function focusVisibleLifePathPresences() {
     if (!runtime.map) return;
-    const visible = visibleLifePathSteps();
+    const visible = visibleLifePathPresences();
     if (!visible.length) return;
     if (visible.length === 1) {
       runtime.map.flyTo({
@@ -1052,7 +1118,7 @@
       return;
     }
     const bounds = new maplibregl.LngLatBounds();
-    for (const stop of visible) bounds.extend(stop.coordinates);
+    for (const presence of visible) bounds.extend(presence.coordinates);
     runtime.map.fitBounds(bounds, {
       padding: { top: 110, right: 70, bottom: 70, left: 70 },
       maxZoom: 7.4,
@@ -1062,79 +1128,85 @@
   }
 
   function lifePathStatus() {
-    const visible = visibleLifePathSteps();
-    if (!visible.length) return 'No source-bound stops in this view.';
-    const label = runtime.lifePathMode === 'journey' ? 'Accumulated journey' : 'Selected range';
-    const timeLabel = visible.length === 1
-      ? formatStopTime(visible[0])
-      : `${formatStopTime(visible[0])} to ${formatStopTime(visible[visible.length - 1])}`;
-    return `${label}: ${visible.length} stop${visible.length === 1 ? '' : 's'} · ${timeLabel}.`;
+    const visible = visibleLifePathPresences();
+    const temporal = selectedLifePathTemporalExtent();
+    const label = runtime.lifePathMode === 'scrub' ? 'Accumulated scrub' : 'Selected range';
+    return `${label}: ${visible.length} presence${visible.length === 1 ? '' : 's'} · ${temporal.start}${temporal.start === temporal.end ? '' : ` to ${temporal.end}`}.`;
   }
 
   function applyLifePathView(options = {}) {
-    const next = lifePathView(runtime.lifePathStartIndex, runtime.lifePathEndIndex);
-    if (!next) throw new Error('No deterministic Leonardo life-path view for the selected stops');
-
-    runtime.activeLifePathViewId = next.view_id;
-    runtime.activeTemporalPresetId = next.view_id;
-    runtime.activeLayerRefs = [...(next.active_layer_refs || next.state.active_layer_refs || [])];
-    runtime.data.state = cloneJson(next.state);
-    runtime.data.projection = next.projection;
-    runtime.data.globe = next.globe;
-
-    const semanticSource = runtime.map?.getSource?.('artemis-semantic');
-    if (semanticSource?.setData) semanticSource.setData(globePrimitivesToGeoJson(next.globe));
+    const visible = visibleLifePathPresences();
+    const next = canonicalLifePathView(visible);
+    if (next) {
+      runtime.activeLifePathViewId = next.view_id;
+      runtime.activeTemporalPresetId = next.view_id;
+      runtime.activeLayerRefs = [...(next.active_layer_refs || next.state.active_layer_refs || [])];
+      runtime.data.state = cloneJson(next.state);
+      runtime.data.projection = next.projection;
+      runtime.data.globe = next.globe;
+      const semanticSource = runtime.map?.getSource?.('artemis-semantic');
+      if (semanticSource?.setData) semanticSource.setData(globePrimitivesToGeoJson(next.globe));
+    } else {
+      runtime.activeLifePathViewId = 'life-path-empty-calendar-window';
+      runtime.activeTemporalPresetId = runtime.activeLifePathViewId;
+    }
+    runtime.data.state.temporal_selection = selectedLifePathTemporalExtent();
     renderSharedState(runtime.data);
     setText('temporal-map-status', lifePathStatus());
     renderLifePathSequence();
     updateLifePathMarkers();
+    updateLifePathConnectors();
 
-    const visible = visibleLifePathSteps();
-    if (!visible.some((stop) => stop.stop_id === runtime.selectedStopId)) {
+    if (!visible.some((presence) => presence.presence_id === runtime.selectedPresenceId)) {
       const fallback = visible[visible.length - 1];
-      if (fallback) selectLifePathStop(fallback.stop_id, { fly: false, syncUrl: false });
-    } else if (runtime.selectedStopId) {
-      selectLifePathStop(runtime.selectedStopId, { fly: false, syncUrl: false });
+      if (fallback) {
+        selectLifePathPresence(fallback.presence_id, { fly: false, syncUrl: false });
+      } else {
+        runtime.selectedPresenceId = null;
+        clearCanonicalSelection('No documented presence overlaps this calendar window.', { syncUrl: false });
+      }
+    } else if (runtime.selectedPresenceId) {
+      selectLifePathPresence(runtime.selectedPresenceId, { fly: false, syncUrl: false });
     }
 
     document.documentElement.dataset.artemisPathMode = runtime.lifePathMode;
-    document.documentElement.dataset.artemisPathStart = String(runtime.lifePathStartIndex);
-    document.documentElement.dataset.artemisPathEnd = String(runtime.lifePathEndIndex);
-    document.documentElement.dataset.artemisVisibleStopCount = String(visible.length);
-    if (options.focus !== false) focusVisibleLifePathStops();
+    document.documentElement.dataset.artemisPathStart = formatAxisValue(runtime.lifePathStartIndex);
+    document.documentElement.dataset.artemisPathEnd = formatAxisValue(runtime.lifePathEndIndex);
+    document.documentElement.dataset.artemisVisiblePresenceCount = String(visible.length);
+    if (options.focus !== false) focusVisibleLifePathPresences();
     if (options.syncUrl !== false) syncUrlState();
     return next;
   }
 
   function syncLifePathControls() {
-    const steps = runtime.data?.lifePath?.steps || [];
-    const last = Math.max(0, steps.length - 1);
-    for (const id of ['range-start', 'range-end', 'journey-start', 'journey-current']) {
+    const axisValues = lifePathAxisValues();
+    const last = Math.max(0, axisValues.length - 1);
+    for (const id of ['range-start', 'range-end', 'scrub-start', 'scrub-current']) {
       const input = byId(id);
       if (input) input.max = String(last);
     }
     if (byId('range-start')) byId('range-start').value = String(runtime.lifePathStartIndex);
     if (byId('range-end')) byId('range-end').value = String(runtime.lifePathEndIndex);
-    if (byId('journey-start')) byId('journey-start').value = String(runtime.lifePathStartIndex);
-    if (byId('journey-current')) byId('journey-current').value = String(runtime.lifePathEndIndex);
-    const startLabel = steps[runtime.lifePathStartIndex] ? formatStopTime(steps[runtime.lifePathStartIndex]) : '—';
-    const endLabel = steps[runtime.lifePathEndIndex] ? formatStopTime(steps[runtime.lifePathEndIndex]) : '—';
+    if (byId('scrub-start')) byId('scrub-start').value = String(runtime.lifePathStartIndex);
+    if (byId('scrub-current')) byId('scrub-current').value = String(runtime.lifePathEndIndex);
+    const startLabel = formatAxisValue(runtime.lifePathStartIndex);
+    const endLabel = formatAxisValue(runtime.lifePathEndIndex);
     setText('range-start-value', startLabel);
     setText('range-end-value', endLabel);
-    setText('journey-start-value', startLabel);
-    setText('journey-current-value', endLabel);
+    setText('scrub-start-value', startLabel);
+    setText('scrub-current-value', endLabel);
     byId('range-start')?.setAttribute('aria-valuetext', startLabel);
     byId('range-end')?.setAttribute('aria-valuetext', endLabel);
-    byId('journey-start')?.setAttribute('aria-valuetext', startLabel);
-    byId('journey-current')?.setAttribute('aria-valuetext', endLabel);
+    byId('scrub-start')?.setAttribute('aria-valuetext', startLabel);
+    byId('scrub-current')?.setAttribute('aria-valuetext', endLabel);
     byId('mode-range')?.setAttribute('aria-pressed', String(runtime.lifePathMode === 'range'));
-    byId('mode-journey')?.setAttribute('aria-pressed', String(runtime.lifePathMode === 'journey'));
+    byId('mode-scrub')?.setAttribute('aria-pressed', String(runtime.lifePathMode === 'scrub'));
     if (byId('range-controls')) byId('range-controls').hidden = runtime.lifePathMode !== 'range';
-    if (byId('journey-controls')) byId('journey-controls').hidden = runtime.lifePathMode !== 'journey';
+    if (byId('scrub-controls')) byId('scrub-controls').hidden = runtime.lifePathMode !== 'scrub';
   }
 
   function setLifePathMode(mode) {
-    runtime.lifePathMode = mode === 'journey' ? 'journey' : 'range';
+    runtime.lifePathMode = mode === 'scrub' ? 'scrub' : 'range';
     syncLifePathControls();
     applyLifePathView();
   }
@@ -1147,7 +1219,7 @@
       applyLifePathView();
     };
     byId('mode-range')?.addEventListener('click', () => setLifePathMode('range'));
-    byId('mode-journey')?.addEventListener('click', () => setLifePathMode('journey'));
+    byId('mode-scrub')?.addEventListener('click', () => setLifePathMode('scrub'));
     byId('range-start')?.addEventListener('input', (event) => {
       const start = Number(event.currentTarget.value);
       update(start, Math.max(start, runtime.lifePathEndIndex));
@@ -1156,52 +1228,69 @@
       const end = Number(event.currentTarget.value);
       update(Math.min(runtime.lifePathStartIndex, end), end);
     });
-    byId('journey-start')?.addEventListener('input', (event) => {
+    byId('scrub-start')?.addEventListener('input', (event) => {
       const start = Number(event.currentTarget.value);
       update(start, Math.max(start, runtime.lifePathEndIndex));
     });
-    byId('journey-current')?.addEventListener('input', (event) => {
+    byId('scrub-current')?.addEventListener('input', (event) => {
       const current = Number(event.currentTarget.value);
       update(runtime.lifePathStartIndex, Math.max(runtime.lifePathStartIndex, current));
     });
   }
 
   function addLifePathMarkers(map) {
-    for (const stop of runtime.data?.lifePath?.steps || []) {
+    map.addSource('life-path-chronology', { type: 'geojson', data: lifePathConnectorGeoJson() });
+    map.addLayer({
+      id: 'life-path-chronology-line',
+      type: 'line',
+      source: 'life-path-chronology',
+      paint: {
+        'line-color': '#a8bed0',
+        'line-width': 2.2,
+        'line-dasharray': [1.5, 2.2],
+        'line-opacity': 0.82
+      }
+    });
+    for (const presence of runtime.data?.lifePath?.presences || []) {
       const markerButton = document.createElement('button');
       markerButton.type = 'button';
       markerButton.className = 'life-path-marker';
-      markerButton.textContent = String(stop.index + 1);
-      markerButton.title = `${stop.place_label} · ${formatStopTime(stop)}`;
-      markerButton.setAttribute('aria-label', `Select ${stop.place_label}, ${formatStopTime(stop)}`);
+      markerButton.textContent = String(presence.index + 1);
+      markerButton.title = `${presence.place_label} · ${formatPresenceTime(presence)}`;
+      markerButton.setAttribute('aria-label', `Select ${presence.place_label}, ${formatPresenceTime(presence)}`);
       markerButton.setAttribute('aria-pressed', 'false');
-      markerButton.addEventListener('click', () => selectLifePathStop(stop.stop_id, { fly: true, focus: true }));
+      markerButton.addEventListener('click', () => selectLifePathPresence(
+        presence.presence_id, { fly: true, focus: true }
+      ));
       const marker = new maplibregl.Marker({ element: markerButton, anchor: 'center' })
-        .setLngLat(stop.coordinates)
+        .setLngLat(presence.coordinates)
         .addTo(map);
-      runtime.lifePathMarkers.set(stop.stop_id, marker);
+      runtime.lifePathMarkers.set(presence.presence_id, marker);
     }
     updateLifePathMarkers();
+    updateLifePathConnectors();
   }
 
   function restoreLifePathStateFromUrl(options = {}) {
-    const steps = runtime.data?.lifePath?.steps || [];
-    if (!steps.length) return;
+    const axisValues = lifePathAxisValues();
+    if (!axisValues.length) return;
     const params = new URLSearchParams(window.location.search);
     const indexFor = (value, fallback) => {
-      const index = steps.findIndex((stop) => stop.stop_id === value);
+      const index = axisValues.indexOf(value);
       return index >= 0 ? index : fallback;
     };
-    runtime.lifePathMode = params.get('mode') === 'journey' ? 'journey' : 'range';
+    runtime.lifePathMode = params.get('mode') === 'scrub' ? 'scrub' : 'range';
     runtime.lifePathStartIndex = indexFor(params.get('start'), 0);
-    runtime.lifePathEndIndex = indexFor(params.get('end'), steps.length - 1);
+    runtime.lifePathEndIndex = indexFor(params.get('end'), axisValues.length - 1);
     if (runtime.lifePathStartIndex > runtime.lifePathEndIndex) {
       runtime.lifePathEndIndex = runtime.lifePathStartIndex;
     }
     syncLifePathControls();
     applyLifePathView({ focus: options.focus !== false, syncUrl: false });
-    const requestedStop = params.get('stop');
-    if (requestedStop) selectLifePathStop(requestedStop, { fly: false, syncUrl: false });
+    const requestedPresence = params.get('presence');
+    if (requestedPresence) selectLifePathPresence(
+      requestedPresence, { fly: false, syncUrl: false }
+    );
     syncUrlState();
   }
 
@@ -1230,11 +1319,13 @@
     if (card) {
       card.classList.add('empty');
       card.removeAttribute('data-item-id');
+      card.removeAttribute('data-presence-id');
       card.textContent = message;
     }
     for (const row of document.querySelectorAll('.unresolved-item[aria-pressed="true"]')) {
       row.setAttribute('aria-pressed', 'false');
     }
+    if (runtime.data?.lifePath?.available) syncLifePathSelectionControls();
     if (options.syncUrl !== false) syncUrlState();
   }
 
@@ -1487,9 +1578,9 @@
     runtime.knowledgeByItem = new Map((knowledge.records || []).map((record) => [record.item_id, record]));
     runtime.selectItem = (itemId) => selectKnowledgeItem(itemId, { focus: true });
     runtime.selectView = (presetId, layerRefs) => applySemanticView(presetId, layerRefs || runtime.activeLayerRefs);
-    runtime.selectStop = (stopId) => selectLifePathStop(stopId, { focus: true });
+    runtime.selectPresence = (presenceId) => selectLifePathPresence(presenceId, { focus: true });
     runtime.selectLifePathRange = (startIndex, endIndex, mode = runtime.lifePathMode) => {
-      runtime.lifePathMode = mode === 'journey' ? 'journey' : 'range';
+      runtime.lifePathMode = mode === 'scrub' ? 'scrub' : 'range';
       runtime.lifePathStartIndex = Math.min(startIndex, endIndex);
       runtime.lifePathEndIndex = Math.max(startIndex, endIndex);
       syncLifePathControls();
@@ -1547,7 +1638,7 @@
       configureTerrainPath(map, assets);
       bindPicking(map);
       bindControls(map);
-      if (lifePath.available) focusVisibleLifePathStops();
+      if (lifePath.available) focusVisibleLifePathPresences();
       collectAcceptanceEvidence(acceptanceProfiles);
       window.addEventListener('resize', () => collectAcceptanceEvidence(acceptanceProfiles));
 

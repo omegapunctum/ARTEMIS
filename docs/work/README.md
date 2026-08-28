@@ -20,7 +20,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` | #355 deterministic desktop/tablet/hosted-mobile browser evidence and explicit limitations | replaced by normal-browser/real-device/assistive-technology evidence or archived with Gate D |
 | `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only after the early value decision |
 | `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with Gate D |
-| `2026-08-28_LEONARDO_LIFE_PATH_V0.md` | #355 narrowed default Globe presentation: range/journey modes, interactive source-bound stops and progressive disclosure | one understandable Leonardo path loop ready for user review |
+| `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 revised object/time/path contract: calendar Range/Scrub, canonical presences and non-route chronology connectors | one understandable Leonardo path loop ready for user review |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
 | `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
 

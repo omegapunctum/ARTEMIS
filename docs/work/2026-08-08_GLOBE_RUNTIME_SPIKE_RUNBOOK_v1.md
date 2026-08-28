@@ -10,7 +10,7 @@
 
 ## 1. Purpose
 
-This runbook reproduces and manually verifies the bounded #343 3D Earth prototype and the narrowed `Leonardo Life Path v0` presentation over the frozen Leonardo Gate C package for #355.
+This runbook reproduces and manually verifies the bounded #343 3D Earth prototype and the revised calendar-based `Leonardo Life Path` interaction scaffold over the frozen Leonardo Gate C package for #355.
 
 The default build adapts the frozen, non-public `fixtures/world_slices/leonardo_romagna_1502/v1/` package into a read-only World Model-compatible view, then consumes the shared Explorer State / Render Projection / Geospatial Asset contracts. It preserves draft/rejected Claim states, withheld geometry, unresolved routes, `promotion_allowed=false`, and the accepted #377 read-only runtime boundary.
 
@@ -37,7 +37,7 @@ The output directory must contain:
 - `globe-projection.json`;
 - `explorer-state.json`;
 - `explorer-views.json` (precomputed time/layer Explorer State + projection packages);
-- `life-path.json` (four source-bound stops, all permitted Range/Journey views and null route gaps);
+- `life-path.json` (four source-bound presences, calendar axis, canonical segment bindings, null route gaps and presentation-only chronology policy);
 - `geospatial-assets.json`;
 - `earth-context.geojson` (bundled Natural Earth 1:110m Land v4.0.0 present-day context);
 - `capability-path.geojson`;
@@ -83,11 +83,11 @@ On successful load:
 - the canvas is an interactive globe, not a flat public compatibility map;
 - the header says `ARTEMIS · Leonardo Life Path`; a local build is labelled as a generated review artifact, while `--public-preview` is explicitly labelled as a public experimental R&D surface;
 - four numbered markers represent Rimini, Cesena, Cesenatico and Imola using present-day named-settlement reference coordinates;
-- `Range` shows every supported stop between the selected start and end;
-- `Journey` progressively reveals accumulated stops from the selected start through the current step;
-- changing either control switches to a precomputed Explorer State / Render Projection view rather than interpreting new historical dates in the browser;
+- `Range` shows every documented presence whose temporal extent overlaps the selected calendar interval;
+- `Scrub` progressively reveals accumulated presences from the selected calendar start through current time;
+- changing either control selects the matching precomputed Explorer State / Render Projection closure while the browser preserves the exact calendar selection;
 - selecting a marker or sequence entry opens a compact place/date/activity card; duration, exact-position and route limitations remain visible before optional source/uncertainty details;
-- no line connects the four stops because all three inter-stop routes remain unknown with null geometry;
+- dashed links connect currently visible consecutive presences as presentation-only chronology; all three historical routes remain unknown with null geometry;
 - layer combinations, Region alternatives and renderer diagnostics remain available in generated evidence but are not default user controls;
 - real generalized Natural Earth land is visible only as `present_day_context`, carries no World Model identity and is not presented as valid 1502 coastline geometry;
 - terrain status states that the default terrain fixture is synthetic/no live DEM;
@@ -95,14 +95,14 @@ On successful load:
 
 ## 5. Interaction and picking acceptance
 
-In `Range`, move the start and end controls. Then switch to `Journey`, choose a start and move the current step.
+In `Range`, move the start and end controls. Then switch to `Scrub`, choose a calendar start and move current time.
 
 Expected result:
 
-- `Range` displays exactly the inclusive stop interval;
-- `Journey` displays exactly the accumulated stops from start through current;
+- `Range` displays exactly the presences overlapping the calendar interval;
+- `Scrub` displays exactly the accumulated presences from start through current time;
 - the numbered sequence and globe markers update together;
-- the Explorer State, projection and URL update with the visible stop set;
+- the Explorer State, projection and URL update with calendar values and the visible presence set;
 - selecting an out-of-range sequence entry is prevented;
 - reduced-motion preference removes scripted camera animation.
 
@@ -127,10 +127,10 @@ claim that the marker is Leonardo's exact historical coordinate.
 The spike passes only if all are true:
 
 1. all three `trajectory-leonardo-romagna-1502` inferred gaps remain unresolved;
-2. no line connects the four named-place presence contexts as historical movement;
+2. every dashed connector is explicitly presentation-only chronology and is never exposed as historical movement;
 3. both Region reconstruction alternatives remain separately inspectable with null geometry and no silent winner;
 4. all 22 Claims retain their exact `draft` or `rejected` Gate C review state;
-5. the frozen package boundary remains 8 August–31 December 1502, while life-path stops preserve only their source-native day/month precision without invented intermediate dates;
+5. the frozen package boundary remains 8 August–31 December 1502, while life-path presences preserve only their source-native day/month precision without invented intermediate dates;
 6. corpus/geometry absence is not presented as historical absence.
 
 ## 7. Terrain acceptance
@@ -198,8 +198,8 @@ It must not silently fall back to `data/features.geojson`, `/api/*`, or the curr
 6. static HTTP serving smoke test;
 7. **headless Chrome execution of the generated artifact** with SwiftShader/WebGL at pinned desktop (`1440×900`), tablet (`1024×768`) and hosted-mobile (`500×844`, Chrome headless minimum) browser-window profiles, while recording each actual CSS viewport;
 8. layout-mode, horizontal-overflow, globe-size, overlay-collision, interactive-control accessible-name, 24 CSS px target-size and mobile reduced-motion assertions defined by `acceptance-profiles.json`;
-9. assertions that the browser DOM contains Leonardo Life Path/Explorer State, four source-bound stops, a selected concise activity, source/uncertainty access, honest frozen-candidate status, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
-10. URL-restorable Range/Journey state, inclusive visible-stop count and canonical stop selection checks;
+9. assertions that the browser DOM contains Leonardo Life Path/Explorer State, four source-bound presences, a selected concise activity, source/uncertainty access, honest frozen-candidate status, synthetic terrain status, MapLibre 5.24 engine status and a real `maplibregl-canvas` created by the runtime;
+10. URL-restorable Range/Scrub calendar state, visible-presence count and canonical presence selection checks;
 11. upload of the generated runtime, three screenshots, DOM snapshots and `artemis-globe-browser-evidence.json` for inspection.
 
 The headless gate proves that the pinned MapLibre engine executes in a browser and reaches its map `load` path with the generated semantic data across the three deterministic viewport profiles. It does not replace human visual/interaction review or a complete WCAG audit, and it intentionally does not fail on hosted-runner `idle`/rAF timing because those values are not a production SLO.

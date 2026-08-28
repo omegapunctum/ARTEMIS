@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "presentation_id": "leonardo-romagna-source-presences-v1",
+  "subject_ref": "entity-leonardo-da-vinci",
+  "trajectory_ref": "trajectory-leonardo-romagna-1502",
+  "scope_status": "interaction_scaffold_not_complete_life",
+  "presence_bindings": [
+    {
+      "presence_id": "presence-rimini-1502-08-08",
+      "place_ref": "place-rimini",
+      "event_ref": "event-leonardo-rimini-note",
+      "trajectory_segment_ref": "segment-rimini-presence"
+    },
+    {
+      "presence_id": "presence-cesena-1502-08-10",
+      "place_ref": "place-cesena",
+      "event_ref": "event-leonardo-cesena-survey",
+      "trajectory_segment_ref": "segment-cesena-presence"
+    },
+    {
+      "presence_id": "presence-cesenatico-1502-09-06",
+      "place_ref": "place-cesenatico",
+      "event_ref": "event-leonardo-cesenatico-port-note",
+      "trajectory_segment_ref": "segment-cesenatico-presence"
+    },
+    {
+      "presence_id": "presence-imola-autumn-1502",
+      "place_ref": "place-imola",
+      "event_ref": "event-leonardo-imola-map-context",
+      "trajectory_segment_ref": "segment-imola-presence"
+    }
+  ],
+  "transition_bindings": [
+    {
+      "transition_id": "transition-rimini-cesena",
+      "from_presence_ref": "presence-rimini-1502-08-08",
+      "to_presence_ref": "presence-cesena-1502-08-10",
+      "trajectory_segment_ref": "segment-rimini-cesena-gap"
+    },
+    {
+      "transition_id": "transition-cesena-cesenatico",
+      "from_presence_ref": "presence-cesena-1502-08-10",
+      "to_presence_ref": "presence-cesenatico-1502-09-06",
+      "trajectory_segment_ref": "segment-cesena-cesenatico-gap"
+    },
+    {
+      "transition_id": "transition-cesenatico-imola",
+      "from_presence_ref": "presence-cesenatico-1502-09-06",
+      "to_presence_ref": "presence-imola-autumn-1502",
+      "trajectory_segment_ref": "segment-cesenatico-imola-gap"
+    }
+  ]
+}
