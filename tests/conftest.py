@@ -3,8 +3,6 @@ from pathlib import Path
 
 import pytest
 
-from app.security.rate_limit import login_block_store, login_failure_store, rate_limit_store
-
 
 def _configure_isolated_test_db() -> None:
     if os.getenv("AUTH_DATABASE_URL"):
@@ -22,6 +20,21 @@ _configure_isolated_test_db()
 
 @pytest.fixture(autouse=True)
 def reset_rate_limit_state():
+    try:
+        from app.security.rate_limit import (
+            login_block_store,
+            login_failure_store,
+            rate_limit_store,
+        )
+    except ModuleNotFoundError as exc:
+        # Semantic/Core tests intentionally run without the frozen FastAPI
+        # compatibility stack. Backend-owned tests install requirements.txt
+        # and must still surface any other missing import normally.
+        if exc.name != "fastapi":
+            raise
+        yield
+        return
+
     rate_limit_store.clear()
     login_failure_store.clear()
     login_block_store.clear()

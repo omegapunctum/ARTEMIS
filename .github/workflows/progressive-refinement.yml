@@ -1,29 +1,10 @@
 name: Progressive Refinement Contract
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - ".github/workflows/progressive-refinement.yml"
-      - "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
-      - "docs/CONTENT_GOVERNANCE.md"
-      - "docs/DEVELOPMENT_OPERATING_SYSTEM.md"
-      - "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
-      - "fixtures/world_model/refinement/v1/**"
-      - "scripts/validate_progressive_refinement_fixtures.py"
-      - "tests/test_progressive_refinement_fixtures.py"
-      - "requirements.txt"
-  pull_request:
-    paths:
-      - ".github/workflows/progressive-refinement.yml"
-      - "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
-      - "docs/CONTENT_GOVERNANCE.md"
-      - "docs/DEVELOPMENT_OPERATING_SYSTEM.md"
-      - "docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
-      - "fixtures/world_model/refinement/v1/**"
-      - "scripts/validate_progressive_refinement_fixtures.py"
-      - "tests/test_progressive_refinement_fixtures.py"
-      - "requirements.txt"
+  # Accepted v1 remains reproducible historical evidence. It is intentionally
+  # manual while #392 separates immutable semantics from mutable repository
+  # routing; it is not part of the read-only Leonardo MVP critical path.
+  workflow_dispatch:
 
 jobs:
   validate:

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-08-14",
+  "updated_at": "2026-08-28",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -60,7 +60,7 @@
     ]
   },
   "capability": {
-    "public_runtime": "2d_architecture_atlas_baseline",
+    "public_runtime": "core_landing_globe_primary_atlas_compatibility",
     "globe": "public_r_and_d_preview",
     "world_slice": "gate_c_frozen_non_public"
   },
@@ -81,6 +81,6 @@
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Complete the bounded source-aware Globe experience and record ADVANCE_TO_GATE_E, NARROW or REJECT; only ADVANCE_TO_GATE_E may open Gate E."
+    "condition": "Complete Core Reset, deliver one Leonardo exploration loop, and record an early ITERATE, NARROW or STOP/RETHINK product decision before opening infrastructure."
   }
 }

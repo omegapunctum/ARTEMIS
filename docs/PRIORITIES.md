@@ -1,182 +1,118 @@
-# ARTEMIS — PRIORITIES v6.8
+# ARTEMIS — PRIORITIES v7.0
 
-## Статус
+## Status
 
-- Тип: canonical active priorities.
-- Дата: 2026-08-14.
-- Active cycle: Globe MVP.
+- Type: canonical active priorities.
+- Date: 2026-08-28.
+- Active cycle: Core Reset inside the Globe MVP vertical.
 - Active primary issue: GitHub issue `#355`.
-- Completed recovery foundation: issue `#344` / PR `#351`.
-- Current public baseline and default entrypoint: root 2D MapLibre runtime. `/globe/` is an explicitly labelled public R&D review preview, not a product-ready Globe promotion.
+- Foundation-maintenance incident: issue `#392`, reduced to historical-control isolation.
+- Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-The active product decision is recorded in `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
+## P0 — One working ARTEMIS Core
 
-## P0 — Restore repository truth and parity — COMPLETED
+The only active product question is whether a source-aware spatial-temporal
+configuration helps a user understand Leonardo in context.
 
-### P0.1 Lifecycle recovery
+The load-bearing path is:
 
-- keep PR #338 closed as superseded and issue #331 explicitly `DEFERRED`;
-- preserve #331 as the required gate before documented Relation predicates enter a real World Slice/runtime;
-- correct the incomplete governance merge from PR #354;
-- make canonical owners, agent routing and executable lifecycle guards agree on #355;
-- restore a green Release Discipline Gate.
+`Leonardo sources/manifests → World Model → Explorer State → Render Projection → Globe + inspector`
 
-### P0.2 Cross-renderer semantic parity — COMPLETED / #344 / PR #351
-
-- PR #351 was synchronized with current `main`;
-- selected-object / active-focus fixture drift was repaired against the accepted Explorer State;
-- object identity, time-boundary membership, uncertainty, alternatives, evidence and projection-loss semantics are executable;
-- screenshot/visual regression remains separate from semantic parity;
-- the recovered parity and repository gates passed before merge.
-
-Exit achieved: `main` is green, #344 is closed by the merged parity implementation, and governance describes the evidence actually present.
-
-## P1 — First real Globe World Slice
-
-Freeze one deliberately small, source-aware corpus boundary under #355.
-
-Required content:
-
-- at least one Event, State, Process, Trajectory and temporally changing Region;
-- Claims, EvidenceLinks, locators, uncertainty and alternative reconstructions;
-- explicit coverage, inclusion/exclusion rules and known gaps;
-- geometry provenance and licensing;
-- measured curation/review cost.
-
-The initial candidate is the bounded Leonardo / Life in Context slice delivered through #332, while #355 owns the active cross-cutting vertical.
-
-The former marker `Active Gate C delivery: #332/#360` is superseded. Gate C is completed by a `FREEZE` decision for #332/#360. The non-public Leonardo-in-Romagna boundary covers 8 August–31 December 1502 with institutional source candidates, pinned university-press locators, explicit unknown-route segments, temporal geometry-withheld Region states, known gaps and measured preparation/review cost. Two independent reviews on one Git-bound revision are `READY` with zero unresolved critical/material findings. The Claims and EvidenceLinks remain draft rather than READY historical data; the separate Cesena wall-survey folio Claim remains rejected from the supported set. Gate D is now in progress under #355 and consumes this frozen package without upgrading its historical readiness.
-
-Until #331 is accepted, the slice may expose derived proximity/co-presence only. It must not publish documented encounter, interaction, influence or causal predicates.
-
-## P2 — Source-aware Globe MVP
-
-The Globe is the primary interface-development surface for this cycle.
-
-Completed #377 / PR #378 owns the accepted append-only refinement contract. Gate D may continue to
-read and render the frozen Gate C package, but write/edit/refinement behavior still requires a
-separate implementation authorization. Contract acceptance did not reopen Gate C or change
-`project_state` capability.
-
-Required interaction:
+Required behavior:
 
 - one shared time/interval state;
-- synchronized layers and visible temporal change;
-- canonical selection/picking;
-- Event, State, Process, Trajectory and Region rendering;
-- explicit unresolved routes and alternative reconstructions;
+- synchronized layers and selection;
+- Event, State, Process, Trajectory and Region semantics;
 - source, locator, uncertainty, coverage and projection-loss access;
-- modern terrain/imagery shown as attributed context, not timeless historical truth;
-- desktop/mobile/accessibility and representative performance checks.
+- explicit unknown routes and geometry-withheld alternatives;
+- present-day context clearly separated from historical assertions;
+- URL-restorable exploration without a backend.
 
-Completed Gate D increments:
+The current bounded package remains honest:
 
-- PR #379 consumes the frozen Leonardo package directly through World Model → Explorer State → Render Projection and keeps all historical geometry withheld;
-- PR #380 provides 96 deterministic Explorer views from six source-native temporal presets × 16 semantic-layer combinations, with synchronized timeline, layers, selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior;
-- PR #382 provides pinned bundled Natural Earth 1:110m Land `present_day_context` plus provenance, attribution, temporal-role, licensing, cache and secret policy while terrain remains synthetic/non-live;
-- PR #383 provides desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes; all six triggered workflows passed;
-- PR #385 replaces premature virtual-time screenshots with same-page wall-clock CDP capture, requires non-zero loaded/rendered Natural Earth features and restores legible hosted desktop/tablet/mobile Earth context; all six triggered workflows passed;
-- PR #389 publishes the same generated artifact at `/globe/` as an experimental R&D review preview while preserving root 2D as default/rollback; Gate D remains open;
-- the place-anchor increment resolves Rimini, Cesena, Cesenatico and Imola only as CC0 present-day `named_settlement` reference points, keeps their provenance/uncertainty inspectable and preserves all route/Region geometry gaps.
+- Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte;
+- historical Claims remain draft/rejected;
+- no route or Region geometry is invented;
+- `historical_corpus_ready=false` and `promotion_allowed=false`;
+- four settlement coordinates are present-day source-bound reference anchors only.
 
-Remaining Gate D work:
+## P1 — Reduce the active delivery surface
 
-- normal-browser real desktop and 390 CSS px mobile interaction/visual evidence; hosted 500 px evidence remains non-equivalent to a real-device pass;
-- assistive-technology review and representative non-virtual performance observations; hosted wall-clock metrics remain diagnostic only;
-- one explicit Gate D exit decision.
+Core Reset rules:
 
-The current 2D renderer remains:
+1. Leonardo Globe is the primary product-development surface.
+2. Architecture Atlas is preserved at `/atlas/` as a compatibility baseline, not a second active product.
+3. FastAPI, auth, Redis, drafts, moderation, Research Slices, Stories, Courses and uploads are frozen compatibility code.
+4. Airtable legacy export and the nine empty World Model shadow tables are outside the Core critical path.
+5. Progressive Refinement v1 remains accepted historical evidence, but its repository-wide READY envelope is manual while #392 separates immutable semantics from mutable routing.
+6. The required CI signal is ARTEMIS Core Check. Legacy checks run only when their owned paths change or by manual dispatch.
 
-- the public compatibility baseline;
-- a same-content comparison renderer;
-- a semantic parity target;
-- a rollback path.
+Security fixes and preservation of accepted evidence remain allowed. New backend,
+storage, Airtable, UGC or platform capability requires evidence that the static
+read-only product loop is insufficient.
 
-MapLibre GL JS remains the leading MVP engine. CesiumJS comparison requires a measured blocker in terrain, 3D Tiles, precision, scene complexity or performance.
+## P2 — Validate value before further infrastructure
 
-## P3 — Gate D closeout evidence and one decision
+The next product increment is one complete user journey:
 
-Before Gate D exit:
+1. choose a date or interval;
+2. see Leonardo's local context and simultaneous global context;
+3. select an object;
+4. distinguish what is supported, contextual, uncertain or unresolved;
+5. return to the same state through the URL.
 
-- preserve the reproducible generated review artifact from PRs #379–#385 and the bounded public R&D route from PR #389;
-- preserve source/rights/uncertainty closure for the four place anchors without inventing exact historical positions, routes or boundaries;
-- verify semantic parity on the bounded frozen corpus;
-- collect real-device/browser, accessibility and performance evidence;
-- preserve the completed #382 provider availability/licensing/attribution/cache/security boundary and evaluate any future live provider separately;
-- define rollback and current-truth/release implications;
-- prepare the Gate E task protocol, but do not run participant validation before `ADVANCE_TO_GATE_E`.
+After that increment, run a small observed validation against the same-content
+baseline. Do not wait for a second infrastructure gate before learning from users.
 
-Record exactly one result:
+Minimum decision evidence:
 
-- `ADVANCE_TO_GATE_E`;
+- users can reconstruct the spatial-temporal context;
+- users discover at least one relevant simultaneous event or process;
+- source and uncertainty displays do not cause systematic overclaim;
+- Globe value is not only visual novelty;
+- the curation and review cost remains bounded.
+
+Record one result:
+
+- `ITERATE`;
 - `NARROW`;
-- `REJECT`.
+- `STOP/RETHINK`.
 
-Only `ADVANCE_TO_GATE_E` opens #334 participant evidence work. Promotion from labelled R&D preview to product-ready Globe remains a separate later decision.
+Only `ITERATE` may reopen persistence, editorial storage or broader corpus work.
 
-## Accepted renderer foundations
+## Preserved foundations
 
-Preserved executable architecture evidence:
-
+- #329 / PR #336 — reviewed World Model fixtures;
+- #330 / PR #337 — uncertainty semantics;
 - #339 / PR #346 — renderer-neutral architecture;
 - #340 / PR #347 — Explorer State;
 - #341 / PR #348 — Render Projection;
-- #342 / PR #349 — geospatial asset/provider boundary;
-- #343 / PR #350 — browser-executed MapLibre Globe spike;
-- #344 / PR #351 — cross-renderer semantic parity.
-- #345 / PR #352 — repository/runtime/CI boundary.
+- #342 / PR #349 — geospatial asset boundary;
+- #343 / PR #350 — MapLibre Globe spike;
+- #344 / PR #351 — cross-renderer semantic parity;
+- #345 / PR #352 — repository/runtime boundary;
+- #332/#360 / PR #362 — frozen Leonardo-in-Romagna source boundary.
 
-PR #354 attempted to close the lifecycle but merged only a workflow change and a failing guard, without the declared canonical owner updates. Its intended evidence claim is therefore superseded by the recovery decision above.
+These are technical foundations, not user-value evidence.
 
-## Preserved technical foundations
+## Deferred
 
-- public MapLibre/GeoJSON baseline;
-- reviewed #329 World Model and #330 uncertainty fixtures;
-- one World Model → Explorer State → Render Projection path;
-- UUID/source identity split;
-- Source/Media export and semantic ETL/release gate;
-- Architecture Atlas corpus and Gate A fixtures;
-- mutable ResearchSlice v2 backend compatibility;
-- fail-closed Pages API configuration.
-
-These assets do not prove a public Globe, historical terrain coverage, a real Foundation v3 corpus or user value.
-
-## Deferred and frozen work
-
-Deferred:
-
-- #331 relation predicates, reactivated before documented Relations enter the real slice/runtime;
-- #334 validation work until Gate E; #333 is superseded by the #355 Gate D contour;
-- #371/#373 Airtable historical import and independent mapping review; the merged preflight remains fail-closed with empty tables and `historical_rows_authorized=false`.
-
-Frozen:
-
-- generative AI;
-- automatic causal/counterfactual engine;
-- public production Globe before promotion evidence;
-- universal or photorealistic historical terrain reconstruction;
-- VR/AR;
-- universal corpus;
-- framework/backend/repository rewrite without a measured blocker;
-- product/platform expansion unrelated to #355.
-
-Security, compatibility and critical reliability maintenance remain allowed.
+- #331 documented Relation predicates;
+- #334 formal participant protocol as previously sequenced;
+- #371/#373 Airtable historical import/review;
+- editable Progressive Refinement runtime;
+- generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
+- production backend and dynamic Earth infrastructure.
 
 ## Execution order
 
-1. Preserve the completed governance, Release Discipline and #344 parity foundations.
-2. Freeze and curate the first real bounded World Slice through #332 within #355 — completed/FREEZE.
-3. Preserve the completed #379/#380 frozen-package and synchronized-interaction increments, #389 bounded public R&D route and the source-bound four-place anchor overlay.
-4. Complete normal-browser/physical-device desktop and 390 CSS px mobile, assistive-technology and representative non-virtual performance evidence.
-5. Record exactly one Gate D decision: `ADVANCE_TO_GATE_E`, `NARROW` or `REJECT`.
+1. Merge the Core Reset boundary and restore one trustworthy required check.
+2. Complete one Leonardo Globe user journey.
+3. Observe users and record `ITERATE`, `NARROW` or `STOP/RETHINK`.
+4. Open at most one evidence-backed next branch.
 
 ## Completion rule
 
-A priority closes only with:
-
-- an artifact;
-- relevant test/review evidence;
-- synchronized owner docs and issue lifecycle;
-- honest public/current capability wording;
-- no semantic fork or invented precision;
-- an explicit next dependency or stop decision.
+A change is complete when the core artifact works, source/uncertainty semantics are
+preserved, the relevant core tests pass and the next user-facing question is explicit.
+Routine PRs do not require synchronized edits across historical gate records.

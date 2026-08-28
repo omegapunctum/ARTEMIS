@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_INDEX = ROOT / "index.html"
 PUBLIC_MANIFEST = ROOT / "manifest.json"
 PUBLIC_SERVICE_WORKER = ROOT / "sw.js"
+CORE_LANDING = ROOT / "scripts" / "globe_spike" / "root-index.html"
 GLOBE_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
 GLOBE_RUNTIME = ROOT / "scripts" / "globe_spike" / "runtime.js"
 GLOBE_BUILDER = ROOT / "scripts" / "build_globe_spike.py"
@@ -18,7 +19,7 @@ def _text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_current_public_2d_entrypoint_stays_on_maplibre_4_and_links_preview() -> None:
+def test_architecture_atlas_source_stays_on_maplibre_4_and_links_preview() -> None:
     index = _text(PUBLIC_INDEX)
     assert "maplibre-gl@4.7.1" in index
     assert "maplibre-gl@5.24.0" not in index
@@ -26,6 +27,15 @@ def test_current_public_2d_entrypoint_stays_on_maplibre_4_and_links_preview() ->
     assert "3D Globe · R&amp;D" in index
     assert "scripts/globe_spike" not in index
     assert "build/globe-spike" not in index
+
+
+def test_public_root_landing_routes_globe_primary_and_atlas_compatibility() -> None:
+    landing = _text(CORE_LANDING)
+    assert 'href="./globe/"' in landing
+    assert 'href="./atlas/"' in landing
+    assert "Globe — активный продуктовый контур" in landing
+    assert "исследовательский прототип" in landing
+    assert "maplibre" not in landing.lower()
 
 
 def test_globe_engine_version_is_isolated_to_experimental_template() -> None:
@@ -85,11 +95,23 @@ def test_globe_workflow_uploads_review_artifact_but_never_deploys_pages() -> Non
 
 def test_pages_workflow_builds_bounded_public_globe_preview() -> None:
     workflow = _text(PAGES_WORKFLOW)
+    assert "scripts/globe_spike/root-index.html pages_artifact/index.html" in workflow
+    assert 'pages_artifact/atlas/$file' in workflow
     assert "python scripts/build_globe_spike.py" in workflow
     assert "--public-preview" in workflow
     assert "--output pages_artifact/globe" in workflow
     assert 'metadata["public_pages_entrypoint"] is True' in workflow
     assert "actions/upload-pages-artifact@" in workflow
+
+
+def test_pages_core_path_has_no_backend_or_airtable_dependency() -> None:
+    workflow = _text(PAGES_WORKFLOW)
+    assert "pip install jsonschema==4.25.1 pytest" in workflow
+    assert "pip install -r requirements.txt" not in workflow
+    assert "scripts/release_check.py" not in workflow
+    assert "validate_airtable" not in workflow
+    assert "preflight_migration_check" not in workflow
+    assert "app.main" not in workflow
 
 
 def test_boundary_decision_rejects_premature_apps_or_framework_migration() -> None:
@@ -105,8 +127,9 @@ def test_boundary_decision_rejects_premature_apps_or_framework_migration() -> No
 def test_existing_canonical_structure_already_prohibits_renderer_semantic_forks() -> None:
     structure = _text(PROJECT_STRUCTURE)
     lowered = structure.lower()
-    assert "current `index.html`" in lowered
-    assert "public globe r&d preview" in lowered
+    assert "source `index.html`" in lowered
+    assert "generated core landing" in lowered
+    assert "primary leonardo globe research prototype" in lowered
     assert "second semantic core" not in lowered  # English shortcut must not become an alternate owner label.
     assert "renderer-specific historical data forks" in lowered
 

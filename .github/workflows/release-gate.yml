@@ -1,12 +1,13 @@
-name: Release Discipline Gate
+name: ARTEMIS Core Check
 
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
-  release-gate:
-    name: Structural + semantic release gate
+  artemis-core:
+    name: Leonardo World Slice + Globe runtime
     runs-on: ubuntu-latest
 
     steps:
@@ -20,59 +21,43 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
+      - name: Install Core dependencies
+        run: pip install jsonschema==4.25.1 pytest
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt pytest
-
-      - name: Run migration preflight discipline check
-        env:
-          AUTH_DATABASE_URL: "sqlite:///:memory:"
-        run: python scripts/preflight_migration_check.py
-
-      - name: Run release gate
-        # Cross-artifact structural and semantic publish check; full regression remains separate.
-        run: python scripts/release_check.py
-
-      - name: Validate renderer-neutral Explorer State contract
+      - name: Validate source-aware Core inputs
         run: |
-          python scripts/validate_explorer_state_fixtures.py
-          pytest -q tests/test_explorer_state_fixtures.py
-
-      - name: Validate active Leonardo World Slice scope
-        run: |
-          python scripts/validate_project_state.py
-          pytest -q tests/test_project_state.py
           python scripts/validate_leonardo_world_slice.py
-          pytest -q tests/test_leonardo_world_slice.py
+          python scripts/validate_explorer_state_fixtures.py
+          python scripts/validate_geospatial_assets.py
 
-      - name: Validate Airtable pre-Gate-D shadow curation schema
+      - name: Build the bounded public-preview artifact
         run: |
-          python scripts/validate_airtable_curation_schema.py --require-empty
-          pytest -q \
-            tests/test_airtable_pre_gate_d_contract.py \
-            tests/test_airtable_curation_schema.py
+          python scripts/build_globe_spike.py \
+            --public-preview \
+            --output /tmp/artemis-core-preview
+          python - <<'PY'
+          import json
+          from pathlib import Path
 
-      - name: Validate Leonardo Airtable shadow-import preflight
-        run: |
-          python scripts/validate_airtable_leonardo_shadow_preflight.py
-          python scripts/build_airtable_leonardo_shadow_plan.py
-          python scripts/validate_airtable_leonardo_row_plan_lock.py
-          python scripts/validate_airtable_leonardo_mapping_review.py
-          pytest -q \
-            tests/test_airtable_leonardo_shadow_preflight.py \
-            tests/test_airtable_leonardo_shadow_plan.py \
-            tests/test_airtable_leonardo_row_plan_lock.py \
-            tests/test_airtable_leonardo_mapping_review.py
+          metadata = json.loads(
+              Path("/tmp/artemis-core-preview/build-meta.json").read_text()
+          )
+          assert metadata["semantic_dataset"] == "leonardo_gate_c"
+          assert metadata["backend_required"] is False
+          assert metadata["public_pages_entrypoint"] is True
+          assert metadata["capability_path_is_semantic"] is False
+          PY
 
-      - name: Run concept and repository governance guards
+      - name: Run ARTEMIS Core regression tests
         run: |
           pytest -q \
-            tests/test_concept_lock_contract.py \
-            tests/test_attractor_refinement_contract.py \
-            tests/test_repository_governance_contract.py \
+            tests/test_core_reset_boundary.py \
+            tests/test_explorer_state_fixtures.py \
+            tests/test_geospatial_assets_contract.py \
+            tests/test_globe_repository_boundary.py \
             tests/test_globe_rnd_lifecycle_contract.py \
-            tests/test_pages_runtime_config.py
+            tests/test_globe_runtime_spike.py \
+            tests/test_leonardo_world_slice.py \
+            tests/test_render_projection_contract.py \
+            tests/test_renderer_parity.py \
+            tests/test_uncertainty_fixtures.py
