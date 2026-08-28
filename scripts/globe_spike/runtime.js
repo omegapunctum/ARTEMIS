@@ -1059,7 +1059,6 @@
       const copy = document.createElement('span');
       copy.className = 'stop-copy';
       appendText(copy, 'strong', presence.place_label);
-      appendText(copy, 'span', presence.short_description);
       appendText(button, 'span', formatPresenceTime(presence), 'stop-date');
       button.insertBefore(copy, button.lastElementChild);
       button.addEventListener('click', () => selectLifePathPresence(

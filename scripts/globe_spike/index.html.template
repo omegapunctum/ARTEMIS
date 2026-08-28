@@ -69,16 +69,16 @@
         <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
       </section>
 
-      <section class="stop-sequence-section" aria-labelledby="stop-sequence-title">
-        <h2 id="stop-sequence-title">Documented places</h2>
-        <div id="path-sequence" class="path-sequence" role="list"></div>
-        <p class="route-note"><span class="route-swatch" aria-hidden="true"></span>Dashed links show chronology only. Exact routes remain unknown.</p>
-      </section>
-
       <section class="selection-section" aria-labelledby="selection-title">
         <span class="eyebrow">Selected presence</span>
         <h2 id="selection-title">Place details</h2>
         <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">Choose a numbered place on the globe or in the list.</div>
+      </section>
+
+      <section class="stop-sequence-section" aria-labelledby="stop-sequence-title">
+        <h2 id="stop-sequence-title">Documented places</h2>
+        <div id="path-sequence" class="path-sequence" role="list"></div>
+        <p class="route-note"><span class="route-swatch" aria-hidden="true"></span>Dashed links show chronology only. Exact routes remain unknown.</p>
       </section>
 
       <details id="prototype-details" class="prototype-details">

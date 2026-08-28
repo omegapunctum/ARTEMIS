@@ -631,6 +631,7 @@ def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
     assert 'id="mode-scrub"' in html_source
     assert 'id="layer-controls"' not in html_source
     assert 'role="status" aria-live="polite"' in html_source
+    assert html_source.index('id="selection-card"') < html_source.index('id="path-sequence"')
     assert "applySemanticView" in runtime_source
     assert "runtime.viewByKey.get" in runtime_source
     assert "semanticSource.setData(globePrimitivesToGeoJson(next.globe))" in runtime_source
