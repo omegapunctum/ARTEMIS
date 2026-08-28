@@ -41,7 +41,7 @@ def test_public_root_landing_routes_globe_primary_and_atlas_compatibility() -> N
 def test_globe_engine_version_is_isolated_to_experimental_template() -> None:
     template = _text(GLOBE_TEMPLATE)
     assert "maplibre-gl@5.24.0" in template
-    assert "ARTEMIS Globe R&D Spike" in template
+    assert "ARTEMIS · Leonardo Life Path" in template
     assert "{{PUBLIC_PREVIEW_STATUS}}" in template
 
 

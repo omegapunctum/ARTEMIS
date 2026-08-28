@@ -73,7 +73,7 @@ jobs:
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           sleep 1
-          curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS Globe R&D Spike"
+          curl -fsS http://127.0.0.1:8123/ | grep -F "ARTEMIS · Leonardo Life Path"
           curl -fsS http://127.0.0.1:8123/build-meta.json | python -m json.tool >/dev/null
           curl -fsS http://127.0.0.1:8123/explorer-views.json | python -m json.tool >/dev/null
           curl -fsS http://127.0.0.1:8123/knowledge-index.json | python -m json.tool >/dev/null
@@ -107,7 +107,7 @@ jobs:
             "tablet:1024:768:tablet:false"
             "mobile:500:844:mobile:true"
           )
-          PROFILE_URL='http://127.0.0.1:8124/?view=slice&time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey'
+          PROFILE_URL='http://127.0.0.1:8124/?mode=range&start=stop-rimini-1502-08-08&end=stop-imola-autumn-1502&stop=stop-cesena-1502-08-10'
 
           for SPEC in "${PROFILE_SPECS[@]}"; do
             IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"
@@ -238,15 +238,17 @@ jobs:
           )
           PY
 
-          # Preserve the original semantic and source-chain smoke assertions on the
-          # desktop profile while the new profile loop checks layout/accessibility.
+          # Preserve semantic/source closure while checking the narrowed life-path UI.
           DESKTOP_DOM=/tmp/artemis-globe-browser-desktop-dom.html
           grep -F "explorer-state-leonardo-romagna-1502-gate-d" "$DESKTOP_DOM"
-          grep -F "uncertainty-trajectory-route-gaps" "$DESKTOP_DOM"
-          grep -F "Manuscript L folio 46v" "$DESKTOP_DOM"
-          grep -F "Cronologia vinciana" "$DESKTOP_DOM"
+          grep -F "Leonardo Life Path" "$DESKTOP_DOM"
+          grep -F 'data-artemis-visible-stop-count="4"' "$DESKTOP_DOM"
+          grep -F "Leonardo documented in the Cesena survey context" "$DESKTOP_DOM"
+          grep -F "Route from the previous stop is unknown" "$DESKTOP_DOM"
+          grep -F "exact historical position unknown" "$DESKTOP_DOM"
+          grep -F "Sources and uncertainty" "$DESKTOP_DOM"
           grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" "$DESKTOP_DOM"
-          grep -F "Terrain: capability path ready" "$DESKTOP_DOM"
+          grep -F "Terrain: adapter ready" "$DESKTOP_DOM"
           grep -F 'id="startup-ms"' "$DESKTOP_DOM"
           grep -F 'id="frame-sample"' "$DESKTOP_DOM"
 
@@ -255,7 +257,7 @@ jobs:
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
             --dump-dom \
-            'http://127.0.0.1:8124/?time=cesena-1502-08-10&layers=layer-leonardo-trajectory,layer-engineering-work&item=rp:event:event-leonardo-cesena-survey' \
+            'http://127.0.0.1:8124/?mode=journey&start=stop-cesena-1502-08-10&end=stop-cesenatico-1502-09-06&stop=stop-cesena-1502-08-10' \
             >/tmp/artemis-globe-interaction-dom.html \
             2>/tmp/artemis-globe-interaction-browser.log
           if grep -Fq "ARTEMIS Globe spike failed:" /tmp/artemis-globe-interaction-dom.html; then
@@ -263,10 +265,12 @@ jobs:
             cat /tmp/artemis-globe-interaction-browser.log >&2 || true
             exit 1
           fi
-          grep -F 'data-artemis-temporal-preset="cesena-1502-08-10"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-layer-count="2"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-mode="journey"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-start="1"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-end="2"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-visible-stop-count="2"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'event-leonardo-cesena-survey' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'Cesena source date' /tmp/artemis-globe-interaction-dom.html
+          grep -F '1502-08-10' /tmp/artemis-globe-interaction-dom.html
 
       - name: Upload generated Globe artifact
         uses: actions/upload-artifact@v4

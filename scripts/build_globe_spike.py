@@ -55,6 +55,7 @@ REQUIRED_OUTPUT_FILES = {
     "engine-evaluation.json",
     "acceptance-profiles.json",
     "knowledge-index.json",
+    "life-path.json",
     "build-meta.json",
     "README.txt",
 }
@@ -125,6 +126,33 @@ LEONARDO_TEMPORAL_PRESETS = (
             "precision": "month",
             "calendar": "proleptic_gregorian",
         },
+    },
+)
+
+LEONARDO_LIFE_PATH_STOPS = (
+    {
+        "stop_id": "stop-rimini-1502-08-08",
+        "place_ref": "place-rimini",
+        "event_ref": "event-leonardo-rimini-note",
+        "presence_segment_ref": "segment-rimini-presence",
+    },
+    {
+        "stop_id": "stop-cesena-1502-08-10",
+        "place_ref": "place-cesena",
+        "event_ref": "event-leonardo-cesena-survey",
+        "presence_segment_ref": "segment-cesena-presence",
+    },
+    {
+        "stop_id": "stop-cesenatico-1502-09-06",
+        "place_ref": "place-cesenatico",
+        "event_ref": "event-leonardo-cesenatico-port-note",
+        "presence_segment_ref": "segment-cesenatico-presence",
+    },
+    {
+        "stop_id": "stop-imola-autumn-1502",
+        "place_ref": "place-imola",
+        "event_ref": "event-leonardo-imola-map-context",
+        "presence_segment_ref": "segment-imola-presence",
     },
 )
 
@@ -653,6 +681,185 @@ def _build_explorer_views(
     }
 
 
+def _build_life_path_presentation(
+    *,
+    world: dict[str, Any],
+    base_state: dict[str, Any],
+    base_projection: dict[str, Any],
+    projection_schema: dict[str, Any],
+    dataset: str,
+) -> dict[str, Any]:
+    """Build the deterministic, presentation-only Leonardo stop sequence."""
+
+    if dataset != DEFAULT_DATASET:
+        return {
+            "schema_version": "1.0.0",
+            "path_id": "life-path-unavailable-for-contract-fixture",
+            "available": False,
+            "steps": [],
+            "views": [],
+        }
+
+    events = _index_by_id(world.get("events", []), label="events")
+    entities = _index_by_id(world.get("entities", []), label="entities")
+    trajectories = _index_by_id(world.get("trajectories", []), label="trajectories")
+    trajectory = trajectories.get("trajectory-leonardo-romagna-1502")
+    if trajectory is None:
+        raise SpikeBuildError("Leonardo life path lost its canonical Trajectory")
+    segments = {
+        str(segment.get("id")): segment
+        for segment in trajectory.get("segments", [])
+        if segment.get("id")
+    }
+    geometries = {
+        str(geometry.get("owner_ref")): geometry
+        for geometry in base_projection.get("geometries", [])
+        if geometry.get("owner_ref")
+    }
+    projection_item_ids = {
+        str(item.get("item_id"))
+        for item in base_projection.get("items", [])
+        if item.get("item_id")
+    }
+
+    steps: list[dict[str, Any]] = []
+    for index, binding in enumerate(LEONARDO_LIFE_PATH_STOPS):
+        event = events.get(binding["event_ref"])
+        place = entities.get(binding["place_ref"])
+        segment = segments.get(binding["presence_segment_ref"])
+        geometry = geometries.get(binding["place_ref"])
+        if event is None or place is None or segment is None or geometry is None:
+            raise SpikeBuildError(
+                f"life-path stop closure failed for {binding['stop_id']}"
+            )
+        if segment.get("segment_kind") != "presence":
+            raise SpikeBuildError("life-path stop must bind a presence segment")
+        spatial = segment.get("spatial_extent") or {}
+        if spatial.get("place_ref") != binding["place_ref"]:
+            raise SpikeBuildError("life-path presence segment/place binding drifted")
+        if geometry.get("origin_kind") != "place_reference_anchor":
+            raise SpikeBuildError("life-path stop escaped place-reference geometry")
+        if geometry.get("spatial_precision") != "named_settlement":
+            raise SpikeBuildError("life-path stop lost named-settlement precision")
+        coordinates = geometry.get("geometry", {}).get("coordinates")
+        if geometry.get("geometry", {}).get("type") != "Point" or not coordinates:
+            raise SpikeBuildError("life-path stop must resolve to one anchor Point")
+
+        event_item_id = f"rp:event:{binding['event_ref']}"
+        presence_item_id = (
+            "rp:trajectory_segment:trajectory-leonardo-romagna-1502:"
+            f"{binding['presence_segment_ref']}"
+        )
+        if {event_item_id, presence_item_id} - projection_item_ids:
+            raise SpikeBuildError("life-path stop escaped the canonical projection")
+
+        temporal = copy.deepcopy(event.get("temporal_extent") or {})
+        if not temporal.get("start") or not temporal.get("end"):
+            raise SpikeBuildError("life-path stop requires source-bound temporal values")
+        steps.append(
+            {
+                "index": index,
+                **copy.deepcopy(binding),
+                "place_label": place.get("label") or binding["place_ref"],
+                "activity_label": event.get("label") or binding["event_ref"],
+                "temporal": temporal,
+                "coordinates": copy.deepcopy(coordinates),
+                "coordinate_role": "present_day_settlement_reference",
+                "historical_location_precision": (
+                    "exact_position_within_named_settlement_unknown"
+                ),
+                "duration_status": "not_established_in_current_corpus",
+                "event_item_id": event_item_id,
+                "presence_item_id": presence_item_id,
+                "route_from_previous": (
+                    None
+                    if index == 0
+                    else {
+                        "status": "unknown_route",
+                        "geometry": None,
+                        "uncertainty_refs": [
+                            "uncertainty-trajectory-route-gaps"
+                        ],
+                    }
+                ),
+            }
+        )
+
+    all_layers = sorted(layer["id"] for layer in world.get("layers", []))
+    views: list[dict[str, Any]] = []
+    for start_index in range(len(steps)):
+        for end_index in range(start_index, len(steps)):
+            first = steps[start_index]
+            last = steps[end_index]
+            state = copy.deepcopy(base_state)
+            state["state_id"] = (
+                f"{base_state['state_id']}--life-path-{start_index}-{end_index}"
+            )
+            state["active_layer_refs"] = all_layers
+            state["temporal_selection"] = {
+                "mode": (
+                    "instant"
+                    if first["temporal"]["start"] == last["temporal"]["end"]
+                    else "interval"
+                ),
+                "start": first["temporal"]["start"],
+                "end": last["temporal"]["end"],
+                "precision": (
+                    "month"
+                    if start_index == end_index
+                    and len(str(first["temporal"]["start"])) == 7
+                    else "day"
+                    if start_index == end_index
+                    else "range"
+                ),
+                "calendar": "proleptic_gregorian",
+            }
+            projection, _maplibre, globe = build_all(
+                world, state, projection_schema
+            )
+            _assert_gate_d_place_anchor_projection(projection, globe)
+            view_id = f"life-path-{start_index}-{end_index}"
+            views.append(
+                {
+                    "view_id": view_id,
+                    "start_index": start_index,
+                    "end_index": end_index,
+                    "visible_stop_ids": [
+                        step["stop_id"]
+                        for step in steps[start_index : end_index + 1]
+                    ],
+                    "state": state,
+                    "projection": projection,
+                    "globe": globe,
+                }
+            )
+
+    return {
+        "schema_version": "1.0.0",
+        "path_id": "leonardo-romagna-source-stops-v0",
+        "available": True,
+        "presentation_only": True,
+        "subject_ref": "entity-leonardo-da-vinci",
+        "subject_label": entities["entity-leonardo-da-vinci"]["label"],
+        "coverage": {
+            "start": steps[0]["temporal"]["start"],
+            "end": steps[-1]["temporal"]["end"],
+            "scope_label": "Selected source-bound Romagna stops · 1502",
+            "complete_life": False,
+            "step_granularity": "source_native_day_or_month",
+        },
+        "default_mode": "range",
+        "default_view_id": f"life-path-0-{len(steps) - 1}",
+        "route_policy": {
+            "status": "unknown_route",
+            "geometry": None,
+            "map_line_permitted": False,
+        },
+        "steps": steps,
+        "views": views,
+    }
+
+
 def _assert_gate_d_place_anchor_projection(
     projection: dict[str, Any], globe: dict[str, Any]
 ) -> None:
@@ -770,6 +977,13 @@ def build_spike(
             raise SpikeBuildError("Gate C Region alternatives must remain unresolved")
 
     knowledge_index = _build_knowledge_index(world, projection)
+    life_path = _build_life_path_presentation(
+        world=world,
+        base_state=state,
+        base_projection=projection,
+        projection_schema=projection_schema,
+        dataset=dataset,
+    )
     knowledge_item_ids = {
         record["item_id"] for record in knowledge_index["records"]
     }
@@ -820,6 +1034,7 @@ def build_spike(
     _write_json(output / "engine-evaluation.json", evaluation)
     _write_json(output / "acceptance-profiles.json", acceptance_profiles)
     _write_json(output / "knowledge-index.json", knowledge_index)
+    _write_json(output / "life-path.json", life_path)
     copied_source_sha256 = _copy_local_sources(
         world, output, source_root=source_root
     )
@@ -837,6 +1052,12 @@ def build_spike(
         "semantic_item_count": len(projection.get("items", [])),
         "globe_primitive_count": len(globe_adapter.get("primitives", [])),
         "knowledge_record_count": len(knowledge_index["records"]),
+        "life_path_available": life_path.get("available") is True,
+        "life_path_stop_count": len(life_path.get("steps", [])),
+        "life_path_view_count": len(life_path.get("views", [])),
+        "life_path_map_line_permitted": (
+            life_path.get("route_policy", {}).get("map_line_permitted") is True
+        ),
         "explorer_view_count": len(explorer_views["views"]),
         "temporal_preset_count": len(explorer_views["temporal_presets"]),
         "unresolved_item_count": len(
@@ -883,6 +1104,7 @@ def build_spike(
             "globe_projection": _sha(globe_adapter),
             "knowledge_index": _sha(knowledge_index),
             "explorer_views": _sha(explorer_views),
+            "life_path": _sha(life_path),
         },
     }
     _write_json(output / "build-meta.json", metadata)
@@ -904,8 +1126,9 @@ def build_spike(
         "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
         "Its historical Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
         "Four CC0 Wikidata points are present-day named-settlement reference anchors only; exact historical position remains unknown.\n"
-        "Time/layer controls switch only among precomputed Explorer State and Render Projection packages.\n"
-        "The inspector resolves only package-derived canonical references, sources, locators and uncertainty.\n",
+        "Leonardo Life Path offers precomputed Range and Journey views over the four source-bound stops.\n"
+        "No line connects the stops: every inter-stop route remains unknown with null geometry.\n"
+        "The compact stop card resolves only package-derived canonical references, sources, locators and uncertainty.\n",
         encoding="utf-8",
     )
 

@@ -20,8 +20,8 @@ The load-bearing path is:
 
 Required behavior:
 
-- one shared time/interval state;
-- synchronized layers and selection;
+- two synchronized time modes: bounded `Range` and accumulated `Journey`;
+- visible stop selection shared by timeline, map and URL;
 - Event, State, Process, Trajectory and Region semantics;
 - source, locator, uncertainty, coverage and projection-loss access;
 - explicit unknown routes and geometry-withheld alternatives;
@@ -53,21 +53,25 @@ read-only product loop is insufficient.
 
 ## P2 — Validate value before further infrastructure
 
-The next product increment is one complete user journey:
+The next product increment is one complete, deliberately coarse user journey:
 
-1. choose a date or interval;
-2. see Leonardo's local context and simultaneous global context;
-3. select an object;
-4. distinguish what is supported, contextual, uncertain or unresolved;
-5. return to the same state through the URL.
+1. choose a time range and see every supported Leonardo stop inside it;
+2. switch to Journey and reveal the path progressively from a chosen start;
+3. select a stop from the map or sequence;
+4. understand place, source-native date, principal activity and the duration/position/route limits;
+5. open sources and uncertainty only when needed and return to the same state through the URL.
+
+The current validation corpus is intentionally limited to Rimini, Cesena, Cesenatico and Imola in
+1502. Local/global context and broader layers remain later hypotheses; they do not precede proving
+that this primary life-path loop is understandable.
 
 After that increment, run a small observed validation against the same-content
 baseline. Do not wait for a second infrastructure gate before learning from users.
 
 Minimum decision evidence:
 
-- users can reconstruct the spatial-temporal context;
-- users discover at least one relevant simultaneous event or process;
+- users can explain which stops are visible and why the set changes between time modes;
+- users can retrieve the concise meaning and epistemic limits of a selected stop;
 - source and uncertainty displays do not cause systematic overclaim;
 - Globe value is not only visual novelty;
 - the curation and review cost remains bounded.
