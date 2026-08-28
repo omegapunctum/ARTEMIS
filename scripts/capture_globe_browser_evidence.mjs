@@ -147,8 +147,19 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     const initialStatus = document.getElementById('temporal-map-status')?.textContent || '';
     const steps = runtime.data.lifePath.steps;
     if (steps.length !== 4) throw new Error('Leonardo life path does not expose four stops');
-    runtime.selectLifePathRange(1, 2, 'journey');
-    runtime.selectStop(steps[2].stop_id);
+    document.getElementById('mode-journey')?.click();
+    const journeyStart = document.getElementById('journey-start');
+    const journeyCurrent = document.getElementById('journey-current');
+    if (!journeyStart || !journeyCurrent) throw new Error('Journey controls are unavailable');
+    journeyStart.value = '1';
+    journeyStart.dispatchEvent(new Event('input', { bubbles: true }));
+    journeyCurrent.value = '2';
+    journeyCurrent.dispatchEvent(new Event('input', { bubbles: true }));
+    const marker = [...document.querySelectorAll('.life-path-marker')].find(
+      (button) => button.getAttribute('aria-label')?.startsWith('Select Cesenatico,')
+    );
+    if (!marker || marker.hidden) throw new Error('Visible Cesenatico map marker is unavailable');
+    marker.click();
 
     const params = new URLSearchParams(window.location.search);
     return {
