@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical foundation index.
-- Версия: 3.3.
-- Дата: 2026-08-12.
+- Версия: 3.4.
+- Дата: 2026-08-29.
 - Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
 
@@ -72,6 +72,7 @@ North Star не является release promise. Backend code не являет
 
 | Document | Owner role |
 |---|---|
+| `docs/PLATFORM_ARCHITECTURE_DECISION.md` | Canonical web-first platform, delivery/PWA, shared-renderer, scaling and Git/GitHub versus corpus-storage boundary |
 | `docs/DATA_DICTIONARY.md` | Current semantic fields/artifacts |
 | `docs/DATA_CONTRACT.md` | ETL and public data contract |
 | `docs/RESEARCH_SLICE_SPEC.md` | Current mutable runtime compatibility API/schema |
@@ -88,6 +89,7 @@ Accepted:
 
 - Foundation v3: `docs/work/2026-07-28_FOUNDATION_V3_DECISION.md` / PR `#328`.
 - Foundation v3.1 attractor refinement: `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` / issue `#363` / PR `#364`.
+- Platform architecture: `docs/PLATFORM_ARCHITECTURE_DECISION.md` — accepted 2026-08-29; web-first application, PWA as delivery capability, 2D/Globe as shared-core renderers, Git/GitHub separated from future corpus storage.
 - Migration/disposition: `docs/work/2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md`.
 - Validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated until its corresponding product gate is explicitly opened.
 
@@ -116,7 +118,7 @@ runtime/data migration or capability change. Working lifecycle authority remains
 11. `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md` and `docs/DEVELOPMENT_OPERATING_SYSTEM.md`.
 12. `docs/project_state.json`.
 13. `docs/work/README.md`, then active/accepted Foundation records.
-14. Task-specific data/runtime/governance contracts.
+14. Task-specific platform/data/runtime/governance contracts, including `docs/PLATFORM_ARCHITECTURE_DECISION.md` for client platform, renderer, scaling or repository/storage questions.
 
 ## 6. Routing
 
@@ -166,6 +168,12 @@ Primary: `EPISTEMIC_CONTRACT.md`.
 
 Primary: `PROJECT_TRUTH.md`.
 
+### Platform / delivery / renderers / repository storage boundary
+
+Primary: `PLATFORM_ARCHITECTURE_DECISION.md`.
+
+This owner answers whether ARTEMIS is web/PWA/native, how 2D Map and Globe relate, how client loading must scale with corpus growth, and what belongs in Git/GitHub versus future operational corpus storage. It does not override `PROJECT_TRUTH.md` for current capability or `PROJECT_STRUCTURE.md` for concrete repository/runtime layout.
+
 ### Data/runtime/release
 
 Primary: `DATA_DICTIONARY.md`, `DATA_CONTRACT.md`, `RESEARCH_SLICE_SPEC.md`, `PROJECT_STRUCTURE.md`, executable checks.
@@ -205,6 +213,8 @@ A reviewed executable contract cannot be changed merely to make identity-level w
 
 - ARTEMIS is an explorable source-aware spatial-temporal knowledge model about the world;
 - `World Model` is the technical semantic-core name; its reviewed v1.0 executable semantics remain unchanged by Foundation v3.1;
+- ARTEMIS is web-first at the application-platform level; PWA/native wrappers are delivery choices rather than competing product architectures;
+- 2D Map and Globe are presentation renderers over the same semantic core, Explorer State and projection boundary;
 - space/time are mandatory;
 - change objects are first-class;
 - evidence is trust layer;
@@ -271,9 +281,10 @@ Active product/governance decision:
 
 - `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
 
-Accepted foundation decision:
+Accepted foundation decisions:
 
 - `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md`.
+- `docs/PLATFORM_ARCHITECTURE_DECISION.md`.
 
 ## 10. Change control
 
