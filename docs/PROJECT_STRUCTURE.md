@@ -1,8 +1,8 @@
-# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.4
+# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.5
 
 Статус: updated canonical project structure document.
 Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
-Дата обновления: 2026-08-28.
+Дата обновления: 2026-08-29.
 
 ---
 
@@ -26,7 +26,7 @@
 - canonical domain/world-model semantics имеют одного владельца и не дублируются по renderer-веткам;
 - несколько явно зарегистрированных presentation runtimes допустимы, если они используют общий World Model / Explorer State / projection boundary;
 - новый renderer не может создавать скрытый backend, отдельную historical truth или competing data core;
-- experimental runtime может попасть в production artifact только через отдельно зарегистрированный, явно маркированный public R&D preview; случайная публикация запрещена.
+- experimental runtime может попасть в public production artifact только через отдельно зарегистрированный, явно маркированный public R&D preview; случайная публикация запрещена.
 
 ---
 
@@ -64,23 +64,25 @@
 | `data/` | Architecture Atlas compatibility data + export diagnostics | compatibility |
 | `docs/` | canonical / working / audits / archive / reference documentation system | основной |
 | `fixtures/` | versioned executable contract fixtures; not public/runtime data | validation |
-| `icons/` | PWA assets | основной |
+| `icons/` | PWA assets | compatibility |
 | `js/` | Architecture Atlas compatibility frontend modules | compatibility |
-| `scripts/` | ETL, import/export, audit, release and contract checks | основной |
+| `scripts/` | ETL, import/export, audit, release and contract checks; generated Globe build scripts | основной |
 | `tests/` | automated checks | основной |
 | `AGENTS.md` | единый repository entrypoint для агентов; маршрутизирует к canonical owners | operational |
 | `README.md` | корневой entrypoint документации | canonical |
-| `sw.js` | service worker | основной |
-| `manifest.json` | PWA manifest | основной |
+| `sw.js` | Architecture Atlas service worker | compatibility |
+| `manifest.json` | Architecture Atlas PWA manifest | compatibility |
 
 Source root retains the Architecture Atlas compatibility implementation. The Pages artifact maps it to `/atlas/`; public `/` is generated from `scripts/globe_spike/root-index.html`, and `/globe/` is generated from the shared semantic path.
 
 Дополнение по release/workflow layer:
-- structural and semantic release discipline закреплён исполнимыми checks в workflow-слое (`.github/workflows/*`), `scripts/release_check.py` и `scripts/semantic_data_gate.py`;
-- renderer-neutral Explorer State contract under #340 has its own executable validator/test contour and remains validation/R&D evidence rather than public runtime data;
-- `scripts/release_check.py` остаётся canonical executable release/readiness entrypoint;
-- точные enforcement points должны определяться по текущим workflow files, а не по упрощённой формулировке в одном summary-документе;
-- workflow-слой не заменяет полный regression suite и не должен описываться как его эквивалент.
+- executable behavior is owned by the actual workflow/check files relevant to each contour;
+- `ARTEMIS Core Check` is the required product signal for the current static Core/Leonardo Temporal Map path;
+- `scripts/release_check.py` is a preserved **Architecture Atlas/backend compatibility release/readiness check**, not the sole or canonical current ARTEMIS Core product signal;
+- `scripts/semantic_data_gate.py` owns semantic gating for the Architecture Atlas checked-in data/export contour;
+- renderer-neutral Explorer State and Render Projection have dedicated executable validators/tests; the current `/globe/` runtime consumes those accepted boundaries;
+- exact enforcement points must be determined from current workflow files, not from an old summary/release decision;
+- no single workflow substitutes for every regression/compatibility check across the whole preserved repository.
 
 ---
 
@@ -89,30 +91,31 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 | Слой | Entry point |
 |---|---|
 | Public ARTEMIS Core landing | generated `/` from `scripts/globe_spike/root-index.html` |
-| Primary Leonardo Globe research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
+| Primary Leonardo Globe/Temporal Map research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
 | Architecture Atlas compatibility frontend | source `index.html`, deployed at `/atlas/` |
-| Backend | `app/main.py` |
-| ETL | `scripts/export_airtable.py` |
-| Release check | `scripts/release_check.py` |
+| Backend compatibility runtime | `app/main.py` |
+| Architecture Atlas ETL | `scripts/export_airtable.py` |
+| Current Core product signal | `ARTEMIS Core Check` / current Core-owned workflow path |
+| Architecture Atlas/backend compatibility release check | `scripts/release_check.py` |
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
 | Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
 | Explorer-state fixture validation | `scripts/validate_explorer_state_fixtures.py` |
 | Uncertainty-semantics owner | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` |
-| Current public 2D map projection | `data/features.geojson` |
+| Current public Architecture Atlas 2D map projection | `data/features.geojson` |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
 
 Правило:
 - canonical semantic/domain owner для одной ответственности должен быть один;
-- backend, ETL, release-check и documentation registries не получают competing entrypoints;
+- backend, ETL, compatibility release-check and documentation registries do not receive competing semantic authority;
 - presentation runtimes являются отдельным классом: несколько renderer entrypoints допустимы только после явной регистрации и при общей domain/state/projection семантике;
 - наличие второго renderer не разрешает второй World Model, второй historical source of truth или второй backend;
 - generated Core landing is the default public entrypoint;
-- generated `/globe/` is primary but remains explicitly non-product-validated;
+- generated `/globe/` is primary but remains explicitly non-product-validated public R&D;
 - source `index.html` is deployed under `/atlas/` as compatibility-only;
 - Explorer State validator is a validation entrypoint, not a frontend/backend runtime entrypoint;
-- working Explorer State ownership remains in `docs/work/README.md`; it is not promoted into the canonical owner registry by this structure document;
-- legacy-слои не могут становиться скрытым альтернативным runtime.
+- working Explorer State and Temporal Map records remain registered through `docs/work/README.md`; they do not become competing canonical semantic owners;
+- legacy-слои не могут становиться скрытым альтернативным active product runtime.
 
 ---
 
@@ -150,29 +153,33 @@ js/
 └── ux.js
 ```
 
-Правила текущего public contour:
+Правила Architecture Atlas compatibility contour:
 - frontend остаётся vanilla JS без нового framework layer;
-- current 2D карта читает canonical public data только из `data/*`;
+- 2D Architecture Atlas читает public data только из `data/*` by default;
 - `/api/map/feed` не становится альтернативным public data source;
 - безопасный DOM-rendering обязателен для пользовательского контента;
 - PWA и UX-hardenings не должны подменять архитектурные boundaries;
 - `css/tokens.css`, `css/base.css` и `css/components/*` являются первой owner-scoped foundation extraction без изменения visual contract;
 - `css/style.css` временно владеет оставшимися layout/feature/legacy rules до следующих migration batches;
-- `css/main-screen.css` является текущим transitional override layer, а не целевой архитектурой;
-- в Architecture Atlas UX cycle актуальные правила должны быть перенесены к owner-scoped modules, после чего competing override удаляется;
+- `css/main-screen.css` является transitional compatibility override layer, а не целевой ARTEMIS Core architecture;
+- Architecture Atlas CSS migration remains compatibility maintenance, not the active #355 product path;
 - owner-scoped split должен разделять tokens/base/layout/features и не создавать параллельные visual systems;
 - measured baseline, selector-owner matrix, staged target tree and recovery rules зафиксированы в `docs/work/uiux/2026-07-17_CSS_OWNERSHIP_MIGRATION_AUDIT_v1.md`.
 
 Renderer expansion rule:
-- Globe/future renderer code должен находиться за explicit experimental/runtime boundary; Pages получает только deterministic generated preview;
+- Globe/future renderer code remains behind explicit generated/runtime boundaries; Pages receives the deterministic public R&D preview only through registered build/publish paths;
 - renderer-neutral selected time/layers/object state не должен принадлежать MapLibre или Globe engine objects;
 - render adapters получают World Model / World Slice data через явную projection boundary;
 - engine-specific camera, GPU resources, tile caches, hover/picking buffers и visual transitions остаются renderer-local;
-- нельзя переписывать current frontend framework/layout только ради появления второго renderer без отдельного evidence-backed architecture decision;
-- target repository split (`apps/*`, shared packages или другой layout) определяется #345, а не предполагается этим документом заранее.
+- timeline is shared Explorer temporal state/UI, not a renderer-specific semantic core;
+- current Temporal Map semantics are `Range` interval overlap and `Scrub` build-origin + single current-time cursor accumulation;
+- single-click selection state is distinct from explicit camera focus;
+- нельзя переписывать frontend framework/layout только ради второго renderer без evidence-backed architecture decision;
+- platform/repository evolution follows `PLATFORM_ARCHITECTURE_DECISION.md`; current evidence does not authorize a framework rewrite.
 
 Working renderer architecture record: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
 Working Explorer State contract: `docs/work/2026-08-08_EXPLORER_STATE_CONTRACT_v1.md`.
+Current Temporal Map interaction record: `docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md`.
 
 ---
 
@@ -197,10 +204,11 @@ app/
 ```
 
 Правила:
-- `app/` — единственный backend runtime;
+- `app/` — единственный preserved backend runtime;
+- current #355 Core/Temporal Map does not require that backend and GitHub Pages does not execute it;
 - legacy root package `api/` удалён; новый competing backend package запрещён;
 - 3D Globe/renderer expansion само по себе не является основанием для второго backend runtime;
-- env/runtime configuration закрепляется только за `app.main:app`;
+- env/runtime configuration закрепляется only for `app.main:app` inside the backend compatibility contour;
 - session backend deployment policy: memory-backed refresh sessions допустимы только для development/testing/local baseline (включая short aliases `dev`/`test`); non-development/testing/local deployments обязаны использовать Redis-backed session store (`AUTH_SESSION_BACKEND=redis` + `REDIS_URL`) с fail-fast на misconfiguration;
 - Redis-backed refresh-session consume в текущем baseline трактуется как atomic one-time operation (`GETDEL` или atomic fallback path), а legacy non-atomic `get+delete` не должен считаться допустимым baseline-поведением;
 - rate limiting в текущем baseline остаётся process-local/in-memory; `X-Forwarded-For` для извлечения client IP в rate-limit key trusted только от configured trusted proxy peers (`ARTEMIS_TRUSTED_PROXIES` / `TRUSTED_PROXY_IPS`, exact IP + CIDR), иначе используется peer IP (`request.client.host`);
@@ -243,16 +251,17 @@ data/
 ```
 
 Правила:
-- `data/features.geojson` — canonical current public 2D map projection/source;
+- `data/features.geojson` — canonical current public **Architecture Atlas** 2D map projection/source;
 - Point-only limitations of `data/features.geojson` do not define the Foundation v3 World Model spatial ontology;
 - `features.json` не является public source of truth;
 - `data/id_aliases.json` — versioned compatibility map from legacy/source IDs to canonical UUID v4;
 - raw / validated / rejected слои не смешиваются;
-- checked-in data artifacts должны использовать тот же contract, что и release gate;
-- renderer-specific payloads for future 2D/3D runtimes are derived projections and cannot become independent historical truth without an explicit contract change;
+- checked-in data artifacts должны использовать тот же contract, что и their owned compatibility data/release gate;
+- Globe/renderer payloads are derived projections and cannot become independent historical truth;
+- current Leonardo Globe historical input comes from the reviewed repository World Slice through Explorer State/Render Projection, not `data/features.geojson`;
 - terrain/elevation/imagery/tile assets belong to a separate geospatial asset boundary and do not silently enter historical World Model semantics;
-- `content_profile.json` schema version 1 — детерминированный snapshot comparison-pilot readiness; генерируется из public artifacts и проверяется на drift;
-- `validation_report.json` schema version 2 — обязательное release evidence с разделёнными blocking errors и budgeted warnings; это не content source-of-truth, но semantic release gate опирается на него напрямую;
+- `content_profile.json` schema version 1 — детерминированный snapshot Architecture Atlas comparison-pilot readiness; генерируется из public artifacts и проверяется на drift;
+- `validation_report.json` schema version 2 — compatibility release evidence с разделёнными blocking errors и budgeted warnings; это не content source-of-truth;
 - `export_errors.log` остаётся человекочитаемой JSONL-проекцией тех же diagnostics и не создаёт отдельную validation truth.
 
 Canonical details remain in `docs/DATA_CONTRACT.md`.
@@ -268,6 +277,7 @@ scripts/
 ├── import_features.py
 ├── release_check.py
 ├── semantic_data_gate.py
+├── build_globe_spike.py
 ├── validate_world_model_fixtures.py
 ├── validate_uncertainty_fixtures.py
 └── validate_explorer_state_fixtures.py
@@ -310,18 +320,19 @@ fixtures/
 - synthetic fixtures must be visibly marked and cannot support historical capability claims;
 - compatibility projections expose losses and never invent missing evidence/precision;
 - additive contract extensions reference the reviewed base and do not rewrite a READY package;
-- `scripts/validate_explorer_state_fixtures.py` owns structural + cross-reference checks for #340 and must reject renderer-owned state such as engine zoom/pitch/camera objects;
-- `scripts/` отвечают за ETL, import/export, checks, preparation;
+- `scripts/validate_explorer_state_fixtures.py` owns structural + cross-reference checks for the reviewed Explorer State contour and must reject renderer-owned state such as engine zoom/pitch/camera objects;
+- `scripts/` отвечают за ETL, import/export, generated builds, checks and preparation;
 - `tests/` отвечают за автоматическую проверку контрактов и регрессий;
-- cross-renderer semantic parity, when a second renderer exists, belongs to executable tests and must be independent from screenshot/visual regression;
+- cross-renderer semantic parity belongs to executable tests and is independent from screenshot/visual regression;
+- `scripts/release_check.py` remains useful compatibility evidence when its owned backend/Atlas paths are relevant, but is not the current Core product-readiness source of truth;
 - release discipline не должна жить только в Markdown без исполнимой проверки.
 
 ---
 
-## 8. НОВАЯ СИСТЕМА ДОКУМЕНТАЦИИ
+## 8. СИСТЕМА ДОКУМЕНТАЦИИ
 
 Цель:
-Перевести документацию ARTEMIS из разросшегося набора файлов в управляемую систему.
+Поддерживать документацию ARTEMIS как управляемую систему, а не набор равноправных заметок.
 
 ### 8.1 Root-level canonical document
 
@@ -332,17 +343,17 @@ README.md
 Назначение:
 - главный вход в проект;
 - краткое описание продукта, стека, запуска и ссылок на canonical docs;
-- не заменяет архитектурные и release-документы, но направляет к ним.
+- не заменяет профильные canonical owners, а направляет к ним.
 
 ### 8.2 Canonical docs
 
-Полный canonical set и назначение каждого owner document зарегистрированы только в `FOUNDATION_INDEX.md`.
+Полный canonical set и назначение каждого owner document зарегистрированы **только** в `FOUNDATION_INDEX.md`.
 
 Правило:
 - `FOUNDATION_INDEX.md` является единственным canonical registry;
-- foundation-layer (`FOUNDATION_INDEX.md`, `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `RESEARCH_SLICE_CONTRACT.md`, `EPISTEMIC_CONTRACT.md`, `ENTITY_MODEL.md`, `CONTENT_GOVERNANCE.md`, `AI_POLICY.md`) является обязательным контуром для product/data/UI/AI решений;
+- foundation-layer (`ARTEMIS_CONCEPT.md`, spatial-temporal/epistemic/entity contracts, active product scope, content/AI governance and registered platform/data/runtime owners) является обязательным контуром для product/data/UI/AI решений;
 - conceptual foundation не может существовать только как внешний черновик;
-- упоминание старого canonical-набора (`ARCHITECTURE.md`, `RELEASE_SYSTEM.md`, `ROADMAP.md`) считается documentation drift, если эти файлы не являются реальными действующими canonical entrypoints.
+- historical compatibility decisions do not become current owners merely because they remain in `docs/`.
 
 ### 8.3 Working docs
 
@@ -352,8 +363,8 @@ README.md
 - рабочие документы текущего цикла;
 - допускают быстрые изменения;
 - не считаются canonical по умолчанию;
-- active renderer architecture/Explorer State records must be registered here and cannot override canonical model/data/truth owners;
-- UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`; `ARTEMIS_UI_UX_SYSTEM.md` владеет общей UX-моделью, `ARTEMIS_UI_UX_COMPONENT_MAP.md` — картой компонентов и состояний, `ARTEMIS_UI_UX_VISUAL_SYSTEM.md` — visual design layer;
+- renderer architecture/Explorer State/Temporal Map records must be registered here and cannot override canonical model/data/truth owners;
+- UI/UX working specs физически размещаются в `docs/work/uiux/`, а не в canonical root `docs/`;
 - historical AI/Courses/expansion plans live in `docs/archive/` and cannot open scope.
 
 ### 8.4 Audits
@@ -397,41 +408,42 @@ docs/reference/
 Технические нарушения:
 - competing backend package рядом с canonical `app/`;
 - прямой доступ frontend к Airtable;
-- implicit fallback public map на runtime API;
+- implicit fallback Architecture Atlas public map на runtime API;
 - смешивание draft/runtime/public data contracts;
 - competing backend entrypoints;
 - второй renderer, который владеет собственной historical/domain semantics вместо shared model/projection boundary;
 - renderer-specific historical data forks (`*_2d`, `*_3d` or equivalent) that can drift semantically;
-- renderer-owned `zoom/pitch/bearing/camera/viewer/scene` state promoted into the semantic Explorer State contract;
+- renderer-owned `zoom/pitch/bearing/camera/viewer/scene` state promoted into semantic Explorer State;
 - authoritative persisted `visible_object_ids` instead of deterministic derivation from World Slice + Explorer State;
-- experimental Globe assets/dependencies entering the public Pages artifact outside the explicit `--public-preview` build and `/globe/` route;
+- Globe assets/dependencies entering the public Pages artifact outside the explicit registered build and `/globe/` R&D route;
 - использование terrain/imagery provider metadata как substitute for historical provenance.
 
 Документационные нарушения:
 - несколько равноправных source-of-truth документов по одной теме;
 - хранение активного roadmap в archive/reference-слое;
-- несинхрон canonical docs и checked-in release/data behavior;
+- несинхрон canonical docs и checked-in executable/data behavior;
 - использование audit-файла вместо обновления canonical doc;
-- обновление кода без обязательного docs sync для архитектурных, data и release изменений;
-- сохранение в canonical docs старых имён документов или старых API summary после смены фактической структуры проекта;
+- обновление code/runtime без обязательного docs sync для architecture/data/release/product changes;
+- сохранение в canonical docs старых имён документов, lifecycle states или API summary после смены фактического состояния;
 - добавление product/data/UI/AI решений без проверки against foundation-layer;
-- развитие Stories/Courses/AI вне independent branch decision;
+- развитие Stories/Courses/AI вне independent evidence-backed branch decision;
 - описание current mutable ResearchSlice as immutable revision;
 - использование classification/Similarity as substantive Relation;
 - использование AI output как source-backed/canonical knowledge без governance;
-- описание experimental 3D Globe R&D как current public/product capability.
+- описание public experimental Globe R&D как product-validated/production-ready capability;
+- описание historical compatibility release checks as universal current Core readiness authority.
 
 ---
 
 ## 10. ПРАВИЛО DOCS SYNC
 
-Любое изменение в следующих областях обязано сопровождаться обновлением canonical docs:
+Любое изменение в следующих областях обязано сопровождаться обновлением соответствующих canonical docs:
 - architecture boundaries;
 - registered frontend/presentation runtime boundaries;
 - renderer-neutral state or render-projection contracts;
 - data contract;
-- release gate / workflow / readiness semantics;
-- canonical current public map source;
+- release/check/workflow/readiness semantics;
+- canonical current public map/source boundaries;
 - geospatial asset/terrain/imagery semantics when they affect runtime or historical interpretation;
 - auth/runtime deployment constraints;
 - mission, product scope, research-work semantics, Claim/Evidence model, entity model, content governance and AI policy;
