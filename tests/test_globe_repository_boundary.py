@@ -130,7 +130,7 @@ def test_existing_canonical_structure_prohibits_renderer_semantic_forks() -> Non
     assert "source `index.html`" in lowered
     assert "generated core landing" in lowered
     assert "primary leonardo globe/temporal map research prototype" in lowered
-    assert "one semantic core" in lowered
+    assert "общий world model / explorer state / projection boundary" in lowered
     assert "renderer-specific historical data forks" in lowered
     assert "current leonardo globe historical input" in lowered
     assert "not `data/features.geojson`" in lowered
