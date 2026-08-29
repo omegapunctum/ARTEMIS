@@ -3,12 +3,11 @@
 ## Статус документа
 
 - Тип: foundation content governance document
-- Статус: active, canonical registration confirmed in `PROJECT_STRUCTURE.md` and `DOCUMENTATION_SYSTEM.md`
+- Статус: active canonical; registration/owner routing is defined only by `FOUNDATION_INDEX.md`
 - Роль: фиксирует правила доверия к данным, источникам, UGC, модерации и публикации content в ARTEMIS
 - Назначение: определить, как candidate content становится trusted/canonical content и какие данные не могут попасть в public knowledge layer без проверки
 - Scope: source policy, content lifecycle, validation, moderation, UGC promotion, uncertainty, corrections, public publish boundaries
-- Progressive refinement owner: `PROGRESSIVE_REFINEMENT_CONTRACT.md` defines append-only revision
-  semantics; this document owns the intake, review and promotion workflow around those revisions.
+- Progressive refinement owner: `PROGRESSIVE_REFINEMENT_CONTRACT.md` defines append-only revision semantics; this document owns the intake, review and promotion workflow around those revisions.
 
 ---
 
@@ -105,14 +104,17 @@ Curated content — материал, принятый editorial/governance proc
 
 ### 3.4 Canonical public content
 
-Canonical public content — опубликованный слой, используемый public map/runtime.
+Canonical public content — опубликованный слой внутри явно авторизованного product/data contour.
 
-Текущий public map baseline:
+Текущий Architecture Atlas public map baseline:
 - `data/features.geojson`.
 
+Current Leonardo Globe/Temporal Map is a separate R&D projection of the frozen repository World Slice through Explorer State/Render Projection. Its public visibility does not convert draft/rejected historical Claims into canonical published historical content.
+
 Правила:
-- canonical public content проходит ETL/export validation;
-- canonical public content не должен напрямую подменяться runtime API;
+- canonical public content проходит соответствующий authorized validation/review/publish path;
+- Architecture Atlas public content проходит ETL/export validation;
+- runtime/API/UI не должны напрямую подменять canonical content authority;
 - public publish flow должен быть управляемым, а не случайным результатом UI action.
 
 ### 3.5 Archive/historical content
@@ -154,10 +156,7 @@ Candidate content заносится в рабочий контур.
 - claim kind/origin/review/confidence/evidence/uncertainty where known;
 - required review notes.
 
-Intake also records the active decision target and the minimum material temporal/spatial fidelity
-needed for that decision. Coarse, approximate, range-based or unknown values are valid candidate
-inputs when they preserve the source-native expression and make the uncertainty explicit. Intake
-must not create a day, point, path or boundary merely because the storage/UI supports one.
+Intake also records the active decision target and the minimum material temporal/spatial fidelity needed for that decision. Coarse, approximate, range-based or unknown values are valid candidate inputs when they preserve the source-native expression and make the uncertainty explicit. Intake must not create a day, point, path or boundary merely because the storage/UI supports one.
 
 ### 4.2.1 Progressive intake and promotion path
 
@@ -168,20 +167,14 @@ The controlled path is:
 System responsibilities do not collapse along that path:
 
 - Google Drive may retain research originals, GIS/media and validation material;
-- Airtable may hold curated corpus records only when the corresponding lifecycle explicitly
-  authorizes the schema/write contour;
+- Airtable may hold curated corpus records only when the corresponding lifecycle explicitly authorizes the schema/write contour;
 - GitHub owns versioned contracts, fixtures, review evidence, decisions and development truth;
 - runtime/public artifacts consume only an authorized versioned package or controlled export;
-- ChatGPT/AI may discover sources or propose candidate revisions, but is neither Source nor a
-  silent canonical writer.
+- ChatGPT/AI may discover sources or propose candidate revisions, but is neither Source nor a silent canonical writer.
 
-For the current #377 contour, the executable fixture and review evidence live in GitHub. The nine
-Airtable World Model shadow tables remain empty and no historical write is authorized.
+For the current #377 contour, the executable fixture and review evidence live in GitHub. The nine Airtable World Model shadow tables remain empty and no historical write is authorized.
 
-When the target already has an accepted revision series, intake must classify the proposal as
-`refine`, `correct`, `add_alternative` or `withdraw`; a generic field update is not an allowed
-semantic operation. Object identity and unrelated dimensions remain unchanged unless separately
-claimed and reviewed.
+When the target already has an accepted revision series, intake must classify the proposal as `refine`, `correct`, `add_alternative` or `withdraw`; a generic field update is not an allowed semantic operation. Object identity and unrelated dimensions remain unchanged unless separately claimed and reviewed.
 
 ### 4.3 Technical validation
 
@@ -194,12 +187,7 @@ claimed and reviewed.
 - allowed enums;
 - public artifact compatibility.
 
-For a refinement candidate, technical validation additionally checks immutable lineage, stable
-target identity, valid-time/record-time separation, source-native precision and the prohibition on
-normalized precision finer than its evidence. A supporting locator must reproduce the source-native
-expression, atomic Claim and canonical digests of the complete source value/precision and normalized
-assertion. Temporal precision projections must agree, alternatives cannot exceed their source or
-top-level precision, and every temporal primary/alternative member must represent a non-empty set.
+For a refinement candidate, technical validation additionally checks immutable lineage, stable target identity, valid-time/record-time separation, source-native precision and the prohibition on normalized precision finer than its evidence. A supporting locator must reproduce the source-native expression, atomic Claim and canonical digests of the complete source value/precision and normalized assertion. Temporal precision projections must agree, alternatives cannot exceed their source or top-level precision, and every temporal primary/alternative member must represent a non-empty set.
 
 Результат:
 - pass technical validation;
@@ -249,29 +237,27 @@ Approval does not mean:
 
 ### 4.6 Publish
 
-Approved content enters ETL/export/public artifact path.
+Approved content enters an explicitly authorized export/projection/publication path.
 
 Rules:
-- public map content is published through controlled data pipeline;
-- moderation/runtime UI must not directly overwrite canonical public dataset;
-- publish result must be auditable through artifacts and release checks.
+- Architecture Atlas public map content is published through its controlled ETL/data pipeline;
+- a World Slice/Globe projection may use a separately reviewed versioned repository package when that product gate explicitly authorizes it;
+- moderation/runtime UI must not directly overwrite canonical public knowledge;
+- publish result must be auditable through artifacts and owned checks;
+- public R&D rendering of draft/rejected Claims does not silently promote their epistemic status.
 
 ### 4.7 Correction
 
 Published content may be corrected.
 
-Corrections are appended as a `correct` revision under
-`PROGRESSIVE_REFINEMENT_CONTRACT.md`; an accepted assertion is never edited in place. Corrections
-must preserve:
+Corrections are appended as a `correct` revision under `PROGRESSIVE_REFINEMENT_CONTRACT.md`; an accepted assertion is never edited in place. Corrections must preserve:
 - what changed;
 - why it changed;
 - source or governance basis;
 - impact on confidence/uncertainty;
 - whether public artifact must be regenerated.
 
-For a non-temporal atomic target, a correction preserves the predecessor's full `valid_time`
-envelope. Correcting geometry, route or label and moving it to another world-time state are two
-different proposals and require separate target/revision treatment.
+For a non-temporal atomic target, a correction preserves the predecessor's full `valid_time` envelope. Correcting geometry, route or label and moving it to another world-time state are two different proposals and require separate target/revision treatment.
 
 ### 4.8 Deprecation / archival
 
@@ -282,8 +268,7 @@ Content may be deprecated if:
 - interpretation is superseded;
 - content no longer fits scope.
 
-Accepted content is withdrawn or superseded through an append-only revision. It must not silently
-disappear from the ledger even when it is absent from the current frontier or public projection.
+Accepted content is withdrawn or superseded through an append-only revision. It must not silently disappear from the ledger even when it is absent from the current frontier or public projection.
 
 ---
 
@@ -361,7 +346,7 @@ Rules:
 - coordinate confidence must be explicit where relevant;
 - representative coordinate must not imply exact site;
 - uncertain coordinate can be published if marked honestly;
-- invalid coordinates must be rejected from public map artifact;
+- invalid coordinates must be rejected from a public map artifact that requires geometry;
 - approximate coordinates should not support precise spatial claims.
 
 ---
@@ -499,11 +484,12 @@ Rejection reason should be actionable where possible.
 Public publish must remain controlled.
 
 Rules:
-- runtime draft approval is not the same as public data publish unless explicitly connected by controlled publish flow;
+- runtime draft approval is not the same as public knowledge publication unless explicitly connected by a controlled publish flow;
 - direct runtime publish outside moderation/governance path is forbidden;
-- public map source remains `data/features.geojson` for current baseline;
-- public content changes must be compatible with `DATA_CONTRACT.md`;
-- release gate must guard required artifacts and public map discipline.
+- Architecture Atlas public map source remains `data/features.geojson` inside that compatibility contour;
+- current Leonardo Globe is a public R&D projection of a separate frozen repository package and must preserve the package's draft/rejected Claim status, uncertainty and coverage limits;
+- Architecture Atlas public content changes must be compatible with `DATA_CONTRACT.md`;
+- each publication contour must be guarded by its owned executable checks rather than one universal legacy release gate.
 
 ---
 
@@ -543,18 +529,22 @@ Reject or defer content that is:
 - topic outside ARTEMIS core;
 - content that turns ARTEMIS into generic LMS/GIS/wiki/social feed.
 
+Current content inclusion is further constrained by `ARTEMIS_PRODUCT_SCOPE.md`: material may be conceptually valid for ARTEMIS and still be deferred from the active MVP.
+
 ---
 
 ## 16. Relationship to other foundation docs
 
+- `FOUNDATION_INDEX.md` is the only canonical owner registry/routing source.
 - `ARTEMIS_CONCEPT.md` defines why ARTEMIS requires verifiable and explainable knowledge.
-- `ARTEMIS_PRODUCT_SCOPE.md` defines the active Life in Context/Foundation v3 boundaries and frozen scope. Architecture Atlas remains a thematic-layer baseline.
+- `ARTEMIS_PRODUCT_SCOPE.md` defines the active Life in Context/Foundation v3 boundaries and frozen scope. Architecture Atlas remains a thematic compatibility layer.
 - `EPISTEMIC_CONTRACT.md` defines Claim/EvidenceLink and independent epistemic dimensions.
 - `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` defines temporal/spatial/change/coverage semantics; `ENTITY_MODEL.md` defines entities, Claims, Relations, Sources and product/runtime/context entities.
-- `DATA_CONTRACT.md` defines current ETL/public artifact shape.
-- `RESEARCH_SLICE_CONTRACT.md` defines how content is used inside Investigation/revision context.
-- `AI_POLICY.md` will define AI-specific behavior boundaries after creation.
-- `CONTROLLED_RELEASE_DECISION.md` defines release/readiness interpretation and baseline limitations.
+- `DATA_CONTRACT.md` defines the Architecture Atlas ETL/public artifact shape and shared renderer data-boundary interpretation.
+- `RESEARCH_SLICE_CONTRACT.md` defines how content may be used inside Investigation/revision context.
+- `AI_POLICY.md` defines AI-specific behavior and canonical-knowledge boundaries.
+- `CONTROLLED_RELEASE_DECISION.md` is preserved historical compatibility release context, not the current Core release owner.
+- `PROJECT_TRUTH.md` owns current public/backend/R&D capability truth.
 
 ---
 
@@ -574,7 +564,8 @@ Content governance is broken if:
 - media is used publicly without source/license confidence;
 - public dataset changes without controlled publish/export path;
 - rejected records are not traceable;
-- course/story narratives hide material uncertainty.
+- course/story narratives hide material uncertainty;
+- public R&D rendering silently upgrades draft/rejected historical Claims into canonical facts.
 
 ---
 
@@ -586,13 +577,13 @@ Any change to content governance must check impact on:
 - `ENTITY_MODEL.md`;
 - `DATA_CONTRACT.md`;
 - `RESEARCH_SLICE_CONTRACT.md`;
-- `AI_POLICY.md` after creation;
+- `AI_POLICY.md`;
 - moderation runtime;
 - UGC/drafts runtime;
 - ETL/export scripts;
-- public data artifacts;
+- public data/projection artifacts;
 - UI labels/detail panels;
-- tests and release checks if executable behavior changes.
+- tests and owned executable checks if behavior changes.
 
 A content-related change is incomplete if technical validation, Claim/Evidence semantics and publish governance are not synchronized.
 
