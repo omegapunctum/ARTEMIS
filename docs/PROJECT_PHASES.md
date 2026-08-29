@@ -1,11 +1,13 @@
-# ARTEMIS — PROJECT PHASES v7.0
+# ARTEMIS — PROJECT PHASES v7.1
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-08-28.
-- Active phase: **4.8R — Core Reset / one Leonardo Globe product loop**.
+- Date: 2026-08-29.
+- Active phase: **4.8 — Leonardo Temporal Map / fresh user check after first ITERATE**.
 - Active issue: **#355**.
+- Gate C: **completed / FREEZE**.
+- Gate D: **OPEN / IN PROGRESS**.
 - Public surfaces: Core landing at `/`, Leonardo Globe at `/globe/`, frozen Architecture Atlas compatibility surface at `/atlas/`.
 
 ## Phase 0 — Preserved history
@@ -34,60 +36,78 @@ Preserved:
 
 Passing these contracts proves representability and technical integrity, not product value.
 
-## Phase 2 — Core Reset [active]
+## Phase 2 — Core Reset [completed]
 
-Exit conditions:
+Completed by PR `#393`.
 
-- one public entrypoint names Leonardo Globe as the active product surface;
-- Architecture Atlas is isolated as compatibility-only;
-- Pages and required CI do not depend on backend, Redis, moderation, Airtable or mutable review-routing documents;
-- #392 no longer blocks the read-only MVP critical path;
-- the frozen Gate C evidence and no-invented-geometry rules remain intact;
-- one reproducible public-preview build and the ARTEMIS Core regression set pass.
+The resulting boundary is:
 
-Core Reset is a narrowing inside #355. Gate C remains completed/FREEZE; it is not
-reopened and no historical Claim is promoted.
+- the root is a small ARTEMIS Core landing;
+- Leonardo Globe at `/globe/` is the primary product-development/research surface;
+- Architecture Atlas is isolated at `/atlas/` as compatibility-only;
+- the required Core path does not depend on backend, Redis, moderation, Airtable or mutable review-routing documents;
+- #392 does not block the read-only MVP critical path;
+- frozen Gate C evidence and no-invented-geometry rules remain intact;
+- ARTEMIS Core Check is the required product signal.
 
-## Phase 3 — One complete exploration loop
+Core Reset was a narrowing inside #355. It did not reopen Gate C, promote historical Claims or complete Gate D.
 
-Deliver:
+## Phase 3 — Leonardo Temporal Map loop, iteration 1 [completed]
 
-- time/interval choice;
-- synchronized semantic layers;
-- local/global context;
-- canonical selection;
-- source-aware inspector;
-- visible uncertainty, alternatives, coverage and projection loss;
-- URL restoration;
-- basic desktop/mobile/keyboard operability.
+PR `#395` established the calendar-based life-path loop. The published manual check produced an explicit **`ITERATE`** result because:
 
-Do not add persistence, authoring, accounts, AI or another World Slice in this phase.
+- Range and Scrub looked too similar;
+- the timeline did not read as the primary instrument;
+- place selection exposed too much persistent text;
+- single-click camera movement was too aggressive.
 
-## Phase 4 — Early value decision
+PR `#396` completed the bounded correction:
 
-Observe a small number of target users with the same content in the Globe and a
-non-synchronized baseline.
+- the full-width bottom timeline is the primary time instrument;
+- `Range` is a two-handle calendar interval and shows documented Presences overlapping the interval;
+- `Scrub` keeps a chosen build origin plus one current-time cursor and progressively accumulates the path;
+- map, timeline, selection and URL share one state;
+- first click opens a compact popup without moving the camera;
+- optional further action opens the right detail drawer;
+- double-click may focus/zoom the selected place;
+- dashed connectors remain chronology-only presentation and never historical route geometry;
+- no new Leonardo data, route geometry, historical coordinates or promoted Claims were introduced.
 
-Decision:
+The current bounded corpus remains the four source-bound 1502 Romagna Presences. It is an interaction scaffold, not Leonardo's complete biography.
+
+## Phase 4 — Fresh user check of the published loop [active]
+
+The next product action is to observe the **current published #396 interface**, not to add infrastructure, another World Slice or broader Leonardo data pre-emptively.
+
+Check whether a user can:
+
+1. understand the difference between `Range` and `Scrub`;
+2. use the bottom timeline as the primary time control;
+3. understand how the visible path changes as time changes;
+4. select a Presence without unwanted camera movement;
+5. read concise place/date/activity information and reach source/uncertainty details when needed;
+6. understand that dashed connectors are chronology only and that exact historical routes remain unknown.
+
+Record exactly one next product result:
 
 - `ITERATE` — improve the same product loop;
 - `NARROW` — reduce content or interaction scope;
-- `STOP/RETHINK` — stop Globe expansion and revisit the hypothesis.
+- `STOP/RETHINK` — stop this Globe/Temporal Map approach and revisit the product hypothesis.
 
-This decision occurs before new backend/storage infrastructure.
+A fresh user check is not the same as declaring Gate D complete or claiming validated historical/product capability.
 
-## Phase 5 — One evidence-backed branch
+## Phase 5 — One evidence-backed next branch
 
-Only after `ITERATE`, open one branch:
+Only after an explicit post-#396 decision may one next branch be opened. Possible branches include:
 
+- one bounded data increment, such as a source-aware 6–10 Presence major-life package;
+- a measured context/layer increment;
 - curation/editorial storage;
 - persistence/sharing;
-- one additional World Slice;
 - a measured renderer/provider improvement.
 
-Generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain future.
+Only one branch may become active. Generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain future/gated.
 
 ## Rule
 
-One active product loop, one required check and one next decision. Update this file
-only when that order changes.
+One active product loop, one required check and one next decision. Completed implementation is not user-value validation, and a successful public deployment is not permission to expand scope.

@@ -4,34 +4,35 @@
 
 - Тип: canonical data contract document
 - Статус: active
-- Роль: source of truth для ETL/data/current public map contract, release artifact semantics и runtime data boundaries
-- Scope: Airtable curated source → ETL/export → checked-in `data/*` → current public 2D map runtime
+- Роль: source of truth для Architecture Atlas ETL/data/public map contract, release artifact semantics и compatibility runtime data boundaries; also records the shared World Model → Explorer State → Render Projection boundary relevant to renderer integration
+- Scope: Airtable curated Architecture Atlas source → ETL/export → checked-in `data/*` → public `/atlas/` 2D compatibility runtime
 
-Этот документ описывает **текущий public export/runtime contract**. Он не переопределяет canonical semantics пространственно-временной модели из `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` и не утверждает, что Point-only GeoJSON является универсальным форматом всей будущей модели ARTEMIS.
+Этот документ описывает **текущий Architecture Atlas public export/runtime contract**. Он не переопределяет canonical semantics пространственно-временной модели из `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` и не утверждает, что Point-only GeoJSON является универсальным форматом всей будущей модели ARTEMIS или историческим source of truth для `/globe/`.
 
 ---
 
 ## 1. Contract ownership
 
-ARTEMIS current public data contract is owned by the checked-in ETL/export pipeline and canonical documentation layer.
+ARTEMIS current Architecture Atlas public data contract is owned by the checked-in ETL/export pipeline and canonical documentation layer.
 
 Owner chain:
 1. Airtable is the curated editorial source for the current Architecture Atlas compatibility corpus.
 2. `scripts/export_airtable.py` validates and exports curated source records.
-3. `data/*` stores checked-in current release artifacts.
-4. `data/features.geojson` is the canonical public **2D map projection** for the current runtime.
-5. frontend public map bootstrap reads `data/features.geojson` by default.
+3. `data/*` stores checked-in current compatibility release artifacts.
+4. `data/features.geojson` is the canonical public **2D Architecture Atlas map projection** for that runtime.
+5. Architecture Atlas frontend bootstrap reads `data/features.geojson` by default.
 6. runtime API routes must not replace the published public dataset silently.
 
 Rule:
-- any change to source fields, validation semantics, release artifact structure, or current public map payload must update this document and the relevant ETL/check code in the same change cycle.
+- any change to source fields, validation semantics, release artifact structure, or current Architecture Atlas public map payload must update this document and the relevant ETL/check code in the same change cycle.
 - World Model semantics belong to their foundation contracts and must not be inferred from limitations of the current Architecture Atlas export.
+- the active Leonardo Globe/Temporal Map consumes the reviewed repository World Model/World Slice through Explorer State and Render Projection; it does not use `data/features.geojson` as historical truth.
 
 ---
 
 ## 2. Canonical public map source
 
-Canonical current public 2D map dataset:
+Canonical current public 2D Architecture Atlas map dataset:
 - `data/features.geojson`
 
 Supporting release artifacts:
@@ -50,18 +51,18 @@ Release-evidence / diagnostic artifacts:
 - `data/export_errors.log`
 
 Rules:
-- `data/features.geojson` is the production-default public source for the current 2D map rendering contour.
-- it is a current compatibility/render projection and must not be promoted into the canonical representation of all future `Event`, `State`, `Process`, `Trajectory` or temporal `Region` objects.
+- `data/features.geojson` is the production-default public source for the current Architecture Atlas 2D map rendering contour.
+- it is a compatibility/render projection and must not be promoted into the canonical representation of all future `Event`, `State`, `Process`, `Trajectory` or temporal `Region` objects.
 - `data/features.json` is a supporting/raw validated artifact, not the public source of truth.
-- `export_meta.json`, `rejected.json`, `validation_report.json` and `content_profile.json` are release-quality evidence.
-- `validation_report.json` is not a competing content source, but release gate explicitly depends on its blocking-error/warning contract.
+- `export_meta.json`, `rejected.json`, `validation_report.json` and `content_profile.json` are compatibility release-quality evidence.
+- `validation_report.json` is not a competing content source, but the owned compatibility release gate explicitly depends on its blocking-error/warning contract.
 - `content_profile.json` is a deterministic readiness snapshot derived from public artifacts; it does not create or override content.
 
 ### 2.1 World Model and render-projection boundary
 
-Foundation v3 requires richer spatial-temporal objects than the current Point-only public export. The canonical semantic model supports, among other things, paths/trajectories, temporal regions, states, processes, alternative geometries and uncertainty.
+Foundation v3 requires richer spatial-temporal objects than the current Point-only Architecture Atlas export. The canonical semantic model supports, among other things, paths/trajectories, temporal regions, states, processes, alternative geometries and uncertainty.
 
-For future 2D/3D renderer integration, the intended boundary is:
+The accepted renderer boundary is:
 
 ```text
 World Model / versioned World Slice
@@ -82,13 +83,13 @@ Rules:
 - terrain, elevation, basemap imagery and rendering tiles are geospatial assets and require their own provenance/licensing/coordinate metadata; they are not historical World Model objects by default;
 - a historical/reconstructed terrain, coastline or boundary that asserts past state must use temporal validity, provenance and uncertainty semantics from the World Model contracts.
 
-The working architecture record is `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` and parent work item is #339. Until executable contracts and runtime artifacts are accepted, this subsection changes architecture interpretation only; it does not change current `data/*` schemas or public runtime capability.
+Renderer architecture/state/projection contracts under issues #339–#345 are accepted, and the current Leonardo Globe executable path uses this boundary. This subsection therefore describes an **active architectural/runtime boundary**, while leaving the Architecture Atlas `data/*` schemas and authority unchanged. The Globe's frozen Leonardo historical input is separate repository World Slice evidence, not an extension of the legacy Airtable export.
 
 ---
 
 ## 3. Release artifact contract
 
-Required release artifacts:
+Required Architecture Atlas compatibility release artifacts:
 - `data/features.geojson`
 - `data/features.json`
 - `data/id_aliases.json`
@@ -101,7 +102,7 @@ Required release artifacts:
 - `data/export_meta.json`
 - `data/rejected.json`
 
-Release gate rules:
+Owned compatibility release-gate rules:
 - required artifacts must exist;
 - `data/features.geojson` must be valid JSON;
 - `data/features.geojson.type` must be `FeatureCollection`;
@@ -131,6 +132,8 @@ Current warning policy:
 - passing with warnings means semantic publish safety under the approved pilot boundary, not production content maturity;
 - raw source diagnostic metadata alone is not release-gating unless ETL converts it into release warnings or rejections.
 
+These rules do not define the current #355 ARTEMIS Core product signal unless a change touches this compatibility contour.
+
 ---
 
 ## 4. Public GeoJSON schema
@@ -155,7 +158,7 @@ Current warning policy:
 ```
 
 Geometry rules:
-- only `Point` geometry is accepted in the **current public 2D map baseline**;
+- only `Point` geometry is accepted in the **current public 2D Architecture Atlas baseline**;
 - this Point-only restriction is a compatibility/runtime constraint, not the spatial limit of the Foundation v3 World Model;
 - coordinates order is `[longitude, latitude]`;
 - longitude and latitude must be numeric;
@@ -223,14 +226,14 @@ Optional fields may be `null` or absent only if frontend/runtime consumers handl
 
 ### 5.1 Normalized Source/Media contract targeted by #283
 
-This subsection is a migration target, not a claim about the current checked-in export.
+This subsection is retained migration/history context for the Architecture Atlas compatibility corpus; current artifact truth is determined by checked-in data and current ETL/checks rather than the old issue status.
 
-After #283 implementation, the export owns two normalized artifacts:
+The export owns two normalized artifacts:
 
 - `data/sources.json` — reviewed canonical Sources;
 - `data/media.json` — reviewed displayable Media with rights and attribution.
 
-Feature properties add:
+Feature properties include:
 
 - `source_ids: string[]` and `media_ids: string[]` as normalized reference indexes;
 - `source_refs: {source_id, roles[], is_primary}[]` for per-link evidence semantics;
@@ -238,7 +241,7 @@ Feature properties add:
 
 Only reviewed links to reviewed records are exported. A referenced ID must exist in its normalized artifact. `source_url` may temporarily mirror the primary Source URL and `image_url` may temporarily mirror the primary Media direct asset URL for old frontend consumers. No compatibility field may invent a license or attribution.
 
-Blocking conditions owned by #283 implementation:
+Blocking conditions inside this compatibility contract include:
 
 - published Feature without at least one reviewed Source;
 - Source without URL or bibliographic locator;
@@ -341,11 +344,11 @@ Clarification:
 ## 10. Runtime map feed boundary
 
 Boundary rules:
-- canonical public map dataset remains `data/features.geojson` for the current 2D public runtime;
+- canonical public Architecture Atlas map dataset remains `data/features.geojson` for the current 2D compatibility runtime;
 - `GET /api/map/feed` is an auxiliary, non-canonical runtime support/read-model endpoint for authenticated UI/runtime scenarios;
-- current baseline implementation of `/api/map/feed` must be treated as a temporary MVP adapter, not as a production-grade public read model over the published dataset;
+- current baseline implementation of `/api/map/feed` must be treated as a temporary compatibility adapter, not as a production-grade public read model over the published dataset;
 - `/api/map/feed` currently serves internal runtime feed semantics without transitional/mock-backed place payloads; any future entity expansion must remain internal/non-canonical and be introduced explicitly;
-- frontend main map bootstrap path must keep `data/features.geojson` as default source;
+- Architecture Atlas frontend bootstrap path must keep `data/features.geojson` as default source;
 - `/api/map/feed` may be used only as an explicit internal runtime toggle/path;
 - runtime consumers must not treat `/api/map/feed` as a replacement for published `/data/*` artifacts or as a stable public export contract.
 
@@ -373,13 +376,15 @@ Any change to this contract must define:
 - affected ETL code;
 - affected checked-in `data/*` artifact shape;
 - affected frontend/runtime consumers;
-- release-check impact;
+- compatibility release-check impact;
 - migration or compatibility behavior for existing records;
 - required documentation sync.
 
 A data-contract change is not complete until:
 - ETL/export behavior is updated;
-- release checks are updated if needed;
+- owned compatibility release checks are updated if needed;
 - checked-in data artifacts match the new contract;
 - this document is updated;
 - relevant tests pass.
+
+A change to the Leonardo World Slice or current Temporal Map does not require changing this contract unless it also changes the Architecture Atlas ETL/public-data contour or the shared render-projection/data-boundary semantics owned here.

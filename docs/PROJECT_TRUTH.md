@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-08-28.
+- Дата фиксации: 2026-08-29.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -13,7 +13,7 @@
 
 Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal World Model. Foundation v3.1 / issue `#363` / PR `#364` clarifies that `World Model` is a source-aware **knowledge representation about the world**, not an objective digital twin or a claim of completeness. This accepted clarification changes North Star wording, not current capability.
 
-Первый active validation vertical — `Life in Context`; issue #355 делает 3D Globe единственной активной product-development surface. Core Reset отделяет Architecture Atlas, backend и преждевременную инфраструктуру от этого критического пути.
+Первый active validation vertical — `Life in Context / Leonardo Temporal Map`; issue #355 делает 3D Globe единственной активной product-development surface. Core Reset завершён PR `#393`: Architecture Atlas, backend и преждевременная инфраструктура отделены от текущего критического пути.
 
 Важно:
 
@@ -28,18 +28,20 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - **A real executable 3D Globe R&D artifact exists** and uses MapLibre GL JS `5.24.0` in isolation; the compatibility Atlas at `/atlas/` remains on MapLibre GL JS `4.7.1`.
 - PR `#389` first published the generated artifact at `/globe/` as a labelled experimental review preview. Core Reset makes it the primary route from the root landing without upgrading its content maturity. The selected Earth context remains a pinned, bundled Natural Earth present-day layer, not historical geography or a live provider capability.
 - PR `#379` integrated the frozen Gate C package into the then non-public generated Globe artifact through the shared World Model → Explorer State → Render Projection path. It preserved `0` authorized historical geometries/primitives, all withheld Region alternatives and all unknown-route gaps.
-- PR `#380` adds 96 deterministic Explorer views from six source-native temporal presets and all 16 combinations of four semantic layers, plus synchronized timeline/layers, canonical selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior. This is a completed Gate D interaction increment, not a completed Gate D experience or public promotion.
-- The revised `Leonardo Life Path` scaffold narrows the default Globe presentation to two calendar modes over the same frozen material: `Range` shows presences overlapping an interval, while `Scrub` progressively reveals accumulated presences from a chosen start. Selecting a numbered marker opens a compact place/date/activity card with source and uncertainty under progressive disclosure. Dashed links are presentation-only chronology; all historical route gaps keep null geometry. The 96 Explorer views and layer semantics remain underlying technical evidence, not default controls.
-- The first published manual check found that Range and Scrub still looked like equivalent two-ended ranges, the timeline lacked primary visual weight, and marker selection moved the camera too aggressively. The active correction moves time to a full-width bottom dock, gives Scrub one current-time cursor, stages selection as popup → optional right drawer, and reserves camera focus for double-click.
+- PR `#380` adds 96 deterministic Explorer views from six source-native temporal presets and all 16 combinations of four semantic layers, plus synchronized timeline/layers, canonical selection/picking, inspector, URL restoration, keyboard operation and reduced-motion behavior. This is completed technical interaction evidence, not a completed Gate D product-value decision.
+- PR `#395` established the calendar-based `Leonardo Life Path` scaffold over the frozen material. `Range` shows Presences overlapping a selected calendar interval; `Scrub` progressively reveals the path from a chosen start. Dashed links are presentation-only chronology; all historical route gaps keep null geometry. The 96 Explorer views and layer semantics remain underlying technical evidence, not default controls.
+- The first published manual check after #395 produced `ITERATE`: Range and Scrub looked too similar, the timeline lacked primary visual weight, place selection exposed too much persistent text and single-click camera movement was too aggressive.
+- PR `#396` completed that bounded iteration and is published: the full-width bottom timeline is the primary time instrument; Range is a two-handle interval; Scrub keeps a chosen build origin plus one current-time cursor; first click opens a compact popup without moving the camera; optional further action opens the right detail drawer; double-click may focus/zoom the selected place.
+- The next product action is a **fresh user check of the published #396 interface**, not another infrastructure increment or broader Leonardo dataset by default. The next decision is `ITERATE`, `NARROW` or `STOP/RETHINK`.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
 - PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
 - The Gate D place-anchor overlay resolves Rimini, Cesena, Cesenatico and Imola only as CC0 present-day `named_settlement` reference points. Each point carries a Claim, EvidenceLink locator, Source/rights record and material spatial-precision Uncertainty. It does not modify the frozen Gate C package, claim an exact Leonardo/event position, connect a route or create a Region boundary.
-- The current life-path presentation covers only those four 1502 presences. It does not claim a complete 1452–1519 biography, duration at each place or known routes between places; a broader 6–10-presence major-life package remains a separate source-aware data decision.
+- The current life-path presentation covers only those four 1502 Presences. It does not claim a complete 1452–1519 biography, duration at each place or known routes between places; a broader 6–10-Presence major-life package remains a separate source-aware data decision after the current loop is rechecked.
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
-- Foundation v3.1 / #363 / PR #364 is completed. Gate D is now separately opened and in progress under #355; that lifecycle transition does not change public capability or historical readiness.
+- Foundation v3.1 / #363 / PR #364 is completed. Gate D is separately open/in progress under #355; current implementation and public R&D access do not themselves complete it or prove user value.
 - #368 established the original six-table empty/non-authoritative Airtable World Model shadow schema. Merged PR #372 extends that preflight surface with three additional empty shadow-only tables plus parity fields, but **no Gate C historical row has been written**. Issues #371/#373 are deferred outside the Gate D critical path.
 
 ## 2. Что доступно публично
@@ -163,11 +165,11 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 ## 5. Что не считается реализованным продуктом
 
 - universal spatial-temporal knowledge-model runtime;
-- public/product-ready Life in Context World Slice and synchronized explorer;
+- product-validated Life in Context / Leonardo Temporal Map experience; the current `/globe/` loop is a bounded public R&D prototype with a fresh post-#396 user check still pending;
 - Airtable World Model shadow schema as a historical corpus, canonical storage authority or product capability;
 - frozen 154-row Airtable plan as imported data, round-trip parity evidence or historical readiness;
 - Gate C package integrated into Airtable as a validated shadow copy;
-- a complete Gate D experience with normal-browser real desktop and 390 CSS px mobile evidence, assistive-technology review, representative non-virtual performance observations and an explicit Gate D exit decision;
+- a completed Gate D user-value decision; implementation of #393/#395/#396 does not itself close the gate;
 - first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
 - product-ready 3D Globe, production dynamic terrain or VR experience; `/globe/` is only a bounded public R&D review route;
 - production-hardened multi-node backend;
@@ -184,28 +186,28 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 6. Главные риски текущего состояния
 
-1. Интерфейс обещает больше, чем доступно в public runtime.
+1. Public R&D availability may be mistaken for product validation or historical readiness.
 2. Документация и backend breadth создают впечатление зрелости, не подтверждённое содержанием.
 3. Identity/source/media contracts допускают формально успешный, но семантически слабый export.
 4. Legacy `same_movement` count может создать впечатление relation graph, хотя 10/12 записей являются shared classification.
 5. Scaling до доказательства product loop увеличивает стоимость неподтверждённой архитектуры.
 6. Backend-complete mutable Slice v2 может быть ошибочно принят за target immutable research model.
-7. Usability test без cognitive и behavioral evidence может создать ложное впечатление подтверждённой продуктовой ценности.
+7. Fresh usability feedback без cognitive и behavioral evidence может создать ложное впечатление полностью подтверждённой продуктовой ценности.
 8. Globe MVP может стать shadow product, если он обойдёт shared World Model / Explorer State / Render Projection; public access itself does not prove value.
 9. Long-term attractor может быть ошибочно воспринят как permission to implement AI/VR/universal corpus before gates; Foundation v3.1 explicitly forbids this.
 10. `World Model` wording can drift back toward objective-digital-twin claims unless the knowledge-vs-world boundary remains explicit.
 11. Airtable World Model schema может стать competing semantic/storage authority, если данные начнут вноситься вручную в обход deterministic import/export + row-level validation + round-trip parity against the frozen repository package.
 12. Frozen 154-row plan может быть ошибочно принят за completed import evidence; поэтому live historical write остаётся fail-closed до отдельного independent mapping review и последующего readback/parity proof.
 13. Accepted #377 / PR #378 refinement semantics can be mistaken for runtime/storage capability; #392 demonstrates that its immutable review envelope incorrectly captured mutable repository routing.
-14. Required CI previously coupled the static Globe path to FastAPI, Redis, moderation, Airtable shadow plans and broad governance synchronization, obscuring the actual product signal.
+14. Required CI previously coupled the static Globe path to FastAPI, Redis, moderation, Airtable shadow plans and broad governance synchronization, obscuring the actual product signal; Core Reset fixed the required path, but compatibility breadth can still distract from the active user-value question.
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Core Reset / Gate C frozen / one primary public Leonardo Life Path research prototype / user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / published Leonardo Temporal Map after first ITERATE / fresh user check pending / user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
-Reviewed/accepted foundation evidence includes:
+Reviewed/accepted foundation and implementation evidence includes:
 
 - #329 / PR #336 world-model fixtures — READY;
 - #330 / PR #337 uncertainty semantics — READY;
@@ -216,10 +218,15 @@ Reviewed/accepted foundation evidence includes:
 - PR #379 — frozen Gate C package consumed by the initially non-public generated Globe artifact through the shared semantic path;
 - PR #380 — synchronized time/layers/selection/inspector interaction increment with 96 deterministic Explorer views and all six PR workflows green;
 - PR #382 — pinned bundled Natural Earth physical-land context with explicit provider/licensing/temporal-role boundary and all seven PR workflows green;
-- PR #383 — desktop/tablet/hosted-mobile browser evidence, zero measured overflow/name/target/overlay failures and all six triggered PR workflows green.
-- PR #385 — same-page wall-clock CDP visual-readiness evidence with non-zero Natural Earth source/render counts, legible reviewed hosted screenshots and all six triggered workflows green.
-- PR #389 — bounded `/globe/` public R&D review publication with root 2D preserved as default/rollback and no Gate D exit claim.
-- Gate D place-anchor overlay — four Wikidata/CC0 present-day named-settlement points with provenance and uncertainty closure; no exact historical positions, routes or boundaries.
+- PR #383 — desktop/tablet/hosted-mobile browser evidence, zero measured overflow/name/target/overlay failures and all six triggered PR workflows green;
+- PR #385 — same-page wall-clock CDP visual-readiness evidence with non-zero Natural Earth source/render counts, legible reviewed hosted screenshots and all six triggered workflows green;
+- PR #389 — bounded `/globe/` public R&D review publication;
+- PR #390 — four source-bound present-day named-settlement anchors with provenance and uncertainty closure; no exact historical positions, routes or boundaries;
+- PR #391 — evidence-aware Globe UX correction and canonical URL/state restoration;
+- PR #393 — Core Reset completed; Globe primary, Atlas compatibility-only and ARTEMIS Core Check isolated as the required product signal;
+- PR #395 — calendar-based Leonardo Temporal Map life-path interaction;
+- first published #395 manual check — `ITERATE` product-feedback result;
+- PR #396 — published first-feedback correction: primary bottom timeline, distinct Range/Scrub, popup-first selection, optional right drawer and double-click camera focus.
 
 Completed/deferred Airtable data-governance evidence now includes:
 
@@ -227,27 +234,18 @@ Completed/deferred Airtable data-governance evidence now includes:
 - #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
 - #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
-Issue #377 is foundation maintenance whose exact lifecycle is owned by
-`PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but
-does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current
-capability. Gate D remains explicitly open under #355 as the sole active product gate. The runtime
-may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize
-runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import
-issue.
+Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D remains explicitly open under #355 as the sole active product gate. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
 Для активного #355 primary order:
 
-1. finish Core Reset and keep one trustworthy required Core check;
-2. complete one Leonardo time → context → object → source → uncertainty journey;
-3. observe target users before adding infrastructure;
-4. record `ITERATE`, `NARROW` or `STOP/RETHINK`;
-5. open at most one evidence-backed next branch.
+1. preserve the completed Core Reset and the published #396 Temporal Map loop;
+2. run a fresh user check of the current published interface;
+3. record exactly one `ITERATE`, `NARROW` or `STOP/RETHINK` result;
+4. only if justified, open at most one evidence-backed next branch.
 
-Formal D1/M1/A1/P1 closeout and the old Gate E sequencing are paused as roadmap drivers.
-Basic keyboard, responsive and accessible behavior remains part of the product increment, but
-additional evidence machinery does not precede the early value decision.
+Formal D1/M1/A1/P1 closeout and the old Gate E sequencing are not current roadmap drivers. Basic keyboard, responsive and accessible behavior remains part of the product increment, but additional evidence machinery does not precede the fresh user-value decision.
 
 Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 

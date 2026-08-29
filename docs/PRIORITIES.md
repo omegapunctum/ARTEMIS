@@ -1,89 +1,96 @@
-# ARTEMIS — PRIORITIES v7.0
+# ARTEMIS — PRIORITIES v7.1
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-08-28.
-- Active cycle: Core Reset inside the Globe MVP vertical.
+- Date: 2026-08-29.
+- Active cycle: Leonardo Temporal Map fresh user check after the first `ITERATE`.
 - Active primary issue: GitHub issue `#355`.
-- Foundation-maintenance incident: issue `#392`, reduced to historical-control isolation.
+- Gate C: completed / `FREEZE`.
+- Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — One working ARTEMIS Core
+## P0 — Validate the current Leonardo Temporal Map loop
 
-The only active product question is whether a source-aware spatial-temporal
-configuration helps a user understand Leonardo in context.
+The only active product question is whether the **current published #396 interaction** makes the spatial-temporal life-path model understandable enough to justify another iteration or a single next branch.
 
-The load-bearing path is:
+The load-bearing path remains:
 
-`Leonardo sources/manifests → World Model → Explorer State → Render Projection → Globe + inspector`
+`Leonardo sources/manifests → World Model → Explorer State → Render Projection → Globe + timeline + concise details`
 
-Required behavior:
+Current required behavior:
 
-- two visibly distinct calendar modes: two-handle interval-overlap `Range` and single-cursor accumulated `Scrub` in a full-width bottom timeline;
-- visible presence selection shared by timeline, map and URL, with popup-first details and no camera jump on a single click;
-- Event, State, Process, Trajectory and Region semantics;
-- source, locator, uncertainty, coverage and projection-loss access;
-- explicit unknown routes and geometry-withheld alternatives;
-- present-day context clearly separated from historical assertions;
-- URL-restorable exploration without a backend.
+- the full-width bottom timeline is the primary time instrument;
+- `Range` is a two-handle calendar interval and shows documented Presences overlapping that interval;
+- `Scrub` keeps a chosen build origin and one current-time cursor, progressively revealing the accumulated path;
+- visible Presence selection is shared by timeline, map and URL;
+- one click opens a compact popup without moving the camera;
+- optional further action opens the right detail drawer;
+- double-click may focus the selected place;
+- source, locator, uncertainty, coverage and projection-loss details remain available through progressive disclosure;
+- explicit unknown routes and geometry-withheld alternatives remain honest;
+- dashed connectors mean chronology only and never historical route geometry;
+- present-day context remains clearly separated from historical assertions;
+- exploration remains URL-restorable and backend-independent.
 
 The current bounded package remains honest:
 
 - Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte;
 - historical Claims remain draft/rejected;
-- no route or Region geometry is invented; dashed presentation connectors mean chronology only and are not historical route geometry;
+- no route or Region geometry is invented;
 - `historical_corpus_ready=false` and `promotion_allowed=false`;
-- four settlement coordinates are present-day source-bound reference anchors only.
+- four settlement coordinates are present-day source-bound reference anchors only;
+- the four Romagna Presences are an interaction scaffold, not Leonardo's complete biography.
 
-## P1 — Reduce the active delivery surface
+## P1 — Preserve the completed Core Reset boundary
 
-Core Reset rules:
+Core Reset was completed by PR `#393`; it is no longer an active implementation task.
 
-1. Leonardo Globe is the primary product-development surface.
-2. Architecture Atlas is preserved at `/atlas/` as a compatibility baseline, not a second active product.
-3. FastAPI, auth, Redis, drafts, moderation, Research Slices, Stories, Courses and uploads are frozen compatibility code.
-4. Airtable legacy export and the nine empty World Model shadow tables are outside the Core critical path.
-5. Progressive Refinement v1 remains accepted historical evidence, but its repository-wide READY envelope is manual while #392 separates immutable semantics from mutable routing.
-6. The required CI signal is ARTEMIS Core Check. Legacy checks run only when their owned paths change or by manual dispatch.
+Preserve:
 
-Security fixes and preservation of accepted evidence remain allowed. New backend,
-storage, Airtable, UGC or platform capability requires evidence that the static
-read-only product loop is insufficient.
+1. Leonardo Globe as the primary product-development/research surface.
+2. Architecture Atlas at `/atlas/` as a compatibility baseline, not a second active product.
+3. FastAPI, auth, Redis, drafts, moderation, Research Slices, Stories, Courses and uploads as frozen compatibility code outside the Core critical path.
+4. Airtable legacy export and the nine empty World Model shadow tables outside the Core critical path.
+5. Progressive Refinement v1 as accepted historical foundation evidence; editable refinement remains deferred.
+6. ARTEMIS Core Check as the required product signal. Legacy checks run only for their owned compatibility paths or by manual dispatch.
 
-## P2 — Validate value before further infrastructure
+Security fixes and preservation of accepted evidence remain allowed. New backend, storage, Airtable, UGC or platform capability requires evidence that the static read-only loop is insufficient.
 
-The next product increment is one complete, deliberately coarse user journey:
+## P2 — Fresh user check before more data or infrastructure
 
-1. choose a calendar range and see every supported Leonardo presence overlapping it;
-2. switch to Scrub and reveal the path progressively from a chosen calendar start;
-3. select a presence from the map or sequence;
-4. understand place, source-native date, principal activity and the duration/position/route limits;
-5. open sources and uncertainty only when needed and return to the same state through the URL.
+PR `#395` established the calendar life-path interaction. Its first published manual check produced `ITERATE` because Range/Scrub looked too similar, the timeline lacked primary visual weight, place selection was too persistent, and single-click camera movement was too aggressive.
 
-The current validation corpus is intentionally limited to Rimini, Cesena, Cesenatico and Imola in
-1502. It is an interaction scaffold, not Leonardo's complete path. The next separate data increment
-may curate 6–10 major life presences over 1452–1519 only after this interaction is understandable.
-Local/global context and broader layers remain later hypotheses.
+PR `#396` implemented the bounded correction and is published. The next action is therefore **not** another infrastructure gate and **not** a broader Leonardo dataset.
 
-After that increment, run a small observed validation against the same-content
-baseline. Do not wait for a second infrastructure gate before learning from users.
+Run a fresh user check of the current interface and observe whether the user can:
 
-Minimum decision evidence:
+1. distinguish `Range` from `Scrub` and explain why visible Presences change;
+2. use the timeline naturally as the primary time control;
+3. understand the progressively accumulated path in Scrub;
+4. select a Presence without unwanted camera motion;
+5. retrieve concise place/date/activity meaning and reach source/uncertainty details when needed;
+6. avoid interpreting dashed chronology as a known historical route.
 
-- users can explain which presences are visible and why the set changes between time modes;
-- users can retrieve the concise meaning and epistemic limits of a selected presence;
-- source and uncertainty displays do not cause systematic overclaim;
-- Globe value is not only visual novelty;
-- the curation and review cost remains bounded.
-
-Record one result:
+Record exactly one next result:
 
 - `ITERATE`;
 - `NARROW`;
 - `STOP/RETHINK`.
 
-Only `ITERATE` may reopen persistence, editorial storage or broader corpus work.
+The fresh check does not by itself close Gate D or prove validated product value.
+
+## P3 — Open at most one evidence-backed next branch
+
+Only after the post-#396 decision may one next branch be opened. Candidate branches may include:
+
+- one bounded source-aware data increment, such as roughly 6–10 major life Presences across 1452–1519;
+- one measured local/global context or layer increment;
+- curation/editorial storage;
+- persistence/sharing;
+- a measured renderer/provider improvement.
+
+Do not open multiple branches from one `ITERATE` result.
 
 ## Preserved foundations
 
@@ -96,9 +103,12 @@ Only `ITERATE` may reopen persistence, editorial storage or broader corpus work.
 - #343 / PR #350 — MapLibre Globe spike;
 - #344 / PR #351 — cross-renderer semantic parity;
 - #345 / PR #352 — repository/runtime boundary;
-- #332/#360 / PR #362 — frozen Leonardo-in-Romagna source boundary.
+- #332/#360 / PR #362 — frozen Leonardo-in-Romagna source boundary;
+- #393 — Core Reset boundary;
+- #395 — calendar-based Leonardo life-path interaction;
+- #396 — first feedback-driven Temporal Map UX correction.
 
-These are technical foundations, not user-value evidence.
+These are technical/product-development foundations, not final user-value evidence.
 
 ## Deferred
 
@@ -106,18 +116,16 @@ These are technical foundations, not user-value evidence.
 - #334 formal participant protocol as previously sequenced;
 - #371/#373 Airtable historical import/review;
 - editable Progressive Refinement runtime;
+- broader Leonardo corpus before the current loop is rechecked;
 - generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
 - production backend and dynamic Earth infrastructure.
 
 ## Execution order
 
-1. Merge the Core Reset boundary and restore one trustworthy required check.
-2. Complete one Leonardo Globe user journey.
-3. Observe users and record `ITERATE`, `NARROW` or `STOP/RETHINK`.
-4. Open at most one evidence-backed next branch.
+1. Freshly check the published #396 Leonardo Temporal Map loop with a user.
+2. Record exactly one `ITERATE`, `NARROW` or `STOP/RETHINK` result.
+3. If justified, open at most one evidence-backed next branch.
 
 ## Completion rule
 
-A change is complete when the core artifact works, source/uncertainty semantics are
-preserved, the relevant core tests pass and the next user-facing question is explicit.
-Routine PRs do not require synchronized edits across historical gate records.
+A change is complete when the core artifact works, source/uncertainty semantics are preserved, the relevant Core checks pass and the next user-facing question is explicit. Implementation success, public deployment and visual polish do not by themselves equal product validation.
