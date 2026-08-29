@@ -47,7 +47,8 @@ def test_core_path_preserves_world_model_and_frozen_slice_truth() -> None:
     assert "historical Claims remain draft/rejected" in priorities
     assert "no route or Region geometry is invented" in priorities
     assert "Gate C is completed/FREEZE" in truth
-    assert "four source-bound Romagna Presences" in priorities
+    assert "four Romagna Presences" in priorities
+    assert "source-bound reference anchors" in priorities
 
 
 def test_temporal_map_interaction_contract_is_current() -> None:
@@ -93,7 +94,7 @@ def test_legacy_and_premature_infrastructure_is_outside_core() -> None:
     assert "editable Progressive Refinement runtime" in priorities
     assert "#392" in operating_system
     assert "broader Leonardo corpus" in priorities
-    assert "default local/global context" in priorities
+    assert "local/global context" in priorities
 
 
 def test_next_decision_is_single_and_precedes_new_branches() -> None:
@@ -124,5 +125,5 @@ def test_publication_and_implementation_do_not_equal_user_validation() -> None:
 
     assert "user value not yet validated" in truth
     assert "PENDING USER EVIDENCE" in validation
-    assert "public R&D access" in validation
+    assert "R&D research prototype" in validation
     assert "do not by themselves prove user value" in validation
