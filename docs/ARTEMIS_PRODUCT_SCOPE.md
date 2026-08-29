@@ -3,76 +3,93 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.4.
-- Дата: 2026-08-28.
-- Active vertical: `Life in Context` Globe MVP / issue `#355`.
-- Current increment: Core Reset inside Gate D — one public read-only Leonardo Globe loop.
+- Версия: 3.5.
+- Дата: 2026-08-29.
+- Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
+- Current increment: fresh user check of the published PR `#396` loop after the first recorded `ITERATE`.
+- Gate C: completed / `FREEZE`.
+- Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
 - North Star: `ARTEMIS_CONCEPT.md`.
 - Current reality: `PROJECT_TRUTH.md`.
 - World-model authority: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
 
-Этот документ разрешает только Foundation v3 validation scope. Concept target не является утверждением о current implementation.
+Этот документ разрешает только текущий Foundation v3 product-validation scope. Concept target не является утверждением о current implementation.
 
 ## 1. Формула текущего продукта
 
-ARTEMIS Life in Context — **source-aware synchronized Globe/timeline experience для исследования жизненного пути личности с постепенным добавлением локального и глобального контекста её времени**.
+ARTEMIS Life in Context — **source-aware synchronized Globe/timeline experience для исследования жизненного пути личности с постепенным добавлением контекста только после подтверждения ценности базового пространственно-временного loop**.
 
-Продукт помогает:
+Текущая проверяемая ценность существенно уже long-term thesis:
 
-- проследить trajectory;
-- наблюдать events, states и processes в текущем пространственно-временном окне;
-- сначала видеть понятный coarse life path, затем при подтверждённой ценности добавлять тематические layers;
-- сравнивать локальный и глобальный контекст;
-- различать co-presence, encounter, interaction и influence;
-- проверять source, locator и uncertainty;
-- сохранять view или исследовательский вопрос.
+`object → time → path → place → information`
+
+Для Leonardo текущий loop должен позволять:
+
+- выбрать календарное время;
+- увидеть подтверждённые Presence в соответствующем temporal state;
+- проследить coarse trajectory без выдуманного маршрута;
+- выбрать Presence;
+- понять место, source-native time, principal activity и границы известного;
+- открыть source/locator/uncertainty по необходимости.
+
+Local/global context, тематические layers, richer Events/States/Processes и broader simultaneity остаются следующими hypotheses, а не обязательными элементами текущей проверки.
 
 ## 2. Scope lock текущего цикла
 
-Текущий цикл состоит из двух последовательных частей:
+Foundation и Core Reset уже завершены как prerequisites. Текущий Gate D cycle не должен повторно открывать их.
 
-### Foundation
+Completed prerequisites:
 
-- принять Concept v3;
-- определить universal world-model contract;
-- согласовать entity/epistemic/uncertainty semantics;
-- зафиксировать migration disposition прежнего backlog;
-- не выполнять schema/runtime migration.
+- Foundation v3 / v3.1 identity and World Model boundaries;
+- reviewed World Model, uncertainty and renderer contracts;
+- Gate C `FREEZE` for the Leonardo-in-Romagna 1502 package;
+- Core Reset / PR `#393`;
+- calendar-based Temporal Map loop / PR `#395`;
+- first manual feedback result `ITERATE`;
+- feedback correction / PR `#396`.
 
-### Globe MVP vertical / Core Reset
+Current authorized work:
 
-- подготовить ограниченный Leonardo `World Slice`;
-- восстановить cross-renderer parity в #344 / PR #351;
-- реализовать synchronized Globe and timeline через общий Explorer State / Render Projection;
-- проверить два первичных режима пути: выбранный временной диапазон и последовательное раскрытие от выбранного начала;
-- оставить layer combinations и renderer diagnostics в underlying architecture, но не делать их default user controls до подтверждения пользы;
-- сохранить Architecture Atlas только как compatibility surface, не как same-content Leonardo baseline;
-- проверить contextual understanding against same-content baseline;
-- записать decision.
+- preserve the published #396 interaction;
+- perform a fresh user check of that exact interaction;
+- record one next product decision;
+- do not add broader data, infrastructure or context layers before that decision unless required to fix a direct blocker in the current loop.
 
-## 3. Обязательный content scope
+## 3. Обязательный current content scope
 
-Минимальный World Slice:
+Текущий validation scaffold содержит:
 
-- одна primary Person;
-- ограниченный набор trajectory segments;
-- selected Places and changing Regions;
-- Events around selected stops/time windows;
-- regional political/cultural States;
-- at least one long Process;
+- одна primary Person: Leonardo da Vinci;
+- canonical Trajectory as semantic authority;
+- четыре source-bound Presence anchors in Romagna, 1502:
+  - Rimini — 1502-08-08;
+  - Cesena — 1502-08-10;
+  - Cesenatico — 1502-09-06;
+  - Imola — source-native autumn 1502 range;
+- Claim/EvidenceLink/locator closure для material assertions;
+- explicit temporal/spatial/corpus uncertainty;
+- unknown route gaps with `route_geometry=null`;
+- present-day settlement anchors explicitly separated from exact historical position claims.
+
+Это **interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
+
+Не являются обязательными для текущей post-#396 проверки:
+
+- changing historical Region geometry;
+- complete local political/cultural State context;
+- long Processes;
 - selected contemporaries;
-- documented Relations only after #331 is accepted; before then, derived proximity/co-presence only;
-- co-presence observations represented separately;
-- selected synchronous global Events;
-- Claim/EvidenceLink/locator for material content;
-- explicit spatial, temporal and corpus uncertainty.
+- documented Relation predicates;
+- global simultaneous Events;
+- broad thematic layer set;
+- 6–10 Presence full-life package.
 
-Каждый included element должен служить validation hypothesis. Полнота эпохи не является целью.
+Эти элементы могут стать следующей отдельной evidence-backed branch только после текущего решения.
 
 ### 3.1 Progressive fidelity / достаточная точность
 
-ARTEMIS развивается **от общего к частному**. Текущий gate требует не максимальной возможной детализации, а минимальной достаточной fidelity, которая честно поддерживает validation hypothesis и пользовательский сценарий.
+ARTEMIS развивается **от общего к частному**. Текущий gate требует не максимальной возможной детализации, а минимальной достаточной fidelity, которая честно поддерживает пользовательский сценарий.
 
 Правила:
 
@@ -86,44 +103,46 @@ ARTEMIS развивается **от общего к частному**. Тек
 
 Это правило экономит curation/research budget, но **не ослабляет accuracy, provenance, uncertainty или evidence requirements**.
 
-The append-only recording/refinement mechanism is scoped by issue `#377` and
-`PROGRESSIVE_REFINEMENT_CONTRACT.md`; its exact lifecycle is owned by the contract/registry. Gate D
-must consume the frozen Gate C fidelity, and mutable precision/history behavior requires a separate
-implementation authorization even after contract acceptance.
+The append-only recording/refinement mechanism is scoped by issue `#377` and `PROGRESSIVE_REFINEMENT_CONTRACT.md`; its accepted semantics do not authorize editable runtime/storage behavior in Gate D.
 
 ## 4. Обязательный interface scope
 
+Current required interface behavior:
+
 - 3D Globe as the primary MVP spatial surface;
 - Architecture Atlas at `/atlas/` as a frozen compatibility surface;
-- full-width bottom calendar timeline with explicit `Range` interval and single-cursor `Scrub` modes;
+- full-width bottom calendar timeline as the primary time instrument;
+- `Range` as a two-handle calendar interval using temporal overlap;
+- `Scrub` as a chosen build origin plus one current-time cursor that accumulates the path forward;
 - selectable start/end or start/current calendar values at an honest display granularity;
-- interactive presence markers with a compact first-click popup and optional right detail drawer;
+- map, timeline, selection and URL controlling one shared Explorer State;
+- interactive Presence markers with a compact first-click popup;
+- no map-camera movement on single click;
+- optional right detail drawer for deeper information;
+- explicit double-click may focus/zoom the selected place;
 - coarse trajectory presentation where a dashed chronological connector is explicitly not historical route geometry;
+- concise place/date/activity information first;
 - source/locator/uncertainty under progressive disclosure;
-- layer visibility and legend only after the primary path loop is understandable or inside advanced evidence views;
-- temporal Region/State rendering at an honest precision;
-- Event and Entity details;
-- local-context and global-simultaneity views;
-- visible distinction between co-presence and stronger Relations;
-- source/locator/uncertainty access;
-- save/share only if achievable without new backend dependency; otherwise local/session view state is enough for pilot.
+- URL-restorable state without a backend dependency.
 
-Map and timeline must control one shared model state. Two adjacent but unsynchronized widgets do not satisfy scope. `Range` uses temporal overlap; `Scrub` accumulates state from its chosen start. `Trajectory` remains the semantic authority, and a presentation-only chronological connector must remain distinguishable from unknown route geometry.
+Layer combinations, Region alternatives and renderer diagnostics may remain available as underlying evidence/advanced inspection, but they are not default primary controls for the current user check.
 
-Selecting a marker must not move the map camera. Repeated selection may open details; explicit double-click may focus/zoom the selected place.
+`Trajectory` remains the semantic authority. A presentation-only chronological connector must remain distinguishable from unknown route geometry.
 
 ## 5. Knowledge and epistemic scope
+
+The canonical World Model remains broader than the current visible loop:
 
 - `Entity`, `Event`, `State`, `Process`, `Trajectory`, `Region`, `Layer`;
 - `Relation` as structured Claim;
 - `Claim`, `Source`, `EvidenceLink`;
 - independent claim kind/origin/review/confidence/evidence/uncertainty;
 - explicit corpus coverage;
-- alternative reconstructions may be represented where necessary;
-- `Similarity` remains computed output, not evidence;
-- `same_movement` remains legacy classification projection.
+- alternative reconstructions where necessary;
+- `Similarity` as computed output, not evidence;
+- `same_movement` as legacy classification projection.
 
-Full canonical schema implementation is not required before the contract and fixtures are reviewed. Compatibility adapters may be used only if they do not erase target semantics.
+The current UI does not need to expose every canonical object type to prove the first Temporal Map interaction. Compatibility adapters may be used only if they do not erase target semantics.
 
 ## 6. Architecture Atlas disposition
 
@@ -132,8 +151,8 @@ Architecture Atlas:
 - remains a public compatibility surface at `/atlas/`;
 - remains an architecture thematic layer;
 - retains current Sources/Media/Relations and Gate A fixtures;
-- may supply buildings and context to Life in Context;
-- does not define the only user, loop or outcome.
+- may later supply contextual material to Life in Context through the shared core;
+- does not define the active user, loop or outcome.
 
 No completed corpus or engineering work is deleted in this cycle.
 
@@ -141,18 +160,20 @@ No completed corpus or engineering work is deleted in this cycle.
 
 Target Investigation/SliceRevision/ResearchBrief remains a valid optional research-work capability.
 
-For the first Life in Context pilot:
+For the current Leonardo Temporal Map check:
 
 - immutable revisions and Research Brief are not prerequisites;
 - current mutable ResearchSlice v2 remains compatibility backend code;
 - issues #323–#325 are not executed;
-- PR #314 is not merged as a Foundation prerequisite;
-- no new public backend is required unless the validation design proves static runtime insufficient.
+- PR #314 is not a Foundation prerequisite;
+- no new public backend is required unless evidence shows the static read-only loop is insufficient.
 
 ## 8. Frozen scope
 
 Until a recorded decision opens one named branch:
 
+- broader Leonardo 1452–1519 corpus;
+- default local/global context layers;
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
 - counterfactual simulation;
@@ -166,7 +187,7 @@ Until a recorded decision opens one named branch:
 - native apps;
 - enterprise APIs/integrations;
 - framework rewrite;
-- scaling unrelated to pilot blockers.
+- scaling unrelated to current blockers.
 
 Security and compatibility maintenance remain allowed.
 
@@ -177,74 +198,66 @@ Capability labels:
 - `PUBLIC NOW`;
 - `BACKEND-AVAILABLE`;
 - `PILOT`;
+- `R&D`;
 - `CONCEPT TARGET`;
 - `FUTURE`.
 
 The public root is the ARTEMIS Core landing. It routes `/globe/` as the primary Leonardo research prototype and `/atlas/` as compatibility-only.
 
-The #355 decision and Concept v3 do not make:
+The #355 decision, public deployment and #396 implementation do not make:
 
-- Leonardo World Slice product-validated;
-- temporal Regions implemented;
+- Leonardo historical content product-validated;
+- broader local/global context implemented as the current default experience;
 - AI available;
 - the Globe product-validated;
 - VR available;
 - world-scale coverage real.
 
-## 10. Exit gates
+## 10. Current exit condition
 
-Foundation gate:
+The immediate Gate D product step is complete only when the corrected #396 loop receives a fresh user check and one explicit next result is recorded:
 
-- canonical docs agree;
-- world-model semantics are reviewable;
-- Concept v2 is superseded without deleting history;
-- old backlog is held, not silently repurposed;
-- no runtime capability claim changed.
+- `ITERATE`;
+- `NARROW`;
+- `STOP/RETHINK`.
 
-Dataset gate:
+The check should determine whether the user can:
 
-- World Slice scope and coverage are explicit;
-- material Claims have EvidenceLinks/locators;
-- trajectory/regions/time uncertainty are represented;
-- co-presence and Relation fixtures cannot collapse;
-- curation/review cost is recorded.
+- distinguish Range from Scrub;
+- use the timeline as the primary time control;
+- understand why visible Presences/path change with time;
+- select a Presence without unwanted camera movement;
+- retrieve concise meaning and epistemic limits;
+- avoid interpreting dashed chronology as a known route.
 
-Experience gate:
+A result does not automatically mean Gate D is globally complete. It authorizes at most one next evidence-backed product branch.
 
-- map/timeline/selection share one state;
-- user can move either time mode and observe a meaningful change in visible presences;
-- selected presences explain place, time, activity and epistemic limits without opening a diagnostic wall of text;
-- source/uncertainty is accessible;
-- required desktop/tablet/mobile states work.
+Formal same-content baseline, broader contextual-understanding metrics and participant protocol remain available for a later validation step when the tested scope actually contains the corresponding context/layer hypotheses.
 
-Validation gate:
+## 11. Next-branch rule
 
-- same-content baseline is frozen;
-- contextual understanding and simultaneity discovery are measured;
-- relation overclaim errors are measured;
-- decision is recorded before branch expansion.
+After the current #396 user check, record exactly one result:
 
-## 11. Promotion decision
+- `ITERATE` — improve the same loop;
+- `NARROW` — reduce the loop/content scope;
+- `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-After the #355 evidence cycle, record exactly one result:
+Only an evidence-supported `ITERATE` may open at most one next branch. Candidate branches include one bounded data increment, one context/layer increment, curation/editorial storage, persistence/sharing or a measured renderer/provider improvement.
 
-- continue as generated R&D evidence;
-- promote to a maintained experimental Globe app;
-- narrow/rework the vertical;
-- stop/rethink.
-
-Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR each remain separate decisions.
+Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 
 ## 12. Owner documents
 
 - North Star: `ARTEMIS_CONCEPT.md`;
 - product thesis: `PRODUCT_THESIS.md`;
 - current truth: `PROJECT_TRUTH.md`;
+- platform architecture: `PLATFORM_ARCHITECTURE_DECISION.md`;
 - world model: `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
 - epistemic semantics: `EPISTEMIC_CONTRACT.md`;
 - entities and relations: `ENTITY_MODEL.md`;
 - current public data: `DATA_DICTIONARY.md` and `DATA_CONTRACT.md`;
 - research persistence: `RESEARCH_SLICE_CONTRACT.md`;
 - Foundation decision: `work/2026-07-28_FOUNDATION_V3_DECISION.md`;
-- validation execution: `work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`.
-- active Globe decision: `work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
+- formal validation design: `work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md`;
+- active Globe decision: `work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`;
+- current Temporal Map interaction: `work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md`.
