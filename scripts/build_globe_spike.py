@@ -4,12 +4,14 @@
 from __future__ import annotations
 
 import argparse
+import calendar
 import copy
 import hashlib
 import itertools
 import json
 import shutil
 import sys
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +37,9 @@ ENGINE_EVALUATION_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "engine_ev
 ACCEPTANCE_PROFILES_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "gate_d_acceptance_profiles.json"
 EARTH_CONTEXT_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "natural_earth_110m_land.geojson"
 CAPABILITY_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "capability_path.geojson"
+LIFE_PATH_PRESENTATION_PATH = (
+    ROOT / "fixtures" / "globe_runtime" / "v1" / "leonardo_life_path_presentation.json"
+)
 TEMPLATE_DIR = ROOT / "scripts" / "globe_spike"
 
 SPIKE_ID = "artemis-globe-gate-d-review-v1"
@@ -55,6 +60,7 @@ REQUIRED_OUTPUT_FILES = {
     "engine-evaluation.json",
     "acceptance-profiles.json",
     "knowledge-index.json",
+    "life-path.json",
     "build-meta.json",
     "README.txt",
 }
@@ -127,7 +133,6 @@ LEONARDO_TEMPORAL_PRESETS = (
         },
     },
 )
-
 
 class SpikeBuildError(ValueError):
     pass
@@ -653,6 +658,269 @@ def _build_explorer_views(
     }
 
 
+def _expanded_temporal_bound(value: str, *, edge: str) -> date:
+    parts = value.split("-")
+    try:
+        year = int(parts[0])
+        month = int(parts[1]) if len(parts) >= 2 else (1 if edge == "start" else 12)
+        day = int(parts[2]) if len(parts) >= 3 else (
+            1 if edge == "start" else calendar.monthrange(year, month)[1]
+        )
+        return date(year, month, day)
+    except (ValueError, IndexError) as exc:
+        raise SpikeBuildError(f"invalid life-path temporal value {value!r}") from exc
+
+
+def _build_life_path_time_axis(presences: list[dict[str, Any]]) -> dict[str, Any]:
+    starts = [
+        _expanded_temporal_bound(presence["temporal"]["start"], edge="start")
+        for presence in presences
+    ]
+    ends = [
+        _expanded_temporal_bound(presence["temporal"]["end"], edge="end")
+        for presence in presences
+    ]
+    lower = min(starts)
+    upper = max(ends)
+    if upper.year - lower.year >= 2:
+        values = [str(year) for year in range(lower.year, upper.year + 1)]
+        axis_kind = "year"
+        for presence, start, end in zip(presences, starts, ends, strict=True):
+            presence["axis_start_index"] = start.year - lower.year
+            presence["axis_end_index"] = end.year - lower.year
+    else:
+        values = []
+        cursor = lower
+        while cursor <= upper:
+            values.append(cursor.isoformat())
+            cursor += timedelta(days=1)
+        axis_kind = "day"
+        for presence, start, end in zip(presences, starts, ends, strict=True):
+            presence["axis_start_index"] = (start - lower).days
+            presence["axis_end_index"] = (end - lower).days
+    return {
+        "axis_kind": axis_kind,
+        "calendar": "proleptic_gregorian",
+        "values": values,
+        "default_start_index": 0,
+        "default_end_index": len(values) - 1,
+        "future_granularity": ["month", "day"],
+    }
+
+
+def _build_life_path_presentation(
+    *,
+    world: dict[str, Any],
+    base_state: dict[str, Any],
+    base_projection: dict[str, Any],
+    projection_schema: dict[str, Any],
+    presentation: dict[str, Any],
+    dataset: str,
+) -> dict[str, Any]:
+    """Build a deterministic presentation from canonical Trajectory segments."""
+
+    if dataset != DEFAULT_DATASET:
+        return {
+            "schema_version": "1.0.0",
+            "path_id": "life-path-unavailable-for-contract-fixture",
+            "available": False,
+            "presences": [],
+            "transitions": [],
+            "views": [],
+        }
+
+    events = _index_by_id(world.get("events", []), label="events")
+    entities = _index_by_id(world.get("entities", []), label="entities")
+    trajectories = _index_by_id(world.get("trajectories", []), label="trajectories")
+    subject_ref = str(presentation.get("subject_ref") or "")
+    trajectory_ref = str(presentation.get("trajectory_ref") or "")
+    trajectory = trajectories.get(trajectory_ref)
+    if trajectory is None:
+        raise SpikeBuildError("life-path presentation lost its canonical Trajectory")
+    if trajectory.get("subject_ref") != subject_ref or subject_ref not in entities:
+        raise SpikeBuildError("life-path subject/Trajectory binding drifted")
+    segments = {
+        str(segment.get("id")): segment
+        for segment in trajectory.get("segments", [])
+        if segment.get("id")
+    }
+    geometries = {
+        str(geometry.get("owner_ref")): geometry
+        for geometry in base_projection.get("geometries", [])
+        if geometry.get("owner_ref")
+    }
+    projection_item_ids = {
+        str(item.get("item_id"))
+        for item in base_projection.get("items", [])
+        if item.get("item_id")
+    }
+
+    presences: list[dict[str, Any]] = []
+    bindings = presentation.get("presence_bindings") or []
+    if not isinstance(bindings, list) or not bindings:
+        raise SpikeBuildError("life-path presentation requires presence bindings")
+    for index, binding in enumerate(bindings):
+        event = events.get(binding["event_ref"])
+        place = entities.get(binding["place_ref"])
+        segment = segments.get(binding["trajectory_segment_ref"])
+        geometry = geometries.get(binding["place_ref"])
+        if event is None or place is None or segment is None or geometry is None:
+            raise SpikeBuildError(
+                f"life-path presence closure failed for {binding['presence_id']}"
+            )
+        if segment.get("segment_kind") != "presence":
+            raise SpikeBuildError("life-path binding must resolve to a presence segment")
+        spatial = segment.get("spatial_extent") or {}
+        if spatial.get("place_ref") != binding["place_ref"]:
+            raise SpikeBuildError("life-path presence segment/place binding drifted")
+        if geometry.get("origin_kind") != "place_reference_anchor":
+            raise SpikeBuildError("life-path presence escaped place-reference geometry")
+        if geometry.get("spatial_precision") != "named_settlement":
+            raise SpikeBuildError("life-path presence lost named-settlement precision")
+        coordinates = geometry.get("geometry", {}).get("coordinates")
+        if geometry.get("geometry", {}).get("type") != "Point" or not coordinates:
+            raise SpikeBuildError("life-path presence must resolve to one anchor Point")
+
+        event_item_id = f"rp:event:{binding['event_ref']}"
+        presence_item_id = (
+            f"rp:trajectory_segment:{trajectory_ref}:"
+            f"{binding['trajectory_segment_ref']}"
+        )
+        if {event_item_id, presence_item_id} - projection_item_ids:
+            raise SpikeBuildError("life-path presence escaped the canonical projection")
+
+        temporal = copy.deepcopy(event.get("temporal_extent") or {})
+        if not temporal.get("start") or not temporal.get("end"):
+            raise SpikeBuildError("life-path presence requires source-bound temporal values")
+        presences.append(
+            {
+                "index": index,
+                **copy.deepcopy(binding),
+                "place_label": place.get("label") or binding["place_ref"],
+                "short_description": event.get("label") or binding["event_ref"],
+                "temporal": temporal,
+                "coordinates": copy.deepcopy(coordinates),
+                "coordinate_role": "present_day_settlement_reference",
+                "historical_location_precision": (
+                    "exact_position_within_named_settlement_unknown"
+                ),
+                "duration_status": "not_established_in_current_corpus",
+                "event_item_id": event_item_id,
+                "presence_item_id": presence_item_id,
+            }
+        )
+
+    time_axis = _build_life_path_time_axis(presences)
+    presence_ids = {presence["presence_id"] for presence in presences}
+    transitions: list[dict[str, Any]] = []
+    for binding in presentation.get("transition_bindings") or []:
+        segment = segments.get(binding["trajectory_segment_ref"])
+        if segment is None or segment.get("segment_kind") != "inferred_gap":
+            raise SpikeBuildError("life-path transition must bind an inferred gap")
+        if {
+            binding.get("from_presence_ref"),
+            binding.get("to_presence_ref"),
+        } - presence_ids:
+            raise SpikeBuildError("life-path transition escapes presence sequence")
+        if (segment.get("spatial_extent") or {}).get("geometry") is not None:
+            raise SpikeBuildError("unknown life-path transition acquired route geometry")
+        transitions.append(
+            {
+                **copy.deepcopy(binding),
+                "segment_kind": "inferred_gap",
+                "route_status": "unknown_route",
+                "route_geometry": None,
+                "uncertainty_refs": ["uncertainty-trajectory-route-gaps"],
+                "presentation_connector": {
+                    "semantic_role": "chronological_connection",
+                    "style": "dashed",
+                    "derived_from_presence_anchors": True,
+                    "is_historical_route_geometry": False,
+                },
+            }
+        )
+
+    all_layers = sorted(layer["id"] for layer in world.get("layers", []))
+    views: list[dict[str, Any]] = []
+    for start_index in range(len(presences)):
+        for end_index in range(start_index, len(presences)):
+            first = presences[start_index]
+            last = presences[end_index]
+            state = copy.deepcopy(base_state)
+            state["state_id"] = (
+                f"{base_state['state_id']}--life-path-{start_index}-{end_index}"
+            )
+            state["active_layer_refs"] = all_layers
+            state["temporal_selection"] = {
+                "mode": (
+                    "instant"
+                    if first["temporal"]["start"] == last["temporal"]["end"]
+                    else "interval"
+                ),
+                "start": first["temporal"]["start"],
+                "end": last["temporal"]["end"],
+                "precision": (
+                    "month"
+                    if start_index == end_index
+                    and len(str(first["temporal"]["start"])) == 7
+                    else "day"
+                    if start_index == end_index
+                    else "range"
+                ),
+                "calendar": "proleptic_gregorian",
+            }
+            projection, _maplibre, globe = build_all(
+                world, state, projection_schema
+            )
+            _assert_gate_d_place_anchor_projection(projection, globe)
+            view_id = f"life-path-{start_index}-{end_index}"
+            views.append(
+                {
+                    "view_id": view_id,
+                    "start_index": start_index,
+                    "end_index": end_index,
+                    "visible_presence_ids": [
+                        presence["presence_id"]
+                        for presence in presences[start_index : end_index + 1]
+                    ],
+                    "state": state,
+                    "projection": projection,
+                    "globe": globe,
+                }
+            )
+
+    return {
+        "schema_version": "1.0.0",
+        "path_id": presentation["presentation_id"],
+        "available": True,
+        "presentation_only": True,
+        "scope_status": presentation["scope_status"],
+        "subject_ref": subject_ref,
+        "subject_label": entities[subject_ref]["label"],
+        "trajectory_ref": trajectory_ref,
+        "coverage": {
+            "start": presences[0]["temporal"]["start"],
+            "end": presences[-1]["temporal"]["end"],
+            "scope_label": "Selected source-bound Romagna presences · 1502",
+            "complete_life": False,
+            "step_granularity": "source_native_day_or_month",
+        },
+        "default_mode": "range",
+        "time_axis": time_axis,
+        "default_view_id": f"life-path-0-{len(presences) - 1}",
+        "route_policy": {
+            "status": "unknown_route",
+            "geometry": None,
+            "historical_route_geometry_permitted": False,
+            "chronological_connector_permitted": True,
+            "chronological_connector_is_route": False,
+        },
+        "presences": presences,
+        "transitions": transitions,
+        "views": views,
+    }
+
+
 def _assert_gate_d_place_anchor_projection(
     projection: dict[str, Any], globe: dict[str, Any]
 ) -> None:
@@ -693,6 +961,7 @@ def build_spike(
     acceptance_profiles = _load(ACCEPTANCE_PROFILES_PATH)
     earth_context = _load(EARTH_CONTEXT_PATH)
     capability_path = _load(CAPABILITY_PATH)
+    life_path_presentation = _load(LIFE_PATH_PRESENTATION_PATH)
 
     asset_errors = validate_manifest(asset_manifest, schema=asset_schema, world=world)
     if asset_errors:
@@ -770,6 +1039,14 @@ def build_spike(
             raise SpikeBuildError("Gate C Region alternatives must remain unresolved")
 
     knowledge_index = _build_knowledge_index(world, projection)
+    life_path = _build_life_path_presentation(
+        world=world,
+        base_state=state,
+        base_projection=projection,
+        projection_schema=projection_schema,
+        presentation=life_path_presentation,
+        dataset=dataset,
+    )
     knowledge_item_ids = {
         record["item_id"] for record in knowledge_index["records"]
     }
@@ -820,6 +1097,7 @@ def build_spike(
     _write_json(output / "engine-evaluation.json", evaluation)
     _write_json(output / "acceptance-profiles.json", acceptance_profiles)
     _write_json(output / "knowledge-index.json", knowledge_index)
+    _write_json(output / "life-path.json", life_path)
     copied_source_sha256 = _copy_local_sources(
         world, output, source_root=source_root
     )
@@ -837,6 +1115,16 @@ def build_spike(
         "semantic_item_count": len(projection.get("items", [])),
         "globe_primitive_count": len(globe_adapter.get("primitives", [])),
         "knowledge_record_count": len(knowledge_index["records"]),
+        "life_path_available": life_path.get("available") is True,
+        "life_path_presence_count": len(life_path.get("presences", [])),
+        "life_path_transition_count": len(life_path.get("transitions", [])),
+        "life_path_view_count": len(life_path.get("views", [])),
+        "life_path_chronological_connector_enabled": (
+            life_path.get("route_policy", {}).get(
+                "chronological_connector_permitted"
+            )
+            is True
+        ),
         "explorer_view_count": len(explorer_views["views"]),
         "temporal_preset_count": len(explorer_views["temporal_presets"]),
         "unresolved_item_count": len(
@@ -876,6 +1164,7 @@ def build_spike(
             "acceptance_profiles": _sha(acceptance_profiles),
             "earth_context": _sha(earth_context),
             "capability_path": _sha(capability_path),
+            "life_path_presentation": _sha(life_path_presentation),
             "source_documents": copied_source_sha256,
         },
         "generated_sha256": {
@@ -883,6 +1172,7 @@ def build_spike(
             "globe_projection": _sha(globe_adapter),
             "knowledge_index": _sha(knowledge_index),
             "explorer_views": _sha(explorer_views),
+            "life_path": _sha(life_path),
         },
     }
     _write_json(output / "build-meta.json", metadata)
@@ -904,8 +1194,9 @@ def build_spike(
         "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
         "Its historical Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
         "Four CC0 Wikidata points are present-day named-settlement reference anchors only; exact historical position remains unknown.\n"
-        "Time/layer controls switch only among precomputed Explorer State and Render Projection packages.\n"
-        "The inspector resolves only package-derived canonical references, sources, locators and uncertainty.\n",
+        "Leonardo Life Path offers calendar-scaled Range and Scrub views over the current four source-bound presences.\n"
+        "Dashed chronological connectors are presentation-only; every inter-presence route remains unknown with null geometry.\n"
+        "The compact presence card resolves only package-derived canonical references, sources, locators and uncertainty.\n",
         encoding="utf-8",
     )
 

@@ -1,94 +1,104 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>ARTEMIS Globe R&D Spike</title>
+  <title>ARTEMIS · Leonardo Life Path</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <main id="app">
-    <section id="globe-shell" aria-label="ARTEMIS experimental 3D globe">
+    <section id="globe-shell" aria-label="ARTEMIS Leonardo life path globe">
       <div id="globe"></div>
       <header id="spike-banner">
-        <div>
-          <strong>ARTEMIS · Source-aware 3D Globe MVP</strong>
+        <div class="product-label">
+          <strong>ARTEMIS · Leonardo Life Path</strong>
           <span>{{PUBLIC_PREVIEW_STATUS}}</span>
         </div>
-        <div class="banner-actions">
-          {{PUBLIC_PREVIEW_NAV}}
-          <div id="engine-status" class="status-pill">engine: loading</div>
-        </div>
+        <div class="banner-actions">{{PUBLIC_PREVIEW_NAV}}</div>
       </header>
-
-      <div id="globe-controls" role="group" aria-label="Globe controls">
-        <button id="view-global" type="button">Global</button>
-        <button id="view-slice" type="button">World Slice</button>
-        <button id="toggle-alternatives" type="button" aria-pressed="true" title="Renderer-local visibility for already projected alternative geometry" hidden>Map display: alternative geometry shown</button>
-      </div>
-
-      <div id="temporal-map-status" class="map-note temporal-map-note" role="status" aria-live="polite">Loading source-bound time view…</div>
-      <div id="terrain-status" class="map-note"></div>
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>
 
-    <aside id="inspector" aria-label="ARTEMIS globe spike inspector">
-      <section aria-labelledby="explorer-controls-title">
-        <h1 id="explorer-controls-title">Synchronized Explorer</h1>
-        <p class="source-note">Data source: frozen repository review package. This preview does not query Airtable live.</p>
-        <div class="explorer-control">
-          <label for="temporal-preset">Source-bound date or interval</label>
-          <input id="temporal-preset" type="range" min="0" max="0" step="1" value="0" aria-describedby="temporal-preset-value interaction-status" />
-          <output id="temporal-preset-value" for="temporal-preset">Loading…</output>
+    <aside id="inspector" aria-label="Leonardo life path controls and selected presence">
+      <header class="subject-header">
+        <span class="eyebrow">Selected object</span>
+        <h1>Leonardo da Vinci</h1>
+        <p id="path-coverage">Current source-bound interaction scaffold · Romagna 1502</p>
+      </header>
+
+      <section class="path-controls" aria-labelledby="time-mode-title">
+        <div class="section-heading">
+          <h2 id="time-mode-title">Explore through time</h2>
+          <div class="mode-switch" role="group" aria-label="Timeline mode">
+            <button id="mode-range" type="button" aria-pressed="true">Range</button>
+            <button id="mode-scrub" type="button" aria-pressed="false">Scrub</button>
+          </div>
         </div>
-        <fieldset id="layer-controls" class="layer-controls">
-          <legend>Active semantic layers</legend>
-        </fieldset>
-        <p id="interaction-status" class="hint" role="status" aria-live="polite">Loading deterministic Explorer views…</p>
+
+        <div id="range-controls" class="timeline-mode">
+          <div class="range-row">
+            <label for="range-start">Start</label>
+            <output id="range-start-value" for="range-start">—</output>
+            <input id="range-start" type="range" min="0" max="0" step="1" value="0" />
+          </div>
+          <div class="range-row">
+            <label for="range-end">End</label>
+            <output id="range-end-value" for="range-end">—</output>
+            <input id="range-end" type="range" min="0" max="0" step="1" value="0" />
+          </div>
+          <p class="mode-help">Shows every documented presence overlapping the selected calendar interval.</p>
+        </div>
+
+        <div id="scrub-controls" class="timeline-mode" hidden>
+          <div class="range-row">
+            <label for="scrub-start">Begin at</label>
+            <output id="scrub-start-value" for="scrub-start">—</output>
+            <input id="scrub-start" type="range" min="0" max="0" step="1" value="0" />
+          </div>
+          <div class="range-row">
+            <label for="scrub-current">Current time</label>
+            <output id="scrub-current-value" for="scrub-current">—</output>
+            <input id="scrub-current" type="range" min="0" max="0" step="1" value="0" />
+          </div>
+          <p class="mode-help">Builds the accumulated path as the calendar cursor moves forward.</p>
+        </div>
+
+        <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
       </section>
 
-      <details class="inspector-disclosure">
-        <summary>Shared state and data boundary</summary>
-        <div class="disclosure-body">
+      <section class="selection-section" aria-labelledby="selection-title">
+        <span class="eyebrow">Selected presence</span>
+        <h2 id="selection-title">Place details</h2>
+        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">Choose a numbered place on the globe or in the list.</div>
+      </section>
+
+      <section class="stop-sequence-section" aria-labelledby="stop-sequence-title">
+        <h2 id="stop-sequence-title">Documented places</h2>
+        <div id="path-sequence" class="path-sequence" role="list"></div>
+        <p class="route-note"><span class="route-swatch" aria-hidden="true"></span>Dashed links show chronology only. Exact routes remain unknown.</p>
+      </section>
+
+      <details id="prototype-details" class="prototype-details">
+        <summary>Sources, limits and prototype status</summary>
+        <div class="prototype-body">
+          <p class="source-note">Frozen repository review package. Claims remain draft/rejected; this preview does not query Airtable.</p>
           <dl class="metrics">
-            <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
-            <div><dt>Explorer State</dt><dd id="explorer-state">—</dd></div>
             <div><dt>Selected time</dt><dd id="selected-time">—</dd></div>
-            <div><dt>Projection</dt><dd id="projection-id">—</dd></div>
+            <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
             <div><dt>Corpus status</dt><dd id="corpus-status">—</dd></div>
-            <div><dt>Deferred types</dt><dd id="deferred-types">—</dd></div>
-          </dl>
-          <p id="boundary-status" class="boundary-note">Loading semantic and renderer boundary…</p>
-        </div>
-      </details>
-
-      <section>
-        <h2>Semantic render</h2>
-        <div id="semantic-summary" class="summary-grid"></div>
-        <p class="hint">Pick a rendered object or choose an unresolved record. Both paths resolve the same canonical evidence chain.</p>
-      </section>
-
-      <section>
-        <h2>Selection</h2>
-        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">No semantic object selected.</div>
-      </section>
-
-      <details class="inspector-disclosure">
-        <summary>Unresolved / uncertain · <span id="unresolved-count">0</span></summary>
-        <div id="unresolved-list" class="disclosure-body"></div>
-      </details>
-
-      <details class="inspector-disclosure">
-        <summary>Renderer and runtime diagnostics</summary>
-        <div class="disclosure-body">
-          <p class="warning">The dashed path is synthetic renderer-capability geometry only. It has no World Model object ID and is not historical knowledge.</p>
-          <dl class="metrics">
-            <div><dt>Startup → idle</dt><dd id="startup-ms">pending</dd></div>
+            <div><dt>Engine</dt><dd id="engine-status">loading</dd></div>
+            <div><dt>Terrain</dt><dd id="terrain-status">—</dd></div>
+            <div><dt>Startup</dt><dd id="startup-ms">pending</dd></div>
             <div><dt>Frame sample</dt><dd id="frame-sample">pending</dd></div>
-            <div><dt>Rendered semantic primitives</dt><dd id="primitive-count">—</dd></div>
           </dl>
+          <p id="boundary-status" class="boundary-note"></p>
+          <span id="explorer-state" hidden></span>
+          <span id="projection-id" hidden></span>
+          <span id="deferred-types" hidden></span>
+          <span id="primitive-count" hidden></span>
         </div>
       </details>
     </aside>
@@ -98,29 +108,5 @@
 
   <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
   <script src="./runtime.js"></script>
-  <script>
-    (() => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('view') !== 'slice') return;
-
-      let attempts = 0;
-      const timer = window.setInterval(() => {
-        attempts += 1;
-        const map = window.__ARTEMIS_GLOBE_SPIKE?.map;
-        if (
-          map
-          && typeof map.getLayer === 'function'
-          && map.getLayer('artemis-region-primary-fill')
-          && typeof window.__ARTEMIS_GLOBE_SPIKE?.focusSlice === 'function'
-        ) {
-          window.clearInterval(timer);
-          window.__ARTEMIS_GLOBE_SPIKE.focusSlice();
-          document.documentElement.dataset.artemisCamera = 'world-slice';
-          return;
-        }
-        if (attempts >= 150) window.clearInterval(timer);
-      }, 100);
-    })();
-  </script>
 </body>
 </html>

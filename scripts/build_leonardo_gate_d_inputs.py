@@ -356,6 +356,7 @@ def _adapt_candidate(
         result["value"] = "candidate_not_ready"
     elif object_type == "Trajectory":
         parent_extent = copy.deepcopy(temporal_extent)
+        result["subject_ref"] = "entity-leonardo-da-vinci"
         result["coverage"] = candidate["notes"]
         result["segments"] = []
         for segment in candidate.get("segments") or []:

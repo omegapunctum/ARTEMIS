@@ -14,6 +14,7 @@ from scripts.build_globe_spike import (
     EXPECTED_ENGINE,
     ROOT,
     WORLD_PATH,
+    _build_life_path_time_axis,
     build_spike,
     _validate_acceptance_profiles,
     SpikeBuildError,
@@ -28,6 +29,21 @@ HTML_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
 
 def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_life_path_time_axis_uses_years_for_whole_life_coverage() -> None:
+    presences = [
+        {"temporal": {"start": "1452", "end": "1452"}},
+        {"temporal": {"start": "1519", "end": "1519"}},
+    ]
+
+    axis = _build_life_path_time_axis(presences)
+
+    assert axis["axis_kind"] == "year"
+    assert axis["values"][0] == "1452"
+    assert axis["values"][-1] == "1519"
+    assert presences[0]["axis_start_index"] == 0
+    assert presences[1]["axis_end_index"] == 67
 
 
 def test_engine_evaluation_selects_maplibre_with_all_required_criteria_pass() -> None:
@@ -63,6 +79,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
         "engine-evaluation.json",
         "acceptance-profiles.json",
         "knowledge-index.json",
+        "life-path.json",
         "build-meta.json",
         "README.txt",
     }
@@ -75,6 +92,11 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["knowledge_record_count"] == metadata["semantic_item_count"]
     assert metadata["explorer_view_count"] == 96
     assert metadata["temporal_preset_count"] == 6
+    assert metadata["life_path_available"] is True
+    assert metadata["life_path_presence_count"] == 4
+    assert metadata["life_path_transition_count"] == 3
+    assert metadata["life_path_view_count"] == 10
+    assert metadata["life_path_chronological_connector_enabled"] is True
     assert metadata["browser_acceptance_profile_count"] == 3
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
@@ -112,6 +134,50 @@ def test_generated_runtime_uses_shared_world_slice_state_and_projection(tmp_path
     assert globe["projection_id"] == projection["projection_id"]
     assert globe["source"]["explorer_state_ref"] == state["state_id"]
     assert globe["vertical_semantics"] == "not_modeled"
+
+
+def test_life_path_presentation_is_calendar_scaled_and_route_geometry_free(tmp_path: Path) -> None:
+    output = tmp_path / "globe-spike"
+    build_spike(output)
+    life_path = _load(output / "life-path.json")
+
+    assert life_path["available"] is True
+    assert life_path["presentation_only"] is True
+    assert life_path["subject_ref"] == "entity-leonardo-da-vinci"
+    assert life_path["trajectory_ref"] == "trajectory-leonardo-romagna-1502"
+    assert life_path["scope_status"] == "interaction_scaffold_not_complete_life"
+    assert life_path["coverage"]["complete_life"] is False
+    assert life_path["route_policy"] == {
+        "status": "unknown_route",
+        "geometry": None,
+        "historical_route_geometry_permitted": False,
+        "chronological_connector_permitted": True,
+        "chronological_connector_is_route": False,
+    }
+    assert life_path["time_axis"]["axis_kind"] == "day"
+    assert life_path["time_axis"]["values"][0] == "1502-08-08"
+    assert life_path["time_axis"]["values"][-1] == "1502-11-30"
+    assert len(life_path["time_axis"]["values"]) == 115
+    assert [presence["place_ref"] for presence in life_path["presences"]] == [
+        "place-rimini",
+        "place-cesena",
+        "place-cesenatico",
+        "place-imola",
+    ]
+    assert all(presence["coordinate_role"] == "present_day_settlement_reference" for presence in life_path["presences"])
+    assert all(presence["historical_location_precision"] == "exact_position_within_named_settlement_unknown" for presence in life_path["presences"])
+    assert all("short_description" in presence for presence in life_path["presences"])
+    assert len(life_path["transitions"]) == 3
+    assert all(transition["route_status"] == "unknown_route" for transition in life_path["transitions"])
+    assert all(transition["route_geometry"] is None for transition in life_path["transitions"])
+    assert all(transition["presentation_connector"] == {
+        "semantic_role": "chronological_connection",
+        "style": "dashed",
+        "derived_from_presence_anchors": True,
+        "is_historical_route_geometry": False,
+    } for transition in life_path["transitions"])
+    assert len(life_path["views"]) == 10
+    assert life_path["default_view_id"] == "life-path-0-3"
 
 
 def test_precomputed_views_use_source_native_time_and_projection_semantics(tmp_path: Path) -> None:
@@ -215,6 +281,12 @@ def test_default_adapter_preserves_frozen_gate_c_boundary_with_context_overlay()
     assert world["promotion_allowed"] is False
     assert world["gate_c_decision"]["decision"] == "FREEZE"
     assert world["gate_c_decision"]["promotion_allowed"] is False
+    trajectory = next(
+        item
+        for item in world["trajectories"]
+        if item["id"] == "trajectory-leonardo-romagna-1502"
+    )
+    assert trajectory["subject_ref"] == "entity-leonardo-da-vinci"
     assert state["world_slice_ref"] == "world-slice-leonardo-romagna-1502-v1"
     assert state["dataset_identity"] == world["world_slice"]["dataset_identity"]
     assert state["temporal_selection"] == {
@@ -529,8 +601,8 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "node.getClientRects().length > 0" in runtime_source
     assert 'input[type="range"]' in runtime_source
     assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
-    assert 'input[type="range"] { min-height: 24px; }' in style_source
-    assert "#globe-controls { left: 16px; right: 16px; bottom: 94px; flex-wrap: wrap; }" in style_source
+    assert 'input[type="range"] { min-height: 30px;' in style_source
+    assert ".life-path-marker" in style_source
     assert "verifyEarthContextRender" in runtime_source
     assert "querySourceFeatures('artemis-earth-context')" in runtime_source
     assert "contextRenderedFeatureCount" in runtime_source
@@ -547,36 +619,45 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "/tmp/artemis-globe-browser-*-capture.json" in workflow_source
 
 
-def test_timeline_layers_and_selection_share_precomputed_explorer_views() -> None:
+def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
-    assert 'id="temporal-preset" type="range"' in html_source
-    assert 'id="layer-controls"' in html_source
+    assert 'id="range-start" type="range"' in html_source
+    assert 'id="range-end" type="range"' in html_source
+    assert 'id="scrub-start" type="range"' in html_source
+    assert 'id="scrub-current" type="range"' in html_source
+    assert 'id="mode-range"' in html_source
+    assert 'id="mode-scrub"' in html_source
+    assert 'id="layer-controls"' not in html_source
     assert 'role="status" aria-live="polite"' in html_source
+    assert html_source.index('id="selection-card"') < html_source.index('id="path-sequence"')
     assert "applySemanticView" in runtime_source
     assert "runtime.viewByKey.get" in runtime_source
     assert "semanticSource.setData(globePrimitivesToGeoJson(next.globe))" in runtime_source
     assert "updateCanonicalSelection(projectionItem)" in runtime_source
-    assert "Selection cleared: the object is outside the active time/layer projection." in runtime_source
+    assert "function applyLifePathView" in runtime_source
+    assert "function selectLifePathPresence" in runtime_source
+    assert "function visibleLifePathPresences" in runtime_source
+    assert "presence.axis_start_index <= end" in runtime_source
     assert "prefers-reduced-motion: reduce" in runtime_source
 
 
-def test_runtime_explains_time_invariant_geometry_and_hides_noop_controls() -> None:
+def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-map-status"' in html_source
-    assert "only present-day named-settlement reference points are authorized" in runtime_source
-    assert "geometryIsTimeInvariant" in runtime_source
-    assert "range.setAttribute('aria-valuetext', presetLabel)" in runtime_source
-    assert 'id="toggle-alternatives"' in html_source
-    assert 'aria-pressed="true"' in html_source
-    assert 'alternative geometry" hidden' in html_source
-    assert "alternativeGeometryCount" in runtime_source
-    assert "control.hidden = count === 0" in runtime_source
-    assert "applyAlternativeLayerVisibility" in runtime_source
-    assert "state.epistemic_display.show_alternatives = runtime.alternativesVisible" not in runtime_source
+    assert "Dashed links show chronology only" in html_source
+    assert "Exact routes remain unknown" in html_source
+    assert 'id="toggle-alternatives"' not in html_source
+    assert 'id="view-global"' not in html_source
+    assert 'id="view-slice"' not in html_source
+    assert "addCapabilityPath(map, capabilityPath)" in runtime_source
+    assert "else addCapabilityPath(map, capabilityPath)" in runtime_source
+    assert "addLifePathMarkers(map)" in runtime_source
+    assert "life-path-chronology-line" in runtime_source
+    assert "is_historical_route_geometry: false" in runtime_source
     assert "maplibregl.GlobeControl" not in runtime_source
 
 
@@ -584,10 +665,10 @@ def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
-    assert "frozen repository review package" in html_source
-    assert "does not query Airtable live" in html_source
-    assert "Shared state and data boundary" in html_source
-    assert "Renderer and runtime diagnostics" in html_source
+    assert "Frozen repository review package" in html_source
+    assert "does not query Airtable" in html_source
+    assert "Sources, limits and prototype status" in html_source
+    assert "Sources and uncertainty" in runtime_source
     assert "knowledgeDisclosure" in runtime_source
     assert "Claims & evidence" in runtime_source
     assert "Material uncertainty" in runtime_source
@@ -602,11 +683,16 @@ def test_runtime_persists_and_restores_explorer_state_in_url() -> None:
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
 
     assert "function syncUrlState()" in runtime_source
+    assert "url.searchParams.set('mode'" in runtime_source
+    assert "url.searchParams.set('start'" in runtime_source
+    assert "url.searchParams.set('end'" in runtime_source
+    assert "url.searchParams.set('presence'" in runtime_source
     assert "url.searchParams.set('time'" in runtime_source
     assert "url.searchParams.set('layers'" in runtime_source
     assert "url.searchParams.set('item'" in runtime_source
     assert "window.history.replaceState" in runtime_source
     assert "function restoreExplorerStateFromUrl()" in runtime_source
+    assert "function restoreLifePathStateFromUrl" in runtime_source
     assert "window.addEventListener('popstate', restoreExplorerStateFromUrl)" in runtime_source
 
 
