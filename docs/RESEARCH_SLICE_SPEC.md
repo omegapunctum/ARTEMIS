@@ -12,7 +12,7 @@ Target product semantics принадлежат `RESEARCH_SLICE_CONTRACT.md`. Т
 - owner create/edit/reopen/delete and unlisted share/rotate/revoke: backend-available;
 - public deployment E2E: not yet proved;
 - Investigation identity, immutable revisions, claim-level EvidenceLinks with locators, pinned dataset identity and Brief export: not implemented;
-- product validation: `PENDING` until the protocol in `PRODUCT_VALIDATION_PLAN.md` is completed.
+- product validation: this compatibility runtime has no current product-validation authorization; ARTEMIS user-value status is owned by `VALIDATION_DECISION.md` and active scope by `ARTEMIS_PRODUCT_SCOPE.md`. Historical `PRODUCT_VALIDATION_PLAN.md` is not an active Foundation v3 owner.
 
 ## 2. JSON model v2
 
@@ -194,9 +194,9 @@ Migration `203/research_slices_product_complete_v2`:
 - share rotation and revoke;
 - frontend payload construction and nested Saved View precedence.
 
-Schema/code sync не равен public validation. Capability становится validation-ready только после #309: deployment evidence для create → edit → reopen → share на canonical public Pages/API runtime.
+Schema/code sync не равен public validation. Historical compatibility work item #309 defined deployment evidence for a create → edit → reopen → share backend/API loop, but that path is not the active #355 ARTEMIS Core product-validation route and cannot authorize current scope by itself.
 
-Даже после #309 current capability подтверждает только mutable Slice v2 loop. Target Investigation/revision/Brief model требует отдельного docs/data/runtime migration и нового E2E.
+Even if that compatibility E2E is later proved, current capability would confirm only the mutable Slice v2 loop. Target Investigation/revision/Brief model requires a separate docs/data/runtime migration and new E2E, and current ARTEMIS user-value status remains governed by `VALIDATION_DECISION.md`.
 
 ## 7. Out of scope
 
