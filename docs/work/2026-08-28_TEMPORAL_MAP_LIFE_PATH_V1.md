@@ -6,8 +6,8 @@
 - Updated: 2026-08-29.
 - Owner: issue `#355`.
 - Implemented sequence: PR `#395` established the calendar life-path loop; first published manual check recorded `ITERATE`; PR `#396` implemented and published the bounded feedback correction.
-- Current lifecycle: Gate C remains `FREEZE`; Gate D remains `OPEN / IN PROGRESS`; a fresh user check of the published #396 interface is the next product step.
-- Lifecycle effect: this contract does not promote any historical Claim, close Gate D, open Gate E or authorize a new product/data branch.
+- Current lifecycle: Gate C remains `FREEZE`; Gate D remains `OPEN / IN PROGRESS`; the fresh #396 user check recorded `ITERATE` and preserves this interaction as the baseline.
+- Lifecycle effect: this contract does not promote any historical Claim, close Gate D or open Gate E. The separate decision record authorizes exactly one source-package branch, not an interaction redesign.
 
 ## 1. Product loop
 
@@ -151,9 +151,9 @@ The #396 interaction remains acceptable only if:
 - frozen Gate C historical evidence remains unchanged/non-promoted;
 - current Core and repository-boundary checks remain green.
 
-## 8. Next product action
+## 8. Recorded post-#396 check
 
-The **only immediate next product action** is a fresh user check of the published PR `#396` interface.
+The fresh user check of the published PR `#396` interface reported that the interaction is now good enough to continue and that remaining visual issues are not the next priority.
 
 Observe whether the user can:
 
@@ -165,29 +165,25 @@ Observe whether the user can:
 6. retrieve concise place/date/activity meaning and reach source/uncertainty details when needed;
 7. understand that dashed connectors show chronology, not a known historical route.
 
-After that check record exactly one result:
+The allowed result vocabulary was:
 
 - `ITERATE` — improve the same loop;
 - `NARROW` — reduce content or interaction scope;
 - `STOP/RETHINK` — stop this Globe/Temporal Map approach and revisit the product hypothesis.
 
-Implementation completion, successful CI and public R&D availability are not user-value validation.
+The recorded result is `ITERATE`. It preserves this interaction contract and opens no further UI work by itself. Implementation completion, successful CI and public R&D availability are not formal user-value validation.
 
-## 9. Possible next branch — not authorized yet
+## 9. Opened next branch
 
-Only a supported continuing decision may open **at most one** evidence-backed next branch.
+The supported `ITERATE` opens exactly one evidence-backed next branch:
 
-Possible future branches include:
+- `Leonardo Major-Life Presence Scope v1`: a separate source-aware package with roughly 6–10 coarse anchors across 1452–1519.
 
-- a separate source-aware major-life Presence package with roughly 6–10 coarse anchors across 1452–1519;
-- one measured local/global context or thematic-layer increment;
-- curation/editorial storage;
-- persistence/sharing;
-- a measured renderer/provider improvement.
+Its first stage is source discovery, candidate selection and review design. It does not authorize runtime integration.
 
-No candidate branch is current scope merely because it is compatible with the ARTEMIS North Star.
+Local/global context, thematic layers, curation/editorial storage, persistence/sharing and renderer/provider work remain unopened.
 
-If a broader Leonardo package is later opened, it should use a coarse honest time scale first and refine toward months, days, roads or paths only when stronger evidence changes material understanding. The Roman Empire or other temporal polygon/state examples remain later universality tests and do not precede the current Leonardo user check.
+The broader Leonardo package uses a coarse honest time scale first and refines toward months, days, roads or paths only when stronger evidence changes material understanding. The Roman Empire or other temporal polygon/state examples remain later universality tests and do not precede this branch.
 
 ## 10. Final rule
 

@@ -17,7 +17,7 @@ def test_foundation_v3_restores_the_spatial_temporal_world_model() -> None:
     assert "Space and time are core coordinates" in concept
     assert "Evidence не является миссией ARTEMIS" in concept
     assert "Life in Context" in thesis
-    assert "synchronized map/time/layers" in thesis
+    assert "synchronized ARTEMIS experience" in thesis
 
     for object_name in ("Entity", "Event", "State", "Process", "Trajectory", "Region", "Layer"):
         assert object_name in model
@@ -102,8 +102,8 @@ def test_foundation_v3_validation_is_same_content_and_relation_safe() -> None:
     assert "same-content baseline" in validation
     assert "two evaluators" in validation
     assert "co-presence or similarity stated as documented encounter/influence/causality" in validation
-    assert "FOUNDATION V3 / PENDING USER EVIDENCE" in decision
-    assert "Opened future branch | `NONE`" in decision
+    assert "GATE D / ITERATE / FORMAL USER VALUE PENDING" in decision
+    assert "Opened next branch | `Leonardo Major-Life Presence Scope v1`" in decision
 
 
 def test_concept_v2_is_preserved_but_cannot_authorize_execution() -> None:

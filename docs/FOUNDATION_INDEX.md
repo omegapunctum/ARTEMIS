@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical foundation index.
-- Версия: 3.5.
+- Версия: 3.6.
 - Дата: 2026-08-29.
 - Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
@@ -253,20 +253,21 @@ Completed product/foundation prerequisites:
 
 Active product gate:
 
-7. Gate D remains `OPEN / IN PROGRESS`. The immediate product action is a **fresh user check of the published #396 interaction** and one next result: `ITERATE`, `NARROW` or `STOP/RETHINK`.
+7. The fresh user check of the published #396 interaction recorded `ITERATE`: preserve the loop and treat remaining visual issues as non-priority. Gate D remains `OPEN / IN PROGRESS`.
+8. Exactly one next branch is active: `Leonardo Major-Life Presence Scope v1`, a source-aware candidate/review package for roughly 6–10 coarse Presences across 1452–1519. Runtime promotion is not yet authorized.
 
 Foundation status:
 
-8. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
-9. Issue `#377`: Progressive Refinement Contract v1 — accepted historical foundation evidence. Issue #392 isolates its stale repository-wide READY envelope from the active Core path.
+9. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
+10. Issue `#377`: Progressive Refinement Contract v1 — accepted historical foundation evidence. Issue #392 isolates its stale repository-wide READY envelope from the active Core path.
 
 Deferred/gated:
 
-10. Issue `#331`: deferred; required before documented Relation predicates enter the real corpus/runtime.
-11. Issue `#333`: superseded by #355. Issue `#334`: deferred outside the immediate post-#396 user check.
-12. Issues `#371` / `#373`: deferred; no Airtable historical import or review is active, and `historical_rows_authorized=false` remains fail-closed.
-13. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
-14. Broader Leonardo 1452–1519 data, default local/global context and broad layer expansion remain unopened possible branches.
+11. Issue `#331`: deferred; required before documented Relation predicates enter the real corpus/runtime.
+12. Issue `#333`: superseded by #355. Issue `#334`: deferred outside the current bounded package work.
+13. Issues `#371` / `#373`: deferred; no Airtable historical import or review is active, and `historical_rows_authorized=false` remains fail-closed.
+14. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
+15. Leonardo detail beyond the bounded major-life candidate package, default local/global context and broad layer expansion remain unopened.
 
 Frozen:
 
@@ -294,6 +295,11 @@ Active product/governance decision:
 Current interaction contract:
 
 - `docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md`.
+
+Current product-feedback evidence and active branch:
+
+- `docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md`.
+- `docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md`.
 
 Accepted foundation decisions:
 

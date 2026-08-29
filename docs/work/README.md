@@ -13,13 +13,14 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | fresh user check of the published #396 loop and one explicit `ITERATE`, `NARROW` or `STOP/RETHINK` result |
+| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D promotion/stop outcome; the bounded post-#396 `ITERATE` does not close it |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
 | `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` | #355 deterministic hosted browser evidence and explicit limitations | retained as technical evidence; superseded only by a newer scoped browser-evidence contract |
 | `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only if the fresh product decision makes this evidence necessary |
 | `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with the Globe contour |
-| `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 current object → time → path → place → information interaction contract; implemented through PRs #395–#396 | fresh user check of the published #396 interaction and one next product decision |
+| `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 current object → time → path → place → information interaction contract; implemented through PRs #395–#396 | replaced only by a later reviewed interaction contract; current #396 behavior is preserved |
+| `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | #355 only active post-#396 branch: 6–10 coarse whole-life Presence candidate/source package | `FREEZE FOR REVIEW`, `NARROW` or `STOP` before runtime integration |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
 | `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
 
@@ -51,7 +52,7 @@ Current interaction semantics:
 - dashed connectors express chronology only and are never historical route geometry;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The **only next product step** is a fresh user check of the published #396 loop. Do not add broader Leonardo data, local/global layers, backend/storage or another infrastructure gate before recording one `ITERATE`, `NARROW` or `STOP/RETHINK` result.
+The fresh user check of the published #396 loop recorded `ITERATE`: preserve the interaction, and treat remaining visual issues as non-priority. The **only active next branch** is `Leonardo Major-Life Presence Scope v1`, limited to source discovery, candidate selection and review design for 6–10 coarse Presences across 1452–1519. Do not add local/global layers, backend/storage, runtime data or another infrastructure gate before its package decision.
 
 ## Foundation lifecycle records
 
@@ -133,6 +134,7 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
+- `2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md` — direct post-#396 product-feedback evidence; recorded `ITERATE`, left Gate D/formal validation open and authorized exactly one bounded source branch.
 - `2026-08-12_GATE_D_OPENING_v1.md` — historical opening record; Gate D was explicitly opened, while Core Reset and later Temporal Map changes are owned by current canonical state and #355.
 - `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` implementation history — PR #395 established the calendar loop; first published check recorded `ITERATE`; PR #396 implemented/published the bounded feedback correction. The document remains active as the current interaction contract until replaced by a later accepted version.
 - `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` — #368 completed in PR `#369`; six empty non-authoritative World Model curation tables, executable live schema snapshot/contract and Release Discipline guard were accepted, with no Gate C import or public export authority.

@@ -3,18 +3,19 @@
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `FOUNDATION V3 / PENDING USER EVIDENCE`.
+- Статус решения: `GATE D / ITERATE / FORMAL USER VALUE PENDING`.
 - Дата последнего обновления: 2026-08-29.
 - Active product issue: GitHub issue `#355`.
 - Formal Foundation v3 protocol design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` (`GATED`; not the immediate execution step).
-- Immediate execution step: fresh user check of the published PR `#396` Leonardo Temporal Map interface.
+- Recorded product-feedback result: `ITERATE` after the published PR `#396` user check.
+- Immediate execution step: `Leonardo Major-Life Presence Scope v1` candidate/source package.
 - Parent foundation decision: GitHub issue `#327` / PR `#328`.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion and public deployment do not by themselves prove user value.
 
 ## 1. Текущее решение
 
-`PENDING USER EVIDENCE`
+`ITERATE — ONE BOUNDED DATA BRANCH OPEN`
 
 Зафиксировано:
 
@@ -28,20 +29,26 @@
 - the first published manual interaction check after #395 produced an explicit **`ITERATE`** product-feedback result;
 - PR `#396` implemented that bounded iteration: full-width bottom timeline, distinct Range/Scrub, popup-first selection, optional right drawer and double-click camera focus;
 - the #396 interface is public as an R&D research prototype, not a product-validated historical capability;
-- a fresh user check of the corrected #396 interface has not yet produced the next product decision;
-- no evidence-backed next product branch is open.
+- the fresh user check of the corrected #396 interface reported that the interaction is now good enough to continue and that remaining visual issues are not the next priority;
+- this evidence records `ITERATE` while leaving Gate D and formal user-value validation open;
+- exactly one next branch is open: `Leonardo Major-Life Presence Scope v1`, a source/review package for roughly 6–10 coarse Presences across 1452–1519;
+- no runtime promotion, broader context/layer, infrastructure or second product branch is open.
 
-The recorded `ITERATE` after #395 is a product-feedback decision for the same loop. It is **not** the final Foundation v3 user-value validation outcome.
+Neither the recorded `ITERATE` after #395 nor the post-#396 `ITERATE` is the final Foundation v3 user-value validation outcome.
 
-## 2. Следующее продуктовое решение
+## 2. Recorded decision and next branch
 
-After a fresh user check of the current published #396 interface, record exactly one result:
+The allowed post-#396 result vocabulary was:
 
 - `ITERATE` — improve the same Leonardo Temporal Map loop;
 - `NARROW` — reduce the content or interaction scope while preserving the ARTEMIS World Model mission;
 - `STOP/RETHINK` — stop this Globe/Temporal Map approach and revisit the product hypothesis before further implementation.
 
-If `ITERATE` is supported, it may open **at most one** named evidence-backed next branch. Branch opening is a consequence of the decision, not a fourth peer outcome.
+The recorded result is `ITERATE`. It preserves the #396 interaction baseline and opens exactly one named branch:
+
+`Leonardo Major-Life Presence Scope v1`
+
+This branch prepares and reviews a coarse whole-life Presence package. It does not authorize runtime integration before source/evidence/uncertainty closure and a package review decision.
 
 Failure of one vertical does not silently reinstate Concept v2 or make space/time optional. Such identity change requires a new foundation decision.
 
@@ -61,7 +68,7 @@ These prove representability and bounded curation quality, not product value.
 
 ### Current experience
 
-The current public #396 loop should be checked for:
+The current public #396 loop remains the accepted interaction baseline:
 
 - clear distinction between two-handle interval `Range` and single-current-time accumulated `Scrub`;
 - the full-width bottom timeline reading as the primary time instrument;
@@ -102,7 +109,7 @@ When a controlled participant wave is opened, preserve:
 | Field | Value |
 |---|---|
 | Foundation decision | `ACCEPTED / PR #328` |
-| Formal user-value decision | `PENDING USER EVIDENCE` |
+| Formal user-value decision | `PENDING`; the direct post-#396 product-feedback result is `ITERATE` |
 | Active vertical | `Life in Context / Leonardo Temporal Map` |
 | Active issue | `#355` |
 | Current gate | `D / OPEN / IN PROGRESS` |
@@ -117,10 +124,12 @@ When a controlled participant wave is opened, preserve:
 | First feedback correction | `IMPLEMENTED + PUBLISHED / PR #396` |
 | Current interaction model | bottom timeline; Range interval; Scrub build-origin + current cursor; popup → optional drawer; double-click focus |
 | Current corpus | four source-bound Romagna Presences in 1502; not a complete biography |
-| Same-content formal baseline | `NOT RUN` in the current post-#396 step |
+| Post-#396 direct user check | `ITERATE / interaction good enough to continue; visual issues non-priority` |
+| Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
-| Next product decision | `ITERATE / NARROW / STOP/RETHINK` after fresh #396 check |
-| Opened next branch | `NONE` |
+| Recorded product decision | `ITERATE` |
+| Opened next branch | `Leonardo Major-Life Presence Scope v1` / candidate-source stage only |
+| Runtime promotion from branch | `NOT AUTHORIZED` |
 
 ## 5. Change rule
 
