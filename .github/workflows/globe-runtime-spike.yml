@@ -269,7 +269,8 @@ jobs:
           grep -F 'data-artemis-path-end="1502-08-10"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'data-artemis-path-current="1502-08-10"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'data-artemis-visible-presence-count="2"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'event-leonardo-cesena-survey' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-selected-presence="presence-cesena-1502-08-10"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-selected-item="event-leonardo-cesena-survey"' /tmp/artemis-globe-interaction-dom.html
           grep -F '1502-08-10' /tmp/artemis-globe-interaction-dom.html
 
       - name: Upload generated Globe artifact

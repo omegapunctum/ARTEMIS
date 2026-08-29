@@ -708,6 +708,8 @@ def test_runtime_persists_and_restores_explorer_state_in_url() -> None:
     assert "url.searchParams.set('from'" in runtime_source
     assert "url.searchParams.set('at'" in runtime_source
     assert "url.searchParams.set('presence'" in runtime_source
+    assert "dataset.artemisSelectedPresence" in runtime_source
+    assert "dataset.artemisSelectedItem" in runtime_source
     assert "url.searchParams.set('time'" in runtime_source
     assert "url.searchParams.set('layers'" in runtime_source
     assert "url.searchParams.set('item'" in runtime_source

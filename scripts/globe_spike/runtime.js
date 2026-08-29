@@ -1095,6 +1095,8 @@
     )) return;
     runtime.selectedPresenceId = presence.presence_id;
     runtime.selectedItemId = presence.event_item_id;
+    document.documentElement.dataset.artemisSelectedPresence = presence.presence_id;
+    document.documentElement.dataset.artemisSelectedItem = presence.event_item_id;
     const projectionItem = currentProjectionItem(presence.event_item_id);
     if (projectionItem) updateCanonicalSelection(projectionItem);
     syncLifePathSelectionControls();
@@ -1442,6 +1444,8 @@
 
   function clearCanonicalSelection(message = 'No semantic object selected.', options = {}) {
     runtime.selectedItemId = null;
+    document.documentElement.dataset.artemisSelectedPresence = '';
+    document.documentElement.dataset.artemisSelectedItem = '';
     if (runtime.data?.state?.selection) {
       runtime.data.state.selection.primary_object_ref = null;
       runtime.data.state.selection.selected_object_refs = [];
