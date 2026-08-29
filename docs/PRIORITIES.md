@@ -20,8 +20,8 @@ The load-bearing path is:
 
 Required behavior:
 
-- two synchronized calendar modes: interval-overlap `Range` and accumulated `Scrub`;
-- visible presence selection shared by timeline, map and URL;
+- two visibly distinct calendar modes: two-handle interval-overlap `Range` and single-cursor accumulated `Scrub` in a full-width bottom timeline;
+- visible presence selection shared by timeline, map and URL, with popup-first details and no camera jump on a single click;
 - Event, State, Process, Trajectory and Region semantics;
 - source, locator, uncertainty, coverage and projection-loss access;
 - explicit unknown routes and geometry-withheld alternatives;

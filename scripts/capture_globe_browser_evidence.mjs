@@ -142,7 +142,7 @@ async function waitForVisualReadiness(cdp, deadline) {
 }
 
 async function verifyUrlStateRestoration(cdp, deadline) {
-  const interaction = await evaluate(cdp, `(() => {
+  const interaction = await evaluate(cdp, `(async () => {
     const runtime = window.__ARTEMIS_GLOBE_SPIKE;
     const initialStatus = document.getElementById('temporal-map-status')?.textContent || '';
     const presences = runtime.data.lifePath.presences;
@@ -153,33 +153,51 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     const scrubCurrent = document.getElementById('scrub-current');
     if (!scrubStart || !scrubCurrent) throw new Error('Scrub controls are unavailable');
     scrubStart.value = '0';
-    scrubStart.dispatchEvent(new Event('input', { bubbles: true }));
+    scrubStart.dispatchEvent(new Event('change', { bubbles: true }));
     scrubCurrent.value = '2';
     scrubCurrent.dispatchEvent(new Event('input', { bubbles: true }));
     const marker = [...document.querySelectorAll('.life-path-marker')].find(
-      (button) => button.getAttribute('aria-label')?.startsWith('Select Cesena,')
+      (button) => button.getAttribute('aria-label')?.startsWith('Show Cesena summary,')
     );
     if (!marker || marker.hidden) throw new Error('Visible Cesena map marker is unavailable');
+    const cameraBefore = {
+      center: runtime.map.getCenter().toArray(),
+      zoom: runtime.map.getZoom()
+    };
     marker.click();
+    await new Promise((resolve) => setTimeout(resolve, 320));
+    const popupText = document.querySelector('.presence-popup-card')?.textContent || '';
+    const detailsAfterFirstClick = document.getElementById('inspector')?.hidden === false;
+    marker.click();
+    await new Promise((resolve) => setTimeout(resolve, 320));
+    const cameraAfter = {
+      center: runtime.map.getCenter().toArray(),
+      zoom: runtime.map.getZoom()
+    };
 
     const params = new URLSearchParams(window.location.search);
     return {
       initialStatus,
       updatedStatus: document.getElementById('temporal-map-status')?.textContent || '',
       cardText: document.getElementById('selection-card')?.textContent || '',
+      popupText,
+      detailsAfterFirstClick,
+      detailsAfterSecondClick: document.getElementById('inspector')?.hidden === false,
+      cameraBefore,
+      cameraAfter,
       mode: runtime.lifePathMode,
-      start: axisValues[runtime.lifePathStartIndex],
-      end: axisValues[runtime.lifePathEndIndex],
+      from: axisValues[runtime.lifePathStartIndex],
+      at: axisValues[runtime.lifePathEndIndex],
       presence: runtime.selectedPresenceId,
       item: runtime.selectedItemId,
       visiblePresenceCount: Number(document.documentElement.dataset.artemisVisiblePresenceCount || 0),
       urlMode: params.get('mode'),
-      urlStart: params.get('start'),
-      urlEnd: params.get('end'),
+      urlFrom: params.get('from'),
+      urlAt: params.get('at'),
       urlPresence: params.get('presence'),
       urlItem: params.get('item')
     };
-  })()`);
+  })()`, true);
 
   if (!interaction.mode || !interaction.presence || !interaction.item) {
     throw new Error(`Interaction did not select life-path state: ${JSON.stringify(interaction)}`);
@@ -195,6 +213,15 @@ async function verifyUrlStateRestoration(cdp, deadline) {
       throw new Error(`Life-path presence card did not expose ${requiredText}`);
     }
   }
+  if (!interaction.popupText.includes('Cesena') || !interaction.popupText.includes('Open details')) {
+    throw new Error(`First marker click did not open a compact popup: ${JSON.stringify(interaction)}`);
+  }
+  if (interaction.detailsAfterFirstClick || !interaction.detailsAfterSecondClick) {
+    throw new Error(`Marker selection did not preserve the two-stage detail flow: ${JSON.stringify(interaction)}`);
+  }
+  if (JSON.stringify(interaction.cameraBefore) !== JSON.stringify(interaction.cameraAfter)) {
+    throw new Error(`Single marker clicks changed the map camera: ${JSON.stringify(interaction)}`);
+  }
   if (interaction.initialStatus === interaction.updatedStatus) {
     throw new Error('Timeline interaction did not update the visible globe status');
   }
@@ -203,8 +230,8 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   }
   if (
     interaction.urlMode !== interaction.mode
-    || interaction.urlStart !== interaction.start
-    || interaction.urlEnd !== interaction.end
+    || interaction.urlFrom !== interaction.from
+    || interaction.urlAt !== interaction.at
     || interaction.urlPresence !== interaction.presence
     || interaction.urlItem !== interaction.item
   ) {
@@ -228,22 +255,24 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     const axisValues = runtime.data.lifePath.time_axis.values;
     return {
       mode: runtime.lifePathMode,
-      start: axisValues[runtime.lifePathStartIndex],
-      end: axisValues[runtime.lifePathEndIndex],
+      from: axisValues[runtime.lifePathStartIndex],
+      at: axisValues[runtime.lifePathEndIndex],
       presence: runtime.selectedPresenceId,
       item: runtime.selectedItemId,
-      cardItem: document.getElementById('selection-card')?.dataset.itemId || null,
-      cardPresence: document.getElementById('selection-card')?.dataset.presenceId || null
+      popupPresence: runtime.popupPresenceId,
+      popupText: document.querySelector('.presence-popup-card')?.textContent || '',
+      detailsOpen: document.getElementById('inspector')?.hidden === false
     };
   })()`);
   if (JSON.stringify(restored) !== JSON.stringify({
     mode: interaction.mode,
-    start: interaction.start,
-    end: interaction.end,
+    from: interaction.from,
+    at: interaction.at,
     presence: interaction.presence,
     item: interaction.item,
-    cardItem: interaction.item,
-    cardPresence: interaction.presence
+    popupPresence: interaction.presence,
+    popupText: interaction.popupText,
+    detailsOpen: false
   })) {
     throw new Error(`URL state did not survive reload: ${JSON.stringify({ interaction, restored })}`);
   }
@@ -253,6 +282,8 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     url.searchParams.set('mode', 'invalid-mode');
     url.searchParams.set('start', 'invalid-start');
     url.searchParams.set('end', 'invalid-end');
+    url.searchParams.set('from', 'invalid-from');
+    url.searchParams.set('at', 'invalid-at');
     url.searchParams.set('presence', 'invalid-presence');
     url.searchParams.set('item', 'invalid-item');
     history.pushState({ invalid: true }, '', url);
@@ -269,6 +300,8 @@ async function verifyUrlStateRestoration(cdp, deadline) {
       urlMode: params.get('mode'),
       urlStart: params.get('start'),
       urlEnd: params.get('end'),
+      urlFrom: params.get('from'),
+      urlAt: params.get('at'),
       urlPresence: params.get('presence'),
       urlItem: params.get('item')
     };
@@ -277,6 +310,8 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     invalidCanonical.urlMode !== invalidCanonical.mode
     || invalidCanonical.urlStart !== invalidCanonical.start
     || invalidCanonical.urlEnd !== invalidCanonical.end
+    || invalidCanonical.urlFrom !== null
+    || invalidCanonical.urlAt !== null
     || invalidCanonical.urlPresence !== invalidCanonical.presence
     || invalidCanonical.urlItem !== invalidCanonical.item
   ) {
@@ -291,16 +326,16 @@ async function verifyUrlStateRestoration(cdp, deadline) {
       const axisValues = runtime.data.lifePath.time_axis.values;
       return {
         mode: runtime.lifePathMode,
-        start: axisValues[runtime.lifePathStartIndex],
-        end: axisValues[runtime.lifePathEndIndex],
+        from: axisValues[runtime.lifePathStartIndex],
+        at: axisValues[runtime.lifePathEndIndex],
         presence: runtime.selectedPresenceId,
         item: runtime.selectedItemId
       };
     })()`);
     if (
       popstateRestored.mode === interaction.mode
-      && popstateRestored.start === interaction.start
-      && popstateRestored.end === interaction.end
+      && popstateRestored.from === interaction.from
+      && popstateRestored.at === interaction.at
       && popstateRestored.presence === interaction.presence
       && popstateRestored.item === interaction.item
     ) break;
@@ -308,8 +343,8 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   }
   if (
     popstateRestored.mode !== interaction.mode
-    || popstateRestored.start !== interaction.start
-    || popstateRestored.end !== interaction.end
+    || popstateRestored.from !== interaction.from
+    || popstateRestored.at !== interaction.at
     || popstateRestored.presence !== interaction.presence
     || popstateRestored.item !== interaction.item
   ) {

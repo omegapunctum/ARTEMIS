@@ -25,6 +25,12 @@ The timeline is a calendar scale, not an ordinal list of stops. Whole-life cover
 granularity; a bounded corpus may use month or day granularity when its source precision supports it.
 Finer future precision must not require a new interaction model.
 
+After the first published user check, the two modes must also be visually distinct:
+
+- `Range` uses one interval track with two handles and URL keys `start/end`;
+- `Scrub` uses one current-time cursor, a secondary `Build from` value and URL keys `from/at`;
+- the timeline is a full-width bottom dock because time is a primary navigation instrument, not inspector metadata.
+
 ## 2. Canonical model boundary
 
 `Trajectory` is the single semantic authority for the ordered life path. It binds `subject_ref` and
@@ -62,6 +68,9 @@ invent a more exact day.
 - `Range` and `Scrub` visibly change the same presence set on timeline, map and URL;
 - an interval with no overlapping presence produces an honest empty state;
 - every visible marker is pointer- and keyboard-operable and selects the matching compact card;
+- one marker click opens a compact map popup without moving the camera;
+- a second click or explicit `Open details` action opens the right detail drawer;
+- only a marker double-click focuses/zooms the map;
 - URL state stores calendar values and stable `presence` identity, not stop-array indexes;
 - `Trajectory.subject_ref` resolves to Leonardo and presentation bindings close to its canonical segments;
 - all three gaps retain null route geometry while dashed connectors identify chronology only;

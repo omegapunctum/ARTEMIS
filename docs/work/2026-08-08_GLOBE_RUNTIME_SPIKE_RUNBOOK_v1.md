@@ -84,9 +84,10 @@ On successful load:
 - the header says `ARTEMIS · Leonardo Life Path`; a local build is labelled as a generated review artifact, while `--public-preview` is explicitly labelled as a public experimental R&D surface;
 - four numbered markers represent Rimini, Cesena, Cesenatico and Imola using present-day named-settlement reference coordinates;
 - `Range` shows every documented presence whose temporal extent overlaps the selected calendar interval;
-- `Scrub` progressively reveals accumulated presences from the selected calendar start through current time;
+- `Range` is a two-handle interval on the full-width bottom timeline;
+- `Scrub` has one primary current-time cursor plus a secondary `Build from` value and progressively reveals accumulated presences;
 - changing either control selects the matching precomputed Explorer State / Render Projection closure while the browser preserves the exact calendar selection;
-- selecting a marker or sequence entry opens a compact place/date/activity card; duration, exact-position and route limitations remain visible before optional source/uncertainty details;
+- selecting a marker once opens a compact map popup without changing the camera; selecting it again or choosing `Open details` opens the right drawer; double-click alone focuses the map;
 - dashed links connect currently visible consecutive presences as presentation-only chronology; all three historical routes remain unknown with null geometry;
 - layer combinations, Region alternatives and renderer diagnostics remain available in generated evidence but are not default user controls;
 - real generalized Natural Earth land is visible only as `present_day_context`, carries no World Model identity and is not presented as valid 1502 coastline geometry;
@@ -101,12 +102,12 @@ Expected result:
 
 - `Range` displays exactly the presences overlapping the calendar interval;
 - `Scrub` displays exactly the accumulated presences from start through current time;
-- the numbered sequence and globe markers update together;
+- the globe markers update with the active temporal view;
 - the Explorer State, projection and URL update with calendar values and the visible presence set;
-- selecting an out-of-range sequence entry is prevented;
+- selecting an out-of-range marker is prevented;
 - reduced-motion preference removes scripted camera animation.
 
-Select Cesena or Cesenatico first from the sequence and then from its marker.
+Select Cesena or Cesenatico from its marker. The first click must open the compact popup without moving the camera; use `Open details` or select the same marker again to open the right drawer.
 
 The card must show:
 

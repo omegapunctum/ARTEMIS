@@ -597,7 +597,7 @@ def test_runtime_exposes_browser_accessibility_layout_and_diagnostic_evidence() 
     assert "artemisStartupRecorded" in runtime_source
     assert "artemisStartupToIdleMs" in runtime_source
     assert "artemisAverageFrameMs" in runtime_source
-    assert "button, input, a[href], summary" in runtime_source
+    assert "button, input, select, a[href], summary" in runtime_source
     assert "node.getClientRects().length > 0" in runtime_source
     assert 'input[type="range"]' in runtime_source
     assert "@media (min-width: 821px) and (max-width: 1100px)" in style_source
@@ -625,13 +625,15 @@ def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
 
     assert 'id="range-start" type="range"' in html_source
     assert 'id="range-end" type="range"' in html_source
-    assert 'id="scrub-start" type="range"' in html_source
+    assert 'id="timeline-dock"' in html_source
+    assert 'id="scrub-start" aria-label="Path build start"' in html_source
     assert 'id="scrub-current" type="range"' in html_source
     assert 'id="mode-range"' in html_source
     assert 'id="mode-scrub"' in html_source
     assert 'id="layer-controls"' not in html_source
     assert 'role="status" aria-live="polite"' in html_source
-    assert html_source.index('id="selection-card"') < html_source.index('id="path-sequence"')
+    assert 'id="path-sequence"' not in html_source
+    assert 'id="inspector" aria-label="Selected place details" hidden' in html_source
     assert "applySemanticView" in runtime_source
     assert "runtime.viewByKey.get" in runtime_source
     assert "semanticSource.setData(globePrimitivesToGeoJson(next.globe))" in runtime_source
@@ -640,7 +642,24 @@ def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
     assert "function selectLifePathPresence" in runtime_source
     assert "function visibleLifePathPresences" in runtime_source
     assert "presence.axis_start_index <= end" in runtime_source
+    assert "mode: 'instant'" in runtime_source
+    assert "url.searchParams.set('from'" in runtime_source
+    assert "url.searchParams.set('at'" in runtime_source
     assert "prefers-reduced-motion: reduce" in runtime_source
+
+
+def test_marker_selection_uses_popup_drawer_and_double_click_camera_focus() -> None:
+    runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
+    html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
+
+    assert "function showPresencePopup" in runtime_source
+    assert "function openDetailsDrawer" in runtime_source
+    assert "function closeDetailsDrawer" in runtime_source
+    assert "handlePresenceMarkerClick" in runtime_source
+    assert "handlePresenceMarkerDoubleClick" in runtime_source
+    assert "markerButton.addEventListener('dblclick'" in runtime_source
+    assert "if (options.fly === true && runtime.map)" in runtime_source
+    assert 'id="close-details"' in html_source
 
 
 def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes() -> None:
@@ -686,7 +705,11 @@ def test_runtime_persists_and_restores_explorer_state_in_url() -> None:
     assert "url.searchParams.set('mode'" in runtime_source
     assert "url.searchParams.set('start'" in runtime_source
     assert "url.searchParams.set('end'" in runtime_source
+    assert "url.searchParams.set('from'" in runtime_source
+    assert "url.searchParams.set('at'" in runtime_source
     assert "url.searchParams.set('presence'" in runtime_source
+    assert "dataset.artemisSelectedPresence" in runtime_source
+    assert "dataset.artemisSelectedItem" in runtime_source
     assert "url.searchParams.set('time'" in runtime_source
     assert "url.searchParams.set('layers'" in runtime_source
     assert "url.searchParams.set('item'" in runtime_source

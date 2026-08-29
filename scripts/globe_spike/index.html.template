@@ -22,65 +22,17 @@
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>
 
-    <aside id="inspector" aria-label="Leonardo life path controls and selected presence">
-      <header class="subject-header">
-        <span class="eyebrow">Selected object</span>
-        <h1>Leonardo da Vinci</h1>
-        <p id="path-coverage">Current source-bound interaction scaffold · Romagna 1502</p>
+    <aside id="inspector" aria-label="Selected place details" hidden>
+      <header class="drawer-header">
+        <div>
+          <span class="eyebrow">Selected presence</span>
+          <h2 id="selection-title">Place details</h2>
+        </div>
+        <button id="close-details" type="button" aria-label="Close place details">×</button>
       </header>
-
-      <section class="path-controls" aria-labelledby="time-mode-title">
-        <div class="section-heading">
-          <h2 id="time-mode-title">Explore through time</h2>
-          <div class="mode-switch" role="group" aria-label="Timeline mode">
-            <button id="mode-range" type="button" aria-pressed="true">Range</button>
-            <button id="mode-scrub" type="button" aria-pressed="false">Scrub</button>
-          </div>
-        </div>
-
-        <div id="range-controls" class="timeline-mode">
-          <div class="range-row">
-            <label for="range-start">Start</label>
-            <output id="range-start-value" for="range-start">—</output>
-            <input id="range-start" type="range" min="0" max="0" step="1" value="0" />
-          </div>
-          <div class="range-row">
-            <label for="range-end">End</label>
-            <output id="range-end-value" for="range-end">—</output>
-            <input id="range-end" type="range" min="0" max="0" step="1" value="0" />
-          </div>
-          <p class="mode-help">Shows every documented presence overlapping the selected calendar interval.</p>
-        </div>
-
-        <div id="scrub-controls" class="timeline-mode" hidden>
-          <div class="range-row">
-            <label for="scrub-start">Begin at</label>
-            <output id="scrub-start-value" for="scrub-start">—</output>
-            <input id="scrub-start" type="range" min="0" max="0" step="1" value="0" />
-          </div>
-          <div class="range-row">
-            <label for="scrub-current">Current time</label>
-            <output id="scrub-current-value" for="scrub-current">—</output>
-            <input id="scrub-current" type="range" min="0" max="0" step="1" value="0" />
-          </div>
-          <p class="mode-help">Builds the accumulated path as the calendar cursor moves forward.</p>
-        </div>
-
-        <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
-      </section>
-
       <section class="selection-section" aria-labelledby="selection-title">
-        <span class="eyebrow">Selected presence</span>
-        <h2 id="selection-title">Place details</h2>
-        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">Choose a numbered place on the globe or in the list.</div>
+        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">Choose a numbered place on the globe.</div>
       </section>
-
-      <section class="stop-sequence-section" aria-labelledby="stop-sequence-title">
-        <h2 id="stop-sequence-title">Documented places</h2>
-        <div id="path-sequence" class="path-sequence" role="list"></div>
-        <p class="route-note"><span class="route-swatch" aria-hidden="true"></span>Dashed links show chronology only. Exact routes remain unknown.</p>
-      </section>
-
       <details id="prototype-details" class="prototype-details">
         <summary>Sources, limits and prototype status</summary>
         <div class="prototype-body">
@@ -102,6 +54,50 @@
         </div>
       </details>
     </aside>
+
+    <section id="timeline-dock" aria-labelledby="time-mode-title">
+      <header class="timeline-subject">
+        <span class="eyebrow">Selected object</span>
+        <h1>Leonardo da Vinci</h1>
+        <p id="path-coverage">Romagna 1502 · interaction scaffold</p>
+      </header>
+
+      <div class="timeline-workspace">
+        <div class="timeline-heading">
+          <h2 id="time-mode-title">Timeline</h2>
+          <div class="mode-switch" role="group" aria-label="Timeline mode">
+            <button id="mode-range" type="button" aria-pressed="true">Range</button>
+            <button id="mode-scrub" type="button" aria-pressed="false">Scrub</button>
+          </div>
+        </div>
+
+        <div id="range-controls" class="timeline-mode">
+          <div class="timeline-values">
+            <label for="range-start">From <output id="range-start-value" for="range-start">—</output></label>
+            <label for="range-end">To <output id="range-end-value" for="range-end">—</output></label>
+          </div>
+          <div class="dual-range" aria-label="Selected calendar interval">
+            <input id="range-start" type="range" min="0" max="0" step="1" value="0" />
+            <input id="range-end" type="range" min="0" max="0" step="1" value="0" />
+          </div>
+        </div>
+
+        <div id="scrub-controls" class="timeline-mode scrub-mode" hidden>
+          <label class="scrub-origin" for="scrub-start">Build from
+            <select id="scrub-start" aria-label="Path build start"></select>
+          </label>
+          <label class="scrub-cursor" for="scrub-current">Current time
+            <output id="scrub-current-value" for="scrub-current">—</output>
+          </label>
+          <input id="scrub-current" type="range" min="0" max="0" step="1" value="0" />
+        </div>
+      </div>
+
+      <div class="timeline-summary">
+        <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
+        <p class="route-note"><span class="route-swatch" aria-hidden="true"></span>Dashed links show chronology only. Exact routes remain unknown.</p>
+      </div>
+    </section>
   </main>
 
   <div id="fatal-error" role="alert" hidden></div>
