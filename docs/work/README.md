@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-28.
+- Updated: 2026-08-29.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,16 +13,45 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-08-12_GATE_D_OPENING_v1.md` | #355 historical Gate D opening plus current Core Reset narrowing | one complete Leonardo exploration loop and an early `ITERATE`, `NARROW` or `STOP/RETHINK` decision |
-| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe MVP product/governance decision | Gate D evidence and one explicit next decision before Gate E |
-| `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe seed used during #355 MVP work | replaced by a maintained-app runbook after promotion or archived after stop decision |
-| `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 real Earth-context selection, provenance, license, cache and secret boundary | replaced only by a reviewed provider decision or archived with Gate D |
-| `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` | #355 deterministic desktop/tablet/hosted-mobile browser evidence and explicit limitations | replaced by normal-browser/real-device/assistive-technology evidence or archived with Gate D |
-| `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only after the early value decision |
-| `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with Gate D |
-| `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 revised object/time/path contract: calendar Range/Scrub, canonical presences and non-route chronology connectors | one understandable Leonardo path loop ready for user review |
-| `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | Current operator interpretation for runtime/release signals | Replaced by a newer verified runbook |
-| `moderation-runbook.md` | Current moderation recovery procedure | Replaced when moderation behavior changes |
+| `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | fresh user check of the published #396 loop and one explicit `ITERATE`, `NARROW` or `STOP/RETHINK` result |
+| `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
+| `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
+| `2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md` | #355 deterministic hosted browser evidence and explicit limitations | retained as technical evidence; superseded only by a newer scoped browser-evidence contract |
+| `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only if the fresh product decision makes this evidence necessary |
+| `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with the Globe contour |
+| `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 current object → time → path → place → information interaction contract; implemented through PRs #395–#396 | fresh user check of the published #396 interaction and one next product decision |
+| `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
+| `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
+
+## Current #355 execution truth
+
+Core Reset is **completed**, not active work:
+
+- PR `#393` isolated ARTEMIS Core delivery;
+- root is the Core landing;
+- `/globe/` is the primary Leonardo research prototype;
+- `/atlas/` is compatibility-only;
+- ARTEMIS Core Check is the required product signal.
+
+The first Leonardo Temporal Map implementation cycle is also completed:
+
+- PR `#395` established calendar-based Range/Scrub and canonical Presence/Trajectory bindings;
+- the first published manual check produced `ITERATE`;
+- PR `#396` implemented that correction and is published.
+
+Current interaction semantics:
+
+- `Range` = two-handle calendar interval using temporal overlap;
+- `Scrub` = chosen build origin + one current-time cursor, progressively accumulating the path;
+- the full-width bottom timeline is the primary time instrument;
+- map, timeline, selection and URL share one state;
+- first click opens a compact popup and does not move the camera;
+- optional further action opens the right detail drawer;
+- double-click may focus the selected place;
+- dashed connectors express chronology only and are never historical route geometry;
+- no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
+
+The **only next product step** is a fresh user check of the published #396 loop. Do not add broader Leonardo data, local/global layers, backend/storage or another infrastructure gate before recording one `ITERATE`, `NARROW` or `STOP/RETHINK` result.
 
 ## Foundation lifecycle records
 
@@ -30,9 +59,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 |---|---|---|
 | `2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md` | #377 foundation-only coarse-to-fine knowledge refinement lifecycle record | exact status and decision recorded by its contract/registry; no capability authorization |
 
-Issue #377 is accepted historical foundation evidence. Issue #392 isolates the stale
-repository-wide READY envelope from mutable routing and from the read-only Core path. Editable
-refinement remains deferred.
+Issue #377 is accepted historical foundation evidence. Issue #392 isolates the stale repository-wide READY envelope from mutable routing and from the read-only Core path. Editable refinement remains deferred.
 #371/#373 remain deferred.
 
 #366 / PR #367 completed legacy Airtable truth alignment, canonical audit routing and the proposal-only schema decision. #368 / PR #369 completed the six-table empty non-authoritative shadow schema plus executable contract/snapshot validation. Neither opened Gate D, imported the frozen Gate C package or changed the Architecture Atlas public export authority.
@@ -50,25 +77,25 @@ The accepted/current Airtable working/evidence chain is:
 
 No real Gate C historical row import is active. PR #372 merged the schema/mapping preflight only; #371/#373 are deferred and historical writes remain prohibited.
 
-Active execution rule for the Globe MVP:
+## Active execution rule for the Temporal Map / Globe MVP
 
-- it cannot override `ARTEMIS_CONCEPT.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md`, `PROJECT_TRUTH.md` or `DEVELOPMENT_OPERATING_SYSTEM.md`;
-- it authorizes the bounded #355 MVP only through explicitly opened product gates;
-- Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public input;
-- Gate D is separately opened and active under #355; Gate C completion and Foundation v3.1 did not open it by implication;
-- the generated Globe artifact must consume merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
-- it is published at `/globe/` as the primary research prototype; the root is a Core landing and Architecture Atlas is compatibility-only at `/atlas/`;
-- MapLibre GL JS `5.24.0` is pinned for the #343 spike only and does not upgrade the current public MapLibre `4.7.1` runtime;
-- the reviewed unknown Trajectory gaps remain unresolved; any polyline capability fixture must be explicitly non-semantic and carry no World Model identity;
-- the default Gate D review artifact uses pinned Natural Earth physical geography as real `present_day_context`; it cannot be described as historical geography, while synthetic terrain remains non-live and cannot imply production provider readiness;
-- live terrain/provider use, if later introduced, must pass the completed #342 provider/vertical/provenance/license/secret boundary;
-- the MVP decision and `/globe/` review publication do not make 3D Globe a product-ready capability;
-- #331 is deferred but becomes blocking before documented Relation predicates enter the real corpus/runtime;
-- the completed #344 parity contract remains a fail-closed promotion gate for every runtime change;
-- the Leonardo-in-Romagna 1502 Gate C package is frozen with two independent READY reviews, but its historical Claims remain draft, Region/route geometry remains withheld where unsupported and `promotion_allowed=false`.
-- the separate Gate D place-anchor overlay may resolve only four present-day named-settlement points with source, rights and uncertainty closure; it cannot create exact historical positions, routes, boundaries, Relations or Airtable rows.
+- working docs cannot override `ARTEMIS_CONCEPT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `PLATFORM_ARCHITECTURE_DECISION.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md`, `PROJECT_TRUTH.md` or `DEVELOPMENT_OPERATING_SYSTEM.md`;
+- #355 authorizes only the bounded current loop and the next evidence-backed decision;
+- Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public source/semantic input;
+- Gate D remains open/in progress under #355; implementation completion does not itself close the gate;
+- the Globe consumes merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
+- `/globe/` is the primary research prototype; the root is a Core landing and Architecture Atlas is compatibility-only at `/atlas/`;
+- 2D Map and Globe are renderer choices over one semantic core; timeline is shared Explorer temporal state, not a separate truth model;
+- the reviewed unknown Trajectory gaps remain unresolved; any visible connecting line must remain explicitly presentation-only chronology unless source-bound route geometry exists;
+- the current Earth context is pinned Natural Earth physical geography as `present_day_context`, not historical geography;
+- the MVP decision and public `/globe/` access do not make the Globe a product-ready capability;
+- #331 is deferred and documented Relation predicates remain prohibited until explicitly reopened/accepted;
+- the completed #344 parity contract remains a fail-closed semantic requirement for renderer changes;
+- the Leonardo-in-Romagna 1502 Gate C package remains frozen with draft/rejected historical Claims and geometry withheld where unsupported;
+- the separate place-anchor overlay may resolve only the four present-day named-settlement points with source/rights/uncertainty closure; it cannot create exact historical positions, routes, boundaries, Relations or Airtable rows;
+- broader 1452–1519 Presence data and default context/layer expansion are separate possible branches, not current scope.
 
-Accepted Attractor-refinement rule from #363 / PR #364:
+## Accepted Attractor-refinement rule from #363 / PR #364
 
 - `ARTEMIS_CONCEPT.md` remains the only North Star/attractor owner;
 - `World Model` remains the technical semantic-core name while the North Star defines ARTEMIS as knowledge about the world rather than objective reality;
@@ -76,14 +103,14 @@ Accepted Attractor-refinement rule from #363 / PR #364:
 - one semantic core must serve future domains and interfaces;
 - future AI may only gain view/query control through a separate explicit reversible action contract;
 - personal knowledge, AI runtime, universal corpus, VR/AR and causal/counterfactual runtime stay gated/future;
-- Foundation v3.1 does not itself advance Gate D or public capability;
+- Foundation v3.1 does not itself advance product capability;
 - the reviewed `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` v1.0 remains byte-preserved until separately re-reviewed.
 
 ## Gated under Foundation v3
 
 | Document/group | Lifecycle | Rule |
 |---|---|---|
-| `2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` | gated Life in Context validation design | Use only when the corresponding product gate is opened and prerequisites are satisfied |
+| `2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` | gated broader Life in Context validation design | not the immediate post-#396 step; use only when the corresponding product scope/protocol is explicitly opened |
 | `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md` | completed Architecture Layer preparation program | Modules/fixtures may be reused; no longer the active product-validation gate |
 | `validation_modules/` | completed Gate A executable package | Preserve as architecture fixtures and historical readiness evidence |
 | `2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md` | superseded execution plan | Must not authorize #323–#325 or v2 migration order |
@@ -106,28 +133,30 @@ Its retained Claim/Evidence, uncertainty and relation-discipline decisions apply
 
 ## Completed execution evidence
 
-- `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` — #368 completed in PR `#369`; six empty non-authoritative World Model curation tables, executable live schema snapshot/contract and Release Discipline guard were accepted, with no Gate C import, no public export authority and an explicit unresolved Gate C Layer mapping blocker before any future import.
-- `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md` — #366 completed in PR `#367`; current eight-table Architecture Atlas Airtable boundary, schema descriptions and canonical audit routing were aligned, with a proposal-only World Model curation plan and explicit Gate D prohibition.
-- `2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` — #363 completed in PR `#364`; Foundation v3.1 fixes the long-term attractor, knowledge-about-world identity, one-core/many-domains/many-interfaces invariant and future reversible AI exploration boundary without starting Gate D or changing public capability.
-- `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C in PR `#362` with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary; Claims remain draft and Gate D is not started by that decision.
-- `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints, temporal boundaries and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
-- `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/non-public runtime and Pages boundaries accepted.
-- `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` — #343 completed in PR `#350`; MapLibre GL JS 5.24.0 selected for the bounded spike, with Cesium retained as measured-gap escalation; the generated runtime runbook remains active for #355.
+- `2026-08-12_GATE_D_OPENING_v1.md` — historical opening record; Gate D was explicitly opened, while Core Reset and later Temporal Map changes are owned by current canonical state and #355.
+- `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` implementation history — PR #395 established the calendar loop; first published check recorded `ITERATE`; PR #396 implemented/published the bounded feedback correction. The document remains active as the current interaction contract until replaced by a later accepted version.
+- `2026-08-10_AIRTABLE_SHADOW_CURATION_SCHEMA_v1.md` — #368 completed in PR `#369`; six empty non-authoritative World Model curation tables, executable live schema snapshot/contract and Release Discipline guard were accepted, with no Gate C import or public export authority.
+- `2026-08-10_AIRTABLE_PRE_GATE_D_ALIGNMENT_v1.md` — #366 completed in PR `#367`; current eight-table Architecture Atlas Airtable boundary, schema descriptions and canonical audit routing were aligned.
+- `2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` — #363 completed in PR `#364`; Foundation v3.1 fixes the long-term attractor and one-core invariant without changing public capability by itself.
+- `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md` — #332/#360 completed Gate C in PR `#362` with a Git-bound `FREEZE`, two independent READY reviews, measured cost and a non-public scope boundary.
+- `2026-08-08_CROSS_RENDERER_PARITY_CONTRACT_v1.md` — #344 completed in PR `#351`; renderer-neutral fingerprints and controlled corruption cases protect semantic equivalence across 2D and Globe adapters.
+- `2026-08-08_GLOBE_REPOSITORY_RUNTIME_BOUNDARY_v1.md` — #345 completed in PR `#352`; generated/runtime and Pages boundaries accepted.
+- `2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md` — #343 completed in PR `#350`; MapLibre GL JS 5.24.0 selected for the bounded spike, with Cesium retained as measured-gap escalation.
 - `2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md` — #339 completed in PR `#346`; one semantic core and multiple projection renderers established.
-- `2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md` — #342 completed in PR `#349`; provider/CRS/vertical/temporal/provenance/license/cache/runtime boundaries accepted with synthetic fixtures and dedicated CI.
-- `2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md` — #341 completed in PR `#348`; one World Slice + Explorer State deterministically produce semantically equivalent 2D/Globe adapter payloads with explicit projection loss.
-- `2026-08-08_EXPLORER_STATE_CONTRACT_v1.md` — #340 completed in PR `#347`; renderer-neutral state schema/fixture/validator accepted, with two-adapter proof completed by PR `#348`.
+- `2026-08-08_GEOSPATIAL_ASSETS_CONTRACT_v1.md` — #342 completed in PR `#349`; provider/CRS/vertical/temporal/provenance/license/cache/runtime boundaries accepted.
+- `2026-08-08_RENDER_PROJECTION_CONTRACT_v1.md` — #341 completed in PR `#348`; one World Slice + Explorer State deterministically produce 2D/Globe adapter payloads with explicit projection loss.
+- `2026-08-08_EXPLORER_STATE_CONTRACT_v1.md` — #340 completed in PR `#347`; renderer-neutral state schema/fixture/validator accepted.
 - `2026-08-04_UNCERTAINTY_SEMANTICS_REVIEW.md` — #330 completed in PR `#337` with READY uncertainty semantics and independent review evidence.
 - `2026-07-29_WORLD_MODEL_FIXTURE_REVIEW.md` — #329 completed in PR `#336` with READY package and two independent reviews.
 - `2026-07-28_FOUNDATION_V3_DECISION.md` — accepted in PR `#328`.
 - `2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md` — backlog disposition completed.
-- `2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`
-- `2026-07-16_RELATIONS_SIMILARITY_MIGRATION_v1.md`
-- `2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`
-- `2026-07-21_SEMANTIC_DATA_GATE_v1.md`
-- `2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`
-- `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`
-- `validation_modules/`
+- `2026-07-16_CANONICAL_IDENTITY_MIGRATION_v1.md`.
+- `2026-07-16_RELATIONS_SIMILARITY_MIGRATION_v1.md`.
+- `2026-07-16_SOURCES_MEDIA_MIGRATION_v1.md`.
+- `2026-07-21_SEMANTIC_DATA_GATE_v1.md`.
+- `2026-07-21_VALIDATION_CORPUS_PILOT_v1.md`.
+- `2026-07-26_VALIDATION_RESEARCH_MODULES_v1.md`.
+- `validation_modules/`.
 
 Technical/corpus readiness is not Foundation v3 user-value evidence.
 
