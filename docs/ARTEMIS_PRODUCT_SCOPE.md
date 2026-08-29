@@ -95,9 +95,9 @@ implementation authorization even after contract acceptance.
 
 - 3D Globe as the primary MVP spatial surface;
 - Architecture Atlas at `/atlas/` as a frozen compatibility surface;
-- compact synchronized calendar timeline with explicit `Range` and `Scrub` modes;
+- full-width bottom calendar timeline with explicit `Range` interval and single-cursor `Scrub` modes;
 - selectable start/end or start/current calendar values at an honest display granularity;
-- interactive presence markers and one concise place/date/activity card;
+- interactive presence markers with a compact first-click popup and optional right detail drawer;
 - coarse trajectory presentation where a dashed chronological connector is explicitly not historical route geometry;
 - source/locator/uncertainty under progressive disclosure;
 - layer visibility and legend only after the primary path loop is understandable or inside advanced evidence views;
@@ -109,6 +109,8 @@ implementation authorization even after contract acceptance.
 - save/share only if achievable without new backend dependency; otherwise local/session view state is enough for pilot.
 
 Map and timeline must control one shared model state. Two adjacent but unsynchronized widgets do not satisfy scope. `Range` uses temporal overlap; `Scrub` accumulates state from its chosen start. `Trajectory` remains the semantic authority, and a presentation-only chronological connector must remain distinguishable from unknown route geometry.
+
+Selecting a marker must not move the map camera. Repeated selection may open details; explicit double-click may focus/zoom the selected place.
 
 ## 5. Knowledge and epistemic scope
 
