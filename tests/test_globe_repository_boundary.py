@@ -124,14 +124,16 @@ def test_boundary_decision_rejects_premature_apps_or_framework_migration() -> No
     assert "Production-scale 3D/dynamic Earth remains gated" in decision
 
 
-def test_existing_canonical_structure_already_prohibits_renderer_semantic_forks() -> None:
+def test_existing_canonical_structure_prohibits_renderer_semantic_forks() -> None:
     structure = _text(PROJECT_STRUCTURE)
     lowered = structure.lower()
     assert "source `index.html`" in lowered
     assert "generated core landing" in lowered
-    assert "primary leonardo globe research prototype" in lowered
-    assert "second semantic core" not in lowered  # English shortcut must not become an alternate owner label.
+    assert "primary leonardo globe/temporal map research prototype" in lowered
+    assert "one semantic core" in lowered
     assert "renderer-specific historical data forks" in lowered
+    assert "current leonardo globe historical input" in lowered
+    assert "not `data/features.geojson`" in lowered
 
 
 def test_no_checked_in_generated_globe_build_exists() -> None:
