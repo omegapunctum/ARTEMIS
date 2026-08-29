@@ -1,7 +1,7 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v6.4
+# ARTEMIS — МАСТЕР-ПРОМПТ v6.5
 
 Статус: canonical operational governance for AI agents and assistants.
-Дата: 2026-08-09.
+Дата: 2026-08-29.
 
 ## 1. Роль проекта
 
@@ -27,7 +27,7 @@ Core:
 - one semantic core across domains and interfaces;
 - human judgment.
 
-Architecture Atlas — thematic layer and technical baseline. `Life in Context` — first validation vertical.
+Architecture Atlas — thematic compatibility layer and preserved technical baseline. `Life in Context / Leonardo Temporal Map` — first active validation vertical.
 
 Attractor guides architecture; it does not authorize implementation scope.
 
@@ -37,12 +37,13 @@ Attractor guides architecture; it does not authorize implementation scope.
 - current capability: `docs/PROJECT_TRUTH.md`;
 - North Star + attractor + identity-level World Model interpretation: `docs/ARTEMIS_CONCEPT.md`;
 - active product: `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`;
+- application platform / delivery / renderer / repository-storage boundary: `docs/PLATFORM_ARCHITECTURE_DECISION.md`;
 - reviewed spatial-temporal World Model semantics: `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
 - uncertainty profile: `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
 - epistemics: `docs/EPISTEMIC_CONTRACT.md`;
 - entities: `docs/ENTITY_MODEL.md`;
 - AI behavior: `docs/AI_POLICY.md`;
-- current public data/runtime contract: `docs/DATA_CONTRACT.md`;
+- current Architecture Atlas public-data/export contract: `docs/DATA_CONTRACT.md`;
 - priorities/order: `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md`;
 - development execution contract: `docs/DEVELOPMENT_OPERATING_SYSTEM.md`;
 - machine-readable operational state: `docs/project_state.json`;
@@ -56,16 +57,19 @@ A reviewed executable contract cannot be edited merely to make wording match a n
 
 ## 3. Current technical boundaries
 
-- Vanilla JavaScript + MapLibre frontend is the current public 2D baseline.
-- FastAPI backend.
-- SQLite baseline; PostgreSQL may require later decision.
-- Airtable curated source.
-- ETL publishes current canonical public `data/*` artifacts.
-- `data/features.geojson` is the current public **2D map projection/source**, not the universal representation of Foundation knowledge.
-- A generated MapLibre GL JS 5.24.0 Globe R&D artifact exists, but it is not a public entrypoint or a product-validated historical Globe.
-- Gate C Leonardo-in-Romagna World Slice boundary is frozen/non-public; its Claims remain draft rather than public historical truth.
-- GitHub Pages serves the static frontend; backend is separate.
-- No React/Vue/Angular/TypeScript without architecture decision.
+- ARTEMIS is a web-first Web Application; browser execution is the current canonical client platform.
+- 2D Map and Globe are presentation renderers over one World Model / Explorer State / Render Projection core, not separate products or truth models.
+- Vanilla JavaScript + MapLibre remains the current frontend implementation baseline; no framework rewrite is authorized by current product evidence.
+- FastAPI backend exists as frozen compatibility runtime outside the active static Core path.
+- SQLite is the preserved backend baseline; future operational storage technology requires evidence-backed architecture decisions.
+- Airtable remains the curated editorial source for the Architecture Atlas compatibility export and hosts empty/non-authoritative World Model shadow tables; it is not the current Leonardo historical runtime authority.
+- ETL publishes checked-in Architecture Atlas `data/*` artifacts.
+- `data/features.geojson` is the current public **2D Architecture Atlas projection/source**, not the universal representation of Foundation knowledge and not the historical source of the Leonardo Globe.
+- A generated MapLibre GL JS 5.24.0 Globe R&D runtime is published at `/globe/` as the primary Leonardo research prototype. Public access does not make it a product-validated historical capability.
+- Gate C Leonardo-in-Romagna World Slice boundary is frozen/non-public as historical authority input; its Claims remain draft/rejected rather than public historical truth.
+- The current Globe consumes the frozen repository package through World Model → Explorer State → Render Projection, not through a live Airtable historical import.
+- GitHub Pages serves the static Core landing, `/globe/` research prototype and `/atlas/` compatibility surface; backend is separate.
+- No React/Vue/Angular/TypeScript without an explicit architecture decision.
 - No direct frontend Airtable access.
 - No token/private research storage in Web Storage.
 - No competing semantic/world-model source of truth.
@@ -91,26 +95,29 @@ A reviewed executable contract cannot be edited merely to make wording match a n
 17. Renderer payloads are projections of one World Model / World Slice, not independent historical truth datasets.
 18. Terrain/imagery/tiles are geospatial rendering assets unless they explicitly assert historical state through World Model semantics.
 19. 2D/3D visual differences must not change active object identity, temporal validity, uncertainty, evidence or relation meaning.
-20. Future AI view/query actions must be visible, reversible and separate from knowledge mutation.
-21. Personal knowledge context, VR/AR, universal corpus and causal/counterfactual runtime remain future branches until separately opened.
-22. Attractor constrains direction, not schedule or current scope.
+20. Timeline state is renderer-neutral Explorer State, not renderer-owned domain semantics.
+21. Future AI view/query actions must be visible, reversible and separate from knowledge mutation.
+22. Personal knowledge context, VR/AR, universal corpus and causal/counterfactual runtime remain future branches until separately opened.
+23. Attractor constrains direction, not schedule or current scope.
 
 ## 5. Current order
 
-Active product vertical: Globe MVP / issue `#355`.
+Active product vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
 
 Current operational truth:
 
 1. Preserve reviewed #329 / PR #336 World Model and #330 / PR #337 uncertainty foundations byte-for-byte where their READY review scope requires it.
-2. Preserve completed PRs #356–#357 lifecycle recovery; the bounded `ARTEMIS Core Check` is the required signal, while the broad release check remains a compatibility diagnostic.
-3. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
-4. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real World Slice boundary.
-5. Preserve accepted Foundation v3.1 / #363 / PR #364 attractor and governance rules; #363 is completed, not active maintenance.
-6. Gate D — source-aware Globe experience — is **currently in progress** under #355; `/globe/` is an explicitly authorized public R&D review surface, not a promoted product capability.
-7. Build from the frozen World Slice through Explorer State and Render Projection; do not require or imply an Airtable historical import.
-8. Publish the root Core landing, keep `/globe/` as the primary research prototype and preserve the 2D Architecture Atlas at `/atlas/` as a compatibility surface.
-9. Test one user-facing Leonardo exploration loop before opening backend, persistence, Airtable import or broader corpus work.
-10. Record one explicit `ITERATE`, `NARROW` or `STOP/RETHINK` decision before any infrastructure or product expansion; public prototype access does not itself prove user value.
+2. Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
+3. Preserve Gate C `FREEZE` from #332/#360 / PR #362 as the only approved real Leonardo World Slice boundary.
+4. Preserve accepted Foundation v3.1 / #363 / PR #364 attractor and governance rules; #363 is completed, not active maintenance.
+5. Preserve PR `#393` Core Reset as completed: root Core landing, `/globe/` primary research surface, `/atlas/` compatibility-only, ARTEMIS Core Check as the required product signal.
+6. Preserve PR `#395` as the calendar-based Temporal Map loop over the frozen four-Presence Romagna scaffold.
+7. Preserve the first published #395 manual-feedback result as **`ITERATE`**, not as final user-value validation.
+8. Preserve PR `#396` as the published bounded correction: full-width bottom timeline; two-handle `Range`; chosen build origin + one current-time cursor `Scrub`; popup-first selection; optional right drawer; no single-click camera jump; double-click focus.
+9. Gate D remains **OPEN / IN PROGRESS** under #355. Implementation success and public R&D access do not by themselves close the gate.
+10. The next product action is a **fresh user check of the published #396 interface**. Do not add infrastructure, broader Leonardo data or default context/layer complexity pre-emptively.
+11. Record exactly one next result: `ITERATE`, `NARROW` or `STOP/RETHINK`.
+12. If evidence supports continuing, open at most one named next branch. A branch is a consequence of `ITERATE`, not a fourth peer decision.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 
@@ -122,10 +129,14 @@ Issues #339–#345 / PRs #346–#352 are accepted renderer foundations, includin
 
 Foundation v3 is accepted in PR `#328`; Foundation v3.1 attractor clarification is accepted in PR `#364`. The superseded #323–#325 path and PR #314 remain closed.
 
+Formal D1/M1/A1/P1 closeout and the old automatic Gate E sequencing are not current roadmap drivers. Basic keyboard, responsive and accessible behavior remains required, but more evidence machinery does not precede the fresh user-value check.
+
 ## 6. Frozen / gated work
 
-Frozen or gated at product scale:
+Frozen or gated at product scale until the post-#396 decision opens one named branch:
 
+- broader Leonardo 1452–1519 corpus;
+- default local/global context and broad layer expansion;
 - generative AI runtime;
 - AI-controlled view/query runtime until a separate command/state contract is approved;
 - causal/counterfactual engine;
@@ -141,7 +152,7 @@ Frozen or gated at product scale:
 
 Security/compatibility maintenance remains allowed.
 
-The bounded source-aware Globe MVP is allowed under #355 only through explicitly opened gates. Core Reset makes Globe the primary public research prototype; it does not promote the prototype into a validated product capability or open Gate E.
+The bounded source-aware Temporal Map/Globe MVP is allowed under #355 only through explicitly opened scope. The Globe is the primary public research prototype; this does not promote it into a validated product capability.
 
 ## 7. Attractor decision test
 
@@ -157,9 +168,9 @@ For every proposed capability, ask in order:
 
 A capability may be strategically aligned with the attractor and still be **not allowed now**.
 
-## 8. Renderer / Globe rule
+## 8. Renderer / Globe / Temporal Map rule
 
-When working on 2D map, 3D Globe or future renderers:
+When working on 2D map, 3D Globe, timeline or future renderers:
 
 1. start from World Model / World Slice semantics;
 2. use renderer-neutral selected time/layers/object state;
@@ -170,9 +181,15 @@ When working on 2D map, 3D Globe or future renderers:
 7. keep engine-specific camera/GPU/tile/picking state outside the semantic core;
 8. require semantic parity before promoting a second renderer;
 9. treat screenshot equality as visual evidence only: **Screenshot equality is not semantic parity**;
-10. treat 2D, Globe, local 3D, VR/AR and future clients as interfaces over one semantic core.
+10. treat 2D, Globe, local 3D, VR/AR and future clients as interfaces over one semantic core;
+11. treat timeline as a controller/view over shared Explorer temporal state, not a third truth model;
+12. `Range` and `Scrub` are interaction modes over the same temporal/Trajectory semantics, not separate domain entities;
+13. current `Range` means interval overlap; current `Scrub` means a chosen build origin plus one current-time cursor with accumulated path;
+14. presentation-only dashed chronology must never become historical route geometry;
+15. single-click selection must not implicitly change camera state; explicit focus is a separate action.
 
 Working architecture: `docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md`.
+Current Temporal Map interaction: `docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md`.
 Active product decision: `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` under #355.
 
 ## 9. AI rule
@@ -219,14 +236,14 @@ A frozen reviewed semantic contract requires new review evidence before its byte
 - claiming 3D/VR/AI/world coverage before implementation;
 - creating separate domain-specific or renderer-specific truth models;
 - creating `*_2d`, `*_3d`, `history_core`, `earth_core` or similar source-of-truth forks without a foundation decision;
-- allowing a map/globe engine to redefine temporal, spatial or epistemic semantics;
+- allowing a map/globe/timeline engine to redefine temporal, spatial or epistemic semantics;
 - allowing an AI view action to mutate canonical knowledge implicitly;
 - rewriting a frozen reviewed contract while retaining its previous READY claim;
 - weakening a review digest or validator because a documentation change touched reviewed scope;
 - rewriting old issues into new meaning;
 - performing irreversible migration before fixtures/contract;
 - using archive or audit as active owner;
-- using the attractor itself as implementation authorization.
+- using the attractor or broader Product Thesis itself as implementation authorization.
 
 ## 12. Definition of Ready
 
@@ -253,7 +270,7 @@ A task is ready when:
 - no invalidated READY review claim;
 - next dependency or stop decision is explicit.
 
-For renderer work, Done additionally requires no silent semantic divergence from the shared World Model/Explorer State contract.
+For renderer/Temporal Map work, Done additionally requires no silent semantic divergence from the shared World Model/Explorer State/Trajectory contract.
 
 For AI view-state work, Done additionally requires visible/reversible state transitions and no hidden canonical knowledge mutation.
 
