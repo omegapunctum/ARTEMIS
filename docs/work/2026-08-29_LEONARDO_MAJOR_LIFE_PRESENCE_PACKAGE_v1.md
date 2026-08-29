@@ -1,6 +1,6 @@
 # Leonardo major-life Presence package v1
 
-Status: `WORKING_SPEC / SOURCE_AUDITED / RUNTIME_NOT_AUTHORIZED`.
+Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / CANONICAL_REVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
 
 Parent product contour: issue #355.
 
@@ -193,9 +193,14 @@ Therefore **do not**:
 - copy the new source assertions into the frozen Gate C source/Claim/EvidenceLink manifests;
 - draw route lines between major-life Presences.
 
-The eventual runtime integration needs a separate broader source-aware data package/composition step that can reuse the frozen Romagna identities as a finer segment while keeping one explicitly selected Trajectory authority for the Life Path presentation.
+The candidate storage/composition form is now materialized under
+`fixtures/world_slices/leonardo_major_life/v1/`. It references the frozen Romagna Trajectory as a
+finer external segment, keeps a separate candidate whole-life Trajectory authority, and preserves
+all unsupported inter-segment transitions as evidence-free `unknown_route` gaps with null geometry.
 
-The exact storage/composition form is intentionally not invented in this specification. It must be chosen against the current World Model and projection contracts before implementation.
+This machine-checkable candidate form is not a runtime/public schema decision. A later integration
+decision must still choose how the reviewed package enters the shared World Model → Explorer State
+→ Render Projection path.
 
 ## 7. Drive evidence workspace
 
@@ -210,15 +215,32 @@ Relevant operational artifacts:
 
 Drive is evidence/research workspace only. GitHub remains the owner of product/architecture decisions and any eventual machine-readable runtime package.
 
-## 8. Current lifecycle
+## 8. GitHub candidate package
 
-This package changes the state from “candidate idea” to **source-audited working specification**.
+The reviewable repository package contains:
+
+- `fixtures/world_slices/leonardo_major_life/v1/package.json`;
+- `fixtures/world_slices/leonardo_major_life/v1/package.schema.json`;
+- `scripts/validate_leonardo_major_life_package.py`;
+- `tests/test_leonardo_major_life_package.py`.
+
+It closes candidate Place → Presence → Claim → EvidenceLink → Source and Uncertainty references, preserves
+the seven Drive audit decisions, and fails closed on geometry, route evidence, temporal-precision
+inflation, frozen-Romagna identity copying, Relations, runtime authorization and self-declared review
+completion.
+
+## 9. Current lifecycle
+
+This package changes the state from “candidate idea” to a **source-audited, machine-checkable
+candidate awaiting canonical review**.
 
 It does not claim that the public Globe currently contains the seven new Presences.
 
-Canonical product scope on 2026-08-29 still requires the fresh post-#396 user check before broader 1452–1519 runtime content is opened as a product branch. The current user direction authorizes preparation and source audit of this data package; it is not recorded here as a fabricated user-test result.
+Lifecycle dependency: PR `#399` records the direct post-#396 `ITERATE` and opens exactly one
+`Leonardo Major-Life Presence Scope v1` branch. PR `#400` must not merge before `#399`; this package
+does not duplicate or pre-empt that lifecycle transition.
 
-## 9. Exit condition for this package
+## 10. Exit condition for this package
 
 Research package is ready when:
 
@@ -230,4 +252,6 @@ Research package is ready when:
 
 All seven current candidates meet the source-audit threshold for `READY_FOR_CANONICAL_REVIEW`.
 
-Next implementation decision: after the required product-scope transition, define the smallest broader Life Path composition that preserves frozen Gate C as a finer segment and then implement it through the shared World Model → Explorer State → Render Projection path.
+The package remains `pending_independent_review`. Its next decision is exactly one of
+`FREEZE_FOR_REVIEW`, `NARROW` or `STOP`. Runtime integration is a later decision and is not
+authorized by this candidate package or by a passing structural check.

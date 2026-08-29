@@ -1,0 +1,779 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "leonardo-major-life-presence-candidates-v1",
+  "title": "Leonardo da Vinci major-life Presence candidates, 1452–1519",
+  "status": "CANDIDATE_SOURCE_AUDITED",
+  "publication_status": "non_public_curation",
+  "runtime_authorized": false,
+  "parent_issue": 355,
+  "lifecycle_dependency": {
+    "pull_request": 399,
+    "required_state": "merged_before_package_merge",
+    "opened_branch": "Leonardo Major-Life Presence Scope v1"
+  },
+  "subject": {
+    "entity_ref": "entity-leonardo-da-vinci",
+    "label": "Leonardo da Vinci"
+  },
+  "trajectory": {
+    "trajectory_id": "trajectory-leonardo-major-life-v1",
+    "role": "candidate_composition_authority",
+    "geometry": null,
+    "route_status": "unknown_route",
+    "external_segments": [
+      {
+        "trajectory_ref": "trajectory-leonardo-romagna-1502",
+        "package_ref": "fixtures/world_slices/leonardo_romagna_1502/v1",
+        "composition_role": "finer_existing_segment",
+        "identity_policy": "reference_only_do_not_copy_or_rewrite",
+        "presence_count": 4,
+        "internal_unknown_route_gap_count": 3
+      }
+    ]
+  },
+  "places": [
+    {
+      "place_id": "place-vinci",
+      "label": "Vinci",
+      "place_kind": "settlement",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-vinci-presence-1452-04-15"]
+    },
+    {
+      "place_id": "place-florence",
+      "label": "Florence",
+      "place_kind": "city",
+      "geometry": null,
+      "claim_refs": [
+        "claim-leonardo-florence-presence-1472",
+        "claim-leonardo-florence-presence-1503"
+      ]
+    },
+    {
+      "place_id": "place-milan",
+      "label": "Milan",
+      "place_kind": "city",
+      "geometry": null,
+      "claim_refs": [
+        "claim-leonardo-milan-presence-1483-04-25",
+        "claim-leonardo-milan-presence-1508-09-12"
+      ]
+    },
+    {
+      "place_id": "place-vatican-belvedere",
+      "label": "Rome / Vatican Belvedere",
+      "place_kind": "named_complex",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-rome-belvedere-presence-1513-1516"]
+    },
+    {
+      "place_id": "place-clos-luce",
+      "label": "Clos Lucé, Amboise",
+      "place_kind": "named_residence",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-clos-luce-presence-1516-1519"]
+    }
+  ],
+  "macro_periods": [
+    {
+      "period_id": "period-leonardo-vinci-florence-formation",
+      "label": "Vinci / Florence formation",
+      "display_range": "1452–1482",
+      "presentation_only": true,
+      "presence_refs": [
+        "presence-leonardo-vinci-birth-1452",
+        "presence-leonardo-florence-st-luke-1472"
+      ]
+    },
+    {
+      "period_id": "period-leonardo-milan-i",
+      "label": "Milan I",
+      "display_range": "c. 1482/83–1499",
+      "presentation_only": true,
+      "presence_refs": ["presence-leonardo-milan-altarpiece-contract-1483"]
+    },
+    {
+      "period_id": "period-leonardo-florence-ii",
+      "label": "Florence II",
+      "display_range": "1500–1506",
+      "presentation_only": true,
+      "presence_refs": ["presence-leonardo-florence-second-period-1503"]
+    },
+    {
+      "period_id": "period-leonardo-milan-ii",
+      "label": "Milan II",
+      "display_range": "1506–1513",
+      "presentation_only": true,
+      "presence_refs": ["presence-leonardo-milan-ms-f-1508-09-12"]
+    },
+    {
+      "period_id": "period-leonardo-rome",
+      "label": "Rome",
+      "display_range": "1513–1516",
+      "presentation_only": true,
+      "presence_refs": ["presence-leonardo-rome-belvedere-1513-1516"]
+    },
+    {
+      "period_id": "period-leonardo-amboise-clos-luce",
+      "label": "Amboise / Clos Lucé",
+      "display_range": "1516–1519",
+      "presentation_only": true,
+      "presence_refs": ["presence-leonardo-amboise-clos-luce-1516-1519"]
+    }
+  ],
+  "presences": [
+    {
+      "presence_id": "presence-leonardo-vinci-birth-1452",
+      "period_ref": "period-leonardo-vinci-florence-formation",
+      "place_ref": "place-vinci",
+      "place_label": "Vinci",
+      "activity_label": "Birth and childhood origin",
+      "selection_rationale": "Establishes the source-supported beginning of the whole-life trajectory.",
+      "temporal": {
+        "source_native": "15 April 1452",
+        "start": "1452-04-15",
+        "end": "1452-04-15",
+        "precision": "day",
+        "extent_semantics": "documented_presence_anchor"
+      },
+      "spatial_precision": "named_settlement",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-vinci-presence-1452-04-15"],
+      "uncertainty_refs": ["uncertainty-vinci-exact-birthplace"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    },
+    {
+      "presence_id": "presence-leonardo-florence-st-luke-1472",
+      "period_ref": "period-leonardo-vinci-florence-formation",
+      "place_ref": "place-florence",
+      "place_label": "Florence",
+      "activity_label": "Registered with the painters' Confraternity of Saint Luke",
+      "selection_rationale": "Marks Leonardo's documented Florentine artistic formation at honest year precision.",
+      "temporal": {
+        "source_native": "1472",
+        "start": "1472",
+        "end": "1472",
+        "precision": "year",
+        "extent_semantics": "documented_presence_anchor"
+      },
+      "spatial_precision": "named_city",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-florence-presence-1472"],
+      "uncertainty_refs": ["uncertainty-florence-1472-address"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    },
+    {
+      "presence_id": "presence-leonardo-milan-altarpiece-contract-1483",
+      "period_ref": "period-leonardo-milan-i",
+      "place_ref": "place-milan",
+      "place_label": "Milan",
+      "activity_label": "San Francesco Grande altarpiece contract",
+      "selection_rationale": "Provides a surviving day-level documentary anchor for the first Milan period.",
+      "temporal": {
+        "source_native": "25 April 1483",
+        "start": "1483-04-25",
+        "end": "1483-04-25",
+        "precision": "day",
+        "extent_semantics": "documentary_context_anchor"
+      },
+      "spatial_precision": "named_city_with_institutional_context",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-milan-presence-1483-04-25"],
+      "uncertainty_refs": ["uncertainty-milan-1483-body-position"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    },
+    {
+      "presence_id": "presence-leonardo-florence-second-period-1503",
+      "period_ref": "period-leonardo-florence-ii",
+      "place_ref": "place-florence",
+      "place_label": "Florence",
+      "activity_label": "Returned Florentine work period",
+      "selection_rationale": "Restores the major Florence phase while keeping the finer Romagna 1502 sequence explicit.",
+      "temporal": {
+        "source_native": "1503",
+        "start": "1503",
+        "end": "1503",
+        "precision": "year",
+        "extent_semantics": "documented_presence_anchor"
+      },
+      "spatial_precision": "named_city",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-florence-presence-1503"],
+      "uncertainty_refs": ["uncertainty-florence-1500-1506-continuity"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    },
+    {
+      "presence_id": "presence-leonardo-milan-ms-f-1508-09-12",
+      "period_ref": "period-leonardo-milan-ii",
+      "place_ref": "place-milan",
+      "place_label": "Milan",
+      "activity_label": "Manuscript F begun in Milan",
+      "selection_rationale": "Uses Leonardo's dated Manuscript F incipit as a strong second-Milan anchor.",
+      "temporal": {
+        "source_native": "cominciato a Milano addì 12 settembre 1508",
+        "start": "1508-09-12",
+        "end": "1508-09-12",
+        "precision": "day",
+        "extent_semantics": "source_native_manuscript_anchor"
+      },
+      "spatial_precision": "named_city_with_parish_context",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-milan-presence-1508-09-12"],
+      "uncertainty_refs": ["uncertainty-milan-1506-1513-continuity"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    },
+    {
+      "presence_id": "presence-leonardo-rome-belvedere-1513-1516",
+      "period_ref": "period-leonardo-rome",
+      "place_ref": "place-vatican-belvedere",
+      "place_label": "Rome / Vatican Belvedere",
+      "activity_label": "Roman residence and work context",
+      "selection_rationale": "Provides a source-bound residence/work context for the major Roman phase.",
+      "temporal": {
+        "source_native": "Roman stay 1513–1516; Belvedere work locator circa 1514",
+        "start": "1513",
+        "end": "1516",
+        "precision": "year_range_with_approximate_year_locator",
+        "extent_semantics": "residence_range_not_continuous_position"
+      },
+      "spatial_precision": "named_complex",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-rome-belvedere-presence-1513-1516"],
+      "uncertainty_refs": ["uncertainty-rome-daily-position"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    },
+    {
+      "presence_id": "presence-leonardo-amboise-clos-luce-1516-1519",
+      "period_ref": "period-leonardo-amboise-clos-luce",
+      "place_ref": "place-clos-luce",
+      "place_label": "Clos Lucé, Amboise",
+      "activity_label": "Final residence and work period",
+      "selection_rationale": "Establishes the source-supported endpoint of the whole-life trajectory.",
+      "temporal": {
+        "source_native": "settled in autumn 1516; died there 2 May 1519",
+        "start": "1516",
+        "end": "1519-05-02",
+        "precision": "season_year_start_and_day_end",
+        "extent_semantics": "residence_range_not_continuous_position"
+      },
+      "spatial_precision": "named_residence",
+      "geometry": null,
+      "claim_refs": ["claim-leonardo-clos-luce-presence-1516-1519"],
+      "uncertainty_refs": ["uncertainty-amboise-continuous-position"],
+      "audit_decision": "READY_FOR_CANONICAL_REVIEW"
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "transition-vinci-to-florence-unknown",
+      "from_ref": "presence-leonardo-vinci-birth-1452",
+      "to_ref": "presence-leonardo-florence-st-luke-1472",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    },
+    {
+      "transition_id": "transition-florence-to-milan-i-unknown",
+      "from_ref": "presence-leonardo-florence-st-luke-1472",
+      "to_ref": "presence-leonardo-milan-altarpiece-contract-1483",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    },
+    {
+      "transition_id": "transition-milan-i-to-romagna-unknown",
+      "from_ref": "presence-leonardo-milan-altarpiece-contract-1483",
+      "to_ref": "trajectory-leonardo-romagna-1502",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    },
+    {
+      "transition_id": "transition-romagna-to-florence-ii-unknown",
+      "from_ref": "trajectory-leonardo-romagna-1502",
+      "to_ref": "presence-leonardo-florence-second-period-1503",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    },
+    {
+      "transition_id": "transition-florence-ii-to-milan-ii-unknown",
+      "from_ref": "presence-leonardo-florence-second-period-1503",
+      "to_ref": "presence-leonardo-milan-ms-f-1508-09-12",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    },
+    {
+      "transition_id": "transition-milan-ii-to-rome-unknown",
+      "from_ref": "presence-leonardo-milan-ms-f-1508-09-12",
+      "to_ref": "presence-leonardo-rome-belvedere-1513-1516",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    },
+    {
+      "transition_id": "transition-rome-to-amboise-unknown",
+      "from_ref": "presence-leonardo-rome-belvedere-1513-1516",
+      "to_ref": "presence-leonardo-amboise-clos-luce-1516-1519",
+      "route_status": "unknown_route",
+      "geometry": null,
+      "source_refs": []
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source-museo-leonardiano-places",
+      "title": "Leonardo's places",
+      "organization": "Museo Leonardiano di Vinci",
+      "source_type": "institutional_reference",
+      "url": "https://museoleonardiano.it/en/leonardo-in-vinci/leonardos-places/",
+      "locator": "The Places of Birth and Childhood: birth in Vinci on 15 April 1452; Antonio da Vinci birth/baptism record; Anchiano house described as traditional",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-museo-leonardiano-biography",
+      "title": "Leonardo's biography",
+      "organization": "Museo Leonardiano di Vinci",
+      "source_type": "institutional_reference",
+      "url": "https://museoleonardiano.it/en/leonardo-in-vinci/biografia/",
+      "locator": "1472 biography entry: registration with the Florentine painters' Compagnia di San Luca",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-nga-leonardo-biography",
+      "title": "Leonardo da Vinci",
+      "organization": "National Gallery of Art, Washington",
+      "source_type": "institutional_reference",
+      "url": "https://www.nga.gov/artists/1479-leonardo-da-vinci",
+      "locator": "Biography paragraph: joined the painters' Confraternity of Saint Luke in 1472; departed Florence for Milan around 1482",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "not_used",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-national-gallery-lost-altarpiece",
+      "title": "The lost altarpiece",
+      "organization": "National Gallery, London",
+      "source_type": "institutional_research",
+      "url": "https://www.nationalgallery.org.uk/exhibitions/past/leonardo-experience-a-masterpiece/the-lost-altarpiece",
+      "locator": "The contract: surviving contract from 25 April 1483; San Francesco Grande, Milan; Leonardo and the de Predis painters",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-national-gallery-virgin-rocks",
+      "title": "The Virgin of the Rocks",
+      "organization": "National Gallery, London",
+      "source_type": "collection_catalogue",
+      "url": "https://www.nationalgallery.org.uk/paintings/leonardo-da-vinci-the-virgin-of-the-rocks",
+      "locator": "Collection and commission context for the Milan altarpiece",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-uffizi-leonardo-room",
+      "title": "La nuova sala di Leonardo",
+      "organization": "Gallerie degli Uffizi",
+      "source_type": "institutional_reference",
+      "url": "https://www.uffizi.it/news/la-nuova-sala-di-leonardo",
+      "locator": "Paragraph beginning 'Leonardo nel 1503': returned to Florence in 1503 after the long Milanese absence",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-louvre-leonardo-biography",
+      "title": "Leonardo da Vinci",
+      "organization": "Musée du Louvre",
+      "source_type": "institutional_reference",
+      "url": "https://presse.louvre.fr/leonardo-da-vinci/?lang=en",
+      "locator": "Biography chronology used only as a cross-check for Florence and France sequence",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-museo-galileo-leonardo-chronology",
+      "title": "Cronologia di Leonardo da Vinci",
+      "organization": "Museo Galileo",
+      "source_type": "institutional_research",
+      "url": "https://brunelleschi.imss.fi.it/itinerari/itinerario/CronologiaLeonardo.html",
+      "locator": "1508 entry: 'cominciato a Milano addì 12 settembre 1508'; 1513–1514 entries: Rome departure and Belvedere studio context",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-institut-france-carnet-f",
+      "title": "Carnet F",
+      "organization": "Bibliothèque de l'Institut de France",
+      "source_type": "institutional_manuscript_record",
+      "url": "https://minerva.bibliotheque-institutdefrance.fr/expositions/exhibitions/7-carnet-f2",
+      "locator": "Carnet F record: first codex of the period in which Leonardo had re-established himself in Milan",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-museo-galileo-atl-0426-1",
+      "title": "Codex Atlanticus folio 213v / ATL.0426.1",
+      "organization": "Museo Galileo",
+      "source_type": "institutional_manuscript_record",
+      "url": "https://teche.museogalileo.it/leonardo/foglio/index.html?lang=en&num=ATL.0426.1",
+      "locator": "Folio research record: Roman stay 1513–1516, Belvedere residence context, folio circa 1514",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    },
+    {
+      "source_id": "source-clos-luce-leonardo-biography",
+      "title": "Leonardo da Vinci and the Clos Lucé",
+      "organization": "Château du Clos Lucé",
+      "source_type": "official_residence_biography",
+      "url": "https://www.vinci-closluce.com/en/leonardo-da-vinci/",
+      "locator": "Leonardo settled at Clos Lucé in autumn 1516 and died in his bedchamber on 2 May 1519",
+      "rights": {
+        "data_text_use": "citation_and_factual_claims_only",
+        "media_reuse": "prohibited_without_permission",
+        "derived_geometry_use": "prohibited"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-leonardo-vinci-presence-1452-04-15",
+      "target_ref": "presence-leonardo-vinci-birth-1452",
+      "statement": "Leonardo was born in Vinci on 15 April 1452.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-vinci-birth-museo-leonardiano",
+        "evidence-vinci-birth-nga-crosscheck"
+      ],
+      "uncertainty_refs": ["uncertainty-vinci-exact-birthplace"]
+    },
+    {
+      "claim_id": "claim-leonardo-florence-presence-1472",
+      "target_ref": "presence-leonardo-florence-st-luke-1472",
+      "statement": "Leonardo joined the painters' Confraternity of Saint Luke in Florence in 1472.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-florence-1472-museo-leonardiano",
+        "evidence-florence-1472-nga"
+      ],
+      "uncertainty_refs": ["uncertainty-florence-1472-address"]
+    },
+    {
+      "claim_id": "claim-leonardo-milan-presence-1483-04-25",
+      "target_ref": "presence-leonardo-milan-altarpiece-contract-1483",
+      "statement": "The surviving San Francesco Grande altarpiece contract places Leonardo in the Milan commission context on 25 April 1483.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-milan-1483-national-gallery-contract",
+        "evidence-milan-1483-national-gallery-painting"
+      ],
+      "uncertainty_refs": ["uncertainty-milan-1483-body-position"]
+    },
+    {
+      "claim_id": "claim-leonardo-florence-presence-1503",
+      "target_ref": "presence-leonardo-florence-second-period-1503",
+      "statement": "Leonardo had returned to Florence in 1503.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-florence-1503-uffizi",
+        "evidence-florence-sequence-louvre"
+      ],
+      "uncertainty_refs": ["uncertainty-florence-1500-1506-continuity"]
+    },
+    {
+      "claim_id": "claim-leonardo-milan-presence-1508-09-12",
+      "target_ref": "presence-leonardo-milan-ms-f-1508-09-12",
+      "statement": "Leonardo's Manuscript F was begun in Milan on 12 September 1508.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-milan-1508-museo-galileo",
+        "evidence-milan-1508-institut-france"
+      ],
+      "uncertainty_refs": ["uncertainty-milan-1506-1513-continuity"]
+    },
+    {
+      "claim_id": "claim-leonardo-rome-belvedere-presence-1513-1516",
+      "target_ref": "presence-leonardo-rome-belvedere-1513-1516",
+      "statement": "Leonardo's Roman stay from 1513 to 1516 included a residence and work context at the Vatican Belvedere.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-rome-belvedere-museo-galileo-chronology",
+        "evidence-rome-belvedere-atl-0426-1"
+      ],
+      "uncertainty_refs": ["uncertainty-rome-daily-position"]
+    },
+    {
+      "claim_id": "claim-leonardo-clos-luce-presence-1516-1519",
+      "target_ref": "presence-leonardo-amboise-clos-luce-1516-1519",
+      "statement": "Leonardo settled at Clos Lucé in autumn 1516 and died there on 2 May 1519.",
+      "claim_kind": "factual",
+      "review_state": "candidate_source_audited",
+      "evidence_state": "candidate_not_canonical",
+      "evidence_link_refs": [
+        "evidence-clos-luce-official-biography",
+        "evidence-clos-luce-sequence-louvre"
+      ],
+      "uncertainty_refs": ["uncertainty-amboise-continuous-position"]
+    }
+  ],
+  "evidence_links": [
+    {
+      "evidence_link_id": "evidence-vinci-birth-museo-leonardiano",
+      "claim_id": "claim-leonardo-vinci-presence-1452-04-15",
+      "source_id": "source-museo-leonardiano-places",
+      "relation_to_claim": "supports",
+      "locator": "The Places of Birth and Childhood, first paragraph",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-florence-1472-museo-leonardiano",
+      "claim_id": "claim-leonardo-florence-presence-1472",
+      "source_id": "source-museo-leonardiano-biography",
+      "relation_to_claim": "supports",
+      "locator": "1472 biography entry",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-florence-1472-nga",
+      "claim_id": "claim-leonardo-florence-presence-1472",
+      "source_id": "source-nga-leonardo-biography",
+      "relation_to_claim": "supports",
+      "locator": "Biography paragraph on Verrocchio's workshop and the Confraternity of Saint Luke",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-milan-1483-national-gallery-contract",
+      "claim_id": "claim-leonardo-milan-presence-1483-04-25",
+      "source_id": "source-national-gallery-lost-altarpiece",
+      "relation_to_claim": "supports",
+      "locator": "The contract section: 25 April 1483",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-milan-1483-national-gallery-painting",
+      "claim_id": "claim-leonardo-milan-presence-1483-04-25",
+      "source_id": "source-national-gallery-virgin-rocks",
+      "relation_to_claim": "contextualizes",
+      "locator": "Commission and painting catalogue context",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-florence-1503-uffizi",
+      "claim_id": "claim-leonardo-florence-presence-1503",
+      "source_id": "source-uffizi-leonardo-room",
+      "relation_to_claim": "supports",
+      "locator": "Paragraph beginning 'Leonardo nel 1503'",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-florence-sequence-louvre",
+      "claim_id": "claim-leonardo-florence-presence-1503",
+      "source_id": "source-louvre-leonardo-biography",
+      "relation_to_claim": "contextualizes",
+      "locator": "Biography sequence: Florence return and later Milan move",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-milan-1508-museo-galileo",
+      "claim_id": "claim-leonardo-milan-presence-1508-09-12",
+      "source_id": "source-museo-galileo-leonardo-chronology",
+      "relation_to_claim": "supports",
+      "locator": "1508 entry: 'cominciato a Milano addì 12 settembre 1508'",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-milan-1508-institut-france",
+      "claim_id": "claim-leonardo-milan-presence-1508-09-12",
+      "source_id": "source-institut-france-carnet-f",
+      "relation_to_claim": "contextualizes",
+      "locator": "Carnet F institutional record",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-rome-belvedere-museo-galileo-chronology",
+      "claim_id": "claim-leonardo-rome-belvedere-presence-1513-1516",
+      "source_id": "source-museo-galileo-leonardo-chronology",
+      "relation_to_claim": "supports",
+      "locator": "1513 entry: departure for Rome and Belvedere studio; 1514 Belvedere note",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-rome-belvedere-atl-0426-1",
+      "claim_id": "claim-leonardo-rome-belvedere-presence-1513-1516",
+      "source_id": "source-museo-galileo-atl-0426-1",
+      "relation_to_claim": "supports",
+      "locator": "Folio 213v / ATL.0426.1 research record",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-clos-luce-official-biography",
+      "claim_id": "claim-leonardo-clos-luce-presence-1516-1519",
+      "source_id": "source-clos-luce-leonardo-biography",
+      "relation_to_claim": "supports",
+      "locator": "Leonardo da Vinci and the Clos Lucé, opening and death paragraphs",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-clos-luce-sequence-louvre",
+      "claim_id": "claim-leonardo-clos-luce-presence-1516-1519",
+      "source_id": "source-louvre-leonardo-biography",
+      "relation_to_claim": "contextualizes",
+      "locator": "Biography sequence: final French period",
+      "review_state": "research_audited"
+    },
+    {
+      "evidence_link_id": "evidence-vinci-birth-nga-crosscheck",
+      "claim_id": "claim-leonardo-vinci-presence-1452-04-15",
+      "source_id": "source-nga-leonardo-biography",
+      "relation_to_claim": "contextualizes",
+      "locator": "Biography identity and lifespan header",
+      "review_state": "research_audited"
+    }
+  ],
+  "uncertainties": [
+    {
+      "uncertainty_id": "uncertainty-vinci-exact-birthplace",
+      "target_refs": ["presence-leonardo-vinci-birth-1452"],
+      "dimension": "spatial_precision",
+      "description": "The Anchiano house is a traditional birthplace attribution, not evidence for an exact birth coordinate.",
+      "effect": "Use Vinci at named-settlement precision and keep geometry null."
+    },
+    {
+      "uncertainty_id": "uncertainty-florence-1472-address",
+      "target_refs": ["presence-leonardo-florence-st-luke-1472"],
+      "dimension": "spatial_precision",
+      "description": "The current evidence supports Florence and the 1472 guild context but does not bind an exact workshop address.",
+      "effect": "Use named-city precision and keep geometry null."
+    },
+    {
+      "uncertainty_id": "uncertainty-milan-1483-body-position",
+      "target_refs": ["presence-leonardo-milan-altarpiece-contract-1483"],
+      "dimension": "spatial_precision",
+      "description": "The contract supports the Milan commission context, not Leonardo's exact body-position coordinate.",
+      "effect": "Use named-city/institutional context only and keep geometry null."
+    },
+    {
+      "uncertainty_id": "uncertainty-florence-1500-1506-continuity",
+      "target_refs": ["presence-leonardo-florence-second-period-1503"],
+      "dimension": "temporal_coverage",
+      "description": "The 1500–1506 macro-period must not be read as uninterrupted Florence presence; the frozen Romagna 1502 segment remains explicit.",
+      "effect": "Use the 1503 anchor only; keep the broader range presentation-only."
+    },
+    {
+      "uncertainty_id": "uncertainty-milan-1506-1513-continuity",
+      "target_refs": ["presence-leonardo-milan-ms-f-1508-09-12"],
+      "dimension": "temporal_coverage",
+      "description": "The 12 September 1508 anchor does not prove uninterrupted Milan presence throughout 1506–1513.",
+      "effect": "Use the exact manuscript date only; keep the broader range presentation-only."
+    },
+    {
+      "uncertainty_id": "uncertainty-rome-daily-position",
+      "target_refs": ["presence-leonardo-rome-belvedere-1513-1516"],
+      "dimension": "spatiotemporal_coverage",
+      "description": "The residence range and work locators do not prove Leonardo's exact room or daily position throughout the Roman stay.",
+      "effect": "Use Belvedere-complex/range precision and do not infer movements within Rome."
+    },
+    {
+      "uncertainty_id": "uncertainty-amboise-continuous-position",
+      "target_refs": ["presence-leonardo-amboise-clos-luce-1516-1519"],
+      "dimension": "spatiotemporal_coverage",
+      "description": "Residence at Clos Lucé does not prove Leonardo's continuous position there or movements elsewhere in France.",
+      "effect": "Use named-residence precision and keep surrounding movement unknown."
+    },
+    {
+      "uncertainty_id": "uncertainty-major-life-route-and-coverage",
+      "target_refs": ["trajectory-leonardo-major-life-v1"],
+      "dimension": "trajectory_and_corpus_coverage",
+      "description": "The package deliberately selects coarse major-life anchors and does not reconstruct every trip or route.",
+      "effect": "All seven new transitions remain unknown_route with null geometry; absence is not historical absence."
+    }
+  ],
+  "coverage": {
+    "temporal_scope": {
+      "start": "1452-04-15",
+      "end": "1519-05-02"
+    },
+    "selection_rule": "Choose only source-supported anchors that establish a major life phase, residence/work transition, whole-life coverage, or future refinement seam.",
+    "known_exclusions": [
+      "Exact birth-to-death itinerary",
+      "Road, trail, day or hour level movement",
+      "Unreviewed exact addresses or body-position coordinates",
+      "Default political, cultural or global context layers",
+      "Documented Relations while issue #331 is deferred",
+      "Airtable import and runtime publication"
+    ],
+    "absence_rule": "Absence from this deliberately coarse package never asserts historical absence.",
+    "new_presence_count": 7,
+    "referenced_romagna_presence_count": 4,
+    "composed_anchor_count": 11
+  },
+  "audit": {
+    "research_workspace": "Google Drive / ARTEMIS / 02_WORLD_SLICES / Leonardo_Life_in_Context",
+    "research_artifacts": [
+      "Research Notes / Leonardo_Major_Life_Periods_v1",
+      "Sources / Leonardo_Source_Index / Presence_Audit"
+    ],
+    "research_audit_status": "complete",
+    "canonical_review_status": "pending_independent_review",
+    "allowed_package_decisions": ["FREEZE_FOR_REVIEW", "NARROW", "STOP"],
+    "current_decision": null,
+    "curation_cost": {
+      "duration_minutes": null,
+      "measurement_state": "historical_drive_work_unmeasured",
+      "note": "Do not estimate elapsed research time retrospectively; record measured review/remediation cost when Stage B starts."
+    }
+  },
+  "relation_policy": {
+    "stored_relations": [],
+    "prohibited_predicates": [
+      "possible_encounter",
+      "documented_encounter",
+      "interaction",
+      "influence",
+      "causal"
+    ]
+  }
+}
