@@ -1,11 +1,11 @@
 {
   "schema_version": "1.1.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-08-28",
+  "updated_at": "2026-08-29",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
-    "label": "Life in Context / source-aware Globe MVP",
+    "label": "Life in Context / Leonardo Temporal Map",
     "issue": 355
   },
   "phase": {
@@ -32,9 +32,9 @@
   ],
   "gate": {
     "id": "D",
-    "label": "Source-aware Globe experience",
+    "label": "Leonardo Temporal Map user-value loop",
     "status": "in_progress",
-    "allowed_decisions": ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]
+    "allowed_decisions": ["ITERATE", "NARROW", "STOP/RETHINK"]
   },
   "work_in_progress_limit": 1,
   "github": {
@@ -56,7 +56,13 @@
       "PR #380 — synchronized Gate D time/layers/selection/inspector interaction increment",
       "PR #382 — pinned bundled Natural Earth present-day context and provider policy; no historical geometry or live terrain",
       "PR #383 — deterministic desktop/tablet/hosted-mobile browser evidence and responsive overlay checks/fixes",
-      "PR #385 — same-page wall-clock CDP capture with fail-closed loaded/rendered Earth-context evidence"
+      "PR #385 — same-page wall-clock CDP capture with fail-closed loaded/rendered Earth-context evidence",
+      "PR #389 — public Globe R&D preview publication",
+      "PR #390 — source-bound present-day place anchors",
+      "PR #391 — evidence-aware Globe UX correction",
+      "PR #393 — Core Reset boundary completed; Globe primary, Atlas compatibility-only",
+      "PR #395 — calendar-based Leonardo Temporal Map life-path loop",
+      "PR #396 — first ITERATE correction: primary bottom timeline, distinct Range/Scrub, popup-first selection and double-click focus"
     ]
   },
   "capability": {
@@ -71,16 +77,18 @@
     "docs/PROJECT_TRUTH.md",
     "docs/PROJECT_PHASES.md",
     "docs/PRIORITIES.md",
+    "docs/PLATFORM_ARCHITECTURE_DECISION.md",
     "docs/work/2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md",
     "docs/work/2026-08-12_GATE_D_OPENING_v1.md",
     "docs/work/2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md",
     "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md",
     "docs/work/2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md",
-    "docs/work/2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md"
+    "docs/work/2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md",
+    "docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Complete Core Reset, deliver one Leonardo exploration loop, and record an early ITERATE, NARROW or STOP/RETHINK product decision before opening infrastructure."
+    "condition": "Run a fresh user check of the published PR #396 Leonardo Temporal Map interface and record exactly one ITERATE, NARROW or STOP/RETHINK result before opening at most one evidence-backed next branch."
   }
 }
