@@ -1,6 +1,6 @@
 # Leonardo major-life Presence candidate package v1
 
-Status: `CANDIDATE_SOURCE_AUDITED / CANONICAL_REVIEW_PENDING / NON_PUBLIC`.
+Status: `CANDIDATE_SOURCE_AUDITED / ROUND_1_NARROW / INDEPENDENT_REREVIEW_PENDING / NON_PUBLIC`.
 
 Parent: issue `#355` and the `Leonardo Major-Life Presence Scope v1` transition recorded in PR `#399`.
 
@@ -15,9 +15,9 @@ The package does not change the public Globe, the frozen Gate C files, Airtable,
 - six presentation-only macro-periods;
 - five named Place identities with unresolved geometry;
 - seven new source-audited Presence candidates;
-- an identity-preserving reference to the frozen four-Presence Romagna 1502 segment;
+- a reviewed-commit/tree/digest-pinned reference to the frozen four-Presence Romagna 1502 segment;
 - eleven external institutional source records with link-only rights policy;
-- seven atomic candidate Presence Claims and fourteen EvidenceLinks;
+- twenty-eight atomic identity/time/place/selection-significance Claims and thirty-five EvidenceLinks;
 - seven Presence-specific Uncertainties plus one shared route/coverage Uncertainty;
 - seven new inter-segment transitions, all `unknown_route` with `geometry=null`;
 - explicit coverage, exclusions, audit state and lifecycle guards.
@@ -37,6 +37,8 @@ When composed later, the seven new candidates plus the four existing Romagna Pre
 
 - Macro-periods are presentation/curation groupings, not World Model entities.
 - Every Presence retains source-native time and honest normalized precision.
+- The 1483 Milan commission is normalized to a year/context anchor, not a day-level body position.
+- The Clos Lucé autumn 1516 start retains explicit September–November possible bounds.
 - Place identity is separate from geometry; all new candidate geometry is `null`.
 - Present-day reference coordinates may be added only by a later reviewed spatial package.
 - Every unsupported transition is an evidence-free `unknown_route`.
@@ -53,4 +55,7 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-After PR `#399` establishes the lifecycle transition, perform an independent canonical review of this exact package revision. The allowed package outcomes are `FREEZE_FOR_REVIEW`, `NARROW`, or `STOP`. None of them silently authorizes runtime publication.
+PR `#399` has established the lifecycle transition. Independent review round 1 returned `NARROW`
+on head `5672fbae6f224b0fb90ccc09080ca47d4574c511`; that decision is preserved in package audit history.
+Review the remediated exact revision again. The allowed result remains `FREEZE_FOR_REVIEW`, `NARROW`
+or `STOP`; none silently authorizes runtime publication.

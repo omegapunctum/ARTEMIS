@@ -28,41 +28,93 @@
     "relation_policy"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
-    "package_id": {"const": "leonardo-major-life-presence-candidates-v1"},
-    "title": {"type": "string", "minLength": 1},
-    "status": {"const": "CANDIDATE_SOURCE_AUDITED"},
-    "publication_status": {"const": "non_public_curation"},
-    "runtime_authorized": {"const": false},
-    "parent_issue": {"const": 355},
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "package_id": {
+      "const": "leonardo-major-life-presence-candidates-v1"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "const": "CANDIDATE_SOURCE_AUDITED"
+    },
+    "publication_status": {
+      "const": "non_public_curation"
+    },
+    "runtime_authorized": {
+      "const": false
+    },
+    "parent_issue": {
+      "const": 355
+    },
     "lifecycle_dependency": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["pull_request", "required_state", "opened_branch"],
+      "required": [
+        "pull_request",
+        "required_state",
+        "opened_branch"
+      ],
       "properties": {
-        "pull_request": {"const": 399},
-        "required_state": {"const": "merged_before_package_merge"},
-        "opened_branch": {"const": "Leonardo Major-Life Presence Scope v1"}
+        "pull_request": {
+          "const": 399
+        },
+        "required_state": {
+          "const": "merged_before_package_merge"
+        },
+        "opened_branch": {
+          "const": "Leonardo Major-Life Presence Scope v1"
+        }
       }
     },
     "subject": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["entity_ref", "label"],
+      "required": [
+        "entity_ref",
+        "label"
+      ],
       "properties": {
-        "entity_ref": {"const": "entity-leonardo-da-vinci"},
-        "label": {"const": "Leonardo da Vinci"}
+        "entity_ref": {
+          "const": "entity-leonardo-da-vinci"
+        },
+        "label": {
+          "const": "Leonardo da Vinci"
+        }
       }
     },
     "trajectory": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["trajectory_id", "role", "geometry", "route_status", "external_segments"],
+      "required": [
+        "trajectory_id",
+        "role",
+        "geometry",
+        "route_status",
+        "uncertainty_refs",
+        "external_segments"
+      ],
       "properties": {
-        "trajectory_id": {"const": "trajectory-leonardo-major-life-v1"},
-        "role": {"const": "candidate_composition_authority"},
-        "geometry": {"type": "null"},
-        "route_status": {"const": "unknown_route"},
+        "trajectory_id": {
+          "const": "trajectory-leonardo-major-life-v1"
+        },
+        "role": {
+          "const": "candidate_composition_authority"
+        },
+        "geometry": {
+          "type": "null"
+        },
+        "route_status": {
+          "const": "unknown_route"
+        },
+        "uncertainty_refs": {
+          "const": [
+            "uncertainty-major-life-route-and-coverage"
+          ]
+        },
         "external_segments": {
           "type": "array",
           "minItems": 1,
@@ -76,15 +128,56 @@
               "composition_role",
               "identity_policy",
               "presence_count",
-              "internal_unknown_route_gap_count"
+              "internal_unknown_route_gap_count",
+              "frozen_commit",
+              "frozen_tree",
+              "reviewed_content_digest",
+              "review_registry_ref",
+              "gate_decision_ref",
+              "presence_refs"
             ],
             "properties": {
-              "trajectory_ref": {"const": "trajectory-leonardo-romagna-1502"},
-              "package_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1"},
-              "composition_role": {"const": "finer_existing_segment"},
-              "identity_policy": {"const": "reference_only_do_not_copy_or_rewrite"},
-              "presence_count": {"const": 4},
-              "internal_unknown_route_gap_count": {"const": 3}
+              "trajectory_ref": {
+                "const": "trajectory-leonardo-romagna-1502"
+              },
+              "package_ref": {
+                "const": "fixtures/world_slices/leonardo_romagna_1502/v1"
+              },
+              "composition_role": {
+                "const": "finer_existing_segment"
+              },
+              "identity_policy": {
+                "const": "reference_only_do_not_copy_or_rewrite"
+              },
+              "presence_count": {
+                "const": 4
+              },
+              "internal_unknown_route_gap_count": {
+                "const": 3
+              },
+              "frozen_commit": {
+                "const": "bd2e103cdeec615cb19f0a4293c708fe37a4ae52"
+              },
+              "frozen_tree": {
+                "const": "757fc3d0701e825e865ceeec401d233484f066b7"
+              },
+              "reviewed_content_digest": {
+                "const": "1323ca8f0e85e0d1287cdf8d78db8fcfd907551d7a7dbb37646725cbba72ddca"
+              },
+              "review_registry_ref": {
+                "const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"
+              },
+              "gate_decision_ref": {
+                "const": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json"
+              },
+              "presence_refs": {
+                "const": [
+                  "segment-rimini-presence",
+                  "segment-cesena-presence",
+                  "segment-cesenatico-presence",
+                  "segment-imola-presence"
+                ]
+              }
             }
           }
         }
@@ -94,46 +187,65 @@
       "type": "array",
       "minItems": 5,
       "maxItems": 5,
-      "items": {"$ref": "#/$defs/place"}
+      "items": {
+        "$ref": "#/$defs/place"
+      }
     },
     "macro_periods": {
       "type": "array",
       "minItems": 6,
       "maxItems": 6,
-      "items": {"$ref": "#/$defs/macroPeriod"}
+      "items": {
+        "$ref": "#/$defs/macroPeriod"
+      }
     },
     "presences": {
       "type": "array",
       "minItems": 7,
       "maxItems": 7,
-      "items": {"$ref": "#/$defs/presence"}
+      "items": {
+        "$ref": "#/$defs/presence"
+      }
     },
     "transitions": {
       "type": "array",
       "minItems": 7,
       "maxItems": 7,
-      "items": {"$ref": "#/$defs/transition"}
+      "items": {
+        "$ref": "#/$defs/transition"
+      }
     },
     "sources": {
       "type": "array",
-      "minItems": 7,
-      "items": {"$ref": "#/$defs/source"}
+      "minItems": 11,
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "maxItems": 11
     },
     "claims": {
       "type": "array",
-      "minItems": 7,
-      "maxItems": 7,
-      "items": {"$ref": "#/$defs/claim"}
+      "minItems": 28,
+      "maxItems": 28,
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
     },
     "evidence_links": {
       "type": "array",
-      "minItems": 7,
-      "items": {"$ref": "#/$defs/evidenceLink"}
+      "minItems": 35,
+      "items": {
+        "$ref": "#/$defs/evidenceLink"
+      },
+      "maxItems": 35
     },
     "uncertainties": {
       "type": "array",
       "minItems": 8,
-      "items": {"$ref": "#/$defs/uncertainty"}
+      "items": {
+        "$ref": "#/$defs/uncertainty"
+      },
+      "maxItems": 8
     },
     "coverage": {
       "type": "object",
@@ -151,18 +263,44 @@
         "temporal_scope": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["start", "end"],
+          "required": [
+            "start",
+            "end"
+          ],
           "properties": {
-            "start": {"const": "1452-04-15"},
-            "end": {"const": "1519-05-02"}
+            "start": {
+              "const": "1452-04-15"
+            },
+            "end": {
+              "const": "1519-05-02"
+            }
           }
         },
-        "selection_rule": {"type": "string", "minLength": 1},
-        "known_exclusions": {"type": "array", "minItems": 6, "items": {"type": "string", "minLength": 1}},
-        "absence_rule": {"type": "string", "minLength": 1},
-        "new_presence_count": {"const": 7},
-        "referenced_romagna_presence_count": {"const": 4},
-        "composed_anchor_count": {"const": 11}
+        "selection_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "known_exclusions": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "absence_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "new_presence_count": {
+          "const": 7
+        },
+        "referenced_romagna_presence_count": {
+          "const": 4
+        },
+        "composed_anchor_count": {
+          "const": 11
+        }
       }
     },
     "audit": {
@@ -175,25 +313,106 @@
         "canonical_review_status",
         "allowed_package_decisions",
         "current_decision",
-        "curation_cost"
+        "curation_cost",
+        "prior_reviews"
       ],
       "properties": {
-        "research_workspace": {"type": "string", "minLength": 1},
-        "research_artifacts": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
-        "research_audit_status": {"const": "complete"},
-        "canonical_review_status": {"const": "pending_independent_review"},
-        "allowed_package_decisions": {
-          "const": ["FREEZE_FOR_REVIEW", "NARROW", "STOP"]
+        "research_workspace": {
+          "type": "string",
+          "minLength": 1
         },
-        "current_decision": {"type": "null"},
+        "research_artifacts": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "research_audit_status": {
+          "const": "complete"
+        },
+        "canonical_review_status": {
+          "const": "pending_independent_rereview"
+        },
+        "allowed_package_decisions": {
+          "const": [
+            "FREEZE_FOR_REVIEW",
+            "NARROW",
+            "STOP"
+          ]
+        },
+        "current_decision": {
+          "type": "null"
+        },
         "curation_cost": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["duration_minutes", "measurement_state", "note"],
+          "required": [
+            "duration_minutes",
+            "measurement_state",
+            "note"
+          ],
           "properties": {
-            "duration_minutes": {"type": "null"},
-            "measurement_state": {"const": "historical_drive_work_unmeasured"},
-            "note": {"type": "string", "minLength": 1}
+            "duration_minutes": {
+              "type": "null"
+            },
+            "measurement_state": {
+              "const": "historical_drive_work_unmeasured"
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "prior_reviews": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "round",
+              "reviewed_head",
+              "decision",
+              "independence_method",
+              "github_comment_id",
+              "unresolved_major",
+              "unresolved_medium",
+              "duration_minutes",
+              "measurement_state"
+            ],
+            "properties": {
+              "round": {
+                "const": 1
+              },
+              "reviewed_head": {
+                "const": "5672fbae6f224b0fb90ccc09080ca47d4574c511"
+              },
+              "decision": {
+                "const": "NARROW"
+              },
+              "independence_method": {
+                "const": "separate_agent_task_read_only"
+              },
+              "github_comment_id": {
+                "const": 5466645036
+              },
+              "unresolved_major": {
+                "const": 2
+              },
+              "unresolved_medium": {
+                "const": 2
+              },
+              "duration_minutes": {
+                "type": "null"
+              },
+              "measurement_state": {
+                "const": "not_captured_do_not_estimate"
+              }
+            }
           }
         }
       }
@@ -201,15 +420,27 @@
     "relation_policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["stored_relations", "prohibited_predicates"],
+      "required": [
+        "stored_relations",
+        "prohibited_predicates"
+      ],
       "properties": {
-        "stored_relations": {"type": "array", "maxItems": 0},
+        "stored_relations": {
+          "type": "array",
+          "maxItems": 0
+        },
         "prohibited_predicates": {
           "type": "array",
           "minItems": 5,
           "maxItems": 5,
           "items": {
-            "enum": ["possible_encounter", "documented_encounter", "interaction", "influence", "causal"]
+            "enum": [
+              "possible_encounter",
+              "documented_encounter",
+              "interaction",
+              "influence",
+              "causal"
+            ]
           },
           "uniqueItems": true
         }
@@ -220,37 +451,115 @@
     "place": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["place_id", "label", "place_kind", "geometry", "claim_refs"],
+      "required": [
+        "place_id",
+        "label",
+        "place_kind",
+        "geometry",
+        "claim_refs"
+      ],
       "properties": {
-        "place_id": {"type": "string", "pattern": "^place-"},
-        "label": {"type": "string", "minLength": 1},
-        "place_kind": {"enum": ["settlement", "city", "named_complex", "named_residence"]},
-        "geometry": {"type": "null"},
-        "claim_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^claim-"}, "uniqueItems": true}
+        "place_id": {
+          "type": "string",
+          "pattern": "^place-"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "place_kind": {
+          "enum": [
+            "settlement",
+            "city",
+            "named_complex",
+            "named_residence"
+          ]
+        },
+        "geometry": {
+          "type": "null"
+        },
+        "claim_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^claim-"
+          },
+          "uniqueItems": true
+        }
       }
     },
     "macroPeriod": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["period_id", "label", "display_range", "presentation_only", "presence_refs"],
+      "required": [
+        "period_id",
+        "label",
+        "display_range",
+        "presentation_only",
+        "presence_refs"
+      ],
       "properties": {
-        "period_id": {"type": "string", "pattern": "^period-leonardo-"},
-        "label": {"type": "string", "minLength": 1},
-        "display_range": {"type": "string", "minLength": 1},
-        "presentation_only": {"const": true},
-        "presence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^presence-leonardo-"}, "uniqueItems": true}
+        "period_id": {
+          "type": "string",
+          "pattern": "^period-leonardo-"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "display_range": {
+          "type": "string",
+          "minLength": 1
+        },
+        "presentation_only": {
+          "const": true
+        },
+        "presence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^presence-leonardo-"
+          },
+          "uniqueItems": true
+        }
       }
     },
     "temporal": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_native", "start", "end", "precision", "extent_semantics"],
+      "required": [
+        "source_native",
+        "start",
+        "end",
+        "precision",
+        "extent_semantics",
+        "start_qualifier",
+        "end_qualifier",
+        "start_inclusive",
+        "end_inclusive"
+      ],
       "properties": {
-        "source_native": {"type": "string", "minLength": 1},
-        "start": {"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}-[0-9]{2})?$"},
-        "end": {"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}-[0-9]{2})?$"},
+        "source_native": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+        },
         "precision": {
-          "enum": ["day", "year", "year_range_with_approximate_year_locator", "season_year_start_and_day_end"]
+          "enum": [
+            "day",
+            "year",
+            "year_range_with_approximate_year_locator",
+            "bounded_season_start_and_day_end"
+          ]
         },
         "extent_semantics": {
           "enum": [
@@ -259,6 +568,26 @@
             "source_native_manuscript_anchor",
             "residence_range_not_continuous_position"
           ]
+        },
+        "start_qualifier": {
+          "enum": [
+            "exact",
+            "not_before",
+            "source_context_year"
+          ]
+        },
+        "end_qualifier": {
+          "enum": [
+            "exact",
+            "not_after",
+            "source_context_year"
+          ]
+        },
+        "start_inclusive": {
+          "type": "boolean"
+        },
+        "end_inclusive": {
+          "type": "boolean"
         }
       }
     },
@@ -280,97 +609,399 @@
         "audit_decision"
       ],
       "properties": {
-        "presence_id": {"type": "string", "pattern": "^presence-leonardo-"},
-        "period_ref": {"type": "string", "pattern": "^period-leonardo-"},
-        "place_ref": {"type": "string", "pattern": "^place-"},
-        "place_label": {"type": "string", "minLength": 1},
-        "activity_label": {"type": "string", "minLength": 1},
-        "selection_rationale": {"type": "string", "minLength": 1},
-        "temporal": {"$ref": "#/$defs/temporal"},
-        "spatial_precision": {
-          "enum": ["named_settlement", "named_city", "named_city_with_institutional_context", "named_city_with_parish_context", "named_complex", "named_residence"]
+        "presence_id": {
+          "type": "string",
+          "pattern": "^presence-leonardo-"
         },
-        "geometry": {"type": "null"},
-        "claim_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^claim-"}, "uniqueItems": true},
-        "uncertainty_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^uncertainty-"}, "uniqueItems": true},
-        "audit_decision": {"const": "READY_FOR_CANONICAL_REVIEW"}
+        "period_ref": {
+          "type": "string",
+          "pattern": "^period-leonardo-"
+        },
+        "place_ref": {
+          "type": "string",
+          "pattern": "^place-"
+        },
+        "place_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "activity_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selection_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "temporal": {
+          "$ref": "#/$defs/temporal"
+        },
+        "spatial_precision": {
+          "enum": [
+            "named_settlement",
+            "named_city",
+            "named_city_with_institutional_context",
+            "named_city_with_parish_context",
+            "named_complex",
+            "named_residence"
+          ]
+        },
+        "geometry": {
+          "type": "null"
+        },
+        "claim_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^claim-"
+          },
+          "uniqueItems": true
+        },
+        "uncertainty_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^uncertainty-"
+          },
+          "uniqueItems": true
+        },
+        "audit_decision": {
+          "const": "READY_FOR_CANONICAL_REVIEW"
+        }
       }
     },
     "transition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["transition_id", "from_ref", "to_ref", "route_status", "geometry", "source_refs"],
+      "required": [
+        "transition_id",
+        "from_ref",
+        "to_ref",
+        "route_status",
+        "geometry",
+        "source_refs"
+      ],
       "properties": {
-        "transition_id": {"type": "string", "pattern": "^transition-"},
-        "from_ref": {"type": "string", "minLength": 1},
-        "to_ref": {"type": "string", "minLength": 1},
-        "route_status": {"const": "unknown_route"},
-        "geometry": {"type": "null"},
-        "source_refs": {"type": "array", "maxItems": 0}
+        "transition_id": {
+          "type": "string",
+          "pattern": "^transition-"
+        },
+        "from_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "route_status": {
+          "const": "unknown_route"
+        },
+        "geometry": {
+          "type": "null"
+        },
+        "source_refs": {
+          "type": "array",
+          "maxItems": 0
+        }
       }
     },
     "rights": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["data_text_use", "media_reuse", "derived_geometry_use"],
+      "required": [
+        "data_text_use",
+        "media_reuse",
+        "derived_geometry_use"
+      ],
       "properties": {
-        "data_text_use": {"const": "citation_and_factual_claims_only"},
-        "media_reuse": {"enum": ["prohibited_without_permission", "not_used"]},
-        "derived_geometry_use": {"const": "prohibited"}
+        "data_text_use": {
+          "const": "citation_and_factual_claims_only"
+        },
+        "media_reuse": {
+          "enum": [
+            "prohibited_without_permission",
+            "not_used"
+          ]
+        },
+        "derived_geometry_use": {
+          "const": "prohibited"
+        }
       }
     },
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_id", "title", "organization", "source_type", "url", "locator", "rights"],
+      "required": [
+        "source_id",
+        "title",
+        "organization",
+        "source_type",
+        "review_state",
+        "url",
+        "locator",
+        "rights"
+      ],
       "properties": {
-        "source_id": {"type": "string", "pattern": "^source-"},
-        "title": {"type": "string", "minLength": 1},
-        "organization": {"type": "string", "minLength": 1},
-        "source_type": {"type": "string", "minLength": 1},
-        "url": {"type": "string", "format": "uri", "pattern": "^https://"},
-        "locator": {"type": "string", "minLength": 1},
-        "rights": {"$ref": "#/$defs/rights"}
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "organization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_state": {
+          "const": "research_audited"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rights": {
+          "$ref": "#/$defs/rights"
+        }
       }
     },
     "claim": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["claim_id", "target_ref", "statement", "claim_kind", "review_state", "evidence_state", "evidence_link_refs", "uncertainty_refs"],
+      "required": [
+        "claim_id",
+        "target_ref",
+        "claim_dimension",
+        "statement",
+        "claim_kind",
+        "origin",
+        "review_state",
+        "confidence",
+        "evidence_state",
+        "evidence_link_refs",
+        "uncertainty_refs"
+      ],
       "properties": {
-        "claim_id": {"type": "string", "pattern": "^claim-"},
-        "target_ref": {"type": "string", "pattern": "^presence-leonardo-"},
-        "statement": {"type": "string", "minLength": 1},
-        "claim_kind": {"const": "factual"},
-        "review_state": {"const": "candidate_source_audited"},
-        "evidence_state": {"const": "candidate_not_canonical"},
-        "evidence_link_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^evidence-"}, "uniqueItems": true},
-        "uncertainty_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^uncertainty-"}, "uniqueItems": true}
+        "claim_id": {
+          "type": "string",
+          "pattern": "^claim-"
+        },
+        "target_ref": {
+          "type": "string",
+          "pattern": "^presence-leonardo-"
+        },
+        "claim_dimension": {
+          "enum": [
+            "identity",
+            "time",
+            "place",
+            "selection_significance"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_kind": {
+          "enum": [
+            "factual",
+            "interpretation"
+          ]
+        },
+        "origin": {
+          "const": "curator"
+        },
+        "review_state": {
+          "const": "candidate_source_audited"
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium"
+          ]
+        },
+        "evidence_state": {
+          "const": "source_backed_candidate"
+        },
+        "evidence_link_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^evidence-"
+          },
+          "uniqueItems": true
+        },
+        "uncertainty_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^uncertainty-"
+          },
+          "uniqueItems": true
+        }
       }
     },
     "evidenceLink": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["evidence_link_id", "claim_id", "source_id", "relation_to_claim", "locator", "review_state"],
+      "required": [
+        "evidence_link_id",
+        "claim_id",
+        "source_id",
+        "relation_to_claim",
+        "evidence_strength",
+        "reviewer",
+        "locator",
+        "review_state"
+      ],
       "properties": {
-        "evidence_link_id": {"type": "string", "pattern": "^evidence-"},
-        "claim_id": {"type": "string", "pattern": "^claim-"},
-        "source_id": {"type": "string", "pattern": "^source-"},
-        "relation_to_claim": {"enum": ["supports", "contextualizes"]},
-        "locator": {"type": "string", "minLength": 1},
-        "review_state": {"const": "research_audited"}
+        "evidence_link_id": {
+          "type": "string",
+          "pattern": "^evidence-"
+        },
+        "claim_id": {
+          "type": "string",
+          "pattern": "^claim-"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-"
+        },
+        "relation_to_claim": {
+          "enum": [
+            "supports",
+            "contextualizes"
+          ]
+        },
+        "evidence_strength": {
+          "enum": [
+            "direct",
+            "indirect",
+            "background"
+          ]
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 12
+        },
+        "review_state": {
+          "const": "research_audited"
+        }
       }
     },
     "uncertainty": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["uncertainty_id", "target_refs", "dimension", "description", "effect"],
+      "required": [
+        "uncertainty_id",
+        "target_refs",
+        "dimension",
+        "description",
+        "effect",
+        "basis_claim_refs",
+        "evidence_state",
+        "projection_effect",
+        "possible_bounds"
+      ],
       "properties": {
-        "uncertainty_id": {"type": "string", "pattern": "^uncertainty-"},
-        "target_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
-        "dimension": {"type": "string", "minLength": 1},
-        "description": {"type": "string", "minLength": 1},
-        "effect": {"type": "string", "minLength": 1}
+        "uncertainty_id": {
+          "type": "string",
+          "pattern": "^uncertainty-"
+        },
+        "target_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "dimension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis_claim_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^claim-"
+          },
+          "uniqueItems": true
+        },
+        "evidence_state": {
+          "enum": [
+            "explicit_missing_exactness_evidence",
+            "explicit_missing_route_evidence"
+          ]
+        },
+        "projection_effect": {
+          "enum": [
+            "show_possible",
+            "show_unknown",
+            "prohibit_geometry"
+          ]
+        },
+        "possible_bounds": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "not_before",
+                "not_after",
+                "start_inclusive",
+                "end_inclusive"
+              ],
+              "properties": {
+                "not_before": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+                },
+                "not_after": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+                },
+                "start_inclusive": {
+                  "type": "boolean"
+                },
+                "end_inclusive": {
+                  "type": "boolean"
+                }
+              }
+            }
+          ]
+        }
       }
     }
   }

@@ -1,6 +1,6 @@
 # Leonardo major-life Presence package v1
 
-Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / CANONICAL_REVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
+Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUND_1_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
 
 Parent product contour: issue #355.
 
@@ -224,7 +224,7 @@ The reviewable repository package contains:
 - `scripts/validate_leonardo_major_life_package.py`;
 - `tests/test_leonardo_major_life_package.py`.
 
-It closes candidate Place → Presence → Claim → EvidenceLink → Source and Uncertainty references, preserves
+It closes candidate Place → Presence → atomic identity/time/place/selection Claims → EvidenceLink → Source and structured Uncertainty references, preserves
 the seven Drive audit decisions, and fails closed on geometry, route evidence, temporal-precision
 inflation, frozen-Romagna identity copying, Relations, runtime authorization and self-declared review
 completion.
@@ -236,9 +236,10 @@ candidate awaiting canonical review**.
 
 It does not claim that the public Globe currently contains the seven new Presences.
 
-Lifecycle dependency: PR `#399` records the direct post-#396 `ITERATE` and opens exactly one
-`Leonardo Major-Life Presence Scope v1` branch. PR `#400` must not merge before `#399`; this package
-does not duplicate or pre-empt that lifecycle transition.
+Lifecycle dependency PR `#399` is merged and records the direct post-#396 `ITERATE`, opening exactly
+one `Leonardo Major-Life Presence Scope v1` branch. Independent review round 1 on PR `#400` head
+`5672fbae6f224b0fb90ccc09080ca47d4574c511` returned `NARROW`; the remediated package now awaits a
+new exact-revision review and does not duplicate or pre-empt the lifecycle transition.
 
 ## 10. Exit condition for this package
 
@@ -252,6 +253,6 @@ Research package is ready when:
 
 All seven current candidates meet the source-audit threshold for `READY_FOR_CANONICAL_REVIEW`.
 
-The package remains `pending_independent_review`. Its next decision is exactly one of
+The package remains `pending_independent_rereview`. Its next decision is exactly one of
 `FREEZE_FOR_REVIEW`, `NARROW` or `STOP`. Runtime integration is a later decision and is not
 authorized by this candidate package or by a passing structural check.
