@@ -15,6 +15,21 @@ def _package():
     return json.loads(PACKAGE_PATH.read_text(encoding="utf-8"))
 
 
+def _review_row(round_number, track, decision, *, major=0, medium=0):
+    return {
+        "round": round_number,
+        "track": track,
+        "reviewed_head": "f" * 40,
+        "decision": decision,
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 6000000000 + round_number,
+        "unresolved_major": major,
+        "unresolved_medium": medium,
+        "duration_minutes": None,
+        "measurement_state": "not_captured_do_not_estimate",
+    }
+
+
 def test_source_audited_candidate_package_passes_fail_closed_validation() -> None:
     assert validate_package() == {
         "package_id": "leonardo-major-life-presence-candidates-v1",
@@ -31,7 +46,11 @@ def test_source_audited_candidate_package_passes_fail_closed_validation() -> Non
         "uncertainty_count": 8,
         "runtime_authorized": False,
         "canonical_review_status": "pending_independent_rereview",
-        "prior_review_decisions": ["NARROW", "NARROW", "NARROW", "NARROW", "NARROW"],
+        "current_decision": None,
+        "prior_review_decisions": [
+            "NARROW", "NARROW", "NARROW", "NARROW", "NARROW",
+            "FREEZE_FOR_REVIEW", "NARROW",
+        ],
     }
 
 
@@ -442,4 +461,75 @@ def test_uncertainty_requires_canonical_review_state() -> None:
     package["uncertainties"][0]["review_state"] = "candidate_source_audited"
 
     with pytest.raises(MajorLifePackageError, match="schema validation failed"):
+        validate_package(package)
+
+
+def test_review_history_accepts_a_complete_append_only_round() -> None:
+    package = _package()
+    package["audit"]["prior_reviews"].extend(
+        [
+            _review_row(5, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(5, "validator_integrity", "NARROW", major=1),
+        ]
+    )
+
+    summary = validate_package(package)
+    assert summary["canonical_review_status"] == "pending_independent_rereview"
+    assert summary["prior_review_decisions"][-2:] == ["FREEZE_FOR_REVIEW", "NARROW"]
+
+
+def test_immutable_review_prefix_cannot_be_rewritten() -> None:
+    package = _package()
+    package["audit"]["prior_reviews"][0]["decision"] = "STOP"
+
+    with pytest.raises(MajorLifePackageError, match="schema validation failed"):
+        validate_package(package)
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("research_workspace", "Unrelated workspace"),
+        ("research_artifacts", ["Unrelated artifact A", "Unrelated artifact B"]),
+    ],
+)
+def test_immutable_research_provenance_is_digest_locked(field, replacement) -> None:
+    package = _package()
+    package["audit"][field] = replacement
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_immutable_curation_note_is_digest_locked() -> None:
+    package = _package()
+    package["audit"]["curation_cost"]["note"] = "Rewritten provenance note."
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_positive_decision_only_descendant_does_not_resign_content() -> None:
+    package = _package()
+    original_digest = package["candidate_content_digest_sha256"]
+    package["audit"]["prior_reviews"].extend(
+        [
+            _review_row(5, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(5, "validator_integrity", "FREEZE_FOR_REVIEW"),
+        ]
+    )
+    package["audit"]["canonical_review_status"] = "independent_review_complete"
+    package["audit"]["current_decision"] = "FREEZE_FOR_REVIEW"
+
+    summary = validate_package(package)
+    assert package["candidate_content_digest_sha256"] == original_digest
+    assert summary["current_decision"] == "FREEZE_FOR_REVIEW"
+
+
+def test_freeze_decision_requires_two_positive_latest_tracks() -> None:
+    package = _package()
+    package["audit"]["canonical_review_status"] = "independent_review_complete"
+    package["audit"]["current_decision"] = "FREEZE_FOR_REVIEW"
+
+    with pytest.raises(MajorLifePackageError, match="two positive latest tracks"):
         validate_package(package)

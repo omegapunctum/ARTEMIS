@@ -52,7 +52,7 @@
       "const": 355
     },
     "candidate_content_digest_sha256": {
-      "const": "b7082c71951ecb27ab05f9ddc02c50297fa984cf4d4678bdc9911a10e24ede42"
+      "const": "45d3bafc17be34c461f3745d50f688682d113ac463ad69118bdbccaa3071aaa9"
     },
     "lifecycle_dependency": {
       "type": "object",
@@ -337,7 +337,10 @@
           "const": "complete"
         },
         "canonical_review_status": {
-          "const": "pending_independent_rereview"
+          "enum": [
+            "pending_independent_rereview",
+            "independent_review_complete"
+          ]
         },
         "allowed_package_decisions": {
           "const": [
@@ -347,7 +350,12 @@
           ]
         },
         "current_decision": {
-          "type": "null"
+          "enum": [
+            null,
+            "FREEZE_FOR_REVIEW",
+            "NARROW",
+            "STOP"
+          ]
         },
         "curation_cost": {
           "type": "object",
@@ -371,9 +379,13 @@
           }
         },
         "prior_reviews": {
-          "const": [
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "prefixItems": [
             {
-              "round": 1,
+              "const": {
+                "round": 1,
               "reviewed_head": "5672fbae6f224b0fb90ccc09080ca47d4574c511",
               "decision": "NARROW",
               "independence_method": "separate_agent_task_read_only",
@@ -381,10 +393,12 @@
               "unresolved_major": 2,
               "unresolved_medium": 2,
               "duration_minutes": null,
-              "measurement_state": "not_captured_do_not_estimate"
+                "measurement_state": "not_captured_do_not_estimate"
+              }
             },
             {
-              "round": 2,
+              "const": {
+                "round": 2,
               "track": "semantic_content",
               "reviewed_head": "fb82e272b76645446c41be8c98b35942c44547c7",
               "decision": "NARROW",
@@ -393,10 +407,12 @@
               "unresolved_major": 1,
               "unresolved_medium": 1,
               "duration_minutes": null,
-              "measurement_state": "not_captured_do_not_estimate"
+                "measurement_state": "not_captured_do_not_estimate"
+              }
             },
             {
-              "round": 2,
+              "const": {
+                "round": 2,
               "track": "validator_integrity",
               "reviewed_head": "fb82e272b76645446c41be8c98b35942c44547c7",
               "decision": "NARROW",
@@ -405,10 +421,12 @@
               "unresolved_major": 2,
               "unresolved_medium": 1,
               "duration_minutes": null,
-              "measurement_state": "not_captured_do_not_estimate"
+                "measurement_state": "not_captured_do_not_estimate"
+              }
             },
             {
-              "round": 3,
+              "const": {
+                "round": 3,
               "track": "semantic_content",
               "reviewed_head": "b26e7b2704b6091e0859a75c75728b323bb28d5a",
               "decision": "NARROW",
@@ -417,10 +435,12 @@
               "unresolved_major": 1,
               "unresolved_medium": 1,
               "duration_minutes": null,
-              "measurement_state": "not_captured_do_not_estimate"
+                "measurement_state": "not_captured_do_not_estimate"
+              }
             },
             {
-              "round": 3,
+              "const": {
+                "round": 3,
               "track": "validator_integrity",
               "reviewed_head": "b26e7b2704b6091e0859a75c75728b323bb28d5a",
               "decision": "NARROW",
@@ -429,9 +449,13 @@
               "unresolved_major": 1,
               "unresolved_medium": 1,
               "duration_minutes": null,
-              "measurement_state": "not_captured_do_not_estimate"
+                "measurement_state": "not_captured_do_not_estimate"
+              }
             }
-          ]
+          ],
+          "items": {
+            "$ref": "#/$defs/reviewRecord"
+          }
         }
       }
     },
@@ -922,6 +946,66 @@
         },
         "review_state": {
           "const": "reviewed"
+        }
+      }
+    },
+    "reviewRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "round",
+        "track",
+        "reviewed_head",
+        "decision",
+        "independence_method",
+        "github_comment_id",
+        "unresolved_major",
+        "unresolved_medium",
+        "duration_minutes",
+        "measurement_state"
+      ],
+      "properties": {
+        "round": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "track": {
+          "enum": [
+            "semantic_content",
+            "validator_integrity"
+          ]
+        },
+        "reviewed_head": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "decision": {
+          "enum": [
+            "FREEZE_FOR_REVIEW",
+            "NARROW",
+            "STOP"
+          ]
+        },
+        "independence_method": {
+          "const": "separate_agent_task_read_only"
+        },
+        "github_comment_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unresolved_major": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_medium": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_minutes": {
+          "type": "null"
+        },
+        "measurement_state": {
+          "const": "not_captured_do_not_estimate"
         }
       }
     },

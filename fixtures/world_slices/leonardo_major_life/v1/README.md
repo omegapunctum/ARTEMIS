@@ -1,6 +1,6 @@
 # Leonardo major-life Presence candidate package v1
 
-Status: `CANDIDATE_SOURCE_AUDITED / ROUNDS_1_3_NARROW / INDEPENDENT_REREVIEW_PENDING / NON_PUBLIC`.
+Status: `CANDIDATE_SOURCE_AUDITED / ROUNDS_1_4_NARROW / INDEPENDENT_REREVIEW_PENDING / NON_PUBLIC`.
 
 Parent: issue `#355` and the `Leonardo Major-Life Presence Scope v1` transition recorded in PR `#399`.
 
@@ -20,7 +20,7 @@ The package does not change the public Globe, the frozen Gate C files, Airtable,
 - twenty-eight atomic identity/time/place/selection-significance Claims and thirty-five EvidenceLinks;
 - seven Presence-specific Uncertainties plus one shared route/coverage Uncertainty;
 - seven new inter-segment transitions, all `unknown_route` with `geometry=null`;
-- a deterministic SHA-256 envelope over every substantive package field except mutable audit history;
+- a deterministic SHA-256 envelope over substantive content and immutable research provenance;
 - explicit coverage, exclusions, audit state and lifecycle guards.
 
 When composed later, the seven new candidates plus the four existing Romagna Presences provide eleven coarse/fine anchors. The four Gate C objects are referenced, never copied or rewritten.
@@ -46,6 +46,10 @@ When composed later, the seven new candidates plus the four existing Romagna Pre
 - Uncertainty uses canonical `review_state`; its explicit missing-evidence condition remains separate
   from Claim `evidence_state`.
 - Claim text, source/evidence locators, labels, rationales and Uncertainty meaning are digest-locked.
+- The first three review rounds form an immutable prefix; later complete two-track rounds append
+  without changing the content digest.
+- A reviewed decision-only descendant may change only lifecycle status, current decision and the
+  append-only review log; `FREEZE_FOR_REVIEW` requires two positive latest tracks.
 - The frozen `trajectory-leonardo-romagna-1502` segment remains authoritative for its four Presences and three internal gaps.
 - `READY_FOR_CANONICAL_REVIEW` is a research-audit decision, not canonical acceptance.
 - Runtime integration remains blocked until a later reviewed package decision.
@@ -59,7 +63,7 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-PR `#399` established the lifecycle transition. Independent review rounds 1 through 3 returned
-`NARROW`; their exact reviewed heads, tracks and GitHub comment IDs remain preserved in package audit
+PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 4
+returned `NARROW`; their exact reviewed heads, tracks and GitHub comment IDs remain preserved in package audit
 history. Review the remediated exact revision again. The allowed result remains
 `FREEZE_FOR_REVIEW`, `NARROW` or `STOP`; none silently authorizes runtime publication.

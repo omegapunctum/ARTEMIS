@@ -21,7 +21,10 @@ PACKAGE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_major_life" / "v1"
 PACKAGE_PATH = PACKAGE_ROOT / "package.json"
 SCHEMA_PATH = PACKAGE_ROOT / "package.schema.json"
 EXPECTED_CANDIDATE_CONTENT_DIGEST = (
-    "b7082c71951ecb27ab05f9ddc02c50297fa984cf4d4678bdc9911a10e24ede42"
+    "45d3bafc17be34c461f3745d50f688682d113ac463ad69118bdbccaa3071aaa9"
+)
+EXPECTED_REVIEW_PREFIX_DIGEST = (
+    "9fcf0d6b8c1278146367b83924f7c39f725e0a2de7282c2df49fc5ab1c8842d0"
 )
 
 EXPECTED_PRESENCE_PROFILES = {
@@ -323,7 +326,12 @@ def _validate_candidate_content_digest(package: dict[str, Any]) -> None:
     reviewed_content = {
         key: value
         for key, value in package.items()
-        if key not in {"audit", "candidate_content_digest_sha256"}
+        if key != "candidate_content_digest_sha256"
+    }
+    reviewed_content["audit"] = {
+        key: value
+        for key, value in package["audit"].items()
+        if key not in {"canonical_review_status", "current_decision", "prior_reviews"}
     }
     canonical = json.dumps(
         reviewed_content,
@@ -712,16 +720,55 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
     _validate_candidate_content_digest(package)
 
     audit = package["audit"]
-    if audit["canonical_review_status"] != "pending_independent_rereview":
-        raise MajorLifePackageError("candidate package cannot self-assert canonical review completion")
-    if audit["current_decision"] is not None:
-        raise MajorLifePackageError("candidate package decision requires a later reviewed revision")
     if audit["curation_cost"]["duration_minutes"] is not None:
         raise MajorLifePackageError("historical Drive work cannot receive a retrospective estimate")
-    if len(audit["prior_reviews"]) != 5 or {
-        (row["round"], row["decision"]) for row in audit["prior_reviews"]
-    } != {(1, "NARROW"), (2, "NARROW"), (3, "NARROW")}:
-        raise MajorLifePackageError("rounds 1 through 3 NARROW review history must remain preserved")
+    reviews = audit["prior_reviews"]
+    prefix_canonical = json.dumps(
+        reviews[:5], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    if hashlib.sha256(prefix_canonical).hexdigest() != EXPECTED_REVIEW_PREFIX_DIGEST:
+        raise MajorLifePackageError("immutable rounds 1 through 3 review prefix drifted")
+
+    suffix = reviews[5:]
+    rounds: dict[int, list[dict[str, Any]]] = {}
+    for row in suffix:
+        rounds.setdefault(row["round"], []).append(row)
+        if row["decision"] == "FREEZE_FOR_REVIEW" and (
+            row["unresolved_major"] != 0 or row["unresolved_medium"] != 0
+        ):
+            raise MajorLifePackageError("FREEZE_FOR_REVIEW cannot retain unresolved findings")
+        if row["decision"] == "NARROW" and (
+            row["unresolved_major"] == 0 and row["unresolved_medium"] == 0
+        ):
+            raise MajorLifePackageError("NARROW review must identify an unresolved finding")
+    if sorted(rounds) != list(range(4, 4 + len(rounds))):
+        raise MajorLifePackageError("review rounds must append contiguously from round 4")
+    for round_number, rows in rounds.items():
+        if [row["track"] for row in rows] != ["semantic_content", "validator_integrity"]:
+            raise MajorLifePackageError(
+                f"review round {round_number} must append semantic and validator tracks in order"
+            )
+        if len({row["reviewed_head"] for row in rows}) != 1:
+            raise MajorLifePackageError(f"review round {round_number} tracks must inspect one SHA")
+        if len({row["github_comment_id"] for row in rows}) != 1:
+            raise MajorLifePackageError(f"review round {round_number} tracks must share one record")
+
+    decision = audit["current_decision"]
+    status = audit["canonical_review_status"]
+    if decision is None:
+        if status != "pending_independent_rereview":
+            raise MajorLifePackageError("pending review requires pending lifecycle status")
+    else:
+        if status != "independent_review_complete" or not rounds:
+            raise MajorLifePackageError("a package decision requires a completed appended review")
+        latest = rounds[max(rounds)]
+        latest_decisions = [row["decision"] for row in latest]
+        if decision == "FREEZE_FOR_REVIEW" and latest_decisions != [
+            "FREEZE_FOR_REVIEW", "FREEZE_FOR_REVIEW"
+        ]:
+            raise MajorLifePackageError("FREEZE_FOR_REVIEW requires two positive latest tracks")
+        if decision in {"NARROW", "STOP"} and decision not in latest_decisions:
+            raise MajorLifePackageError("package decision must be supported by the latest review")
 
     coverage = package["coverage"]
     if coverage["new_presence_count"] != len(presences):
@@ -744,6 +791,7 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         "uncertainty_count": len(uncertainties),
         "runtime_authorized": package["runtime_authorized"],
         "canonical_review_status": audit["canonical_review_status"],
+        "current_decision": audit["current_decision"],
         "prior_review_decisions": [row["decision"] for row in audit["prior_reviews"]],
     }
 
