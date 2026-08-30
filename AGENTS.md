@@ -72,7 +72,7 @@ Current Temporal Map behavior:
 - double-click may focus the selected place;
 - dashed connectors are chronology only, never historical route geometry.
 
-The next product action is a fresh user check of the published #396 loop, followed by exactly one `ITERATE`, `NARROW` or `STOP/RETHINK` result. Do not add broader Leonardo data, default local/global context, backend, persistence, Airtable, UGC or framework infrastructure pre-emptively.
+The fresh user check of the published #396 loop recorded `ITERATE`: preserve the current interaction and treat remaining visual issues as non-priority. Exactly one next branch is active, `Leonardo Major-Life Presence Scope v1`, for a source-aware 6–10-Presence candidate package across 1452–1519. Do not promote it to runtime before package review or add default local/global context, backend, persistence, Airtable, UGC or framework infrastructure pre-emptively.
 
 Preserve these boundaries:
 

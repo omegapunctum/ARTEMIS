@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.5.
+- Версия: 3.6.
 - Дата: 2026-08-29.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: fresh user check of the published PR `#396` loop after the first recorded `ITERATE`.
+- Current increment: `Leonardo Major-Life Presence Scope v1` candidate/source package after the post-#396 `ITERATE`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -52,9 +52,10 @@ Completed prerequisites:
 Current authorized work:
 
 - preserve the published #396 interaction;
-- perform a fresh user check of that exact interaction;
-- record one next product decision;
-- do not add broader data, infrastructure or context layers before that decision unless required to fix a direct blocker in the current loop.
+- preserve the recorded post-#396 `ITERATE` and its evidence limitations;
+- prepare and review one candidate package of roughly 6–10 major-life Presences across 1452–1519;
+- keep this increment at source discovery/candidate/review scope until a separate package decision;
+- do not add runtime data, infrastructure or context layers before that package decision unless required to fix a direct blocker.
 
 ## 3. Обязательный current content scope
 
@@ -74,7 +75,7 @@ Current authorized work:
 
 Это **interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
 
-Не являются обязательными для текущей post-#396 проверки:
+Не являются обязательными для текущей major-life Presence branch:
 
 - changing historical Region geometry;
 - complete local political/cultural State context;
@@ -83,9 +84,9 @@ Current authorized work:
 - documented Relation predicates;
 - global simultaneous Events;
 - broad thematic layer set;
-- 6–10 Presence full-life package.
+- runtime publication of the 6–10-Presence candidate package before review.
 
-Эти элементы могут стать следующей отдельной evidence-backed branch только после текущего решения.
+The current branch may define the bounded 6–10-Presence source package, but it does not promote that package to current public content by existing.
 
 ### 3.1 Progressive fidelity / достаточная точность
 
@@ -160,7 +161,7 @@ No completed corpus or engineering work is deleted in this cycle.
 
 Target Investigation/SliceRevision/ResearchBrief remains a valid optional research-work capability.
 
-For the current Leonardo Temporal Map check:
+For the current Leonardo major-life Presence source branch:
 
 - immutable revisions and Research Brief are not prerequisites;
 - current mutable ResearchSlice v2 remains compatibility backend code;
@@ -170,9 +171,10 @@ For the current Leonardo Temporal Map check:
 
 ## 8. Frozen scope
 
-Until a recorded decision opens one named branch:
+Outside the one currently opened `Leonardo Major-Life Presence Scope v1` branch:
 
-- broader Leonardo 1452–1519 corpus;
+- Leonardo detail beyond the bounded 6–10-Presence candidate package;
+- runtime integration of that candidate package before freeze/review;
 - default local/global context layers;
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
@@ -215,34 +217,29 @@ The #355 decision, public deployment and #396 implementation do not make:
 
 ## 10. Current exit condition
 
-The immediate Gate D product step is complete only when the corrected #396 loop receives a fresh user check and one explicit next result is recorded:
+The corrected #396 loop received a fresh user check. The recorded result is `ITERATE`: preserve the interaction baseline, treat remaining visual issues as non-priority and open one bounded data branch.
 
-- `ITERATE`;
+The current increment is complete only when the major-life Presence candidate package records exactly one outcome:
+
+- `FREEZE FOR REVIEW`;
 - `NARROW`;
-- `STOP/RETHINK`.
+- `STOP`.
 
-The check should determine whether the user can:
+The package must provide 6–10 or explicitly narrowed candidate anchors across 1452–1519, selection/coverage rationale, source/locator/uncertainty mapping, unknown-route preservation and reviewable cost. Runtime inclusion is a later decision.
 
-- distinguish Range from Scrub;
-- use the timeline as the primary time control;
-- understand why visible Presences/path change with time;
-- select a Presence without unwanted camera movement;
-- retrieve concise meaning and epistemic limits;
-- avoid interpreting dashed chronology as a known route.
-
-A result does not automatically mean Gate D is globally complete. It authorizes at most one next evidence-backed product branch.
+This package outcome does not automatically mean Gate D is globally complete or authorize another product branch.
 
 Formal same-content baseline, broader contextual-understanding metrics and participant protocol remain available for a later validation step when the tested scope actually contains the corresponding context/layer hypotheses.
 
 ## 11. Next-branch rule
 
-After the current #396 user check, record exactly one result:
+The post-#396 result vocabulary was:
 
 - `ITERATE` — improve the same loop;
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-Only an evidence-supported `ITERATE` may open at most one next branch. Candidate branches include one bounded data increment, one context/layer increment, curation/editorial storage, persistence/sharing or a measured renderer/provider improvement.
+The recorded result is `ITERATE`, and it opens exactly one branch: `Leonardo Major-Life Presence Scope v1`. Context/layers, curation/editorial storage, persistence/sharing and renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

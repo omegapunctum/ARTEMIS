@@ -9,6 +9,7 @@
 - Completed Gate C delivery: issues `#332` / `#360` and `2026-08-09_LEONARDO_WORLD_SLICE_SCOPE_v1.md`.
 - Active Gate D contract: `2026-08-12_GATE_D_OPENING_v1.md`.
 - Public capability change: amended 2026-08-14 to allow a labelled generated R&D review preview; no maintained-app or product promotion.
+- Post-#396 product feedback: `ITERATE` recorded 2026-08-29; one bounded major-life Presence source branch opened without closing Gate D or promoting the Globe.
 
 The amendment is recorded in `2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md`. It allows `/globe/` review access while preserving every Gate D exit, provider, accessibility, performance, rollback and product-validation requirement below.
 
@@ -118,5 +119,7 @@ This decision exits only when #355 records exactly one result:
 - promote to a maintained experimental application;
 - narrow/rework the vertical;
 - stop/rethink.
+
+The 2026-08-29 post-#396 `ITERATE` is an intermediate product-feedback result. It preserves the generated R&D interaction and authorizes only the bounded `Leonardo Major-Life Presence Scope v1` source package. It is not one of the final promotion outcomes above and does not close this decision.
 
 No result automatically authorizes public deployment or broader product expansion.

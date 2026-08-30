@@ -13,7 +13,7 @@ def _json(relative_path: str) -> dict:
     return json.loads(_text(relative_path))
 
 
-def test_355_owns_one_post_iteration_temporal_map_loop() -> None:
+def test_355_owns_one_post_396_major_life_presence_branch() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     scope = _text("docs/ARTEMIS_PRODUCT_SCOPE.md")
@@ -23,14 +23,16 @@ def test_355_owns_one_post_iteration_temporal_map_loop() -> None:
     assert "Core Reset was completed by PR `#393`" in priorities
     assert "PR `#395`" in priorities
     assert "PR `#396`" in priorities
-    assert "fresh user check" in priorities.lower()
+    assert "post-#396 `ITERATE`" in priorities
 
     assert "Core Reset [completed]" in phases
     assert "Leonardo Temporal Map loop, iteration 1 [completed]" in phases
-    assert "Fresh user check of the published loop [active]" in phases
+    assert "Fresh user check of the published loop [completed]" in phases
+    assert "Leonardo Major-Life Presence Scope v1 [active]" in phases
 
-    assert "Current increment: fresh user check of the published PR `#396` loop" in scope
+    assert "Current increment: `Leonardo Major-Life Presence Scope v1`" in scope
     assert state["active_vertical"]["issue"] == 355
+    assert state["phase"]["id"] == "5.0"
     assert state["gate"]["id"] == "D"
     assert state["gate"]["status"] == "in_progress"
 
@@ -93,11 +95,12 @@ def test_legacy_and_premature_infrastructure_is_outside_core() -> None:
     assert "#371/#373 Airtable historical import/review" in priorities
     assert "editable Progressive Refinement runtime" in priorities
     assert "#392" in operating_system
-    assert "broader Leonardo corpus" in priorities
-    assert "local/global context" in priorities
+    assert "Leonardo detail beyond the bounded 6–10-Presence candidate package" in priorities
+    assert "runtime integration before the package freeze/review decision" in priorities
+    assert "context/layers" in priorities
 
 
-def test_next_decision_is_single_and_precedes_new_branches() -> None:
+def test_post_396_decision_opens_exactly_one_bounded_branch() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     validation = _text("docs/VALIDATION_DECISION.md")
@@ -111,19 +114,27 @@ def test_next_decision_is_single_and_precedes_new_branches() -> None:
         assert decision in phases
         assert decision in validation
 
-    assert "at most one evidence-backed next branch" in priorities
-    assert "before opening at most one evidence-backed next branch" in state["next_transition"]["condition"]
+    assert "single opened branch is `Leonardo Major-Life Presence Scope v1`" in priorities
+    assert "before runtime integration or another product branch" in state["next_transition"]["condition"]
+    assert "Recorded product decision | `ITERATE`" in validation
+    assert "Opened next branch | `Leonardo Major-Life Presence Scope v1`" in validation
+
+    branch = _text("docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md")
+    assert "6–10 major-life Presence anchors" in branch
+    assert "1452–1519" in branch
+    assert "route_geometry=null" in branch
+    assert "Stage C — Runtime increment [not authorized]" in branch
 
     active_text = "\n".join((priorities, phases, validation, _text("docs/project_state.json")))
     assert "ADVANCE_TO_GATE_E" not in active_text
     assert "EXPAND ONE BRANCH" not in active_text
 
 
-def test_publication_and_implementation_do_not_equal_user_validation() -> None:
+def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None:
     truth = _text("docs/PROJECT_TRUTH.md")
     validation = _text("docs/VALIDATION_DECISION.md")
 
-    assert "user value not yet validated" in truth
-    assert "PENDING USER EVIDENCE" in validation
+    assert "formal user value not yet validated" in truth
+    assert "FORMAL USER VALUE PENDING" in validation
     assert "R&D research prototype" in validation
     assert "do not by themselves prove user value" in validation
