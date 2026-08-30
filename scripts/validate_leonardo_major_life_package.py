@@ -11,9 +11,9 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 try:
-    from scripts.validate_project_state import ProjectStateError, _validate_frozen_git_revision
+    from scripts.validate_project_state import ProjectStateError, _git, _validate_frozen_git_revision
 except ModuleNotFoundError:  # direct script execution from scripts/
-    from validate_project_state import ProjectStateError, _validate_frozen_git_revision
+    from validate_project_state import ProjectStateError, _git, _validate_frozen_git_revision
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,7 +24,7 @@ EXPECTED_CANDIDATE_CONTENT_DIGEST = (
     "45d3bafc17be34c461f3745d50f688682d113ac463ad69118bdbccaa3071aaa9"
 )
 EXPECTED_REVIEW_PREFIX_DIGEST = (
-    "9fcf0d6b8c1278146367b83924f7c39f725e0a2de7282c2df49fc5ab1c8842d0"
+    "ee504b9d444a327e97d54775c5746d1f217d906abf2c76d53fea4d08f74ef572"
 )
 
 EXPECTED_PRESENCE_PROFILES = {
@@ -305,6 +305,50 @@ def _expected_evidence_profiles() -> dict[str, tuple[str, str, str, str]]:
             f"claim-{slug}-identity", secondary_source, "contextualizes", "background"
         )
     return profiles
+
+
+def _validate_appended_review_artifact(
+    row: dict[str, Any], candidate_content_digest: str
+) -> None:
+    track_slug = row["track"].replace("_", "-")
+    expected_ref = (
+        "fixtures/world_slices/leonardo_major_life/v1/reviews/"
+        f"round-{row['round']}-{track_slug}.json"
+    )
+    if row["artifact_ref"] != expected_ref:
+        raise MajorLifePackageError("appended review artifact path drifted")
+    try:
+        resolved = _git("rev-parse", "--verify", f"{row['reviewed_head']}^{{commit}}")
+        current_head = _git("rev-parse", "HEAD")
+        if resolved == current_head:
+            raise MajorLifePackageError("reviewed head must predate its audit append")
+        _git("merge-base", "--is-ancestor", resolved, "HEAD")
+        reviewed_raw = _git(
+            "show",
+            f"{resolved}:fixtures/world_slices/leonardo_major_life/v1/package.json",
+        )
+        reviewed_package = json.loads(reviewed_raw)
+    except (ProjectStateError, json.JSONDecodeError) as exc:
+        raise MajorLifePackageError(
+            f"appended review head cannot be verified: {row['reviewed_head']}"
+        ) from exc
+    if reviewed_package.get("candidate_content_digest_sha256") != candidate_content_digest:
+        raise MajorLifePackageError("appended review inspected a different candidate content digest")
+
+    artifact = _load(ROOT / row["artifact_ref"])
+    review_payload = {key: value for key, value in row.items() if key != "artifact_ref"}
+    expected_artifact = {
+        "schema_version": "1.0.0",
+        "package_id": "leonardo-major-life-presence-candidates-v1",
+        "candidate_content_digest_sha256": candidate_content_digest,
+        "review": review_payload,
+        "review_url": (
+            "https://github.com/omegapunctum/ARTEMIS/pull/400"
+            f"#issuecomment-{row['github_comment_id']}"
+        ),
+    }
+    if artifact != expected_artifact:
+        raise MajorLifePackageError("appended review artifact does not bind the exact review row")
 
 
 def _validate_schema(package: dict[str, Any]) -> None:
@@ -724,26 +768,20 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         raise MajorLifePackageError("historical Drive work cannot receive a retrospective estimate")
     reviews = audit["prior_reviews"]
     prefix_canonical = json.dumps(
-        reviews[:5], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        reviews[:9], ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
     if hashlib.sha256(prefix_canonical).hexdigest() != EXPECTED_REVIEW_PREFIX_DIGEST:
-        raise MajorLifePackageError("immutable rounds 1 through 3 review prefix drifted")
+        raise MajorLifePackageError("immutable rounds 1 through 5 review prefix drifted")
 
-    suffix = reviews[5:]
+    suffix = reviews[9:]
+    if len(suffix) % 2:
+        raise MajorLifePackageError("appended review history requires complete two-track pairs")
     rounds: dict[int, list[dict[str, Any]]] = {}
-    for row in suffix:
-        rounds.setdefault(row["round"], []).append(row)
-        if row["decision"] == "FREEZE_FOR_REVIEW" and (
-            row["unresolved_major"] != 0 or row["unresolved_medium"] != 0
-        ):
-            raise MajorLifePackageError("FREEZE_FOR_REVIEW cannot retain unresolved findings")
-        if row["decision"] == "NARROW" and (
-            row["unresolved_major"] == 0 and row["unresolved_medium"] == 0
-        ):
-            raise MajorLifePackageError("NARROW review must identify an unresolved finding")
-    if sorted(rounds) != list(range(4, 4 + len(rounds))):
-        raise MajorLifePackageError("review rounds must append contiguously from round 4")
-    for round_number, rows in rounds.items():
+    for index in range(0, len(suffix), 2):
+        rows = suffix[index:index + 2]
+        round_number = 6 + index // 2
+        if any(row["round"] != round_number for row in rows):
+            raise MajorLifePackageError("review rounds must append as contiguous adjacent pairs")
         if [row["track"] for row in rows] != ["semantic_content", "validator_integrity"]:
             raise MajorLifePackageError(
                 f"review round {round_number} must append semantic and validator tracks in order"
@@ -752,6 +790,19 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             raise MajorLifePackageError(f"review round {round_number} tracks must inspect one SHA")
         if len({row["github_comment_id"] for row in rows}) != 1:
             raise MajorLifePackageError(f"review round {round_number} tracks must share one record")
+        for row in rows:
+            if row["decision"] == "FREEZE_FOR_REVIEW" and (
+                row["unresolved_major"] != 0 or row["unresolved_medium"] != 0
+            ):
+                raise MajorLifePackageError("FREEZE_FOR_REVIEW cannot retain unresolved findings")
+            if row["decision"] == "NARROW" and (
+                row["unresolved_major"] == 0 and row["unresolved_medium"] == 0
+            ):
+                raise MajorLifePackageError("NARROW review must identify an unresolved finding")
+            _validate_appended_review_artifact(
+                row, package["candidate_content_digest_sha256"]
+            )
+        rounds[round_number] = rows
 
     decision = audit["current_decision"]
     status = audit["canonical_review_status"]

@@ -1667,6 +1667,30 @@
         "unresolved_medium": 0,
         "duration_minutes": null,
         "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 5,
+        "track": "semantic_content",
+        "reviewed_head": "76cea307d11c5974f2f4e829eba0ccf3bad95aeb",
+        "decision": "FREEZE_FOR_REVIEW",
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 5469645182,
+        "unresolved_major": 0,
+        "unresolved_medium": 0,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 5,
+        "track": "validator_integrity",
+        "reviewed_head": "76cea307d11c5974f2f4e829eba0ccf3bad95aeb",
+        "decision": "NARROW",
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 5469645182,
+        "unresolved_major": 2,
+        "unresolved_medium": 1,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate"
       }
     ]
   },

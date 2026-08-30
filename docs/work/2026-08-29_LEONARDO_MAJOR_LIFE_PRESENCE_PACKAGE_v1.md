@@ -1,6 +1,6 @@
 # Leonardo major-life Presence package v1
 
-Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUNDS_1_4_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
+Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUNDS_1_5_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
 
 Parent product contour: issue #355.
 
@@ -232,6 +232,9 @@ envelope additionally locks all substantive package content—including statemen
 rationales and Uncertainty meaning—plus immutable research-workspace, artifact and curation-note
 provenance. Only lifecycle status, current decision and the validated append-only review log remain
 outside the digest, so a positive decision-only descendant does not re-sign historical content.
+Rounds 1–5 are an exact immutable prefix. Each later round must append as an adjacent semantic /
+validator pair, bind a checked-in exact review artifact, and name an ancestor Git commit whose
+candidate content digest matches the current package.
 
 ## 9. Current lifecycle
 
@@ -247,7 +250,9 @@ one `Leonardo Major-Life Presence Scope v1` branch. Independent review round 1 o
 `b26e7b2704b6091e0859a75c75728b323bb28d5a` returned `NARROW`. Round 4 on
 `a58540aaadcb912a800ab1d21cc732ad814c09f6` returned semantic `FREEZE_FOR_REVIEW` and validator
 `NARROW`, so its combined result remains `NARROW`. Their provenance is preserved in package audit
-history; the audit-only remediation awaits a new exact-revision review.
+history. Round 5 on `76cea307d11c5974f2f4e829eba0ccf3bad95aeb` again returned semantic
+`FREEZE_FOR_REVIEW` and validator `NARROW`; the review-journal-only remediation awaits a new exact
+revision review.
 
 ## 10. Exit condition for this package
 
