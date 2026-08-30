@@ -48,8 +48,13 @@ When composed later, the seven new candidates plus the four existing Romagna Pre
 - Claim text, source/evidence locators, labels, rationales and Uncertainty meaning are digest-locked.
 - The first five recorded review rounds form an immutable prefix; later complete two-track rounds
   append without changing the content digest.
-- Every appended review row must bind a checked-in exact review artifact and a real ancestor Git
-  commit carrying the same candidate content digest.
+- Git history must prove every later pair was appended once, directly after the exact revision it
+  reviewed; deleting or rewriting an appended pair or artifact is rejected.
+- Every appended row binds the recomputed historical candidate digest plus a review-envelope digest
+  covering the exact reviewed package, schema and validator Git content. Artifacts are read as Git
+  blobs, not from an uncommitted working tree.
+- A GitHub review URL is retained only as a human locator. The offline validator explicitly does not
+  treat its comment number as authenticated evidence.
 - A reviewed decision-only descendant may change only lifecycle status, current decision and the
   append-only review log; `FREEZE_FOR_REVIEW` requires two positive latest tracks.
 - The frozen `trajectory-leonardo-romagna-1502` segment remains authoritative for its four Presences and three internal gaps.
@@ -65,7 +70,8 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 5
-returned `NARROW`; their exact reviewed heads, tracks and GitHub comment IDs remain preserved in package audit
-history. Review the remediated exact revision again. The allowed result remains
+PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 6
+returned `NARROW`; their exact reviewed heads, tracks and GitHub record locators remain preserved in
+package audit history. Round 6 found review-envelope integrity gaps only; no candidate content was
+changed. Review the remediated exact revision again. The allowed result remains
 `FREEZE_FOR_REVIEW`, `NARROW` or `STOP`; none silently authorizes runtime publication.

@@ -20,9 +20,14 @@ def _review_row(round_number, track, decision, *, major=0, medium=0):
         "round": round_number,
         "track": track,
         "reviewed_head": "f" * 40,
+        "review_envelope_digest_sha256": "d" * 64,
         "decision": decision,
         "independence_method": "separate_agent_task_read_only",
-        "github_comment_id": 6000000000 + round_number,
+        "review_record_locator": (
+            "https://github.com/omegapunctum/ARTEMIS/pull/400"
+            f"#issuecomment-{6000000000 + round_number}"
+        ),
+        "review_record_authentication": "reference_only_not_verified_by_validator",
         "unresolved_major": major,
         "unresolved_medium": medium,
         "duration_minutes": None,
@@ -471,6 +476,9 @@ def test_uncertainty_requires_canonical_review_state() -> None:
 def test_review_history_accepts_a_complete_append_only_round(monkeypatch) -> None:
     package = _package()
     monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
+    monkeypatch.setattr(
+        validator, "_review_history_append_commits", lambda _rows: {6: ("a" * 40, "f" * 40)}
+    )
     package["audit"]["prior_reviews"].extend(
         [
             _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
@@ -535,6 +543,9 @@ def test_immutable_curation_note_is_digest_locked() -> None:
 def test_positive_decision_only_descendant_does_not_resign_content(monkeypatch) -> None:
     package = _package()
     monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
+    monkeypatch.setattr(
+        validator, "_review_history_append_commits", lambda _rows: {6: ("a" * 40, "f" * 40)}
+    )
     original_digest = package["candidate_content_digest_sha256"]
     package["audit"]["prior_reviews"].extend(
         [
@@ -553,6 +564,11 @@ def test_positive_decision_only_descendant_does_not_resign_content(monkeypatch) 
 def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
     package = _package()
     monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
+    monkeypatch.setattr(
+        validator,
+        "_review_history_append_commits",
+        lambda _rows: {6: ("a" * 40, "f" * 40), 7: ("b" * 40, "f" * 40)},
+    )
     package["audit"]["prior_reviews"].extend(
         [
             _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
@@ -566,8 +582,11 @@ def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
         validate_package(package)
 
 
-def test_fabricated_reviewed_head_cannot_authorize_freeze() -> None:
+def test_fabricated_reviewed_head_cannot_authorize_freeze(monkeypatch) -> None:
     package = _package()
+    monkeypatch.setattr(
+        validator, "_review_history_append_commits", lambda _rows: {6: ("a" * 40, "e" * 40)}
+    )
     package["audit"]["prior_reviews"].extend(
         [
             _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
@@ -589,11 +608,10 @@ def test_review_artifact_binds_exact_row_and_candidate_digest(monkeypatch) -> No
         "schema_version": "1.0.0",
         "package_id": package["package_id"],
         "candidate_content_digest_sha256": digest,
+        "review_envelope_digest_sha256": row["review_envelope_digest_sha256"],
         "review": {key: value for key, value in row.items() if key != "artifact_ref"},
-        "review_url": (
-            "https://github.com/omegapunctum/ARTEMIS/pull/400"
-            f"#issuecomment-{row['github_comment_id']}"
-        ),
+        "review_record_locator": row["review_record_locator"],
+        "review_record_authentication": "reference_only_not_verified_by_validator",
     }
 
     def fake_git(*args):
@@ -601,15 +619,21 @@ def test_review_artifact_binds_exact_row_and_candidate_digest(monkeypatch) -> No
             return row["reviewed_head"]
         if args == ("rev-parse", "HEAD"):
             return "e" * 40
+        if args[0] == "rev-parse" and ":" in args[1]:
+            return "b" * 40
         if args[0] == "merge-base":
             return ""
         if args[0] == "show":
-            return json.dumps({"candidate_content_digest_sha256": digest})
+            return json.dumps(artifact)
         raise AssertionError(args)
 
     monkeypatch.setattr(validator, "_git", fake_git)
-    monkeypatch.setattr(validator, "_load", lambda _path: artifact)
-    validator._validate_appended_review_artifact(row, digest)
+    monkeypatch.setattr(
+        validator,
+        "_review_envelope_digest",
+        lambda _head: (row["review_envelope_digest_sha256"], digest),
+    )
+    validator._validate_appended_review_artifact(row, digest, "a" * 40, "f" * 40)
 
 
 def test_freeze_decision_requires_two_positive_latest_tracks() -> None:
@@ -619,3 +643,58 @@ def test_freeze_decision_requires_two_positive_latest_tracks() -> None:
 
     with pytest.raises(MajorLifePackageError, match="completed appended review"):
         validate_package(package)
+
+
+def test_review_suffix_cannot_be_deleted_after_its_append(monkeypatch) -> None:
+    base = _package()
+    appended = copy.deepcopy(base)
+    appended["audit"]["prior_reviews"].extend(
+        [
+            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(6, "validator_integrity", "NARROW", major=1),
+        ]
+    )
+    deleted = copy.deepcopy(base)
+    commits = ["1" * 40, "2" * 40, "3" * 40]
+    packages = {
+        commits[0]: base,
+        commits[1]: appended,
+        commits[2]: deleted,
+    }
+    for row in appended["audit"]["prior_reviews"][-2:]:
+        row["reviewed_head"] = commits[0]
+
+    def fake_git(*args):
+        if args[:4] == ("rev-list", "--first-parent", "--reverse", "HEAD"):
+            return "\n".join(commits)
+        if args[0] == "show":
+            commit = args[1].split(":", 1)[0]
+            return json.dumps(packages[commit])
+        if args[0] == "rev-parse" and args[1].endswith("^1"):
+            commit = args[1][:-2]
+            return commits[commits.index(commit) - 1]
+        raise AssertionError(args)
+
+    monkeypatch.setattr(validator, "_git", fake_git)
+    with pytest.raises(MajorLifePackageError, match="deleted, rewritten"):
+        validator._review_history_append_commits(deleted["audit"]["prior_reviews"])
+
+
+def test_historical_candidate_digest_is_recomputed(monkeypatch) -> None:
+    package = _package()
+    package["presences"][0]["activity_label"] = "Fabricated historical content"
+    schema = json.loads(validator.SCHEMA_PATH.read_text(encoding="utf-8"))
+
+    def fake_git(*args):
+        path = args[1].split(":", 1)[1]
+        if path == validator.PACKAGE_RELATIVE:
+            return json.dumps(package)
+        if path == validator.SCHEMA_RELATIVE:
+            return json.dumps(schema)
+        if path == validator.VALIDATOR_RELATIVE:
+            return "validator source"
+        raise AssertionError(args)
+
+    monkeypatch.setattr(validator, "_git", fake_git)
+    with pytest.raises(MajorLifePackageError, match="does not match its content"):
+        validator._review_envelope_digest("a" * 40)

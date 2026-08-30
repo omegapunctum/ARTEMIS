@@ -1012,9 +1012,11 @@
         "round",
         "track",
         "reviewed_head",
+        "review_envelope_digest_sha256",
         "decision",
         "independence_method",
-        "github_comment_id",
+        "review_record_locator",
+        "review_record_authentication",
         "unresolved_major",
         "unresolved_medium",
         "duration_minutes",
@@ -1036,6 +1038,10 @@
           "type": "string",
           "pattern": "^[0-9a-f]{40}$"
         },
+        "review_envelope_digest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
         "decision": {
           "enum": [
             "FREEZE_FOR_REVIEW",
@@ -1046,9 +1052,12 @@
         "independence_method": {
           "const": "separate_agent_task_read_only"
         },
-        "github_comment_id": {
-          "type": "integer",
-          "minimum": 1
+        "review_record_locator": {
+          "type": "string",
+          "pattern": "^https://github\\.com/omegapunctum/ARTEMIS/pull/400#issuecomment-[1-9][0-9]*$"
+        },
+        "review_record_authentication": {
+          "const": "reference_only_not_verified_by_validator"
         },
         "unresolved_major": {
           "type": "integer",

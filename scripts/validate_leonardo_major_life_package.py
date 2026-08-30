@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_major_life" / "v1"
 PACKAGE_PATH = PACKAGE_ROOT / "package.json"
 SCHEMA_PATH = PACKAGE_ROOT / "package.schema.json"
+PACKAGE_RELATIVE = "fixtures/world_slices/leonardo_major_life/v1/package.json"
+SCHEMA_RELATIVE = "fixtures/world_slices/leonardo_major_life/v1/package.schema.json"
+VALIDATOR_RELATIVE = "scripts/validate_leonardo_major_life_package.py"
 EXPECTED_CANDIDATE_CONTENT_DIGEST = (
     "45d3bafc17be34c461f3745d50f688682d113ac463ad69118bdbccaa3071aaa9"
 )
@@ -307,8 +310,117 @@ def _expected_evidence_profiles() -> dict[str, tuple[str, str, str, str]]:
     return profiles
 
 
+def _canonical_json_digest(value: Any) -> str:
+    canonical = json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
+def _candidate_content_digest(package: dict[str, Any]) -> str:
+    reviewed_content = {
+        key: value
+        for key, value in package.items()
+        if key != "candidate_content_digest_sha256"
+    }
+    reviewed_content["audit"] = {
+        key: value
+        for key, value in package["audit"].items()
+        if key not in {"canonical_review_status", "current_decision", "prior_reviews"}
+    }
+    return _canonical_json_digest(reviewed_content)
+
+
+def _review_envelope_digest(reviewed_head: str) -> tuple[str, str]:
+    try:
+        package_raw = _git("show", f"{reviewed_head}:{PACKAGE_RELATIVE}")
+        schema_raw = _git("show", f"{reviewed_head}:{SCHEMA_RELATIVE}")
+        validator_raw = _git("show", f"{reviewed_head}:{VALIDATOR_RELATIVE}")
+        reviewed_package = json.loads(package_raw)
+        reviewed_schema = json.loads(schema_raw)
+    except (ProjectStateError, json.JSONDecodeError) as exc:
+        raise MajorLifePackageError(
+            f"review envelope cannot be read at {reviewed_head}"
+        ) from exc
+    if not isinstance(reviewed_package, dict) or not isinstance(reviewed_schema, dict):
+        raise MajorLifePackageError("review envelope JSON roots must be objects")
+
+    recomputed_candidate_digest = _candidate_content_digest(reviewed_package)
+    if reviewed_package.get("candidate_content_digest_sha256") != recomputed_candidate_digest:
+        raise MajorLifePackageError(
+            "historical reviewed package candidate digest does not match its content"
+        )
+    envelope = {
+        "schema_version": "1.0.0",
+        "candidate_content_digest_sha256": recomputed_candidate_digest,
+        "package_sha256": _canonical_json_digest(reviewed_package),
+        "package_schema_sha256": _canonical_json_digest(reviewed_schema),
+        "validator_sha256": hashlib.sha256(validator_raw.encode("utf-8")).hexdigest(),
+    }
+    return _canonical_json_digest(envelope), recomputed_candidate_digest
+
+
+def _review_history_append_commits(
+    current_reviews: list[dict[str, Any]],
+) -> dict[int, tuple[str, str]]:
+    """Prove every suffix pair was appended once on current first-parent history."""
+    try:
+        commits = _git(
+            "rev-list", "--first-parent", "--reverse", "HEAD", "--", PACKAGE_RELATIVE
+        ).splitlines()
+    except ProjectStateError as exc:
+        raise MajorLifePackageError("review history cannot be read from Git") from exc
+
+    previous_reviews: list[dict[str, Any]] | None = None
+    append_commits: dict[int, tuple[str, str]] = {}
+    for commit in commits:
+        try:
+            historical = json.loads(_git("show", f"{commit}:{PACKAGE_RELATIVE}"))
+            reviews = historical["audit"]["prior_reviews"]
+        except (ProjectStateError, json.JSONDecodeError, KeyError, TypeError):
+            continue
+        if len(reviews) < 9:
+            continue
+        prefix_digest = _canonical_json_digest(reviews[:9])
+        if prefix_digest != EXPECTED_REVIEW_PREFIX_DIGEST:
+            continue
+        if previous_reviews is None:
+            if reviews[9:]:
+                raise MajorLifePackageError(
+                    "appended review history lacks an empty-suffix Git baseline"
+                )
+            previous_reviews = reviews
+            continue
+        if reviews == previous_reviews:
+            continue
+        if reviews[: len(previous_reviews)] != previous_reviews or len(reviews) != len(previous_reviews) + 2:
+            raise MajorLifePackageError(
+                "appended review history was deleted, rewritten, or added outside one complete pair"
+            )
+        appended = reviews[-2:]
+        try:
+            parent = _git("rev-parse", f"{commit}^1")
+        except ProjectStateError as exc:
+            raise MajorLifePackageError("review append commit has no verifiable parent") from exc
+        if any(row.get("reviewed_head") != parent for row in appended):
+            raise MajorLifePackageError(
+                "appended review pair must inspect the exact parent revision"
+            )
+        append_commits[int(appended[0]["round"])] = (commit, parent)
+        previous_reviews = reviews
+
+    if previous_reviews is None or current_reviews != previous_reviews:
+        raise MajorLifePackageError(
+            "working review history does not match the committed Git history"
+        )
+    if set(append_commits) != {row["round"] for row in current_reviews[9:]}:
+        raise MajorLifePackageError("not every appended review round has a Git append commit")
+    return append_commits
+
+
 def _validate_appended_review_artifact(
-    row: dict[str, Any], candidate_content_digest: str
+    row: dict[str, Any], candidate_content_digest: str, append_commit: str,
+    expected_reviewed_head: str,
 ) -> None:
     track_slug = row["track"].replace("_", "-")
     expected_ref = (
@@ -320,32 +432,36 @@ def _validate_appended_review_artifact(
     try:
         resolved = _git("rev-parse", "--verify", f"{row['reviewed_head']}^{{commit}}")
         current_head = _git("rev-parse", "HEAD")
+        if resolved != expected_reviewed_head:
+            raise MajorLifePackageError("reviewed head is not the exact review-append parent")
         if resolved == current_head:
             raise MajorLifePackageError("reviewed head must predate its audit append")
         _git("merge-base", "--is-ancestor", resolved, "HEAD")
-        reviewed_raw = _git(
-            "show",
-            f"{resolved}:fixtures/world_slices/leonardo_major_life/v1/package.json",
-        )
-        reviewed_package = json.loads(reviewed_raw)
+        append_blob = _git("rev-parse", f"{append_commit}:{row['artifact_ref']}")
+        current_blob = _git("rev-parse", f"HEAD:{row['artifact_ref']}")
+        artifact = json.loads(_git("show", f"HEAD:{row['artifact_ref']}"))
     except (ProjectStateError, json.JSONDecodeError) as exc:
         raise MajorLifePackageError(
             f"appended review head cannot be verified: {row['reviewed_head']}"
         ) from exc
-    if reviewed_package.get("candidate_content_digest_sha256") != candidate_content_digest:
-        raise MajorLifePackageError("appended review inspected a different candidate content digest")
+    if append_blob != current_blob:
+        raise MajorLifePackageError("appended review artifact changed after its Git append commit")
 
-    artifact = _load(ROOT / row["artifact_ref"])
+    envelope_digest, historical_candidate_digest = _review_envelope_digest(resolved)
+    if historical_candidate_digest != candidate_content_digest:
+        raise MajorLifePackageError("appended review inspected a different candidate content digest")
+    if row["review_envelope_digest_sha256"] != envelope_digest:
+        raise MajorLifePackageError("appended review envelope digest does not match reviewed Git content")
+
     review_payload = {key: value for key, value in row.items() if key != "artifact_ref"}
     expected_artifact = {
         "schema_version": "1.0.0",
         "package_id": "leonardo-major-life-presence-candidates-v1",
         "candidate_content_digest_sha256": candidate_content_digest,
+        "review_envelope_digest_sha256": envelope_digest,
         "review": review_payload,
-        "review_url": (
-            "https://github.com/omegapunctum/ARTEMIS/pull/400"
-            f"#issuecomment-{row['github_comment_id']}"
-        ),
+        "review_record_locator": row["review_record_locator"],
+        "review_record_authentication": "reference_only_not_verified_by_validator",
     }
     if artifact != expected_artifact:
         raise MajorLifePackageError("appended review artifact does not bind the exact review row")
@@ -367,23 +483,7 @@ def _validate_schema(package: dict[str, Any]) -> None:
 
 
 def _validate_candidate_content_digest(package: dict[str, Any]) -> None:
-    reviewed_content = {
-        key: value
-        for key, value in package.items()
-        if key != "candidate_content_digest_sha256"
-    }
-    reviewed_content["audit"] = {
-        key: value
-        for key, value in package["audit"].items()
-        if key not in {"canonical_review_status", "current_decision", "prior_reviews"}
-    }
-    canonical = json.dumps(
-        reviewed_content,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    actual = hashlib.sha256(canonical).hexdigest()
+    actual = _candidate_content_digest(package)
     if package["candidate_content_digest_sha256"] != EXPECTED_CANDIDATE_CONTENT_DIGEST:
         raise MajorLifePackageError("candidate reviewed-content digest identity drifted")
     if actual != EXPECTED_CANDIDATE_CONTENT_DIGEST:
@@ -774,6 +874,7 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         raise MajorLifePackageError("immutable rounds 1 through 5 review prefix drifted")
 
     suffix = reviews[9:]
+    append_commits = _review_history_append_commits(reviews)
     if len(suffix) % 2:
         raise MajorLifePackageError("appended review history requires complete two-track pairs")
     rounds: dict[int, list[dict[str, Any]]] = {}
@@ -788,8 +889,9 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             )
         if len({row["reviewed_head"] for row in rows}) != 1:
             raise MajorLifePackageError(f"review round {round_number} tracks must inspect one SHA")
-        if len({row["github_comment_id"] for row in rows}) != 1:
+        if len({row["review_record_locator"] for row in rows}) != 1:
             raise MajorLifePackageError(f"review round {round_number} tracks must share one record")
+        append_commit, expected_reviewed_head = append_commits[round_number]
         for row in rows:
             if row["decision"] == "FREEZE_FOR_REVIEW" and (
                 row["unresolved_major"] != 0 or row["unresolved_medium"] != 0
@@ -800,7 +902,10 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             ):
                 raise MajorLifePackageError("NARROW review must identify an unresolved finding")
             _validate_appended_review_artifact(
-                row, package["candidate_content_digest_sha256"]
+                row,
+                package["candidate_content_digest_sha256"],
+                append_commit,
+                expected_reviewed_head,
             )
         rounds[round_number] = rows
 
