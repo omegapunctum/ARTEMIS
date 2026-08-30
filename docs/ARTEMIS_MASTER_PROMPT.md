@@ -115,9 +115,9 @@ Current operational truth:
 7. Preserve the first published #395 manual-feedback result as **`ITERATE`**, not as final user-value validation.
 8. Preserve PR `#396` as the published bounded correction: full-width bottom timeline; two-handle `Range`; chosen build origin + one current-time cursor `Scrub`; popup-first selection; optional right drawer; no single-click camera jump; double-click focus.
 9. Gate D remains **OPEN / IN PROGRESS** under #355. Implementation success and public R&D access do not by themselves close the gate.
-10. The next product action is a **fresh user check of the published #396 interface**. Do not add infrastructure, broader Leonardo data or default context/layer complexity pre-emptively.
-11. Record exactly one next result: `ITERATE`, `NARROW` or `STOP/RETHINK`.
-12. If evidence supports continuing, open at most one named next branch. A branch is a consequence of `ITERATE`, not a fourth peer decision.
+10. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
+11. Exactly one next branch is active: `Leonardo Major-Life Presence Scope v1`, limited to source discovery, candidate selection and review design for 6–10 coarse Presences across 1452–1519.
+12. Do not promote the package to runtime or open another branch before its `FREEZE FOR REVIEW`, `NARROW` or `STOP` decision.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 
@@ -133,9 +133,9 @@ Formal D1/M1/A1/P1 closeout and the old automatic Gate E sequencing are not curr
 
 ## 6. Frozen / gated work
 
-Frozen or gated at product scale until the post-#396 decision opens one named branch:
+Frozen or gated outside the one named post-#396 branch:
 
-- broader Leonardo 1452–1519 corpus;
+- Leonardo detail beyond the bounded 6–10-Presence candidate package and any runtime integration before review;
 - default local/global context and broad layer expansion;
 - generative AI runtime;
 - AI-controlled view/query runtime until a separate command/state contract is approved;

@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.1
+# ARTEMIS — PROJECT PHASES v7.2
 
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-08-29.
-- Active phase: **4.8 — Leonardo Temporal Map / fresh user check after first ITERATE**.
+- Active phase: **5.0 — Leonardo Major-Life Presence candidate/source package**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -75,9 +75,9 @@ PR `#396` completed the bounded correction:
 
 The current bounded corpus remains the four source-bound 1502 Romagna Presences. It is an interaction scaffold, not Leonardo's complete biography.
 
-## Phase 4 — Fresh user check of the published loop [active]
+## Phase 4 — Fresh user check of the published loop [completed]
 
-The next product action is to observe the **current published #396 interface**, not to add infrastructure, another World Slice or broader Leonardo data pre-emptively.
+The fresh check of the published #396 interface reported that the interaction is now good enough to continue and that remaining visual problems are not the next priority.
 
 Check whether a user can:
 
@@ -88,26 +88,32 @@ Check whether a user can:
 5. read concise place/date/activity information and reach source/uncertainty details when needed;
 6. understand that dashed connectors are chronology only and that exact historical routes remain unknown.
 
-Record exactly one next product result:
+The allowed product result vocabulary was:
 
 - `ITERATE` — improve the same product loop;
 - `NARROW` — reduce content or interaction scope;
 - `STOP/RETHINK` — stop this Globe/Temporal Map approach and revisit the product hypothesis.
 
-A fresh user check is not the same as declaring Gate D complete or claiming validated historical/product capability.
+The recorded result is **`ITERATE`**. The evidence and its limitations are preserved in `docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md`.
 
-## Phase 5 — One evidence-backed next branch
+This check does not declare Gate D complete or claim validated historical/product capability.
 
-Only after an explicit post-#396 decision may one next branch be opened. Possible branches include:
+## Phase 5 — Leonardo Major-Life Presence Scope v1 [active]
 
-- one bounded data increment, such as a source-aware 6–10 Presence major-life package;
-- a measured context/layer increment;
-- curation/editorial storage;
-- persistence/sharing;
-- a measured renderer/provider improvement.
+The post-#396 `ITERATE` opens exactly one branch: a source-aware candidate package of roughly 6–10 major-life Presences across 1452–1519.
 
-Only one branch may become active. Generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain future/gated.
+Current stage:
+
+- source discovery and candidate selection;
+- explicit inclusion/exclusion and whole-life coverage rationale;
+- Claim/EvidenceLink/Source/locator and uncertainty mapping;
+- cost and review design;
+- no runtime promotion before a package freeze/review decision.
+
+The active contract is `docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md`.
+
+Context/layers, curation storage, persistence/sharing, renderer/provider work, generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain unopened/gated.
 
 ## Rule
 
-One active product loop, one required check and one next decision. Completed implementation is not user-value validation, and a successful public deployment is not permission to expand scope.
+One active product loop and one active branch. The next decision applies to the candidate package (`FREEZE FOR REVIEW`, `NARROW` or `STOP`), not to automatic runtime expansion. Completed implementation is not user-value validation.

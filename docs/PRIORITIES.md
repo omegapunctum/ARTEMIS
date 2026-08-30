@@ -1,18 +1,18 @@
-# ARTEMIS — PRIORITIES v7.1
+# ARTEMIS — PRIORITIES v7.2
 
 ## Status
 
 - Type: canonical active priorities.
 - Date: 2026-08-29.
-- Active cycle: Leonardo Temporal Map fresh user check after the first `ITERATE`.
+- Active cycle: `Leonardo Major-Life Presence Scope v1` after the post-#396 `ITERATE`.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Validate the current Leonardo Temporal Map loop
+## P0 — Prepare one coarse whole-life Presence package
 
-The only active product question is whether the **current published #396 interaction** makes the spatial-temporal life-path model understandable enough to justify another iteration or a single next branch.
+The published #396 user check recorded `ITERATE`: the current interaction is good enough to continue, and remaining visual problems are not the next priority. The only active product question is now whether the same loop can support a source-aware coarse life path across 1452–1519 without invented precision.
 
 The load-bearing path remains:
 
@@ -42,6 +42,8 @@ The current bounded package remains honest:
 - four settlement coordinates are present-day source-bound reference anchors only;
 - the four Romagna Presences are an interaction scaffold, not Leonardo's complete biography.
 
+The one opened branch must prepare roughly 6–10 major-life Presence anchors across 1452–1519, beginning from broad historically significant places/periods. Stage A is source discovery, candidate selection and review design only; runtime promotion is not authorized.
+
 ## P1 — Preserve the completed Core Reset boundary
 
 Core Reset was completed by PR `#393`; it is no longer an active implementation task.
@@ -57,40 +59,26 @@ Preserve:
 
 Security fixes and preservation of accepted evidence remain allowed. New backend, storage, Airtable, UGC or platform capability requires evidence that the static read-only loop is insufficient.
 
-## P2 — Fresh user check before more data or infrastructure
+## P2 — Preserve the post-#396 decision boundary
 
 PR `#395` established the calendar life-path interaction. Its first published manual check produced `ITERATE` because Range/Scrub looked too similar, the timeline lacked primary visual weight, place selection was too persistent, and single-click camera movement was too aggressive.
 
-PR `#396` implemented the bounded correction and is published. The next action is therefore **not** another infrastructure gate and **not** a broader Leonardo dataset.
+PR `#396` implemented the bounded correction and is published. The fresh check recorded `ITERATE`: preserve the current interaction, treat remaining visual issues as non-priority and continue through one bounded data branch.
 
-Run a fresh user check of the current interface and observe whether the user can:
+This result does not close Gate D, prove formal user value or authorize another UI iteration. Preserve the exact decision record in `docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md`.
 
-1. distinguish `Range` from `Scrub` and explain why visible Presences change;
-2. use the timeline naturally as the primary time control;
-3. understand the progressively accumulated path in Scrub;
-4. select a Presence without unwanted camera motion;
-5. retrieve concise place/date/activity meaning and reach source/uncertainty details when needed;
-6. avoid interpreting dashed chronology as a known historical route.
+The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-Record exactly one next result:
+## P3 — Keep the one opened branch bounded
 
-- `ITERATE`;
-- `NARROW`;
-- `STOP/RETHINK`.
+The single opened branch is `Leonardo Major-Life Presence Scope v1`.
 
-The fresh check does not by itself close Gate D or prove validated product value.
+- prepare 6–10 candidate Presence anchors across 1452–1519;
+- record selection rationale, coverage, sources/locators, uncertainty and cost;
+- preserve unsupported transitions as null-geometry unknown routes;
+- freeze/review the source package before any runtime decision.
 
-## P3 — Open at most one evidence-backed next branch
-
-Only after the post-#396 decision may one next branch be opened. Candidate branches may include:
-
-- one bounded source-aware data increment, such as roughly 6–10 major life Presences across 1452–1519;
-- one measured local/global context or layer increment;
-- curation/editorial storage;
-- persistence/sharing;
-- a measured renderer/provider improvement.
-
-Do not open multiple branches from one `ITERATE` result.
+Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another branch from the same `ITERATE` result.
 
 ## Preserved foundations
 
@@ -116,15 +104,17 @@ These are technical/product-development foundations, not final user-value eviden
 - #334 formal participant protocol as previously sequenced;
 - #371/#373 Airtable historical import/review;
 - editable Progressive Refinement runtime;
-- broader Leonardo corpus before the current loop is rechecked;
+- Leonardo detail beyond the bounded 6–10-Presence candidate package;
+- runtime integration before the package freeze/review decision;
 - generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
 - production backend and dynamic Earth infrastructure.
 
 ## Execution order
 
-1. Freshly check the published #396 Leonardo Temporal Map loop with a user.
-2. Record exactly one `ITERATE`, `NARROW` or `STOP/RETHINK` result.
-3. If justified, open at most one evidence-backed next branch.
+1. Prepare the 6–10-Presence candidate manifest and source map.
+2. Record coverage, uncertainty, rights, cost and unresolved evidence gaps.
+3. Decide exactly one package outcome: `FREEZE FOR REVIEW`, `NARROW` or `STOP`.
+4. Do not integrate runtime data before that decision.
 
 ## Completion rule
 

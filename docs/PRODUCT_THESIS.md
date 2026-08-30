@@ -94,7 +94,7 @@ Research Brief, immutable revision и advanced comparison могут подде�
 - source/uncertainty under progressive disclosure;
 - dashed chronology never becoming historical route geometry.
 
-PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Следующий шаг — fresh user check текущего loop, а не автоматическое расширение thesis в UI.
+PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение: текущий loop достаточно хорош, а оставшиеся visual issues не являются следующим приоритетом. Открыта ровно одна bounded branch — source-aware major-life Presence package.
 
 ## 5. First World Slice thesis
 
@@ -186,13 +186,13 @@ Do not score hypotheses whose content/interface is not actually present in the t
 
 The vertical earns further implementation only through evidence appropriate to the tested scope.
 
-For the current post-#396 step, the immediate question is whether users can understand and use the corrected Temporal Map loop. The next recorded decision vocabulary is:
+For the post-#396 check, the recorded decision vocabulary was:
 
 - `ITERATE`;
 - `NARROW`;
 - `STOP/RETHINK`.
 
-A supported `ITERATE` may open at most one named evidence-backed next branch; branch opening is not a separate peer outcome.
+The recorded result is `ITERATE`. It opens only `Leonardo Major-Life Presence Scope v1`; branch opening is not a separate peer outcome and does not prove formal user value.
 
 For later broader validation, evidence may additionally require:
 

@@ -9,7 +9,7 @@
     "issue": 355
   },
   "phase": {
-    "id": "4.8",
+    "id": "5.0",
     "status": "active"
   },
   "completed_gates": [
@@ -32,7 +32,7 @@
   ],
   "gate": {
     "id": "D",
-    "label": "Leonardo Temporal Map user-value loop",
+    "label": "Leonardo Temporal Map / ITERATE / major-life Presence source branch",
     "status": "in_progress",
     "allowed_decisions": ["ITERATE", "NARROW", "STOP/RETHINK"]
   },
@@ -84,11 +84,13 @@
     "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md",
     "docs/work/2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md",
     "docs/work/2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md",
-    "docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md"
+    "docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md",
+    "docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md",
+    "docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Run a fresh user check of the published PR #396 Leonardo Temporal Map interface and record exactly one ITERATE, NARROW or STOP/RETHINK result before opening at most one evidence-backed next branch."
+    "condition": "Complete the Leonardo Major-Life Presence candidate/source package and record exactly one FREEZE FOR REVIEW, NARROW or STOP outcome before runtime integration or another product branch."
   }
 }

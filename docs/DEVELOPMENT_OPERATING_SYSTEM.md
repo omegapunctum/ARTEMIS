@@ -168,9 +168,9 @@ Current product implementation sequence:
 2. PR `#395` established the calendar-based Leonardo Temporal Map loop over the frozen four-Presence Romagna scaffold.
 3. The first published manual check recorded **`ITERATE`** because Range/Scrub looked too similar, timeline hierarchy was weak, place details were too persistent and single-click camera movement was too aggressive.
 4. PR `#396` implemented and published the bounded correction: full-width bottom timeline, two-handle `Range`, build-origin + single-current-time `Scrub`, popup-first selection, optional right drawer, no single-click camera jump and double-click focus.
-5. The **current product action is a fresh user check of the published #396 interface**. No broader Leonardo corpus, default context/layer expansion, backend/storage or new infrastructure gate should precede that check without a direct blocker.
-6. Record exactly one next result: `ITERATE`, `NARROW` or `STOP/RETHINK`.
-7. If continuing evidence justifies expansion, open at most one named next branch.
+5. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
+6. Exactly one next branch is active: `Leonardo Major-Life Presence Scope v1`, limited to a source-aware 6–10-Presence candidate package across 1452–1519.
+7. Freeze/review that package before any runtime integration; no default context/layer expansion, backend/storage or new infrastructure gate is opened.
 
 Current Temporal Map semantic/UI boundary:
 
@@ -184,6 +184,6 @@ Current Temporal Map semantic/UI boundary:
 
 Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated.
 
-Formal D1/M1/A1/P1 closeout and the old automatic Gate E sequencing are not current roadmap drivers. Basic responsive, keyboard and accessibility behavior still belongs to implementation quality, but additional evidence machinery does not precede the fresh user-value decision.
+Formal D1/M1/A1/P1 closeout and the old automatic Gate E sequencing are not current roadmap drivers. Basic responsive, keyboard and accessibility behavior still belongs to implementation quality, but additional evidence machinery and visual polish do not displace the active bounded source branch.
 
 The preserved `CONTROLLED_RELEASE_DECISION.md` describes an older Architecture Atlas/backend compatibility baseline. It does not own current #355 product readiness; use current workflow files and this operating system for the active Core contour.
