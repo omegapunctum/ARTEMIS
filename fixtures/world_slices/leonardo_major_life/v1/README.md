@@ -49,7 +49,9 @@ When composed later, the seven new candidates plus the four existing Romagna Pre
 - The first five recorded review rounds form an immutable prefix; later complete two-track rounds
   append without changing the content digest.
 - Git history must prove every later pair was appended once, directly after the exact revision it
-  reviewed; deleting or rewriting an appended pair or artifact is rejected.
+  reviewed; deleting or rewriting an appended pair or artifact is rejected. After the empty-suffix
+  baseline, even a transient immutable-prefix change fails, and an append commit's direct parent
+  must carry the previously accepted review history.
 - Every appended row binds the recomputed historical candidate digest plus a review-envelope digest
   covering the exact reviewed package, schema and validator Git content. Artifacts are read as Git
   blobs, not from an uncommitted working tree.
@@ -70,8 +72,8 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 6
+PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 7
 returned `NARROW`; their exact reviewed heads, tracks and GitHub record locators remain preserved in
-package audit history. Round 6 found review-envelope integrity gaps only; no candidate content was
-changed. Review the remediated exact revision again. The allowed result remains
+package audit history. Rounds 6–7 found review-envelope integrity gaps only; no candidate content
+was changed. Review the remediated exact revision again. The allowed result remains
 `FREEZE_FOR_REVIEW`, `NARROW` or `STOP`; none silently authorizes runtime publication.

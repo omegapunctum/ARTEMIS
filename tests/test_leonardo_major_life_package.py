@@ -698,3 +698,44 @@ def test_historical_candidate_digest_is_recomputed(monkeypatch) -> None:
     monkeypatch.setattr(validator, "_git", fake_git)
     with pytest.raises(MajorLifePackageError, match="does not match its content"):
         validator._review_envelope_digest("a" * 40)
+
+
+def test_transient_prefix_drift_cannot_hide_an_earlier_suffix_append(monkeypatch) -> None:
+    base = _package()
+    hidden_append = copy.deepcopy(base)
+    hidden_append["audit"]["prior_reviews"][0]["decision"] = "STOP"
+    hidden_append["audit"]["prior_reviews"].extend(
+        [
+            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(6, "validator_integrity", "FREEZE_FOR_REVIEW"),
+        ]
+    )
+    restored = copy.deepcopy(hidden_append)
+    restored["audit"]["prior_reviews"][0] = copy.deepcopy(
+        base["audit"]["prior_reviews"][0]
+    )
+    commits = ["a" * 40, "b" * 40, "c" * 40]
+    for row in hidden_append["audit"]["prior_reviews"][-2:]:
+        row["reviewed_head"] = commits[1]
+    for row in restored["audit"]["prior_reviews"][-2:]:
+        row["reviewed_head"] = commits[1]
+    packages = {
+        commits[0]: base,
+        commits[1]: hidden_append,
+        commits[2]: restored,
+    }
+
+    def fake_git(*args):
+        if args[:4] == ("rev-list", "--first-parent", "--reverse", "HEAD"):
+            return "\n".join(commits)
+        if args[0] == "show":
+            commit = args[1].split(":", 1)[0]
+            return json.dumps(packages[commit])
+        if args[0] == "rev-parse" and args[1].endswith("^1"):
+            commit = args[1][:-2]
+            return commits[commits.index(commit) - 1]
+        raise AssertionError(args)
+
+    monkeypatch.setattr(validator, "_git", fake_git)
+    with pytest.raises(MajorLifePackageError, match="prefix changed after the Git baseline"):
+        validator._review_history_append_commits(restored["audit"]["prior_reviews"])

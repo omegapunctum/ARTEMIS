@@ -380,9 +380,17 @@ def _review_history_append_commits(
         except (ProjectStateError, json.JSONDecodeError, KeyError, TypeError):
             continue
         if len(reviews) < 9:
+            if previous_reviews is not None:
+                raise MajorLifePackageError(
+                    "immutable review prefix changed after the Git baseline"
+                )
             continue
         prefix_digest = _canonical_json_digest(reviews[:9])
         if prefix_digest != EXPECTED_REVIEW_PREFIX_DIGEST:
+            if previous_reviews is not None:
+                raise MajorLifePackageError(
+                    "immutable review prefix changed after the Git baseline"
+                )
             continue
         if previous_reviews is None:
             if reviews[9:]:
@@ -400,8 +408,14 @@ def _review_history_append_commits(
         appended = reviews[-2:]
         try:
             parent = _git("rev-parse", f"{commit}^1")
-        except ProjectStateError as exc:
+            parent_package = json.loads(_git("show", f"{parent}:{PACKAGE_RELATIVE}"))
+            parent_reviews = parent_package["audit"]["prior_reviews"]
+        except (ProjectStateError, json.JSONDecodeError, KeyError, TypeError) as exc:
             raise MajorLifePackageError("review append commit has no verifiable parent") from exc
+        if parent_reviews != previous_reviews:
+            raise MajorLifePackageError(
+                "review append parent does not carry the previously accepted review history"
+            )
         if any(row.get("reviewed_head") != parent for row in appended):
             raise MajorLifePackageError(
                 "appended review pair must inspect the exact parent revision"
