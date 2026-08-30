@@ -12,6 +12,7 @@
     "publication_status",
     "runtime_authorized",
     "parent_issue",
+    "candidate_content_digest_sha256",
     "lifecycle_dependency",
     "subject",
     "trajectory",
@@ -49,6 +50,9 @@
     },
     "parent_issue": {
       "const": 355
+    },
+    "candidate_content_digest_sha256": {
+      "const": "b7082c71951ecb27ab05f9ddc02c50297fa984cf4d4678bdc9911a10e24ede42"
     },
     "lifecycle_dependency": {
       "type": "object",
@@ -399,6 +403,30 @@
               "independence_method": "separate_agent_task_read_only",
               "github_comment_id": 5466719896,
               "unresolved_major": 2,
+              "unresolved_medium": 1,
+              "duration_minutes": null,
+              "measurement_state": "not_captured_do_not_estimate"
+            },
+            {
+              "round": 3,
+              "track": "semantic_content",
+              "reviewed_head": "b26e7b2704b6091e0859a75c75728b323bb28d5a",
+              "decision": "NARROW",
+              "independence_method": "separate_agent_task_read_only",
+              "github_comment_id": 5467902597,
+              "unresolved_major": 1,
+              "unresolved_medium": 1,
+              "duration_minutes": null,
+              "measurement_state": "not_captured_do_not_estimate"
+            },
+            {
+              "round": 3,
+              "track": "validator_integrity",
+              "reviewed_head": "b26e7b2704b6091e0859a75c75728b323bb28d5a",
+              "decision": "NARROW",
+              "independence_method": "separate_agent_task_read_only",
+              "github_comment_id": 5467902597,
+              "unresolved_major": 1,
               "unresolved_medium": 1,
               "duration_minutes": null,
               "measurement_state": "not_captured_do_not_estimate"
@@ -907,7 +935,8 @@
         "description",
         "effect",
         "basis_claim_refs",
-        "evidence_state",
+        "evidence_condition",
+        "review_state",
         "projection_effect",
         "possible_bounds"
       ],
@@ -946,11 +975,14 @@
           },
           "uniqueItems": true
         },
-        "evidence_state": {
+        "evidence_condition": {
           "enum": [
             "explicit_missing_exactness_evidence",
             "explicit_missing_route_evidence"
           ]
+        },
+        "review_state": {
+          "const": "reviewed"
         },
         "projection_effect": {
           "enum": [

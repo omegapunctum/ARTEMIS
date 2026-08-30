@@ -1,6 +1,6 @@
 # Leonardo major-life Presence package v1
 
-Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUNDS_1_2_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
+Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUNDS_1_3_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
 
 Parent product contour: issue #355.
 
@@ -224,10 +224,12 @@ The reviewable repository package contains:
 - `scripts/validate_leonardo_major_life_package.py`;
 - `tests/test_leonardo_major_life_package.py`.
 
-It closes candidate Place → Presence → atomic identity/time/place/selection Claims → EvidenceLink → Source and structured Uncertainty references, preserves
-the seven Drive audit decisions, and fails closed on geometry, route evidence, temporal-precision
-inflation, frozen-Romagna identity copying, Relations, runtime authorization and self-declared review
-completion.
+It closes candidate Place → Presence → atomic identity/time/place/selection Claims → EvidenceLink →
+Source and structured Uncertainty references, preserves the seven Drive audit decisions, and fails
+closed on geometry, route evidence, temporal-precision inflation, frozen-Romagna identity copying,
+Relations, runtime authorization and self-declared review completion. A deterministic SHA-256
+envelope additionally locks all substantive package content—including statements, locators, labels,
+rationales and Uncertainty meaning—while deliberately excluding append-only review audit history.
 
 ## 9. Current lifecycle
 
@@ -238,8 +240,10 @@ It does not claim that the public Globe currently contains the seven new Presenc
 
 Lifecycle dependency PR `#399` is merged and records the direct post-#396 `ITERATE`, opening exactly
 one `Leonardo Major-Life Presence Scope v1` branch. Independent review round 1 on PR `#400` head
-`5672fbae6f224b0fb90ccc09080ca47d4574c511` returned `NARROW`; the remediated package now awaits a
-new exact-revision review and does not duplicate or pre-empt the lifecycle transition.
+`5672fbae6f224b0fb90ccc09080ca47d4574c511`, both round-2 tracks on
+`fb82e272b76645446c41be8c98b35942c44547c7`, and both round-3 tracks on
+`b26e7b2704b6091e0859a75c75728b323bb28d5a` returned `NARROW`. Their provenance is preserved in the
+package audit history; the bounded remediation awaits a new exact-revision review.
 
 ## 10. Exit condition for this package
 

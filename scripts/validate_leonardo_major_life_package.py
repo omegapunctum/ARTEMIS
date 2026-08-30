@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_major_life" / "v1"
 PACKAGE_PATH = PACKAGE_ROOT / "package.json"
 SCHEMA_PATH = PACKAGE_ROOT / "package.schema.json"
+EXPECTED_CANDIDATE_CONTENT_DIGEST = (
+    "b7082c71951ecb27ab05f9ddc02c50297fa984cf4d4678bdc9911a10e24ede42"
+)
 
 EXPECTED_PRESENCE_PROFILES = {
     "presence-leonardo-vinci-birth-1452": (
@@ -313,6 +317,25 @@ def _validate_schema(package: dict[str, Any]) -> None:
         for error in errors
     ]
     raise MajorLifePackageError(f"package schema validation failed: {'; '.join(messages)}")
+
+
+def _validate_candidate_content_digest(package: dict[str, Any]) -> None:
+    reviewed_content = {
+        key: value
+        for key, value in package.items()
+        if key not in {"audit", "candidate_content_digest_sha256"}
+    }
+    canonical = json.dumps(
+        reviewed_content,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    actual = hashlib.sha256(canonical).hexdigest()
+    if package["candidate_content_digest_sha256"] != EXPECTED_CANDIDATE_CONTENT_DIGEST:
+        raise MajorLifePackageError("candidate reviewed-content digest identity drifted")
+    if actual != EXPECTED_CANDIDATE_CONTENT_DIGEST:
+        raise MajorLifePackageError("candidate reviewed semantic content drifted")
 
 
 def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -672,17 +695,21 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             tuple(uncertainty["target_refs"]),
             uncertainty["dimension"],
             tuple(uncertainty["basis_claim_refs"]),
-            uncertainty["evidence_state"],
+            uncertainty["evidence_condition"],
             uncertainty["projection_effect"],
             bounds,
         )
         if actual_profile != expected_profile:
             raise MajorLifePackageError(f"Uncertainty {uncertainty_id} reviewed profile drifted")
+        if uncertainty["review_state"] != "reviewed":
+            raise MajorLifePackageError(f"Uncertainty {uncertainty_id} must remain reviewed")
 
     if set(package["relation_policy"]["prohibited_predicates"]) != EXPECTED_PROHIBITED_RELATIONS:
         raise MajorLifePackageError("deferred #331 Relation boundary drifted")
     if package["relation_policy"]["stored_relations"]:
         raise MajorLifePackageError("candidate package cannot store Relations while #331 is deferred")
+
+    _validate_candidate_content_digest(package)
 
     audit = package["audit"]
     if audit["canonical_review_status"] != "pending_independent_rereview":
@@ -691,10 +718,10 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         raise MajorLifePackageError("candidate package decision requires a later reviewed revision")
     if audit["curation_cost"]["duration_minutes"] is not None:
         raise MajorLifePackageError("historical Drive work cannot receive a retrospective estimate")
-    if len(audit["prior_reviews"]) != 3 or {
+    if len(audit["prior_reviews"]) != 5 or {
         (row["round"], row["decision"]) for row in audit["prior_reviews"]
-    } != {(1, "NARROW"), (2, "NARROW")}:
-        raise MajorLifePackageError("rounds 1 and 2 NARROW review history must remain preserved")
+    } != {(1, "NARROW"), (2, "NARROW"), (3, "NARROW")}:
+        raise MajorLifePackageError("rounds 1 through 3 NARROW review history must remain preserved")
 
     coverage = package["coverage"]
     if coverage["new_presence_count"] != len(presences):

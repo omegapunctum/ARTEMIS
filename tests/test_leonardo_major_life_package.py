@@ -31,7 +31,7 @@ def test_source_audited_candidate_package_passes_fail_closed_validation() -> Non
         "uncertainty_count": 8,
         "runtime_authorized": False,
         "canonical_review_status": "pending_independent_rereview",
-        "prior_review_decisions": ["NARROW", "NARROW", "NARROW"],
+        "prior_review_decisions": ["NARROW", "NARROW", "NARROW", "NARROW", "NARROW"],
     }
 
 
@@ -380,3 +380,66 @@ def test_frozen_romagna_gap_semantics_cannot_drift(monkeypatch: pytest.MonkeyPat
     monkeypatch.setattr(validator, "_load", fake_load)
     with pytest.raises(MajorLifePackageError, match="segment and gap semantics drifted"):
         validate_package(_package())
+
+
+def test_reviewed_claim_statement_cannot_be_substituted() -> None:
+    package = _package()
+    package["claims"][0]["statement"] = "A false unrelated statement about another person."
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_reviewed_source_url_and_locator_cannot_be_substituted() -> None:
+    package = _package()
+    package["sources"][0]["url"] = "https://example.com/unrelated"
+    package["sources"][0]["locator"] = "An unrelated locator with enough characters."
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_reviewed_evidence_locator_cannot_be_substituted() -> None:
+    package = _package()
+    package["evidence_links"][0]["locator"] = "A fabricated but structurally valid locator."
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_reviewed_place_payload_cannot_be_coordinately_substituted() -> None:
+    package = _package()
+    place = package["places"][0]
+    presence = next(row for row in package["presences"] if row["place_ref"] == place["place_id"])
+    place["label"] = "Atlantis"
+    place["place_kind"] = "city"
+    presence["place_label"] = "Atlantis"
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_reviewed_presence_labels_and_rationale_cannot_be_substituted() -> None:
+    package = _package()
+    package["presences"][0]["activity_label"] = "Fabricated activity"
+    package["presences"][0]["selection_rationale"] = "Fabricated rationale"
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_reviewed_uncertainty_description_and_effect_cannot_be_substituted() -> None:
+    package = _package()
+    package["uncertainties"][0]["description"] = "Exact geometry is fully known."
+    package["uncertainties"][0]["effect"] = "Render an exact coordinate."
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic content drifted"):
+        validate_package(package)
+
+
+def test_uncertainty_requires_canonical_review_state() -> None:
+    package = _package()
+    package["uncertainties"][0]["review_state"] = "candidate_source_audited"
+
+    with pytest.raises(MajorLifePackageError, match="schema validation failed"):
+        validate_package(package)

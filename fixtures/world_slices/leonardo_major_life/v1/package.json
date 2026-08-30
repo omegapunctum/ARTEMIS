@@ -6,6 +6,7 @@
   "publication_status": "non_public_curation",
   "runtime_authorized": false,
   "parent_issue": 355,
+  "candidate_content_digest_sha256": "b7082c71951ecb27ab05f9ddc02c50297fa984cf4d4678bdc9911a10e24ede42",
   "lifecycle_dependency": {
     "pull_request": 399,
     "required_state": "merged_before_package_merge",
@@ -1409,7 +1410,8 @@
       "basis_claim_refs": [
         "claim-vinci-1452-place"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "prohibit_geometry",
       "possible_bounds": null
     },
@@ -1424,7 +1426,8 @@
       "basis_claim_refs": [
         "claim-florence-1472-place"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "prohibit_geometry",
       "possible_bounds": null
     },
@@ -1439,7 +1442,8 @@
       "basis_claim_refs": [
         "claim-milan-contract-1483-place"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "prohibit_geometry",
       "possible_bounds": null
     },
@@ -1454,7 +1458,8 @@
       "basis_claim_refs": [
         "claim-florence-1503-time"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "show_unknown",
       "possible_bounds": null
     },
@@ -1469,7 +1474,8 @@
       "basis_claim_refs": [
         "claim-milan-ms-f-1508-time"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "show_unknown",
       "possible_bounds": null
     },
@@ -1485,7 +1491,8 @@
         "claim-rome-belvedere-1513-1516-time",
         "claim-rome-belvedere-1513-1516-place"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "show_possible",
       "possible_bounds": {
         "not_before": "1513",
@@ -1506,7 +1513,8 @@
         "claim-clos-luce-1516-1519-time",
         "claim-clos-luce-1516-1519-place"
       ],
-      "evidence_state": "explicit_missing_exactness_evidence",
+      "evidence_condition": "explicit_missing_exactness_evidence",
+      "review_state": "reviewed",
       "projection_effect": "show_possible",
       "possible_bounds": {
         "not_before": "1516-09",
@@ -1532,7 +1540,8 @@
         "claim-rome-belvedere-1513-1516-selection-significance",
         "claim-clos-luce-1516-1519-selection-significance"
       ],
-      "evidence_state": "explicit_missing_route_evidence",
+      "evidence_condition": "explicit_missing_route_evidence",
+      "review_state": "reviewed",
       "projection_effect": "prohibit_geometry",
       "possible_bounds": null
     }
@@ -1607,6 +1616,30 @@
         "independence_method": "separate_agent_task_read_only",
         "github_comment_id": 5466719896,
         "unresolved_major": 2,
+        "unresolved_medium": 1,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 3,
+        "track": "semantic_content",
+        "reviewed_head": "b26e7b2704b6091e0859a75c75728b323bb28d5a",
+        "decision": "NARROW",
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 5467902597,
+        "unresolved_major": 1,
+        "unresolved_medium": 1,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 3,
+        "track": "validator_integrity",
+        "reviewed_head": "b26e7b2704b6091e0859a75c75728b323bb28d5a",
+        "decision": "NARROW",
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 5467902597,
+        "unresolved_major": 1,
         "unresolved_medium": 1,
         "duration_minutes": null,
         "measurement_state": "not_captured_do_not_estimate"
