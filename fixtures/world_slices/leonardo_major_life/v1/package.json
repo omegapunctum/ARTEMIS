@@ -220,7 +220,7 @@
       "place_ref": "place-milan",
       "place_label": "Milan",
       "activity_label": "San Francesco Grande altarpiece contract",
-      "selection_rationale": "Provides a surviving day-level documentary anchor for the first Milan period.",
+      "selection_rationale": "Provides a surviving year/context documentary anchor for the first Milan period without asserting a day-level body position.",
       "temporal": {
         "source_native": "surviving contract dated 25 April 1483",
         "start": "1483",
@@ -434,7 +434,7 @@
       "title": "Leonardo's places",
       "organization": "Museo Leonardiano di Vinci",
       "source_type": "institutional_reference",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://museoleonardiano.it/en/leonardo-in-vinci/leonardos-places/",
       "locator": "The Places of Birth and Childhood: birth in Vinci on 15 April 1452; Antonio da Vinci birth/baptism record; Anchiano house described as traditional",
       "rights": {
@@ -448,7 +448,7 @@
       "title": "Leonardo's biography",
       "organization": "Museo Leonardiano di Vinci",
       "source_type": "institutional_reference",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://museoleonardiano.it/en/leonardo-in-vinci/biografia/",
       "locator": "1472 biography entry: registration with the Florentine painters' Compagnia di San Luca",
       "rights": {
@@ -462,7 +462,7 @@
       "title": "Leonardo da Vinci",
       "organization": "National Gallery of Art, Washington",
       "source_type": "institutional_reference",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://www.nga.gov/artists/1479-leonardo-da-vinci",
       "locator": "Biography paragraph: joined the painters' Confraternity of Saint Luke in 1472; departed Florence for Milan around 1482",
       "rights": {
@@ -476,7 +476,7 @@
       "title": "The lost altarpiece",
       "organization": "National Gallery, London",
       "source_type": "institutional_research",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://www.nationalgallery.org.uk/exhibitions/past/leonardo-experience-a-masterpiece/the-lost-altarpiece",
       "locator": "The contract: surviving contract from 25 April 1483; San Francesco Grande, Milan; Leonardo and the de Predis painters",
       "rights": {
@@ -490,7 +490,7 @@
       "title": "The Virgin of the Rocks",
       "organization": "National Gallery, London",
       "source_type": "collection_catalogue",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://www.nationalgallery.org.uk/paintings/leonardo-da-vinci-the-virgin-of-the-rocks",
       "locator": "Collection and commission context for the Milan altarpiece",
       "rights": {
@@ -504,7 +504,7 @@
       "title": "La nuova sala di Leonardo",
       "organization": "Gallerie degli Uffizi",
       "source_type": "institutional_reference",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://www.uffizi.it/news/la-nuova-sala-di-leonardo",
       "locator": "Paragraph beginning 'Leonardo nel 1503': returned to Florence in 1503 after the long Milanese absence",
       "rights": {
@@ -518,7 +518,7 @@
       "title": "Leonardo da Vinci",
       "organization": "Musée du Louvre",
       "source_type": "institutional_reference",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://presse.louvre.fr/leonardo-da-vinci/?lang=en",
       "locator": "Biography chronology used only as a cross-check for Florence and France sequence",
       "rights": {
@@ -532,7 +532,7 @@
       "title": "Cronologia di Leonardo da Vinci",
       "organization": "Museo Galileo",
       "source_type": "institutional_research",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://brunelleschi.imss.fi.it/itinerari/itinerario/CronologiaLeonardo.html",
       "locator": "1508 entry: 'cominciato a Milano addì 12 settembre 1508'; 1513–1514 entries: Rome departure and Belvedere studio context",
       "rights": {
@@ -546,7 +546,7 @@
       "title": "Carnet F",
       "organization": "Bibliothèque de l'Institut de France",
       "source_type": "institutional_manuscript_record",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://minerva.bibliotheque-institutdefrance.fr/expositions/exhibitions/7-carnet-f2",
       "locator": "Carnet F record: first codex of the period in which Leonardo had re-established himself in Milan",
       "rights": {
@@ -560,7 +560,7 @@
       "title": "Codex Atlanticus folio 213v / ATL.0426.1",
       "organization": "Museo Galileo",
       "source_type": "institutional_manuscript_record",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://teche.museogalileo.it/leonardo/foglio/index.html?lang=en&num=ATL.0426.1",
       "locator": "Folio research record: Roman stay 1513–1516, Belvedere residence context, folio circa 1514",
       "rights": {
@@ -574,7 +574,7 @@
       "title": "Leonardo da Vinci and the Clos Lucé",
       "organization": "Château du Clos Lucé",
       "source_type": "official_residence_biography",
-      "review_state": "research_audited",
+      "review_state": "reviewed",
       "url": "https://www.vinci-closluce.com/en/leonardo-da-vinci/",
       "locator": "Leonardo settled at Clos Lucé in autumn 1516 and died in his bedchamber on 2 May 1519",
       "rights": {
@@ -592,9 +592,9 @@
       "statement": "The documented birth record concerns Leonardo da Vinci.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-vinci-1452-identity-primary",
         "evidence-vinci-1452-identity-secondary"
@@ -608,9 +608,9 @@
       "statement": "Leonardo's birth is dated 15 April 1452.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-vinci-1452-time-primary"
       ],
@@ -623,9 +623,9 @@
       "statement": "The documented birthplace is Vinci at named-settlement precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-vinci-1452-place-primary"
       ],
@@ -640,9 +640,9 @@
       "statement": "This birth anchor establishes the evidenced beginning of the bounded whole-life trajectory.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-vinci-1452-selection-significance-primary"
       ],
@@ -657,9 +657,9 @@
       "statement": "The 1472 Compagnia di San Luca entry concerns Leonardo da Vinci.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1472-identity-primary",
         "evidence-florence-1472-identity-secondary"
@@ -673,9 +673,9 @@
       "statement": "Leonardo's registration with the painters' confraternity is dated to 1472 at year precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1472-time-primary"
       ],
@@ -688,9 +688,9 @@
       "statement": "The documented confraternity context places this anchor in Florence at named-city precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1472-place-primary"
       ],
@@ -705,9 +705,9 @@
       "statement": "This anchor represents Leonardo's documented Florentine artistic formation in the bounded trajectory.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1472-selection-significance-primary"
       ],
@@ -722,9 +722,9 @@
       "statement": "The surviving 1483 altarpiece contract names Leonardo as a commissioned painter.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-contract-1483-identity-primary",
         "evidence-milan-contract-1483-identity-secondary"
@@ -738,9 +738,9 @@
       "statement": "The surviving contract is dated 25 April 1483; the candidate Presence is normalized only to the year 1483.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-contract-1483-time-primary"
       ],
@@ -753,9 +753,9 @@
       "statement": "The contract documents a Milan commission context at named-city precision, not Leonardo's exact body position.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-contract-1483-place-primary"
       ],
@@ -770,9 +770,9 @@
       "statement": "This contract anchor provides the bounded package's documentary marker for Leonardo's first Milan phase.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-contract-1483-selection-significance-primary"
       ],
@@ -787,9 +787,9 @@
       "statement": "The artist described as back in Florence in 1503 is Leonardo da Vinci.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1503-identity-primary",
         "evidence-florence-1503-identity-secondary"
@@ -803,9 +803,9 @@
       "statement": "Leonardo's return is anchored to 1503 at year precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1503-time-primary"
       ],
@@ -820,9 +820,9 @@
       "statement": "The documented return places this anchor in Florence at named-city precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1503-place-primary"
       ],
@@ -835,9 +835,9 @@
       "statement": "This anchor restores the major Florence phase while preserving the finer frozen Romagna 1502 segment.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-florence-1503-selection-significance-primary"
       ],
@@ -852,9 +852,9 @@
       "statement": "The Manuscript F incipit is Leonardo da Vinci's dated notebook record.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-ms-f-1508-identity-primary",
         "evidence-milan-ms-f-1508-identity-secondary"
@@ -868,9 +868,9 @@
       "statement": "The Manuscript F incipit is dated 12 September 1508.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-ms-f-1508-time-primary"
       ],
@@ -885,9 +885,9 @@
       "statement": "The incipit explicitly names Milan, supporting named-city precision only.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-ms-f-1508-place-primary"
       ],
@@ -900,9 +900,9 @@
       "statement": "This source-native day anchor provides the bounded package's documentary marker for Leonardo's second Milan phase.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-milan-ms-f-1508-selection-significance-primary"
       ],
@@ -917,9 +917,9 @@
       "statement": "The Roman and Belvedere chronology entries concern Leonardo da Vinci.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-rome-belvedere-1513-1516-identity-primary",
         "evidence-rome-belvedere-1513-1516-identity-secondary"
@@ -933,9 +933,9 @@
       "statement": "Leonardo's Roman phase is bounded to 1513–1516 at year-range precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-rome-belvedere-1513-1516-time-primary"
       ],
@@ -950,9 +950,9 @@
       "statement": "The documented residence/work context is Rome and the Vatican Belvedere complex, without exact room geometry.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-rome-belvedere-1513-1516-place-primary"
       ],
@@ -967,9 +967,9 @@
       "statement": "This bounded residence/work anchor represents Leonardo's major Roman phase in the whole-life trajectory.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-rome-belvedere-1513-1516-selection-significance-primary"
       ],
@@ -984,9 +984,9 @@
       "statement": "The final Clos Lucé residence described by the source concerns Leonardo da Vinci.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-clos-luce-1516-1519-identity-primary",
         "evidence-clos-luce-1516-1519-identity-secondary"
@@ -1000,9 +1000,9 @@
       "statement": "Leonardo settled at Clos Lucé during autumn 1516 and died there on 2 May 1519; the possible start is bounded to September–November 1516.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-clos-luce-1516-1519-time-primary"
       ],
@@ -1017,9 +1017,9 @@
       "statement": "The documented final residence is Clos Lucé in Amboise at named-residence precision.",
       "claim_kind": "factual",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "high",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-clos-luce-1516-1519-place-primary"
       ],
@@ -1034,9 +1034,9 @@
       "statement": "This residence/death anchor establishes the evidenced endpoint of the bounded whole-life trajectory.",
       "claim_kind": "interpretation",
       "origin": "curator",
-      "review_state": "candidate_source_audited",
+      "review_state": "reviewed",
       "confidence": "medium",
-      "evidence_state": "source_backed_candidate",
+      "evidence_state": "supported",
       "evidence_link_refs": [
         "evidence-clos-luce-1516-1519-selection-significance-primary"
       ],
@@ -1054,7 +1054,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The Places of Birth and Childhood, first paragraph: Vinci and 15 April 1452",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-vinci-1452-time-primary",
@@ -1064,7 +1064,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The Places of Birth and Childhood, first paragraph: Vinci and 15 April 1452",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-vinci-1452-place-primary",
@@ -1074,7 +1074,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The Places of Birth and Childhood, first paragraph: Vinci and 15 April 1452",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-vinci-1452-selection-significance-primary",
@@ -1084,7 +1084,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The Places of Birth and Childhood, first paragraph: Vinci and 15 April 1452",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-vinci-1452-identity-secondary",
@@ -1094,7 +1094,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Artist biography identity and lifespan header",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1472-identity-primary",
@@ -1104,7 +1104,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1472 biography entry: Compagnia di San Luca in Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1472-time-primary",
@@ -1114,7 +1114,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1472 biography entry: Compagnia di San Luca in Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1472-place-primary",
@@ -1124,7 +1124,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1472 biography entry: Compagnia di San Luca in Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1472-selection-significance-primary",
@@ -1134,7 +1134,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1472 biography entry: Compagnia di San Luca in Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1472-identity-secondary",
@@ -1144,7 +1144,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Biography paragraph on Verrocchio's workshop and the Confraternity of Saint Luke",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-contract-1483-identity-primary",
@@ -1154,7 +1154,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The contract section: Leonardo and the de Predis painters, dated 25 April 1483",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-contract-1483-time-primary",
@@ -1164,7 +1164,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The contract section: Leonardo and the de Predis painters, dated 25 April 1483",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-contract-1483-place-primary",
@@ -1174,7 +1174,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The contract section: Leonardo and the de Predis painters, dated 25 April 1483",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-contract-1483-selection-significance-primary",
@@ -1184,7 +1184,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "The contract section: Leonardo and the de Predis painters, dated 25 April 1483",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-contract-1483-identity-secondary",
@@ -1194,7 +1194,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Catalogue section describing the Milan altarpiece commission",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1503-identity-primary",
@@ -1204,7 +1204,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Paragraph beginning 'Leonardo nel 1503': return to Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1503-time-primary",
@@ -1214,7 +1214,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Paragraph beginning 'Leonardo nel 1503': return to Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1503-place-primary",
@@ -1224,7 +1224,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Paragraph beginning 'Leonardo nel 1503': return to Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1503-selection-significance-primary",
@@ -1234,7 +1234,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Paragraph beginning 'Leonardo nel 1503': return to Florence",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-florence-1503-identity-secondary",
@@ -1244,7 +1244,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Biography sequence: Florence return and later Milan move",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-ms-f-1508-identity-primary",
@@ -1254,7 +1254,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1508 entry quoting 'cominciato a Milano addì 12 settembre 1508'",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-ms-f-1508-time-primary",
@@ -1264,7 +1264,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1508 entry quoting 'cominciato a Milano addì 12 settembre 1508'",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-ms-f-1508-place-primary",
@@ -1274,7 +1274,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1508 entry quoting 'cominciato a Milano addì 12 settembre 1508'",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-ms-f-1508-selection-significance-primary",
@@ -1284,7 +1284,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1508 entry quoting 'cominciato a Milano addì 12 settembre 1508'",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-milan-ms-f-1508-identity-secondary",
@@ -1294,7 +1294,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Carnet F record, introductory paragraph on Leonardo's renewed Milan period",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-rome-belvedere-1513-1516-identity-primary",
@@ -1304,7 +1304,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1513 entry: departure for Rome and Belvedere studio; 1514 Belvedere note",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-rome-belvedere-1513-1516-time-primary",
@@ -1314,7 +1314,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1513 entry: departure for Rome and Belvedere studio; 1514 Belvedere note",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-rome-belvedere-1513-1516-place-primary",
@@ -1324,7 +1324,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1513 entry: departure for Rome and Belvedere studio; 1514 Belvedere note",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-rome-belvedere-1513-1516-selection-significance-primary",
@@ -1334,7 +1334,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "1513 entry: departure for Rome and Belvedere studio; 1514 Belvedere note",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-rome-belvedere-1513-1516-identity-secondary",
@@ -1344,7 +1344,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Folio 213v / ATL.0426.1 record for the Belvedere context, circa 1514",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-clos-luce-1516-1519-identity-primary",
@@ -1354,7 +1354,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Opening settlement paragraph and death paragraph: autumn 1516 and 2 May 1519",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-clos-luce-1516-1519-time-primary",
@@ -1364,7 +1364,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Opening settlement paragraph and death paragraph: autumn 1516 and 2 May 1519",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-clos-luce-1516-1519-place-primary",
@@ -1374,7 +1374,7 @@
       "evidence_strength": "direct",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Opening settlement paragraph and death paragraph: autumn 1516 and 2 May 1519",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-clos-luce-1516-1519-selection-significance-primary",
@@ -1384,7 +1384,7 @@
       "evidence_strength": "indirect",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Opening settlement paragraph and death paragraph: autumn 1516 and 2 May 1519",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     },
     {
       "evidence_link_id": "evidence-clos-luce-1516-1519-identity-secondary",
@@ -1394,7 +1394,7 @@
       "evidence_strength": "background",
       "reviewer": "google-drive-presence-audit-2026-08-29",
       "locator": "Biography section on Leonardo's final French period",
-      "review_state": "research_audited"
+      "review_state": "reviewed"
     }
   ],
   "uncertainties": [
@@ -1584,6 +1584,30 @@
         "github_comment_id": 5466645036,
         "unresolved_major": 2,
         "unresolved_medium": 2,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 2,
+        "track": "semantic_content",
+        "reviewed_head": "fb82e272b76645446c41be8c98b35942c44547c7",
+        "decision": "NARROW",
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 5466719896,
+        "unresolved_major": 1,
+        "unresolved_medium": 1,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 2,
+        "track": "validator_integrity",
+        "reviewed_head": "fb82e272b76645446c41be8c98b35942c44547c7",
+        "decision": "NARROW",
+        "independence_method": "separate_agent_task_read_only",
+        "github_comment_id": 5466719896,
+        "unresolved_major": 2,
+        "unresolved_medium": 1,
         "duration_minutes": null,
         "measurement_state": "not_captured_do_not_estimate"
       }

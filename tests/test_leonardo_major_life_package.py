@@ -3,6 +3,7 @@ import json
 
 import pytest
 
+import scripts.validate_leonardo_major_life_package as validator
 from scripts.validate_leonardo_major_life_package import (
     PACKAGE_PATH,
     MajorLifePackageError,
@@ -30,7 +31,7 @@ def test_source_audited_candidate_package_passes_fail_closed_validation() -> Non
         "uncertainty_count": 8,
         "runtime_authorized": False,
         "canonical_review_status": "pending_independent_rereview",
-        "prior_review_decision": "NARROW",
+        "prior_review_decisions": ["NARROW", "NARROW", "NARROW"],
     }
 
 
@@ -238,3 +239,144 @@ def test_uncertainty_target_must_register_the_uncertainty_reciprocally() -> None
 
     with pytest.raises(MajorLifePackageError, match="not reciprocally registered"):
         validate_package(package)
+
+
+def test_coordinated_source_identity_rename_is_rejected() -> None:
+    package = _package()
+    old_id = package["sources"][0]["source_id"]
+    new_id = "source-coordinated-rename"
+    package["sources"][0]["source_id"] = new_id
+    for link in package["evidence_links"]:
+        if link["source_id"] == old_id:
+            link["source_id"] = new_id
+
+    with pytest.raises(MajorLifePackageError, match="Source identity set drifted"):
+        validate_package(package)
+
+
+def test_coordinated_evidence_identity_rename_is_rejected() -> None:
+    package = _package()
+    old_id = package["evidence_links"][0]["evidence_link_id"]
+    new_id = "evidence-coordinated-rename"
+    package["evidence_links"][0]["evidence_link_id"] = new_id
+    for claim in package["claims"]:
+        claim["evidence_link_refs"] = [
+            new_id if ref == old_id else ref for ref in claim["evidence_link_refs"]
+        ]
+
+    with pytest.raises(MajorLifePackageError, match="EvidenceLink identity set drifted"):
+        validate_package(package)
+
+
+def test_coordinated_uncertainty_identity_rename_is_rejected() -> None:
+    package = _package()
+    old_id = package["uncertainties"][0]["uncertainty_id"]
+    new_id = "uncertainty-coordinated-rename"
+    package["uncertainties"][0]["uncertainty_id"] = new_id
+    for presence in package["presences"]:
+        presence["uncertainty_refs"] = [
+            new_id if ref == old_id else ref for ref in presence["uncertainty_refs"]
+        ]
+    for claim in package["claims"]:
+        claim["uncertainty_refs"] = [
+            new_id if ref == old_id else ref for ref in claim["uncertainty_refs"]
+        ]
+
+    with pytest.raises(MajorLifePackageError, match="Uncertainty identity set drifted"):
+        validate_package(package)
+
+
+def test_presence_interval_cannot_become_exclusive() -> None:
+    package = _package()
+    package["presences"][0]["temporal"]["start_inclusive"] = False
+
+    with pytest.raises(MajorLifePackageError, match="temporal bounds must remain inclusive"):
+        validate_package(package)
+
+
+def test_possible_bounds_cannot_be_inverted() -> None:
+    package = _package()
+    uncertainty = next(
+        row for row in package["uncertainties"]
+        if row["uncertainty_id"] == "uncertainty-amboise-continuous-position"
+    )
+    uncertainty["possible_bounds"]["not_before"] = "1516-12"
+
+    with pytest.raises(MajorLifePackageError, match="inverted bounds"):
+        validate_package(package)
+
+
+def test_possible_bounds_cannot_escape_target_presence() -> None:
+    package = _package()
+    uncertainty = next(
+        row for row in package["uncertainties"]
+        if row["uncertainty_id"] == "uncertainty-amboise-continuous-position"
+    )
+    uncertainty["possible_bounds"]["not_before"] = "1516-08"
+
+    with pytest.raises(MajorLifePackageError, match="starts outside its target"):
+        validate_package(package)
+
+
+def test_presence_cannot_register_foreign_uncertainty() -> None:
+    package = _package()
+    package["presences"][0]["uncertainty_refs"].append(
+        "uncertainty-florence-1472-address"
+    )
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic profile drifted"):
+        validate_package(package)
+
+
+def test_claim_cannot_register_foreign_uncertainty() -> None:
+    package = _package()
+    package["claims"][0]["uncertainty_refs"].append(
+        "uncertainty-florence-1472-address"
+    )
+
+    with pytest.raises(MajorLifePackageError, match="reviewed Uncertainty ownership drifted"):
+        validate_package(package)
+
+
+def test_extent_semantics_cannot_drift() -> None:
+    package = _package()
+    package["presences"][0]["temporal"]["extent_semantics"] = "documentary_context_anchor"
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic profile drifted"):
+        validate_package(package)
+
+
+def test_spatial_precision_cannot_drift() -> None:
+    package = _package()
+    package["presences"][0]["spatial_precision"] = "named_city"
+
+    with pytest.raises(MajorLifePackageError, match="reviewed semantic profile drifted"):
+        validate_package(package)
+
+
+def test_frozen_romagna_gap_semantics_cannot_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    original_load = validator._load
+    selection_path = (
+        validator.ROOT
+        / "fixtures"
+        / "world_slices"
+        / "leonardo_romagna_1502"
+        / "v1"
+        / "selection_manifest.json"
+    )
+    corrupted_selection = original_load(selection_path)
+    trajectory = next(
+        row for row in corrupted_selection["candidate_objects"]
+        if row.get("object_id") == "trajectory-leonardo-romagna-1502"
+    )
+    gap = next(row for row in trajectory["segments"] if row["segment_kind"] == "inferred_gap")
+    gap["spatial_mode"] = "documented_path"
+
+    def fake_load(path):
+        if path == selection_path:
+            return corrupted_selection
+        return original_load(path)
+
+    monkeypatch.setattr(validator, "_load", fake_load)
+    with pytest.raises(MajorLifePackageError, match="segment and gap semantics drifted"):
+        validate_package(_package())

@@ -1,6 +1,6 @@
 # Leonardo major-life Presence package v1
 
-Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUND_1_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
+Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUNDS_1_2_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
 
 Parent product contour: issue #355.
 
@@ -35,7 +35,7 @@ The frozen Romagna 1502 Presence sequence remains a finer source-aware segment i
 |---|---|---|---|---|---|---|
 | Vinci / Florence formation | `presence-leonardo-vinci-birth-1452` | Vinci | 15 April 1452 | day | Museo Leonardiano: birth in Vinci; grandfather Antonio recorded birth/baptism | `READY_FOR_CANONICAL_REVIEW` |
 | Vinci / Florence formation | `presence-leonardo-florence-st-luke-1472` | Florence | 1472 | year | Museo Leonardiano: registration with the Compagnia di San Luca in Florence | `READY_FOR_CANONICAL_REVIEW` |
-| Milan I | `presence-leonardo-milan-altarpiece-contract-1483` | Milan | 25 April 1483 | day | National Gallery: surviving San Francesco Grande altarpiece contract | `READY_FOR_CANONICAL_REVIEW` |
+| Milan I | `presence-leonardo-milan-altarpiece-contract-1483` | Milan | surviving contract dated 25 April 1483 | year / documentary context | National Gallery: surviving San Francesco Grande altarpiece contract | `READY_FOR_CANONICAL_REVIEW` |
 | Florence II | `presence-leonardo-florence-second-period-1503` | Florence | 1503 | year | Uffizi: Leonardo back in Florence in 1503 | `READY_FOR_CANONICAL_REVIEW` |
 | Milan II | `presence-leonardo-milan-ms-f-1508-09-12` | Milan | 12 September 1508 | day | Museo Galileo chronology: Manuscript F begun in Milan on that date | `READY_FOR_CANONICAL_REVIEW` |
 | Rome | `presence-leonardo-rome-belvedere-1513-1516` | Rome / Vatican Belvedere | Roman stay 1513–1516; work locator c. 1514 | year range + approximate year locator | Museo Galileo, Codex Atlanticus f. 213v / `ATL.0426.1` | `READY_FOR_CANONICAL_REVIEW` |
@@ -94,7 +94,7 @@ Supported:
 
 Limit:
 
-- the documentary context supports a day-level Milan Presence but does not establish a precise body-position point.
+- the documentary context supports a Milan year/context anchor; it does not establish Leonardo's body position on that day.
 - the broad Milan I macro-period must not be encoded as one uninterrupted 1482/83–1499 Presence on the strength of this contract alone.
 
 Decision: `READY_FOR_CANONICAL_REVIEW`.

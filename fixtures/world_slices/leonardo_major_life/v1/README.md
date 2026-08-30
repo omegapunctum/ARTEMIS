@@ -1,6 +1,6 @@
 # Leonardo major-life Presence candidate package v1
 
-Status: `CANDIDATE_SOURCE_AUDITED / ROUND_1_NARROW / INDEPENDENT_REREVIEW_PENDING / NON_PUBLIC`.
+Status: `CANDIDATE_SOURCE_AUDITED / ROUNDS_1_2_NARROW / INDEPENDENT_REREVIEW_PENDING / NON_PUBLIC`.
 
 Parent: issue `#355` and the `Leonardo Major-Life Presence Scope v1` transition recorded in PR `#399`.
 
@@ -55,7 +55,7 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-PR `#399` has established the lifecycle transition. Independent review round 1 returned `NARROW`
-on head `5672fbae6f224b0fb90ccc09080ca47d4574c511`; that decision is preserved in package audit history.
-Review the remediated exact revision again. The allowed result remains `FREEZE_FOR_REVIEW`, `NARROW`
-or `STOP`; none silently authorizes runtime publication.
+PR `#399` established the lifecycle transition. Independent review rounds 1 and 2 returned
+`NARROW`; their exact reviewed heads and GitHub comment IDs remain preserved in package audit
+history. Review the remediated exact revision again. The allowed result remains
+`FREEZE_FOR_REVIEW`, `NARROW` or `STOP`; none silently authorizes runtime publication.

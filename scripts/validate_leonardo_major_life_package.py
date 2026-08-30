@@ -9,6 +9,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+try:
+    from scripts.validate_project_state import ProjectStateError, _validate_frozen_git_revision
+except ModuleNotFoundError:  # direct script execution from scripts/
+    from validate_project_state import ProjectStateError, _validate_frozen_git_revision
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_major_life" / "v1"
@@ -82,6 +87,122 @@ EXPECTED_PLACE_IDS = {
     "place-vatican-belvedere",
     "place-clos-luce",
 }
+EXPECTED_EVIDENCE_SOURCES = {
+    "presence-leonardo-vinci-birth-1452": (
+        "source-museo-leonardiano-places", "source-nga-leonardo-biography"
+    ),
+    "presence-leonardo-florence-st-luke-1472": (
+        "source-museo-leonardiano-biography", "source-nga-leonardo-biography"
+    ),
+    "presence-leonardo-milan-altarpiece-contract-1483": (
+        "source-national-gallery-lost-altarpiece", "source-national-gallery-virgin-rocks"
+    ),
+    "presence-leonardo-florence-second-period-1503": (
+        "source-uffizi-leonardo-room", "source-louvre-leonardo-biography"
+    ),
+    "presence-leonardo-milan-ms-f-1508-09-12": (
+        "source-museo-galileo-leonardo-chronology", "source-institut-france-carnet-f"
+    ),
+    "presence-leonardo-rome-belvedere-1513-1516": (
+        "source-museo-galileo-leonardo-chronology", "source-museo-galileo-atl-0426-1"
+    ),
+    "presence-leonardo-amboise-clos-luce-1516-1519": (
+        "source-clos-luce-leonardo-biography", "source-louvre-leonardo-biography"
+    ),
+}
+EXPECTED_SOURCE_IDS = {
+    source_id
+    for pair in EXPECTED_EVIDENCE_SOURCES.values()
+    for source_id in pair
+}
+EXPECTED_PRESENCE_SEMANTICS = {
+    "presence-leonardo-vinci-birth-1452": (
+        "documented_presence_anchor", "named_settlement", ("uncertainty-vinci-exact-birthplace",)
+    ),
+    "presence-leonardo-florence-st-luke-1472": (
+        "documented_presence_anchor", "named_city", ("uncertainty-florence-1472-address",)
+    ),
+    "presence-leonardo-milan-altarpiece-contract-1483": (
+        "documentary_context_anchor", "named_city_with_institutional_context",
+        ("uncertainty-milan-1483-body-position",),
+    ),
+    "presence-leonardo-florence-second-period-1503": (
+        "documented_presence_anchor", "named_city",
+        ("uncertainty-florence-1500-1506-continuity",),
+    ),
+    "presence-leonardo-milan-ms-f-1508-09-12": (
+        "source_native_manuscript_anchor", "named_city_with_parish_context",
+        ("uncertainty-milan-1506-1513-continuity",),
+    ),
+    "presence-leonardo-rome-belvedere-1513-1516": (
+        "residence_range_not_continuous_position", "named_complex",
+        ("uncertainty-rome-daily-position",),
+    ),
+    "presence-leonardo-amboise-clos-luce-1516-1519": (
+        "residence_range_not_continuous_position", "named_residence",
+        ("uncertainty-amboise-continuous-position",),
+    ),
+}
+EXPECTED_UNCERTAINTY_PROFILES = {
+    "uncertainty-vinci-exact-birthplace": (
+        ("presence-leonardo-vinci-birth-1452",), "spatial_precision",
+        ("claim-vinci-1452-place",), "explicit_missing_exactness_evidence",
+        "prohibit_geometry", None,
+    ),
+    "uncertainty-florence-1472-address": (
+        ("presence-leonardo-florence-st-luke-1472",), "spatial_precision",
+        ("claim-florence-1472-place",), "explicit_missing_exactness_evidence",
+        "prohibit_geometry", None,
+    ),
+    "uncertainty-milan-1483-body-position": (
+        ("presence-leonardo-milan-altarpiece-contract-1483",), "spatial_precision",
+        ("claim-milan-contract-1483-place",), "explicit_missing_exactness_evidence",
+        "prohibit_geometry", None,
+    ),
+    "uncertainty-florence-1500-1506-continuity": (
+        ("presence-leonardo-florence-second-period-1503",), "temporal_coverage",
+        ("claim-florence-1503-time",), "explicit_missing_exactness_evidence",
+        "show_unknown", None,
+    ),
+    "uncertainty-milan-1506-1513-continuity": (
+        ("presence-leonardo-milan-ms-f-1508-09-12",), "temporal_coverage",
+        ("claim-milan-ms-f-1508-time",), "explicit_missing_exactness_evidence",
+        "show_unknown", None,
+    ),
+    "uncertainty-rome-daily-position": (
+        ("presence-leonardo-rome-belvedere-1513-1516",), "spatiotemporal_coverage",
+        ("claim-rome-belvedere-1513-1516-time", "claim-rome-belvedere-1513-1516-place"),
+        "explicit_missing_exactness_evidence", "show_possible",
+        {"not_before": "1513", "not_after": "1516", "start_inclusive": True, "end_inclusive": True},
+    ),
+    "uncertainty-amboise-continuous-position": (
+        ("presence-leonardo-amboise-clos-luce-1516-1519",), "spatiotemporal_coverage",
+        ("claim-clos-luce-1516-1519-time", "claim-clos-luce-1516-1519-place"),
+        "explicit_missing_exactness_evidence", "show_possible",
+        {"not_before": "1516-09", "not_after": "1516-11", "start_inclusive": True, "end_inclusive": True},
+    ),
+    "uncertainty-major-life-route-and-coverage": (
+        ("trajectory-leonardo-major-life-v1",), "trajectory_and_corpus_coverage",
+        tuple(
+            f"claim-{slug}-selection-significance"
+            for slug in EXPECTED_CLAIM_SLUGS.values()
+        ),
+        "explicit_missing_route_evidence", "prohibit_geometry", None,
+    ),
+}
+EXPECTED_ROMAGNA_SEGMENTS = (
+    ("segment-rimini-presence", "presence", "place-rimini", "named_place", None,
+     ("source-visit-romagna-leonardo-borgia", "source-uniurb-volpe-chronology")),
+    ("segment-rimini-cesena-gap", "inferred_gap", None, "unknown_route", None, ()),
+    ("segment-cesena-presence", "presence", "place-cesena", "named_place", None,
+     ("source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology")),
+    ("segment-cesena-cesenatico-gap", "inferred_gap", None, "unknown_route", None, ()),
+    ("segment-cesenatico-presence", "presence", "place-cesenatico", "named_place", None,
+     ("source-visit-romagna-leonardo-borgia", "source-museo-galileo-ms-l", "source-uniurb-volpe-chronology")),
+    ("segment-cesenatico-imola-gap", "inferred_gap", None, "unknown_route", None, ()),
+    ("segment-imola-presence", "presence", "place-imola", "named_place", None,
+     ("source-rct-imola-map", "source-imola-civic-museums-rocca")),
+)
 EXPECTED_PERIOD_MEMBERSHIP = {
     "period-leonardo-vinci-florence-formation": (
         "presence-leonardo-vinci-birth-1452",
@@ -144,6 +265,41 @@ def _index(rows: list[dict[str, Any]], key: str, label: str) -> dict[str, dict[s
     return result
 
 
+def _temporal_key(value: str, *, upper: bool = False) -> tuple[int, int, int]:
+    parts = [int(part) for part in value.split("-")]
+    year = parts[0]
+    month = parts[1] if len(parts) > 1 else (12 if upper else 1)
+    day = parts[2] if len(parts) > 2 else (31 if upper else 1)
+    return year, month, day
+
+
+def _expected_claim_uncertainties(claim_id: str) -> tuple[str, ...]:
+    return tuple(
+        uncertainty_id
+        for uncertainty_id, profile in EXPECTED_UNCERTAINTY_PROFILES.items()
+        if claim_id in profile[2]
+    )
+
+
+def _expected_evidence_profiles() -> dict[str, tuple[str, str, str, str]]:
+    profiles: dict[str, tuple[str, str, str, str]] = {}
+    for presence_id, slug in EXPECTED_CLAIM_SLUGS.items():
+        primary_source, secondary_source = EXPECTED_EVIDENCE_SOURCES[presence_id]
+        for dimension in CLAIM_DIMENSIONS:
+            dimension_slug = dimension.replace("_", "-")
+            claim_id = f"claim-{slug}-{dimension_slug}"
+            profiles[f"evidence-{slug}-{dimension_slug}-primary"] = (
+                claim_id,
+                primary_source,
+                "supports",
+                "indirect" if dimension == "selection_significance" else "direct",
+            )
+        profiles[f"evidence-{slug}-identity-secondary"] = (
+            f"claim-{slug}-identity", secondary_source, "contextualizes", "background"
+        )
+    return profiles
+
+
 def _validate_schema(package: dict[str, Any]) -> None:
     schema = _load(SCHEMA_PATH)
     errors = sorted(
@@ -176,6 +332,13 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         raise MajorLifePackageError("the seven reviewed Presence identities drifted")
     if set(places) != EXPECTED_PLACE_IDS:
         raise MajorLifePackageError("the five named Place identities drifted")
+    if set(sources) != EXPECTED_SOURCE_IDS:
+        raise MajorLifePackageError("the reviewed Source identity set drifted")
+    expected_evidence_profiles = _expected_evidence_profiles()
+    if set(evidence) != set(expected_evidence_profiles):
+        raise MajorLifePackageError("the reviewed EvidenceLink identity set drifted")
+    if set(uncertainties) != set(EXPECTED_UNCERTAINTY_PROFILES):
+        raise MajorLifePackageError("the reviewed Uncertainty identity set drifted")
 
     if set(periods) != set(EXPECTED_PERIOD_MEMBERSHIP):
         raise MajorLifePackageError("the six reviewed macro-period identities drifted")
@@ -216,6 +379,16 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             raise MajorLifePackageError(
                 f"Presence {presence_id} temporal precision drifted: expected {expected}, got {actual}"
             )
+        if not presence["temporal"]["start_inclusive"] or not presence["temporal"]["end_inclusive"]:
+            raise MajorLifePackageError(f"Presence {presence_id} temporal bounds must remain inclusive")
+        expected_semantics = EXPECTED_PRESENCE_SEMANTICS[presence_id]
+        actual_semantics = (
+            presence["temporal"]["extent_semantics"],
+            presence["spatial_precision"],
+            tuple(presence["uncertainty_refs"]),
+        )
+        if actual_semantics != expected_semantics:
+            raise MajorLifePackageError(f"Presence {presence_id} reviewed semantic profile drifted")
         if presence["geometry"] is not None:
             raise MajorLifePackageError(f"Presence {presence_id} cannot publish geometry before review")
         if presence["place_ref"] not in places:
@@ -287,6 +460,14 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
     for field, expected in FROZEN_ROMAGNA.items():
         if external[field] != expected:
             raise MajorLifePackageError(f"frozen Romagna {field} drifted")
+    try:
+        _validate_frozen_git_revision(
+            external["frozen_commit"],
+            external["frozen_tree"],
+            external["reviewed_content_digest"],
+        )
+    except ProjectStateError as exc:
+        raise MajorLifePackageError(f"frozen Romagna Git evidence is invalid: {exc}") from exc
     gate_decision = _load(ROOT / external["gate_decision_ref"])
     review_registry = _load(ROOT / external["review_registry_ref"])
     for field in ("frozen_commit", "frozen_tree", "reviewed_content_digest"):
@@ -299,6 +480,19 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
     ]
     if len(trajectory_rows) != 1:
         raise MajorLifePackageError("frozen Romagna Trajectory cannot be resolved exactly once")
+    frozen_segments = tuple(
+        (
+            segment["segment_id"],
+            segment["segment_kind"],
+            segment["place_ref"],
+            segment["spatial_mode"],
+            segment["geometry"],
+            tuple(segment["source_refs"]),
+        )
+        for segment in trajectory_rows[0]["segments"]
+    )
+    if frozen_segments != EXPECTED_ROMAGNA_SEGMENTS:
+        raise MajorLifePackageError("frozen Romagna segment and gap semantics drifted")
     frozen_presence_refs = [
         segment["segment_id"]
         for segment in trajectory_rows[0]["segments"]
@@ -366,6 +560,11 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             raise MajorLifePackageError(f"Claim {claim_id} target/dimension ownership drifted")
         if claim_id not in presences[target_presence]["claim_refs"]:
             raise MajorLifePackageError(f"Claim {claim_id} is not reciprocally owned by its Presence")
+        if claim["review_state"] != "reviewed" or claim["evidence_state"] != "supported":
+            raise MajorLifePackageError(f"Claim {claim_id} must use canonical reviewed/supported states")
+        expected_uncertainties = _expected_claim_uncertainties(claim_id)
+        if tuple(claim["uncertainty_refs"]) != expected_uncertainties:
+            raise MajorLifePackageError(f"Claim {claim_id} reviewed Uncertainty ownership drifted")
         supporting = [
             evidence[ref]
             for ref in claim["evidence_link_refs"]
@@ -402,6 +601,16 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             raise MajorLifePackageError(
                 f"supporting EvidenceLink {evidence_id} cannot have background strength"
             )
+        actual_profile = (
+            link["claim_id"],
+            link["source_id"],
+            link["relation_to_claim"],
+            link["evidence_strength"],
+        )
+        if actual_profile != expected_evidence_profiles[evidence_id]:
+            raise MajorLifePackageError(f"EvidenceLink {evidence_id} reviewed binding drifted")
+        if link["review_state"] != "reviewed":
+            raise MajorLifePackageError(f"EvidenceLink {evidence_id} must remain reviewed")
         used_sources.add(link["source_id"])
 
     if used_sources != set(sources):
@@ -441,6 +650,34 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
             raise MajorLifePackageError(
                 f"Uncertainty {uncertainty_id} requires explicit possible bounds"
             )
+        if bounds is not None:
+            if not bounds["start_inclusive"] or not bounds["end_inclusive"]:
+                raise MajorLifePackageError(f"Uncertainty {uncertainty_id} bounds must remain inclusive")
+            lower = _temporal_key(bounds["not_before"])
+            upper = _temporal_key(bounds["not_after"], upper=True)
+            if lower > upper:
+                raise MajorLifePackageError(f"Uncertainty {uncertainty_id} has inverted bounds")
+            presence_targets = [ref for ref in uncertainty["target_refs"] if ref in presences]
+            if len(presence_targets) != 1:
+                raise MajorLifePackageError(
+                    f"bounded Uncertainty {uncertainty_id} must target exactly one Presence"
+                )
+            target_temporal = presences[presence_targets[0]]["temporal"]
+            if lower < _temporal_key(target_temporal["start"]):
+                raise MajorLifePackageError(f"Uncertainty {uncertainty_id} starts outside its target")
+            if upper > _temporal_key(target_temporal["end"], upper=True):
+                raise MajorLifePackageError(f"Uncertainty {uncertainty_id} ends outside its target")
+        expected_profile = EXPECTED_UNCERTAINTY_PROFILES[uncertainty_id]
+        actual_profile = (
+            tuple(uncertainty["target_refs"]),
+            uncertainty["dimension"],
+            tuple(uncertainty["basis_claim_refs"]),
+            uncertainty["evidence_state"],
+            uncertainty["projection_effect"],
+            bounds,
+        )
+        if actual_profile != expected_profile:
+            raise MajorLifePackageError(f"Uncertainty {uncertainty_id} reviewed profile drifted")
 
     if set(package["relation_policy"]["prohibited_predicates"]) != EXPECTED_PROHIBITED_RELATIONS:
         raise MajorLifePackageError("deferred #331 Relation boundary drifted")
@@ -454,8 +691,10 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         raise MajorLifePackageError("candidate package decision requires a later reviewed revision")
     if audit["curation_cost"]["duration_minutes"] is not None:
         raise MajorLifePackageError("historical Drive work cannot receive a retrospective estimate")
-    if len(audit["prior_reviews"]) != 1 or audit["prior_reviews"][0]["decision"] != "NARROW":
-        raise MajorLifePackageError("round-1 NARROW review history must remain preserved")
+    if len(audit["prior_reviews"]) != 3 or {
+        (row["round"], row["decision"]) for row in audit["prior_reviews"]
+    } != {(1, "NARROW"), (2, "NARROW")}:
+        raise MajorLifePackageError("rounds 1 and 2 NARROW review history must remain preserved")
 
     coverage = package["coverage"]
     if coverage["new_presence_count"] != len(presences):
@@ -478,7 +717,7 @@ def validate_package(package: dict[str, Any] | None = None) -> dict[str, Any]:
         "uncertainty_count": len(uncertainties),
         "runtime_authorized": package["runtime_authorized"],
         "canonical_review_status": audit["canonical_review_status"],
-        "prior_review_decision": audit["prior_reviews"][0]["decision"],
+        "prior_review_decisions": [row["decision"] for row in audit["prior_reviews"]],
     }
 
 

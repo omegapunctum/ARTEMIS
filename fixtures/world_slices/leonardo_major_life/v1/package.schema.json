@@ -367,53 +367,43 @@
           }
         },
         "prior_reviews": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "round",
-              "reviewed_head",
-              "decision",
-              "independence_method",
-              "github_comment_id",
-              "unresolved_major",
-              "unresolved_medium",
-              "duration_minutes",
-              "measurement_state"
-            ],
-            "properties": {
-              "round": {
-                "const": 1
-              },
-              "reviewed_head": {
-                "const": "5672fbae6f224b0fb90ccc09080ca47d4574c511"
-              },
-              "decision": {
-                "const": "NARROW"
-              },
-              "independence_method": {
-                "const": "separate_agent_task_read_only"
-              },
-              "github_comment_id": {
-                "const": 5466645036
-              },
-              "unresolved_major": {
-                "const": 2
-              },
-              "unresolved_medium": {
-                "const": 2
-              },
-              "duration_minutes": {
-                "type": "null"
-              },
-              "measurement_state": {
-                "const": "not_captured_do_not_estimate"
-              }
+          "const": [
+            {
+              "round": 1,
+              "reviewed_head": "5672fbae6f224b0fb90ccc09080ca47d4574c511",
+              "decision": "NARROW",
+              "independence_method": "separate_agent_task_read_only",
+              "github_comment_id": 5466645036,
+              "unresolved_major": 2,
+              "unresolved_medium": 2,
+              "duration_minutes": null,
+              "measurement_state": "not_captured_do_not_estimate"
+            },
+            {
+              "round": 2,
+              "track": "semantic_content",
+              "reviewed_head": "fb82e272b76645446c41be8c98b35942c44547c7",
+              "decision": "NARROW",
+              "independence_method": "separate_agent_task_read_only",
+              "github_comment_id": 5466719896,
+              "unresolved_major": 1,
+              "unresolved_medium": 1,
+              "duration_minutes": null,
+              "measurement_state": "not_captured_do_not_estimate"
+            },
+            {
+              "round": 2,
+              "track": "validator_integrity",
+              "reviewed_head": "fb82e272b76645446c41be8c98b35942c44547c7",
+              "decision": "NARROW",
+              "independence_method": "separate_agent_task_read_only",
+              "github_comment_id": 5466719896,
+              "unresolved_major": 2,
+              "unresolved_medium": 1,
+              "duration_minutes": null,
+              "measurement_state": "not_captured_do_not_estimate"
             }
-          }
+          ]
         }
       }
     },
@@ -762,7 +752,7 @@
           "minLength": 1
         },
         "review_state": {
-          "const": "research_audited"
+          "const": "reviewed"
         },
         "url": {
           "type": "string",
@@ -825,7 +815,7 @@
           "const": "curator"
         },
         "review_state": {
-          "const": "candidate_source_audited"
+          "const": "reviewed"
         },
         "confidence": {
           "enum": [
@@ -834,7 +824,7 @@
           ]
         },
         "evidence_state": {
-          "const": "source_backed_candidate"
+          "const": "supported"
         },
         "evidence_link_refs": {
           "type": "array",
@@ -903,7 +893,7 @@
           "minLength": 12
         },
         "review_state": {
-          "const": "research_audited"
+          "const": "reviewed"
         }
       }
     },
