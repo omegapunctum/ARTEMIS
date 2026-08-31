@@ -62,8 +62,8 @@ def test_source_audited_candidate_package_passes_fail_closed_validation() -> Non
         "evidence_link_count": 35,
         "uncertainty_count": 8,
         "runtime_authorized": False,
-        "canonical_review_status": "independent_review_complete",
-        "current_decision": "FREEZE_FOR_REVIEW",
+        "canonical_review_status": "pending_independent_rereview",
+        "current_decision": None,
         "prior_review_decisions": [
             "NARROW", "NARROW", "NARROW", "NARROW", "NARROW",
             "FREEZE_FOR_REVIEW", "NARROW", "FREEZE_FOR_REVIEW", "NARROW",
@@ -553,13 +553,16 @@ def test_immutable_curation_note_is_digest_locked() -> None:
         validate_package(package)
 
 
-def test_positive_decision_only_descendant_does_not_resign_content() -> None:
+def test_recorded_positive_round_does_not_resign_content_during_rereview() -> None:
     package = _package()
     original_digest = package["candidate_content_digest_sha256"]
 
     summary = validate_package(package)
     assert package["candidate_content_digest_sha256"] == original_digest
-    assert summary["current_decision"] == "FREEZE_FOR_REVIEW"
+    assert summary["current_decision"] is None
+    assert summary["prior_review_decisions"][-2:] == [
+        "FREEZE_FOR_REVIEW", "FREEZE_FOR_REVIEW"
+    ]
 
 
 def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
@@ -639,6 +642,8 @@ def test_freeze_decision_requires_two_positive_latest_tracks(monkeypatch) -> Non
     package = _package()
     package["audit"]["prior_reviews"][-1]["decision"] = "NARROW"
     package["audit"]["prior_reviews"][-1]["unresolved_major"] = 1
+    package["audit"]["canonical_review_status"] = "independent_review_complete"
+    package["audit"]["current_decision"] = "FREEZE_FOR_REVIEW"
     monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
     monkeypatch.setattr(
         validator,
@@ -670,7 +675,7 @@ def test_review_suffix_cannot_be_deleted_after_its_append(monkeypatch) -> None:
         row["reviewed_head"] = commits[0]
 
     def fake_git(*args):
-        if args[:4] == ("rev-list", "--first-parent", "--reverse", "HEAD"):
+        if args[:4] == ("rev-list", "--topo-order", "--reverse", "HEAD"):
             return "\n".join(commits)
         if args[0] == "show":
             commit = args[1].split(":", 1)[0]
@@ -683,6 +688,40 @@ def test_review_suffix_cannot_be_deleted_after_its_append(monkeypatch) -> None:
     monkeypatch.setattr(validator, "_git", fake_git)
     with pytest.raises(MajorLifePackageError, match="deleted, rewritten"):
         validator._review_history_append_commits(deleted["audit"]["prior_reviews"])
+
+
+def test_review_history_accepts_synthetic_merge_topology(monkeypatch) -> None:
+    base = _empty_suffix_package()
+    appended = copy.deepcopy(base)
+    appended["audit"]["prior_reviews"].extend(
+        [
+            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(6, "validator_integrity", "FREEZE_FOR_REVIEW"),
+        ]
+    )
+    commits = ["1" * 40, "2" * 40, "3" * 40]
+    for row in appended["audit"]["prior_reviews"][-2:]:
+        row["reviewed_head"] = commits[0]
+    packages = {
+        commits[0]: base,
+        commits[1]: appended,
+        commits[2]: appended,
+    }
+
+    def fake_git(*args):
+        if args[:4] == ("rev-list", "--topo-order", "--reverse", "HEAD"):
+            return "\n".join(commits)
+        if args[0] == "show":
+            commit = args[1].split(":", 1)[0]
+            return json.dumps(packages[commit])
+        if args[0] == "rev-parse" and args[1].endswith("^1"):
+            return commits[0]
+        raise AssertionError(args)
+
+    monkeypatch.setattr(validator, "_git", fake_git)
+    assert validator._review_history_append_commits(
+        appended["audit"]["prior_reviews"]
+    ) == {6: (commits[1], commits[0])}
 
 
 def test_historical_candidate_digest_is_recomputed(monkeypatch) -> None:
@@ -731,7 +770,7 @@ def test_transient_prefix_drift_cannot_hide_an_earlier_suffix_append(monkeypatch
     }
 
     def fake_git(*args):
-        if args[:4] == ("rev-list", "--first-parent", "--reverse", "HEAD"):
+        if args[:4] == ("rev-list", "--topo-order", "--reverse", "HEAD"):
             return "\n".join(commits)
         if args[0] == "show":
             commit = args[1].split(":", 1)[0]
@@ -751,7 +790,7 @@ def test_unreadable_package_cannot_be_skipped_after_history_baseline(monkeypatch
     commits = ["a" * 40, "b" * 40, "c" * 40]
 
     def fake_git(*args):
-        if args[:4] == ("rev-list", "--first-parent", "--reverse", "HEAD"):
+        if args[:4] == ("rev-list", "--topo-order", "--reverse", "HEAD"):
             return "\n".join(commits)
         if args[0] == "show":
             commit = args[1].split(":", 1)[0]

@@ -363,10 +363,10 @@ def _review_envelope_digest(reviewed_head: str) -> tuple[str, str]:
 def _review_history_append_commits(
     current_reviews: list[dict[str, Any]],
 ) -> dict[int, tuple[str, str]]:
-    """Prove every suffix pair was appended once on current first-parent history."""
+    """Prove every suffix pair was appended once on current ancestor history."""
     try:
         commits = _git(
-            "rev-list", "--first-parent", "--reverse", "HEAD", "--", PACKAGE_RELATIVE
+            "rev-list", "--topo-order", "--reverse", "HEAD", "--", PACKAGE_RELATIVE
         ).splitlines()
     except ProjectStateError as exc:
         raise MajorLifePackageError("review history cannot be read from Git") from exc
@@ -467,7 +467,7 @@ def _validate_appended_review_artifact(
     try:
         later_artifact_commits = _git(
             "rev-list",
-            "--first-parent",
+            "--topo-order",
             "--reverse",
             f"{append_commit}..HEAD",
             "--",

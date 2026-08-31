@@ -54,7 +54,7 @@ When composed later, the seven new candidates plus the four existing Romagna Pre
   fails, and an append commit's direct parent must carry the previously accepted review history.
 - Every appended row binds the recomputed historical candidate digest plus a review-envelope digest
   covering the exact reviewed package, schema and validator Git content. Artifacts are read as Git
-  blobs, not from an uncommitted working tree; every later first-parent revision touching an artifact
+  blobs, not from an uncommitted working tree; every later ancestor revision touching an artifact
   must preserve its original blob, so deletion or modification followed by restoration also fails.
 - A GitHub review URL is retained only as a human locator. The offline validator explicitly does not
   treat its comment number as authenticated evidence.
@@ -79,5 +79,12 @@ first authenticated appended pair reviewed exact head `946e64d686a538b61a525941c
 and returned semantic and validator-integrity `FREEZE_FOR_REVIEW` with zero unresolved findings.
 Package audit round 6 is therefore complete and the candidate decision is `FREEZE_FOR_REVIEW`.
 
-This decision permits review and merge of the non-public candidate package only. Runtime/public
-integration of the eleven composed anchors still requires a separate bounded PR and review.
+GitHub evaluates pull requests on a synthetic merge commit. The original first-parent traversal did
+not retain the feature-branch baseline in that topology, so Core Check correctly failed while the
+branch-head checks passed. Review history now uses topologically ordered ancestor traversal. Because
+this changes the reviewed validator after round 6, the current lifecycle is deliberately reset to
+`pending_independent_rereview`; round 6 remains immutable history but is not reused as the current
+decision.
+
+A new positive two-track review of the merge-compatible validator is required before package merge.
+Runtime/public integration of the eleven composed anchors still requires a separate bounded PR.

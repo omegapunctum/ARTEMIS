@@ -232,11 +232,11 @@ envelope additionally locks all substantive package content—including statemen
 rationales and Uncertainty meaning—plus immutable research-workspace, artifact and curation-note
 provenance. Only lifecycle status, current decision and the validated append-only review log remain
 outside the digest, so a positive decision-only descendant does not re-sign historical content.
-Rounds 1–5 are an exact immutable prefix. Git first-parent history must prove that each later round
+Rounds 1–5 are an exact immutable prefix. Topologically ordered Git ancestor history must prove that each later round
 was appended once as an adjacent semantic / validator pair directly after the exact reviewed
 revision. After its empty-suffix baseline, every package state must remain readable, a transient
 prefix change is fatal, and the direct append parent must contain the previously accepted review
-history. Each row binds a Git-blob artifact whose complete later first-parent history must remain
+history. Each row binds a Git-blob artifact whose complete later ancestor history must remain
 unchanged, a recomputed historical candidate digest,
 and a review-envelope digest over the reviewed package, schema and validator. A GitHub record URL is
 only a human locator and is explicitly not authenticated by the offline validator.
@@ -274,6 +274,13 @@ these results as package audit round 6 and sets `canonical_review_status` to
 `independent_review_complete`. This does not set `runtime_authorized` and does not publish any of the
 seven new Presences.
 
+GitHub's synthetic PR merge commit then exposed a topology mismatch: first-parent traversal followed
+`main` and could not see the feature-branch empty-suffix baseline. The validator now traverses all
+ancestors in topological order, preserving the same append and artifact invariants on branch heads,
+synthetic merge refs and post-merge `main`. Because this is a validator change after authenticated
+round 6, lifecycle status is reset to `pending_independent_rereview` and `current_decision` to null;
+the recorded positive pair remains immutable history rather than being reused without review.
+
 ## 10. Exit condition for this package
 
 Research package is ready when:
@@ -286,6 +293,6 @@ Research package is ready when:
 
 All seven current candidates meet the source-audit threshold for `READY_FOR_CANONICAL_REVIEW`.
 
-The package decision is `FREEZE_FOR_REVIEW`; its source-audited candidate content may proceed to PR
-review and merge. Runtime integration is a later decision and is not authorized by this candidate
-package, its positive canonical review, or a passing structural check.
+The package is again `pending_independent_rereview` solely for the merge-topology validator change.
+Runtime integration is a later decision and is not authorized by this candidate package, its prior
+positive review record, or a passing structural check.

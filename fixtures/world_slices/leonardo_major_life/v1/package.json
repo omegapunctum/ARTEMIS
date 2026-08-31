@@ -1572,13 +1572,13 @@
       "Sources / Leonardo_Source_Index / Presence_Audit"
     ],
     "research_audit_status": "complete",
-    "canonical_review_status": "independent_review_complete",
+    "canonical_review_status": "pending_independent_rereview",
     "allowed_package_decisions": [
       "FREEZE_FOR_REVIEW",
       "NARROW",
       "STOP"
     ],
-    "current_decision": "FREEZE_FOR_REVIEW",
+    "current_decision": null,
     "curation_cost": {
       "duration_minutes": null,
       "measurement_state": "historical_drive_work_unmeasured",
