@@ -1,6 +1,6 @@
 # Leonardo major-life Presence candidate package v1
 
-Status: `CANDIDATE_SOURCE_AUDITED / ROUNDS_1_5_NARROW / INDEPENDENT_REREVIEW_PENDING / NON_PUBLIC`.
+Status: `CANDIDATE_SOURCE_AUDITED / INDEPENDENT_REVIEW_COMPLETE / FREEZE_FOR_REVIEW / NON_PUBLIC`.
 
 Parent: issue `#355` and the `Leonardo Major-Life Presence Scope v1` transition recorded in PR `#399`.
 
@@ -82,9 +82,11 @@ Package audit round 6 is therefore complete and the candidate decision is `FREEZ
 GitHub evaluates pull requests on a synthetic merge commit. The original first-parent traversal did
 not retain the feature-branch baseline in that topology, so Core Check correctly failed while the
 branch-head checks passed. Review history now uses topologically ordered ancestor traversal. Because
-this changes the reviewed validator after round 6, the current lifecycle is deliberately reset to
-`pending_independent_rereview`; round 6 remains immutable history but is not reused as the current
-decision.
+this changed the reviewed validator after round 6, lifecycle was deliberately reset and round 6 was
+retained only as immutable history.
 
-A new positive two-track review of the merge-compatible validator is required before package merge.
-Runtime/public integration of the eleven composed anchors still requires a separate bounded PR.
+Authenticated package round 7 then reviewed exact merge-compatible head
+`9ceadaeb00d32b982628563c9bdd2fe09bfd85d1`. Both tracks returned `FREEZE_FOR_REVIEW` with zero
+unresolved findings after branch-head, synthetic-merge and later-main checks. The candidate package
+is therefore ready for PR review and merge. Runtime/public integration of the eleven composed
+anchors still requires a separate bounded PR.

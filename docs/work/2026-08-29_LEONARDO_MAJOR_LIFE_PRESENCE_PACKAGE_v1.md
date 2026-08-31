@@ -1,6 +1,6 @@
 # Leonardo major-life Presence package v1
 
-Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / ROUNDS_1_5_NARROW / INDEPENDENT_REREVIEW_PENDING / RUNTIME_NOT_AUTHORIZED`.
+Status: `MACHINE_CHECKABLE_CANDIDATE / SOURCE_AUDITED / INDEPENDENT_REVIEW_COMPLETE / FREEZE_FOR_REVIEW / RUNTIME_NOT_AUTHORIZED`.
 
 Parent product contour: issue #355.
 
@@ -281,6 +281,13 @@ synthetic merge refs and post-merge `main`. Because this is a validator change a
 round 6, lifecycle status is reset to `pending_independent_rereview` and `current_decision` to null;
 the recorded positive pair remains immutable history rather than being reused without review.
 
+Authenticated package round 7 reviewed exact merge-compatible head
+`9ceadaeb00d32b982628563c9bdd2fe09bfd85d1`. Semantic-content and validator-integrity tracks both
+returned `FREEZE_FOR_REVIEW` with zero unresolved findings after validation on the branch head, a
+GitHub-style synthetic merge and a later linear `main` descendant. The decision-only child appends
+the two round-7 records and artifacts, restores `independent_review_complete`, and does not change
+candidate semantics or authorize runtime publication.
+
 ## 10. Exit condition for this package
 
 Research package is ready when:
@@ -293,6 +300,6 @@ Research package is ready when:
 
 All seven current candidates meet the source-audit threshold for `READY_FOR_CANONICAL_REVIEW`.
 
-The package is again `pending_independent_rereview` solely for the merge-topology validator change.
-Runtime integration is a later decision and is not authorized by this candidate package, its prior
-positive review record, or a passing structural check.
+The package decision is `FREEZE_FOR_REVIEW` and the non-public candidate package may proceed to PR
+review and merge. Runtime integration is a later decision and is not authorized by this package
+decision or by a passing structural check.

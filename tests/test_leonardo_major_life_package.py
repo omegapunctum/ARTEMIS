@@ -62,11 +62,12 @@ def test_source_audited_candidate_package_passes_fail_closed_validation() -> Non
         "evidence_link_count": 35,
         "uncertainty_count": 8,
         "runtime_authorized": False,
-        "canonical_review_status": "pending_independent_rereview",
-        "current_decision": None,
+        "canonical_review_status": "independent_review_complete",
+        "current_decision": "FREEZE_FOR_REVIEW",
         "prior_review_decisions": [
             "NARROW", "NARROW", "NARROW", "NARROW", "NARROW",
             "FREEZE_FOR_REVIEW", "NARROW", "FREEZE_FOR_REVIEW", "NARROW",
+            "FREEZE_FOR_REVIEW", "FREEZE_FOR_REVIEW",
             "FREEZE_FOR_REVIEW", "FREEZE_FOR_REVIEW",
         ],
     }
@@ -488,12 +489,16 @@ def test_review_history_accepts_a_complete_append_only_round(monkeypatch) -> Non
     monkeypatch.setattr(
         validator,
         "_review_history_append_commits",
-        lambda _rows: {6: ("a" * 40, "f" * 40), 7: ("b" * 40, "f" * 40)},
+        lambda _rows: {
+            6: ("a" * 40, "f" * 40),
+            7: ("b" * 40, "f" * 40),
+            8: ("c" * 40, "f" * 40),
+        },
     )
     package["audit"]["prior_reviews"].extend(
         [
-            _review_row(7, "semantic_content", "FREEZE_FOR_REVIEW"),
-            _review_row(7, "validator_integrity", "NARROW", major=1),
+            _review_row(8, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(8, "validator_integrity", "NARROW", major=1),
         ]
     )
     package["audit"]["canonical_review_status"] = "pending_independent_rereview"
@@ -553,13 +558,13 @@ def test_immutable_curation_note_is_digest_locked() -> None:
         validate_package(package)
 
 
-def test_recorded_positive_round_does_not_resign_content_during_rereview() -> None:
+def test_positive_decision_only_descendant_does_not_resign_content() -> None:
     package = _package()
     original_digest = package["candidate_content_digest_sha256"]
 
     summary = validate_package(package)
     assert package["candidate_content_digest_sha256"] == original_digest
-    assert summary["current_decision"] is None
+    assert summary["current_decision"] == "FREEZE_FOR_REVIEW"
     assert summary["prior_review_decisions"][-2:] == [
         "FREEZE_FOR_REVIEW", "FREEZE_FOR_REVIEW"
     ]
@@ -575,14 +580,15 @@ def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
             6: ("a" * 40, "f" * 40),
             7: ("b" * 40, "f" * 40),
             8: ("c" * 40, "f" * 40),
+            9: ("d" * 40, "f" * 40),
         },
     )
     package["audit"]["prior_reviews"].extend(
         [
-            _review_row(7, "semantic_content", "FREEZE_FOR_REVIEW"),
             _review_row(8, "semantic_content", "FREEZE_FOR_REVIEW"),
-            _review_row(7, "validator_integrity", "FREEZE_FOR_REVIEW"),
+            _review_row(9, "semantic_content", "FREEZE_FOR_REVIEW"),
             _review_row(8, "validator_integrity", "FREEZE_FOR_REVIEW"),
+            _review_row(9, "validator_integrity", "FREEZE_FOR_REVIEW"),
         ]
     )
 
@@ -592,7 +598,7 @@ def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
 
 def test_fabricated_reviewed_head_cannot_authorize_freeze(monkeypatch) -> None:
     package = _package()
-    row = _review_row(7, "semantic_content", "FREEZE_FOR_REVIEW")
+    row = _review_row(8, "semantic_content", "FREEZE_FOR_REVIEW")
 
     with pytest.raises(MajorLifePackageError, match="review head cannot be verified"):
         validator._validate_appended_review_artifact(
@@ -648,7 +654,10 @@ def test_freeze_decision_requires_two_positive_latest_tracks(monkeypatch) -> Non
     monkeypatch.setattr(
         validator,
         "_review_history_append_commits",
-        lambda _rows: {6: ("a" * 40, "f" * 40)},
+        lambda _rows: {
+            6: ("a" * 40, "f" * 40),
+            7: ("b" * 40, "f" * 40),
+        },
     )
 
     with pytest.raises(MajorLifePackageError, match="two positive latest tracks"):

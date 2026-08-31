@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "leonardo-major-life-presence-candidates-v1",
+  "candidate_content_digest_sha256": "45d3bafc17be34c461f3745d50f688682d113ac463ad69118bdbccaa3071aaa9",
+  "review_envelope_digest_sha256": "17d6448ad0829385b0cd725d70f2dd281c287c2c6f5149fc7bcd349005fd573c",
+  "review": {
+    "round": 7,
+    "track": "validator_integrity",
+    "reviewed_head": "9ceadaeb00d32b982628563c9bdd2fe09bfd85d1",
+    "review_envelope_digest_sha256": "17d6448ad0829385b0cd725d70f2dd281c287c2c6f5149fc7bcd349005fd573c",
+    "decision": "FREEZE_FOR_REVIEW",
+    "independence_method": "separate_agent_task_read_only",
+    "review_record_locator": "https://github.com/omegapunctum/ARTEMIS/pull/400#issuecomment-5473448104",
+    "review_record_authentication": "reference_only_not_verified_by_validator",
+    "unresolved_major": 0,
+    "unresolved_medium": 0,
+    "duration_minutes": null,
+    "measurement_state": "not_captured_do_not_estimate"
+  },
+  "review_record_locator": "https://github.com/omegapunctum/ARTEMIS/pull/400#issuecomment-5473448104",
+  "review_record_authentication": "reference_only_not_verified_by_validator"
+}
