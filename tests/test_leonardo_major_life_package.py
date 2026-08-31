@@ -15,6 +15,14 @@ def _package():
     return json.loads(PACKAGE_PATH.read_text(encoding="utf-8"))
 
 
+def _empty_suffix_package():
+    package = _package()
+    package["audit"]["prior_reviews"] = package["audit"]["prior_reviews"][:9]
+    package["audit"]["canonical_review_status"] = "pending_independent_rereview"
+    package["audit"]["current_decision"] = None
+    return package
+
+
 def _review_row(round_number, track, decision, *, major=0, medium=0):
     return {
         "round": round_number,
@@ -54,11 +62,12 @@ def test_source_audited_candidate_package_passes_fail_closed_validation() -> Non
         "evidence_link_count": 35,
         "uncertainty_count": 8,
         "runtime_authorized": False,
-        "canonical_review_status": "pending_independent_rereview",
-        "current_decision": None,
+        "canonical_review_status": "independent_review_complete",
+        "current_decision": "FREEZE_FOR_REVIEW",
         "prior_review_decisions": [
             "NARROW", "NARROW", "NARROW", "NARROW", "NARROW",
             "FREEZE_FOR_REVIEW", "NARROW", "FREEZE_FOR_REVIEW", "NARROW",
+            "FREEZE_FOR_REVIEW", "FREEZE_FOR_REVIEW",
         ],
     }
 
@@ -477,14 +486,18 @@ def test_review_history_accepts_a_complete_append_only_round(monkeypatch) -> Non
     package = _package()
     monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
     monkeypatch.setattr(
-        validator, "_review_history_append_commits", lambda _rows: {6: ("a" * 40, "f" * 40)}
+        validator,
+        "_review_history_append_commits",
+        lambda _rows: {6: ("a" * 40, "f" * 40), 7: ("b" * 40, "f" * 40)},
     )
     package["audit"]["prior_reviews"].extend(
         [
-            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
-            _review_row(6, "validator_integrity", "NARROW", major=1),
+            _review_row(7, "semantic_content", "FREEZE_FOR_REVIEW"),
+            _review_row(7, "validator_integrity", "NARROW", major=1),
         ]
     )
+    package["audit"]["canonical_review_status"] = "pending_independent_rereview"
+    package["audit"]["current_decision"] = None
 
     summary = validate_package(package)
     assert summary["canonical_review_status"] == "pending_independent_rereview"
@@ -540,21 +553,9 @@ def test_immutable_curation_note_is_digest_locked() -> None:
         validate_package(package)
 
 
-def test_positive_decision_only_descendant_does_not_resign_content(monkeypatch) -> None:
+def test_positive_decision_only_descendant_does_not_resign_content() -> None:
     package = _package()
-    monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
-    monkeypatch.setattr(
-        validator, "_review_history_append_commits", lambda _rows: {6: ("a" * 40, "f" * 40)}
-    )
     original_digest = package["candidate_content_digest_sha256"]
-    package["audit"]["prior_reviews"].extend(
-        [
-            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
-            _review_row(6, "validator_integrity", "FREEZE_FOR_REVIEW"),
-        ]
-    )
-    package["audit"]["canonical_review_status"] = "independent_review_complete"
-    package["audit"]["current_decision"] = "FREEZE_FOR_REVIEW"
 
     summary = validate_package(package)
     assert package["candidate_content_digest_sha256"] == original_digest
@@ -567,14 +568,18 @@ def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
     monkeypatch.setattr(
         validator,
         "_review_history_append_commits",
-        lambda _rows: {6: ("a" * 40, "f" * 40), 7: ("b" * 40, "f" * 40)},
+        lambda _rows: {
+            6: ("a" * 40, "f" * 40),
+            7: ("b" * 40, "f" * 40),
+            8: ("c" * 40, "f" * 40),
+        },
     )
     package["audit"]["prior_reviews"].extend(
         [
-            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
             _review_row(7, "semantic_content", "FREEZE_FOR_REVIEW"),
-            _review_row(6, "validator_integrity", "FREEZE_FOR_REVIEW"),
+            _review_row(8, "semantic_content", "FREEZE_FOR_REVIEW"),
             _review_row(7, "validator_integrity", "FREEZE_FOR_REVIEW"),
+            _review_row(8, "validator_integrity", "FREEZE_FOR_REVIEW"),
         ]
     )
 
@@ -584,20 +589,12 @@ def test_appended_rounds_cannot_be_physically_interleaved(monkeypatch) -> None:
 
 def test_fabricated_reviewed_head_cannot_authorize_freeze(monkeypatch) -> None:
     package = _package()
-    monkeypatch.setattr(
-        validator, "_review_history_append_commits", lambda _rows: {6: ("a" * 40, "e" * 40)}
-    )
-    package["audit"]["prior_reviews"].extend(
-        [
-            _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW"),
-            _review_row(6, "validator_integrity", "FREEZE_FOR_REVIEW"),
-        ]
-    )
-    package["audit"]["canonical_review_status"] = "independent_review_complete"
-    package["audit"]["current_decision"] = "FREEZE_FOR_REVIEW"
+    row = _review_row(7, "semantic_content", "FREEZE_FOR_REVIEW")
 
     with pytest.raises(MajorLifePackageError, match="review head cannot be verified"):
-        validate_package(package)
+        validator._validate_appended_review_artifact(
+            row, package["candidate_content_digest_sha256"], "a" * 40, "e" * 40
+        )
 
 
 def test_review_artifact_binds_exact_row_and_candidate_digest(monkeypatch) -> None:
@@ -638,17 +635,23 @@ def test_review_artifact_binds_exact_row_and_candidate_digest(monkeypatch) -> No
     validator._validate_appended_review_artifact(row, digest, "a" * 40, "f" * 40)
 
 
-def test_freeze_decision_requires_two_positive_latest_tracks() -> None:
+def test_freeze_decision_requires_two_positive_latest_tracks(monkeypatch) -> None:
     package = _package()
-    package["audit"]["canonical_review_status"] = "independent_review_complete"
-    package["audit"]["current_decision"] = "FREEZE_FOR_REVIEW"
+    package["audit"]["prior_reviews"][-1]["decision"] = "NARROW"
+    package["audit"]["prior_reviews"][-1]["unresolved_major"] = 1
+    monkeypatch.setattr(validator, "_validate_appended_review_artifact", lambda *_args: None)
+    monkeypatch.setattr(
+        validator,
+        "_review_history_append_commits",
+        lambda _rows: {6: ("a" * 40, "f" * 40)},
+    )
 
-    with pytest.raises(MajorLifePackageError, match="completed appended review"):
+    with pytest.raises(MajorLifePackageError, match="two positive latest tracks"):
         validate_package(package)
 
 
 def test_review_suffix_cannot_be_deleted_after_its_append(monkeypatch) -> None:
-    base = _package()
+    base = _empty_suffix_package()
     appended = copy.deepcopy(base)
     appended["audit"]["prior_reviews"].extend(
         [
@@ -703,7 +706,7 @@ def test_historical_candidate_digest_is_recomputed(monkeypatch) -> None:
 
 
 def test_transient_prefix_drift_cannot_hide_an_earlier_suffix_append(monkeypatch) -> None:
-    base = _package()
+    base = _empty_suffix_package()
     hidden_append = copy.deepcopy(base)
     hidden_append["audit"]["prior_reviews"][0]["decision"] = "STOP"
     hidden_append["audit"]["prior_reviews"].extend(
@@ -744,7 +747,7 @@ def test_transient_prefix_drift_cannot_hide_an_earlier_suffix_append(monkeypatch
 
 
 def test_unreadable_package_cannot_be_skipped_after_history_baseline(monkeypatch) -> None:
-    package = _package()
+    package = _empty_suffix_package()
     commits = ["a" * 40, "b" * 40, "c" * 40]
 
     def fake_git(*args):

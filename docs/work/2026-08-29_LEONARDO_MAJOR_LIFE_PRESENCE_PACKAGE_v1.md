@@ -267,6 +267,13 @@ case. Round 8 on `75cc4462fa308f7c0f495a4c1773afb6f9d6ea52` returned semantic
 package revision and an artifact changed or deleted before exact restoration. Both are confined to
 history validation and now fail closed; candidate content remains unchanged.
 
+The first authenticated appended pair then reviewed exact head
+`946e64d686a538b61a525941c22733e2ddba0997`. Both semantic-content and validator-integrity tracks
+returned `FREEZE_FOR_REVIEW` with zero unresolved findings. The decision-only descendant records
+these results as package audit round 6 and sets `canonical_review_status` to
+`independent_review_complete`. This does not set `runtime_authorized` and does not publish any of the
+seven new Presences.
+
 ## 10. Exit condition for this package
 
 Research package is ready when:
@@ -279,6 +286,6 @@ Research package is ready when:
 
 All seven current candidates meet the source-audit threshold for `READY_FOR_CANONICAL_REVIEW`.
 
-The package remains `pending_independent_rereview`. Its next decision is exactly one of
-`FREEZE_FOR_REVIEW`, `NARROW` or `STOP`. Runtime integration is a later decision and is not
-authorized by this candidate package or by a passing structural check.
+The package decision is `FREEZE_FOR_REVIEW`; its source-audited candidate content may proceed to PR
+review and merge. Runtime integration is a later decision and is not authorized by this candidate
+package, its positive canonical review, or a passing structural check.

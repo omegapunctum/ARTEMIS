@@ -1572,13 +1572,13 @@
       "Sources / Leonardo_Source_Index / Presence_Audit"
     ],
     "research_audit_status": "complete",
-    "canonical_review_status": "pending_independent_rereview",
+    "canonical_review_status": "independent_review_complete",
     "allowed_package_decisions": [
       "FREEZE_FOR_REVIEW",
       "NARROW",
       "STOP"
     ],
-    "current_decision": null,
+    "current_decision": "FREEZE_FOR_REVIEW",
     "curation_cost": {
       "duration_minutes": null,
       "measurement_state": "historical_drive_work_unmeasured",
@@ -1691,6 +1691,36 @@
         "unresolved_medium": 1,
         "duration_minutes": null,
         "measurement_state": "not_captured_do_not_estimate"
+      },
+      {
+        "round": 6,
+        "track": "semantic_content",
+        "reviewed_head": "946e64d686a538b61a525941c22733e2ddba0997",
+        "review_envelope_digest_sha256": "db25a5b35b1853a9fccab40f66818b63f27da197dee886231524329faf88775a",
+        "decision": "FREEZE_FOR_REVIEW",
+        "independence_method": "separate_agent_task_read_only",
+        "review_record_locator": "https://github.com/omegapunctum/ARTEMIS/pull/400#issuecomment-5473311485",
+        "review_record_authentication": "reference_only_not_verified_by_validator",
+        "unresolved_major": 0,
+        "unresolved_medium": 0,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate",
+        "artifact_ref": "fixtures/world_slices/leonardo_major_life/v1/reviews/round-6-semantic-content.json"
+      },
+      {
+        "round": 6,
+        "track": "validator_integrity",
+        "reviewed_head": "946e64d686a538b61a525941c22733e2ddba0997",
+        "review_envelope_digest_sha256": "db25a5b35b1853a9fccab40f66818b63f27da197dee886231524329faf88775a",
+        "decision": "FREEZE_FOR_REVIEW",
+        "independence_method": "separate_agent_task_read_only",
+        "review_record_locator": "https://github.com/omegapunctum/ARTEMIS/pull/400#issuecomment-5473311485",
+        "review_record_authentication": "reference_only_not_verified_by_validator",
+        "unresolved_major": 0,
+        "unresolved_medium": 0,
+        "duration_minutes": null,
+        "measurement_state": "not_captured_do_not_estimate",
+        "artifact_ref": "fixtures/world_slices/leonardo_major_life/v1/reviews/round-6-validator-integrity.json"
       }
     ]
   },

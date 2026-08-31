@@ -73,8 +73,11 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 8
-returned `NARROW`; their exact reviewed heads, tracks and GitHub record locators remain preserved in
-package audit history. Rounds 6–8 found review-envelope integrity gaps only; no candidate content
-was changed. Review the remediated exact revision again. The allowed result remains
-`FREEZE_FOR_REVIEW`, `NARROW` or `STOP`; none silently authorizes runtime publication.
+PR `#399` established the lifecycle transition. Diagnostic review cycles after the immutable
+five-round prefix narrowed only the review-envelope validator; no candidate content changed. The
+first authenticated appended pair reviewed exact head `946e64d686a538b61a525941c22733e2ddba0997`
+and returned semantic and validator-integrity `FREEZE_FOR_REVIEW` with zero unresolved findings.
+Package audit round 6 is therefore complete and the candidate decision is `FREEZE_FOR_REVIEW`.
+
+This decision permits review and merge of the non-public candidate package only. Runtime/public
+integration of the eleven composed anchors still requires a separate bounded PR and review.
