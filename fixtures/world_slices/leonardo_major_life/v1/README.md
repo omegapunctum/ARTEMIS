@@ -50,11 +50,12 @@ When composed later, the seven new candidates plus the four existing Romagna Pre
   append without changing the content digest.
 - Git history must prove every later pair was appended once, directly after the exact revision it
   reviewed; deleting or rewriting an appended pair or artifact is rejected. After the empty-suffix
-  baseline, even a transient immutable-prefix change fails, and an append commit's direct parent
-  must carry the previously accepted review history.
+  baseline, every package revision must remain readable, even a transient immutable-prefix change
+  fails, and an append commit's direct parent must carry the previously accepted review history.
 - Every appended row binds the recomputed historical candidate digest plus a review-envelope digest
   covering the exact reviewed package, schema and validator Git content. Artifacts are read as Git
-  blobs, not from an uncommitted working tree.
+  blobs, not from an uncommitted working tree; every later first-parent revision touching an artifact
+  must preserve its original blob, so deletion or modification followed by restoration also fails.
 - A GitHub review URL is retained only as a human locator. The offline validator explicitly does not
   treat its comment number as authenticated evidence.
 - A reviewed decision-only descendant may change only lifecycle status, current decision and the
@@ -72,8 +73,8 @@ pytest -q tests/test_leonardo_major_life_package.py
 
 ## Next decision
 
-PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 7
+PR `#399` established the lifecycle transition. Combined independent review rounds 1 through 8
 returned `NARROW`; their exact reviewed heads, tracks and GitHub record locators remain preserved in
-package audit history. Rounds 6–7 found review-envelope integrity gaps only; no candidate content
+package audit history. Rounds 6–8 found review-envelope integrity gaps only; no candidate content
 was changed. Review the remediated exact revision again. The allowed result remains
 `FREEZE_FOR_REVIEW`, `NARROW` or `STOP`; none silently authorizes runtime publication.

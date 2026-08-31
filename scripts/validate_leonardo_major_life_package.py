@@ -377,7 +377,11 @@ def _review_history_append_commits(
         try:
             historical = json.loads(_git("show", f"{commit}:{PACKAGE_RELATIVE}"))
             reviews = historical["audit"]["prior_reviews"]
-        except (ProjectStateError, json.JSONDecodeError, KeyError, TypeError):
+        except (ProjectStateError, json.JSONDecodeError, KeyError, TypeError) as exc:
+            if previous_reviews is not None:
+                raise MajorLifePackageError(
+                    "review package became unreadable after the Git baseline"
+                ) from exc
             continue
         if len(reviews) < 9:
             if previous_reviews is not None:
@@ -460,6 +464,25 @@ def _validate_appended_review_artifact(
         ) from exc
     if append_blob != current_blob:
         raise MajorLifePackageError("appended review artifact changed after its Git append commit")
+    try:
+        later_artifact_commits = _git(
+            "rev-list",
+            "--first-parent",
+            "--reverse",
+            f"{append_commit}..HEAD",
+            "--",
+            row["artifact_ref"],
+        ).splitlines()
+        for commit in later_artifact_commits:
+            historical_blob = _git("rev-parse", f"{commit}:{row['artifact_ref']}")
+            if historical_blob != append_blob:
+                raise MajorLifePackageError(
+                    "appended review artifact changed in later Git history"
+                )
+    except ProjectStateError as exc:
+        raise MajorLifePackageError(
+            "appended review artifact was removed in later Git history"
+        ) from exc
 
     envelope_digest, historical_candidate_digest = _review_envelope_digest(resolved)
     if historical_candidate_digest != candidate_content_digest:

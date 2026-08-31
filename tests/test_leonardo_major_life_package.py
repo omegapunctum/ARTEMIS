@@ -623,6 +623,8 @@ def test_review_artifact_binds_exact_row_and_candidate_digest(monkeypatch) -> No
             return "b" * 40
         if args[0] == "merge-base":
             return ""
+        if args[0] == "rev-list":
+            return ""
         if args[0] == "show":
             return json.dumps(artifact)
         raise AssertionError(args)
@@ -739,3 +741,67 @@ def test_transient_prefix_drift_cannot_hide_an_earlier_suffix_append(monkeypatch
     monkeypatch.setattr(validator, "_git", fake_git)
     with pytest.raises(MajorLifePackageError, match="prefix changed after the Git baseline"):
         validator._review_history_append_commits(restored["audit"]["prior_reviews"])
+
+
+def test_unreadable_package_cannot_be_skipped_after_history_baseline(monkeypatch) -> None:
+    package = _package()
+    commits = ["a" * 40, "b" * 40, "c" * 40]
+
+    def fake_git(*args):
+        if args[:4] == ("rev-list", "--first-parent", "--reverse", "HEAD"):
+            return "\n".join(commits)
+        if args[0] == "show":
+            commit = args[1].split(":", 1)[0]
+            if commit == commits[1]:
+                return "{not-json"
+            return json.dumps(package)
+        raise AssertionError(args)
+
+    monkeypatch.setattr(validator, "_git", fake_git)
+    with pytest.raises(MajorLifePackageError, match="unreadable after the Git baseline"):
+        validator._review_history_append_commits(package["audit"]["prior_reviews"])
+
+
+def test_review_artifact_cannot_change_and_then_be_restored(monkeypatch) -> None:
+    package = _package()
+    row = _review_row(6, "semantic_content", "FREEZE_FOR_REVIEW")
+    digest = package["candidate_content_digest_sha256"]
+    artifact = {
+        "schema_version": "1.0.0",
+        "package_id": package["package_id"],
+        "candidate_content_digest_sha256": digest,
+        "review_envelope_digest_sha256": row["review_envelope_digest_sha256"],
+        "review": {key: value for key, value in row.items() if key != "artifact_ref"},
+        "review_record_locator": row["review_record_locator"],
+        "review_record_authentication": "reference_only_not_verified_by_validator",
+    }
+    append_commit = "a" * 40
+    later_commit = "c" * 40
+
+    def fake_git(*args):
+        if args[:2] == ("rev-parse", "--verify"):
+            return row["reviewed_head"]
+        if args == ("rev-parse", "HEAD"):
+            return "e" * 40
+        if args[0] == "merge-base":
+            return ""
+        if args[0] == "rev-list":
+            return later_commit
+        if args[0] == "rev-parse" and args[1].startswith(later_commit + ":"):
+            return "d" * 40
+        if args[0] == "rev-parse" and ":" in args[1]:
+            return "b" * 40
+        if args[0] == "show":
+            return json.dumps(artifact)
+        raise AssertionError(args)
+
+    monkeypatch.setattr(validator, "_git", fake_git)
+    monkeypatch.setattr(
+        validator,
+        "_review_envelope_digest",
+        lambda _head: (row["review_envelope_digest_sha256"], digest),
+    )
+    with pytest.raises(MajorLifePackageError, match="changed in later Git history"):
+        validator._validate_appended_review_artifact(
+            row, digest, append_commit, row["reviewed_head"]
+        )

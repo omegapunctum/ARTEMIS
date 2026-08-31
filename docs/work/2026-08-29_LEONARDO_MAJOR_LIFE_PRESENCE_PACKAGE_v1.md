@@ -234,9 +234,10 @@ provenance. Only lifecycle status, current decision and the validated append-onl
 outside the digest, so a positive decision-only descendant does not re-sign historical content.
 Rounds 1–5 are an exact immutable prefix. Git first-parent history must prove that each later round
 was appended once as an adjacent semantic / validator pair directly after the exact reviewed
-revision. After its empty-suffix baseline, a transient prefix change is also fatal, and the direct
-append parent must contain the previously accepted review history. Each row binds an immutable
-Git-blob artifact, a recomputed historical candidate digest,
+revision. After its empty-suffix baseline, every package state must remain readable, a transient
+prefix change is fatal, and the direct append parent must contain the previously accepted review
+history. Each row binds a Git-blob artifact whose complete later first-parent history must remain
+unchanged, a recomputed historical candidate digest,
 and a review-envelope digest over the reviewed package, schema and validator. A GitHub record URL is
 only a human locator and is explicitly not authenticated by the offline validator.
 
@@ -261,7 +262,10 @@ historical digest recomputation, committed artifact reads and the non-authentica
 GitHub locator. The candidate entities and evidence remain unchanged; the remediated exact revision
 awaits review. Round 7 on `2b2383e5d76f99a799540323c0bb29db84df0f78` returned semantic
 `FREEZE_FOR_REVIEW` and validator `NARROW`: the only remaining finding was a transient-prefix history
-case. That bounded history traversal correction now awaits another exact-revision review.
+case. Round 8 on `75cc4462fa308f7c0f495a4c1773afb6f9d6ea52` returned semantic
+`FREEZE_FOR_REVIEW` and validator `NARROW`; the remaining cases were an unreadable intermediate
+package revision and an artifact changed or deleted before exact restoration. Both are confined to
+history validation and now fail closed; candidate content remains unchanged.
 
 ## 10. Exit condition for this package
 
