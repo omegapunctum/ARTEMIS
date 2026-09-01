@@ -1,18 +1,18 @@
-# ARTEMIS — PRIORITIES v7.3
+# ARTEMIS — PRIORITIES v7.4
 
 ## Status
 
 - Type: canonical active priorities.
 - Date: 2026-09-01.
-- Active cycle: `M2 — One-source proof` after completed M1 and merged PR #400 candidate review.
+- Active cycle: `M3 — Multi-source proof` after PR #401 completed M2 with `PROCEED_TO_M3`.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Complete M2 one-source proof
+## P0 — Complete one bounded M3 multi-source proof
 
-M1 is complete: the published #396 user check recorded `ITERATE`, so the current interaction is good enough to continue. PR #400 completed the independently reviewed multi-source candidate package but did not prove an external-source runtime path. The only active question is whether one structured external fact can pass through ARTEMIS into the existing Globe without semantic invention.
+M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package without runtime authorization. PR #401 completed M2: one pinned Wikidata birth Presence passes through the existing semantic and Globe projection path without invented route or position precision. The recorded result is `PROCEED_TO_M3`. The only active question is whether one independent second provider can corroborate, refine or conflict with that same Presence without losing either source identity.
 
 The load-bearing path remains:
 
@@ -42,7 +42,7 @@ The current bounded package remains honest:
 - four settlement coordinates are present-day source-bound reference anchors only;
 - the four Romagna Presences are an interaction scaffold, not Leonardo's complete biography.
 
-The selected M2 proof uses one provider (Wikidata) and one birth Presence. It must preserve pinned statement/revision identity, CC0 rights, day precision, named-settlement spatial uncertainty and the existing shared projection path. It does not authorize public runtime promotion or M3.
+The M3 proof is limited to the existing Leonardo birth Presence, the merged Wikidata M2 source and exactly one independent second provider. It must preserve source-native locators, rights, temporal/spatial precision and uncertainty, and represent agreement, refinement or conflict explicitly. It does not authorize public runtime promotion or M4.
 
 ## P1 — Preserve the completed Core Reset boundary
 
@@ -69,15 +69,15 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Keep M2 bounded
+## P3 — Keep M3 bounded
 
-The single opened branch is the Wikidata Leonardo-birth one-source proof.
+The single opened branch is one two-provider Leonardo-birth proof.
 
-- one provider and one normalized Presence fact;
-- pinned revisions and statement locators;
-- exact source-native day, named-settlement reference geometry and explicit historical-position uncertainty;
-- existing World Model → Explorer State → Render Projection → Globe adapter;
-- one exit decision: `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2`.
+- preserve the merged Wikidata M2 fact unchanged;
+- select exactly one independent second provider;
+- keep separate Source, Claim, EvidenceLink, locator, rights and uncertainty identities;
+- model agreement, refinement or conflict for the same Presence without premature generic federation infrastructure;
+- one exit decision: `PROCEED_TO_M4`, `NARROW_M3` or `STOP_M3`.
 
 Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another branch from the same `ITERATE` result.
 
@@ -106,16 +106,17 @@ These are technical/product-development foundations, not final user-value eviden
 - #371/#373 Airtable historical import/review;
 - editable Progressive Refinement runtime;
 - public integration of the PR #400 candidate package;
-- a second external source before the M2 exit decision;
+- a third provider or second Presence before the M3 exit decision;
+- the M4 federated-architecture decision;
 - generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
 - production backend and dynamic Earth infrastructure.
 
 ## Execution order
 
-1. Pin one external structured source snapshot and exact statement locators.
-2. Normalize one fact with provenance, rights and uncertainty closure.
-3. Pass it through the existing projection and Globe adapter with fail-closed tests.
-4. Decide exactly one M2 outcome: `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2`.
+1. Select one independent second provider for the existing Leonardo birth Presence.
+2. Pin its exact revision/locator, rights, precision and uncertainty.
+3. Preserve both provider identities and expose agreement, refinement or conflict through the existing semantic/projection path.
+4. Decide exactly one M3 outcome: `PROCEED_TO_M4`, `NARROW_M3` or `STOP_M3`.
 
 ## Completion rule
 

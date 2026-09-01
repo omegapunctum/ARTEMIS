@@ -33,7 +33,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - The first published manual check after #395 produced `ITERATE`: Range and Scrub looked too similar, the timeline lacked primary visual weight, place selection exposed too much persistent text and single-click camera movement was too aggressive.
 - PR `#396` completed that bounded iteration and is published: the full-width bottom timeline is the primary time instrument; Range is a two-handle interval; Scrub keeps a chosen build origin plus one current-time cursor; first click opens a compact popup without moving the camera; optional further action opens the right detail drawer; double-click may focus/zoom the selected place.
 - The fresh user check of the published #396 interface recorded `ITERATE`: the interaction is now good enough to continue, while remaining visual problems are explicitly non-priority.
-- M1 — UX checkpoint is complete with `ITERATE`. PR #400 completed independent review of the non-public major-life candidate package without runtime authorization. The current milestone is M2 — One-source proof; M3 multi-source proof and M4 architecture decision remain closed.
+- M1 — UX checkpoint is complete with `ITERATE`. PR #400 completed independent review of the non-public major-life candidate package. PR #401 completed M2, and the recorded result is `PROCEED_TO_M3`. The current milestone is M3 — Multi-source proof; M4 remains closed.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
 - PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
@@ -204,7 +204,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 UX checkpoint completed with ITERATE / PR #400 candidate review completed without runtime authorization / M2 one-source proof active / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / PR #400 candidate review non-public / M2 completed through PR #401 with PROCEED_TO_M3 / M3 multi-source proof active / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
@@ -244,8 +244,9 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESS
 1. preserve the completed Core Reset and the published #396 Temporal Map loop;
 2. preserve the recorded post-#396 `ITERATE` and its limitations;
 3. preserve the reviewed PR #400 package as non-public and non-runtime;
-4. complete one pinned-provider/one-fact M2 projection proof;
-5. record `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2` before adding a second source.
+4. preserve the merged PR #401 M2 proof and its `PROCEED_TO_M3` decision;
+5. add exactly one independent second provider for the same birth Presence;
+6. record `PROCEED_TO_M4`, `NARROW_M3` or `STOP_M3` before adding a third provider, another Presence or making the M4 architecture decision.
 
 Formal D1/M1/A1/P1 closeout and the old Gate E sequencing are not current roadmap drivers. Basic keyboard, responsive and accessible behavior remains part of the product increment, but visual polish and additional evidence machinery do not displace the active bounded source package.
 

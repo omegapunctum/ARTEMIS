@@ -72,7 +72,7 @@ Current Temporal Map behavior:
 - double-click may focus the selected place;
 - dashed connectors are chronology only, never historical route geometry.
 
-The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`: preserve the current interaction and treat remaining visual issues as non-priority. PR `#400` subsequently completed the reviewed major-life candidate package without runtime authorization. The current milestone is **M2 — One-source proof**: pass exactly one real structured external fact through the existing World Model → Explorer State → Render Projection → Globe path with provenance, rights and uncertainty closure. M3 (multi-source proof) and M4 (architecture decision) remain closed until the M2 exit decision.
+The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package without runtime authorization. PR `#401` completed **M2 — One-source proof**, and the recorded result is `PROCEED_TO_M3`. The current milestone is **M3 — Multi-source proof**: add exactly one independent second provider for the same bounded Leonardo Presence and preserve agreement, refinement or conflict without collapsing source identity. Public runtime promotion and M4 (architecture decision) remain closed.
 
 Preserve these boundaries:
 
