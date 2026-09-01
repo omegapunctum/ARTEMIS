@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "museo-leonardiano-leonardo-birth-2026-09-01",
+  "snapshot_kind": "reviewed_web_claim_excerpt",
+  "provider": {
+    "id": "museo_leonardiano_vinci",
+    "label": "Museo Leonardiano di Vinci",
+    "organization": "Comune di Vinci — Museo Leonardiano",
+    "source_type": "institutional_web_reference",
+    "independence_scope": "independent_publisher_identity_only",
+    "shared_upstream_evidence": "unknown"
+  },
+  "retrieved_at": "2026-09-01",
+  "pages": {
+    "places": {
+      "title": "Leonardo’s places",
+      "url": "https://museoleonardiano.it/en/leonardo-in-vinci/leonardos-places/",
+      "locator": "The Places of Birth and Childhood — first paragraph",
+      "revision_identity": "not_published",
+      "excerpts": [
+        {
+          "role": "birth_date_and_locality",
+          "text": "Leonardo was born in Vinci on April 15, 1452."
+        },
+        {
+          "role": "traditional_house_attribution",
+          "text": "The house where Leonardo is traditionally believed to have been born is located in Anchiano."
+        }
+      ],
+      "excerpt_sha256": "a62d0c514c713eb87dacaa76ecbffdb7484c66b93fbf128ae64b1e46bef61720"
+    },
+    "biography": {
+      "title": "Leonardo da Vinci",
+      "url": "https://museoleonardiano.it/en/leonardo-in-vinci/biografia/",
+      "locator": "Leonardo's life — 15 April 1452 entry",
+      "revision_identity": "not_published",
+      "reviewed_claims_sha256": "fc82711b636ede7f5a30c2f1fb5108574c3a95f5aa01d65e024d83163931226a"
+    }
+  },
+  "reviewed_claims": {
+    "birth_date": "1452-04-15",
+    "birth_locality_label": "Vinci",
+    "anchiano_house_status": "traditional_attribution",
+    "exact_birth_house_supported": false
+  },
+  "rights": {
+    "factual_claim_use": "citation_and_factual_claims_only",
+    "media_reuse": "prohibited_without_permission",
+    "derived_geometry_use": "not_permitted_from_site_media",
+    "rights_url": "https://museoleonardiano.it/en/regulations-for-reproductions/"
+  },
+  "scope": {
+    "included_semantics": [
+      "birth date agreement",
+      "Vinci birth-locality assertion",
+      "traditional status of the Anchiano house attribution"
+    ],
+    "excluded_semantics": [
+      "exact birth-house identity",
+      "exact historical coordinate",
+      "residence duration",
+      "route geometry",
+      "media reuse"
+    ]
+  }
+}
