@@ -1,18 +1,18 @@
-# ARTEMIS — PRIORITIES v7.5
+# ARTEMIS — PRIORITIES v7.6
 
 ## Status
 
 - Type: canonical active priorities.
 - Date: 2026-09-01.
-- Active cycle: `M4 — Architecture decision` after PR #403 completed M3 with `PROCEED_TO_M4`.
+- Active cycle: `Post-M4 hold`; M4 completed with `ADOPT`, and no implementation branch is open.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Decide the architecture direction; do not build it
+## P0 — Preserve ADOPT and select no branch implicitly
 
-M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with one pinned Wikidata birth Presence. PR #403 completed M3 with Wikidata and Museo Leonardiano preserved as separate publisher identities for the same Presence, exact date agreement and an explicit spatial-granularity refinement. The recorded M3 result is `PROCEED_TO_M4`. The only active question is whether that bounded evidence supports `ADOPT`, `NARROW` or `REJECT` for the source-federated architecture direction.
+M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with one pinned Wikidata birth Presence. PR #403 completed M3 with Wikidata and Museo Leonardiano preserved as separate publisher identities for the same Presence, exact date agreement and an explicit spatial-granularity refinement. M4 records `ADOPT` for the source-federated semantic direction. No implementation branch follows automatically.
 
 The load-bearing path remains:
 
@@ -42,7 +42,7 @@ The current bounded package remains honest:
 - four settlement coordinates are present-day source-bound reference anchors only;
 - the four Romagna Presences are an interaction scaffold, not Leonardo's complete biography.
 
-The M3 proof remains limited to the existing Leonardo birth Presence, Wikidata and Museo Leonardiano. It demonstrates a viable source-aware comparison path, but it does not prove upstream-independent historical corroboration, a hard-conflict case, broad operational value, production ingestion/storage or public user value. M4 must decide from this evidence without adding implementation.
+The M3 proof remains limited to the existing Leonardo birth Presence, Wikidata and Museo Leonardiano. It demonstrates a viable source-aware comparison path, but it does not prove upstream-independent historical corroboration, a hard-conflict case, broad operational value, production ingestion/storage or public user value. M4 adopts the direction without converting these missing proofs into implementation authorization.
 
 ## P1 — Preserve the completed Core Reset boundary
 
@@ -69,15 +69,14 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Keep M4 decision-only
+## P3 — Keep the post-M4 boundary closed
 
-The single opened branch is one architecture decision over the completed M2/M3 evidence.
+There is no active implementation branch.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
-- compare demonstrated value with the recorded evidence limitations;
-- distinguish incremental source-aware semantics from a premature generic federation platform;
-- record exactly one exit decision: `ADOPT`, `NARROW` or `REJECT`;
-- state the implementation consequences of the selected outcome without implementing them in the decision PR.
+- preserve `ADOPT` as one semantic path, not a live-federation capability;
+- require the next branch to name exactly one bounded question, artifact scope, evidence requirement and exit condition;
+- do not treat the PR #400 package, M2/M3 proofs or architecture decision as public runtime authorization.
 
 Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another branch from the same `ITERATE` result.
 
@@ -106,17 +105,17 @@ These are technical/product-development foundations, not final user-value eviden
 - #371/#373 Airtable historical import/review;
 - editable Progressive Refinement runtime;
 - public integration of the PR #400 candidate package;
-- a third provider or second Presence before the M4 decision;
+- a third provider or second Presence before a separate bounded branch decision;
 - generic provider, federation, reconciliation, ingestion or storage infrastructure;
 - generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
 - production backend and dynamic Earth infrastructure.
 
 ## Execution order
 
-1. Compare the M2 one-source and M3 two-source evidence against the long-term architecture direction.
-2. Weigh the demonstrated semantic/projection fit against unknown upstream dependence, missing conflict evidence and unmeasured operational cost.
-3. Select exactly one M4 outcome: `ADOPT`, `NARROW` or `REJECT`.
-4. Record the selected scope and consequences before any new source, data, runtime or infrastructure work.
+1. Preserve the M4 `ADOPT` decision and its non-authorization boundary.
+2. Do not begin implementation until one separate branch decision names the next user or architecture question.
+3. For that branch, state exact artifact scope, evidence requirement, stop condition and explicitly deferred work.
+4. Only then implement the smallest reversible increment.
 
 ## Completion rule
 

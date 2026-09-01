@@ -32,9 +32,10 @@
   ],
   "gate": {
     "id": "D",
-    "label": "Leonardo Temporal Map / M4 architecture decision",
+    "label": "Leonardo Temporal Map / post-M4 hold",
     "status": "in_progress",
-    "allowed_decisions": ["ADOPT", "NARROW", "REJECT"]
+    "allowed_decisions": ["ADOPT", "NARROW", "REJECT"],
+    "decision": "ADOPT"
   },
   "work_in_progress_limit": 1,
   "github": {
@@ -65,7 +66,8 @@
       "PR #396 — first ITERATE correction: primary bottom timeline, distinct Range/Scrub, popup-first selection and double-click focus",
       "PR #400 — independently reviewed major-life Presence candidate package; runtime not authorized",
       "PR #401 — M2 one-source proof completed; Wikidata identity/provenance/rights/uncertainty and Globe projection path verified",
-      "PR #403 — M3 two-source proof completed; exact date agreement and spatial granularity refinement preserved without source collapse"
+      "PR #403 — M3 two-source proof completed; exact date agreement and spatial granularity refinement preserved without source collapse",
+      "PR #404 — M3 exit recorded as PROCEED_TO_M4; M4 opened as decision-only"
     ]
   },
   "capability": {
@@ -93,11 +95,12 @@
     "docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md",
-    "docs/work/2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md"
+    "docs/work/2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md",
+    "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Record exactly one ADOPT, NARROW or REJECT M4 architecture outcome before adding new sources, data, runtime capability, federation infrastructure or another product branch."
+    "condition": "Select and authorize one bounded post-M4 question in a separate decision before adding new sources, data, runtime capability, federation infrastructure or another product branch."
   }
 }

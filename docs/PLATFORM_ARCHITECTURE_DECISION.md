@@ -3,7 +3,7 @@
 ## Status
 
 - Type: canonical architecture decision.
-- Date: 2026-08-29.
+- Date: 2026-09-01.
 - Status: ACCEPTED.
 - Owner: application platform, delivery, renderer and repository/storage boundary.
 - Capability truth remains owned by `docs/PROJECT_TRUTH.md`.
@@ -69,6 +69,24 @@ The current Globe is the active product-development surface for `Life in Context
 Time controls are part of the shared Explorer interaction model. `Range`, `Scrub` and future time navigation modes must modify renderer-neutral selected time/state and then be projected to whichever spatial renderer is active.
 
 A 2D Map, Globe and timeline may have separate UI components, but they are synchronized views over one exploration state.
+
+### 1.4 Source-federated semantic boundary
+
+M4 under issue `#355` records `ADOPT` for the source-federated semantic direction.
+
+Bounded external or curated source inputs may use source-specific adapters, but normalized output must enter one canonical path:
+
+```text
+source snapshot/intake
+        ↓
+Claim + EvidenceLink + Source + Uncertainty
+        ↓
+World Model → Explorer State → Render Projection
+```
+
+Normalization must preserve provider identity, source-native locator/revision, rights, precision, uncertainty and material agreement/challenge/refinement semantics. A provider adapter must not become a second ontology, silently merge competing Claims or invent missing evidence and geometry.
+
+This is a semantic architecture decision, not authorization for live federation, automatic reconciliation, generic ingestion infrastructure, backend/storage migration or public runtime data. The current safe intake remains deterministic and reviewable through bounded source-specific snapshots or curated packages. Shared infrastructure requires later measured evidence that these bounded mechanisms are insufficient.
 
 ---
 

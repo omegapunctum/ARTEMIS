@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical active product thesis.
-- Версия: 3.2.
-- Дата: 2026-08-29.
+- Версия: 3.3.
+- Дата: 2026-09-01.
 - Решение: Foundation v3 / first `Life in Context` vertical.
 - Current proof surface: `Leonardo Temporal Map` on the public `/globe/` R&D prototype under issue `#355`.
 - Current scope owner: `ARTEMIS_PRODUCT_SCOPE.md`.
@@ -94,7 +94,7 @@ Research Brief, immutable revision и advanced comparison могут подде�
 - source/uncertainty under progressive disclosure;
 - dashed chronology never becoming historical route geometry.
 
-PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение: текущий loop достаточно хорош, а оставшиеся visual issues не являются следующим приоритетом. Открыта ровно одна bounded branch — source-aware major-life Presence package.
+PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение: текущий loop достаточно хорош, а оставшиеся visual issues не являются следующим приоритетом. M2/M3 subsequently proved the bounded source-to-projection path, and M4 recorded `ADOPT` for the source-federated semantic direction. No post-M4 implementation branch is currently open; the thesis does not authorize one by itself.
 
 ## 5. First World Slice thesis
 

@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.9.
+- Версия: 4.0.
 - Дата: 2026-09-01.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `M4 — Architecture decision`; M1 is complete, PR #400 remains non-public, PR #401 completed M2, and PR #403 completed M3 with `PROCEED_TO_M4`.
+- Current increment: `Post-M4 hold`; M4 is complete with `ADOPT`, and no implementation branch is open.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -56,8 +56,8 @@ Current authorized work:
 - preserve the reviewed PR #400 package without promoting it to runtime;
 - preserve the merged PR #401 one-source proof unchanged as M2 evidence;
 - preserve the merged PR #403 two-source proof unchanged as M3 evidence;
-- compare the bounded M2/M3 evidence and record exactly one M4 architecture outcome: `ADOPT`, `NARROW` or `REJECT`;
-- do not add a third provider, another Presence, public runtime data, federation infrastructure or context layers before the M4 decision.
+- preserve the M4 `ADOPT` decision as a semantic direction rather than a capability claim;
+- require a separate bounded branch decision before any new data, runtime, federation infrastructure or context/layer work.
 
 ## 3. Обязательный current content scope
 
@@ -77,7 +77,7 @@ Current authorized work:
 
 Это **interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
 
-Не являются обязательными для текущего M4 decision:
+Не являются обязательными для текущего post-M4 hold:
 
 - changing historical Region geometry;
 - complete local political/cultural State context;
@@ -89,7 +89,7 @@ Current authorized work:
 - runtime publication of the PR #400 candidate package;
 - expansion beyond the one selected two-provider Presence.
 
-The reviewed PR #400 candidate package remains separate non-public evidence; M4 does not promote it or expand its Presence set.
+The reviewed PR #400 candidate package remains separate non-public evidence; M4 did not promote it or expand its Presence set.
 
 ### 3.1 Progressive fidelity / достаточная точность
 
@@ -164,7 +164,7 @@ No completed corpus or engineering work is deleted in this cycle.
 
 Target Investigation/SliceRevision/ResearchBrief remains a valid optional research-work capability.
 
-For the current M4 architecture decision:
+For the current post-M4 hold:
 
 - immutable revisions and Research Brief are not prerequisites;
 - current mutable ResearchSlice v2 remains compatibility backend code;
@@ -174,10 +174,10 @@ For the current M4 architecture decision:
 
 ## 8. Frozen scope
 
-Outside the currently opened `M4 — Architecture decision` branch:
+Outside the currently authorized post-M4 preservation boundary:
 
 - public runtime integration of the PR #400 candidate package;
-- any third-provider integration, second Presence or broad reconciliation framework before the M4 decision;
+- any third-provider integration, second Presence or broad reconciliation framework before a separate bounded branch decision;
 - default local/global context layers;
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
@@ -220,13 +220,11 @@ The #355 decision, public deployment and #396 implementation do not make:
 
 ## 10. Current exit condition
 
-The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3, and the recorded result is `PROCEED_TO_M4`. The current increment is complete only when the bounded architecture review records exactly one outcome:
+The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 is complete with:
 
-- `ADOPT`;
-- `NARROW`;
-- `REJECT`.
+- **`ADOPT`** — accept the source-federated semantic direction while keeping intake bounded, deterministic and reviewable.
 
-M4 must decide whether the M2/M3 evidence justifies adopting, narrowing or rejecting the source-federated architecture direction. It is a decision-only stage and does not authorize another implementation, public runtime promotion or data expansion.
+The decision does not authorize another implementation, public runtime promotion, data expansion, live federation or generic ingestion/storage infrastructure.
 
 This package outcome does not automatically mean Gate D is globally complete or authorize another product branch.
 
@@ -240,7 +238,7 @@ The post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`. The one active branch is the M4 architecture decision. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened until that decision.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`. No implementation branch is active. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened until a separate bounded decision names one question, artifact scope, evidence requirement and exit condition.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

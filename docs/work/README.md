@@ -13,7 +13,8 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md` | #355 recorded M3 exit decision and bounded M4 opening | M4 records `ADOPT`, `NARROW` or `REJECT` |
+| `2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md` | #355 completed M4 architecture decision | `ADOPT`; no implementation branch opened |
+| `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md` | #355 recorded M3 exit decision and bounded M4 opening | completed by M4 `ADOPT` decision |
 | `2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md` | #355 completed two-provider/one-Presence M3 evidence | completed with `PROCEED_TO_M4` through separate decision record |
 | `2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md` | #355 recorded M2 exit decision and bounded M3 opening | completed by M3 proof and decision |
 | `2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md` | #355 completed milestone lifecycle and Wikidata M2 evidence | completed with `PROCEED_TO_M3` through separate decision record |
@@ -56,7 +57,7 @@ Current interaction semantics:
 - dashed connectors express chronology only and are never historical route geometry;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. The **only active branch** is now the M4 architecture decision: record exactly one `ADOPT`, `NARROW` or `REJECT` outcome. Do not add another provider/Presence, local/global layers, backend/storage, public runtime data or federation infrastructure before that decision.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 completed with `ADOPT` for the source-federated semantic direction. **No post-M4 implementation branch is active.** Do not add another provider/Presence, local/global layers, backend/storage, public runtime data or federation infrastructure before a separate bounded branch decision.
 
 ## Foundation lifecycle records
 

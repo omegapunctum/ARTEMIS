@@ -173,7 +173,8 @@ Current product implementation sequence:
 7. PR #401 completed M2 with one pinned provider, one normalized external fact and the existing World Model → Explorer State → Render Projection → Globe path.
 8. The recorded M2 result is `PROCEED_TO_M3`.
 9. PR #403 completed M3 with two publisher identities, one Presence and explicit agreement/spatial-refinement semantics; the recorded result is `PROCEED_TO_M4`.
-10. Exactly one branch is active: `M4 — Architecture decision`, limited to comparing the bounded M2/M3 evidence and recording `ADOPT`, `NARROW` or `REJECT`. Public runtime promotion, additional sources or Presences, default context/layer expansion, backend/storage and federation infrastructure remain closed.
+10. M4 records `ADOPT` for the source-federated semantic direction: source-specific reviewed intake may normalize into the canonical Claim/EvidenceLink/Source/Uncertainty path without becoming a second ontology.
+11. No post-M4 implementation branch is active. A separate decision must name one bounded question, artifact scope, evidence requirement and exit condition before public runtime promotion, additional sources or Presences, context/layer expansion, backend/storage or federation infrastructure work begins.
 
 Current Temporal Map semantic/UI boundary:
 
