@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-08-29",
+  "updated_at": "2026-09-01",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -32,9 +32,9 @@
   ],
   "gate": {
     "id": "D",
-    "label": "Leonardo Temporal Map / ITERATE / major-life Presence source branch",
+    "label": "Leonardo Temporal Map / M2 one-source proof",
     "status": "in_progress",
-    "allowed_decisions": ["ITERATE", "NARROW", "STOP/RETHINK"]
+    "allowed_decisions": ["PROCEED_TO_M3", "NARROW_M2", "STOP_M2"]
   },
   "work_in_progress_limit": 1,
   "github": {
@@ -62,7 +62,8 @@
       "PR #391 — evidence-aware Globe UX correction",
       "PR #393 — Core Reset boundary completed; Globe primary, Atlas compatibility-only",
       "PR #395 — calendar-based Leonardo Temporal Map life-path loop",
-      "PR #396 — first ITERATE correction: primary bottom timeline, distinct Range/Scrub, popup-first selection and double-click focus"
+      "PR #396 — first ITERATE correction: primary bottom timeline, distinct Range/Scrub, popup-first selection and double-click focus",
+      "PR #400 — independently reviewed major-life Presence candidate package; runtime not authorized"
     ]
   },
   "capability": {
@@ -86,11 +87,12 @@
     "docs/work/2026-08-14_GLOBE_PUBLIC_REVIEW_PREVIEW_DECISION_v1.md",
     "docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md",
     "docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md",
-    "docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md"
+    "docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md",
+    "docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Complete the Leonardo Major-Life Presence candidate/source package and record exactly one FREEZE FOR REVIEW, NARROW or STOP outcome before runtime integration or another product branch."
+    "condition": "Complete the one-provider/one-fact M2 proof and record exactly one PROCEED_TO_M3, NARROW_M2 or STOP_M2 outcome before adding a second external source or making the M4 architecture decision."
   }
 }

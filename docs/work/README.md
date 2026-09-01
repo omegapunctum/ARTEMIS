@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-08-29.
+- Updated: 2026-09-01.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,6 +13,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
+| `2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md` | #355 current milestone lifecycle and bounded Wikidata M2 one-source proof | `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2` after review and green bounded checks |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D promotion/stop outcome; the bounded post-#396 `ITERATE` does not close it |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
@@ -20,7 +21,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only if the fresh product decision makes this evidence necessary |
 | `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with the Globe contour |
 | `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 current object → time → path → place → information interaction contract; implemented through PRs #395–#396 | replaced only by a later reviewed interaction contract; current #396 behavior is preserved |
-| `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | #355 only active post-#396 branch: 6–10 coarse whole-life Presence candidate/source package | `FREEZE FOR REVIEW`, `NARROW` or `STOP` before runtime integration |
+| `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | completed source/review branch through PR #400; candidate package remains non-public and runtime-not-authorized | preserved evidence; any runtime use requires a later decision |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
 | `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
 
@@ -52,7 +53,7 @@ Current interaction semantics:
 - dashed connectors express chronology only and are never historical route geometry;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop recorded `ITERATE`: preserve the interaction, and treat remaining visual issues as non-priority. The **only active next branch** is `Leonardo Major-Life Presence Scope v1`, limited to source discovery, candidate selection and review design for 6–10 coarse Presences across 1452–1519. Do not add local/global layers, backend/storage, runtime data or another infrastructure gate before its package decision.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package without runtime authorization. The **only active branch** is now M2 one-source proof. Do not add a second source, local/global layers, backend/storage, public runtime data or another infrastructure gate before the M2 exit decision.
 
 ## Foundation lifecycle records
 

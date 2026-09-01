@@ -1,18 +1,18 @@
-# ARTEMIS — PRIORITIES v7.2
+# ARTEMIS — PRIORITIES v7.3
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-08-29.
-- Active cycle: `Leonardo Major-Life Presence Scope v1` after the post-#396 `ITERATE`.
+- Date: 2026-09-01.
+- Active cycle: `M2 — One-source proof` after completed M1 and merged PR #400 candidate review.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Prepare one coarse whole-life Presence package
+## P0 — Complete M2 one-source proof
 
-The published #396 user check recorded `ITERATE`: the current interaction is good enough to continue, and remaining visual problems are not the next priority. The only active product question is now whether the same loop can support a source-aware coarse life path across 1452–1519 without invented precision.
+M1 is complete: the published #396 user check recorded `ITERATE`, so the current interaction is good enough to continue. PR #400 completed the independently reviewed multi-source candidate package but did not prove an external-source runtime path. The only active question is whether one structured external fact can pass through ARTEMIS into the existing Globe without semantic invention.
 
 The load-bearing path remains:
 
@@ -42,7 +42,7 @@ The current bounded package remains honest:
 - four settlement coordinates are present-day source-bound reference anchors only;
 - the four Romagna Presences are an interaction scaffold, not Leonardo's complete biography.
 
-The one opened branch must prepare roughly 6–10 major-life Presence anchors across 1452–1519, beginning from broad historically significant places/periods. Stage A is source discovery, candidate selection and review design only; runtime promotion is not authorized.
+The selected M2 proof uses one provider (Wikidata) and one birth Presence. It must preserve pinned statement/revision identity, CC0 rights, day precision, named-settlement spatial uncertainty and the existing shared projection path. It does not authorize public runtime promotion or M3.
 
 ## P1 — Preserve the completed Core Reset boundary
 
@@ -69,14 +69,15 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Keep the one opened branch bounded
+## P3 — Keep M2 bounded
 
-The single opened branch is `Leonardo Major-Life Presence Scope v1`.
+The single opened branch is the Wikidata Leonardo-birth one-source proof.
 
-- prepare 6–10 candidate Presence anchors across 1452–1519;
-- record selection rationale, coverage, sources/locators, uncertainty and cost;
-- preserve unsupported transitions as null-geometry unknown routes;
-- freeze/review the source package before any runtime decision.
+- one provider and one normalized Presence fact;
+- pinned revisions and statement locators;
+- exact source-native day, named-settlement reference geometry and explicit historical-position uncertainty;
+- existing World Model → Explorer State → Render Projection → Globe adapter;
+- one exit decision: `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2`.
 
 Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another branch from the same `ITERATE` result.
 
@@ -104,17 +105,17 @@ These are technical/product-development foundations, not final user-value eviden
 - #334 formal participant protocol as previously sequenced;
 - #371/#373 Airtable historical import/review;
 - editable Progressive Refinement runtime;
-- Leonardo detail beyond the bounded 6–10-Presence candidate package;
-- runtime integration before the package freeze/review decision;
+- public integration of the PR #400 candidate package;
+- a second external source before the M2 exit decision;
 - generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
 - production backend and dynamic Earth infrastructure.
 
 ## Execution order
 
-1. Prepare the 6–10-Presence candidate manifest and source map.
-2. Record coverage, uncertainty, rights, cost and unresolved evidence gaps.
-3. Decide exactly one package outcome: `FREEZE FOR REVIEW`, `NARROW` or `STOP`.
-4. Do not integrate runtime data before that decision.
+1. Pin one external structured source snapshot and exact statement locators.
+2. Normalize one fact with provenance, rights and uncertainty closure.
+3. Pass it through the existing projection and Globe adapter with fail-closed tests.
+4. Decide exactly one M2 outcome: `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2`.
 
 ## Completion rule
 

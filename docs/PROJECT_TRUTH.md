@@ -33,12 +33,12 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - The first published manual check after #395 produced `ITERATE`: Range and Scrub looked too similar, the timeline lacked primary visual weight, place selection exposed too much persistent text and single-click camera movement was too aggressive.
 - PR `#396` completed that bounded iteration and is published: the full-width bottom timeline is the primary time instrument; Range is a two-handle interval; Scrub keeps a chosen build origin plus one current-time cursor; first click opens a compact popup without moving the camera; optional further action opens the right detail drawer; double-click may focus/zoom the selected place.
 - The fresh user check of the published #396 interface recorded `ITERATE`: the interaction is now good enough to continue, while remaining visual problems are explicitly non-priority.
-- Exactly one next branch is active: `Leonardo Major-Life Presence Scope v1`, limited to source discovery, candidate selection and review design for roughly 6–10 coarse Presences across 1452–1519. Runtime promotion is not authorized yet.
+- M1 — UX checkpoint is complete with `ITERATE`. PR #400 completed independent review of the non-public major-life candidate package without runtime authorization. The current milestone is M2 — One-source proof; M3 multi-source proof and M4 architecture decision remain closed.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
 - PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
 - The Gate D place-anchor overlay resolves Rimini, Cesena, Cesenatico and Imola only as CC0 present-day `named_settlement` reference points. Each point carries a Claim, EvidenceLink locator, Source/rights record and material spatial-precision Uncertainty. It does not modify the frozen Gate C package, claim an exact Leonardo/event position, connect a route or create a Region boundary.
-- The current public life-path presentation still covers only those four 1502 Presences. It does not claim a complete 1452–1519 biography, duration at each place or known routes between places; the opened 6–10-Presence major-life branch is candidate/source work and is not public runtime data.
+- The current public life-path presentation still covers only those four 1502 Presences. It does not claim a complete 1452–1519 biography, duration at each place or known routes between places; neither the PR #400 package nor the M2 proof is public runtime data.
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
@@ -204,7 +204,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / published Leonardo Temporal Map / post-#396 ITERATE recorded / one major-life Presence source branch active / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 UX checkpoint completed with ITERATE / PR #400 candidate review completed without runtime authorization / M2 one-source proof active / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
@@ -243,8 +243,9 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESS
 
 1. preserve the completed Core Reset and the published #396 Temporal Map loop;
 2. preserve the recorded post-#396 `ITERATE` and its limitations;
-3. prepare one 6–10-Presence whole-life candidate/source package across 1452–1519;
-4. record `FREEZE FOR REVIEW`, `NARROW` or `STOP` before any runtime integration.
+3. preserve the reviewed PR #400 package as non-public and non-runtime;
+4. complete one pinned-provider/one-fact M2 projection proof;
+5. record `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2` before adding a second source.
 
 Formal D1/M1/A1/P1 closeout and the old Gate E sequencing are not current roadmap drivers. Basic keyboard, responsive and accessible behavior remains part of the product increment, but visual polish and additional evidence machinery do not displace the active bounded source package.
 

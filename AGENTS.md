@@ -72,7 +72,7 @@ Current Temporal Map behavior:
 - double-click may focus the selected place;
 - dashed connectors are chronology only, never historical route geometry.
 
-The fresh user check of the published #396 loop recorded `ITERATE`: preserve the current interaction and treat remaining visual issues as non-priority. Exactly one next branch is active, `Leonardo Major-Life Presence Scope v1`, for a source-aware 6–10-Presence candidate package across 1452–1519. Do not promote it to runtime before package review or add default local/global context, backend, persistence, Airtable, UGC or framework infrastructure pre-emptively.
+The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`: preserve the current interaction and treat remaining visual issues as non-priority. PR `#400` subsequently completed the reviewed major-life candidate package without runtime authorization. The current milestone is **M2 — One-source proof**: pass exactly one real structured external fact through the existing World Model → Explorer State → Render Projection → Globe path with provenance, rights and uncertainty closure. M3 (multi-source proof) and M4 (architecture decision) remain closed until the M2 exit decision.
 
 Preserve these boundaries:
 

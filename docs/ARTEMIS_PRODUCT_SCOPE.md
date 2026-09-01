@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.6.
-- Дата: 2026-08-29.
+- Версия: 3.7.
+- Дата: 2026-09-01.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Leonardo Major-Life Presence Scope v1` candidate/source package after the post-#396 `ITERATE`.
+- Current increment: `M2 — One-source proof`; M1 is complete, PR #400 candidate review is complete and non-public, M3/M4 are closed.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -53,9 +53,10 @@ Current authorized work:
 
 - preserve the published #396 interaction;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;
-- prepare and review one candidate package of roughly 6–10 major-life Presences across 1452–1519;
-- keep this increment at source discovery/candidate/review scope until a separate package decision;
-- do not add runtime data, infrastructure or context layers before that package decision unless required to fix a direct blocker.
+- preserve the reviewed PR #400 package without promoting it to runtime;
+- pass one pinned structured Wikidata fact through the existing semantic/projection/Globe path;
+- close provenance, statement locator, rights, temporal/spatial precision and uncertainty for that fact;
+- do not add a second source, public runtime data, infrastructure or context layers before the M2 exit decision.
 
 ## 3. Обязательный current content scope
 
@@ -75,7 +76,7 @@ Current authorized work:
 
 Это **interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
 
-Не являются обязательными для текущей major-life Presence branch:
+Не являются обязательными для текущего M2 proof:
 
 - changing historical Region geometry;
 - complete local political/cultural State context;
@@ -84,7 +85,8 @@ Current authorized work:
 - documented Relation predicates;
 - global simultaneous Events;
 - broad thematic layer set;
-- runtime publication of the 6–10-Presence candidate package before review.
+- runtime publication of the PR #400 candidate package;
+- multi-source corroboration/conflict handling (M3).
 
 The current branch may define the bounded 6–10-Presence source package, but it does not promote that package to current public content by existing.
 
@@ -161,7 +163,7 @@ No completed corpus or engineering work is deleted in this cycle.
 
 Target Investigation/SliceRevision/ResearchBrief remains a valid optional research-work capability.
 
-For the current Leonardo major-life Presence source branch:
+For the current M2 one-source proof:
 
 - immutable revisions and Research Brief are not prerequisites;
 - current mutable ResearchSlice v2 remains compatibility backend code;
@@ -171,10 +173,10 @@ For the current Leonardo major-life Presence source branch:
 
 ## 8. Frozen scope
 
-Outside the one currently opened `Leonardo Major-Life Presence Scope v1` branch:
+Outside the currently opened `M2 — One-source proof` branch:
 
-- Leonardo detail beyond the bounded 6–10-Presence candidate package;
-- runtime integration of that candidate package before freeze/review;
+- public runtime integration of the PR #400 candidate package;
+- any second-source integration or reconciliation before the M2 exit decision;
 - default local/global context layers;
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
@@ -217,15 +219,13 @@ The #355 decision, public deployment and #396 implementation do not make:
 
 ## 10. Current exit condition
 
-The corrected #396 loop received a fresh user check. The recorded result is `ITERATE`: preserve the interaction baseline, treat remaining visual issues as non-priority and open one bounded data branch.
+The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed multi-source candidate package without runtime authorization. The current increment is complete only when the one-source proof records exactly one outcome:
 
-The current increment is complete only when the major-life Presence candidate package records exactly one outcome:
+- `PROCEED_TO_M3`;
+- `NARROW_M2`;
+- `STOP_M2`.
 
-- `FREEZE FOR REVIEW`;
-- `NARROW`;
-- `STOP`.
-
-The package must provide 6–10 or explicitly narrowed candidate anchors across 1452–1519, selection/coverage rationale, source/locator/uncertainty mapping, unknown-route preservation and reviewable cost. Runtime inclusion is a later decision.
+M2 must demonstrate one pinned provider, one normalized fact, source/locator/rights/uncertainty closure and the existing Globe projection path. Runtime inclusion and multi-source behavior are later decisions.
 
 This package outcome does not automatically mean Gate D is globally complete or authorize another product branch.
 
@@ -239,7 +239,7 @@ The post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded result is `ITERATE`, and it opens exactly one branch: `Leonardo Major-Life Presence Scope v1`. Context/layers, curation/editorial storage, persistence/sharing and renderer/provider improvement remain unopened.
+The recorded M1 result is `ITERATE`. The major-life candidate branch is complete through PR #400; the one active branch is M2. M3, M4, context/layers, curation/editorial storage, persistence/sharing and renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

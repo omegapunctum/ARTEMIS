@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "wikidata-leonardo-birth-2026-09-01",
+  "snapshot_kind": "reviewed_structured_excerpt",
+  "provider": {
+    "id": "wikidata",
+    "label": "Wikidata",
+    "data_access": "https://www.wikidata.org/wiki/Wikidata:Data_access",
+    "license": "CC0-1.0",
+    "license_url": "https://www.wikidata.org/wiki/Wikidata:Licensing"
+  },
+  "retrieved_at": "2026-09-01",
+  "entities": {
+    "Q762": {
+      "label": "Leonardo da Vinci",
+      "revision": 2533380508,
+      "revision_url": "https://www.wikidata.org/w/index.php?title=Q762&oldid=2533380508",
+      "raw_entity_json_sha256": "109bf80f56e22ec4078ce7def6103fd54e600ac1dd4316f2ab572ff92c0e64cc",
+      "statements": {
+        "P569": [{
+          "statement_id": "Q762$E556FF29-077E-47B3-995A-A5F6E5ABFDC9",
+          "rank": "preferred",
+          "snaktype": "value",
+          "value": {"time": "+1452-04-15T00:00:00Z", "precision": 11, "calendar_entity": "Q1985786"},
+          "reference_hashes": [
+            "72850ceb9f2401f4f45f57fbabe274e7a5218cc8",
+            "22bd2579a39fff36a621589f559e9ac86976e97a",
+            "e3d930e024c6a20f6b81f3cb078b99b1767d42bc",
+            "fd38c16d153aa0df9c2885726011012b1fd81164"
+          ]
+        }],
+        "P19": [{
+          "statement_id": "q762$160C942C-22DB-4AE8-8F23-D1C5FE1F2EF6",
+          "rank": "normal",
+          "snaktype": "value",
+          "value": {"entity_id": "Q154184"},
+          "reference_hashes": [
+            "22bd2579a39fff36a621589f559e9ac86976e97a",
+            "e3d930e024c6a20f6b81f3cb078b99b1767d42bc",
+            "642708de9c7676df694bfc92da8ff3ddd607436b"
+          ]
+        }]
+      }
+    },
+    "Q154184": {
+      "label": "Anchiano",
+      "revision": 2504702048,
+      "revision_url": "https://www.wikidata.org/w/index.php?title=Q154184&oldid=2504702048",
+      "raw_entity_json_sha256": "f4a2a87b8cf1824950a951b334cd204e0d2a9b9016c3ecc836e1ed75f47b206f",
+      "statements": {
+        "P625": [{
+          "statement_id": "q154184$5C9E0E15-0D1C-43D4-B822-397818D76C90",
+          "rank": "normal",
+          "snaktype": "value",
+          "value": {
+            "latitude": 43.799166666667,
+            "longitude": 10.938133333333,
+            "precision": 0.00027777777777778,
+            "globe_entity": "Q2"
+          },
+          "reference_hashes": ["9a24f7c0208b05d6be97077d855671d1dfdbc0dd"]
+        }]
+      }
+    }
+  },
+  "scope": {
+    "proof_fact": "Leonardo da Vinci was born on 15 April 1452 in Anchiano.",
+    "included_properties": ["P569", "P19", "P625"],
+    "excluded_semantics": [
+      "exact historical position within Anchiano",
+      "birth house identity",
+      "residence duration",
+      "route geometry"
+    ]
+  }
+}
