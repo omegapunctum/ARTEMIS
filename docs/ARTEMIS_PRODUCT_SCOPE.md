@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 3.7.
+- Версия: 3.8.
 - Дата: 2026-09-01.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `M2 — One-source proof`; M1 is complete, PR #400 candidate review is complete and non-public, M3/M4 are closed.
+- Current increment: `M3 — Multi-source proof`; M1 is complete, PR #400 remains non-public, and PR #401 completed M2 with `PROCEED_TO_M3`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -54,9 +54,10 @@ Current authorized work:
 - preserve the published #396 interaction;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;
 - preserve the reviewed PR #400 package without promoting it to runtime;
-- pass one pinned structured Wikidata fact through the existing semantic/projection/Globe path;
-- close provenance, statement locator, rights, temporal/spatial precision and uncertainty for that fact;
-- do not add a second source, public runtime data, infrastructure or context layers before the M2 exit decision.
+- preserve the merged PR #401 one-source proof unchanged as M2 evidence;
+- add exactly one independent second provider for the same bounded Leonardo birth Presence;
+- preserve each source's Claim/EvidenceLink/Source identity and expose agreement, refinement or conflict explicitly;
+- do not add a third provider, another Presence, public runtime data, infrastructure or context layers before the M3 exit decision.
 
 ## 3. Обязательный current content scope
 
@@ -76,7 +77,7 @@ Current authorized work:
 
 Это **interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
 
-Не являются обязательными для текущего M2 proof:
+Не являются обязательными для текущего M3 proof:
 
 - changing historical Region geometry;
 - complete local political/cultural State context;
@@ -86,9 +87,9 @@ Current authorized work:
 - global simultaneous Events;
 - broad thematic layer set;
 - runtime publication of the PR #400 candidate package;
-- multi-source corroboration/conflict handling (M3).
+- expansion beyond the one selected two-provider Presence.
 
-The current branch may define the bounded 6–10-Presence source package, but it does not promote that package to current public content by existing.
+The reviewed PR #400 candidate package remains separate non-public evidence; M3 does not promote it or expand its Presence set.
 
 ### 3.1 Progressive fidelity / достаточная точность
 
@@ -163,7 +164,7 @@ No completed corpus or engineering work is deleted in this cycle.
 
 Target Investigation/SliceRevision/ResearchBrief remains a valid optional research-work capability.
 
-For the current M2 one-source proof:
+For the current M3 multi-source proof:
 
 - immutable revisions and Research Brief are not prerequisites;
 - current mutable ResearchSlice v2 remains compatibility backend code;
@@ -173,10 +174,10 @@ For the current M2 one-source proof:
 
 ## 8. Frozen scope
 
-Outside the currently opened `M2 — One-source proof` branch:
+Outside the currently opened `M3 — Multi-source proof` branch:
 
 - public runtime integration of the PR #400 candidate package;
-- any second-source integration or reconciliation before the M2 exit decision;
+- any third-provider integration, second Presence or broad reconciliation framework before the M3 exit decision;
 - default local/global context layers;
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
@@ -219,13 +220,13 @@ The #355 decision, public deployment and #396 implementation do not make:
 
 ## 10. Current exit condition
 
-The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed multi-source candidate package without runtime authorization. The current increment is complete only when the one-source proof records exactly one outcome:
+The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed candidate package without runtime authorization. PR #401 completed M2, and the recorded result is `PROCEED_TO_M3`. The current increment is complete only when the bounded two-provider proof records exactly one outcome:
 
-- `PROCEED_TO_M3`;
-- `NARROW_M2`;
-- `STOP_M2`.
+- `PROCEED_TO_M4`;
+- `NARROW_M3`;
+- `STOP_M3`.
 
-M2 must demonstrate one pinned provider, one normalized fact, source/locator/rights/uncertainty closure and the existing Globe projection path. Runtime inclusion and multi-source behavior are later decisions.
+M3 must demonstrate two independent provider identities for the same bounded Presence, explicit agreement/refinement/conflict semantics and visible uncertainty without public runtime promotion. M4 remains a later architecture decision.
 
 This package outcome does not automatically mean Gate D is globally complete or authorize another product branch.
 
@@ -239,7 +240,7 @@ The post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`. The major-life candidate branch is complete through PR #400; the one active branch is M2. M3, M4, context/layers, curation/editorial storage, persistence/sharing and renderer/provider improvement remain unopened.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`. The one active branch is M3. M4, context/layers, curation/editorial storage, persistence/sharing and broad renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

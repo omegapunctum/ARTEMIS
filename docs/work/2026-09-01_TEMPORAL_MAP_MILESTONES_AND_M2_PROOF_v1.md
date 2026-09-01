@@ -2,12 +2,12 @@
 
 ## Status
 
-- Type: active milestone decision and bounded implementation record.
+- Type: completed milestone evidence record.
 - Date: 2026-09-01.
 - Parent contour: issue `#355`.
-- Current milestone: `M2 — One-source proof`.
+- Milestone: `M2 — One-source proof` / completed through PR `#401`.
 - Runtime effect: proof-only; public Leonardo Life Path is unchanged.
-- Next milestone effect: `M3` remains closed until the M2 exit decision is recorded.
+- Recorded outcome: `PROCEED_TO_M3`; M3 is opened only by the separate exit decision record.
 
 ## 1. Correct milestone lifecycle
 
@@ -73,10 +73,8 @@ The public `leonardo_life_path_presentation.json`, frozen Romagna package and PR
 
 ## 7. M2 exit decision
 
-Record exactly one result after code review and green bounded checks:
+Recorded result after code review, merge and green bounded checks:
 
-- `PROCEED_TO_M3` — the one-source path is reproducible, source-bound and rendered without invention;
-- `NARROW_M2` — keep the same source/fact but reduce or correct adapter semantics;
-- `STOP_M2` — the source path cannot meet the semantic/provenance/runtime boundary.
+**`PROCEED_TO_M3`** — the one-source path is reproducible, source-bound and rendered without invention.
 
-Until that decision is recorded, do not add a second source and do not make the M4 architecture decision.
+The decision does not publish the proof, promote the PR #400 package or adopt a federated architecture. Those remain separate M3/M4 decisions.

@@ -336,7 +336,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("project_state v1.1 currently opens only Gate D")
     if gate["status"] not in {"in_progress", "blocked"}:
         raise ProjectStateError("Gate D must be in_progress or blocked")
-    if gate["allowed_decisions"] != ["PROCEED_TO_M3", "NARROW_M2", "STOP_M2"]:
+    if gate["allowed_decisions"] != ["PROCEED_TO_M4", "NARROW_M3", "STOP_M3"]:
         raise ProjectStateError("Gate D decision set drift")
     if payload["next_transition"]["gate"] != "D":
         raise ProjectStateError("Gate E cannot open before a completed Gate D decision")

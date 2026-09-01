@@ -32,9 +32,9 @@
   ],
   "gate": {
     "id": "D",
-    "label": "Leonardo Temporal Map / M2 one-source proof",
+    "label": "Leonardo Temporal Map / M3 multi-source proof",
     "status": "in_progress",
-    "allowed_decisions": ["PROCEED_TO_M3", "NARROW_M2", "STOP_M2"]
+    "allowed_decisions": ["PROCEED_TO_M4", "NARROW_M3", "STOP_M3"]
   },
   "work_in_progress_limit": 1,
   "github": {
@@ -63,7 +63,8 @@
       "PR #393 — Core Reset boundary completed; Globe primary, Atlas compatibility-only",
       "PR #395 — calendar-based Leonardo Temporal Map life-path loop",
       "PR #396 — first ITERATE correction: primary bottom timeline, distinct Range/Scrub, popup-first selection and double-click focus",
-      "PR #400 — independently reviewed major-life Presence candidate package; runtime not authorized"
+      "PR #400 — independently reviewed major-life Presence candidate package; runtime not authorized",
+      "PR #401 — M2 one-source proof completed; Wikidata identity/provenance/rights/uncertainty and Globe projection path verified"
     ]
   },
   "capability": {
@@ -88,11 +89,12 @@
     "docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md",
     "docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md",
     "docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md",
-    "docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md"
+    "docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md",
+    "docs/work/2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Complete the one-provider/one-fact M2 proof and record exactly one PROCEED_TO_M3, NARROW_M2 or STOP_M2 outcome before adding a second external source or making the M4 architecture decision."
+    "condition": "Complete one two-provider/one-Presence M3 proof and record exactly one PROCEED_TO_M4, NARROW_M3 or STOP_M3 outcome before adding a third provider, another Presence or making the M4 architecture decision."
   }
 }

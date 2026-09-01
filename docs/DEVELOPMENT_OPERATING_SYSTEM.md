@@ -170,8 +170,9 @@ Current product implementation sequence:
 4. PR `#396` implemented and published the bounded correction: full-width bottom timeline, two-handle `Range`, build-origin + single-current-time `Scrub`, popup-first selection, optional right drawer, no single-click camera jump and double-click focus.
 5. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
 6. PR #400 completed the reviewed major-life candidate package without runtime authorization.
-7. Exactly one branch is active: `M2 — One-source proof`, limited to one pinned provider, one normalized external fact and the existing World Model → Explorer State → Render Projection → Globe path.
-8. M3 multi-source proof and M4 architecture decision remain closed until the M2 exit decision; no default context/layer expansion, backend/storage or new infrastructure gate is opened.
+7. PR #401 completed M2 with one pinned provider, one normalized external fact and the existing World Model → Explorer State → Render Projection → Globe path.
+8. The recorded M2 result is `PROCEED_TO_M3`.
+9. Exactly one branch is active: `M3 — Multi-source proof`, limited to one independent second provider for the same bounded Presence and explicit agreement/refinement/conflict semantics. M4, public runtime promotion, default context/layer expansion, backend/storage and new infrastructure remain closed.
 
 Current Temporal Map semantic/UI boundary:
 

@@ -13,7 +13,8 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md` | #355 current milestone lifecycle and bounded Wikidata M2 one-source proof | `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2` after review and green bounded checks |
+| `2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md` | #355 recorded M2 exit decision and bounded M3 opening | M3 records `PROCEED_TO_M4`, `NARROW_M3` or `STOP_M3` |
+| `2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md` | #355 completed milestone lifecycle and Wikidata M2 evidence | completed with `PROCEED_TO_M3` through separate decision record |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D promotion/stop outcome; the bounded post-#396 `ITERATE` does not close it |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
@@ -53,7 +54,7 @@ Current interaction semantics:
 - dashed connectors express chronology only and are never historical route geometry;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package without runtime authorization. The **only active branch** is now M2 one-source proof. Do not add a second source, local/global layers, backend/storage, public runtime data or another infrastructure gate before the M2 exit decision.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. The **only active branch** is now one two-provider/one-Presence M3 proof. Do not add a third provider, another Presence, local/global layers, backend/storage, public runtime data or an M4 decision before the M3 exit decision.
 
 ## Foundation lifecycle records
 
