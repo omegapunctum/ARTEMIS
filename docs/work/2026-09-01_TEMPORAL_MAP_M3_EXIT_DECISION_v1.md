@@ -66,3 +66,7 @@ Before that decision, do not:
 - reinterpret green technical checks as formal user-value evidence.
 
 The M3 proof artifact retains `m4_authorized=false`: implementation evidence cannot authorize its own successor. This separate reviewed lifecycle decision is the authority to enter the bounded M4 decision stage.
+
+## 6. Recorded M4 outcome
+
+M4 subsequently recorded `ADOPT` in `2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md`. Adoption applies to the source-federated semantic direction only; no implementation branch, live federation or public data expansion is opened automatically.

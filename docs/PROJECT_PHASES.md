@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.5
+# ARTEMIS — PROJECT PHASES v7.6
 
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-09-01.
-- Active phase: **5.0 — M4 architecture decision**.
+- Active phase: **5.0 — post-M4 hold; no implementation branch active**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -126,14 +126,16 @@ PR #403 completed the exact two-provider/one-Presence proof. Wikidata and Museo 
 
 The proof does not establish upstream-independent corroboration, a hard-conflict case, production ingestion/storage or public user value.
 
-## Phase 5D — M4 Architecture decision [active]
+## Phase 5D — M4 Architecture decision [completed]
 
 M4 asks whether the completed M2/M3 evidence warrants `ADOPT`, `NARROW` or `REJECT` for the source-federated architecture direction.
 
-This phase is decision-only. A third provider, another Presence, generic federation/reconciliation infrastructure, public runtime promotion and new context/layers remain closed until one M4 outcome is recorded.
+The recorded result is `ADOPT`: source-specific reviewed intake may normalize into the canonical Claim/EvidenceLink/Source/Uncertainty path without becoming a second ontology. This is a semantic direction, not authorization for live federation, automatic reconciliation, generic ingestion/storage, public runtime promotion or new data.
+
+No post-M4 implementation phase is active. A separate decision must define one bounded question, artifact scope, evidence requirement and exit condition before implementation begins.
 
 Context/layers, curation storage, persistence/sharing, renderer/provider work, generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain unopened/gated.
 
 ## Rule
 
-One active product loop and one active milestone. The next decision is `ADOPT`, `NARROW` or `REJECT`; green M2/M3 implementations do not select that outcome or authorize public data expansion.
+One active product vertical and at most one active milestone. M4 is complete with `ADOPT`; no successor milestone or implementation branch is inferred from that result. Public data expansion requires a separate bounded decision.

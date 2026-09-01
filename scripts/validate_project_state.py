@@ -338,6 +338,8 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("Gate D must be in_progress or blocked")
     if gate["allowed_decisions"] != ["ADOPT", "NARROW", "REJECT"]:
         raise ProjectStateError("Gate D decision set drift")
+    if gate.get("decision") != "ADOPT":
+        raise ProjectStateError("the completed M4 architecture decision must remain ADOPT")
     if payload["next_transition"]["gate"] != "D":
         raise ProjectStateError("Gate E cannot open before a completed Gate D decision")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
