@@ -59,7 +59,7 @@
       <header class="timeline-subject">
         <span class="eyebrow">Selected object</span>
         <h1>Leonardo da Vinci</h1>
-        <p id="path-coverage">Romagna 1502 · interaction scaffold</p>
+        <p id="path-coverage">Whole-life proof · 1452–1519</p>
       </header>
 
       <div class="timeline-workspace">
@@ -70,6 +70,8 @@
             <button id="mode-scrub" type="button" aria-pressed="false">Scrub</button>
           </div>
         </div>
+
+        <nav id="macro-periods" class="macro-periods" aria-label="Major life periods"></nav>
 
         <div id="range-controls" class="timeline-mode">
           <div class="timeline-values">
@@ -95,7 +97,7 @@
 
       <div class="timeline-summary">
         <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
-        <p class="route-note"><span class="route-swatch" aria-hidden="true"></span>Dashed links show chronology only. Exact routes remain unknown.</p>
+        <p class="route-note">No path line is drawn: exact routes between Presence anchors remain unknown.</p>
       </div>
     </section>
   </main>

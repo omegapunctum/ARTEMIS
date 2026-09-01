@@ -93,10 +93,10 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["explorer_view_count"] == 96
     assert metadata["temporal_preset_count"] == 6
     assert metadata["life_path_available"] is True
-    assert metadata["life_path_presence_count"] == 4
-    assert metadata["life_path_transition_count"] == 3
-    assert metadata["life_path_view_count"] == 10
-    assert metadata["life_path_chronological_connector_enabled"] is True
+    assert metadata["life_path_presence_count"] == 11
+    assert metadata["life_path_transition_count"] == 10
+    assert metadata["life_path_view_count"] == 66
+    assert metadata["life_path_chronological_connector_enabled"] is False
     assert metadata["browser_acceptance_profile_count"] == 3
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
@@ -144,40 +144,48 @@ def test_life_path_presentation_is_calendar_scaled_and_route_geometry_free(tmp_p
     assert life_path["available"] is True
     assert life_path["presentation_only"] is True
     assert life_path["subject_ref"] == "entity-leonardo-da-vinci"
-    assert life_path["trajectory_ref"] == "trajectory-leonardo-romagna-1502"
-    assert life_path["scope_status"] == "interaction_scaffold_not_complete_life"
-    assert life_path["coverage"]["complete_life"] is False
+    assert life_path["trajectory_ref"] == "trajectory-leonardo-major-life-v1"
+    assert life_path["scope_status"] == "m5_whole_life_runtime_proof_not_canonical_publication"
+    assert life_path["coverage"]["complete_life"] is True
+    assert life_path["coverage"]["complete_itinerary"] is False
     assert life_path["route_policy"] == {
         "status": "unknown_route",
         "geometry": None,
         "historical_route_geometry_permitted": False,
-        "chronological_connector_permitted": True,
+        "chronological_connector_permitted": False,
         "chronological_connector_is_route": False,
     }
-    assert life_path["time_axis"]["axis_kind"] == "day"
-    assert life_path["time_axis"]["values"][0] == "1502-08-08"
-    assert life_path["time_axis"]["values"][-1] == "1502-11-30"
-    assert len(life_path["time_axis"]["values"]) == 115
+    assert life_path["time_axis"]["axis_kind"] == "year"
+    assert life_path["time_axis"]["values"][0] == "1452"
+    assert life_path["time_axis"]["values"][-1] == "1519"
+    assert len(life_path["time_axis"]["values"]) == 68
     assert [presence["place_ref"] for presence in life_path["presences"]] == [
+        "place-vinci",
+        "place-florence",
+        "place-milan",
         "place-rimini",
         "place-cesena",
         "place-cesenatico",
         "place-imola",
+        "place-florence",
+        "place-milan",
+        "place-vatican-belvedere",
+        "place-clos-luce",
     ]
-    assert all(presence["coordinate_role"] == "present_day_settlement_reference" for presence in life_path["presences"])
-    assert all(presence["historical_location_precision"] == "exact_position_within_named_settlement_unknown" for presence in life_path["presences"])
+    assert {presence["coordinate_role"] for presence in life_path["presences"]} == {
+        "present_day_settlement_reference",
+        "present_day_place_reference",
+    }
+    assert all(presence["historical_location_precision"].endswith("_unknown") for presence in life_path["presences"])
     assert all("short_description" in presence for presence in life_path["presences"])
-    assert len(life_path["transitions"]) == 3
+    assert len(life_path["transitions"]) == 10
     assert all(transition["route_status"] == "unknown_route" for transition in life_path["transitions"])
     assert all(transition["route_geometry"] is None for transition in life_path["transitions"])
-    assert all(transition["presentation_connector"] == {
-        "semantic_role": "chronological_connection",
-        "style": "dashed",
-        "derived_from_presence_anchors": True,
-        "is_historical_route_geometry": False,
-    } for transition in life_path["transitions"])
-    assert len(life_path["views"]) == 10
-    assert life_path["default_view_id"] == "life-path-0-3"
+    assert all(transition["presentation_connector"] is None for transition in life_path["transitions"])
+    assert len(life_path["macro_periods"]) == 6
+    assert len(life_path["views"]) == 66
+    assert life_path["default_view_id"] == "life-path-0-10"
+    assert life_path["manual_exit_decisions"] == ["ITERATE", "NARROW", "STOP"]
 
 
 def test_precomputed_views_use_source_native_time_and_projection_semantics(tmp_path: Path) -> None:
@@ -630,6 +638,7 @@ def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
     assert 'id="scrub-current" type="range"' in html_source
     assert 'id="mode-range"' in html_source
     assert 'id="mode-scrub"' in html_source
+    assert 'id="macro-periods"' in html_source
     assert 'id="layer-controls"' not in html_source
     assert 'role="status" aria-live="polite"' in html_source
     assert 'id="path-sequence"' not in html_source
@@ -667,8 +676,8 @@ def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes(
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-map-status"' in html_source
-    assert "Dashed links show chronology only" in html_source
-    assert "Exact routes remain unknown" in html_source
+    assert "No path line is drawn" in html_source
+    assert "exact routes between Presence anchors remain unknown" in html_source
     assert 'id="toggle-alternatives"' not in html_source
     assert 'id="view-global"' not in html_source
     assert 'id="view-slice"' not in html_source
@@ -676,6 +685,7 @@ def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes(
     assert "else addCapabilityPath(map, capabilityPath)" in runtime_source
     assert "addLifePathMarkers(map)" in runtime_source
     assert "life-path-chronology-line" in runtime_source
+    assert "chronological_connector_permitted === true" in runtime_source
     assert "is_historical_route_geometry: false" in runtime_source
     assert "maplibregl.GlobeControl" not in runtime_source
 
@@ -688,6 +698,8 @@ def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -
     assert "does not query Airtable" in html_source
     assert "Sources, limits and prototype status" in html_source
     assert "Sources and uncertainty" in runtime_source
+    assert "function renderMacroPeriodControls" in runtime_source
+    assert "Reviewed package sources" in runtime_source
     assert "knowledgeDisclosure" in runtime_source
     assert "Claims & evidence" in runtime_source
     assert "Material uncertainty" in runtime_source

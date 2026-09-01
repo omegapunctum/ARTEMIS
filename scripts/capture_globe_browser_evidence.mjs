@@ -147,14 +147,20 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     const initialStatus = document.getElementById('temporal-map-status')?.textContent || '';
     const presences = runtime.data.lifePath.presences;
     const axisValues = runtime.data.lifePath.time_axis.values;
-    if (presences.length !== 4) throw new Error('Leonardo life path does not expose four presences');
+    if (presences.length !== 11) throw new Error('M5 whole-life path does not expose eleven presences');
+    if ((runtime.data.lifePath.macro_periods || []).length !== 6) {
+      throw new Error('M5 whole-life path does not expose six macro periods');
+    }
+    if (runtime.map.getLayer('life-path-chronology-line')) {
+      throw new Error('M5 rendered a transition line without evidenced route geometry');
+    }
     document.getElementById('mode-scrub')?.click();
     const scrubStart = document.getElementById('scrub-start');
     const scrubCurrent = document.getElementById('scrub-current');
     if (!scrubStart || !scrubCurrent) throw new Error('Scrub controls are unavailable');
     scrubStart.value = '0';
     scrubStart.dispatchEvent(new Event('change', { bubbles: true }));
-    scrubCurrent.value = '2';
+    scrubCurrent.value = String(axisValues.indexOf('1502'));
     scrubCurrent.dispatchEvent(new Event('input', { bubbles: true }));
     const marker = [...document.querySelectorAll('.life-path-marker')].find(
       (button) => button.getAttribute('aria-label')?.startsWith('Show Cesena summary,')
@@ -205,7 +211,7 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   for (const requiredText of [
     'Cesena',
     'Leonardo documented in the Cesena survey context',
-    'Not established in the current corpus',
+    'Not established beyond the documented source anchor',
     'exact historical position unknown',
     'Sources and uncertainty'
   ]) {
@@ -225,8 +231,8 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   if (interaction.initialStatus === interaction.updatedStatus) {
     throw new Error('Timeline interaction did not update the visible globe status');
   }
-  if (interaction.visiblePresenceCount !== 2) {
-    throw new Error(`Scrub mode did not reveal two accumulated presences: ${JSON.stringify(interaction)}`);
+  if (interaction.visiblePresenceCount !== 7) {
+    throw new Error(`Scrub mode did not reveal seven accumulated anchors through 1502: ${JSON.stringify(interaction)}`);
   }
   if (
     interaction.urlMode !== interaction.mode

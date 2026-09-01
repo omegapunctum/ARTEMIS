@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "proof_id": "temporal-map-m5-whole-life-runtime-proof-v1",
+  "status": "OPEN_RUNTIME_PROOF",
+  "question": "Does the existing ARTEMIS Temporal Map remain understandable and useful when the reviewed Leonardo major-life package is rendered across 1452–1519?",
+  "source_package": {
+    "package_ref": "fixtures/world_slices/leonardo_major_life/v1/package.json",
+    "package_id": "leonardo-major-life-presence-candidates-v1",
+    "required_audit_decision": "FREEZE_FOR_REVIEW",
+    "new_presence_count": 7,
+    "referenced_romagna_presence_count": 4,
+    "composed_presence_count": 11
+  },
+  "runtime_authorization": {
+    "scope": "presentation_only_bounded_m5_proof",
+    "changes_source_package_status": false,
+    "canonical_publication": false,
+    "live_provider_access": false,
+    "backend_or_storage": false
+  },
+  "coverage": {
+    "start": "1452",
+    "end": "1519",
+    "timeline_granularity": "year",
+    "absence_semantics": "Missing Presence data never means historical absence."
+  },
+  "ux_contract": {
+    "progressive_refinement": "Show six major periods first, then let the user inspect the eleven source-bound Presence anchors.",
+    "range": "A two-handle calendar interval includes every Presence whose temporal extent overlaps the selected years.",
+    "scrub": "A chosen build origin plus one current-year cursor progressively reveals Presence anchors reached by that year.",
+    "selection": "Single click opens a compact popup without moving the camera; another explicit action opens the right drawer; double click focuses the map.",
+    "routes": "No transition line is rendered without evidenced route geometry."
+  },
+  "non_goals": [
+    "No exact birth-to-death itinerary",
+    "No interpolation between Presence anchors",
+    "No new historical or biographical claims",
+    "No continuous-position claim for residence ranges",
+    "No live source federation, generic ingestion, backend or storage",
+    "No automatic post-M5 implementation branch"
+  ],
+  "manual_exit_decisions": ["ITERATE", "NARROW", "STOP"]
+}
