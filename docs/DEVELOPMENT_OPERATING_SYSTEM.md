@@ -169,8 +169,9 @@ Current product implementation sequence:
 3. The first published manual check recorded **`ITERATE`** because Range/Scrub looked too similar, timeline hierarchy was weak, place details were too persistent and single-click camera movement was too aggressive.
 4. PR `#396` implemented and published the bounded correction: full-width bottom timeline, two-handle `Range`, build-origin + single-current-time `Scrub`, popup-first selection, optional right drawer, no single-click camera jump and double-click focus.
 5. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
-6. Exactly one next branch is active: `Leonardo Major-Life Presence Scope v1`, limited to a source-aware 6–10-Presence candidate package across 1452–1519.
-7. Freeze/review that package before any runtime integration; no default context/layer expansion, backend/storage or new infrastructure gate is opened.
+6. PR #400 completed the reviewed major-life candidate package without runtime authorization.
+7. Exactly one branch is active: `M2 — One-source proof`, limited to one pinned provider, one normalized external fact and the existing World Model → Explorer State → Render Projection → Globe path.
+8. M3 multi-source proof and M4 architecture decision remain closed until the M2 exit decision; no default context/layer expansion, backend/storage or new infrastructure gate is opened.
 
 Current Temporal Map semantic/UI boundary:
 

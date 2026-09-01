@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.2
+# ARTEMIS — PROJECT PHASES v7.3
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-08-29.
-- Active phase: **5.0 — Leonardo Major-Life Presence candidate/source package**.
+- Date: 2026-09-01.
+- Active phase: **5.0 — M2 one-source proof**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -98,11 +98,11 @@ The recorded result is **`ITERATE`**. The evidence and its limitations are prese
 
 This check does not declare Gate D complete or claim validated historical/product capability.
 
-## Phase 5 — Leonardo Major-Life Presence Scope v1 [active]
+## Phase 5A — Leonardo Major-Life Presence Scope v1 [completed]
 
-The post-#396 `ITERATE` opens exactly one branch: a source-aware candidate package of roughly 6–10 major-life Presences across 1452–1519.
+The post-#396 `ITERATE` opened one source-aware candidate package of seven major-life Presences across 1452–1519. PR #400 completed independent review and froze the non-public candidate package without runtime authorization.
 
-Current stage:
+Completed evidence:
 
 - source discovery and candidate selection;
 - explicit inclusion/exclusion and whole-life coverage rationale;
@@ -110,10 +110,16 @@ Current stage:
 - cost and review design;
 - no runtime promotion before a package freeze/review decision.
 
-The active contract is `docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md`.
+The package remains non-public and is not evidence of a live external-source adapter.
+
+## Phase 5B — M2 One-source proof [active]
+
+M2 asks one bounded architecture/product question: can one real structured external fact pass through ARTEMIS into the existing Globe while preserving source identity, rights, temporal/spatial precision and uncertainty?
+
+The selected proof is one Wikidata birth Presence for Leonardo. M3 multi-source reconciliation and M4 architecture adoption/narrowing/rejection remain closed. The active record is `docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md`.
 
 Context/layers, curation storage, persistence/sharing, renderer/provider work, generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain unopened/gated.
 
 ## Rule
 
-One active product loop and one active branch. The next decision applies to the candidate package (`FREEZE FOR REVIEW`, `NARROW` or `STOP`), not to automatic runtime expansion. Completed implementation is not user-value validation.
+One active product loop and one active milestone. The next decision is `PROCEED_TO_M3`, `NARROW_M2` or `STOP_M2`; a green implementation does not decide M4 or authorize public data expansion.
