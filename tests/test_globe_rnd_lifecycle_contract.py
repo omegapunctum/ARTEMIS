@@ -13,7 +13,7 @@ def _json(relative_path: str) -> dict:
     return json.loads(_text(relative_path))
 
 
-def test_355_owns_one_m3_multi_source_proof_branch() -> None:
+def test_355_owns_one_m4_architecture_decision_branch() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     scope = _text("docs/ARTEMIS_PRODUCT_SCOPE.md")
@@ -31,9 +31,10 @@ def test_355_owns_one_m3_multi_source_proof_branch() -> None:
     assert "Fresh user check of the published loop [completed]" in phases
     assert "Leonardo Major-Life Presence Scope v1 [completed]" in phases
     assert "M2 One-source proof [completed]" in phases
-    assert "M3 Multi-source proof [active]" in phases
+    assert "M3 Multi-source proof [completed]" in phases
+    assert "M4 Architecture decision [active]" in phases
 
-    assert "Current increment: `M3 — Multi-source proof`" in scope
+    assert "Current increment: `M4 — Architecture decision`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.0"
     assert state["gate"]["id"] == "D"
@@ -99,19 +100,21 @@ def test_legacy_and_premature_infrastructure_is_outside_core() -> None:
     assert "editable Progressive Refinement runtime" in priorities
     assert "#392" in operating_system
     assert "public integration of the PR #400 candidate package" in priorities
-    assert "a third provider or second Presence before the M3 exit decision" in priorities
+    assert "a third provider or second Presence before the M4 decision" in priorities
     assert "context/layers" in priorities
 
 
-def test_m2_decision_opens_exactly_one_bounded_m3_branch() -> None:
+def test_m3_decision_opens_exactly_one_bounded_m4_branch() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     validation = _text("docs/VALIDATION_DECISION.md")
     m2 = _text("docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md")
-    decision_record = _text("docs/work/2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md")
+    m2_decision = _text("docs/work/2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md")
+    m3 = _text("docs/work/2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md")
+    decision_record = _text("docs/work/2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md")
     state = _json("docs/project_state.json")
 
-    expected = ["PROCEED_TO_M4", "NARROW_M3", "STOP_M3"]
+    expected = ["ADOPT", "NARROW", "REJECT"]
     assert state["gate"]["allowed_decisions"] == expected
 
     for decision in expected:
@@ -119,10 +122,14 @@ def test_m2_decision_opens_exactly_one_bounded_m3_branch() -> None:
         assert decision in phases
         assert decision in decision_record
 
-    assert "single opened branch is one two-provider Leonardo-birth proof" in priorities
-    assert "before adding a third provider" in state["next_transition"]["condition"]
+    assert "single opened branch is one architecture decision" in priorities
+    assert "before adding new sources" in state["next_transition"]["condition"]
     assert "PROCEED_TO_M3" in m2
-    assert "Decision: `PROCEED_TO_M3`" in decision_record
+    assert "Decision: `PROCEED_TO_M3`" in m2_decision
+    assert "Recorded outcome: `PROCEED_TO_M4`" in m3
+    assert "Decision: `PROCEED_TO_M4`" in decision_record
+    assert "decision-only stage" in decision_record
+    assert "m4_authorized=false" in decision_record
     assert "Recorded product decision | `ITERATE`" in validation
     assert "Opened next branch | `Leonardo Major-Life Presence Scope v1`" in validation
 
