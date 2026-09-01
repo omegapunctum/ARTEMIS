@@ -175,6 +175,30 @@ input[type="range"] { min-height: 30px; accent-color: #5fb8ff; }
 }
 .timeline-heading h2 { margin: 0; font-size: 14px; }
 
+.macro-periods {
+  display: flex;
+  gap: 5px;
+  margin: 0 0 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.macro-period {
+  flex: 0 0 auto;
+  min-height: 34px;
+  display: grid;
+  gap: 1px;
+  border: 1px solid #2b425b;
+  border-radius: 7px;
+  background: #0c1927;
+  padding: 4px 8px;
+  color: #d6e9fa;
+  text-align: left;
+}
+.macro-period:hover,
+.macro-period:focus-visible { border-color: #68baf2; background: #132a3e; }
+.macro-period strong { font-size: 10px; line-height: 1.1; }
+.macro-period span { color: #8fa8bd; font-size: 9px; }
+
 .mode-switch { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid #2a3d54; border-radius: 999px; }
 .mode-switch button {
   border: 0;

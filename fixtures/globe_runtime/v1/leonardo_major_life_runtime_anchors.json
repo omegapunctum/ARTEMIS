@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "m5-leonardo-major-life-place-anchors-v1",
+  "coordinate_reference": "EPSG:4326",
+  "semantic_role": "present_day_place_reference",
+  "source": {
+    "source_id": "source-wikidata-m5-place-anchors",
+    "title": "Wikidata coordinate locations",
+    "organization": "Wikimedia Foundation / Wikidata community",
+    "source_type": "open_structured_data",
+    "url": "https://www.wikidata.org/",
+    "locator": "P625 coordinate location on Q82884, Q2044, Q490, Q2547111 and Q1122731",
+    "retrieved_at": "2026-09-01",
+    "curation_state": "verified_contextual_reference",
+    "rights": {
+      "access_status": "accessible",
+      "data_or_text_use": "permitted",
+      "media_reuse": "not_applicable",
+      "derived_geometry_use": "permitted",
+      "license": "CC0-1.0",
+      "attribution": "Wikidata contributors; structured data available under CC0 1.0"
+    }
+  },
+  "uncertainty": {
+    "uncertainty_id": "uncertainty-m5-place-anchor-historical-position",
+    "dimension": "spatial_precision",
+    "description": "Each coordinate is a present-day reference point for the named place, not an evidenced position of Leonardo, a historical footprint or a route.",
+    "effect": "The M5 renderer may place a reference marker at this point while preserving the source package geometry as null and every inter-presence route as unknown."
+  },
+  "anchors": [
+    {
+      "anchor_id": "anchor-vinci-present-day-place",
+      "place_ref": "place-vinci",
+      "label": "Vinci",
+      "source_id": "source-wikidata-m5-place-anchors",
+      "source_entity_id": "Q82884",
+      "source_uri": "https://www.wikidata.org/wiki/Q82884",
+      "geometry": {"type": "Point", "coordinates": [10.9166694444, 43.7833305556]},
+      "spatial_precision": "named_settlement",
+      "historical_location_precision": "exact_position_within_named_settlement_unknown",
+      "semantic_role": "present_day_place_reference",
+      "uncertainty_ref": "uncertainty-m5-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-florence-present-day-place",
+      "place_ref": "place-florence",
+      "label": "Florence",
+      "source_id": "source-wikidata-m5-place-anchors",
+      "source_entity_id": "Q2044",
+      "source_uri": "https://www.wikidata.org/wiki/Q2044",
+      "geometry": {"type": "Point", "coordinates": [11.2541666667, 43.7713888889]},
+      "spatial_precision": "named_city",
+      "historical_location_precision": "exact_position_within_named_city_unknown",
+      "semantic_role": "present_day_place_reference",
+      "uncertainty_ref": "uncertainty-m5-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-milan-present-day-place",
+      "place_ref": "place-milan",
+      "label": "Milan",
+      "source_id": "source-wikidata-m5-place-anchors",
+      "source_entity_id": "Q490",
+      "source_uri": "https://www.wikidata.org/wiki/Q490",
+      "geometry": {"type": "Point", "coordinates": [9.19, 45.4669444444]},
+      "spatial_precision": "named_city",
+      "historical_location_precision": "exact_position_within_named_city_unknown",
+      "semantic_role": "present_day_place_reference",
+      "uncertainty_ref": "uncertainty-m5-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-vatican-belvedere-present-day-place",
+      "place_ref": "place-vatican-belvedere",
+      "label": "Rome / Vatican Belvedere",
+      "source_id": "source-wikidata-m5-place-anchors",
+      "source_entity_id": "Q2547111",
+      "source_uri": "https://www.wikidata.org/wiki/Q2547111",
+      "geometry": {"type": "Point", "coordinates": [12.4547222222, 41.9041666667]},
+      "spatial_precision": "named_complex",
+      "historical_location_precision": "exact_position_within_named_complex_unknown",
+      "semantic_role": "present_day_place_reference",
+      "uncertainty_ref": "uncertainty-m5-place-anchor-historical-position"
+    },
+    {
+      "anchor_id": "anchor-clos-luce-present-day-place",
+      "place_ref": "place-clos-luce",
+      "label": "Clos Lucé, Amboise",
+      "source_id": "source-wikidata-m5-place-anchors",
+      "source_entity_id": "Q1122731",
+      "source_uri": "https://www.wikidata.org/wiki/Q1122731",
+      "geometry": {"type": "Point", "coordinates": [0.9920277778, 47.41025]},
+      "spatial_precision": "named_residence",
+      "historical_location_precision": "exact_position_within_named_residence_unknown",
+      "semantic_role": "present_day_place_reference",
+      "uncertainty_ref": "uncertainty-m5-place-anchor-historical-position"
+    }
+  ]
+}

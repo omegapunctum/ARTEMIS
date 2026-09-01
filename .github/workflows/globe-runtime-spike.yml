@@ -107,7 +107,7 @@ jobs:
             "tablet:1024:768:tablet:false"
             "mobile:500:844:mobile:true"
           )
-          PROFILE_URL='http://127.0.0.1:8124/?mode=range&start=1502-08-08&end=1502-11-30&presence=presence-cesena-1502-08-10'
+          PROFILE_URL='http://127.0.0.1:8124/?mode=range&start=1452&end=1519&presence=presence-cesena-1502-08-10'
 
           for SPEC in "${PROFILE_SPECS[@]}"; do
             IFS=: read -r PROFILE WIDTH HEIGHT LAYOUT REDUCED_MOTION <<<"$SPEC"

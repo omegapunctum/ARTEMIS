@@ -1000,9 +1000,11 @@
     const facts = document.createElement('dl');
     facts.className = 'stop-fact-list';
     for (const [label, value] of [
-      ['Duration', 'Not established in the current corpus'],
-      ['Position', 'Named settlement; exact historical position unknown'],
-      ['Route', transition ? 'Chronological link only; exact route unknown' : 'First documented presence']
+      ['Duration', presence.duration_status === 'range_not_continuous_position'
+        ? 'Source-bounded residence period; not a continuous daily position'
+        : 'Not established beyond the documented source anchor'],
+      ['Position', `${String(presence.spatial_precision || 'named place').replaceAll('_', ' ')}; exact historical position unknown`],
+      ['Route', transition ? 'Exact route unknown; no transition line is rendered' : 'First documented presence']
     ]) {
       const row = document.createElement('div');
       appendText(row, 'dt', label);
@@ -1026,6 +1028,46 @@
       const presence = knowledgeDisclosure(body, 'Place-anchor evidence', (presenceRecord.claims || []).length);
       addEvidence(presence, presenceRecord);
       addUncertainties(presence, presenceRecord);
+    }
+    if (!eventRecord && (presence.sources || []).length) {
+      const sourceSection = knowledgeDisclosure(body, 'Reviewed package sources', presence.sources.length);
+      const evidenceBySource = new Map();
+      for (const evidence of presence.evidence_links || []) {
+        const rows = evidenceBySource.get(evidence.source_id) || [];
+        rows.push(evidence);
+        evidenceBySource.set(evidence.source_id, rows);
+      }
+      for (const source of presence.sources) {
+        const row = document.createElement('article');
+        row.className = 'evidence-group';
+        const sourceHref = safeSourceHref(source.url);
+        if (sourceHref) {
+          const link = document.createElement('a');
+          link.href = sourceHref;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = source.title || source.source_id;
+          row.append(link);
+        } else {
+          appendText(row, 'strong', source.title || source.source_id);
+        }
+        appendText(row, 'div', source.organization, 'record-meta');
+        for (const evidence of evidenceBySource.get(source.source_id) || []) {
+          appendText(row, 'code', evidence.locator, 'evidence-locator');
+        }
+        sourceSection.append(row);
+      }
+      const uncertaintySection = knowledgeDisclosure(
+        body, 'Material uncertainty', (presence.uncertainties || []).length
+      );
+      for (const uncertainty of presence.uncertainties || []) {
+        const card = document.createElement('article');
+        card.className = 'uncertainty-card';
+        appendText(card, 'strong', uncertainty.dimension);
+        appendText(card, 'p', uncertainty.description);
+        appendText(card, 'p', `Effect: ${uncertainty.effect}`, 'uncertainty-effect');
+        uncertaintySection.append(card);
+      }
     }
     addCoverage(body);
     details.append(summary, body);
@@ -1126,6 +1168,9 @@
   }
 
   function lifePathConnectorGeoJson() {
+    if (runtime.data?.lifePath?.route_policy?.chronological_connector_permitted !== true) {
+      return { type: 'FeatureCollection', features: [] };
+    }
     const visible = new Map(visibleLifePathPresences().map(
       (presence) => [presence.presence_id, presence]
     ));
@@ -1184,6 +1229,34 @@
       return `Current time: ${end} · path built from ${start} · ${visible.length} presence${visible.length === 1 ? '' : 's'}.`;
     }
     return `Selected interval: ${start} to ${end} · ${visible.length} presence${visible.length === 1 ? '' : 's'}.`;
+  }
+
+  function renderMacroPeriodControls() {
+    const host = byId('macro-periods');
+    if (!host) return;
+    host.innerHTML = '';
+    for (const period of runtime.data?.lifePath?.macro_periods || []) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'macro-period';
+      button.dataset.periodId = period.period_id;
+      button.setAttribute('aria-label', `Show ${period.label}, ${period.display_range}`);
+      appendText(button, 'strong', period.label);
+      appendText(button, 'span', period.display_range);
+      button.addEventListener('click', () => {
+        runtime.lifePathMode = 'range';
+        runtime.lifePathStartIndex = Math.max(0, period.axis_start_index);
+        runtime.lifePathEndIndex = Math.min(
+          lifePathAxisValues().length - 1,
+          period.axis_end_index
+        );
+        runtime.lifePathRangeStartIndex = runtime.lifePathStartIndex;
+        runtime.lifePathRangeEndIndex = runtime.lifePathEndIndex;
+        syncLifePathControls();
+        applyLifePathView();
+      });
+      host.append(button);
+    }
   }
 
   function applyLifePathView(options = {}) {
@@ -1360,17 +1433,24 @@
 
   function addLifePathMarkers(map) {
     map.addSource('life-path-chronology', { type: 'geojson', data: lifePathConnectorGeoJson() });
-    map.addLayer({
-      id: 'life-path-chronology-line',
-      type: 'line',
-      source: 'life-path-chronology',
-      paint: {
-        'line-color': '#a8bed0',
-        'line-width': 2.2,
-        'line-dasharray': [1.5, 2.2],
-        'line-opacity': 0.82
-      }
-    });
+    if (runtime.data?.lifePath?.route_policy?.chronological_connector_permitted === true) {
+      map.addLayer({
+        id: 'life-path-chronology-line',
+        type: 'line',
+        source: 'life-path-chronology',
+        paint: {
+          'line-color': '#a8bed0',
+          'line-width': 2.2,
+          'line-dasharray': [1.5, 2.2],
+          'line-opacity': 0.82
+        }
+      });
+    }
+    const placeCounts = new Map();
+    for (const presence of runtime.data?.lifePath?.presences || []) {
+      placeCounts.set(presence.place_ref, (placeCounts.get(presence.place_ref) || 0) + 1);
+    }
+    const placeOffsets = new Map();
     for (const presence of runtime.data?.lifePath?.presences || []) {
       const markerButton = document.createElement('button');
       markerButton.type = 'button';
@@ -1381,7 +1461,13 @@
       markerButton.setAttribute('aria-pressed', 'false');
       markerButton.addEventListener('click', () => handlePresenceMarkerClick(presence));
       markerButton.addEventListener('dblclick', (event) => handlePresenceMarkerDoubleClick(event, presence));
-      const marker = new maplibregl.Marker({ element: markerButton, anchor: 'center' })
+      const repeatIndex = placeOffsets.get(presence.place_ref) || 0;
+      placeOffsets.set(presence.place_ref, repeatIndex + 1);
+      const repeatCount = placeCounts.get(presence.place_ref) || 1;
+      const offset = repeatCount > 1
+        ? [repeatIndex === 0 ? -14 : 14, repeatIndex === 0 ? -8 : 8]
+        : [0, 0];
+      const marker = new maplibregl.Marker({ element: markerButton, anchor: 'center', offset })
         .setLngLat(presence.coordinates)
         .addTo(map);
       runtime.lifePathMarkers.set(presence.presence_id, marker);
@@ -1730,7 +1816,11 @@
       syncLifePathControls();
       return applyLifePathView();
     };
-    if (lifePath.available) bindLifePathControls();
+    if (lifePath.available) {
+      setText('path-coverage', lifePath.coverage?.scope_label || 'Whole-life proof');
+      renderMacroPeriodControls();
+      bindLifePathControls();
+    }
     else renderExplorerControls();
     renderAttribution(assets);
 

@@ -9,6 +9,7 @@ import copy
 import hashlib
 import itertools
 import json
+import re
 import shutil
 import sys
 from datetime import date, timedelta
@@ -39,6 +40,15 @@ EARTH_CONTEXT_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "natural_earth
 CAPABILITY_PATH = ROOT / "fixtures" / "globe_runtime" / "v1" / "capability_path.geojson"
 LIFE_PATH_PRESENTATION_PATH = (
     ROOT / "fixtures" / "globe_runtime" / "v1" / "leonardo_life_path_presentation.json"
+)
+MAJOR_LIFE_PACKAGE_PATH = (
+    ROOT / "fixtures" / "world_slices" / "leonardo_major_life" / "v1" / "package.json"
+)
+MAJOR_LIFE_RUNTIME_ANCHORS_PATH = (
+    ROOT / "fixtures" / "globe_runtime" / "v1" / "leonardo_major_life_runtime_anchors.json"
+)
+M5_CONTRACT_PATH = (
+    ROOT / "fixtures" / "globe_runtime" / "v1" / "temporal_map_m5_contract.json"
 )
 TEMPLATE_DIR = ROOT / "scripts" / "globe_spike"
 
@@ -921,6 +931,283 @@ def _build_life_path_presentation(
     }
 
 
+def _validate_m5_inputs(
+    package: dict[str, Any],
+    anchors: dict[str, Any],
+    contract: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    """Close the bounded M5 proof over reviewed claims and separate map anchors."""
+
+    if package.get("package_id") != contract.get("source_package", {}).get("package_id"):
+        raise SpikeBuildError("M5 contract lost its reviewed major-life package identity")
+    if package.get("status") != "CANDIDATE_SOURCE_AUDITED":
+        raise SpikeBuildError("M5 requires the source-audited major-life candidate")
+    if package.get("audit", {}).get("current_decision") != "FREEZE_FOR_REVIEW":
+        raise SpikeBuildError("M5 requires the independent FREEZE_FOR_REVIEW decision")
+    if package.get("runtime_authorized") is not False:
+        raise SpikeBuildError("M5 must not mutate the source package runtime boundary")
+    if contract.get("runtime_authorization", {}).get("scope") != "presentation_only_bounded_m5_proof":
+        raise SpikeBuildError("M5 runtime authorization escaped its bounded proof scope")
+    if contract.get("manual_exit_decisions") != ["ITERATE", "NARROW", "STOP"]:
+        raise SpikeBuildError("M5 manual exit vocabulary drifted")
+
+    places = {str(place["place_id"]): place for place in package.get("places", [])}
+    expected_places = {
+        "place-vinci",
+        "place-florence",
+        "place-milan",
+        "place-vatican-belvedere",
+        "place-clos-luce",
+    }
+    if set(places) != expected_places or any(place.get("geometry") is not None for place in places.values()):
+        raise SpikeBuildError("M5 source places must remain exactly five and geometry-free")
+
+    anchor_rows = anchors.get("anchors") or []
+    anchor_by_place = {str(anchor.get("place_ref")): anchor for anchor in anchor_rows}
+    if set(anchor_by_place) != expected_places or len(anchor_rows) != len(anchor_by_place):
+        raise SpikeBuildError("M5 map anchors must close exactly the five major-life places")
+    source_id = anchors.get("source", {}).get("source_id")
+    uncertainty_id = anchors.get("uncertainty", {}).get("uncertainty_id")
+    for place_ref, anchor in anchor_by_place.items():
+        if anchor.get("semantic_role") != "present_day_place_reference":
+            raise SpikeBuildError(f"{place_ref}: M5 anchor acquired a historical semantic role")
+        if anchor.get("source_id") != source_id or anchor.get("uncertainty_ref") != uncertainty_id:
+            raise SpikeBuildError(f"{place_ref}: M5 anchor escaped source/uncertainty closure")
+        if not str(anchor.get("source_uri", "")).endswith("/" + str(anchor.get("source_entity_id", ""))):
+            raise SpikeBuildError(f"{place_ref}: M5 anchor URI does not close its Wikidata entity")
+        geometry = anchor.get("geometry") or {}
+        coordinates = geometry.get("coordinates") or []
+        if geometry.get("type") != "Point" or len(coordinates) != 2:
+            raise SpikeBuildError(f"{place_ref}: M5 reference anchor must be one Point")
+        longitude, latitude = coordinates
+        if not (-180 <= longitude <= 180 and -90 <= latitude <= 90):
+            raise SpikeBuildError(f"{place_ref}: M5 reference anchor is outside EPSG:4326")
+    return anchor_by_place
+
+
+def _macro_period_axis(period: dict[str, Any], *, first_year: int) -> dict[str, Any]:
+    years = [int(value) for value in re.findall(r"\d{4}", str(period.get("display_range", "")))]
+    if not years:
+        raise SpikeBuildError(f"M5 macro period {period.get('period_id')} lost its display years")
+    start_year = years[0]
+    end_year = years[-1]
+    return {
+        **copy.deepcopy(period),
+        "axis_start_index": start_year - first_year,
+        "axis_end_index": end_year - first_year,
+    }
+
+
+def _build_m5_whole_life_path(
+    *,
+    base_life_path: dict[str, Any],
+    base_state: dict[str, Any],
+    package: dict[str, Any],
+    anchors: dict[str, Any],
+    contract: dict[str, Any],
+) -> dict[str, Any]:
+    if not base_life_path.get("available"):
+        return base_life_path
+    anchor_by_place = _validate_m5_inputs(package, anchors, contract)
+    source_by_id = {str(source["source_id"]): source for source in package.get("sources", [])}
+    uncertainty_by_id = {
+        str(uncertainty["uncertainty_id"]): uncertainty
+        for uncertainty in package.get("uncertainties", [])
+    }
+    claim_by_id = {str(claim["claim_id"]): claim for claim in package.get("claims", [])}
+    evidence_by_claim: dict[str, list[dict[str, Any]]] = {}
+    for evidence in package.get("evidence_links", []):
+        evidence_by_claim.setdefault(str(evidence["claim_id"]), []).append(evidence)
+
+    major_presences: list[dict[str, Any]] = []
+    for row in package.get("presences", []):
+        if row.get("geometry") is not None:
+            raise SpikeBuildError(f"{row.get('presence_id')}: reviewed Presence gained geometry")
+        anchor = anchor_by_place.get(str(row.get("place_ref")))
+        if anchor is None:
+            raise SpikeBuildError(f"{row.get('presence_id')}: no separate M5 map anchor")
+        claims = [claim_by_id[ref] for ref in row.get("claim_refs", []) if ref in claim_by_id]
+        evidence = [
+            item
+            for claim in claims
+            for item in evidence_by_claim.get(str(claim["claim_id"]), [])
+        ]
+        sources = [
+            source_by_id[source_ref]
+            for source_ref in sorted({str(item["source_id"]) for item in evidence})
+            if source_ref in source_by_id
+        ]
+        temporal = copy.deepcopy(row["temporal"])
+        major_presences.append(
+            {
+                "presence_id": row["presence_id"],
+                "period_ref": row["period_ref"],
+                "place_ref": row["place_ref"],
+                "place_label": row["place_label"],
+                "short_description": row["activity_label"],
+                "selection_rationale": row["selection_rationale"],
+                "temporal": temporal,
+                "coordinates": copy.deepcopy(anchor["geometry"]["coordinates"]),
+                "coordinate_role": "present_day_place_reference",
+                "historical_location_precision": anchor["historical_location_precision"],
+                "spatial_precision": row["spatial_precision"],
+                "duration_status": (
+                    "range_not_continuous_position"
+                    if temporal.get("extent_semantics") == "residence_range_not_continuous_position"
+                    else "not_established_beyond_source_anchor"
+                ),
+                "source_package_ref": contract["source_package"]["package_ref"],
+                "claim_refs": copy.deepcopy(row.get("claim_refs", [])),
+                "claims": copy.deepcopy(claims),
+                "evidence_links": copy.deepcopy(evidence),
+                "sources": copy.deepcopy(sources),
+                "uncertainty_refs": copy.deepcopy(row.get("uncertainty_refs", [])),
+                "uncertainties": [
+                    copy.deepcopy(uncertainty_by_id[ref])
+                    for ref in row.get("uncertainty_refs", [])
+                    if ref in uncertainty_by_id
+                ],
+                "event_item_id": f"m5:event:{row['presence_id']}",
+                "presence_item_id": f"m5:presence:{row['presence_id']}",
+                "refinement_level": "major_anchor",
+            }
+        )
+
+    romagna_presences = copy.deepcopy(base_life_path["presences"])
+    for presence in romagna_presences:
+        presence["detail_segment_ref"] = "trajectory-leonardo-romagna-1502"
+        presence["refinement_level"] = "fine_presence"
+        presence["source_package_ref"] = "fixtures/world_slices/leonardo_romagna_1502/v1"
+
+    presences = major_presences[:3] + romagna_presences + major_presences[3:]
+    for index, presence in enumerate(presences):
+        presence["index"] = index
+    time_axis = _build_life_path_time_axis(presences)
+    if time_axis["axis_kind"] != "year" or time_axis["values"] != [
+        str(year) for year in range(1452, 1520)
+    ]:
+        raise SpikeBuildError("M5 whole-life axis must close exactly 1452–1519 by year")
+
+    transition_by_id = {
+        transition["transition_id"]: transition for transition in package.get("transitions", [])
+    }
+    base_transition_by_id = {
+        transition["transition_id"]: transition
+        for transition in base_life_path.get("transitions", [])
+    }
+    transition_sequence = [
+        ("transition-vinci-to-florence-unknown", 0, 1, transition_by_id),
+        ("transition-florence-to-milan-i-unknown", 1, 2, transition_by_id),
+        ("transition-milan-i-to-romagna-unknown", 2, 3, transition_by_id),
+        ("transition-rimini-cesena", 3, 4, base_transition_by_id),
+        ("transition-cesena-cesenatico", 4, 5, base_transition_by_id),
+        ("transition-cesenatico-imola", 5, 6, base_transition_by_id),
+        ("transition-romagna-to-florence-ii-unknown", 6, 7, transition_by_id),
+        ("transition-florence-ii-to-milan-ii-unknown", 7, 8, transition_by_id),
+        ("transition-milan-ii-to-rome-unknown", 8, 9, transition_by_id),
+        ("transition-rome-to-amboise-unknown", 9, 10, transition_by_id),
+    ]
+    transitions: list[dict[str, Any]] = []
+    for transition_id, from_index, to_index, source in transition_sequence:
+        if transition_id not in source:
+            raise SpikeBuildError(f"M5 transition closure lost {transition_id}")
+        original = source[transition_id]
+        if original.get("route_geometry") is not None or original.get("geometry") is not None:
+            raise SpikeBuildError(f"M5 transition {transition_id} acquired route geometry")
+        transitions.append(
+            {
+                "transition_id": transition_id,
+                "from_presence_ref": presences[from_index]["presence_id"],
+                "to_presence_ref": presences[to_index]["presence_id"],
+                "route_status": "unknown_route",
+                "route_geometry": None,
+                "presentation_connector": None,
+            }
+        )
+
+    base_view = next(
+        view
+        for view in base_life_path["views"]
+        if view["view_id"] == base_life_path["default_view_id"]
+    )
+    all_layers = sorted(base_state.get("active_layer_refs") or [])
+    views: list[dict[str, Any]] = []
+    for start_index in range(len(presences)):
+        for end_index in range(start_index, len(presences)):
+            first = presences[start_index]
+            last = presences[end_index]
+            state = copy.deepcopy(base_state)
+            state["state_id"] = f"{base_state['state_id']}--m5-life-path-{start_index}-{end_index}"
+            state["active_layer_refs"] = all_layers
+            state["temporal_selection"] = {
+                "mode": "instant" if start_index == end_index else "interval",
+                "start": first["temporal"]["start"],
+                "end": last["temporal"]["end"],
+                "precision": "source_native" if start_index == end_index else "range",
+                "calendar": "proleptic_gregorian",
+            }
+            views.append(
+                {
+                    "view_id": f"life-path-{start_index}-{end_index}",
+                    "start_index": start_index,
+                    "end_index": end_index,
+                    "visible_presence_ids": [
+                        presence["presence_id"]
+                        for presence in presences[start_index : end_index + 1]
+                    ],
+                    "state": state,
+                    "projection": copy.deepcopy(base_view["projection"]),
+                    "globe": copy.deepcopy(base_view["globe"]),
+                }
+            )
+
+    macro_periods = [
+        _macro_period_axis(period, first_year=1452)
+        for period in package.get("macro_periods", [])
+    ]
+    return {
+        "schema_version": "1.0.0",
+        "proof_ref": contract["proof_id"],
+        "path_id": "leonardo-whole-life-runtime-proof-v1",
+        "available": True,
+        "presentation_only": True,
+        "scope_status": "m5_whole_life_runtime_proof_not_canonical_publication",
+        "subject_ref": base_life_path["subject_ref"],
+        "subject_label": base_life_path["subject_label"],
+        "trajectory_ref": package["trajectory"]["trajectory_id"],
+        "source_package_ref": contract["source_package"]["package_ref"],
+        "coverage": {
+            "start": "1452-04-15",
+            "end": "1519-05-02",
+            "scope_label": "Whole-life proof · 1452–1519 · 11 reviewed Presence anchors",
+            "complete_life": True,
+            "complete_itinerary": False,
+            "step_granularity": "year",
+            "absence_semantics": contract["coverage"]["absence_semantics"],
+        },
+        "default_mode": "range",
+        "time_axis": time_axis,
+        "default_view_id": "life-path-0-10",
+        "macro_periods": macro_periods,
+        "progressive_refinement": {
+            "default_level": "major_periods_and_all_reviewed_anchors",
+            "fine_segment_ref": "trajectory-leonardo-romagna-1502",
+            "fine_presence_count": 4,
+        },
+        "route_policy": {
+            "status": "unknown_route",
+            "geometry": None,
+            "historical_route_geometry_permitted": False,
+            "chronological_connector_permitted": False,
+            "chronological_connector_is_route": False,
+        },
+        "manual_exit_decisions": copy.deepcopy(contract["manual_exit_decisions"]),
+        "presences": presences,
+        "transitions": transitions,
+        "views": views,
+    }
+
+
 def _assert_gate_d_place_anchor_projection(
     projection: dict[str, Any], globe: dict[str, Any]
 ) -> None:
@@ -962,6 +1249,9 @@ def build_spike(
     earth_context = _load(EARTH_CONTEXT_PATH)
     capability_path = _load(CAPABILITY_PATH)
     life_path_presentation = _load(LIFE_PATH_PRESENTATION_PATH)
+    major_life_package = _load(MAJOR_LIFE_PACKAGE_PATH)
+    major_life_runtime_anchors = _load(MAJOR_LIFE_RUNTIME_ANCHORS_PATH)
+    m5_contract = _load(M5_CONTRACT_PATH)
 
     asset_errors = validate_manifest(asset_manifest, schema=asset_schema, world=world)
     if asset_errors:
@@ -1039,13 +1329,20 @@ def build_spike(
             raise SpikeBuildError("Gate C Region alternatives must remain unresolved")
 
     knowledge_index = _build_knowledge_index(world, projection)
-    life_path = _build_life_path_presentation(
+    base_life_path = _build_life_path_presentation(
         world=world,
         base_state=state,
         base_projection=projection,
         projection_schema=projection_schema,
         presentation=life_path_presentation,
         dataset=dataset,
+    )
+    life_path = _build_m5_whole_life_path(
+        base_life_path=base_life_path,
+        base_state=state,
+        package=major_life_package,
+        anchors=major_life_runtime_anchors,
+        contract=m5_contract,
     )
     knowledge_item_ids = {
         record["item_id"] for record in knowledge_index["records"]
@@ -1165,6 +1462,9 @@ def build_spike(
             "earth_context": _sha(earth_context),
             "capability_path": _sha(capability_path),
             "life_path_presentation": _sha(life_path_presentation),
+            "major_life_package": _sha(major_life_package),
+            "major_life_runtime_anchors": _sha(major_life_runtime_anchors),
+            "m5_contract": _sha(m5_contract),
             "source_documents": copied_source_sha256,
         },
         "generated_sha256": {
@@ -1193,10 +1493,11 @@ def build_spike(
         "It is real physical-geography context, not historical reconstruction; terrain remains synthetic/non-live.\n"
         "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
         "Its historical Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
-        "Four CC0 Wikidata points are present-day named-settlement reference anchors only; exact historical position remains unknown.\n"
-        "Leonardo Life Path offers calendar-scaled Range and Scrub views over the current four source-bound presences.\n"
-        "Dashed chronological connectors are presentation-only; every inter-presence route remains unknown with null geometry.\n"
-        "The compact presence card resolves only package-derived canonical references, sources, locators and uncertainty.\n",
+        "Nine CC0 Wikidata points are present-day place references only; exact historical positions remain unknown.\n"
+        "M5 composes seven reviewed major-life Presence candidates with the frozen four-Presence Romagna segment.\n"
+        "Leonardo Life Path offers year-scaled Range and Scrub views across 1452–1519.\n"
+        "No transition connector is rendered; every inter-presence route remains unknown with null geometry.\n"
+        "The six macro periods are presentation-only progressive-refinement controls, not continuous residence claims.\n",
         encoding="utf-8",
     )
 
