@@ -29,6 +29,7 @@ jobs:
           python scripts/validate_leonardo_world_slice.py
           python scripts/validate_leonardo_major_life_package.py
           python scripts/build_temporal_map_m2_proof.py
+          python scripts/build_temporal_map_m3_proof.py
           python scripts/validate_explorer_state_fixtures.py
           python scripts/validate_geospatial_assets.py
 
@@ -64,4 +65,5 @@ jobs:
             tests/test_render_projection_contract.py \
             tests/test_renderer_parity.py \
             tests/test_temporal_map_m2_proof.py \
+            tests/test_temporal_map_m3_proof.py \
             tests/test_uncertainty_fixtures.py
