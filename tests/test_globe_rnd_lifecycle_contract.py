@@ -13,7 +13,7 @@ def _json(relative_path: str) -> dict:
     return json.loads(_text(relative_path))
 
 
-def test_355_owns_one_post_396_major_life_presence_branch() -> None:
+def test_355_owns_one_m2_one_source_proof_branch() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     scope = _text("docs/ARTEMIS_PRODUCT_SCOPE.md")
@@ -23,14 +23,16 @@ def test_355_owns_one_post_396_major_life_presence_branch() -> None:
     assert "Core Reset was completed by PR `#393`" in priorities
     assert "PR `#395`" in priorities
     assert "PR `#396`" in priorities
-    assert "post-#396 `ITERATE`" in priorities
+    assert "M1 is complete" in priorities
+    assert "PR #400 completed" in priorities
 
     assert "Core Reset [completed]" in phases
     assert "Leonardo Temporal Map loop, iteration 1 [completed]" in phases
     assert "Fresh user check of the published loop [completed]" in phases
-    assert "Leonardo Major-Life Presence Scope v1 [active]" in phases
+    assert "Leonardo Major-Life Presence Scope v1 [completed]" in phases
+    assert "M2 One-source proof [active]" in phases
 
-    assert "Current increment: `Leonardo Major-Life Presence Scope v1`" in scope
+    assert "Current increment: `M2 — One-source proof`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.0"
     assert state["gate"]["id"] == "D"
@@ -95,27 +97,28 @@ def test_legacy_and_premature_infrastructure_is_outside_core() -> None:
     assert "#371/#373 Airtable historical import/review" in priorities
     assert "editable Progressive Refinement runtime" in priorities
     assert "#392" in operating_system
-    assert "Leonardo detail beyond the bounded 6–10-Presence candidate package" in priorities
-    assert "runtime integration before the package freeze/review decision" in priorities
+    assert "public integration of the PR #400 candidate package" in priorities
+    assert "a second external source before the M2 exit decision" in priorities
     assert "context/layers" in priorities
 
 
-def test_post_396_decision_opens_exactly_one_bounded_branch() -> None:
+def test_m2_opens_exactly_one_bounded_branch() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     validation = _text("docs/VALIDATION_DECISION.md")
+    m2 = _text("docs/work/2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md")
     state = _json("docs/project_state.json")
 
-    expected = ["ITERATE", "NARROW", "STOP/RETHINK"]
+    expected = ["PROCEED_TO_M3", "NARROW_M2", "STOP_M2"]
     assert state["gate"]["allowed_decisions"] == expected
 
     for decision in expected:
         assert decision in priorities
         assert decision in phases
-        assert decision in validation
+        assert decision in m2
 
-    assert "single opened branch is `Leonardo Major-Life Presence Scope v1`" in priorities
-    assert "before runtime integration or another product branch" in state["next_transition"]["condition"]
+    assert "single opened branch is the Wikidata Leonardo-birth one-source proof" in priorities
+    assert "before adding a second external source" in state["next_transition"]["condition"]
     assert "Recorded product decision | `ITERATE`" in validation
     assert "Opened next branch | `Leonardo Major-Life Presence Scope v1`" in validation
 
@@ -125,7 +128,7 @@ def test_post_396_decision_opens_exactly_one_bounded_branch() -> None:
     assert "route_geometry=null" in branch
     assert "Stage C — Runtime increment [not authorized]" in branch
 
-    active_text = "\n".join((priorities, phases, validation, _text("docs/project_state.json")))
+    active_text = "\n".join((priorities, phases, m2, _text("docs/project_state.json")))
     assert "ADVANCE_TO_GATE_E" not in active_text
     assert "EXPAND ONE BRANCH" not in active_text
 

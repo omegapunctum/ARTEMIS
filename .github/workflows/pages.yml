@@ -45,6 +45,7 @@ jobs:
         run: |
           python scripts/validate_leonardo_world_slice.py
           python scripts/validate_leonardo_major_life_package.py
+          python scripts/build_temporal_map_m2_proof.py
           python scripts/validate_explorer_state_fixtures.py
           python scripts/validate_geospatial_assets.py
           pytest -q \
@@ -58,6 +59,7 @@ jobs:
             tests/test_leonardo_world_slice.py \
             tests/test_render_projection_contract.py \
             tests/test_renderer_parity.py \
+            tests/test_temporal_map_m2_proof.py \
             tests/test_uncertainty_fixtures.py
 
       - name: Setup Pages
