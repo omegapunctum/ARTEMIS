@@ -242,11 +242,11 @@ jobs:
           DESKTOP_DOM=/tmp/artemis-globe-browser-desktop-dom.html
           grep -F "explorer-state-leonardo-romagna-1502-gate-d" "$DESKTOP_DOM"
           grep -F "Leonardo Life Path" "$DESKTOP_DOM"
-          grep -F 'data-artemis-visible-presence-count="4"' "$DESKTOP_DOM"
+          grep -F 'data-artemis-visible-presence-count="11"' "$DESKTOP_DOM"
           grep -F "Leonardo documented in the Cesena survey context" "$DESKTOP_DOM"
           grep -F "Open details" "$DESKTOP_DOM"
-          grep -F "Dashed links show chronology only" "$DESKTOP_DOM"
-          grep -F "frozen Gate C candidate package · non-public · draft/rejected Claims" "$DESKTOP_DOM"
+          grep -F "No path line is drawn: exact routes between Presence anchors remain unknown." "$DESKTOP_DOM"
+          grep -F "M5 composes seven reviewed major-life Presence candidates" "$DESKTOP_DOM"
           grep -F "Terrain: adapter ready" "$DESKTOP_DOM"
           grep -F 'id="startup-ms"' "$DESKTOP_DOM"
           grep -F 'id="frame-sample"' "$DESKTOP_DOM"
@@ -256,7 +256,7 @@ jobs:
             --virtual-time-budget=10000 \
             --window-size=1440,900 \
             --dump-dom \
-            'http://127.0.0.1:8124/?mode=scrub&from=1502-08-08&at=1502-08-10&presence=presence-cesena-1502-08-10' \
+            'http://127.0.0.1:8124/?mode=scrub&from=1452&at=1502&presence=presence-cesena-1502-08-10' \
             >/tmp/artemis-globe-interaction-dom.html \
             2>/tmp/artemis-globe-interaction-browser.log
           if grep -Fq "ARTEMIS Globe spike failed:" /tmp/artemis-globe-interaction-dom.html; then
@@ -265,13 +265,13 @@ jobs:
             exit 1
           fi
           grep -F 'data-artemis-path-mode="scrub"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-path-start="1502-08-08"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-path-end="1502-08-10"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-path-current="1502-08-10"' /tmp/artemis-globe-interaction-dom.html
-          grep -F 'data-artemis-visible-presence-count="2"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-start="1452"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-end="1502"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-path-current="1502"' /tmp/artemis-globe-interaction-dom.html
+          grep -F 'data-artemis-visible-presence-count="7"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'data-artemis-selected-presence="presence-cesena-1502-08-10"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'data-artemis-selected-item="rp:event:event-leonardo-cesena-survey"' /tmp/artemis-globe-interaction-dom.html
-          grep -F '1502-08-10' /tmp/artemis-globe-interaction-dom.html
+          grep -F '1502' /tmp/artemis-globe-interaction-dom.html
 
       - name: Upload generated Globe artifact
         uses: actions/upload-artifact@v4
