@@ -43,7 +43,7 @@ Selected structured statements:
 - `Q762 / P19` — place of birth: `Q154184` (Anchiano);
 - `Q154184 / P625` — current coordinate location for the named settlement.
 
-This is one provider and one normalized Presence fact. Following a linked entity inside the same pinned Wikidata snapshot does not add a second source.
+This is one provider and one normalized Presence fact. Following a linked entity inside the same pinned Wikidata snapshot does not add a second source. The proof runs as an overlay on the existing Gate D World Model, so its output also contains inherited repository sources; they are recorded separately and are not counted as inputs to the M2 fact.
 
 Rights: Wikidata structured data are reused under `CC0-1.0`.
 
@@ -59,7 +59,7 @@ Normalized time is `1452-04-15`, day precision, proleptic Gregorian. Anchiano ge
 
 ## 5. Fail-closed boundaries
 
-The proof rejects a second provider, changed pinned revisions, loss of the preferred `P569` value, an unclosed `P19` target, invalid/non-Earth `P625` coordinates and missing statement/reference identities.
+The proof rejects a second provider, changed retrieval/revision URLs or raw-response digests, any statement-ID/reference-hash drift, loss of the preferred `P569` value, an unclosed `P19` target and invalid/non-Earth `P625` coordinates.
 
 The proof does not assert an exact birth position or house, residence duration, route geometry, a complete life trajectory, public runtime authorization or M3 readiness.
 

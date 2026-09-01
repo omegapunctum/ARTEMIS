@@ -26,6 +26,50 @@ from scripts.build_render_projection_fixtures import build_all  # noqa: E402
 SNAPSHOT_PATH = ROOT / "fixtures/source_proofs/leonardo_wikidata_birth/v1/source_snapshot.json"
 PROJECTION_SCHEMA_PATH = ROOT / "fixtures/render_projection/v1/schema.json"
 
+EXPECTED_PROVIDER = {
+    "id": "wikidata",
+    "data_access": "https://www.wikidata.org/wiki/Wikidata:Data_access",
+    "license": "CC0-1.0",
+    "license_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+}
+EXPECTED_ENTITIES = {
+    "Q762": {
+        "label": "Leonardo da Vinci",
+        "revision": 2533380508,
+        "revision_url": "https://www.wikidata.org/w/index.php?title=Q762&oldid=2533380508",
+        "raw_entity_json_sha256": "109bf80f56e22ec4078ce7def6103fd54e600ac1dd4316f2ab572ff92c0e64cc",
+    },
+    "Q154184": {
+        "label": "Anchiano",
+        "revision": 2504702048,
+        "revision_url": "https://www.wikidata.org/w/index.php?title=Q154184&oldid=2504702048",
+        "raw_entity_json_sha256": "f4a2a87b8cf1824950a951b334cd204e0d2a9b9016c3ecc836e1ed75f47b206f",
+    },
+}
+EXPECTED_STATEMENTS = {
+    "P569": {
+        "statement_id": "Q762$E556FF29-077E-47B3-995A-A5F6E5ABFDC9",
+        "reference_hashes": [
+            "72850ceb9f2401f4f45f57fbabe274e7a5218cc8",
+            "22bd2579a39fff36a621589f559e9ac86976e97a",
+            "e3d930e024c6a20f6b81f3cb078b99b1767d42bc",
+            "fd38c16d153aa0df9c2885726011012b1fd81164",
+        ],
+    },
+    "P19": {
+        "statement_id": "q762$160C942C-22DB-4AE8-8F23-D1C5FE1F2EF6",
+        "reference_hashes": [
+            "22bd2579a39fff36a621589f559e9ac86976e97a",
+            "e3d930e024c6a20f6b81f3cb078b99b1767d42bc",
+            "642708de9c7676df694bfc92da8ff3ddd607436b",
+        ],
+    },
+    "P625": {
+        "statement_id": "q154184$5C9E0E15-0D1C-43D4-B822-397818D76C90",
+        "reference_hashes": ["9a24f7c0208b05d6be97077d855671d1dfdbc0dd"],
+    },
+}
+
 
 class M2ProofError(ValueError):
     """Raised when the one-source proof cannot be reproduced without invention."""
@@ -55,24 +99,31 @@ def _one_statement(entity: dict[str, Any], property_id: str, rank: str) -> dict[
 
 def _normalize_snapshot(snapshot: dict[str, Any]) -> dict[str, Any]:
     provider = snapshot.get("provider") or {}
-    if provider.get("id") != "wikidata" or provider.get("license") != "CC0-1.0":
+    if any(provider.get(key) != value for key, value in EXPECTED_PROVIDER.items()):
         raise M2ProofError("M2 is locked to one CC0 Wikidata provider")
+    if snapshot.get("retrieved_at") != "2026-09-01":
+        raise M2ProofError("M2 retrieval identity drifted")
     entities = snapshot.get("entities") or {}
     if set(entities) != {"Q762", "Q154184"}:
         raise M2ProofError("M2 snapshot must close exactly Q762 and its linked birth place")
     person, place = entities["Q762"], entities["Q154184"]
-    if person.get("revision") != 2533380508 or place.get("revision") != 2504702048:
-        raise M2ProofError("M2 source revisions drifted from the reviewed snapshot")
-    if person.get("raw_entity_json_sha256") != (
-        "109bf80f56e22ec4078ce7def6103fd54e600ac1dd4316f2ab572ff92c0e64cc"
-    ) or place.get("raw_entity_json_sha256") != (
-        "f4a2a87b8cf1824950a951b334cd204e0d2a9b9016c3ecc836e1ed75f47b206f"
-    ):
-        raise M2ProofError("M2 raw entity response digest drifted")
+    for entity_id, expected in EXPECTED_ENTITIES.items():
+        entity = entities[entity_id]
+        for field, value in expected.items():
+            if entity.get(field) != value:
+                raise M2ProofError(f"M2 {entity_id} {field} drifted")
 
     birth = _one_statement(person, "P569", "preferred")
     birthplace = _one_statement(person, "P19", "normal")
     coordinate = _one_statement(place, "P625", "normal")
+    for property_id, statement in (
+        ("P569", birth), ("P19", birthplace), ("P625", coordinate)
+    ):
+        expected = EXPECTED_STATEMENTS[property_id]
+        if statement.get("statement_id") != expected["statement_id"]:
+            raise M2ProofError(f"{property_id} statement identity drifted")
+        if statement.get("reference_hashes") != expected["reference_hashes"]:
+            raise M2ProofError(f"{property_id} reference identity drifted")
     if birth["value"] != {
         "time": "+1452-04-15T00:00:00Z",
         "precision": 11,
@@ -107,6 +158,7 @@ def build_m2_inputs(*, snapshot_path: Path = SNAPSHOT_PATH) -> tuple[dict[str, A
     data = _normalize_snapshot(_load(snapshot_path))
     world, state = build_gate_d_inputs()
     world, state = copy.deepcopy(world), copy.deepcopy(state)
+    inherited_source_refs = sorted(source["id"] for source in world["sources"])
 
     source_id = "source-wikidata-m2-one-source-proof"
     place_id = "place-anchiano-wikidata-m2"
@@ -234,6 +286,15 @@ def build_m2_inputs(*, snapshot_path: Path = SNAPSHOT_PATH) -> tuple[dict[str, A
     world["package_id"] += ":m2-wikidata-birth-proof"
     world["status"] = "m2_one_source_proof"
     world["promotion_allowed"] = False
+    world["m2_proof"] = {
+        "provider_count": 1,
+        "external_source_refs": [source_id],
+        "normalized_fact_count": 1,
+        "inherited_gate_d_source_refs": inherited_source_refs,
+        "inherited_sources_are_m2_inputs": False,
+        "public_runtime_authorized": False,
+        "m3_authorized": False,
+    }
     state["state_id"] = "explorer-state-leonardo-birth-wikidata-m2"
     state["temporal_selection"] = {
         "mode": "instant", "start": data["date"], "end": data["date"],
@@ -264,9 +325,13 @@ def build_m2_projection(*, snapshot_path: Path = SNAPSHOT_PATH):
 
 if __name__ == "__main__":
     world, state, projection, globe = build_m2_projection()
+    proof = world["m2_proof"]
     print(json.dumps({
-        "milestone": "M2_ONE_SOURCE_PROOF", "provider_count": 1,
-        "provider": "wikidata", "fact_count": 1,
+        "milestone": "M2_ONE_SOURCE_PROOF",
+        "provider_count": proof["provider_count"],
+        "provider": "wikidata", "fact_count": proof["normalized_fact_count"],
+        "inherited_gate_d_source_count": len(proof["inherited_gate_d_source_refs"]),
+        "inherited_sources_are_m2_inputs": proof["inherited_sources_are_m2_inputs"],
         "world_package": world["package_id"], "explorer_state": state["state_id"],
         "projection_id": projection["projection_id"],
         "globe_primitive_count": len(globe["primitives"]),
