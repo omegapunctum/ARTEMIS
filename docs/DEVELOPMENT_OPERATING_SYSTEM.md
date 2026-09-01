@@ -1,10 +1,10 @@
-# ARTEMIS — Development Operating System v1.5
+# ARTEMIS — Development Operating System v1.6
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.5.
-- Date: 2026-08-29.
+- Version: 1.6.
+- Date: 2026-09-01.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
 
@@ -172,7 +172,8 @@ Current product implementation sequence:
 6. PR #400 completed the reviewed major-life candidate package without runtime authorization.
 7. PR #401 completed M2 with one pinned provider, one normalized external fact and the existing World Model → Explorer State → Render Projection → Globe path.
 8. The recorded M2 result is `PROCEED_TO_M3`.
-9. Exactly one branch is active: `M3 — Multi-source proof`, limited to one independent second provider for the same bounded Presence and explicit agreement/refinement/conflict semantics. M4, public runtime promotion, default context/layer expansion, backend/storage and new infrastructure remain closed.
+9. PR #403 completed M3 with two publisher identities, one Presence and explicit agreement/spatial-refinement semantics; the recorded result is `PROCEED_TO_M4`.
+10. Exactly one branch is active: `M4 — Architecture decision`, limited to comparing the bounded M2/M3 evidence and recording `ADOPT`, `NARROW` or `REJECT`. Public runtime promotion, additional sources or Presences, default context/layer expansion, backend/storage and federation infrastructure remain closed.
 
 Current Temporal Map semantic/UI boundary:
 

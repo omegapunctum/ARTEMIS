@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.4
+# ARTEMIS — PROJECT PHASES v7.5
 
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-09-01.
-- Active phase: **5.0 — M3 multi-source proof**.
+- Active phase: **5.0 — M4 architecture decision**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -118,14 +118,22 @@ M2 asks one bounded architecture/product question: can one real structured exter
 
 PR #401 merged the selected Wikidata birth Presence proof with green Core, Geospatial and Globe Boundary checks. The recorded result is `PROCEED_TO_M3`; this does not publish the proof or authorize M4.
 
-## Phase 5C — M3 Multi-source proof [active]
+## Phase 5C — M3 Multi-source proof [completed]
 
 M3 asks whether one independent second provider can corroborate, refine or conflict with the existing Leonardo birth Presence while preserving both source identities and visible uncertainty.
 
-The active scope is exactly two providers and one Presence. A third provider, another Presence, a generic federation framework, public runtime promotion and M4 remain closed.
+PR #403 completed the exact two-provider/one-Presence proof. Wikidata and Museo Leonardiano remain distinct publisher identities; their birth dates agree exactly, while the spatial statements are preserved as a granularity refinement rather than collapsed into a stronger claim. The recorded result is `PROCEED_TO_M4`.
+
+The proof does not establish upstream-independent corroboration, a hard-conflict case, production ingestion/storage or public user value.
+
+## Phase 5D — M4 Architecture decision [active]
+
+M4 asks whether the completed M2/M3 evidence warrants `ADOPT`, `NARROW` or `REJECT` for the source-federated architecture direction.
+
+This phase is decision-only. A third provider, another Presence, generic federation/reconciliation infrastructure, public runtime promotion and new context/layers remain closed until one M4 outcome is recorded.
 
 Context/layers, curation storage, persistence/sharing, renderer/provider work, generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain unopened/gated.
 
 ## Rule
 
-One active product loop and one active milestone. The next decision is `PROCEED_TO_M4`, `NARROW_M3` or `STOP_M3`; a green implementation does not decide M4 or authorize public data expansion.
+One active product loop and one active milestone. The next decision is `ADOPT`, `NARROW` or `REJECT`; green M2/M3 implementations do not select that outcome or authorize public data expansion.

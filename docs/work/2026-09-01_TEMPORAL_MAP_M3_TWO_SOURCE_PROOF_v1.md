@@ -2,12 +2,14 @@
 
 ## Status
 
-- Type: active bounded implementation record.
+- Type: completed bounded evidence record.
 - Date: 2026-09-01.
 - Parent contour: issue `#355`.
 - Entry decision: `PROCEED_TO_M3` through PR `#402`.
 - Runtime effect: proof-only; public Leonardo Life Path is unchanged.
-- M4 effect: none; the architecture decision remains closed.
+- Completion: PR `#403` merged.
+- Recorded outcome: `PROCEED_TO_M4` through the separate M3 exit decision record.
+- M4 effect: this proof does not self-authorize M4; the separate reviewed decision opens the decision-only stage.
 
 ## 1. Question
 
@@ -73,6 +75,8 @@ The proof rejects drift in:
 
 The absence of an immutable page revision is preserved explicitly rather than disguised by the local reviewed excerpt.
 
-## 7. M3 exit remains open
+## 7. Recorded M3 result
 
-This implementation does not itself record `PROCEED_TO_M4`, `NARROW_M3` or `STOP_M3`. Review must first decide whether the explicit agreement/refinement model and unequal source-identity strength are sufficient evidence for M4.
+Final review recorded `PROCEED_TO_M4` in `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md`. The explicit agreement/refinement model and preserved unequal source strength are sufficient to open M4 as an architecture decision, while all proof limitations remain binding.
+
+The generated proof retains `m4_authorized=false`. Evidence cannot authorize its own successor; the separate lifecycle decision is the authority to enter M4.
