@@ -13,7 +13,7 @@ def _json(relative_path: str) -> dict:
     return json.loads(_text(relative_path))
 
 
-def test_355_records_m4_adopt_without_opening_implementation() -> None:
+def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     scope = _text("docs/ARTEMIS_PRODUCT_SCOPE.md")
@@ -33,14 +33,19 @@ def test_355_records_m4_adopt_without_opening_implementation() -> None:
     assert "M2 One-source proof [completed]" in phases
     assert "M3 Multi-source proof [completed]" in phases
     assert "M4 Architecture decision [completed]" in phases
-    assert "No post-M4 implementation phase is active" in phases
+    assert "M5 Whole-Life Runtime Proof [active]" in phases
 
-    assert "Current increment: `Post-M4 hold`" in scope
+    assert "Current increment: `M5 — Whole-Life Runtime Proof`" in scope
     assert state["active_vertical"]["issue"] == 355
-    assert state["phase"]["id"] == "5.0"
+    assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
     assert state["gate"]["status"] == "in_progress"
     assert state["gate"]["decision"] == "ADOPT"
+    assert state["current_checkpoint"]["id"] == "M5"
+    assert state["current_checkpoint"]["status"] == "awaiting_manual_product_check"
+    assert state["current_checkpoint"]["allowed_decisions"] == ["ITERATE", "NARROW", "STOP"]
+    assert "decision" not in state["current_checkpoint"]
+    assert state["current_checkpoint"]["pre_start_decision_record"] is False
 
 
 def test_core_path_preserves_world_model_and_frozen_slice_truth() -> None:
@@ -101,12 +106,12 @@ def test_legacy_and_premature_infrastructure_is_outside_core() -> None:
     assert "#371/#373 Airtable historical import/review" in priorities
     assert "editable Progressive Refinement runtime" in priorities
     assert "#392" in operating_system
-    assert "public integration of the PR #400 candidate package" in priorities
+    assert "generic provider, federation, reconciliation, ingestion or storage infrastructure" in priorities
     assert "a third provider or second Presence before a separate bounded branch decision" in priorities
     assert "context/layers" in priorities
 
 
-def test_m4_adopt_preserves_semantic_direction_and_post_m4_hold() -> None:
+def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     priorities = _text("docs/PRIORITIES.md")
     phases = _text("docs/PROJECT_PHASES.md")
     validation = _text("docs/VALIDATION_DECISION.md")
@@ -124,8 +129,8 @@ def test_m4_adopt_preserves_semantic_direction_and_post_m4_hold() -> None:
     for decision in expected:
         assert decision in decision_record
 
-    assert "There is no active implementation branch" in priorities
-    assert "before adding new sources" in state["next_transition"]["condition"]
+    assert "No new feature branch is active" in priorities
+    assert "manual product check" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
     assert "Decision: `PROCEED_TO_M3`" in m2_decision
@@ -147,6 +152,20 @@ def test_m4_adopt_preserves_semantic_direction_and_post_m4_hold() -> None:
     active_text = "\n".join((priorities, phases, decision_record, _text("docs/project_state.json")))
     assert "ADVANCE_TO_GATE_E" not in active_text
     assert "EXPAND ONE BRANCH" not in active_text
+
+
+def test_m5_governance_deviation_and_exit_are_explicit() -> None:
+    alignment = _text("docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md")
+    state = _json("docs/project_state.json")
+
+    assert "no intervening repository decision record exists" in alignment
+    assert "explicit owner instruction" in alignment
+    assert "does not convert that later instruction into a retroactive pre-start decision" in alignment
+    assert "ITERATE" in alignment
+    assert "NARROW" in alignment
+    assert "STOP" in alignment
+    assert state["current_checkpoint"]["implementation_pr"] == 406
+    assert state["current_checkpoint"]["entry_authority"] == "explicit_owner_instruction"
 
 
 def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None:

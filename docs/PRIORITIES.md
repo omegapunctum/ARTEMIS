@@ -1,18 +1,20 @@
-# ARTEMIS — PRIORITIES v7.6
+# ARTEMIS — PRIORITIES v7.7
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-01.
-- Active cycle: `Post-M4 hold`; M4 completed with `ADOPT`, and no implementation branch is open.
+- Date: 2026-09-03.
+- Active cycle: `M5 — Whole-Life Runtime Proof`; implementation is published and the manual product exit is pending.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Preserve ADOPT and select no branch implicitly
+## P0 — Complete the M5 manual product checkpoint
 
-M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with one pinned Wikidata birth Presence. PR #403 completed M3 with Wikidata and Museo Leonardiano preserved as separate publisher identities for the same Presence, exact date agreement and an explicit spatial-granularity refinement. M4 records `ADOPT` for the source-federated semantic direction. No implementation branch follows automatically.
+M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
+
+The user has not yet performed the M5 product check. The next product action is to test the published 1452–1519 loop and record exactly one result: `ITERATE`, `NARROW` or `STOP`.
 
 The load-bearing path remains:
 
@@ -40,7 +42,8 @@ The current bounded package remains honest:
 - no route or Region geometry is invented;
 - `historical_corpus_ready=false` and `promotion_allowed=false`;
 - four settlement coordinates are present-day source-bound reference anchors only;
-- the four Romagna Presences are an interaction scaffold, not Leonardo's complete biography.
+- the runtime contains 11 reviewed coarse Presence anchors — seven major-life anchors plus the four Romagna Presences — and six periods across 1452–1519;
+- the result remains a bounded R&D proof, not Leonardo's complete biography.
 
 The M3 proof remains limited to the existing Leonardo birth Presence, Wikidata and Museo Leonardiano. It demonstrates a viable source-aware comparison path, but it does not prove upstream-independent historical corroboration, a hard-conflict case, broad operational value, production ingestion/storage or public user value. M4 adopts the direction without converting these missing proofs into implementation authorization.
 
@@ -69,16 +72,16 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Keep the post-M4 boundary closed
+## P3 — Freeze new feature branches during housekeeping
 
-There is no active implementation branch.
+No new feature branch is active. M5 is the current bounded proof awaiting its manual product result.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
-- require the next branch to name exactly one bounded question, artifact scope, evidence requirement and exit condition;
-- do not treat the PR #400 package, M2/M3 proofs or architecture decision as public runtime authorization.
+- preserve PR #406 without widening its data, interaction or infrastructure scope;
+- do not infer a successor branch from publication, CI success or the eventual M5 result.
 
-Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another branch from the same `ITERATE` result.
+Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another feature branch before the M5 exit is recorded. Export Airtable CI repair is allowed only as a separate technical maintenance PR after this housekeeping checkpoint.
 
 ## Preserved foundations
 
@@ -104,7 +107,6 @@ These are technical/product-development foundations, not final user-value eviden
 - #334 formal participant protocol as previously sequenced;
 - #371/#373 Airtable historical import/review;
 - editable Progressive Refinement runtime;
-- public integration of the PR #400 candidate package;
 - a third provider or second Presence before a separate bounded branch decision;
 - generic provider, federation, reconciliation, ingestion or storage infrastructure;
 - generative AI, causal/counterfactual runtime, universal corpus, VR/AR;
@@ -112,10 +114,10 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Preserve the M4 `ADOPT` decision and its non-authorization boundary.
-2. Do not begin implementation until one separate branch decision names the next user or architecture question.
-3. For that branch, state exact artifact scope, evidence requirement, stop condition and explicitly deferred work.
-4. Only then implement the smallest reversible increment.
+1. Review and merge the short M5 governance/lifecycle housekeeping checkpoint.
+2. Manually test the published M5 and record exactly `ITERATE`, `NARROW` or `STOP`.
+3. In a separate technical PR, repair Export Airtable CI by first providing sufficient Git history and required evidence refs, then rerunning the suite before changing assertions or digests.
+4. Open no new feature branch until a later explicit decision names its bounded question, evidence and stop condition.
 
 ## Completion rule
 

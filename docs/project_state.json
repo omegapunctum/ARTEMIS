@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-01",
+  "updated_at": "2026-09-03",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -9,7 +9,7 @@
     "issue": 355
   },
   "phase": {
-    "id": "5.0",
+    "id": "5.1",
     "status": "active"
   },
   "completed_gates": [
@@ -32,10 +32,23 @@
   ],
   "gate": {
     "id": "D",
-    "label": "Leonardo Temporal Map / post-M4 hold",
+    "label": "Leonardo Temporal Map / product validation",
     "status": "in_progress",
     "allowed_decisions": ["ADOPT", "NARROW", "REJECT"],
     "decision": "ADOPT"
+  },
+  "current_checkpoint": {
+    "id": "M5",
+    "label": "Whole-Life Runtime Proof",
+    "kind": "bounded_runtime_proof",
+    "status": "awaiting_manual_product_check",
+    "allowed_decisions": ["ITERATE", "NARROW", "STOP"],
+    "implementation_pr": 406,
+    "merged_commit": "24243b7ff09029bddedc3592c2ef2963813f146d",
+    "published_url": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519",
+    "entry_authority": "explicit_owner_instruction",
+    "pre_start_decision_record": false,
+    "governance_alignment_ref": "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md"
   },
   "work_in_progress_limit": 1,
   "github": {
@@ -67,13 +80,16 @@
       "PR #400 — independently reviewed major-life Presence candidate package; runtime not authorized",
       "PR #401 — M2 one-source proof completed; Wikidata identity/provenance/rights/uncertainty and Globe projection path verified",
       "PR #403 — M3 two-source proof completed; exact date agreement and spatial granularity refinement preserved without source collapse",
-      "PR #404 — M3 exit recorded as PROCEED_TO_M4; M4 opened as decision-only"
+      "PR #404 — M3 exit recorded as PROCEED_TO_M4; M4 opened as decision-only",
+      "PR #405 — M4 architecture decision recorded as ADOPT; no successor branch authorized",
+      "PR #406 — owner-directed bounded M5 whole-life runtime proof merged and published; manual product exit pending"
     ]
   },
   "capability": {
     "public_runtime": "core_landing_globe_primary_atlas_compatibility",
     "globe": "public_r_and_d_preview",
-    "world_slice": "gate_c_frozen_non_public"
+    "world_slice": "gate_c_frozen_non_public",
+    "temporal_map": "m5_whole_life_runtime_proof_published"
   },
   "canonical_refs": [
     "docs/ARTEMIS_CONCEPT.md",
@@ -96,11 +112,13 @@
     "docs/work/2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md",
-    "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md"
+    "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md",
+    "docs/work/2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md",
+    "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Select and authorize one bounded post-M4 question in a separate decision before adding new sources, data, runtime capability, federation infrastructure or another product branch."
+    "condition": "Run the manual product check of the published M5 and record exactly ITERATE, NARROW or STOP before opening any new feature branch."
   }
 }

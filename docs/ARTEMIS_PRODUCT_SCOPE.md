@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.0.
-- Дата: 2026-09-01.
+- Версия: 4.1.
+- Дата: 2026-09-03.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Post-M4 hold`; M4 is complete with `ADOPT`, and no implementation branch is open.
+- Current increment: `M5 — Whole-Life Runtime Proof`; published runtime awaits one manual product result.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -53,19 +53,21 @@ Current authorized work:
 
 - preserve the published #396 interaction;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;
-- preserve the reviewed PR #400 package without promoting it to runtime;
+- preserve the reviewed PR #400 package as the content boundary used by the bounded M5 runtime;
 - preserve the merged PR #401 one-source proof unchanged as M2 evidence;
 - preserve the merged PR #403 two-source proof unchanged as M3 evidence;
 - preserve the M4 `ADOPT` decision as a semantic direction rather than a capability claim;
-- require a separate bounded branch decision before any new data, runtime, federation infrastructure or context/layer work.
+- preserve PR #406 as the bounded M5 proof without widening it;
+- complete the manual M5 product check and record exactly `ITERATE`, `NARROW` or `STOP`;
+- freeze new feature branches until that exit and a later explicit branch decision.
 
 ## 3. Обязательный current content scope
 
-Текущий validation scaffold содержит:
+Текущий M5 validation scaffold содержит:
 
 - одна primary Person: Leonardo da Vinci;
 - canonical Trajectory as semantic authority;
-- четыре source-bound Presence anchors in Romagna, 1502:
+- seven reviewed major-life Presence anchors from PR #400 plus four source-bound Presence anchors in Romagna, 1502:
   - Rimini — 1502-08-08;
   - Cesena — 1502-08-10;
   - Cesenatico — 1502-09-06;
@@ -75,9 +77,9 @@ Current authorized work:
 - unknown route gaps with `route_geometry=null`;
 - present-day settlement anchors explicitly separated from exact historical position claims.
 
-Это **interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
+The 11 anchors form six coarse life periods across 1452–1519. Это **bounded whole-life interaction scaffold**, а не Leonardo's complete biography и не полный `Life in Context` corpus.
 
-Не являются обязательными для текущего post-M4 hold:
+Не являются обязательными для текущего M5 checkpoint:
 
 - changing historical Region geometry;
 - complete local political/cultural State context;
@@ -86,10 +88,9 @@ Current authorized work:
 - documented Relation predicates;
 - global simultaneous Events;
 - broad thematic layer set;
-- runtime publication of the PR #400 candidate package;
-- expansion beyond the one selected two-provider Presence.
+- expansion beyond the reviewed 11-Presence M5 package.
 
-The reviewed PR #400 candidate package remains separate non-public evidence; M4 did not promote it or expand its Presence set.
+M4 did not itself promote the PR #400 package. Its later runtime use came from explicit owner instruction and PR #406; no intervening repository decision record exists.
 
 ### 3.1 Progressive fidelity / достаточная точность
 
@@ -164,7 +165,7 @@ No completed corpus or engineering work is deleted in this cycle.
 
 Target Investigation/SliceRevision/ResearchBrief remains a valid optional research-work capability.
 
-For the current post-M4 hold:
+For the current M5 checkpoint:
 
 - immutable revisions and Research Brief are not prerequisites;
 - current mutable ResearchSlice v2 remains compatibility backend code;
@@ -174,10 +175,9 @@ For the current post-M4 hold:
 
 ## 8. Frozen scope
 
-Outside the currently authorized post-M4 preservation boundary:
+Outside the currently authorized M5 preservation boundary:
 
-- public runtime integration of the PR #400 candidate package;
-- any third-provider integration, second Presence or broad reconciliation framework before a separate bounded branch decision;
+- any source, Presence or broad reconciliation expansion beyond the reviewed M5 package;
 - default local/global context layers;
 - generative AI and AI analysis runtime;
 - causal/predictive engine;
@@ -220,11 +220,17 @@ The #355 decision, public deployment and #396 implementation do not make:
 
 ## 10. Current exit condition
 
-The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 is complete with:
+The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed candidate package. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 is complete with:
 
 - **`ADOPT`** — accept the source-federated semantic direction while keeping intake bounded, deterministic and reviewable.
 
-The decision does not authorize another implementation, public runtime promotion, data expansion, live federation or generic ingestion/storage infrastructure.
+PR #405 did not authorize another implementation. M5 nevertheless started later through explicit owner instruction and was published by PR #406. The absence of an intervening repository decision record is recorded as a governance deviation and is not retroactively repaired.
+
+The current exit is a manual check of the published whole-life proof. Record exactly one result:
+
+- `ITERATE` — improve the current bounded whole-life loop;
+- `NARROW` — reduce data or interaction scope;
+- `STOP` — stop this product direction and revisit the hypothesis.
 
 This package outcome does not automatically mean Gate D is globally complete or authorize another product branch.
 
@@ -232,13 +238,13 @@ Formal same-content baseline, broader contextual-understanding metrics and parti
 
 ## 11. Next-branch rule
 
-The post-#396 result vocabulary was:
+The earlier post-#396 result vocabulary was:
 
 - `ITERATE` — improve the same loop;
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`. No implementation branch is active. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened until a separate bounded decision names one question, artifact scope, evidence requirement and exit condition.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 is published and awaiting its manual exit. No new feature branch is active. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened until a later bounded decision names one question, artifact scope, evidence requirement and exit condition.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

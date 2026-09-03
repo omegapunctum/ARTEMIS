@@ -1,7 +1,7 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v6.5
+# ARTEMIS — МАСТЕР-ПРОМПТ v6.6
 
 Статус: canonical operational governance for AI agents and assistants.
-Дата: 2026-08-29.
+Дата: 2026-09-03.
 
 ## 1. Роль проекта
 
@@ -116,8 +116,10 @@ Current operational truth:
 8. Preserve PR `#396` as the published bounded correction: full-width bottom timeline; two-handle `Range`; chosen build origin + one current-time cursor `Scrub`; popup-first selection; optional right drawer; no single-click camera jump; double-click focus.
 9. Gate D remains **OPEN / IN PROGRESS** under #355. Implementation success and public R&D access do not by themselves close the gate.
 10. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
-11. Exactly one next branch is active: `Leonardo Major-Life Presence Scope v1`, limited to source discovery, candidate selection and review design for 6–10 coarse Presences across 1452–1519.
-12. Do not promote the package to runtime or open another branch before its `FREEZE FOR REVIEW`, `NARROW` or `STOP` decision.
+11. Preserve PR #400 as the reviewed major-life package, PR #401 as M2, PR #403 as M3 and PR #405 as the M4 `ADOPT` record that opened no successor.
+12. Record honestly that the owner then instructed M5 without an intervening repository decision record; do not retrofit one.
+13. Preserve PR #406 as the current bounded 11-Presence, six-period, 1452–1519 runtime proof.
+14. Freeze new feature branches until the user manually checks the published M5 and records exactly `ITERATE`, `NARROW` or `STOP`.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 
@@ -133,9 +135,9 @@ Formal D1/M1/A1/P1 closeout and the old automatic Gate E sequencing are not curr
 
 ## 6. Frozen / gated work
 
-Frozen or gated outside the one named post-#396 branch:
+Frozen or gated outside the current M5 checkpoint:
 
-- Leonardo detail beyond the bounded 6–10-Presence candidate package and any runtime integration before review;
+- Leonardo detail beyond the reviewed 11-Presence M5 package;
 - default local/global context and broad layer expansion;
 - generative AI runtime;
 - AI-controlled view/query runtime until a separate command/state contract is approved;

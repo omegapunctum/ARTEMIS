@@ -333,13 +333,22 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.1 currently opens only Gate D")
+        raise ProjectStateError("project_state v1.2 currently opens only Gate D")
     if gate["status"] not in {"in_progress", "blocked"}:
         raise ProjectStateError("Gate D must be in_progress or blocked")
     if gate["allowed_decisions"] != ["ADOPT", "NARROW", "REJECT"]:
         raise ProjectStateError("Gate D decision set drift")
     if gate.get("decision") != "ADOPT":
         raise ProjectStateError("the completed M4 architecture decision must remain ADOPT")
+    checkpoint = payload["current_checkpoint"]
+    if checkpoint["id"] != "M5":
+        raise ProjectStateError("the current product checkpoint must remain M5")
+    if checkpoint["status"] == "awaiting_manual_product_check" and "decision" in checkpoint:
+        raise ProjectStateError("M5 cannot record a product decision before the manual check")
+    if checkpoint["status"] == "completed" and "decision" not in checkpoint:
+        raise ProjectStateError("completed M5 must record exactly one product decision")
+    if checkpoint["pre_start_decision_record"] is not False:
+        raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
     if payload["next_transition"]["gate"] != "D":
         raise ProjectStateError("Gate E cannot open before a completed Gate D decision")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
