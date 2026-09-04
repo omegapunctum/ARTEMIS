@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.6
+# ARTEMIS — PROJECT PHASES v7.7
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-01.
-- Active phase: **5.0 — post-M4 hold; no implementation branch active**.
+- Date: 2026-09-03.
+- Active phase: **5.1 — M5 Whole-Life Runtime Proof; manual product exit pending**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -132,10 +132,21 @@ M4 asks whether the completed M2/M3 evidence warrants `ADOPT`, `NARROW` or `REJE
 
 The recorded result is `ADOPT`: source-specific reviewed intake may normalize into the canonical Claim/EvidenceLink/Source/Uncertainty path without becoming a second ontology. This is a semantic direction, not authorization for live federation, automatic reconciliation, generic ingestion/storage, public runtime promotion or new data.
 
-No post-M4 implementation phase is active. A separate decision must define one bounded question, artifact scope, evidence requirement and exit condition before implementation begins.
+PR #405 did not open a post-M4 implementation phase. The later M5 start occurred through explicit owner instruction, without an intervening repository decision record; that deviation is preserved rather than retroactively rewritten.
 
 Context/layers, curation storage, persistence/sharing, renderer/provider work, generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain unopened/gated.
 
+## Phase 5E — M5 Whole-Life Runtime Proof [active]
+
+PR #406 merged and published the reviewed PR #400 major-life package in the existing Temporal Map as one bounded product proof:
+
+- 11 Presence anchors: seven major-life plus four Romagna;
+- six coarse life periods across 1452–1519;
+- existing Range/Scrub, popup/drawer and shared URL-state behavior;
+- no invented historical route geometry or new infrastructure.
+
+The user has not yet performed the manual product check. The only M5 exit results are `ITERATE`, `NARROW` or `STOP`; exactly one must be recorded before any successor feature branch is considered.
+
 ## Rule
 
-One active product vertical and at most one active milestone. M4 is complete with `ADOPT`; no successor milestone or implementation branch is inferred from that result. Public data expansion requires a separate bounded decision.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 is the only active checkpoint and is not inferred from M4. New feature branches remain frozen until the M5 result is recorded and a later bounded decision explicitly opens work.

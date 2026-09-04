@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.1.json",
-  "title": "ARTEMIS machine-readable operational state v1.1",
+  "$id": "https://artemis.example/schemas/project-state-v1.2.json",
+  "title": "ARTEMIS machine-readable operational state v1.2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,6 +13,7 @@
     "phase",
     "completed_gates",
     "gate",
+    "current_checkpoint",
     "work_in_progress_limit",
     "github",
     "capability",
@@ -50,7 +51,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.1.0"},
+    "schema_version": {"const": "1.2.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -69,7 +70,7 @@
       "additionalProperties": false,
       "required": ["id", "status"],
       "properties": {
-        "id": {"const": "5.0"},
+        "id": {"const": "5.1"},
         "status": {"const": "active"}
       }
     },
@@ -96,6 +97,37 @@
         "decision": {"enum": ["ADOPT", "NARROW", "REJECT"]}
       }
     },
+    "current_checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "status",
+        "allowed_decisions",
+        "implementation_pr",
+        "merged_commit",
+        "published_url",
+        "entry_authority",
+        "pre_start_decision_record",
+        "governance_alignment_ref"
+      ],
+      "properties": {
+        "id": {"const": "M5"},
+        "label": {"const": "Whole-Life Runtime Proof"},
+        "kind": {"const": "bounded_runtime_proof"},
+        "status": {"enum": ["awaiting_manual_product_check", "completed"]},
+        "allowed_decisions": {"const": ["ITERATE", "NARROW", "STOP"]},
+        "decision": {"enum": ["ITERATE", "NARROW", "STOP"]},
+        "implementation_pr": {"const": 406},
+        "merged_commit": {"const": "24243b7ff09029bddedc3592c2ef2963813f146d"},
+        "published_url": {"const": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519"},
+        "entry_authority": {"const": "explicit_owner_instruction"},
+        "pre_start_decision_record": {"const": false},
+        "governance_alignment_ref": {"const": "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md"}
+      }
+    },
     "work_in_progress_limit": {"const": 1},
     "github": {
       "type": "object",
@@ -113,11 +145,12 @@
     "capability": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["public_runtime", "globe", "world_slice"],
+      "required": ["public_runtime", "globe", "world_slice", "temporal_map"],
       "properties": {
         "public_runtime": {"const": "core_landing_globe_primary_atlas_compatibility"},
         "globe": {"const": "public_r_and_d_preview"},
-        "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]}
+        "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]},
+        "temporal_map": {"const": "m5_whole_life_runtime_proof_published"}
       }
     },
     "canonical_refs": {

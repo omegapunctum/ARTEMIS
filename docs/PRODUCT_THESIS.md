@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical active product thesis.
-- Версия: 3.3.
-- Дата: 2026-09-01.
+- Версия: 3.4.
+- Дата: 2026-09-03.
 - Решение: Foundation v3 / first `Life in Context` vertical.
 - Current proof surface: `Leonardo Temporal Map` on the public `/globe/` R&D prototype under issue `#355`.
 - Current scope owner: `ARTEMIS_PRODUCT_SCOPE.md`.
@@ -94,11 +94,11 @@ Research Brief, immutable revision и advanced comparison могут подде�
 - source/uncertainty under progressive disclosure;
 - dashed chronology never becoming historical route geometry.
 
-PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение: текущий loop достаточно хорош, а оставшиеся visual issues не являются следующим приоритетом. M2/M3 subsequently proved the bounded source-to-projection path, and M4 recorded `ADOPT` for the source-federated semantic direction. No post-M4 implementation branch is currently open; the thesis does not authorize one by itself.
+PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение: текущий loop достаточно хорош, а оставшиеся visual issues не являются следующим приоритетом. M2/M3 subsequently proved the bounded source-to-projection path, and M4 recorded `ADOPT` for the source-federated semantic direction. PR #406 now publishes the owner-directed bounded M5 whole-life proof; its manual product result is pending. The thesis does not authorize another feature branch by itself.
 
 ## 5. First World Slice thesis
 
-Longer-term candidate: **Leonardo da Vinci, 1452–1519**.
+Current bounded whole-life proof: **Leonardo da Vinci, 1452–1519**, using 11 coarse Presence anchors and six periods.
 
 A fuller validation Slice may eventually include only material necessary to test the relevant hypotheses:
 
@@ -114,7 +114,7 @@ A fuller validation Slice may eventually include only material necessary to test
 
 Это не попытка дать полную историю Возрождения или мира 1452–1519.
 
-The current four-Presence Romagna 1502 package is a smaller interaction scaffold and must not be described as this fuller thesis already implemented.
+The current M5 package is still an interaction scaffold and must not be described as the fuller contextual thesis already implemented.
 
 ## 6. Hypotheses
 
@@ -192,7 +192,7 @@ For the post-#396 check, the recorded decision vocabulary was:
 - `NARROW`;
 - `STOP/RETHINK`.
 
-The recorded result is `ITERATE`. It opens only `Leonardo Major-Life Presence Scope v1`; branch opening is not a separate peer outcome and does not prove formal user value.
+The earlier recorded M1 result is `ITERATE`. The current M5 proof awaits a new manual result of exactly `ITERATE`, `NARROW` or `STOP`; publication and CI do not prove formal user value.
 
 For later broader validation, evidence may additionally require:
 

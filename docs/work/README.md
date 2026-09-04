@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-01.
+- Updated: 2026-09-03.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,6 +13,8 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
+| `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | #355 current housekeeping record; preserves the owner-directed M4 → M5 deviation without invented authorization | manual M5 product check records exactly `ITERATE`, `NARROW` or `STOP` |
+| `2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md` | #355 current bounded 11-Presence whole-life runtime proof implemented by PR #406 | one manual M5 product result; no automatic successor branch |
 | `2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md` | #355 completed M4 architecture decision | `ADOPT`; no implementation branch opened |
 | `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md` | #355 recorded M3 exit decision and bounded M4 opening | completed by M4 `ADOPT` decision |
 | `2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md` | #355 completed two-provider/one-Presence M3 evidence | completed with `PROCEED_TO_M4` through separate decision record |
@@ -25,7 +27,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-08-14_GATE_D_REAL_DEVICE_REVIEW_PROTOCOL_v1.md` | paused historical closeout protocol; basic responsive/keyboard/accessibility behavior remains required | reconsider only if the fresh product decision makes this evidence necessary |
 | `2026-08-14_GATE_D_PLACE_ANCHOR_CONTRACT_v1.md` | #355 source-bound present-day settlement reference overlay for Rimini, Cesena, Cesenatico and Imola | replaced only by a reviewed higher-precision source contract or archived with the Globe contour |
 | `2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md` | #355 current object → time → path → place → information interaction contract; implemented through PRs #395–#396 | replaced only by a later reviewed interaction contract; current #396 behavior is preserved |
-| `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | completed source/review branch through PR #400; candidate package remains non-public and runtime-not-authorized | preserved evidence; any runtime use requires a later decision |
+| `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | completed source/review branch through PR #400; that record did not authorize runtime use | preserved historical evidence; later owner-directed runtime use is bounded by M5/PR #406 |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
 | `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
 
@@ -57,7 +59,7 @@ Current interaction semantics:
 - dashed connectors express chronology only and are never historical route geometry;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package without runtime authorization. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 completed with `ADOPT` for the source-federated semantic direction. **No post-M4 implementation branch is active.** Do not add another provider/Presence, local/global layers, backend/storage, public runtime data or federation infrastructure before a separate bounded branch decision.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **M5 is current and awaiting manual product exit.** Do not add another provider/Presence, local/global layers, backend/storage or federation infrastructure.
 
 ## Foundation lifecycle records
 
@@ -98,8 +100,8 @@ No real Gate C historical row import is active. PR #372 merged the schema/mappin
 - #331 is deferred and documented Relation predicates remain prohibited until explicitly reopened/accepted;
 - the completed #344 parity contract remains a fail-closed semantic requirement for renderer changes;
 - the Leonardo-in-Romagna 1502 Gate C package remains frozen with draft/rejected historical Claims and geometry withheld where unsupported;
-- the separate place-anchor overlay may resolve only the four present-day named-settlement points with source/rights/uncertainty closure; it cannot create exact historical positions, routes, boundaries, Relations or Airtable rows;
-- broader 1452–1519 Presence data and default context/layer expansion are separate possible branches, not current scope.
+- M5 may render the reviewed 11-Presence package only through present-day source-bound place anchors; it cannot create exact historical positions, routes, boundaries, Relations or Airtable rows;
+- additional Presence data and default context/layer expansion are separate possible branches, not current scope.
 
 ## Accepted Attractor-refinement rule from #363 / PR #364
 

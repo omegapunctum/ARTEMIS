@@ -174,7 +174,9 @@ Current product implementation sequence:
 8. The recorded M2 result is `PROCEED_TO_M3`.
 9. PR #403 completed M3 with two publisher identities, one Presence and explicit agreement/spatial-refinement semantics; the recorded result is `PROCEED_TO_M4`.
 10. M4 records `ADOPT` for the source-federated semantic direction: source-specific reviewed intake may normalize into the canonical Claim/EvidenceLink/Source/Uncertainty path without becoming a second ontology.
-11. No post-M4 implementation branch is active. A separate decision must name one bounded question, artifact scope, evidence requirement and exit condition before public runtime promotion, additional sources or Presences, context/layer expansion, backend/storage or federation infrastructure work begins.
+11. PR #405 closed M4 without opening a successor. The owner then explicitly instructed M5 without an intervening repository decision record; this is a governance deviation and must not be rewritten as prior authorization.
+12. PR #406 merged and published M5 as a bounded 11-Presence, six-period, 1452–1519 runtime proof. Its manual product exit is pending and must record exactly `ITERATE`, `NARROW` or `STOP`.
+13. No new feature branch may open during the housekeeping checkpoint or automatically from the M5 result.
 
 Current Temporal Map semantic/UI boundary:
 
@@ -184,7 +186,7 @@ Current Temporal Map semantic/UI boundary:
 - `Trajectory` remains semantic authority;
 - dashed connectors are chronology-only presentation, never historical route geometry;
 - single-click selection does not implicitly change camera state;
-- the four current settlement geometries are present-day source-bound reference anchors, not exact historical positions.
+- all current settlement geometries are present-day source-bound reference anchors, not exact historical positions or route evidence.
 
 Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated.
 
