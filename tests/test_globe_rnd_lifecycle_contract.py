@@ -33,18 +33,18 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M2 One-source proof [completed]" in phases
     assert "M3 Multi-source proof [completed]" in phases
     assert "M4 Architecture decision [completed]" in phases
-    assert "M5 Whole-Life Runtime Proof [active]" in phases
+    assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `M5 — Whole-Life Runtime Proof`" in scope
+    assert "Current increment: `Post-M5 ITERATE scope decision`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
     assert state["gate"]["status"] == "in_progress"
     assert state["gate"]["decision"] == "ADOPT"
     assert state["current_checkpoint"]["id"] == "M5"
-    assert state["current_checkpoint"]["status"] == "awaiting_manual_product_check"
+    assert state["current_checkpoint"]["status"] == "completed"
     assert state["current_checkpoint"]["allowed_decisions"] == ["ITERATE", "NARROW", "STOP"]
-    assert "decision" not in state["current_checkpoint"]
+    assert state["current_checkpoint"]["decision"] == "ITERATE"
     assert state["current_checkpoint"]["pre_start_decision_record"] is False
 
 
@@ -130,7 +130,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
         assert decision in decision_record
 
     assert "No new feature branch is active" in priorities
-    assert "manual product check" in state["next_transition"]["condition"]
+    assert "bounded M5 UX correction" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
     assert "Decision: `PROCEED_TO_M3`" in m2_decision
@@ -166,6 +166,13 @@ def test_m5_governance_deviation_and_exit_are_explicit() -> None:
     assert "STOP" in alignment
     assert state["current_checkpoint"]["implementation_pr"] == 406
     assert state["current_checkpoint"]["entry_authority"] == "explicit_owner_instruction"
+
+    exit_record = _text("docs/work/2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md")
+    assert "Decision: **`ITERATE`**" in exit_record
+    assert "Next implementation branch: not opened" in exit_record
+    assert "unknown_route" in exit_record
+    assert "route_geometry=null" in exit_record
+    assert "PR #394 remains closed and superseded" in exit_record
 
 
 def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None:

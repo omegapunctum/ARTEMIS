@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical foundation index.
-- Версия: 3.7.
-- Дата: 2026-09-03.
+- Версия: 3.8.
+- Дата: 2026-09-04.
 - Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
 - Роль: единственный реестр canonical owner documents, reading order и conflict routing.
 
@@ -255,7 +255,7 @@ Active product gate:
 
 7. The fresh user check of the published #396 interaction recorded `ITERATE`: preserve the loop and treat remaining visual issues as non-priority. Gate D remains `OPEN / IN PROGRESS`.
 8. M2, M3 and M4 are completed; M4 remains `ADOPT` and did not open a successor.
-9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; its manual `ITERATE` / `NARROW` / `STOP` result is pending. New feature branches are frozen.
+9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; the direct owner check recorded `ITERATE`. No successor feature branch is open.
 
 Foundation status:
 

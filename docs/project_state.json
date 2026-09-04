@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-03",
+  "updated_at": "2026-09-04",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -41,8 +41,9 @@
     "id": "M5",
     "label": "Whole-Life Runtime Proof",
     "kind": "bounded_runtime_proof",
-    "status": "awaiting_manual_product_check",
+    "status": "completed",
     "allowed_decisions": ["ITERATE", "NARROW", "STOP"],
+    "decision": "ITERATE",
     "implementation_pr": 406,
     "merged_commit": "24243b7ff09029bddedc3592c2ef2963813f146d",
     "published_url": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519",
@@ -82,7 +83,8 @@
       "PR #403 — M3 two-source proof completed; exact date agreement and spatial granularity refinement preserved without source collapse",
       "PR #404 — M3 exit recorded as PROCEED_TO_M4; M4 opened as decision-only",
       "PR #405 — M4 architecture decision recorded as ADOPT; no successor branch authorized",
-      "PR #406 — owner-directed bounded M5 whole-life runtime proof merged and published; manual product exit pending"
+      "PR #406 — owner-directed bounded M5 whole-life runtime proof merged and published",
+      "PR #407 — M5 governance/lifecycle housekeeping aligned; new feature branch remained closed"
     ]
   },
   "capability": {
@@ -114,11 +116,12 @@
     "docs/work/2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md",
-    "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md"
+    "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md",
+    "docs/work/2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Run the manual product check of the published M5 and record exactly ITERATE, NARROW or STOP before opening any new feature branch."
+    "condition": "Define and separately authorize one bounded M5 UX correction from the recorded ITERATE findings before implementation; keep Export Airtable CI in a separate technical maintenance PR."
   }
 }

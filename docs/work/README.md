@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-03.
+- Updated: 2026-09-04.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,8 +13,9 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | #355 current housekeeping record; preserves the owner-directed M4 → M5 deviation without invented authorization | manual M5 product check records exactly `ITERATE`, `NARROW` or `STOP` |
-| `2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md` | #355 current bounded 11-Presence whole-life runtime proof implemented by PR #406 | one manual M5 product result; no automatic successor branch |
+| `2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md` | #355 current direct product-check decision | `ITERATE`; no implementation branch opened |
+| `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | #355 completed housekeeping record; preserves the owner-directed M4 → M5 deviation without invented authorization | completed by the direct M5 exit decision |
+| `2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md` | #355 completed bounded 11-Presence whole-life runtime proof implemented by PR #406 | direct product result `ITERATE`; no automatic successor branch |
 | `2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md` | #355 completed M4 architecture decision | `ADOPT`; no implementation branch opened |
 | `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md` | #355 recorded M3 exit decision and bounded M4 opening | completed by M4 `ADOPT` decision |
 | `2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md` | #355 completed two-provider/one-Presence M3 evidence | completed with `PROCEED_TO_M4` through separate decision record |
@@ -59,7 +60,7 @@ Current interaction semantics:
 - dashed connectors express chronology only and are never historical route geometry;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **M5 is current and awaiting manual product exit.** Do not add another provider/Presence, local/global layers, backend/storage or federation infrastructure.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** No successor branch is open; do not add another provider/Presence, local/global layers, backend/storage or federation infrastructure.
 
 ## Foundation lifecycle records
 

@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.1.
-- Дата: 2026-09-03.
+- Версия: 4.2.
+- Дата: 2026-09-04.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `M5 — Whole-Life Runtime Proof`; published runtime awaits one manual product result.
+- Current increment: `Post-M5 ITERATE scope decision`; M5 is complete and no successor branch is open.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -58,8 +58,8 @@ Current authorized work:
 - preserve the merged PR #403 two-source proof unchanged as M3 evidence;
 - preserve the M4 `ADOPT` decision as a semantic direction rather than a capability claim;
 - preserve PR #406 as the bounded M5 proof without widening it;
-- complete the manual M5 product check and record exactly `ITERATE`, `NARROW` or `STOP`;
-- freeze new feature branches until that exit and a later explicit branch decision.
+- preserve the direct M5 product result as exactly `ITERATE`;
+- define one bounded UX correction from the recorded findings without opening implementation implicitly.
 
 ## 3. Обязательный current content scope
 
@@ -226,11 +226,11 @@ The corrected #396 loop completed M1 with `ITERATE`. PR #400 completed the revie
 
 PR #405 did not authorize another implementation. M5 nevertheless started later through explicit owner instruction and was published by PR #406. The absence of an intervening repository decision record is recorded as a governance deviation and is not retroactively repaired.
 
-The current exit is a manual check of the published whole-life proof. Record exactly one result:
+The manual check of the published whole-life proof recorded exactly one result:
 
-- `ITERATE` — improve the current bounded whole-life loop;
-- `NARROW` — reduce data or interaction scope;
-- `STOP` — stop this product direction and revisit the hypothesis.
+- **`ITERATE`** — improve the current bounded whole-life loop.
+
+`NARROW` and `STOP` were not selected. The observed problems concern relational legibility and interface composition rather than evidence that the 1452–1519 scope must be reduced or the Temporal Map direction stopped.
 
 This package outcome does not automatically mean Gate D is globally complete or authorize another product branch.
 
@@ -244,7 +244,7 @@ The earlier post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 is published and awaiting its manual exit. No new feature branch is active. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened until a later bounded decision names one question, artifact scope, evidence requirement and exit condition.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. No new feature branch is active. The next decision may define one bounded UX correction, but context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

@@ -1,7 +1,7 @@
-# ARTEMIS — МАСТЕР-ПРОМПТ v6.6
+# ARTEMIS — МАСТЕР-ПРОМПТ v6.7
 
 Статус: canonical operational governance for AI agents and assistants.
-Дата: 2026-09-03.
+Дата: 2026-09-04.
 
 ## 1. Роль проекта
 
@@ -118,8 +118,9 @@ Current operational truth:
 10. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
 11. Preserve PR #400 as the reviewed major-life package, PR #401 as M2, PR #403 as M3 and PR #405 as the M4 `ADOPT` record that opened no successor.
 12. Record honestly that the owner then instructed M5 without an intervening repository decision record; do not retrofit one.
-13. Preserve PR #406 as the current bounded 11-Presence, six-period, 1452–1519 runtime proof.
-14. Freeze new feature branches until the user manually checks the published M5 and records exactly `ITERATE`, `NARROW` or `STOP`.
+13. Preserve PR #406 as the bounded 11-Presence, six-period, 1452–1519 runtime proof.
+14. Preserve the direct M5 result as exactly `ITERATE`: whole-life scale continues, while relational legibility and six interface-composition findings require bounded UX scoping.
+15. Do not open the UX implementation branch until a separate scope decision states exact changes, semantic limits, acceptance evidence and stop condition.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 
