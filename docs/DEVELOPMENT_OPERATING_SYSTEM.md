@@ -175,8 +175,9 @@ Current product implementation sequence:
 9. PR #403 completed M3 with two publisher identities, one Presence and explicit agreement/spatial-refinement semantics; the recorded result is `PROCEED_TO_M4`.
 10. M4 records `ADOPT` for the source-federated semantic direction: source-specific reviewed intake may normalize into the canonical Claim/EvidenceLink/Source/Uncertainty path without becoming a second ontology.
 11. PR #405 closed M4 without opening a successor. The owner then explicitly instructed M5 without an intervening repository decision record; this is a governance deviation and must not be rewritten as prior authorization.
-12. PR #406 merged and published M5 as a bounded 11-Presence, six-period, 1452–1519 runtime proof. Its manual product exit is pending and must record exactly `ITERATE`, `NARROW` or `STOP`.
-13. No new feature branch may open during the housekeeping checkpoint or automatically from the M5 result.
+12. PR #406 merged and published M5 as a bounded 11-Presence, six-period, 1452–1519 runtime proof.
+13. The direct owner check recorded exactly `ITERATE`: preserve whole-life scope, address relational legibility without inventing routes, and scope the six remaining interface-composition findings.
+14. No new feature branch opens automatically from the M5 result. A separate decision must define the bounded UX artifact, semantic limits, acceptance evidence and stop condition.
 
 Current Temporal Map semantic/UI boundary:
 

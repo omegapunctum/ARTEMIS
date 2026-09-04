@@ -3,8 +3,8 @@
 ## Статус
 
 - Тип: canonical active product thesis.
-- Версия: 3.4.
-- Дата: 2026-09-03.
+- Версия: 3.5.
+- Дата: 2026-09-04.
 - Решение: Foundation v3 / first `Life in Context` vertical.
 - Current proof surface: `Leonardo Temporal Map` on the public `/globe/` R&D prototype under issue `#355`.
 - Current scope owner: `ARTEMIS_PRODUCT_SCOPE.md`.
@@ -94,7 +94,7 @@ Research Brief, immutable revision и advanced comparison могут подде�
 - source/uncertainty under progressive disclosure;
 - dashed chronology never becoming historical route geometry.
 
-PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение: текущий loop достаточно хорош, а оставшиеся visual issues не являются следующим приоритетом. M2/M3 subsequently proved the bounded source-to-projection path, and M4 recorded `ADOPT` for the source-federated semantic direction. PR #406 now publishes the owner-directed bounded M5 whole-life proof; its manual product result is pending. The thesis does not authorize another feature branch by itself.
+PR `#395` получил первый manual-feedback result `ITERATE`; PR `#396` реализовал эту коррекцию. Fresh user check #396 затем подтвердил продолжение. M2/M3 subsequently proved the bounded source-to-projection path, and M4 recorded `ADOPT` for the source-federated semantic direction. PR #406 published the owner-directed bounded M5 whole-life proof; its direct product check recorded `ITERATE` because the scale remains viable but the life path lacks relational legibility and the interface needs bounded composition fixes. The thesis does not authorize another feature branch by itself.
 
 ## 5. First World Slice thesis
 
@@ -192,7 +192,7 @@ For the post-#396 check, the recorded decision vocabulary was:
 - `NARROW`;
 - `STOP/RETHINK`.
 
-The earlier recorded M1 result is `ITERATE`. The current M5 proof awaits a new manual result of exactly `ITERATE`, `NARROW` or `STOP`; publication and CI do not prove formal user value.
+The earlier M1 result and the current M5 result are both `ITERATE`. The M5 decision justifies bounded UX scoping; it does not by itself open implementation or prove formal user value.
 
 For later broader validation, evidence may additionally require:
 

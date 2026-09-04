@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.7
+# ARTEMIS — PROJECT PHASES v7.8
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-03.
-- Active phase: **5.1 — M5 Whole-Life Runtime Proof; manual product exit pending**.
+- Date: 2026-09-04.
+- Current phase: **5.1 — M5 completed with ITERATE; successor branch not opened**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -136,7 +136,7 @@ PR #405 did not open a post-M4 implementation phase. The later M5 start occurred
 
 Context/layers, curation storage, persistence/sharing, renderer/provider work, generative AI, causal/counterfactual runtime, universal corpus and VR/AR remain unopened/gated.
 
-## Phase 5E — M5 Whole-Life Runtime Proof [active]
+## Phase 5E — M5 Whole-Life Runtime Proof [completed]
 
 PR #406 merged and published the reviewed PR #400 major-life package in the existing Temporal Map as one bounded product proof:
 
@@ -145,8 +145,8 @@ PR #406 merged and published the reviewed PR #400 major-life package in the exis
 - existing Range/Scrub, popup/drawer and shared URL-state behavior;
 - no invented historical route geometry or new infrastructure.
 
-The user has not yet performed the manual product check. The only M5 exit results are `ITERATE`, `NARROW` or `STOP`; exactly one must be recorded before any successor feature branch is considered.
+The direct owner check recorded exactly `ITERATE`. The whole-life scale remains viable, while seven product findings require a separately scoped UX correction. The result does not open that implementation branch automatically.
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 is the only active checkpoint and is not inferred from M4. New feature branches remain frozen until the M5 result is recorded and a later bounded decision explicitly opens work.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 is complete with `ITERATE` and was not inferred from M4. No successor milestone or implementation branch exists until a later bounded decision explicitly opens it.

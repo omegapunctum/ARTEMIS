@@ -1,20 +1,22 @@
-# ARTEMIS — PRIORITIES v7.7
+# ARTEMIS — PRIORITIES v7.8
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-03.
-- Active cycle: `M5 — Whole-Life Runtime Proof`; implementation is published and the manual product exit is pending.
+- Date: 2026-09-04.
+- Active cycle: `Post-M5 ITERATE scope decision`; M5 is complete and no successor feature branch is open.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Complete the M5 manual product checkpoint
+## P0 — Define one bounded M5 UX correction
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
-The user has not yet performed the M5 product check. The next product action is to test the published 1452–1519 loop and record exactly one result: `ITERATE`, `NARROW` or `STOP`.
+The direct owner check of the published 1452–1519 loop recorded exactly `ITERATE`. It found seven issues: missing relational legibility, stale popup after opening details, oversized elements, excessive timeline height, header/map-control collision, missing current-M5 `EN / RU` switching and drawer/attribution overlap.
+
+The next action is scope design, not implementation. One bounded UX proposal must distinguish must-fix product semantics from optional polish and must not invent historical routes.
 
 The load-bearing path remains:
 
@@ -72,16 +74,16 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Freeze new feature branches during housekeeping
+## P3 — Keep the successor branch closed until scoped
 
-No new feature branch is active. M5 is the current bounded proof awaiting its manual product result.
+No new feature branch is active. M5 is completed with `ITERATE`.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
 - preserve PR #406 without widening its data, interaction or infrastructure scope;
 - do not infer a successor branch from publication, CI success or the eventual M5 result.
 
-Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another feature branch before the M5 exit is recorded. Export Airtable CI repair is allowed only as a separate technical maintenance PR after this housekeeping checkpoint.
+Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another feature branch from the M5 result. Export Airtable CI repair is allowed only as a separate technical maintenance PR.
 
 ## Preserved foundations
 
@@ -114,10 +116,10 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Review and merge the short M5 governance/lifecycle housekeeping checkpoint.
-2. Manually test the published M5 and record exactly `ITERATE`, `NARROW` or `STOP`.
+1. Review and merge the M5 `ITERATE` exit record.
+2. Define one bounded UX correction with exact scope, acceptance evidence and stop condition; do not implement it implicitly.
 3. In a separate technical PR, repair Export Airtable CI by first providing sufficient Git history and required evidence refs, then rerunning the suite before changing assertions or digests.
-4. Open no new feature branch until a later explicit decision names its bounded question, evidence and stop condition.
+4. Keep all other feature branches closed.
 
 ## Completion rule
 
