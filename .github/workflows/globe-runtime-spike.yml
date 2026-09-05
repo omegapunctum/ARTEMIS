@@ -200,6 +200,8 @@ jobs:
                   "unnamed_interactive_control_count": int(value("unnamed-control-count")),
                   "undersized_target_count": int(value("undersized-target-count")),
                   "overlay_collision_count": int(value("overlay-collision-count")),
+                  "timeline_height_css_px": int(value("timeline-height")),
+                  "chronology_link_count": int(value("chronology-link-count")),
                   "visual_render_ready": value("visual-ready") == "true",
                   "context_source_feature_count": int(value("context-source-feature-count")),
                   "context_rendered_feature_count": int(value("context-rendered-feature-count")),
@@ -219,6 +221,8 @@ jobs:
               assert actual["unnamed_interactive_control_count"] <= thresholds["max_unnamed_interactive_controls"]
               assert actual["undersized_target_count"] == 0
               assert actual["overlay_collision_count"] <= thresholds["max_overlay_collision_count"]
+              assert 0 < actual["timeline_height_css_px"] <= (170 if profile_id == "mobile" else 140)
+              assert actual["chronology_link_count"] == 10
               assert actual["visual_render_ready"] is True
               assert actual["context_source_feature_count"] >= thresholds["min_context_source_feature_count"]
               assert actual["context_rendered_feature_count"] >= thresholds["min_context_rendered_feature_count"]

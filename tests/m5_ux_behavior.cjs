@@ -78,6 +78,22 @@ context.closeDetailsDrawer(); assert.equal(range.focused, true);
 assert.equal(context.lifePathConnectorGeoJson().features.length, 0);
 runtime.data.lifePath.route_policy = {chronological_connector_permitted: false};
 assert.equal(context.lifePathConnectorGeoJson().features.length, 0);
+// Owner-authorized chronology is renderer-only and follows visible endpoints.
+runtime.data.lifePath.route_policy.chronological_connector_permitted = true;
+presences[0].coordinates = [9, 45]; presences[1].coordinates = [11, 44];
+runtime.data.lifePath.transitions = [{transition_id: 'a-b', from_presence_ref: 'a',
+  to_presence_ref: 'b', route_status: 'unknown_route', route_geometry: null}];
+visible = [...presences];
+const links = context.lifePathConnectorGeoJson().features;
+assert.equal(links.length, 1);
+assert.equal(links[0].properties.is_historical_route_geometry, false);
+assert.equal(links[0].properties.route_status, 'unknown_route');
+assert.equal(links[0].geometry.type, 'LineString');
+assert.equal(runtime.data.lifePath.transitions[0].route_geometry, null);
+visible = [presences[0]];
+assert.equal(context.lifePathConnectorGeoJson().features.length, 0);
+visible = [];
+assert.equal(context.lifePathConnectorGeoJson().features.length, 0);
 
 // Run the complete localization module, including refresh and reused nodes.
 const root = new Element();
@@ -101,6 +117,7 @@ assert.equal(text.nodeValue, '2 · Милан');
 assert.equal(label.attrs.title, '1502 · Милан I');
 assert.equal(sourceText.nodeValue, 'Milan');
 assert.equal(window.ARTEMIS_I18N.t('Numbers show chronology; routes unknown.'), 'Номера показывают хронологию; маршруты неизвестны.');
+assert.equal(window.ARTEMIS_I18N.t('Dashed links show order, not travel routes.'), 'Пунктир — порядок событий, не маршруты движения.');
 assert.equal(window.ARTEMIS_I18N.t('1502 · Romagna source anchors'), '1502 · Опоры по источникам Романьи');
 assert.ok(window.ARTEMIS_I18N.t('Vinci · click for summary; double-click to focus map').startsWith('Винчи ·'));
 text.nodeValue = '1 · Vinci'; window.ARTEMIS_I18N.refresh(); assert.equal(text.nodeValue, '1 · Винчи');

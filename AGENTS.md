@@ -52,6 +52,8 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 ## Current execution boundary
 
+Latest owner-directed update: #411 merged and published; its manual check recorded ITERATE (missing visible links, timeline too high). Follow `docs/work/2026-09-05_M5_POST_411_CORRECTION_v1.md`. Dashed renderer-only chronological links are explicitly authorized, superseding the earlier no-connector presentation restriction below. Keep historical routes unknown/null. Merge/publish after automated gates; manual review follows publication, not the reverse.
+
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
 Active work is issue `#355`. Gate C delivery `#332` / `#360` is completed/FREEZE. Gate D remains OPEN / IN PROGRESS, but its current product step is **after** Core Reset and the first Temporal Map iteration:

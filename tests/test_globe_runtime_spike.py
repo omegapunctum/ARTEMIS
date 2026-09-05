@@ -153,7 +153,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     assert metadata["life_path_presence_count"] == 11
     assert metadata["life_path_transition_count"] == 10
     assert metadata["life_path_view_count"] == 66
-    assert metadata["life_path_chronological_connector_enabled"] is False
+    assert metadata["life_path_chronological_connector_enabled"] is True
     assert metadata["browser_acceptance_profile_count"] == 3
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
     assert not (output / "sources").exists()
@@ -209,7 +209,7 @@ def test_life_path_presentation_is_calendar_scaled_and_route_geometry_free(tmp_p
         "status": "unknown_route",
         "geometry": None,
         "historical_route_geometry_permitted": False,
-        "chronological_connector_permitted": False,
+        "chronological_connector_permitted": True,
         "chronological_connector_is_route": False,
     }
     assert life_path["time_axis"]["axis_kind"] == "year"
@@ -733,7 +733,7 @@ def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes(
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-map-status"' in html_source
-    assert "No path line is drawn" in html_source
+    assert "Dashed links show order, not travel routes." in html_source
     assert "exact routes between Presence anchors remain unknown" in html_source
     assert 'id="toggle-alternatives"' not in html_source
     assert 'id="view-global"' not in html_source

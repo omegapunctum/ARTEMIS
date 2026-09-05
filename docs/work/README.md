@@ -14,6 +14,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` | #355 decision-bounded correction of the seven recorded M5 UX findings | one implementation PR, publication and exactly one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result |
+| `2026-09-05_M5_POST_411_CORRECTION_v1.md` | Fresh published #411 ITERATE; owner-authorized visible chronology and compact timeline | merge/publish after automated gates; fresh manual check after publication |
 | `2026-09-05_TEMPORAL_MAP_M5_UX_IMPLEMENTATION_CHECKPOINT_v1.md` | #411 implementation and verification checkpoint | responsive browser evidence, exact-head gates, publication and fresh product check remain pending |
 | `2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md` | #355 current direct product-check decision | `ITERATE`; no implementation branch opened |
 | `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | #355 completed housekeeping record; preserves the owner-directed M4 → M5 deviation without invented authorization | completed by the direct M5 exit decision |

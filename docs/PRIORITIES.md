@@ -4,7 +4,7 @@
 
 - Type: canonical active priorities.
 - Date: 2026-09-05.
-- Active cycle: `M5 bounded UX correction v1`; scope PR #409 merged, implementation PR #411 in progress, acceptance and publication pending.
+- Active cycle: `M5 bounded UX correction v1`; #411 merged/published, fresh owner ITERATE; finish visible chronology and compact dock per `work/2026-09-05_M5_POST_411_CORRECTION_v1.md`, merge/publish after checks, then obtain manual feedback.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.

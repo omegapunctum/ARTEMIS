@@ -4,7 +4,7 @@
 
 - Type: canonical operational phases document.
 - Date: 2026-09-05.
-- Current phase: **5.1 — M5 bounded UX correction in progress in PR #411; full acceptance and publication pending**.
+- Current phase: **5.1 — M5 bounded UX correction: #411 merged/published; owner recorded ITERATE; visible chronology and compact-dock follow-up in progress**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.

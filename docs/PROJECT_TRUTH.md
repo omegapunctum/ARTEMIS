@@ -2,6 +2,8 @@
 
 ## Статус
 
+Latest operational update: #411 is merged/published. The owner's public screenshot/check recorded a fresh `ITERATE`: missing visible connections and excessive timeline height. The bounded [post-#411 amendment](work/2026-09-05_M5_POST_411_CORRECTION_v1.md) authorizes dashed chronological links (not historical routes) and a compact dock. It supersedes pre-publication #411 and no-connector wording below; the correction's merge/deployment is tracked in its PR, not presumed here.
+
 - Тип: canonical current-state document.
 - Дата фиксации: 2026-09-05.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.

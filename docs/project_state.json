@@ -126,6 +126,6 @@
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Under merged scope PR #409, implement exactly its seven M5 corrections in PR #411 (in progress), complete exact-head acceptance checks, merge and publish, then record one fresh manual product exit result; checks and publication remain pending. Export Airtable CI repair merged separately in PR #410."
+    "condition": "PR #411 merged and published; fresh owner ITERATE requires visible renderer-only chronological links and a compact timeline under docs/work/2026-09-05_M5_POST_411_CORRECTION_v1.md. Complete automated gates, merge/publish the bounded follow-up, then obtain a fresh manual result. Historical routes remain unknown/null. Export Airtable CI repair merged separately in PR #410."
   }
 }
