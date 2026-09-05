@@ -3,142 +3,107 @@
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D / ITERATE / FORMAL USER VALUE PENDING`.
-- Дата последнего обновления: 2026-08-29.
+- Статус решения: `GATE D / M5 ITERATE / BOUNDED UX CORRECTION AUTHORIZED / FORMAL USER VALUE PENDING`.
+- Дата последнего обновления: 2026-09-05.
 - Active product issue: GitHub issue `#355`.
-- Formal Foundation v3 protocol design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` (`GATED`; not the immediate execution step).
-- Recorded product-feedback result: `ITERATE` after the published PR `#396` user check.
-- Immediate execution step: `Leonardo Major-Life Presence Scope v1` candidate/source package.
-- Parent foundation decision: GitHub issue `#327` / PR `#328`.
+- Current public proof: M5 / PR `#406` / 11 Presence anchors across 1452–1519.
+- Recorded product result: `ITERATE`.
+- Opened next branch: `Temporal Map M5 bounded UX correction v1` after its decision PR merges.
+- Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
-Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion and public deployment do not by themselves prove user value.
+Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.
 
 ## 1. Текущее решение
 
-`ITERATE — ONE BOUNDED DATA BRANCH OPEN`
+`ITERATE — ONE BOUNDED UX CORRECTION AUTHORIZED`
 
 Зафиксировано:
 
-- Concept v2 validation result не был получен;
-- Foundation v3 restored the source-aware spatial-temporal World Model mission;
-- reviewed World Model and uncertainty contract evidence exists;
-- Gate C frozen the non-public Leonardo-in-Romagna 1502 source/semantic boundary;
-- Gate D is open/in progress under #355;
-- Core Reset was completed in PR `#393`;
-- PR `#395` established the calendar-based Leonardo Temporal Map loop;
-- the first published manual interaction check after #395 produced an explicit **`ITERATE`** product-feedback result;
-- PR `#396` implemented that bounded iteration: full-width bottom timeline, distinct Range/Scrub, popup-first selection, optional right drawer and double-click camera focus;
-- the #396 interface is public as an R&D research prototype, not a product-validated historical capability;
-- the fresh user check of the corrected #396 interface reported that the interaction is now good enough to continue and that remaining visual issues are not the next priority;
-- this evidence records `ITERATE` while leaving Gate D and formal user-value validation open;
-- exactly one next branch is open: `Leonardo Major-Life Presence Scope v1`, a source/review package for roughly 6–10 coarse Presences across 1452–1519;
-- no runtime promotion, broader context/layer, infrastructure or second product branch is open.
+- Gate C remains completed/FREEZE for the non-public Leonardo-in-Romagna source boundary;
+- Gate D remains open/in progress under #355;
+- PR #393 completed Core Reset;
+- PRs #395–#396 established and corrected the calendar-based Range/Scrub interaction;
+- the post-#396 check recorded `ITERATE` and opened the completed major-life source/review branch;
+- PR #400 froze the reviewed major-life candidate package;
+- PR #401 completed M2 with `PROCEED_TO_M3`;
+- PR #403 completed M3 with `PROCEED_TO_M4`;
+- PR #405 recorded M4 `ADOPT` without opening implementation;
+- the owner then directly instructed M5 without an intervening repository decision record;
+- PR #406 published the bounded 11-Presence whole-life proof;
+- PRs #407–#408 aligned governance and recorded the direct M5 result as exactly `ITERATE`;
+- the whole-life scale remains viable, while relational legibility and six interface-composition findings require one bounded correction;
+- formal user value remains unvalidated.
 
-Neither the recorded `ITERATE` after #395 nor the post-#396 `ITERATE` is the final Foundation v3 user-value validation outcome.
+## 2. Evidence and decision
 
-## 2. Recorded decision and next branch
+The owner manually reviewed the published M5 and observed:
 
-The allowed post-#396 result vocabulary was:
+1. Presence markers did not read as one connected life path;
+2. the compact popup remained open after the detail drawer opened;
+3. markers and controls were too large;
+4. the timeline region was too tall;
+5. the header collided with map controls;
+6. the current M5 interface lacked an `EN / RU` switch;
+7. the drawer overlapped attribution/status text.
 
-- `ITERATE` — improve the same Leonardo Temporal Map loop;
-- `NARROW` — reduce the content or interaction scope while preserving the ARTEMIS World Model mission;
-- `STOP/RETHINK` — stop this Globe/Temporal Map approach and revisit the product hypothesis before further implementation.
+The selected result is `ITERATE`. `NARROW` was not selected because the 1452–1519 whole-life scope remained understandable enough to continue. `STOP` was not selected because the Temporal Map direction remained viable.
 
-The recorded result is `ITERATE`. It preserves the #396 interaction baseline and opens exactly one named branch:
+The result authorizes one decision-bounded UX correction described by `docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md`. It does not authorize another content, source, context, storage, backend, renderer or infrastructure branch.
 
-`Leonardo Major-Life Presence Scope v1`
+## 3. Semantic and product boundary
 
-This branch prepares and reviews a coarse whole-life Presence package. It does not authorize runtime integration before source/evidence/uncertainty closure and a package review decision.
+The correction must improve chronological/relational legibility without turning chronology into historical route evidence:
 
-Failure of one vertical does not silently reinstate Concept v2 or make space/time optional. Such identity change requires a new foundation decision.
+- unsupported transitions remain `unknown_route` with `route_geometry=null`;
+- no spatial connector may imply a documented travelled path;
+- sequence, period and synchronized marker/timeline emphasis may communicate chronology as presentation;
+- Range, Scrub, selection, URL state, popup-first disclosure and explicit double-click focus remain the accepted interaction baseline;
+- the current 11 Presence anchors and six coarse periods remain the complete content boundary;
+- present-day settlement coordinates remain qualified reference anchors.
 
-## 3. Required evidence
+## 4. Required evidence for the correction
 
-### Contract/content
+The implementation PR must provide:
 
-Already available as technical/curation evidence:
+- green Core, Globe Repository Boundary and Geospatial Assets checks on the exact head;
+- automated behavior evidence for chronology cues, Range/Scrub, selection, popup/drawer, localization and URL restoration;
+- fail-closed no-route-geometry/no-spatial-connector evidence;
+- deterministic desktop, tablet and hosted-mobile composition evidence;
+- English and Russian parity for one shared semantic state;
+- a fresh manual product check after publication.
 
-- reviewed world-model fixtures and uncertainty semantics;
-- frozen Gate C World Slice manifest/coverage boundary;
-- sources, locators and uncertainty;
-- explicit unknown route/geometry semantics;
-- measured Gate C curation/review cost.
+That check records exactly one result: `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP`.
 
-These prove representability and bounded curation quality, not product value.
-
-### Current experience
-
-The current public #396 loop remains the accepted interaction baseline:
-
-- clear distinction between two-handle interval `Range` and single-current-time accumulated `Scrub`;
-- the full-width bottom timeline reading as the primary time instrument;
-- synchronized map/timeline/selection/URL state;
-- concise popup-first place/date/activity information;
-- optional deeper source/uncertainty disclosure without diagnostic overload;
-- no camera jump on single click; explicit double-click focus only;
-- correct communication that dashed connectors are chronology only and exact historical routes remain unknown.
-
-### User value
-
-For later/formal validation, evidence may include:
-
-- context reconstruction;
-- simultaneity discovery;
-- trajectory/change comprehension;
-- relation overclaim errors;
-- source/uncertainty comprehension;
-- contribution of context/layers when those hypotheses are actually in the tested scope;
-- delayed recall or reuse where included.
-
-The current four-Presence interaction check must not pretend to validate deferred local/global layers that are not part of the default loop.
-
-### Evaluation
-
-When a controlled participant wave is opened, preserve:
-
-- frozen assignment/timebox/rubric;
-- participant inclusion/exclusion;
-- raw anonymized outputs;
-- explicit scoring method;
-- absolute counts;
-- critical errors;
-- limitations.
-
-## 4. Current record
+## 5. Current record
 
 | Field | Value |
 |---|---|
 | Foundation decision | `ACCEPTED / PR #328` |
-| Formal user-value decision | `PENDING`; the direct post-#396 product-feedback result is `ITERATE` |
+| Formal user-value decision | `PENDING` |
 | Active vertical | `Life in Context / Leonardo Temporal Map` |
 | Active issue | `#355` |
 | Current gate | `D / OPEN / IN PROGRESS` |
-| Architecture Gate A fixtures | `3/3 READY` / not user-value evidence |
+| Architecture Gate A fixtures | `3/3 READY` / preserved technical evidence, not user-value evidence |
 | World-model contract evidence | `READY / #329 / PR #336` |
 | Uncertainty semantics | `READY / #330 / PR #337` |
-| Frozen World Slice | `Gate C FREEZE / PR #362` / non-public historical boundary |
-| Public research surface | `/globe/` R&D preview |
+| Gate C | `FREEZE / PR #362` / non-public historical boundary |
 | Core Reset | `COMPLETED / PR #393` |
-| Calendar life-path loop | `IMPLEMENTED / PR #395` |
-| First manual feedback | `ITERATE` |
-| First feedback correction | `IMPLEMENTED + PUBLISHED / PR #396` |
-| Current interaction model | bottom timeline; Range interval; Scrub build-origin + current cursor; popup → optional drawer; double-click focus |
-| Current corpus | four source-bound Romagna Presences in 1502; not a complete biography |
-| Post-#396 direct user check | `ITERATE / interaction good enough to continue; visual issues non-priority` |
+| M1 | `ITERATE / PRs #395–#396` |
+| Major-life package | `REVIEWED / PR #400` |
+| M2 | `PROCEED_TO_M3 / PR #401` |
+| M3 | `PROCEED_TO_M4 / PR #403` |
+| M4 | `ADOPT / PR #405` |
+| M5 implementation | `COMPLETED + PUBLISHED / PR #406` |
+| M5 direct product decision | `ITERATE / PR #408` |
+| Current corpus | 11 coarse Presence anchors / six periods / 1452–1519 |
+| Public research surface | `/globe/` R&D research prototype |
+| Opened next branch | `Temporal Map M5 bounded UX correction v1` |
+| Runtime implementation | `NOT STARTED`; authorized only after the scope decision merges |
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
-| Recorded product decision | `ITERATE` |
-| Opened next branch | `Leonardo Major-Life Presence Scope v1` / candidate-source stage only |
-| Runtime promotion from branch | `NOT AUTHORIZED` |
 
-## 5. Change rule
+## 6. Change rule
 
-Update this document when:
-
-- a user/product evidence result is formally recorded;
-- validation readiness materially changes;
-- a controlled participant wave is completed;
-- the allowed next-decision vocabulary changes;
-- one evidence-backed next branch is explicitly opened.
+Update this document when a user/product result is formally recorded, validation readiness changes, a controlled participant wave completes, the allowed next-decision vocabulary changes or one evidence-backed next branch is opened.
 
 Do not infer user-value validation from code completion, passing CI, public deployment, design enthusiasm or the existence of a Globe interface.

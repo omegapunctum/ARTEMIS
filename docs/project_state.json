@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-04",
+  "updated_at": "2026-09-05",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -117,11 +117,12 @@
     "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md",
     "docs/work/2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md",
     "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md",
-    "docs/work/2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md"
+    "docs/work/2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md",
+    "docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "Define and separately authorize one bounded M5 UX correction from the recorded ITERATE findings before implementation; keep Export Airtable CI in a separate technical maintenance PR."
+    "condition": "After the bounded UX scope decision merges, implement exactly its seven M5 corrections in one product PR, publish, and record one exit result; keep Export Airtable CI in a separate technical maintenance PR."
   }
 }

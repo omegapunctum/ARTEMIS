@@ -177,7 +177,8 @@ Current product implementation sequence:
 11. PR #405 closed M4 without opening a successor. The owner then explicitly instructed M5 without an intervening repository decision record; this is a governance deviation and must not be rewritten as prior authorization.
 12. PR #406 merged and published M5 as a bounded 11-Presence, six-period, 1452–1519 runtime proof.
 13. The direct owner check recorded exactly `ITERATE`: preserve whole-life scope, address relational legibility without inventing routes, and scope the six remaining interface-composition findings.
-14. No new feature branch opens automatically from the M5 result. A separate decision must define the bounded UX artifact, semantic limits, acceptance evidence and stop condition.
+14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition; after merge it opens exactly one implementation branch.
+15. The correction uses non-route chronology cues and cannot add historical content, spatial connectors for unknown routes or a second product branch.
 
 Current Temporal Map semantic/UI boundary:
 

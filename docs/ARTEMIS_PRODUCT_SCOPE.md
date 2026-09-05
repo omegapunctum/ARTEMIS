@@ -3,10 +3,10 @@
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.2.
-- Дата: 2026-09-04.
+- Версия: 4.3.
+- Дата: 2026-09-05.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Post-M5 ITERATE scope decision`; M5 is complete and no successor branch is open.
+- Current increment: `M5 bounded UX correction v1`; implementation is authorized only after the scope decision merges.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -59,7 +59,7 @@ Current authorized work:
 - preserve the M4 `ADOPT` decision as a semantic direction rather than a capability claim;
 - preserve PR #406 as the bounded M5 proof without widening it;
 - preserve the direct M5 product result as exactly `ITERATE`;
-- define one bounded UX correction from the recorded findings without opening implementation implicitly.
+- implement only the seven corrections defined by `work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` after that decision merges.
 
 ## 3. Обязательный current content scope
 
@@ -129,6 +129,8 @@ Current required interface behavior:
 - concise place/date/activity information first;
 - source/locator/uncertainty under progressive disclosure;
 - URL-restorable state without a backend dependency.
+
+The current correction additionally requires non-route chronological sequence/period cues synchronized between markers and timeline, popup closure when the drawer opens, lower visual density and timeline height, collision-free supported viewports, a current-M5 `EN / RU` presentation layer and visible attribution beside the drawer. These requirements do not authorize a spatial connector between unsupported Presence coordinates.
 
 Layer combinations, Region alternatives and renderer diagnostics may remain available as underlying evidence/advanced inspection, but they are not default primary controls for the current user check.
 
@@ -244,7 +246,7 @@ The earlier post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. No new feature branch is active. The next decision may define one bounded UX correction, but context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. The 2026-09-05 decision opens one bounded UX implementation branch after merge. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

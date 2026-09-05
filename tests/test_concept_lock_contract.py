@@ -102,8 +102,8 @@ def test_foundation_v3_validation_is_same_content_and_relation_safe() -> None:
     assert "same-content baseline" in validation
     assert "two evaluators" in validation
     assert "co-presence or similarity stated as documented encounter/influence/causality" in validation
-    assert "GATE D / ITERATE / FORMAL USER VALUE PENDING" in decision
-    assert "Opened next branch | `Leonardo Major-Life Presence Scope v1`" in decision
+    assert "GATE D / M5 ITERATE / BOUNDED UX CORRECTION AUTHORIZED / FORMAL USER VALUE PENDING" in decision
+    assert "Opened next branch | `Temporal Map M5 bounded UX correction v1`" in decision
 
 
 def test_concept_v2_is_preserved_but_cannot_authorize_execution() -> None:

@@ -3,7 +3,7 @@
 ## Статус
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-09-03.
+- Дата фиксации: 2026-09-05.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -35,7 +35,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - The fresh user check of the published #396 interface recorded `ITERATE`: the interaction is now good enough to continue, while remaining visual problems are explicitly non-priority.
 - M1 — UX checkpoint is complete with `ITERATE`. PR #400 completed independent review of the major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 is complete with `ADOPT` for the source-federated semantic direction.
 - After PR #405 explicitly closed M4 without opening a successor, the owner directly instructed M5. No intervening repository decision record exists. PR #406 then merged and published the bounded M5 Whole-Life Runtime Proof. This is recorded as a governance deviation, not retroactive M4 authorization.
-- The direct owner review of published M5 recorded exactly `ITERATE`. The whole-life scope remains viable, while relational legibility, popup/drawer state, visual density, timeline height, map-control collisions, current-M5 localization and attribution placement require bounded UX scoping. No successor branch is opened by that result.
+- The direct owner review of published M5 recorded exactly `ITERATE`. The whole-life scope remains viable, while relational legibility, popup/drawer state, visual density, timeline height, map-control collisions, current-M5 localization and attribution placement require bounded correction. The 2026-09-05 decision authorizes exactly one UX implementation branch after merge; no runtime change exists yet.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
 - PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
@@ -206,7 +206,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / no successor feature branch open / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / one bounded UX correction authorized after decision merge but not implemented / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
@@ -251,7 +251,7 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESS
 
 1. preserve M4 `ADOPT`, the honest M4 → M5 deviation record and PR #406 as the bounded 11-Presence proof;
 2. preserve the direct M5 result as exactly `ITERATE`;
-3. define, but do not yet implement, one bounded UX correction from the seven recorded findings;
+3. after the 2026-09-05 decision merges, implement exactly its seven bounded UX corrections in one product PR;
 4. keep unknown routes geometry-free and distinguish chronology from historical travel;
 5. handle Export Airtable CI only as a separate technical maintenance PR.
 
