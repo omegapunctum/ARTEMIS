@@ -70,9 +70,9 @@ Current Temporal Map behavior:
 - first click opens a compact popup without moving the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus the selected place;
-- dashed connectors are chronology only, never historical route geometry.
+- earlier dashed connectors were chronology-only presentation, never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates.
 
-The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`. PR `#406` later published the owner-directed 11-Presence M5 whole-life proof; the direct product check recorded `ITERATE` in PR `#408`. The 2026-09-05 scope decision authorizes exactly one bounded UX correction branch after merge. New sources/data, live federation, generic ingestion/storage infrastructure and any second product branch remain closed.
+The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`. PR `#406` later published the owner-directed 11-Presence M5 whole-life proof; the direct product check recorded `ITERATE` in PR `#408`. PR `#409` merged the 2026-09-05 scope decision. Its exactly one bounded UX correction is in progress in PR `#411`; full acceptance and publication remain pending. New sources/data, live federation, generic ingestion/storage infrastructure and any second product branch remain closed.
 
 Preserve these boundaries:
 

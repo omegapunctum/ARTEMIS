@@ -41,7 +41,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: `Post-M5 ITERATE scope decision`" in priorities
+    assert "Active cycle: `M5 bounded UX correction v1`" in priorities
     assert "Active primary issue: GitHub issue `#355`" in priorities
     assert "Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte" in priorities
     assert "#330 / PR #337 — uncertainty semantics" in priorities
@@ -51,7 +51,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     assert "NARROW" in priorities
     assert "STOP/RETHINK" in priorities
 
-    assert "Current phase: **5.1 — M5 completed with ITERATE; successor branch not opened**" in phases
+    assert "Current phase: **5.1 — M5 bounded UX correction" in phases
     assert "Active issue: **#355**" in phases
     assert "No historical artifact is deleted or reinterpreted by Core Reset" in phases
     assert "#392 does not block the read-only MVP critical path" in phases

@@ -4,7 +4,7 @@
 
 - Type: canonical operational phases document.
 - Date: 2026-09-05.
-- Current phase: **5.1 — M5 bounded UX correction authorized; implementation not started**.
+- Current phase: **5.1 — M5 bounded UX correction in progress in PR #411; full acceptance and publication pending**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -70,7 +70,7 @@ PR `#396` completed the bounded correction:
 - first click opens a compact popup without moving the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus/zoom the selected place;
-- dashed connectors remain chronology-only presentation and never historical route geometry;
+- earlier dashed connectors were chronology-only presentation and never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
 - no new Leonardo data, route geometry, historical coordinates or promoted Claims were introduced.
 
 The current bounded corpus remains the four source-bound 1502 Romagna Presences. It is an interaction scaffold, not Leonardo's complete biography.
@@ -86,7 +86,7 @@ Check whether a user can:
 3. understand how the visible path changes as time changes;
 4. select a Presence without unwanted camera movement;
 5. read concise place/date/activity information and reach source/uncertainty details when needed;
-6. understand that dashed connectors are chronology only and that exact historical routes remain unknown.
+6. understand chronological sequence/period cues while exact historical routes remain unknown and unsupported Presence coordinates remain unconnected.
 
 The allowed product result vocabulary was:
 
@@ -147,12 +147,12 @@ PR #406 merged and published the reviewed PR #400 major-life package in the exis
 
 The direct owner check recorded exactly `ITERATE`. The whole-life scale remains viable, while seven product findings require a separately scoped UX correction. The result does not open that implementation branch automatically.
 
-## Phase 5F — M5 Bounded UX Correction v1 [authorized after decision merge]
+## Phase 5F — M5 Bounded UX Correction v1 [in progress / PR #411]
 
-The 2026-09-05 scope decision opens one implementation branch for the seven observed M5 findings. The correction must make chronological order legible through non-route sequence/period/timeline semantics, clean popup/drawer state, reduce visual density and timeline height, remove responsive collisions, add current-M5 `EN / RU`, and preserve attribution visibility.
+The 2026-09-05 scope decision merged in PR #409 and opened one implementation branch, PR #411, for the seven observed M5 findings. The correction must make chronological order legible through non-route sequence/period/timeline semantics, clean popup/drawer state, reduce visual density and timeline height, remove responsive collisions, add current-M5 `EN / RU`, and preserve attribution visibility. Full acceptance checks, merge and publication remain pending.
 
-It cannot draw unknown routes, add historical content, change Range/Scrub semantics, introduce a second state model or mix Export Airtable maintenance into the product diff. Publication requires automated Core/semantic checks, deterministic responsive evidence and a fresh manual product result.
+It cannot draw unknown routes, add historical content, change Range/Scrub semantics, introduce a second state model or mix Export Airtable maintenance into the product diff. Publication requires automated Core/semantic checks and deterministic responsive evidence; a fresh manual product result follows publication.
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 remains complete with `ITERATE`. The bounded UX decision opens exactly one correction branch after merge and no other product branch.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 remains complete with `ITERATE`. The merged bounded UX decision opened exactly one correction branch, PR #411, and no other product branch.

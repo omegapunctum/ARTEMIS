@@ -177,7 +177,7 @@ Current product implementation sequence:
 11. PR #405 closed M4 without opening a successor. The owner then explicitly instructed M5 without an intervening repository decision record; this is a governance deviation and must not be rewritten as prior authorization.
 12. PR #406 merged and published M5 as a bounded 11-Presence, six-period, 1452–1519 runtime proof.
 13. The direct owner check recorded exactly `ITERATE`: preserve whole-life scope, address relational legibility without inventing routes, and scope the six remaining interface-composition findings.
-14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition; after merge it opens exactly one implementation branch.
+14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition. PR #409 merged it; its one implementation PR #411 is in progress, with full acceptance and publication pending.
 15. The correction uses non-route chronology cues and cannot add historical content, spatial connectors for unknown routes or a second product branch.
 
 Current Temporal Map semantic/UI boundary:
@@ -186,7 +186,7 @@ Current Temporal Map semantic/UI boundary:
 - `Scrub` keeps a chosen build origin plus one current-time cursor and accumulates the path forward;
 - map, timeline, selection and URL operate on shared Explorer State;
 - `Trajectory` remains semantic authority;
-- dashed connectors are chronology-only presentation, never historical route geometry;
+- earlier dashed connectors were chronology-only presentation, never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
 - single-click selection does not implicitly change camera state;
 - all current settlement geometries are present-day source-bound reference anchors, not exact historical positions or route evidence.
 

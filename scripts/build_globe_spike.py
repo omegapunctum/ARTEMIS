@@ -59,6 +59,7 @@ DATASET_CHOICES = {DEFAULT_DATASET, "contract_fixture"}
 REQUIRED_OUTPUT_FILES = {
     "index.html",
     "runtime.js",
+    "localization.js",
     "style.css",
     "projection.json",
     "globe-projection.json",
@@ -1366,7 +1367,7 @@ def build_spike(
 
     template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
     preview_status = (
-        "Публичный R&D-preview — экспериментальная поверхность, не готовый продукт"
+        "Public research prototype · not a validated product"
         if public_preview
         else "Generated review artifact — not a public capability"
     )
@@ -1382,6 +1383,7 @@ def build_spike(
         encoding="utf-8",
     )
     shutil.copyfile(TEMPLATE_DIR / "runtime.js", output / "runtime.js")
+    shutil.copyfile(TEMPLATE_DIR / "localization.js", output / "localization.js")
     shutil.copyfile(TEMPLATE_DIR / "style.css", output / "style.css")
 
     _write_json(output / "projection.json", projection)

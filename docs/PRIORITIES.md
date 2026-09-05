@@ -4,7 +4,7 @@
 
 - Type: canonical active priorities.
 - Date: 2026-09-05.
-- Active cycle: `M5 bounded UX correction v1`; implementation is authorized only after the scope decision merges.
+- Active cycle: `M5 bounded UX correction v1`; scope PR #409 merged, implementation PR #411 in progress, acceptance and publication pending.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
@@ -16,7 +16,7 @@ M1 is complete with `ITERATE`. PR #400 completed the independently reviewed majo
 
 The direct owner check of the published 1452–1519 loop recorded exactly `ITERATE`. It found seven issues: missing relational legibility, stale popup after opening details, oversized elements, excessive timeline height, header/map-control collision, missing current-M5 `EN / RU` switching and drawer/attribution overlap.
 
-`docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` defines the one permitted correction. After that decision merges, one implementation PR may address the seven findings without new historical content, route geometry, context, infrastructure or broad redesign.
+`docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` defines the one permitted correction. Its decision merged in PR #409; implementation PR #411 addresses the seven findings without new historical content, route geometry, context, infrastructure or broad redesign.
 
 The load-bearing path remains:
 
@@ -33,7 +33,7 @@ Current required behavior:
 - double-click may focus the selected place;
 - source, locator, uncertainty, coverage and projection-loss details remain available through progressive disclosure;
 - explicit unknown routes and geometry-withheld alternatives remain honest;
-- dashed connectors mean chronology only and never historical route geometry;
+- earlier dashed connectors meant chronology only and never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
 - present-day context remains clearly separated from historical assertions;
 - exploration remains URL-restorable and backend-independent.
 
@@ -76,7 +76,7 @@ The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the
 
 ## P3 — Keep the opened correction bounded
 
-The decision opens exactly one UX implementation branch after merge. M5 remains completed with `ITERATE`.
+The merged decision opens exactly one UX implementation branch, currently PR #411. M5 remains completed with `ITERATE`; the correction has no new product outcome yet.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
@@ -116,9 +116,9 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Review and merge the bounded UX scope decision.
-2. Open one implementation PR for the exact seven corrections, publish it and record one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result.
-3. In a separate technical PR, repair Export Airtable CI by first providing sufficient Git history and required evidence refs, then rerunning the suite before changing assertions or digests.
+1. Complete the exact seven corrections in PR #411 under the scope already merged in PR #409.
+2. Complete exact-head automated and responsive acceptance evidence, merge and publish PR #411, then obtain a fresh manual product check and record one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result.
+3. Preserve the separately merged Export Airtable CI repair in PR #410; it does not expand the UX branch.
 4. Keep all other feature branches closed.
 
 ## Completion rule

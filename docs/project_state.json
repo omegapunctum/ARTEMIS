@@ -84,7 +84,10 @@
       "PR #404 — M3 exit recorded as PROCEED_TO_M4; M4 opened as decision-only",
       "PR #405 — M4 architecture decision recorded as ADOPT; no successor branch authorized",
       "PR #406 — owner-directed bounded M5 whole-life runtime proof merged and published",
-      "PR #407 — M5 governance/lifecycle housekeeping aligned; new feature branch remained closed"
+      "PR #407 — M5 governance/lifecycle housekeeping aligned; new feature branch remained closed",
+      "PR #408 — direct M5 product result recorded as ITERATE",
+      "PR #409 — bounded M5 UX scope decision merged; one correction branch authorized",
+      "PR #410 — separate Export Airtable CI repair merged"
     ]
   },
   "capability": {
@@ -123,6 +126,6 @@
   "blockers": [],
   "next_transition": {
     "gate": "D",
-    "condition": "After the bounded UX scope decision merges, implement exactly its seven M5 corrections in one product PR, publish, and record one exit result; keep Export Airtable CI in a separate technical maintenance PR."
+    "condition": "Under merged scope PR #409, implement exactly its seven M5 corrections in PR #411 (in progress), complete exact-head acceptance checks, merge and publish, then record one fresh manual product exit result; checks and publication remain pending. Export Airtable CI repair merged separately in PR #410."
   }
 }
