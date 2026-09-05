@@ -25,7 +25,7 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "working-layer lifecycle registry" in work_registry
     assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in foundation
     assert "UNCERTAINTY_SEMANTICS_CONTRACT.md" in foundation
-    assert "SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md" in structure
+    assert "World-model fixture validation" in structure
     assert "fixtures/" in structure
     assert "validate_world_model_fixtures.py" in structure
     assert "validate_uncertainty_fixtures.py" in structure
@@ -41,7 +41,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: Core Reset inside the Globe MVP vertical" in priorities
+    assert "Active cycle: `Post-M5 ITERATE scope decision`" in priorities
     assert "Active primary issue: GitHub issue `#355`" in priorities
     assert "Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte" in priorities
     assert "#330 / PR #337 — uncertainty semantics" in priorities
@@ -51,30 +51,30 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     assert "NARROW" in priorities
     assert "STOP/RETHINK" in priorities
 
-    assert "Active phase: **4.8R — Core Reset / one Leonardo Globe product loop**" in phases
+    assert "Current phase: **5.1 — M5 completed with ITERATE; successor branch not opened**" in phases
     assert "Active issue: **#355**" in phases
     assert "No historical artifact is deleted or reinterpreted by Core Reset" in phases
-    assert "#392 no longer blocks the read-only MVP critical path" in phases
-    assert "Gate C remains completed/FREEZE" in phases
+    assert "#392 does not block the read-only MVP critical path" in phases
+    assert "Gate C: **completed / FREEZE**" in phases
 
-    assert "Core Reset / Gate C frozen / one primary public Leonardo research prototype" in truth
+    assert "M5 whole-life runtime proof completed with ITERATE" in truth
     assert "#330 / PR #337 uncertainty semantics — READY" in truth
     assert "Issue #331 is deferred" in truth
     assert "issue #355 remains the active product-facing MVP contour" in truth
     assert "#344 / PR #351 semantic parity is merged executable evidence" in truth
     assert "Gate C is completed/FREEZE" in truth
-    assert "Gate D is now separately opened and in progress under #355" in truth
-    assert "does not change public capability" in truth
-    assert "finish Core Reset and keep one trustworthy required Core check" in truth
+    assert "Gate D is separately open/in progress under #355" in truth
+    assert "without runtime/storage capability change" in truth
+    assert "ARTEMIS Core Check" in truth
 
-    assert "Active product vertical: Globe MVP / issue `#355`" in master_prompt
+    assert "Active product vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`" in master_prompt
     assert "#344 / PR #351 semantic parity as a green renderer foundation" in master_prompt
     assert "Issue #331 is `DEFERRED`" in master_prompt
     assert "superseded #323–#325 path and PR #314 remain closed" in master_prompt
-    assert "Gate D — source-aware Globe experience — is **currently in progress**" in master_prompt
+    assert "Gate D remains **OPEN / IN PROGRESS** under #355" in master_prompt
     assert "root Core landing" in master_prompt
-    assert "2D Architecture Atlas at `/atlas/` as a compatibility surface" in master_prompt
-    assert "does not promote the prototype into a validated product capability or open Gate E" in master_prompt
+    assert "`/atlas/` compatibility-only" in master_prompt
+    assert "Implementation success and public R&D access do not by themselves close the gate" in master_prompt
 
 
 def test_globe_architecture_does_not_create_a_second_semantic_core() -> None:
@@ -83,7 +83,7 @@ def test_globe_architecture_does_not_create_a_second_semantic_core() -> None:
     work_registry = _read("docs/work/README.md")
     globe_record = _read("docs/work/2026-08-08_GLOBE_RENDERER_ARCHITECTURE_v1.md")
 
-    assert "canonical public **2D map projection**" in data_contract
+    assert "canonical public **2D Architecture Atlas map projection**" in data_contract
     assert "must not be promoted into the canonical representation" in data_contract
     assert "renderer-ready GeoJSON, engine primitives, meshes or tiles are derived projections" in data_contract
     assert "No competing semantic/world-model source of truth" in master_prompt

@@ -72,9 +72,9 @@ def test_attractor_refinement_does_not_advance_product_gate_or_capability() -> N
     assert state["github"]["active_issues"] == [355]
 
     assert "Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**" in foundation
-    assert "Gate D — source-aware Globe experience — is **currently in progress**" in master
+    assert "Gate D remains **OPEN / IN PROGRESS** under #355" in master
     assert "Foundation v3.1 / #363 / PR #364 is completed" in truth
-    assert "Gate D is now separately opened and in progress under #355" in truth
+    assert "Gate D is separately open/in progress under #355" in truth
 
 
 def test_personal_knowledge_remains_future_and_does_not_change_entity_model() -> None:

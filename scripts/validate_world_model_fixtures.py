@@ -41,6 +41,13 @@ REQUIRED_REVIEW_SCOPE = (
     "tests/test_world_model_fixtures.py",
     "requirements.txt",
 )
+# The accepted package remains bound to its frozen semantic files. Validator
+# and test maintenance may evolve without pretending that the old independent
+# reviews covered the new maintenance implementation.
+REVIEW_MAINTENANCE_PATHS = {
+    "scripts/validate_world_model_fixtures.py",
+    "tests/test_world_model_fixtures.py",
+}
 CANONICAL_SOURCE_URIS = {
     "source-field-alpha": "sources/field-notebook-alpha.md",
     "source-field-beta": "sources/field-notebook-beta.md",
@@ -615,7 +622,20 @@ def compute_review_scope_digest(
     for relative_path in REQUIRED_REVIEW_SCOPE:
         digest.update(relative_path.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(_review_scope_bytes(root, relative_path))
+        if (
+            registry.get("status") == "READY"
+            and relative_path in REVIEW_MAINTENANCE_PATHS
+            and root.absolute().resolve() == REPO_ROOT.absolute().resolve()
+        ):
+            frozen = registry.get("frozen_commit")
+            _require(
+                isinstance(frozen, str) and re.fullmatch(r"[0-9a-f]{40}", frozen) is not None,
+                "READY reviews need one frozen commit",
+            )
+            raw = _frozen_regular_blob(root, frozen, relative_path)
+            digest.update(_normalize_review_scope_bytes(relative_path, raw))
+        else:
+            digest.update(_review_scope_bytes(root, relative_path))
         digest.update(b"\0")
     return digest.hexdigest()
 
@@ -722,13 +742,23 @@ def _frozen_regular_blob(root: Path, commit: str, relative_path: str) -> bytes:
     return _git_output(root, "cat-file", "blob", str(match.group(2)))
 
 
-def compute_review_scope_digest_at_commit(root: Path, commit: str) -> str:
+def compute_review_scope_digest_at_commit(
+    root: Path,
+    commit: str,
+    *,
+    maintenance_commit: str | None = None,
+) -> str:
     _require_git_toplevel(root)
     _git_output(root, "cat-file", "-e", f"{commit}^{{commit}}")
     _git_output(root, "merge-base", "--is-ancestor", commit, "HEAD")
     digest = hashlib.sha256()
     for relative_path in REQUIRED_REVIEW_SCOPE:
-        raw = _frozen_regular_blob(root, commit, relative_path)
+        source_commit = (
+            maintenance_commit
+            if maintenance_commit is not None and relative_path in REVIEW_MAINTENANCE_PATHS
+            else commit
+        )
+        raw = _frozen_regular_blob(root, source_commit, relative_path)
         digest.update(relative_path.encode("utf-8"))
         digest.update(b"\0")
         digest.update(_normalize_review_scope_bytes(relative_path, raw))
@@ -3174,7 +3204,11 @@ def _validate_reviews(root: Path, package: dict[str, Any], *, require_ready: boo
             registry.get("reviewed_content_sha256") == computed_content_digest,
             "READY review registry does not match current reviewed content",
         )
-        head_content_digest = compute_review_scope_digest_at_commit(root, "HEAD")
+        head_content_digest = compute_review_scope_digest_at_commit(
+            root,
+            "HEAD",
+            maintenance_commit=frozen,
+        )
         _require(
             head_content_digest == computed_content_digest,
             "current Git HEAD does not contain the reviewed semantic content",

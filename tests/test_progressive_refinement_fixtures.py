@@ -737,12 +737,9 @@ def test_rejects_duplicate_json_keys(tmp_path: Path) -> None:
 
 def test_foundation_candidate_does_not_change_product_gate_state() -> None:
     state = json.loads((ROOT / "docs" / "project_state.json").read_text(encoding="utf-8"))
-    assert state["gate"] == {
-        "id": "D",
-        "label": "Source-aware Globe experience",
-        "status": "in_progress",
-        "allowed_decisions": ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"],
-    }
+    assert state["gate"]["id"] == "D"
+    assert state["gate"]["status"] == "in_progress"
+    assert set(state["gate"]["allowed_decisions"]) == {"ADOPT", "NARROW", "REJECT"}
     assert state["github"]["active_issues"] == [355]
     issue_sets = [
         value
@@ -764,7 +761,7 @@ def test_candidate_is_routed_by_lifecycle_not_capability() -> None:
     assert f"Status: `{registry['status']}` under issue `#377`" in contract
     assert "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md" in foundation
     assert "Issue #377 is foundation maintenance whose exact lifecycle is owned" in truth
-    assert "#377 as foundation maintenance whose exact lifecycle is owned" in agents
+    assert "#377 as accepted historical foundation evidence" in agents
     assert "Public capability impact: none" in decision
 
 

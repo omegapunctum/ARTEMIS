@@ -12,6 +12,7 @@ import pytest
 from scripts.validate_world_model_fixtures import (
     FixtureValidationError,
     REQUIRED_REVIEW_SCOPE,
+    REVIEW_MAINTENANCE_PATHS,
     _claim_assertion_expression,
     _process_stage_premise_claims,
     compute_review_scope_digest,
@@ -32,6 +33,46 @@ def _copy_fixture(tmp_path: Path) -> Path:
         target = root / relative_path
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
+    frozen_commit = json.loads(
+        (ROOT / PACKAGE / "review_registry.json").read_text(encoding="utf-8")
+    )["frozen_commit"]
+    for relative_path in REVIEW_MAINTENANCE_PATHS:
+        target = root / relative_path
+        target.write_bytes(
+            subprocess.run(
+                ("git", "show", f"{frozen_commit}:{relative_path}"),
+                cwd=ROOT,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            ).stdout
+        )
+    registry = json.loads((ROOT / PACKAGE / "review_registry.json").read_text(encoding="utf-8"))
+    package_path = root / PACKAGE / "package.json"
+    package = json.loads(package_path.read_text(encoding="utf-8"))
+    package["status"] = "REVIEW_REQUIRED"
+    package["record_time"]["reviewed_at"] = None
+    package_path.write_text(
+        json.dumps(package, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    readme_path = root / PACKAGE / "README.md"
+    readme_path.write_text(
+        readme_path.read_text(encoding="utf-8").replace(
+            "Status: `READY`.",
+            "Status: `REVIEW_REQUIRED`.",
+            1,
+        ),
+        encoding="utf-8",
+    )
+    registry["status"] = "REVIEW_REQUIRED"
+    registry["frozen_commit"] = None
+    registry["reviewed_content_sha256"] = None
+    registry["reviews"] = []
+    (root / PACKAGE / "review_registry.json").write_text(
+        json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     data_source = ROOT / "data" / "features.json"
     if data_source.is_file():
         (root / "data").mkdir(parents=True)
@@ -178,9 +219,15 @@ def test_world_model_fixture_package_passes_structural_validation() -> None:
     assert counts["EvidenceLink"] == 21
 
 
-def test_ready_mode_fails_until_two_independent_reviews_exist() -> None:
-    with pytest.raises(FixtureValidationError, match="two independent READY reviews"):
-        validate_package(ROOT, require_ready=True)
+def test_ready_mode_requires_two_independent_reviews() -> None:
+    registry = json.loads((ROOT / PACKAGE / "review_registry.json").read_text(encoding="utf-8"))
+    assert registry["status"] == "READY"
+    assert len(registry["reviews"]) == 2
+    assert {review["review_track"] for review in registry["reviews"]} == {
+        "semantic-model",
+        "validator-integrity",
+    }
+    validate_package(ROOT, require_ready=True)
 
 
 def test_validator_rejects_semantic_collapse(tmp_path: Path) -> None:

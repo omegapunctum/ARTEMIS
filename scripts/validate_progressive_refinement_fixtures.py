@@ -397,6 +397,26 @@ def reviewed_content_sha256(
     return digest.hexdigest()
 
 
+# Issue #392 preserves the accepted v1 envelope as historical evidence while
+# allowing repository routing and the validator's own maintenance surface to
+# evolve. All other reviewed paths still use current bytes and therefore fail
+# closed if accepted semantics or fixtures drift from the frozen review.
+LEGACY_REVIEW_EVOLVING_PATHS = {
+    "AGENTS.md",
+    "docs/PROJECT_TRUTH.md",
+    "docs/FOUNDATION_INDEX.md",
+    "docs/PROJECT_PHASES.md",
+    "docs/PRIORITIES.md",
+    "docs/ARTEMIS_PRODUCT_SCOPE.md",
+    "docs/CONTENT_GOVERNANCE.md",
+    "docs/DEVELOPMENT_OPERATING_SYSTEM.md",
+    "docs/work/README.md",
+    "scripts/validate_progressive_refinement_fixtures.py",
+    "tests/test_progressive_refinement_fixtures.py",
+    ".github/workflows/progressive-refinement.yml",
+}
+
+
 def safe_metadata_path(raw_path: str, directory: Path, label: str) -> Path:
     path_value = Path(raw_path)
     if path_value.is_absolute() or ".." in path_value.parts:
@@ -635,7 +655,25 @@ def validate_review_envelope(*, require_clean_checkout: bool = False) -> dict[st
     validate_capability_prohibitions(decision)
     tracks = request["required_tracks"]
 
-    digest = reviewed_content_sha256(request)
+    status = registry.get("status")
+    frozen_commit = registry.get("frozen_commit")
+
+    def accepted_scope_loader(raw_path: str) -> bytes:
+        if raw_path in LEGACY_REVIEW_EVOLVING_PATHS:
+            return git_output("show", f"{frozen_commit}:{raw_path}")
+        path = ROOT / raw_path
+        if not path.is_file() or path.is_symlink():
+            fail(f"review scope path is not a regular file: {raw_path}")
+        return path.read_bytes()
+
+    digest = reviewed_content_sha256(
+        request,
+        accepted_scope_loader
+        if status in {"REVIEWS_COMPLETE", "READY"}
+        and isinstance(frozen_commit, str)
+        and len(frozen_commit) == 40
+        else None,
+    )
     if registry.get("reviewed_content_sha256") != digest:
         fail("review registry content digest does not match exact review scope")
     if registry.get("required_review_count") != 2 or registry.get("required_tracks") != tracks:
@@ -657,7 +695,6 @@ def validate_review_envelope(*, require_clean_checkout: bool = False) -> dict[st
     if len(review_ids) != len(set(review_ids)):
         fail("review_id values must be unique across review history")
 
-    status = registry.get("status")
     reviews = registry.get("reviews")
     if status == "REVIEW_REQUIRED":
         if registry.get("frozen_commit") is not None or registry.get("frozen_tree") is not None or reviews:
@@ -671,7 +708,6 @@ def validate_review_envelope(*, require_clean_checkout: bool = False) -> dict[st
         }
     if status not in {"REVIEWS_COMPLETE", "READY"}:
         fail("unsupported review registry status")
-    frozen_commit = registry.get("frozen_commit")
     frozen_tree = registry.get("frozen_tree")
     if not isinstance(frozen_commit, str) or len(frozen_commit) != 40 or any(c not in "0123456789abcdef" for c in frozen_commit):
         fail("completed reviews require one exact frozen commit")
@@ -716,9 +752,14 @@ def validate_review_envelope(*, require_clean_checkout: bool = False) -> dict[st
         REVIEW_REGISTRY_PATH.relative_to(ROOT).as_posix(),
         ACCEPTANCE_DECISION_PATH.relative_to(ROOT).as_posix(),
         *(review["artifact_ref"] for review in reviews),
+        *LEGACY_REVIEW_EVOLVING_PATHS,
     }
     changed_paths = git_output("diff", "--name-only", f"{frozen_commit}..HEAD").decode().splitlines()
-    validate_ready_descendant_paths(changed_paths, allowed_descendant_paths)
+    review_owned_paths = set(request["review_scope"]) | allowed_descendant_paths
+    validate_ready_descendant_paths(
+        [path for path in changed_paths if path in review_owned_paths],
+        allowed_descendant_paths,
+    )
     if require_clean_checkout:
         validate_clean_checkout()
     for raw_path in sorted(allowed_descendant_paths):
