@@ -4,7 +4,7 @@
 
 - Type: canonical operational phases document.
 - Date: 2026-09-05.
-- Current phase: **5.1 — M5 bounded UX correction authorized; implementation not started**.
+- Current phase: **5.1 — M5 bounded UX correction in progress; first popup/drawer fix implemented, full acceptance pending**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.

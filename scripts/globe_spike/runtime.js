@@ -1091,6 +1091,9 @@
       (candidate) => candidate.presence_id === presenceId
     );
     if (!presence) return;
+    runtime.lifePathPopup?.remove();
+    runtime.lifePathPopup = null;
+    runtime.popupPresenceId = null;
     renderLifePathPresence(presence);
     const inspector = byId('inspector');
     if (inspector) inspector.hidden = false;

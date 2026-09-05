@@ -1,5 +1,6 @@
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -25,6 +26,57 @@ from scripts import build_leonardo_gate_d_inputs as gate_d_inputs
 
 RUNTIME_JS = ROOT / "scripts" / "globe_spike" / "runtime.js"
 HTML_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
+
+
+def test_open_details_removes_popup_without_mutating_selection_or_url() -> None:
+    source = RUNTIME_JS.read_text(encoding="utf-8")
+    function = "function openDetailsDrawer" + source.split(
+        "function openDetailsDrawer", 1
+    )[1].split("function showPresencePopup", 1)[0]
+    harness = r"""
+const assert = require('node:assert/strict');
+let removed = 0;
+let focused = 0;
+let rendered = null;
+const presence = {presence_id: 'presence-test'};
+const runtime = {
+  data: {lifePath: {presences: [presence]}},
+  selectedPresenceId: presence.presence_id,
+  selectedItemId: 'event-test',
+  popupPresenceId: presence.presence_id,
+  lifePathPopup: {remove() { removed += 1; }}
+};
+const stateBefore = JSON.stringify(runtime.data);
+const window = {location: {href: 'https://example.test/?presence=presence-test'}};
+const urlBefore = window.location.href;
+const inspector = {hidden: true};
+const document = {documentElement: {dataset: {}}};
+function byId(id) {
+  return id === 'inspector' ? inspector : {focus() { focused += 1; }};
+}
+function renderLifePathPresence(value) { rendered = value; }
+"""
+    assertions = r"""
+openDetailsDrawer('missing');
+assert.equal(removed, 0);
+assert.equal(inspector.hidden, true);
+openDetailsDrawer(presence.presence_id);
+assert.equal(removed, 1);
+assert.equal(runtime.lifePathPopup, null);
+assert.equal(runtime.popupPresenceId, null);
+assert.equal(inspector.hidden, false);
+assert.equal(document.documentElement.dataset.artemisDetailsOpen, 'true');
+assert.equal(rendered, presence);
+assert.equal(focused, 1);
+assert.equal(runtime.selectedPresenceId, presence.presence_id);
+assert.equal(runtime.selectedItemId, 'event-test');
+assert.equal(JSON.stringify(runtime.data), stateBefore);
+assert.equal(window.location.href, urlBefore);
+openDetailsDrawer(presence.presence_id, {focus: false});
+assert.equal(removed, 1);
+assert.equal(focused, 1);
+"""
+    subprocess.run(["node", "-e", harness + function + assertions], check=True)
 
 
 def _load(path: Path):
