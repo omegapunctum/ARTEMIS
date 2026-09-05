@@ -8,7 +8,7 @@
 - Active product issue: GitHub issue `#355`.
 - Current public proof: M5 / PR `#406` / 11 Presence anchors across 1452–1519.
 - Recorded product result: `ITERATE`.
-- Opened next branch: `Temporal Map M5 bounded UX correction v1` after its decision PR merges.
+- Opened next branch: `Temporal Map M5 bounded UX correction v1`; scope merged in PR #409, implementation in progress in PR #411.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.
@@ -98,7 +98,8 @@ That check records exactly one result: `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `N
 | Current corpus | 11 coarse Presence anchors / six periods / 1452–1519 |
 | Public research surface | `/globe/` R&D research prototype |
 | Opened next branch | `Temporal Map M5 bounded UX correction v1` |
-| Runtime implementation | `NOT STARTED`; authorized only after the scope decision merges |
+| Runtime implementation | `IN PROGRESS / PR #411`; scope authorized by merged PR #409 |
+| Correction acceptance and publication | `PENDING`; no fresh manual product result recorded |
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
 

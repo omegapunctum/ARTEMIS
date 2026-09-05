@@ -28,6 +28,10 @@ RUNTIME_JS = ROOT / "scripts" / "globe_spike" / "runtime.js"
 HTML_TEMPLATE = ROOT / "scripts" / "globe_spike" / "index.html.template"
 
 
+def test_m5_chronology_and_localization_behavior() -> None:
+    subprocess.run(["node", "tests/m5_ux_behavior.cjs"], cwd=ROOT, check=True)
+
+
 def test_open_details_removes_popup_without_mutating_selection_or_url() -> None:
     source = RUNTIME_JS.read_text(encoding="utf-8")
     function = "function openDetailsDrawer" + source.split(
@@ -120,6 +124,7 @@ def test_builder_creates_isolated_static_artifact(tmp_path: Path) -> None:
     expected = {
         "index.html",
         "runtime.js",
+        "localization.js",
         "style.css",
         "projection.json",
         "globe-projection.json",
@@ -163,7 +168,7 @@ def test_builder_marks_public_review_preview_without_changing_semantics(tmp_path
     assert metadata["deployment_mode"] == "public_r_and_d_preview"
     assert metadata["backend_required"] is False
     assert metadata["semantic_dataset"] == DEFAULT_DATASET
-    assert "Публичный R&D-preview" in index
+    assert "Public research prototype" in index
     assert 'href="../atlas/"' in index
     assert "Architecture Atlas · compatibility" in index
     assert "2D-карта" not in index

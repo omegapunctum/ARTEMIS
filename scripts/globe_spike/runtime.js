@@ -226,6 +226,7 @@
     const globeRect = byId('globe-shell')?.getBoundingClientRect();
     const overlayRects = ['spike-banner', 'inspector', 'timeline-dock', 'attribution-status']
       .map((id) => byId(id)?.getBoundingClientRect())
+      .concat([...document.querySelectorAll('.maplibregl-ctrl-group')].map((node) => node.getBoundingClientRect()))
       .filter((rect) => rect && rect.width > 0 && rect.height > 0);
     let overlayCollisions = 0;
     for (let left = 0; left < overlayRects.length; left += 1) {
@@ -1078,12 +1079,39 @@
     for (const [presenceId, marker] of runtime.lifePathMarkers) {
       marker.getElement().setAttribute('aria-pressed', String(presenceId === runtime.selectedPresenceId));
     }
+    for (const button of byId('presence-sequence')?.querySelectorAll('button') || []) {
+      button.setAttribute('aria-pressed', String(button.dataset.presenceId === runtime.selectedPresenceId));
+    }
+    const selected = (runtime.data?.lifePath?.presences || []).find((p) => p.presence_id === runtime.selectedPresenceId);
+    const periodId = selected && presencePeriod(selected)?.period_id;
+    for (const button of byId('macro-periods')?.querySelectorAll('button') || []) {
+      button.setAttribute('aria-current', String(button.dataset.periodId === periodId));
+    }
+  }
+
+  function bindPresenceEmphasis(element, presenceId) {
+    const emphasize = (active) => {
+      runtime.lifePathMarkers.get(presenceId)?.getElement().classList.toggle('is-emphasized', active);
+      for (const button of byId('presence-sequence')?.querySelectorAll('button') || []) {
+        if (button.dataset.presenceId === presenceId) button.classList.toggle('is-emphasized', active);
+      }
+    };
+    element.addEventListener('mouseenter', () => emphasize(true));
+    element.addEventListener('mouseleave', () => emphasize(false));
+    element.addEventListener('focus', () => emphasize(true));
+    element.addEventListener('blur', () => emphasize(false));
   }
 
   function closeDetailsDrawer() {
     const inspector = byId('inspector');
+    const restoreFocus = inspector?.contains(document.activeElement);
     if (inspector) inspector.hidden = true;
     document.documentElement.dataset.artemisDetailsOpen = 'false';
+    if (restoreFocus) {
+      const target = [...(byId('presence-sequence')?.querySelectorAll('button') || [])]
+        .find((button) => button.dataset.presenceId === runtime.selectedPresenceId && !button.hidden);
+      (target || byId('mode-range'))?.focus({ preventScroll: true });
+    }
   }
 
   function openDetailsDrawer(presenceId, options = {}) {
@@ -1103,6 +1131,7 @@
 
   function showPresencePopup(presence) {
     if (!runtime.map || !presence) return;
+    closeDetailsDrawer();
     runtime.lifePathPopup?.remove();
     const content = document.createElement('article');
     content.className = 'presence-popup-card';
@@ -1145,6 +1174,9 @@
     const projectionItem = currentProjectionItem(presence.event_item_id);
     if (projectionItem) updateCanonicalSelection(projectionItem);
     syncLifePathSelectionControls();
+    [...(byId('presence-sequence')?.querySelectorAll('button') || [])]
+      .find((button) => button.dataset.presenceId === presence.presence_id)
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
     if (options.popup !== false) showPresencePopup(presence);
     if (options.openDetails === true) openDetailsDrawer(presence.presence_id, options);
     if (options.fly === true && runtime.map) {
@@ -1167,7 +1199,46 @@
       marker.getElement().hidden = !visibleIds.has(presenceId);
       marker.getElement().classList.toggle('is-current', presenceId === currentPresence?.presence_id);
     }
+    for (const button of byId('presence-sequence')?.querySelectorAll('button') || []) {
+      button.hidden = !visibleIds.has(button.dataset.presenceId);
+      button.classList.toggle('is-current', button.dataset.presenceId === currentPresence?.presence_id);
+    }
     syncLifePathSelectionControls();
+  }
+
+  function presencePeriod(presence) {
+    return (runtime.data?.lifePath?.macro_periods || []).find(
+      (period) => period.presence_refs.includes(presence.presence_id)
+    );
+  }
+
+  function renderPresenceSequence() {
+    const host = byId('presence-sequence');
+    if (!host) return;
+    host.replaceChildren();
+    for (const presence of [...(runtime.data?.lifePath?.presences || [])].sort((a, b) => a.index - b.index)) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.presenceId = presence.presence_id;
+      button.className = 'presence-sequence-item';
+      button.textContent = `${presence.index + 1} · ${presence.place_label}`;
+      const period = presencePeriod(presence);
+      button.title = `${formatPresenceTime(presence)} · ${period?.label || 'Romagna source anchors'}`;
+      button.setAttribute('aria-pressed', 'false');
+      button.addEventListener('click', () => selectLifePathPresence(presence.presence_id, { fly: false }));
+      bindPresenceEmphasis(button, presence.presence_id);
+      host.append(button);
+    }
+  }
+
+  function syncOverlayLayout() {
+    const root = document.documentElement;
+    const dock = byId('timeline-dock')?.getBoundingClientRect();
+    const banner = byId('spike-banner')?.getBoundingClientRect();
+    const attribution = byId('attribution-status')?.getBoundingClientRect();
+    root.style.setProperty('--dock-height', `${Math.ceil(dock?.height || 180)}px`);
+    root.style.setProperty('--banner-bottom', `${Math.ceil(banner?.bottom || 72)}px`);
+    root.style.setProperty('--attribution-height', `${Math.ceil(attribution?.height || 30)}px`);
   }
 
   function lifePathConnectorGeoJson() {
@@ -1374,6 +1445,21 @@
   }
 
   function bindLifePathControls() {
+    for (const lang of ['en', 'ru']) {
+      byId(`language-${lang}`)?.addEventListener('click', () => {
+        window.ARTEMIS_I18N?.setLanguage(lang);
+        for (const value of ['en', 'ru']) byId(`language-${value}`)?.setAttribute('aria-pressed', String(value === lang));
+        requestAnimationFrame(syncOverlayLayout);
+      });
+    }
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
+    });
+    const layoutObserver = new ResizeObserver(syncOverlayLayout);
+    for (const id of ['timeline-dock', 'spike-banner', 'attribution-status']) {
+      if (byId(id)) layoutObserver.observe(byId(id));
+    }
+    syncOverlayLayout();
     const update = (startIndex, endIndex) => {
       runtime.lifePathStartIndex = startIndex;
       runtime.lifePathEndIndex = endIndex;
@@ -1458,17 +1544,18 @@
       const markerButton = document.createElement('button');
       markerButton.type = 'button';
       markerButton.className = 'life-path-marker';
-      markerButton.textContent = String(presence.index + 1);
+      appendText(markerButton, 'span', String(presence.index + 1), 'marker-dot');
       markerButton.title = `${presence.place_label} · click for summary; double-click to focus map`;
       markerButton.setAttribute('aria-label', `Show ${presence.place_label} summary, ${formatPresenceTime(presence)}; double-click to focus map`);
       markerButton.setAttribute('aria-pressed', 'false');
+      bindPresenceEmphasis(markerButton, presence.presence_id);
       markerButton.addEventListener('click', () => handlePresenceMarkerClick(presence));
       markerButton.addEventListener('dblclick', (event) => handlePresenceMarkerDoubleClick(event, presence));
       const repeatIndex = placeOffsets.get(presence.place_ref) || 0;
       placeOffsets.set(presence.place_ref, repeatIndex + 1);
       const repeatCount = placeCounts.get(presence.place_ref) || 1;
       const offset = repeatCount > 1
-        ? [repeatIndex === 0 ? -14 : 14, repeatIndex === 0 ? -8 : 8]
+        ? [(repeatIndex - (repeatCount - 1) / 2) * 36, 0]
         : [0, 0];
       const marker = new maplibregl.Marker({ element: markerButton, anchor: 'center', offset })
         .setLngLat(presence.coordinates)
@@ -1822,6 +1909,7 @@
     if (lifePath.available) {
       setText('path-coverage', lifePath.coverage?.scope_label || 'Whole-life proof');
       renderMacroPeriodControls();
+      renderPresenceSequence();
       bindLifePathControls();
     }
     else renderExplorerControls();

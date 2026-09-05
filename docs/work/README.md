@@ -14,6 +14,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` | #355 decision-bounded correction of the seven recorded M5 UX findings | one implementation PR, publication and exactly one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result |
+| `2026-09-05_TEMPORAL_MAP_M5_UX_IMPLEMENTATION_CHECKPOINT_v1.md` | #411 implementation and verification checkpoint | responsive browser evidence, exact-head gates, publication and fresh product check remain pending |
 | `2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md` | #355 current direct product-check decision | `ITERATE`; no implementation branch opened |
 | `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | #355 completed housekeeping record; preserves the owner-directed M4 → M5 deviation without invented authorization | completed by the direct M5 exit decision |
 | `2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md` | #355 completed bounded 11-Presence whole-life runtime proof implemented by PR #406 | direct product result `ITERATE`; no automatic successor branch |
@@ -58,10 +59,10 @@ Current interaction semantics:
 - first click opens a compact popup and does not move the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus the selected place;
-- dashed connectors express chronology only and are never historical route geometry;
+- earlier dashed connectors expressed chronology only and were never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** The 2026-09-05 decision opens exactly one bounded UX correction after merge; it does not authorize another provider/Presence, local/global layers, backend/storage or federation infrastructure.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** The 2026-09-05 decision merged in PR #409 and opened exactly one bounded UX correction, PR #411 (in progress; full acceptance and publication pending); it does not authorize another provider/Presence, local/global layers, backend/storage or federation infrastructure.
 
 ## Foundation lifecycle records
 

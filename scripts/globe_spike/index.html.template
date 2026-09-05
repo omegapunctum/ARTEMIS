@@ -17,7 +17,7 @@
           <strong>ARTEMIS · Leonardo Life Path</strong>
           <span>{{PUBLIC_PREVIEW_STATUS}}</span>
         </div>
-        <div class="banner-actions">{{PUBLIC_PREVIEW_NAV}}</div>
+        <div class="banner-actions"><div class="language-switch" role="group" aria-label="Language"><button id="language-en" type="button" aria-pressed="true">EN</button><button id="language-ru" type="button" aria-pressed="false">RU</button></div>{{PUBLIC_PREVIEW_NAV}}</div>
       </header>
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>
@@ -93,10 +93,12 @@
           </label>
           <input id="scrub-current" type="range" min="0" max="0" step="1" value="0" />
         </div>
+        <nav id="presence-sequence" aria-label="Chronological presences"></nav>
+        <p class="sequence-note">Numbers show chronology; routes unknown.</p>
+        <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
       </div>
 
       <div class="timeline-summary">
-        <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
         <p class="route-note">No path line is drawn: exact routes between Presence anchors remain unknown.</p>
       </div>
     </section>
@@ -105,6 +107,7 @@
   <div id="fatal-error" role="alert" hidden></div>
 
   <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script src="./localization.js"></script>
   <script src="./runtime.js"></script>
 </body>
 </html>
