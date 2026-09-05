@@ -6,9 +6,9 @@
 - Статус решения: `GATE D / M5 ITERATE / BOUNDED UX CORRECTION AUTHORIZED / FORMAL USER VALUE PENDING`.
 - Дата последнего обновления: 2026-09-05.
 - Active product issue: GitHub issue `#355`.
-- Current public proof: M5 / PR `#406` / 11 Presence anchors across 1452–1519.
+- Current public proof: M5 content from PR `#406`, UX from merged/published PR `#411` / 11 Presence anchors across 1452–1519.
 - Recorded product result: `ITERATE`.
-- Opened next branch: `Temporal Map M5 bounded UX correction v1`; scope merged in PR #409, implementation in progress in PR #411.
+- Opened next branch: `Temporal Map M5 bounded UX correction v1`; fresh post-#411 `ITERATE` requires visible chronological links and a shorter timeline under [the owner's amendment](work/2026-09-05_M5_POST_411_CORRECTION_v1.md).
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.

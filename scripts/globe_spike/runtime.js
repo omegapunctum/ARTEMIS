@@ -274,6 +274,9 @@
     root.dataset.artemisUnnamedControlCount = String(unnamed.length);
     root.dataset.artemisUndersizedTargetCount = String(undersized.length);
     root.dataset.artemisOverlayCollisionCount = String(overlayCollisions);
+    root.dataset.artemisTimelineHeight = String(Math.ceil(byId('timeline-dock')?.getBoundingClientRect().height || 0));
+    root.dataset.artemisChronologyLinkCount = String(runtime.map?.getLayer('life-path-chronology-line')
+      ? lifePathConnectorGeoJson().features.length : 0);
     root.dataset.artemisGlobeWidth = String(runtime.acceptanceEvidence.globe_css_px.width);
     root.dataset.artemisGlobeHeight = String(runtime.acceptanceEvidence.globe_css_px.height);
     root.dataset.artemisStartupRecorded = String(runtime.performance.startupToIdleMs !== null);
@@ -1005,7 +1008,7 @@
         ? 'Source-bounded residence period; not a continuous daily position'
         : 'Not established beyond the documented source anchor'],
       ['Position', `${String(presence.spatial_precision || 'named place').replaceAll('_', ' ')}; exact historical position unknown`],
-      ['Route', transition ? 'Exact route unknown; no transition line is rendered' : 'First documented presence']
+      ['Route', transition ? 'Exact route unknown; dashed links show order only' : 'First documented presence']
     ]) {
       const row = document.createElement('div');
       appendText(row, 'dt', label);
@@ -1286,7 +1289,7 @@
     }
     const bounds = new maplibregl.LngLatBounds();
     for (const presence of visible) bounds.extend(presence.coordinates);
-    const timelinePadding = window.innerWidth <= 820 ? 280 : 210;
+    const timelinePadding = Math.ceil(byId('timeline-dock')?.getBoundingClientRect().height || 120) + 40;
     runtime.map.fitBounds(bounds, {
       padding: { top: 110, right: 70, bottom: timelinePadding, left: 70 },
       maxZoom: 7.4,

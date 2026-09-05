@@ -130,7 +130,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
         assert decision in decision_record
 
     assert "opens exactly one UX implementation branch" in priorities
-    assert "implement exactly its seven M5 corrections" in state["next_transition"]["condition"]
+    assert "PR #411 merged and published" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
     assert "Decision: `PROCEED_TO_M3`" in m2_decision
@@ -189,7 +189,11 @@ def test_m5_bounded_ux_scope_opens_one_non_route_correction() -> None:
     assert "Export Airtable CI remains a separate technical maintenance PR" in decision
     assert "11 coarse Presence anchors / six periods / 1452–1519" in validation
     assert "Temporal Map M5 bounded UX correction v1" in validation
-    assert "implement exactly its seven M5 corrections" in state["next_transition"]["condition"]
+    assert "visible renderer-only chronological links" in state["next_transition"]["condition"]
+    amendment = _text("docs/work/2026-09-05_M5_POST_411_CORRECTION_v1.md")
+    assert "ITERATE" in amendment
+    assert "route_geometry=null" in amendment
+    assert "supersedes" in amendment
 
 
 def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None:

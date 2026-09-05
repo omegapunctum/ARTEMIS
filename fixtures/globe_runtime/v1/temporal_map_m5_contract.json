@@ -29,7 +29,7 @@
     "range": "A two-handle calendar interval includes every Presence whose temporal extent overlaps the selected years.",
     "scrub": "A chosen build origin plus one current-year cursor progressively reveals Presence anchors reached by that year.",
     "selection": "Single click opens a compact popup without moving the camera; another explicit action opens the right drawer; double click focuses the map.",
-    "routes": "No transition line is rendered without evidenced route geometry."
+    "routes": "Dashed straight connectors show chronological order only, not known travel routes. Historical route geometry remains null where unsupported."
   },
   "non_goals": [
     "No exact birth-to-death itinerary",

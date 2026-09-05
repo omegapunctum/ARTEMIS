@@ -1199,7 +1199,7 @@ def _build_m5_whole_life_path(
             "status": "unknown_route",
             "geometry": None,
             "historical_route_geometry_permitted": False,
-            "chronological_connector_permitted": False,
+            "chronological_connector_permitted": True,
             "chronological_connector_is_route": False,
         },
         "manual_exit_decisions": copy.deepcopy(contract["manual_exit_decisions"]),

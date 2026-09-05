@@ -483,6 +483,36 @@ button:focus-visible { outline: 2px solid #79cfff; outline-offset: 2px; }
   #inspector { padding: 16px; }
 }
 
+/* Post-publication M5 correction: three compact working rows, no subject column. */
+#timeline-dock { grid-template-columns: minmax(0, 1fr); padding: 6px 12px; gap: 0; }
+.timeline-subject { display: none; }
+.timeline-workspace { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; align-items: center; }
+.timeline-heading { grid-column: 2; grid-row: 1; margin: 0; gap: 0; }
+.timeline-heading h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.macro-periods { grid-column: 1; grid-row: 1; margin: 0; }
+#range-controls, #scrub-controls { grid-column: 1 / -1; grid-row: 2; }
+#range-controls { grid-template-columns: max-content minmax(0, 1fr) max-content; align-items: center; gap: 10px; }
+.timeline-values { display: contents; }
+.timeline-values label:first-child { grid-column: 1; grid-row: 1; }
+.timeline-values label:last-child { grid-column: 3; grid-row: 1; }
+.dual-range { grid-column: 2; grid-row: 1; height: 32px; }
+#scrub-controls { grid-template-columns: max-content minmax(0, 1fr) max-content; align-items: center; gap: 10px; }
+.scrub-origin { display: flex; align-items: center; gap: 6px; grid-column: 1; grid-row: 1; }
+.scrub-cursor { grid-column: 3; grid-row: 1; gap: 4px; }
+.scrub-mode > input { grid-column: 2; grid-row: 1; margin: 0; }
+#presence-sequence { grid-column: 1; grid-row: 3; min-width: 0; padding: 2px; }
+#temporal-map-status { grid-column: 2; grid-row: 3; max-width: 260px; padding: 0; border: 0; background: none; font-size: 10px; line-height: 1.2; }
+.sequence-note::before { content: ''; display: inline-block; width: 22px; border-top: 2px dashed #a8bed0; margin-right: 5px; vertical-align: middle; }
+@media (max-width: 820px) {
+  #timeline-dock { padding: 5px 8px; }
+  .timeline-subject { display: none; }
+  .timeline-workspace { gap: 2px 6px; }
+  #presence-sequence { grid-column: 1 / -1; }
+  #temporal-map-status { grid-column: 1 / -1; grid-row: 4; max-width: none; }
+  #range-controls, #scrub-controls { gap: 6px; }
+  .scrub-origin, .scrub-cursor { font-size: 10px; gap: 3px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

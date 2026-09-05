@@ -2,6 +2,8 @@
 
 ## Status
 
+Post-publication amendment: [M5 post-#411 correction](2026-09-05_M5_POST_411_CORRECTION_v1.md) records the owner's fresh ITERATE and explicitly supersedes the no-map-connector presentation restriction below. Historical route geometry remains forbidden; dashed chronology links are now authorized. The original decision text below is preserved as history.
+
 - Type: Gate D decision-only implementation scope.
 - Date: 2026-09-05.
 - Active product issue: `#355`.
