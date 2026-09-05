@@ -1,22 +1,22 @@
-# ARTEMIS — PRIORITIES v7.8
+# ARTEMIS — PRIORITIES v7.9
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-04.
-- Active cycle: `Post-M5 ITERATE scope decision`; M5 is complete and no successor feature branch is open.
+- Date: 2026-09-05.
+- Active cycle: `M5 bounded UX correction v1`; implementation is authorized only after the scope decision merges.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Define one bounded M5 UX correction
+## P0 — Implement one bounded M5 UX correction
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
 The direct owner check of the published 1452–1519 loop recorded exactly `ITERATE`. It found seven issues: missing relational legibility, stale popup after opening details, oversized elements, excessive timeline height, header/map-control collision, missing current-M5 `EN / RU` switching and drawer/attribution overlap.
 
-The next action is scope design, not implementation. One bounded UX proposal must distinguish must-fix product semantics from optional polish and must not invent historical routes.
+`docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` defines the one permitted correction. After that decision merges, one implementation PR may address the seven findings without new historical content, route geometry, context, infrastructure or broad redesign.
 
 The load-bearing path remains:
 
@@ -74,14 +74,14 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Keep the successor branch closed until scoped
+## P3 — Keep the opened correction bounded
 
-No new feature branch is active. M5 is completed with `ITERATE`.
+The decision opens exactly one UX implementation branch after merge. M5 remains completed with `ITERATE`.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
 - preserve PR #406 without widening its data, interaction or infrastructure scope;
-- do not infer a successor branch from publication, CI success or the eventual M5 result.
+- do not infer any second successor branch from publication, CI success or the M5 result.
 
 Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another feature branch from the M5 result. Export Airtable CI repair is allowed only as a separate technical maintenance PR.
 
@@ -116,8 +116,8 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Review and merge the M5 `ITERATE` exit record.
-2. Define one bounded UX correction with exact scope, acceptance evidence and stop condition; do not implement it implicitly.
+1. Review and merge the bounded UX scope decision.
+2. Open one implementation PR for the exact seven corrections, publish it and record one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result.
 3. In a separate technical PR, repair Export Airtable CI by first providing sufficient Git history and required evidence refs, then rerunning the suite before changing assertions or digests.
 4. Keep all other feature branches closed.
 

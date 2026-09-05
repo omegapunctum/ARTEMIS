@@ -1,10 +1,10 @@
-# ARTEMIS — PROJECT PHASES v7.8
+# ARTEMIS — PROJECT PHASES v7.9
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-04.
-- Current phase: **5.1 — M5 completed with ITERATE; successor branch not opened**.
+- Date: 2026-09-05.
+- Current phase: **5.1 — M5 bounded UX correction authorized; implementation not started**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -147,6 +147,12 @@ PR #406 merged and published the reviewed PR #400 major-life package in the exis
 
 The direct owner check recorded exactly `ITERATE`. The whole-life scale remains viable, while seven product findings require a separately scoped UX correction. The result does not open that implementation branch automatically.
 
+## Phase 5F — M5 Bounded UX Correction v1 [authorized after decision merge]
+
+The 2026-09-05 scope decision opens one implementation branch for the seven observed M5 findings. The correction must make chronological order legible through non-route sequence/period/timeline semantics, clean popup/drawer state, reduce visual density and timeline height, remove responsive collisions, add current-M5 `EN / RU`, and preserve attribution visibility.
+
+It cannot draw unknown routes, add historical content, change Range/Scrub semantics, introduce a second state model or mix Export Airtable maintenance into the product diff. Publication requires automated Core/semantic checks, deterministic responsive evidence and a fresh manual product result.
+
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 is complete with `ITERATE` and was not inferred from M4. No successor milestone or implementation branch exists until a later bounded decision explicitly opens it.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 remains complete with `ITERATE`. The bounded UX decision opens exactly one correction branch after merge and no other product branch.

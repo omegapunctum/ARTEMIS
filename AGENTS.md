@@ -72,7 +72,7 @@ Current Temporal Map behavior:
 - double-click may focus the selected place;
 - dashed connectors are chronology only, never historical route geometry.
 
-The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package without runtime authorization. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`: ARTEMIS adopts the source-federated semantic direction while retaining bounded, deterministic source intake. No post-M4 implementation branch is open; public runtime promotion, new sources/data, live federation and generic ingestion/storage infrastructure remain closed until a separate bounded decision.
+The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`. PR `#406` later published the owner-directed 11-Presence M5 whole-life proof; the direct product check recorded `ITERATE` in PR `#408`. The 2026-09-05 scope decision authorizes exactly one bounded UX correction branch after merge. New sources/data, live federation, generic ingestion/storage infrastructure and any second product branch remain closed.
 
 Preserve these boundaries:
 

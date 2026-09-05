@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Post-M5 ITERATE scope decision`" in scope
+    assert "Current increment: `M5 bounded UX correction v1`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -129,8 +129,8 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     for decision in expected:
         assert decision in decision_record
 
-    assert "No new feature branch is active" in priorities
-    assert "bounded M5 UX correction" in state["next_transition"]["condition"]
+    assert "opens exactly one UX implementation branch" in priorities
+    assert "implement exactly its seven M5 corrections" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
     assert "Decision: `PROCEED_TO_M3`" in m2_decision
@@ -140,8 +140,8 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Next implementation branch: not opened" in decision_record
     assert "Source-federated semantic boundary" in architecture
     assert "not authorization for live federation" in architecture
-    assert "Recorded product decision | `ITERATE`" in validation
-    assert "Opened next branch | `Leonardo Major-Life Presence Scope v1`" in validation
+    assert "M5 direct product decision | `ITERATE / PR #408`" in validation
+    assert "Opened next branch | `Temporal Map M5 bounded UX correction v1`" in validation
 
     branch = _text("docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md")
     assert "6–10 major-life Presence anchors" in branch
@@ -173,6 +173,23 @@ def test_m5_governance_deviation_and_exit_are_explicit() -> None:
     assert "unknown_route" in exit_record
     assert "route_geometry=null" in exit_record
     assert "PR #394 remains closed and superseded" in exit_record
+
+
+def test_m5_bounded_ux_scope_opens_one_non_route_correction() -> None:
+    decision = _text("docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md")
+    validation = _text("docs/VALIDATION_DECISION.md")
+    state = _json("docs/project_state.json")
+
+    assert "authorize exactly one bounded UX implementation branch" in decision
+    assert "all seven recorded corrections" in decision
+    assert "Do not connect Presence coordinates with a spatial path" in decision
+    assert "unknown_route" in decision
+    assert "route_geometry=null" in decision
+    assert "PROCEED_TO_GATE_D_REVIEW" in decision
+    assert "Export Airtable CI remains a separate technical maintenance PR" in decision
+    assert "11 coarse Presence anchors / six periods / 1452–1519" in validation
+    assert "Temporal Map M5 bounded UX correction v1" in validation
+    assert "implement exactly its seven M5 corrections" in state["next_transition"]["condition"]
 
 
 def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None:

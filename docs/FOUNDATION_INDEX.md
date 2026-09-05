@@ -255,7 +255,7 @@ Active product gate:
 
 7. The fresh user check of the published #396 interaction recorded `ITERATE`: preserve the loop and treat remaining visual issues as non-priority. Gate D remains `OPEN / IN PROGRESS`.
 8. M2, M3 and M4 are completed; M4 remains `ADOPT` and did not open a successor.
-9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; the direct owner check recorded `ITERATE`. No successor feature branch is open.
+9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; the direct owner check recorded `ITERATE`. The 2026-09-05 decision opens exactly one bounded UX correction branch after merge.
 
 Foundation status:
 
@@ -301,6 +301,7 @@ Current product-feedback evidence and active branch:
 
 - `docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md`.
 - `docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md`.
+- `docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md`.
 
 Accepted foundation decisions:
 
