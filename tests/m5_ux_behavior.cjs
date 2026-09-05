@@ -125,4 +125,4 @@ window.ARTEMIS_I18N.setLanguage('en');
 assert.equal(text.nodeValue, '1 · Vinci'); assert.equal(label.attrs.title, '1502 · Milan I');
 assert.equal(window.location, location); assert.equal(JSON.stringify(runtime.data), state);
 assert.equal(runtime.selectedPresenceId, 'b');
-console.log('M5 chronology, filtering, emphasis, focus, no connectors, EN/RU round-trip: passed');
+console.log('M5 chronology, filtering, emphasis, focus, presentation-only connectors, EN/RU round-trip: passed');

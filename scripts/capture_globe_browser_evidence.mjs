@@ -151,8 +151,13 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     if ((runtime.data.lifePath.macro_periods || []).length !== 6) {
       throw new Error('M5 whole-life path does not expose six macro periods');
     }
-    if (runtime.map.getLayer('life-path-chronology-line')) {
-      throw new Error('M5 rendered a transition line without evidenced route geometry');
+    if (!runtime.map.getLayer('life-path-chronology-line')) {
+      throw new Error('M5 chronological presentation links are missing');
+    }
+    if (runtime.data.lifePath.route_policy.historical_route_geometry_permitted !== false
+        || runtime.data.lifePath.route_policy.chronological_connector_is_route !== false
+        || runtime.data.lifePath.transitions.some((link) => link.route_geometry !== null || link.route_status !== 'unknown_route')) {
+      throw new Error('Chronological presentation must not promote unknown historical routes');
     }
     document.getElementById('mode-scrub')?.click();
     const scrubStart = document.getElementById('scrub-start');
