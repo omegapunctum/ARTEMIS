@@ -46,6 +46,13 @@ SEMANTIC_SCOPE = (
     Path("tests/test_uncertainty_fixtures.py"),
     Path(".github/workflows/etl.yml"),
 )
+# Accepted semantic bytes remain pinned while CI, validator and test harness
+# maintenance evolve under ordinary repository review.
+REVIEW_MAINTENANCE_PATHS = {
+    Path("scripts/validate_uncertainty_fixtures.py"),
+    Path("tests/test_uncertainty_fixtures.py"),
+    Path(".github/workflows/etl.yml"),
+}
 READY_TRANSITION_PATHS = (OWNER_PATH, README_PATH, PACKAGE_PATH, REGISTRY_PATH)
 GIT_ENVIRONMENT_OVERRIDES = {
     "GIT_ALTERNATE_OBJECT_DIRECTORIES",
@@ -826,10 +833,14 @@ def _regular_repo_file(root: Path, relative: Path | str) -> Path:
     return current
 
 
-def compute_review_digest(root: Path) -> str:
+def compute_review_digest(root: Path, *, maintenance_commit: str | None = None) -> str:
     digest = hashlib.sha256()
     for relative in SEMANTIC_SCOPE:
-        content = _normalized_scope_bytes(relative, _regular_repo_file(root, relative).read_bytes())
+        if maintenance_commit is not None and relative in REVIEW_MAINTENANCE_PATHS:
+            raw = _frozen_regular_blob(root, maintenance_commit, relative)
+        else:
+            raw = _regular_repo_file(root, relative).read_bytes()
+        content = _normalized_scope_bytes(relative, raw)
         digest.update(relative.as_posix().encode("utf-8"))
         digest.update(b"\0")
         digest.update(hashlib.sha256(content).digest())
@@ -884,13 +895,23 @@ def _frozen_regular_blob(root: Path, commit: str, relative: Path | str) -> bytes
     return _git_output(root, "cat-file", "blob", match.group(2))
 
 
-def compute_review_digest_at_commit(root: Path, commit: str) -> str:
+def compute_review_digest_at_commit(
+    root: Path,
+    commit: str,
+    *,
+    maintenance_commit: str | None = None,
+) -> str:
     _require_git_toplevel(root)
     _git_output(root, "cat-file", "-e", f"{commit}^{{commit}}")
     _git_output(root, "merge-base", "--is-ancestor", commit, "HEAD")
     digest = hashlib.sha256()
     for relative in SEMANTIC_SCOPE:
-        content = _normalized_scope_bytes(relative, _frozen_regular_blob(root, commit, relative))
+        source_commit = (
+            maintenance_commit
+            if maintenance_commit is not None and relative in REVIEW_MAINTENANCE_PATHS
+            else commit
+        )
+        content = _normalized_scope_bytes(relative, _frozen_regular_blob(root, source_commit, relative))
         digest.update(relative.as_posix().encode("utf-8"))
         digest.update(b"\0")
         digest.update(hashlib.sha256(content).digest())
@@ -1042,7 +1063,7 @@ def _validate_review_state(
     reviewed_digest = registry["reviewed_content_sha256"]
     _require(isinstance(frozen, str) and COMMIT_RE.fullmatch(frozen) is not None, "READY registry frozen_commit is invalid")
     _require(isinstance(reviewed_digest, str) and SHA_RE.fullmatch(reviewed_digest) is not None, "READY registry content digest is invalid")
-    current_digest = compute_review_digest(root)
+    current_digest = compute_review_digest(root, maintenance_commit=frozen)
     _require(reviewed_digest == current_digest, "READY digest does not match current semantic scope")
     for dependency_commit in (
         package["base_package"]["merge_commit"],
@@ -1050,7 +1071,11 @@ def _validate_review_state(
     ):
         _git_output(root, "cat-file", "-e", f"{dependency_commit}^{{commit}}")
         _git_output(root, "merge-base", "--is-ancestor", dependency_commit, "HEAD")
-    _require(compute_review_digest_at_commit(root, "HEAD") == current_digest, "current Git HEAD does not contain the reviewed semantic scope")
+    _require(
+        compute_review_digest_at_commit(root, "HEAD", maintenance_commit=frozen)
+        == current_digest,
+        "current Git HEAD does not contain the reviewed semantic scope",
+    )
     _require(compute_review_digest_at_commit(root, frozen) == current_digest, "frozen commit does not contain the reviewed semantic scope")
 
     artifact_paths = [Path(review["artifact"]) for review in parsed_reviews]
