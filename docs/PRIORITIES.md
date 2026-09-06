@@ -1,5 +1,8 @@
 # ARTEMIS — PRIORITIES v7.9
 
+Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; no new runtime work is opened.
+
+
 Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
 
 ## Status
@@ -12,7 +15,7 @@ Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXI
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Prepare one bounded Gate E evidence protocol
+## P0 — Use the bounded Gate E protocol for one formative session
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
@@ -119,9 +122,10 @@ These are technical/product-development foundations, not final user-value eviden
 ## Execution order
 
 1. Preserve merged #413 and the explicit Gate D exit `ADVANCE_TO_GATE_E`.
-2. Prepare one bounded task/evidence protocol on the accepted published loop: user question, tasks, observable success/failure criteria and decision rule.
-3. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate. Gate E collection and the formal participant wave have not started.
-4. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified.
+2. Merge the tiny protocol fixes in #415, then E1: one independent novice T1–T5 session. Material failure → bounded fix → retest the failed task; all tasks passed → E2.
+3. E2: same-content ARTEMIS versus linear baseline with 3–5 formative users; freeze the baseline, rubric and value-signal rule before collection. Then record the Gate E decision. Positive value signal → scoped universality proof with Roman Empire / temporal Region; no value signal → rethink the current product proposition. Inconclusive evidence remains explicit. None of these later implementations is opened now.
+4. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate. Gate E collection and the formal participant wave have not started.
+5. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified or the later positive Gate E decision explicitly scopes the conditional universality proof.
 
 ## Completion rule
 
