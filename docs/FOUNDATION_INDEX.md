@@ -1,5 +1,7 @@
 # ARTEMIS — FOUNDATION INDEX
 
+Current Gate E task/evidence owner: [bounded protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md). Protocol prepared; task observations not collected.
+
 Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
 
 ## Статус

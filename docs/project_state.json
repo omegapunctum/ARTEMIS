@@ -152,12 +152,13 @@
     "docs/work/2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md",
     "docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md",
     "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md",
-    "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"
+    "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md",
+    "docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "gate": "E",
-    "condition": "M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW. Gate D completed with ADVANCE_TO_GATE_E. Prepare one bounded task/evidence protocol on the accepted published loop; Gate E collection has not started. No new implementation without a concrete material gap."
+    "condition": "M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW. Gate D completed with ADVANCE_TO_GATE_E. Gate E bounded task protocol prepared; T1–T5 observations NOT COLLECTED. Additional owner manual acceptance reported 2026-09-06 with no findings, execution details unspecified. Next: one consenting formative session and evidence readout under docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md. No new implementation without a concrete material gap."
   },
   "architecture_checkpoint": {
     "id": "M4",

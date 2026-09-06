@@ -1,5 +1,8 @@
 # ARTEMIS — PROJECT TRUTH
 
+Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; no new runtime work is opened.
+
+
 Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
 
 ## Статус
