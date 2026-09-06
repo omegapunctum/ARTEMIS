@@ -1,5 +1,7 @@
 # ARTEMIS working documents registry
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Status
 
 - Type: working-layer lifecycle registry.
@@ -13,7 +15,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md` | Decision-only closeout and one bounded Gate D evidence review | M5 correction `PROCEED_TO_GATE_D_REVIEW`; Gate D recommendation `ADVANCE_TO_GATE_E`, final exit pending |
+| `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; prepare a bounded Gate E protocol, collection not started |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D promotion/stop outcome; the bounded post-#396 `ITERATE` does not close it |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
@@ -25,10 +27,11 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
 | `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
 
-## Completed M2–M5 and correction evidence
+## Completed M2–M5, correction and Gate D review evidence
 
 | Document | Lifecycle | Current disposition |
 |---|---|---|
+| `2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md` | Completed evidence / merged #413 | Review accepted; final exit owned by 2026-09-06_GATE_D_EXIT_DECISION_v1.md |
 | `2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
 | `2026-09-05_M5_POST_411_CORRECTION_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
 | `2026-09-05_TEMPORAL_MAP_M5_UX_IMPLEMENTATION_CHECKPOINT_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
@@ -69,7 +72,7 @@ Current interaction semantics:
 - earlier dashed connectors expressed chronology only and were never historical route geometry; current #412 uses explicitly labelled renderer-only chronological links; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; active execution is Gate D decision-only closeout/review. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; active execution is Gate E evidence preparation. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
 
 ## Foundation lifecycle records
 
@@ -100,7 +103,7 @@ No real Gate C historical row import is active. PR #372 merged the schema/mappin
 - working docs cannot override `ARTEMIS_CONCEPT.md`, `ARTEMIS_PRODUCT_SCOPE.md`, `PLATFORM_ARCHITECTURE_DECISION.md`, `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`, `UNCERTAINTY_SEMANTICS_CONTRACT.md`, `DATA_CONTRACT.md`, `PRIORITIES.md`, `PROJECT_PHASES.md`, `PROJECT_TRUTH.md` or `DEVELOPMENT_OPERATING_SYSTEM.md`;
 - #355 authorizes only the bounded current loop and the next evidence-backed decision;
 - Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public source/semantic input;
-- Gate D remains open/in progress under #355; implementation completion does not itself close the gate;
+- Gate D is completed with ADVANCE_TO_GATE_E under #355; implementation completion does not itself close the gate;
 - the Globe consumes merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
 - `/globe/` is the primary research prototype; the root is a Core landing and Architecture Atlas is compatibility-only at `/atlas/`;
 - 2D Map and Globe are renderer choices over one semantic core; timeline is shared Explorer temporal state, not a separate truth model;

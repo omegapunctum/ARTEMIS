@@ -1,22 +1,24 @@
 # ARTEMIS — PRIORITIES v7.9
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Status
 
 - Type: canonical active priorities.
 - Date: 2026-09-06.
-- Active cycle: `Gate D closeout/review`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
+- Active cycle: `Gate E evidence preparation`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
-- Gate D: `OPEN / IN PROGRESS`.
+- Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Accept M5 closeout and record the Gate D exit
+## P0 — Prepare one bounded Gate E evidence protocol
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
 The direct owner check of the published 1452–1519 loop recorded exactly `ITERATE`. It found seven issues: missing relational legibility, stale popup after opening details, oversized elements, excessive timeline height, header/map-control collision, missing current-M5 `EN / RU` switching and drawer/attribution overlap.
 
-PR #409 scoped the correction; PRs #411 and #412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) closes this execution cycle and records one bounded review. Its recommendation is `ADVANCE_TO_GATE_E`; Gate D itself remains open until an explicit synchronized exit. M4 `ADOPT` is completed architecture evidence, not the Gate D decision.
+PR #409 scoped the correction; PRs #411 and #412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) closes this execution cycle and records one bounded review. Its recommendation is `ADVANCE_TO_GATE_E`; Gate D is now completed by the separate explicit exit decision. M4 `ADOPT` is completed architecture evidence, not the Gate D decision.
 
 The load-bearing path remains:
 
@@ -116,9 +118,9 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Review/merge the single decision-only M5 closeout and Gate D review PR.
-2. Use its completed evidence matrix; record one Gate D exit: `ADVANCE_TO_GATE_E / NARROW / REJECT`. Recommendation: `ADVANCE_TO_GATE_E`; no concrete material implementation gap identified.
-3. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate.
+1. Preserve merged #413 and the explicit Gate D exit `ADVANCE_TO_GATE_E`.
+2. Prepare one bounded task/evidence protocol on the accepted published loop: user question, tasks, observable success/failure criteria and decision rule.
+3. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate. Gate E collection and the formal participant wave have not started.
 4. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified.
 
 ## Completion rule

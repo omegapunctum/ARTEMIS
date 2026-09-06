@@ -30,12 +30,12 @@ def _historical_gate_c_payload() -> dict:
     return state
 
 
-def test_current_project_state_opens_one_gate_d_vertical() -> None:
+def test_current_project_state_records_gate_d_exit() -> None:
     state = _state()
     assert state["capability"]["globe"] == "public_r_and_d_preview"
     assert validate_project_state() == {
         "gate": "D",
-        "gate_status": "in_progress",
+        "gate_status": "completed",
         "active_issue_count": len(state["github"]["active_issues"]),
         "blocker_count": 0,
     }
@@ -88,6 +88,9 @@ def test_gate_d_decision_set_cannot_drift() -> None:
 
 def test_gate_e_cannot_open_before_gate_d_decision() -> None:
     state = _state()
+    state["gate"]["status"] = "in_progress"
+    state["gate"].pop("decision")
+    state["gate"].pop("evidence_ref")
     state["next_transition"]["gate"] = "E"
     with pytest.raises(ProjectStateError, match="Gate E cannot open"):
         validate_project_state(state)
@@ -104,8 +107,9 @@ def test_m4_adopt_cannot_leak_into_gate_d() -> None:
 def test_review_recommendation_is_not_a_gate_d_exit() -> None:
     state = _state()
     assert state["ux_correction_checkpoint"]["decision"] == "PROCEED_TO_GATE_D_REVIEW"
+    state["gate"]["status"] = "in_progress"
     state["gate"]["decision"] = state["gate_review"]["recommendation"]
-    with pytest.raises(ProjectStateError, match="Gate D exit remains pending"):
+    with pytest.raises(ProjectStateError, match="unfinished Gate D cannot record"):
         validate_project_state(state)
 
 
@@ -119,6 +123,9 @@ def test_advancement_recommendation_cannot_hide_material_gap() -> None:
 def test_blocked_gate_d_requires_named_blocker() -> None:
     state = _state()
     state["gate"]["status"] = "blocked"
+    state["gate"].pop("decision")
+    state["gate"].pop("evidence_ref")
+    state["next_transition"]["gate"] = "D"
     with pytest.raises(ProjectStateError, match="must name at least one blocker"):
         validate_project_state(state)
 
@@ -213,3 +220,18 @@ def test_historical_reject_cannot_advance_to_gate_d() -> None:
     state["capability"]["world_slice"] = "gate_c_rejected_non_public"
     with pytest.raises(ProjectStateError, match="transition to STOP"):
         _validate_completed_gate_transition(state)
+
+
+@pytest.mark.parametrize("missing", ["decision", "evidence_ref"])
+def test_completed_gate_d_requires_explicit_exit(missing):
+    state = _state()
+    state["gate"].pop(missing)
+    with pytest.raises(ProjectStateError, match="requires explicit advancement"):
+        validate_project_state(state)
+
+
+def test_completed_advancement_must_point_to_gate_e():
+    state = _state()
+    state["next_transition"]["gate"] = "D"
+    with pytest.raises(ProjectStateError, match="completed advancement must point to E"):
+        validate_project_state(state)

@@ -1,14 +1,16 @@
 # ARTEMIS — PRODUCT SCOPE
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Статус
 
 - Тип: canonical current product scope.
 - Версия: 4.3.
 - Дата: 2026-09-06.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Gate D closeout/review`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
+- Current increment: `Gate E evidence preparation`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Gate C: completed / `FREEZE`.
-- Gate D: `OPEN / IN PROGRESS`.
+- Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
 - North Star: `ARTEMIS_CONCEPT.md`.
 - Current reality: `PROJECT_TRUTH.md`.
@@ -247,7 +249,7 @@ The earlier post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. Gate D review recommends `ADVANCE_TO_GATE_E`, but only a separate recorded exit using `ADVANCE_TO_GATE_E / NARROW / REJECT` can open Gate E. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. The accepted Gate D review and explicit exit record `ADVANCE_TO_GATE_E`; Gate D is completed and Gate E evidence preparation is next. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

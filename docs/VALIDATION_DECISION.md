@@ -1,26 +1,28 @@
 # ARTEMIS — VALIDATION DECISION
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D REVIEW / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE PENDING`.
+- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE PENDING`.
 - Дата последнего обновления: 2026-09-06.
 - Active product issue: GitHub issue `#355`.
 - Current public proof: M5 content from PR `#406`, UX from merged/published and owner-accepted PR `#412` / 11 Presence anchors across 1452–1519.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
-- Active work: `Gate D closeout/review`; no runtime implementation branch open.
+- Active work: `Gate E evidence preparation`; no runtime implementation branch open.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.
 
 ## 1. Текущее решение
 
-`PROCEED_TO_GATE_D_REVIEW — M5 BOUNDED UX CORRECTION COMPLETED`
+`ADVANCE_TO_GATE_E — GATE D COMPLETED`
 
 Зафиксировано:
 
 - Gate C remains completed/FREEZE for the non-public Leonardo-in-Romagna source boundary;
-- Gate D remains open/in progress under #355;
+- Gate D is completed with ADVANCE_TO_GATE_E under #355;
 - PR #393 completed Core Reset;
 - PRs #395–#396 established and corrected the calendar-based Range/Scrub interaction;
 - the post-#396 check recorded `ITERATE` and opened the completed major-life source/review branch;
@@ -33,7 +35,7 @@
 - PRs #407–#408 aligned governance and recorded the direct M5 result as exactly `ITERATE`;
 - #409 scoped the bounded correction; #411 and #412 implemented and published it;
 - the owner accepted published #412 in the 2026-09-06 closeout instruction; acceptance is an owner report, not an assistant-performed manual run;
-- the correction is completed; the bounded Gate D review recommends `ADVANCE_TO_GATE_E`, but the final gate exit is not recorded yet;
+- the correction is completed; the accepted bounded Gate D review is finalized by the separate explicit exit `ADVANCE_TO_GATE_E`;
 - formal user value remains unvalidated.
 
 ## 2. Historical evidence and decision
@@ -69,7 +71,7 @@ The [2026-09-06 closeout and bounded review](work/2026-09-06_M5_UX_CLOSEOUT_AND_
 
 No new assistant manual test, physical-device matrix, real AT/performance pass or paired EN/RU screenshot evidence is invented. Earlier negative findings remain historical evidence. Acceptance closes this bounded correction; formal user value remains unvalidated.
 
-Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Gate D remains open with no final decision; the completed bounded evidence review recommends `ADVANCE_TO_GATE_E` after closeout acceptance. A formal exit synchronized with #355 remains necessary before Gate E can open.
+Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Merged #413 accepted the bounded review. The separate explicit exit records `ADVANCE_TO_GATE_E`; Gate D is completed. Gate E evidence preparation is next; collection has not started.
 
 ## 5. Current record
 
@@ -79,7 +81,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Formal user-value decision | `PENDING` |
 | Active vertical | `Life in Context / Leonardo Temporal Map` |
 | Active issue | `#355` |
-| Current gate | `D / OPEN / IN PROGRESS` |
+| Current gate | `D / COMPLETED / ADVANCE_TO_GATE_E` |
 | Architecture Gate A fixtures | `3/3 READY` / preserved technical evidence, not user-value evidence |
 | World-model contract evidence | `READY / #329 / PR #336` |
 | Uncertainty semantics | `READY / #330 / PR #337` |
@@ -98,7 +100,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Runtime implementation | `COMPLETED / PRs #411–#412`; scope #409 is completed evidence |
 | Correction acceptance and publication | #412 merged/published; owner acceptance recorded 2026-09-06 |
 | Gate D exit vocabulary | `ADVANCE_TO_GATE_E / NARROW / REJECT` |
-| Gate D review recommendation | `ADVANCE_TO_GATE_E`; final exit pending |
+| Gate D review recommendation | `ADVANCE_TO_GATE_E`; exit recorded as `ADVANCE_TO_GATE_E` |
 | #410 maintenance | Scheduled Export Airtable success confirmed, run 34005145312 |
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |

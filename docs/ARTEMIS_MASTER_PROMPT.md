@@ -1,5 +1,7 @@
 # ARTEMIS — МАСТЕР-ПРОМПТ v6.8
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 Статус: canonical operational governance for AI agents and assistants.
 Дата: 2026-09-05.
 
@@ -114,13 +116,13 @@ Current operational truth:
 6. Preserve PR `#395` as the calendar-based Temporal Map loop over the frozen four-Presence Romagna scaffold.
 7. Preserve the first published #395 manual-feedback result as **`ITERATE`**, not as final user-value validation.
 8. Preserve PR `#396` as the published bounded correction: full-width bottom timeline; two-handle `Range`; chosen build origin + one current-time cursor `Scrub`; popup-first selection; optional right drawer; no single-click camera jump; double-click focus.
-9. Gate D remains **OPEN / IN PROGRESS** under #355. Implementation success and public R&D access do not by themselves close the gate.
+9. Gate D is **COMPLETED / ADVANCE_TO_GATE_E** under #355. Implementation success and public R&D access do not by themselves close the gate.
 10. The fresh user check of the published #396 interface recorded **`ITERATE`**: preserve the interaction and treat remaining visual issues as non-priority.
 11. Preserve PR #400 as the reviewed major-life package, PR #401 as M2, PR #403 as M3 and PR #405 as the M4 `ADOPT` record that opened no successor.
 12. Record honestly that the owner then instructed M5 without an intervening repository decision record; do not retrofit one.
 13. Preserve PR #406 as the bounded 11-Presence, six-period, 1452–1519 runtime proof.
 14. Preserve the direct M5 result as exactly `ITERATE`: whole-life scale continues, while relational legibility and six interface-composition findings require bounded correction.
-15. #409/#411/#412 are completed scope/implementation/publication evidence. Owner acceptance on 2026-09-06 closes M5 UX correction with `PROCEED_TO_GATE_D_REVIEW`. Follow the decision-only closeout/review record; Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`, final exit pending. M4 `ADOPT` is not a Gate D exit. No new implementation without a concrete material gap.
+15. #409/#411/#412 are completed scope/implementation/publication evidence. Owner acceptance on 2026-09-06 closes M5 UX correction with `PROCEED_TO_GATE_D_REVIEW`. Follow the explicit Gate D exit record and prepare one bounded Gate E evidence protocol; Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`, exit recorded as `ADVANCE_TO_GATE_E`. M4 `ADOPT` is not a Gate D exit. No new implementation without a concrete material gap.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 
