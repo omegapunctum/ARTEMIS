@@ -333,13 +333,20 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.3 currently opens only Gate D")
-    if gate["status"] not in {"in_progress", "blocked"}:
-        raise ProjectStateError("Gate D must be in_progress or blocked")
+        raise ProjectStateError("project_state v1.4 records the latest Gate D decision")
+    if gate["status"] not in {"in_progress", "blocked", "completed"}:
+        raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
         raise ProjectStateError("Gate D decision set drift")
-    if "decision" in gate:
-        raise ProjectStateError("Gate D exit remains pending; checkpoint acceptance is not a gate decision")
+    if gate["status"] == "completed":
+        if gate.get("decision") != "ADVANCE_TO_GATE_E" or not gate.get("evidence_ref"):
+            raise ProjectStateError("completed Gate D requires explicit advancement decision and evidence")
+        if gate["evidence_ref"] != payload["gate_review"]["exit_record_ref"] or gate["evidence_ref"] not in payload["canonical_refs"]:
+            raise ProjectStateError("Gate D exit evidence must match the review and canonical registry")
+        if payload["blockers"]:
+            raise ProjectStateError("completed Gate D cannot retain blockers")
+    elif "decision" in gate:
+        raise ProjectStateError("an unfinished Gate D cannot record an exit decision")
     if payload["gate_review"]["material_implementation_gaps"]:
         raise ProjectStateError("ADVANCE_TO_GATE_E recommendation cannot ignore material implementation gaps")
     checkpoint = payload["current_checkpoint"]
@@ -351,8 +358,9 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed M5 must record exactly one product decision")
     if checkpoint["pre_start_decision_record"] is not False:
         raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
-    if payload["next_transition"]["gate"] != "D":
-        raise ProjectStateError("Gate E cannot open before a completed Gate D decision")
+    expected_next_gate = "E" if gate["status"] == "completed" else "D"
+    if payload["next_transition"]["gate"] != expected_next_gate:
+        raise ProjectStateError("Gate E cannot open before a completed Gate D decision; completed advancement must point to E")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
         raise ProjectStateError("Gate D must begin from the frozen non-public Gate C World Slice")
     if 333 not in superseded or 334 not in deferred:

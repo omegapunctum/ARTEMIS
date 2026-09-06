@@ -1,5 +1,7 @@
 # M5 UX closeout and bounded Gate D review
 
+Later decision: this review was accepted in merged PR #413. Its recommendation is finalized by [the explicit Gate D exit](2026-09-06_GATE_D_EXIT_DECISION_v1.md). Exit-pending wording below records the review-stage state, not current execution.
+
 ## Decision
 
 - Date recorded: 2026-09-06.

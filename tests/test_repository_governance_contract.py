@@ -41,7 +41,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: `Gate D closeout/review`" in priorities
+    assert "Active cycle: `Gate E evidence preparation`" in priorities
     assert "Active primary issue: GitHub issue `#355`" in priorities
     assert "Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte" in priorities
     assert "#330 / PR #337 — uncertainty semantics" in priorities
@@ -51,7 +51,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     assert "NARROW" in priorities
     assert "STOP/RETHINK" in priorities
 
-    assert "Current phase: **5.1 — Gate D closeout/review" in phases
+    assert "Current phase: **5.1 — Gate E evidence preparation" in phases
     assert "Active issue: **#355**" in phases
     assert "No historical artifact is deleted or reinterpreted by Core Reset" in phases
     assert "#392 does not block the read-only MVP critical path" in phases
@@ -63,7 +63,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     assert "issue #355 remains the active product-facing MVP contour" in truth
     assert "#344 / PR #351 semantic parity is merged executable evidence" in truth
     assert "Gate C is completed/FREEZE" in truth
-    assert "Gate D is separately open/in progress under #355" in truth
+    assert "Gate D is completed with ADVANCE_TO_GATE_E under #355" in truth
     assert "without runtime/storage capability change" in truth
     assert "ARTEMIS Core Check" in truth
 
@@ -71,7 +71,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     assert "#344 / PR #351 semantic parity as a green renderer foundation" in master_prompt
     assert "Issue #331 is `DEFERRED`" in master_prompt
     assert "superseded #323–#325 path and PR #314 remain closed" in master_prompt
-    assert "Gate D remains **OPEN / IN PROGRESS** under #355" in master_prompt
+    assert "Gate D is **COMPLETED / ADVANCE_TO_GATE_E** under #355" in master_prompt
     assert "root Core landing" in master_prompt
     assert "`/atlas/` compatibility-only" in master_prompt
     assert "Implementation success and public R&D access do not by themselves close the gate" in master_prompt

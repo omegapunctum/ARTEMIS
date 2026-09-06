@@ -738,7 +738,7 @@ def test_rejects_duplicate_json_keys(tmp_path: Path) -> None:
 def test_foundation_candidate_does_not_change_product_gate_state() -> None:
     state = json.loads((ROOT / "docs" / "project_state.json").read_text(encoding="utf-8"))
     assert state["gate"]["id"] == "D"
-    assert state["gate"]["status"] == "in_progress"
+    assert state["gate"]["status"] == "completed"
     assert set(state["gate"]["allowed_decisions"]) == {"ADVANCE_TO_GATE_E", "NARROW", "REJECT"}
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert state["github"]["active_issues"] == [355]

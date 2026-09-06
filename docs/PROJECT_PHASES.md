@@ -1,13 +1,15 @@
 # ARTEMIS — PROJECT PHASES v7.9
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-09-06.
-- Current phase: **5.1 — Gate D closeout/review; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
+- Current phase: **5.1 — Gate E evidence preparation; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
-- Gate D: **OPEN / IN PROGRESS**.
+- Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
 - Public surfaces: Core landing at `/`, Leonardo Globe at `/globe/`, frozen Architecture Atlas compatibility surface at `/atlas/`.
 
 ## Phase 0 — Preserved history
@@ -155,4 +157,4 @@ It cannot draw unknown routes, add historical content, change Range/Scrub semant
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The active work is decision-only Gate D closeout/review. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The active work is decision-only Gate E evidence preparation. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.

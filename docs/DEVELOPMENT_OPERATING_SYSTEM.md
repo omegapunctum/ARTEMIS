@@ -1,5 +1,7 @@
 # ARTEMIS — Development Operating System v1.6
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Status
 
 - Type: canonical operational governance.
@@ -156,7 +158,7 @@ Baseline failures must be named and reproducible; they cannot be used to hide a 
 
 The active product vertical is `Life in Context / Leonardo Temporal Map` under issue `#355`.
 
-Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the non-public Leonardo-in-Romagna source/semantic boundary. `docs/project_state.json` preserves that exact completed-gate evidence and records Gate D as **in progress** under #355.
+Gate C (`#332` / `#360`) is **completed/FREEZE** in PR `#362`; it produced the non-public Leonardo-in-Romagna source/semantic boundary. `docs/project_state.json` preserves that exact completed-gate evidence and records Gate D as **completed / ADVANCE_TO_GATE_E** under #355.
 
 Foundation v3.1 Attractor refinement (`#363` / PR `#364`) is **completed**. Its accepted rules belong to the canonical owners and executable guards.
 
@@ -179,7 +181,7 @@ Current product implementation sequence:
 13. The direct owner check recorded exactly `ITERATE`: preserve whole-life scope, address relational legibility without inventing routes, and scope the six remaining interface-composition findings.
 14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition. PR #409 merged it; #411/#412 completed and published it; owner acceptance on 2026-09-06 records `PROCEED_TO_GATE_D_REVIEW`.
 15. #412 added explicitly labelled renderer-only chronology links and compacted the dock; historical routes remain unknown/null. The correction is completed evidence.
-16. Current execution is one decision-only Gate D closeout/review. Gate D uses `ADVANCE_TO_GATE_E / NARROW / REJECT`; M4 `ADOPT` stays separate. The bounded review recommends advancement, with final exit pending and no new implementation authorized.
+16. Current execution is one decision-only Gate E evidence preparation. Gate D uses `ADVANCE_TO_GATE_E / NARROW / REJECT`; M4 `ADOPT` stays separate. The bounded review is accepted, with exit recorded as `ADVANCE_TO_GATE_E` and no new implementation authorized.
 
 Current Temporal Map semantic/UI boundary:
 

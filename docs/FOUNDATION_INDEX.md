@@ -1,5 +1,7 @@
 # ARTEMIS — FOUNDATION INDEX
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Статус
 
 - Тип: canonical foundation index.
@@ -253,9 +255,9 @@ Completed product/foundation prerequisites:
 
 Active product gate:
 
-7. The fresh user check of the published #396 interaction recorded `ITERATE`: preserve the loop and treat remaining visual issues as non-priority. Gate D remains `OPEN / IN PROGRESS`.
+7. The fresh user check of the published #396 interaction recorded `ITERATE`: preserve the loop and treat remaining visual issues as non-priority. Gate D was open at that historical checkpoint; its later explicit exit is `ADVANCE_TO_GATE_E`.
 8. M2, M3 and M4 are completed; M4 remains `ADOPT` and did not open a successor.
-9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; the direct owner check recorded `ITERATE`. The #409/#411/#412 correction is completed and owner-accepted with `PROCEED_TO_GATE_D_REVIEW` on 2026-09-06. Active work is decision-only Gate D review under `work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md`; final Gate D exit is pending.
+9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; the direct owner check recorded `ITERATE`. The #409/#411/#412 correction is completed and owner-accepted with `PROCEED_TO_GATE_D_REVIEW` on 2026-09-06. The bounded review in merged #413 is completed evidence; active work is Gate E evidence preparation; Gate D exit is recorded as `ADVANCE_TO_GATE_E`.
 
 Foundation status:
 

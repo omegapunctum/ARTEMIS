@@ -35,12 +35,12 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Gate D closeout/review`" in scope
+    assert "Current increment: `Gate E evidence preparation`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
-    assert state["gate"]["status"] == "in_progress"
-    assert "decision" not in state["gate"]
+    assert state["gate"]["status"] == "completed"
+    assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert state["current_checkpoint"]["id"] == "M5"
     assert state["current_checkpoint"]["status"] == "completed"
@@ -133,7 +133,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
 
     assert "No implementation branch is currently opened" in priorities
     assert "M5 bounded UX correction completed" in state["next_transition"]["condition"]
-    assert "decision" not in state["gate"]
+    assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
     assert "Decision: `PROCEED_TO_M3`" in m2_decision

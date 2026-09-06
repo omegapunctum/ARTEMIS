@@ -1,8 +1,10 @@
 # ARTEMIS — PROJECT TRUTH
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 ## Статус
 
-Latest operational update: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, not a final gate exit or formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
+Latest operational update: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
 - Дата фиксации: 2026-09-06.
@@ -46,7 +48,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Issue #344 / PR #351 semantic parity is merged executable evidence; issue #355 remains the active product-facing MVP contour.
 - Gate C is completed/FREEZE in #332/#360 / PR #362 for the non-public Leonardo-in-Romagna boundary, 8 August–31 December 1502.
 - The Gate C package has two independent READY reviews and measured curation/review cost, but `historical_objects_ready=false`, `promotion_allowed=false`, Claims remain draft and unsupported route/Region geometry remains withheld.
-- Foundation v3.1 / #363 / PR #364 is completed. Gate D is separately open/in progress under #355; current implementation and public R&D access do not themselves complete it or prove user value.
+- Foundation v3.1 / #363 / PR #364 is completed. Gate D is completed with ADVANCE_TO_GATE_E under #355; current implementation and public R&D access do not themselves complete it or prove user value.
 - #368 established the original six-table empty/non-authoritative Airtable World Model shadow schema. Merged PR #372 extends that preflight surface with three additional empty shadow-only tables plus parity fields, but **no Gate C historical row has been written**. Issues #371/#373 are deferred outside the Gate D critical path.
 
 ## 2. Что доступно публично
@@ -208,7 +210,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; bounded Gate D review complete, exit decision pending / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E evidence preparation next / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
@@ -245,7 +247,7 @@ Completed/deferred Airtable data-governance evidence now includes:
 - #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
 - #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
-Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D remains explicitly open under #355 as the sole active product gate. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
+Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D is completed with ADVANCE_TO_GATE_E; #355 remains the active product umbrella for Gate E preparation. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
@@ -253,7 +255,7 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESS
 
 1. preserve M4 `ADOPT`, the honest M4 → M5 deviation record and PR #406 as the bounded 11-Presence proof;
 2. preserve the direct M5 result as exactly `ITERATE`;
-3. preserve #409/#411/#412 as completed scope/implementation/publication/owner-acceptance evidence; accept the decision-only closeout and then record a Gate D exit using `ADVANCE_TO_GATE_E / NARROW / REJECT`;
+3. preserve #409/#411/#412 as completed scope/implementation/publication/owner-acceptance evidence; preserve accepted closeout #413 and the explicit Gate D exit `ADVANCE_TO_GATE_E`; prepare one bounded Gate E evidence protocol;
 4. keep unknown routes geometry-free and distinguish chronology from historical travel;
 5. preserve #410 as scheduled-CI-confirmed maintenance evidence; do not reopen that repair.
 

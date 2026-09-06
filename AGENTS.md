@@ -1,5 +1,7 @@
 # ARTEMIS repository instructions
 
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+
 This file is the single entrypoint for agents working in ARTEMIS. It routes to project-owned contracts and does not replace them.
 
 ## Required orientation
@@ -52,11 +54,11 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 ## Current execution boundary
 
-Latest owner-directed update: #412 merged/published and owner-accepted 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`. Follow `docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md`. Active work is decision-only Gate D review; vocabulary `ADVANCE_TO_GATE_E / NARROW / REJECT`, final exit pending. M4 `ADOPT` is separate completed evidence. No new implementation without a concrete material gap.
+Latest owner-directed update: #412 merged/published and owner-accepted 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`. Follow `docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md`. Active work is Gate E evidence preparation; vocabulary `ADVANCE_TO_GATE_E / NARROW / REJECT`, exit recorded as `ADVANCE_TO_GATE_E`. M4 `ADOPT` is separate completed evidence. No new implementation without a concrete material gap.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
-Active work is issue `#355`. Gate C delivery `#332` / `#360` is completed/FREEZE. Gate D remains OPEN / IN PROGRESS, but its current product step is **after** Core Reset and the first Temporal Map iteration:
+Active work is issue `#355`. Gate C delivery `#332` / `#360` is completed/FREEZE. Gate D is completed / ADVANCE_TO_GATE_E, following the completed Core Reset and Temporal Map milestones:
 
 - PR `#393` completed Core Reset: root Core landing, `/globe/` primary research surface, `/atlas/` compatibility-only and `ARTEMIS Core Check` isolated as the required product signal;
 - PR `#395` established the calendar-based Leonardo Temporal Map life-path loop;
