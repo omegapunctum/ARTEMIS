@@ -93,6 +93,29 @@ def test_gate_e_cannot_open_before_gate_d_decision() -> None:
         validate_project_state(state)
 
 
+def test_m4_adopt_cannot_leak_into_gate_d() -> None:
+    state = _state()
+    assert state["architecture_checkpoint"]["decision"] == "ADOPT"
+    state["gate"]["decision"] = "ADOPT"
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
+        validate_project_state(state)
+
+
+def test_review_recommendation_is_not_a_gate_d_exit() -> None:
+    state = _state()
+    assert state["ux_correction_checkpoint"]["decision"] == "PROCEED_TO_GATE_D_REVIEW"
+    state["gate"]["decision"] = state["gate_review"]["recommendation"]
+    with pytest.raises(ProjectStateError, match="Gate D exit remains pending"):
+        validate_project_state(state)
+
+
+def test_advancement_recommendation_cannot_hide_material_gap() -> None:
+    state = _state()
+    state["gate_review"]["material_implementation_gaps"].append("canonical selection lost")
+    with pytest.raises(ProjectStateError, match="cannot ignore material"):
+        validate_project_state(state)
+
+
 def test_blocked_gate_d_requires_named_blocker() -> None:
     state = _state()
     state["gate"]["status"] = "blocked"

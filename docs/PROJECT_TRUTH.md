@@ -2,10 +2,10 @@
 
 ## Статус
 
-Latest operational update: #411 is merged/published. The owner's public screenshot/check recorded a fresh `ITERATE`: missing visible connections and excessive timeline height. The bounded [post-#411 amendment](work/2026-09-05_M5_POST_411_CORRECTION_v1.md) authorizes dashed chronological links (not historical routes) and a compact dock. It supersedes pre-publication #411 and no-connector wording below; the correction's merge/deployment is tracked in its PR, not presumed here.
+Latest operational update: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, not a final gate exit or formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-09-05.
+- Дата фиксации: 2026-09-06.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -37,7 +37,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - The fresh user check of the published #396 interface recorded `ITERATE`: the interaction is now good enough to continue, while remaining visual problems are explicitly non-priority.
 - M1 — UX checkpoint is complete with `ITERATE`. PR #400 completed independent review of the major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`. PR #403 completed M3 with `PROCEED_TO_M4`. M4 is complete with `ADOPT` for the source-federated semantic direction.
 - After PR #405 explicitly closed M4 without opening a successor, the owner directly instructed M5. No intervening repository decision record exists. PR #406 then merged and published the bounded M5 Whole-Life Runtime Proof. This is recorded as a governance deviation, not retroactive M4 authorization.
-- The direct owner review of published M5 recorded exactly `ITERATE`. The whole-life scope remains viable, while relational legibility, popup/drawer state, visual density, timeline height, map-control collisions, current-M5 localization and attribution placement require bounded correction. PR #409 merged the 2026-09-05 scope decision. Its one authorized implementation is in progress in PR #411; full acceptance checks, merge and publication remain pending. PR #410 separately merged the Export Airtable CI repair.
+- The direct owner review of published M5 recorded exactly `ITERATE`. The whole-life scope remains viable, while relational legibility, popup/drawer state, visual density, timeline height, map-control collisions, current-M5 localization and attribution placement required bounded correction. PR #409 merged the 2026-09-05 scope decision. PRs #411/#412 implemented and published the correction, now owner-accepted with `PROCEED_TO_GATE_D_REVIEW`. PR #410 separately repaired Export Airtable CI, confirmed by successful scheduled runs.
 - PR `#382` adds pinned Natural Earth 1:110m Land as real `present_day_context` with explicit provenance, licensing, attribution, cache, secret and temporal-role policy. Historical geometry remains withheld and terrain remains synthetic/non-live.
 - PR `#383` adds deterministic desktop/tablet/hosted-mobile Chromium evidence, accessible-name/target-size/overflow/overlay checks and responsive overlay fixes. Hosted evidence is not a complete WCAG audit, real-device result or production performance SLO.
 - PR `#385` makes that hosted visual evidence fail closed on non-zero loaded/rendered Natural Earth features and captures DOM plus PNG from the same wall-clock CDP page. Reviewed screenshots now show legible present-day land/coastlines, but hosted 500 px Chrome still does not prove a real 390 CSS px mobile pass.
@@ -208,7 +208,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / one bounded UX correction in progress in PR #411, acceptance and publication pending / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; bounded Gate D review complete, exit decision pending / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
@@ -253,11 +253,11 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESS
 
 1. preserve M4 `ADOPT`, the honest M4 → M5 deviation record and PR #406 as the bounded 11-Presence proof;
 2. preserve the direct M5 result as exactly `ITERATE`;
-3. finish exactly the seven bounded UX corrections authorized by merged PR #409 in PR #411; complete its acceptance checks before merge and publication, then obtain a fresh manual product result;
+3. preserve #409/#411/#412 as completed scope/implementation/publication/owner-acceptance evidence; accept the decision-only closeout and then record a Gate D exit using `ADVANCE_TO_GATE_E / NARROW / REJECT`;
 4. keep unknown routes geometry-free and distinguish chronology from historical travel;
-5. preserve the separately merged Export Airtable CI repair in PR #410 without adding maintenance scope to PR #411.
+5. preserve #410 as scheduled-CI-confirmed maintenance evidence; do not reopen that repair.
 
-Formal D1/M1/A1/P1 closeout and the old Gate E sequencing are not current roadmap drivers. Basic keyboard, responsive and accessible behavior remains part of the product increment, but visual polish and additional evidence machinery do not displace the active bounded source package.
+The work registry already paused the old D1/M1/A1/P1 matrix during later narrowing; its unperformed physical/AT/performance runs remain limitations, not passes. Basic keyboard, responsive and accessible behavior remains required. Gate D retains its original exit vocabulary and meaning; only an explicit `ADVANCE_TO_GATE_E` opens the next task-based evidence step.
 
 Issue #331 is deferred outside this critical path. Until it is explicitly reopened and accepted, the real slice/runtime may expose only derived proximity/co-presence and must not publish documented encounter, interaction, influence or causal predicates.
 

@@ -3,19 +3,19 @@
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D / M5 ITERATE / BOUNDED UX CORRECTION AUTHORIZED / FORMAL USER VALUE PENDING`.
-- Дата последнего обновления: 2026-09-05.
+- Статус решения: `GATE D REVIEW / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE PENDING`.
+- Дата последнего обновления: 2026-09-06.
 - Active product issue: GitHub issue `#355`.
-- Current public proof: M5 content from PR `#406`, UX from merged/published PR `#411` / 11 Presence anchors across 1452–1519.
-- Recorded product result: `ITERATE`.
-- Opened next branch: `Temporal Map M5 bounded UX correction v1`; fresh post-#411 `ITERATE` requires visible chronological links and a shorter timeline under [the owner's amendment](work/2026-09-05_M5_POST_411_CORRECTION_v1.md).
+- Current public proof: M5 content from PR `#406`, UX from merged/published and owner-accepted PR `#412` / 11 Presence anchors across 1452–1519.
+- Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
+- Active work: `Gate D closeout/review`; no runtime implementation branch open.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.
 
 ## 1. Текущее решение
 
-`ITERATE — ONE BOUNDED UX CORRECTION AUTHORIZED`
+`PROCEED_TO_GATE_D_REVIEW — M5 BOUNDED UX CORRECTION COMPLETED`
 
 Зафиксировано:
 
@@ -31,10 +31,12 @@
 - the owner then directly instructed M5 without an intervening repository decision record;
 - PR #406 published the bounded 11-Presence whole-life proof;
 - PRs #407–#408 aligned governance and recorded the direct M5 result as exactly `ITERATE`;
-- the whole-life scale remains viable, while relational legibility and six interface-composition findings require one bounded correction;
+- #409 scoped the bounded correction; #411 and #412 implemented and published it;
+- the owner accepted published #412 in the 2026-09-06 closeout instruction; acceptance is an owner report, not an assistant-performed manual run;
+- the correction is completed; the bounded Gate D review recommends `ADVANCE_TO_GATE_E`, but the final gate exit is not recorded yet;
 - formal user value remains unvalidated.
 
-## 2. Evidence and decision
+## 2. Historical evidence and decision
 
 The owner manually reviewed the published M5 and observed:
 
@@ -46,9 +48,9 @@ The owner manually reviewed the published M5 and observed:
 6. the current M5 interface lacked an `EN / RU` switch;
 7. the drawer overlapped attribution/status text.
 
-The selected result is `ITERATE`. `NARROW` was not selected because the 1452–1519 whole-life scope remained understandable enough to continue. `STOP` was not selected because the Temporal Map direction remained viable.
+The historical #408 result was `ITERATE`. `NARROW` was not selected because the 1452–1519 whole-life scope remained understandable enough to continue. `STOP` was not selected because the Temporal Map direction remained viable.
 
-The result authorizes one decision-bounded UX correction described by `docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md`. It does not authorize another content, source, context, storage, backend, renderer or infrastructure branch.
+That historical result authorized the now-completed decision-bounded UX correction described by `docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md`. It does not authorize another content, source, context, storage, backend, renderer or infrastructure branch.
 
 ## 3. Semantic and product boundary
 
@@ -61,18 +63,13 @@ The correction must improve chronological/relational legibility without turning 
 - the current 11 Presence anchors and six coarse periods remain the complete content boundary;
 - present-day settlement coordinates remain qualified reference anchors.
 
-## 4. Required evidence for the correction
+## 4. Completed correction evidence and limits
 
-The implementation PR must provide:
+The [2026-09-06 closeout and bounded review](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records exact PR, Pages and CI identities. #412 is merged + published + manually accepted by the owner. Four exact-head gates passed, including hosted composition and executable interaction checks. The correction result is `PROCEED_TO_GATE_D_REVIEW`.
 
-- green Core, Globe Repository Boundary and Geospatial Assets checks on the exact head;
-- automated behavior evidence for chronology cues, Range/Scrub, selection, popup/drawer, localization and URL restoration;
-- fail-closed no-route-geometry/no-spatial-connector evidence;
-- deterministic desktop, tablet and hosted-mobile composition evidence;
-- English and Russian parity for one shared semantic state;
-- a fresh manual product check after publication.
+No new assistant manual test, physical-device matrix, real AT/performance pass or paired EN/RU screenshot evidence is invented. Earlier negative findings remain historical evidence. Acceptance closes this bounded correction; formal user value remains unvalidated.
 
-That check records exactly one result: `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP`.
+Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Gate D remains open with no final decision; the completed bounded evidence review recommends `ADVANCE_TO_GATE_E` after closeout acceptance. A formal exit synchronized with #355 remains necessary before Gate E can open.
 
 ## 5. Current record
 
@@ -97,9 +94,12 @@ That check records exactly one result: `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `N
 | M5 direct product decision | `ITERATE / PR #408` |
 | Current corpus | 11 coarse Presence anchors / six periods / 1452–1519 |
 | Public research surface | `/globe/` R&D research prototype |
-| Opened next branch | `Temporal Map M5 bounded UX correction v1` |
-| Runtime implementation | `IN PROGRESS / PR #411`; scope authorized by merged PR #409 |
-| Correction acceptance and publication | `PENDING`; no fresh manual product result recorded |
+| Completed correction | `Temporal Map M5 bounded UX correction v1` / `PROCEED_TO_GATE_D_REVIEW` |
+| Runtime implementation | `COMPLETED / PRs #411–#412`; scope #409 is completed evidence |
+| Correction acceptance and publication | #412 merged/published; owner acceptance recorded 2026-09-06 |
+| Gate D exit vocabulary | `ADVANCE_TO_GATE_E / NARROW / REJECT` |
+| Gate D review recommendation | `ADVANCE_TO_GATE_E`; final exit pending |
+| #410 maintenance | Scheduled Export Airtable success confirmed, run 34005145312 |
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
 

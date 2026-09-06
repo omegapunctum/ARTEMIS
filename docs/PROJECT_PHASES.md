@@ -3,8 +3,8 @@
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-05.
-- Current phase: **5.1 — M5 bounded UX correction: #411 merged/published; owner recorded ITERATE; visible chronology and compact-dock follow-up in progress**.
+- Date: 2026-09-06.
+- Current phase: **5.1 — Gate D closeout/review; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **OPEN / IN PROGRESS**.
@@ -70,7 +70,7 @@ PR `#396` completed the bounded correction:
 - first click opens a compact popup without moving the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus/zoom the selected place;
-- earlier dashed connectors were chronology-only presentation and never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
+- dashed connectors in #412 express chronology only and never historical route geometry; unknown routes remain null;
 - no new Leonardo data, route geometry, historical coordinates or promoted Claims were introduced.
 
 The current bounded corpus remains the four source-bound 1502 Romagna Presences. It is an interaction scaffold, not Leonardo's complete biography.
@@ -147,12 +147,12 @@ PR #406 merged and published the reviewed PR #400 major-life package in the exis
 
 The direct owner check recorded exactly `ITERATE`. The whole-life scale remains viable, while seven product findings require a separately scoped UX correction. The result does not open that implementation branch automatically.
 
-## Phase 5F — M5 Bounded UX Correction v1 [in progress / PR #411]
+## Phase 5F — M5 Bounded UX Correction v1 [completed]
 
-The 2026-09-05 scope decision merged in PR #409 and opened one implementation branch, PR #411, for the seven observed M5 findings. The correction must make chronological order legible through non-route sequence/period/timeline semantics, clean popup/drawer state, reduce visual density and timeline height, remove responsive collisions, add current-M5 `EN / RU`, and preserve attribution visibility. Full acceptance checks, merge and publication remain pending.
+PR #409 scoped seven findings; #411 implemented the package and #412 completed visible chronological links and compact timeline after further owner feedback. Both implementations are merged/published. The 2026-09-06 owner acceptance records `PROCEED_TO_GATE_D_REVIEW`; all three PRs are completed evidence. See [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) for provenance and automated checks.
 
 It cannot draw unknown routes, add historical content, change Range/Scrub semantics, introduce a second state model or mix Export Airtable maintenance into the product diff. Publication requires automated Core/semantic checks and deterministic responsive evidence; a fresh manual product result follows publication.
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 remains complete with `ITERATE`. The merged bounded UX decision opened exactly one correction branch, PR #411, and no other product branch.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The active work is decision-only Gate D closeout/review. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.
