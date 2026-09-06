@@ -3,7 +3,7 @@
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-05.
+- Updated: 2026-09-06.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -13,17 +13,7 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` | #355 decision-bounded correction of the seven recorded M5 UX findings | one implementation PR, publication and exactly one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result |
-| `2026-09-05_M5_POST_411_CORRECTION_v1.md` | Fresh published #411 ITERATE; owner-authorized visible chronology and compact timeline | merge/publish after automated gates; fresh manual check after publication |
-| `2026-09-05_TEMPORAL_MAP_M5_UX_IMPLEMENTATION_CHECKPOINT_v1.md` | #411 implementation and verification checkpoint | responsive browser evidence, exact-head gates, publication and fresh product check remain pending |
-| `2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md` | #355 current direct product-check decision | `ITERATE`; no implementation branch opened |
-| `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | #355 completed housekeeping record; preserves the owner-directed M4 → M5 deviation without invented authorization | completed by the direct M5 exit decision |
-| `2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md` | #355 completed bounded 11-Presence whole-life runtime proof implemented by PR #406 | direct product result `ITERATE`; no automatic successor branch |
-| `2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md` | #355 completed M4 architecture decision | `ADOPT`; no implementation branch opened |
-| `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md` | #355 recorded M3 exit decision and bounded M4 opening | completed by M4 `ADOPT` decision |
-| `2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md` | #355 completed two-provider/one-Presence M3 evidence | completed with `PROCEED_TO_M4` through separate decision record |
-| `2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md` | #355 recorded M2 exit decision and bounded M3 opening | completed by M3 proof and decision |
-| `2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md` | #355 completed milestone lifecycle and Wikidata M2 evidence | completed with `PROCEED_TO_M3` through separate decision record |
+| `2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md` | Decision-only closeout and one bounded Gate D evidence review | M5 correction `PROCEED_TO_GATE_D_REVIEW`; Gate D recommendation `ADVANCE_TO_GATE_E`, final exit pending |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D promotion/stop outcome; the bounded post-#396 `ITERATE` does not close it |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
@@ -34,6 +24,22 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 | `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | completed source/review branch through PR #400; that record did not authorize runtime use | preserved historical evidence; later owner-directed runtime use is bounded by M5/PR #406 |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
 | `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
+
+## Completed M2–M5 and correction evidence
+
+| Document | Lifecycle | Current disposition |
+|---|---|---|
+| `2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-05_M5_POST_411_CORRECTION_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-05_TEMPORAL_MAP_M5_UX_IMPLEMENTATION_CHECKPOINT_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-04_TEMPORAL_MAP_M5_EXIT_DECISION_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-01_TEMPORAL_MAP_M5_WHOLE_LIFE_RUNTIME_PROOF_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-01_TEMPORAL_MAP_M3_EXIT_DECISION_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-01_TEMPORAL_MAP_M3_TWO_SOURCE_PROOF_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-01_TEMPORAL_MAP_M2_EXIT_DECISION_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
+| `2026-09-01_TEMPORAL_MAP_MILESTONES_AND_M2_PROOF_v1.md` | Completed evidence | Historical result retained; current closeout is 2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md |
 
 ## Current #355 execution truth
 
@@ -60,10 +66,10 @@ Current interaction semantics:
 - first click opens a compact popup and does not move the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus the selected place;
-- earlier dashed connectors expressed chronology only and were never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
+- earlier dashed connectors expressed chronology only and were never historical route geometry; current #412 uses explicitly labelled renderer-only chronological links; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** The 2026-09-05 decision merged in PR #409 and opened exactly one bounded UX correction, PR #411 (in progress; full acceptance and publication pending); it does not authorize another provider/Presence, local/global layers, backend/storage or federation infrastructure.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; active execution is Gate D decision-only closeout/review. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
 
 ## Foundation lifecycle records
 

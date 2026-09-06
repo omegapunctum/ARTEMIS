@@ -333,13 +333,15 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.2 currently opens only Gate D")
+        raise ProjectStateError("project_state v1.3 currently opens only Gate D")
     if gate["status"] not in {"in_progress", "blocked"}:
         raise ProjectStateError("Gate D must be in_progress or blocked")
-    if gate["allowed_decisions"] != ["ADOPT", "NARROW", "REJECT"]:
+    if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
         raise ProjectStateError("Gate D decision set drift")
-    if gate.get("decision") != "ADOPT":
-        raise ProjectStateError("the completed M4 architecture decision must remain ADOPT")
+    if "decision" in gate:
+        raise ProjectStateError("Gate D exit remains pending; checkpoint acceptance is not a gate decision")
+    if payload["gate_review"]["material_implementation_gaps"]:
+        raise ProjectStateError("ADVANCE_TO_GATE_E recommendation cannot ignore material implementation gaps")
     checkpoint = payload["current_checkpoint"]
     if checkpoint["id"] != "M5":
         raise ProjectStateError("the current product checkpoint must remain M5")

@@ -120,7 +120,7 @@ Current operational truth:
 12. Record honestly that the owner then instructed M5 without an intervening repository decision record; do not retrofit one.
 13. Preserve PR #406 as the bounded 11-Presence, six-period, 1452–1519 runtime proof.
 14. Preserve the direct M5 result as exactly `ITERATE`: whole-life scale continues, while relational legibility and six interface-composition findings require bounded correction.
-15. The 2026-09-05 scope decision merged in PR #409 and authorizes exactly one implementation branch, PR #411 (in progress; full acceptance and publication pending); follow its seven changes, semantic limits, acceptance evidence and stop condition without expansion.
+15. #409/#411/#412 are completed scope/implementation/publication evidence. Owner acceptance on 2026-09-06 closes M5 UX correction with `PROCEED_TO_GATE_D_REVIEW`. Follow the decision-only closeout/review record; Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`, final exit pending. M4 `ADOPT` is not a Gate D exit. No new implementation without a concrete material gap.
 
 Issue #331 is `DEFERRED`. It becomes blocking before documented Relation predicates enter a real corpus/runtime. Until it is explicitly reopened and accepted, only derived proximity/co-presence is allowed.
 

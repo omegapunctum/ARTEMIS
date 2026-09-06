@@ -52,7 +52,7 @@ Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
 
 ## Current execution boundary
 
-Latest owner-directed update: #411 merged and published; its manual check recorded ITERATE (missing visible links, timeline too high). Follow `docs/work/2026-09-05_M5_POST_411_CORRECTION_v1.md`. Dashed renderer-only chronological links are explicitly authorized, superseding the earlier no-connector presentation restriction below. Keep historical routes unknown/null. Merge/publish after automated gates; manual review follows publication, not the reverse.
+Latest owner-directed update: #412 merged/published and owner-accepted 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`. Follow `docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md`. Active work is decision-only Gate D review; vocabulary `ADVANCE_TO_GATE_E / NARROW / REJECT`, final exit pending. M4 `ADOPT` is separate completed evidence. No new implementation without a concrete material gap.
 
 Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
 
@@ -72,9 +72,9 @@ Current Temporal Map behavior:
 - first click opens a compact popup without moving the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus the selected place;
-- earlier dashed connectors were chronology-only presentation, never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates.
+- earlier dashed connectors were chronology-only presentation, never historical route geometry; current #412 uses explicitly labelled renderer-only chronological links; historical routes remain unknown/null.
 
-The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`. PR `#406` later published the owner-directed 11-Presence M5 whole-life proof; the direct product check recorded `ITERATE` in PR `#408`. PR `#409` merged the 2026-09-05 scope decision. Its exactly one bounded UX correction is in progress in PR `#411`; full acceptance and publication remain pending. New sources/data, live federation, generic ingestion/storage infrastructure and any second product branch remain closed.
+The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`. PR `#406` later published the owner-directed 11-Presence M5 whole-life proof; the direct product check recorded `ITERATE` in PR `#408`. PR `#409` merged the 2026-09-05 scope decision. Its bounded UX correction in PRs #411/#412 is completed, published and owner-accepted with `PROCEED_TO_GATE_D_REVIEW`. New sources/data, live federation, generic ingestion/storage infrastructure and any second product branch remain closed.
 
 Preserve these boundaries:
 

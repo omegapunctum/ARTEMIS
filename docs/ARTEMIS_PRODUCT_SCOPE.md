@@ -4,9 +4,9 @@
 
 - Тип: canonical current product scope.
 - Версия: 4.3.
-- Дата: 2026-09-05.
+- Дата: 2026-09-06.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `M5 bounded UX correction v1`; scope PR #409 merged, implementation PR #411 in progress, full acceptance and publication pending.
+- Current increment: `Gate D closeout/review`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -59,7 +59,8 @@ Current authorized work:
 - preserve the M4 `ADOPT` decision as a semantic direction rather than a capability claim;
 - preserve PR #406 as the bounded M5 proof without widening it;
 - preserve the direct M5 product result as exactly `ITERATE`;
-- implement only the seven corrections defined by `work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md`, authorized by merged PR #409, in PR #411.
+- preserve completed #409/#411/#412 evidence and the 2026-09-06 owner acceptance;
+- accept the decision-only closeout and use its bounded Gate D review; no runtime implementation is open.
 
 ## 3. Обязательный current content scope
 
@@ -130,7 +131,7 @@ Current required interface behavior:
 - source/locator/uncertainty under progressive disclosure;
 - URL-restorable state without a backend dependency.
 
-The current correction additionally requires non-route chronological sequence/period cues synchronized between markers and timeline, popup closure when the drawer opens, lower visual density and timeline height, collision-free supported viewports, a current-M5 `EN / RU` presentation layer and visible attribution beside the drawer. These requirements do not authorize a spatial connector between unsupported Presence coordinates.
+The completed correction added non-route chronological sequence/period cues synchronized between markers and timeline, popup closure when the drawer opens, lower visual density and timeline height, collision-free supported viewports, a current-M5 `EN / RU` presentation layer and visible attribution beside the drawer. The owner-directed #412 amendment permits dashed chronological presentation links; historical route geometry remains unknown/null.
 
 Layer combinations, Region alternatives and renderer diagnostics may remain available as underlying evidence/advanced inspection, but they are not default primary controls for the current user check.
 
@@ -246,7 +247,7 @@ The earlier post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. The 2026-09-05 decision merged in PR #409 and opened one bounded UX implementation branch, PR #411; full acceptance and publication remain pending. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. Gate D review recommends `ADVANCE_TO_GATE_E`, but only a separate recorded exit using `ADVANCE_TO_GATE_E / NARROW / REJECT` can open Gate E. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 

@@ -35,12 +35,13 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `M5 bounded UX correction v1`" in scope
+    assert "Current increment: `Gate D closeout/review`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
     assert state["gate"]["status"] == "in_progress"
-    assert state["gate"]["decision"] == "ADOPT"
+    assert "decision" not in state["gate"]
+    assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert state["current_checkpoint"]["id"] == "M5"
     assert state["current_checkpoint"]["status"] == "completed"
     assert state["current_checkpoint"]["allowed_decisions"] == ["ITERATE", "NARROW", "STOP"]
@@ -124,14 +125,16 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     state = _json("docs/project_state.json")
 
     expected = ["ADOPT", "NARROW", "REJECT"]
-    assert state["gate"]["allowed_decisions"] == expected
+    assert state["architecture_checkpoint"]["allowed_decisions"] == expected
+    assert state["gate"]["allowed_decisions"] == ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]
 
     for decision in expected:
         assert decision in decision_record
 
-    assert "opens exactly one UX implementation branch" in priorities
-    assert "PR #411 merged and published" in state["next_transition"]["condition"]
-    assert state["gate"]["decision"] == "ADOPT"
+    assert "No implementation branch is currently opened" in priorities
+    assert "M5 bounded UX correction completed" in state["next_transition"]["condition"]
+    assert "decision" not in state["gate"]
+    assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
     assert "Decision: `PROCEED_TO_M3`" in m2_decision
     assert "Recorded outcome: `PROCEED_TO_M4`" in m3
@@ -141,7 +144,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Source-federated semantic boundary" in architecture
     assert "not authorization for live federation" in architecture
     assert "M5 direct product decision | `ITERATE / PR #408`" in validation
-    assert "Opened next branch | `Temporal Map M5 bounded UX correction v1`" in validation
+    assert "Completed correction | `Temporal Map M5 bounded UX correction v1`" in validation
 
     branch = _text("docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md")
     assert "6–10 major-life Presence anchors" in branch
@@ -150,7 +153,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Stage C — Runtime increment [not authorized]" in branch
 
     active_text = "\n".join((priorities, phases, decision_record, _text("docs/project_state.json")))
-    assert "ADVANCE_TO_GATE_E" not in active_text
+    assert "ADVANCE_TO_GATE_E" in active_text
     assert "EXPAND ONE BRANCH" not in active_text
 
 
@@ -189,7 +192,8 @@ def test_m5_bounded_ux_scope_opens_one_non_route_correction() -> None:
     assert "Export Airtable CI remains a separate technical maintenance PR" in decision
     assert "11 coarse Presence anchors / six periods / 1452–1519" in validation
     assert "Temporal Map M5 bounded UX correction v1" in validation
-    assert "visible renderer-only chronological links" in state["next_transition"]["condition"]
+    assert state["ux_correction_checkpoint"]["decision"] == "PROCEED_TO_GATE_D_REVIEW"
+    assert state["gate_review"]["recommendation"] == "ADVANCE_TO_GATE_E"
     amendment = _text("docs/work/2026-09-05_M5_POST_411_CORRECTION_v1.md")
     assert "ITERATE" in amendment
     assert "route_geometry=null" in amendment

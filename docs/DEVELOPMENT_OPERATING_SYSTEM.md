@@ -177,8 +177,9 @@ Current product implementation sequence:
 11. PR #405 closed M4 without opening a successor. The owner then explicitly instructed M5 without an intervening repository decision record; this is a governance deviation and must not be rewritten as prior authorization.
 12. PR #406 merged and published M5 as a bounded 11-Presence, six-period, 1452–1519 runtime proof.
 13. The direct owner check recorded exactly `ITERATE`: preserve whole-life scope, address relational legibility without inventing routes, and scope the six remaining interface-composition findings.
-14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition. PR #409 merged it; its one implementation PR #411 is in progress, with full acceptance and publication pending.
-15. The correction uses non-route chronology cues and cannot add historical content, spatial connectors for unknown routes or a second product branch.
+14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition. PR #409 merged it; #411/#412 completed and published it; owner acceptance on 2026-09-06 records `PROCEED_TO_GATE_D_REVIEW`.
+15. #412 added explicitly labelled renderer-only chronology links and compacted the dock; historical routes remain unknown/null. The correction is completed evidence.
+16. Current execution is one decision-only Gate D closeout/review. Gate D uses `ADVANCE_TO_GATE_E / NARROW / REJECT`; M4 `ADOPT` stays separate. The bounded review recommends advancement, with final exit pending and no new implementation authorized.
 
 Current Temporal Map semantic/UI boundary:
 
@@ -186,12 +187,12 @@ Current Temporal Map semantic/UI boundary:
 - `Scrub` keeps a chosen build origin plus one current-time cursor and accumulates the path forward;
 - map, timeline, selection and URL operate on shared Explorer State;
 - `Trajectory` remains semantic authority;
-- earlier dashed connectors were chronology-only presentation, never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
+- earlier dashed connectors were chronology-only presentation, never historical route geometry; current #412 uses explicitly labelled renderer-only chronological links; historical routes remain unknown/null;
 - single-click selection does not implicitly change camera state;
 - all current settlement geometries are present-day source-bound reference anchors, not exact historical positions or route evidence.
 
 Issue `#331` is deferred, so documented Relation predicates are prohibited until it is explicitly reopened and accepted. Issues `#371` and `#373` are deferred: the nine Airtable World Model shadow tables remain empty and the merged preflight does not authorize historical writes. Issue `#335` remains gated.
 
-Formal D1/M1/A1/P1 closeout and the old automatic Gate E sequencing are not current roadmap drivers. Basic responsive, keyboard and accessibility behavior still belongs to implementation quality, but additional evidence machinery and visual polish do not displace the active bounded source branch.
+The existing registry disposition pauses the old D1/M1/A1/P1 matrix; it is not a set of passed tests. Basic responsive, keyboard and accessibility behavior remains required. The 2026-09-06 review applies this existing narrowing and restores the original Gate D exit vocabulary; only an explicit `ADVANCE_TO_GATE_E` may open Gate E.
 
 The preserved `CONTROLLED_RELEASE_DECISION.md` describes an older Architecture Atlas/backend compatibility baseline. It does not own current #355 product readiness; use current workflow files and this operating system for the active Core contour.

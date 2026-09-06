@@ -3,20 +3,20 @@
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-05.
-- Active cycle: `M5 bounded UX correction v1`; #411 merged/published, fresh owner ITERATE; finish visible chronology and compact dock per `work/2026-09-05_M5_POST_411_CORRECTION_v1.md`, merge/publish after checks, then obtain manual feedback.
+- Date: 2026-09-06.
+- Active cycle: `Gate D closeout/review`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `OPEN / IN PROGRESS`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Implement one bounded M5 UX correction
+## P0 — Accept M5 closeout and record the Gate D exit
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
 The direct owner check of the published 1452–1519 loop recorded exactly `ITERATE`. It found seven issues: missing relational legibility, stale popup after opening details, oversized elements, excessive timeline height, header/map-control collision, missing current-M5 `EN / RU` switching and drawer/attribution overlap.
 
-`docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md` defines the one permitted correction. Its decision merged in PR #409; implementation PR #411 addresses the seven findings without new historical content, route geometry, context, infrastructure or broad redesign.
+PR #409 scoped the correction; PRs #411 and #412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) closes this execution cycle and records one bounded review. Its recommendation is `ADVANCE_TO_GATE_E`; Gate D itself remains open until an explicit synchronized exit. M4 `ADOPT` is completed architecture evidence, not the Gate D decision.
 
 The load-bearing path remains:
 
@@ -33,7 +33,7 @@ Current required behavior:
 - double-click may focus the selected place;
 - source, locator, uncertainty, coverage and projection-loss details remain available through progressive disclosure;
 - explicit unknown routes and geometry-withheld alternatives remain honest;
-- earlier dashed connectors meant chronology only and never historical route geometry; current M5 uses no spatial connector between unsupported Presence coordinates;
+- dashed connectors express chronology only and never historical route geometry; the published #412 legend preserves that distinction;
 - present-day context remains clearly separated from historical assertions;
 - exploration remains URL-restorable and backend-independent.
 
@@ -74,16 +74,16 @@ This result does not close Gate D, prove formal user value or authorize another 
 
 The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the selected result was `ITERATE`.
 
-## P3 — Keep the opened correction bounded
+## P3 — Keep completed correction evidence closed
 
-The merged decision opens exactly one UX implementation branch, currently PR #411. M5 remains completed with `ITERATE`; the correction has no new product outcome yet.
+The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. No implementation branch is currently opened.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
 - preserve PR #406 without widening its data, interaction or infrastructure scope;
 - do not infer any second successor branch from publication, CI success or the M5 result.
 
-Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another feature branch from the M5 result. Export Airtable CI repair is allowed only as a separate technical maintenance PR.
+Do not open context/layers, curation storage, persistence/sharing, renderer/provider work or another feature branch from the M5 result. Export Airtable CI repair #410 is completed and confirmed by scheduled successes, latest run 34005145312.
 
 ## Preserved foundations
 
@@ -116,10 +116,10 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Complete the exact seven corrections in PR #411 under the scope already merged in PR #409.
-2. Complete exact-head automated and responsive acceptance evidence, merge and publish PR #411, then obtain a fresh manual product check and record one `PROCEED_TO_GATE_D_REVIEW`, `ITERATE`, `NARROW` or `STOP` result.
-3. Preserve the separately merged Export Airtable CI repair in PR #410; it does not expand the UX branch.
-4. Keep all other feature branches closed.
+1. Review/merge the single decision-only M5 closeout and Gate D review PR.
+2. Use its completed evidence matrix; record one Gate D exit: `ADVANCE_TO_GATE_E / NARROW / REJECT`. Recommendation: `ADVANCE_TO_GATE_E`; no concrete material implementation gap identified.
+3. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate.
+4. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified.
 
 ## Completion rule
 
