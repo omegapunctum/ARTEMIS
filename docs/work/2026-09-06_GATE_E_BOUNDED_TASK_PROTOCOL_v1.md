@@ -16,7 +16,7 @@ M4 `ADOPT`, original M5 `ITERATE`, correction `PROCEED_TO_GATE_D_REVIEW` and Gat
 
 Can someone use the current map to reconstruct Leonardo's documented chronology, narrow it in time, inspect its evidence and explain its limits without treating the displayed chronology as a known travelled route?
 
-Use one formative session first, preferably with one consenting person unfamiliar with the implementation. An owner-only session must be labelled as such and cannot demonstrate novice usability. No recruitment or outreach is performed by this PR. This is a task-comprehension probe, not a comparative study, market validation or formal participant wave. The older Foundation v3 plan remains deferred and its `EXPAND ONE BRANCH` requirements are not waived or satisfied here.
+E1 requires one consenting independent novice unfamiliar with the implementation. An owner-only or agent session cannot substitute for E1. No recruitment or outreach is performed by this PR. E1 is a task-comprehension probe; E2 is the conditional formative comparison described below. Neither is market validation or the old formal participant wave. The older Foundation v3 plan remains deferred and its `EXPAND ONE BRANCH` requirements are not waived or satisfied here.
 
 Freeze these prompts and rubric before the session. Use the published [Temporal Map](https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519). Record UTC time, URL/state, displayed language, device/browser and available deployment identity. If exact build identity cannot be verified, say unknown and retain the timestamp; do not mix observations across a changed deployment. Give no interface walkthrough or answer key before unaided attempts. Record assistance explicitly, then allow it to diagnose a failed task. Time is descriptive only; there is no invented speed threshold.
 
@@ -42,12 +42,25 @@ Critical trust error: representing chronology as a documented route, inventing s
 
 This first session produces a formative disposition, not a Gate E exit:
 
-- All five tasks PASS unaided and zero critical trust errors: sufficient for this bounded comprehension probe. Record the result and decide whether one independent replication or a separately scoped comparison would change the next product decision. No automatic feature expansion or user-value claim.
-- Any ASSISTED/FAIL or critical trust error: record the exact task and observation. Identify whether the gap is interaction, comprehension, content/evidence or protocol ambiguity. Propose implementation only if a concrete material defect is demonstrated; general preferences do not reopen M5.
+- All five tasks PASS unaided and zero critical trust errors: E1 passes and opens E2 preparation, not implementation or a user-value claim.
+- Any ASSISTED/FAIL or critical trust error: record the exact task and observation. Identify whether the gap is interaction, comprehension, content/evidence or protocol ambiguity. A demonstrated material failure opens one bounded fix, then a retest of the failed task (and directly affected regression checks), not the whole general UI review. Preserve first-attempt and retest results separately. A previously assisted participant is no longer naive to that task; verify independent unaided completion with a fresh novice where learning could explain the retest pass. General preferences do not reopen M5. E2 waits until every task is passed and no material failure remains.
 - Any NOT_RUN or untraceable observation: evidence incomplete. Complete only the missing observation, without repeating accepted general UI checks.
 - If the prompt itself is ambiguous, record a protocol revision and keep pre/post-revision results separate; never rewrite criteria to turn a failure into success.
 
-Stop after one completed session and a short evidence readout. Do not recruit a larger wave, reread the architecture, add sources/layers, reopen #334 or widen infrastructure by default. A later Gate E exit must name its own evidence and scope; this protocol does not repurpose M4 `ADOPT` or Gate D vocabulary as a new gate outcome.
+Stop E1 analysis after one completed session and a short evidence readout. Follow the owner's E1 → E2 sequence below; do not reread the architecture, add sources/layers, reopen #334 or widen infrastructure by default.
+
+## E2 and Gate E decision — owner-directed sequence
+
+After E1 passes, compare ARTEMIS with a linear baseline using **3–5 formative users**. The baseline must contain the same 11 Presences, six periods, sources/locators and uncertainty/coverage information; it must not be a deliberately weakened summary. Freeze both versions, task prompts, answer rubric and value-signal rule before E2 collection. Use equivalent content-understanding questions in both conditions rather than scoring interface-specific actions such as operating Scrub against a document. Alternate condition order as evenly as possible and record learning/order effects; report a returning E1 participant separately.
+
+Compare correct reconstruction of chronology/time overlap, retrieval of supporting evidence, recognition of uncertainty and critical trust errors. Record assistance and effort/time descriptively; preference alone is not a value signal. Report per-user paired results and absolute counts, including ties and failures. Three to five users provide a formative signal, not statistical generalization. The exact baseline artifact and predeclared decision thresholds are E2 preparation deliverables, not completed by this PR.
+
+The Gate E decision must explicitly classify the observed result as a **value signal** or **no value signal**, with supporting observations and limitations. Missing or inconclusive evidence must be labelled as such rather than forced into either result. This is not M4 `ADOPT` or a reuse of the Gate D exit vocabulary.
+
+- Value signal: next is a bounded universality proof, using a second geometry type — **Roman Empire / temporal Region**. Write its concrete scope and source/uncertainty criteria after the Gate E decision; no Region implementation or data expansion is opened now. One second-geometry proof tests transferability, not universal validity.
+- No value signal: rethink the current product proposition using the observed failure; do not automatically expand to Roman Empire or reopen the entire foundation architecture.
+
+Current authorization is tiny protocol fixes and merge #415, then E1. E2 is conditional on E1; the Region proof is conditional on a positive Gate E value decision. No E1/E2 results are inferred from owner acceptance or CI.
 
 ## Initial evidence ledger
 
@@ -56,6 +69,8 @@ Stop after one completed session and a short evidence readout. Do not recruit a 
 | Earlier #412 publication and owner acceptance, closed by #413 | Completed; see accepted closeout review | Bounded UX correction acceptance |
 | Owner report on 2026-09-06 quoted above | No findings reported; execution details not supplied | Additional owner acceptance only |
 | T1–T5 structured observations | NOT COLLECTED | No task-comprehension conclusion yet |
-| Independent replication / same-content comparison | NOT RUN | No novice/generalized or comparative value claim |
+| E1 independent novice session | NOT RUN | Required before E2; owner acceptance is not a substitute |
+| E2 same-content comparison, 3–5 formative users | NOT RUN / conditional on E1 | No comparative value claim yet |
+| Roman Empire / Region universality proof | NOT OPEN / conditional on positive Gate E value signal | No new geometry implementation authorized now |
 
 References: [Gate D exit](2026-09-06_GATE_D_EXIT_DECISION_v1.md), [accepted bounded review](2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md), [current validation decision](../VALIDATION_DECISION.md).

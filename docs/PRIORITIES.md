@@ -122,9 +122,10 @@ These are technical/product-development foundations, not final user-value eviden
 ## Execution order
 
 1. Preserve merged #413 and the explicit Gate D exit `ADVANCE_TO_GATE_E`.
-2. The bounded task/evidence protocol is prepared. Next obtain one consenting formative T1–T5 session, then record a short evidence readout; no general UI recheck is required. No recruitment is performed by the protocol PR.
-3. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate. Gate E collection and the formal participant wave have not started.
-4. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified.
+2. Merge the tiny protocol fixes in #415, then E1: one independent novice T1–T5 session. Material failure → bounded fix → retest the failed task; all tasks passed → E2.
+3. E2: same-content ARTEMIS versus linear baseline with 3–5 formative users; freeze the baseline, rubric and value-signal rule before collection. Then record the Gate E decision. Positive value signal → scoped universality proof with Roman Empire / temporal Region; no value signal → rethink the current product proposition. Inconclusive evidence remains explicit. None of these later implementations is opened now.
+4. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate. Gate E collection and the formal participant wave have not started.
+5. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified or the later positive Gate E decision explicitly scopes the conditional universality proof.
 
 ## Completion rule
 

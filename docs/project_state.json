@@ -158,7 +158,7 @@
   "blockers": [],
   "next_transition": {
     "gate": "E",
-    "condition": "M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW. Gate D completed with ADVANCE_TO_GATE_E. Gate E bounded task protocol prepared; T1–T5 observations NOT COLLECTED. Additional owner manual acceptance reported 2026-09-06 with no findings, execution details unspecified. Next: one consenting formative session and evidence readout under docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md. No new implementation without a concrete material gap."
+    "condition": "M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW. Gate D completed with ADVANCE_TO_GATE_E. Next E1: one independent novice session; material failure -> bounded fix -> failed-task retest; all tasks pass -> E2 same-content ARTEMIS versus linear baseline with 3–5 formative users -> Gate E decision. Value signal -> scoped Roman Empire / Region universality proof; no value signal -> rethink product. E1/E2 observations NOT COLLECTED. Follow docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md; owner acceptance is not task evidence and no later implementation is opened now."
   },
   "architecture_checkpoint": {
     "id": "M4",
