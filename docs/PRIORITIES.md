@@ -40,7 +40,7 @@ Current required behavior:
 - double-click may focus the selected place;
 - source, locator, uncertainty, coverage and projection-loss details remain available through progressive disclosure;
 - explicit unknown routes and geometry-withheld alternatives remain honest;
-- dashed connectors express chronology only and never historical route geometry; the published #418 legend and midpoint cues preserves that distinction;
+- dashed connectors express chronology only and never historical route geometry; the published #418 legend and midpoint cues preserve that distinction;
 - present-day context remains clearly separated from historical assertions;
 - exploration remains URL-restorable and backend-independent.
 

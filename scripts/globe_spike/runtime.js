@@ -1665,7 +1665,8 @@
       const label = node.querySelector('.place-label');
       const point = runtime.map.project(marker.getLngLat());
       const width = label.offsetWidth, height = label.offsetHeight;
-      const candidates = [[9, -10], [-width - 9, -10], [9, -height - 12], [-width - 9, 12], [9, 12]];
+      const candidates = [[9, -10], [-width - 9, -10], [9, -height - 12], [-width - 9, 12], [9, 12],
+        [-width / 2, -height - 20], [-width / 2, 20]];
       const fits = ([dx, dy]) => {
         const rect = {left: point.x + dx, top: point.y + dy, right: point.x + dx + width, bottom: point.y + dy + height};
         return rect.left >= 0 && rect.right <= canvas.clientWidth && rect.top >= 0 && rect.bottom <= canvas.clientHeight

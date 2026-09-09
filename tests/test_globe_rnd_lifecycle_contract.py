@@ -131,7 +131,9 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     for decision in expected:
         assert decision in decision_record
 
-    assert "No implementation branch is currently opened" in priorities
+    assert "Only the owner-requested pre-E1 stabilization exception is currently open" in priorities
+    assert "no new product feature is authorized" in priorities
+    assert "E1 observations remain NOT COLLECTED" in priorities
     assert "M5 bounded UX correction completed" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
