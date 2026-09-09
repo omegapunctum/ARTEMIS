@@ -1,21 +1,23 @@
 # ARTEMIS — PRIORITIES v7.9
 
-Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; no new runtime work is opened.
+Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; the current exception is bounded pre-E1 stabilization, not a new product gate.
 
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. The bounded Gate E protocol is prepared; E1 observations remain NOT COLLECTED. Only owner-requested pre-E1 stabilization is in scope; stop implementation after its closeout, then run one independent novice session.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-06.
+- Date: 2026-09-09.
 - Active cycle: `Gate E evidence preparation`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Use the bounded Gate E protocol for one formative session
+## P0 — Close bounded pre-E1 stabilization, then one independent novice session
+
+Current published target: #418 / `b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`, Place-centric v4.5 / Temporal Map v1.3. Confirm publication of any accepted stabilization candidate before repinning E1. No additional UX/features; E1 observations remain NOT COLLECTED.
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
@@ -31,14 +33,14 @@ Current required behavior:
 
 - the full-width bottom timeline is the primary time instrument;
 - `Range` is a two-handle calendar interval and shows documented Presences overlapping that interval;
-- `Scrub` keeps a chosen build origin and one current-time cursor, progressively revealing the accumulated path;
+- `Scrub` uses one current-time cursor and default origin 1452, preserving deterministic legacy `from/at` restoration, progressively revealing the accumulated path;
 - visible Presence selection is shared by timeline, map and URL;
 - one click opens a compact popup without moving the camera;
 - optional further action opens the right detail drawer;
 - double-click may focus the selected place;
 - source, locator, uncertainty, coverage and projection-loss details remain available through progressive disclosure;
 - explicit unknown routes and geometry-withheld alternatives remain honest;
-- dashed connectors express chronology only and never historical route geometry; the published #412 legend preserves that distinction;
+- dashed connectors express chronology only and never historical route geometry; the published #418 legend and midpoint cues preserve that distinction;
 - present-day context remains clearly separated from historical assertions;
 - exploration remains URL-restorable and backend-independent.
 
@@ -81,7 +83,7 @@ The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the
 
 ## P3 — Keep completed correction evidence closed
 
-The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. No implementation branch is currently opened.
+The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. Only the owner-requested pre-E1 stabilization exception is currently open; no new product feature is authorized.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;

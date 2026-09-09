@@ -1656,16 +1656,22 @@
     const priority = place => place === selected ? 0 : place === current ? 1
       : ends.has(place) ? 2 : (groups.get(place)?.length || 0) > 1 ? 3 : 4;
     const markers = [...runtime.placeMarkers.entries()].sort((a, b) => priority(a[0]) - priority(b[0]));
-    for (const [, marker] of markers) {
+    // Reserve every visible fixed dot, including Places whose text is suppressed.
+    const anchorPoints = markers.filter(([, marker]) => !marker.getElement().hidden)
+      .map(([place, marker]) => ({place, ...runtime.map.project(marker.getLngLat())}));
+    for (const [place, marker] of markers) {
       const node = marker.getElement();
       if (node.hidden) continue;
       const label = node.querySelector('.place-label');
       const point = runtime.map.project(marker.getLngLat());
       const width = label.offsetWidth, height = label.offsetHeight;
-      const candidates = [[9, -10], [-width - 9, -10], [9, -height - 12], [-width - 9, 12], [9, 12]];
+      const candidates = [[9, -10], [-width - 9, -10], [9, -height - 12], [-width - 9, 12], [9, 12],
+        [-width / 2, -height - 20], [-width / 2, 20]];
       const fits = ([dx, dy]) => {
         const rect = {left: point.x + dx, top: point.y + dy, right: point.x + dx + width, bottom: point.y + dy + height};
         return rect.left >= 0 && rect.right <= canvas.clientWidth && rect.top >= 0 && rect.bottom <= canvas.clientHeight
+          && !anchorPoints.some(p => p.place !== place && rect.left < p.x + 8 && rect.right > p.x - 8
+            && rect.top < p.y + 8 && rect.bottom > p.y - 8)
           && !occupied.some(r => rect.left < r.right + 3 && rect.right > r.left - 3 && rect.top < r.bottom + 3 && rect.bottom > r.top - 3);
       };
       const placement = candidates.find(fits);
