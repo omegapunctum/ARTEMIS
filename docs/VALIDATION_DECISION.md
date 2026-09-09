@@ -1,19 +1,19 @@
 # ARTEMIS — VALIDATION DECISION
 
-Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; no new runtime work is opened.
+Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; the current exception is bounded pre-E1 stabilization, not a new product gate.
 
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. The bounded Gate E protocol is prepared; E1 observations remain NOT COLLECTED. Only owner-requested pre-E1 stabilization is in scope; stop implementation after its closeout, then run one independent novice session.
 
 ## Статус
 
 - Тип: canonical validation outcome document.
 - Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE PENDING`.
-- Дата последнего обновления: 2026-09-06.
+- Дата последнего обновления: 2026-09-09.
 - Active product issue: GitHub issue `#355`.
-- Current public proof: M5 content from PR `#406`, UX from merged/published and owner-accepted PR `#412` / 11 Presence anchors across 1452–1519.
+- Current public proof: M5 content from PR `#406`, Place-centric UX from merged/published PR `#418` (`b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`) / 9 Places and 11 distinct Presence episodes across 1452–1519. This is the current future-E1 runtime target, not E1 evidence; owner acceptance below belongs to #412.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
-- Active work: `Gate E evidence preparation`; no runtime implementation branch open.
+- Active work: `bounded pre-E1 stabilization`, then stop implementation and run E1; observations NOT COLLECTED.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.

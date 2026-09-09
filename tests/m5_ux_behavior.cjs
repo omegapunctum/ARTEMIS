@@ -234,3 +234,29 @@ console.log('Place anchors, repeated episode selection/counts, saved Scrub URLs 
   assert.equal(nodes[11].label.suppressed, false);
   assert.ok(anchors.every(([,a]) => JSON.stringify(a.getLngLat()) === '[150,150]'));
 }
+
+// A label must avoid foreign fixed dots even before their labels are laid out.
+{
+  const visits = [0, 1].map(index => ({index, presence_id: `p${index}`, place_ref: `place${index}`}));
+  const positions = [[150,150], [175,150]];
+  const nodes = visits.map(() => {
+    const label = {offsetWidth: 65, offsetHeight: 16, style: {}, classList: {toggle(_, value) {label.suppressed = value;}}};
+    return {hidden: false, label, querySelector: () => label};
+  });
+  const r = {placeMarkers: new Map(visits.map((p,i) => [p.place_ref, {getElement: () => nodes[i], getLngLat: () => positions[i]}])),
+    lifePathMode: 'range', selectedPresenceId: 'p0', map: {getCanvas: () => ({clientWidth:300, clientHeight:300}), project: ([x,y]) => ({x,y})}};
+  const ctx = vm.createContext({runtime:r, visibleLifePathPresences: () => visits, visiblePlaceGroups: () => new Map(visits.map(p => [p.place_ref,[p]]))});
+  vm.runInContext(fn('layoutPlaceLabels'), ctx);
+  ctx.layoutPlaceLabels();
+  assert.equal(nodes[0].label.suppressed, false, 'selected label has a safe candidate');
+  for (let i = 0; i < nodes.length; i++) {
+    const label = nodes[i].label;
+    if (label.suppressed) continue;
+    const left = positions[i][0] + parseFloat(label.style.left) - 16;
+    const top = positions[i][1] + parseFloat(label.style.top) - 16;
+    const [x,y] = positions[1-i];
+    assert.ok(!(left < x+8 && left+65 > x-8 && top < y+8 && top+16 > y-8), 'text avoids foreign dot exclusion zone');
+  }
+  assert.deepEqual(positions, [[150,150],[175,150]], 'reference anchors never move');
+  assert.ok(nodes.every(n => !n.hidden));
+}

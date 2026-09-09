@@ -53,7 +53,7 @@ The published PR `#396` interaction remains the semantic interaction baseline; l
 - timeline and popup episode buttons preserve individual Presence IDs; selecting any repeated visit highlights the same Place anchor;
 - one marker click retains the selected visible episode at that Place, otherwise chooses its first visible episode in Range or last in Scrub, and opens a compact popup;
 - nearby text may use a small label-only offset; no spatial marker displacement or tethers;
-- labels are placed in selected, Scrub-current, first/last, repeated, ordinary Place priority; labels without collision-free placement are suppressed while dots retain full accessible names/titles; hover and keyboard focus reveal suppressed text temporarily;
+- labels are placed in selected, Scrub-current, first/last, repeated, ordinary Place priority; candidate text rectangles avoid other visible labels and small exclusion zones around foreign fixed Place dots (including dots with suppressed text); labels without collision-free placement are suppressed while dots retain full accessible names/titles; hover and keyboard focus reveal suppressed text temporarily;
 - a single click must not move the camera;
 - explicit `Open details` / further action may open the right detail drawer;
 - double-click may explicitly focus/zoom the selected place;

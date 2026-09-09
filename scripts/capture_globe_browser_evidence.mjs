@@ -155,6 +155,13 @@ async function verifyPlaceLabels(cdp) {
       const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
       if (w > 1 && h > 1) throw new Error('Visible Place-label overlap: ' + shown[i].textContent + ' / ' + shown[j].textContent);
     }
+    for (const label of shown) for (const node of nodes.filter(n => !n.hidden)) {
+      if (label.closest('.life-path-marker') === node) continue;
+      const a = label.getBoundingClientRect(), b = node.querySelector('.place-dot').getBoundingClientRect();
+      const w = Math.min(a.right, b.right + 2) - Math.max(a.left, b.left - 2);
+      const h = Math.min(a.bottom, b.bottom + 2) - Math.max(a.top, b.top - 2);
+      if (w > 1 && h > 1) throw new Error('Foreign Place dot overlaps label: ' + label.textContent + ' / ' + node.title);
+    }
     let suppressed = 0;
     for (const label of labels) if (label.classList.contains('is-suppressed')) {
       suppressed++;
@@ -168,7 +175,7 @@ async function verifyPlaceLabels(cdp) {
     const selected = r.data.lifePath.presences.find(p => p.presence_id === r.selectedPresenceId);
     if (selected && getComputedStyle(r.placeMarkers.get(selected.place_ref).getElement().querySelector('.place-label')).visibility === 'hidden') throw new Error('Selected Place label suppressed');
     if (/numbered place|Numbers show chronology|Build from/i.test(document.body.innerText)) throw new Error('Obsolete visible copy');
-    return {anchors: nodes.length, visibleLabels: shown.length, suppressedLabels: suppressed, materialLabelOverlaps: 0};
+    return {anchors: nodes.length, visibleLabels: shown.length, suppressedLabels: suppressed, materialLabelOverlaps: 0, materialForeignDotOverlaps: 0};
   })()`, true);
 }
 
