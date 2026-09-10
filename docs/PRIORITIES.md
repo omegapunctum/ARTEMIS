@@ -1,23 +1,20 @@
-# ARTEMIS — PRIORITIES v7.9
+# ARTEMIS — PRIORITIES v7.10
 
-Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; the current exception is bounded pre-E1 stabilization, not a new product gate.
-
-
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. The bounded Gate E protocol is prepared; E1 observations remain NOT COLLECTED. Only owner-requested pre-E1 stabilization is in scope; stop implementation after its closeout, then run one independent novice session.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-09.
-- Active cycle: `Gate E evidence preparation`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
+- Date: 2026-09-10.
+- Active cycle: `Gate E owner bypass / Region proof decision`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Close bounded pre-E1 stabilization, then one independent novice session
+## P0 — Record owner bypass, then one bounded Temporal Region universality proof
 
-Current published target: #418 / `b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`, Place-centric v4.5 / Temporal Map v1.3. Confirm publication of any accepted stabilization candidate before repinning E1. No additional UX/features; E1 observations remain NOT COLLECTED.
+Follow [the decision and acceptance contract](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). Current public runtime remains #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`; #416 navigation is future-only and #418/#419 are completed implementation evidence. E1/E2 observations remain NOT COLLECTED. No Region implementation starts before this decision PR merges; no default Leonardo replacement without a separate publication decision.
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
@@ -83,7 +80,7 @@ The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the
 
 ## P3 — Keep completed correction evidence closed
 
-The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. Only the owner-requested pre-E1 stabilization exception is currently open; no new product feature is authorized.
+The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. The #419 stabilization is completed. Only one bounded Temporal Region universality proof is authorized after decision merge; no implementation is opened in this PR.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
@@ -123,11 +120,10 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Preserve merged #413 and the explicit Gate D exit `ADVANCE_TO_GATE_E`.
-2. Merge the tiny protocol fixes in #415, then E1: one independent novice T1–T5 session. Material failure → bounded fix → retest the failed task; all tasks passed → E2.
-3. E2: same-content ARTEMIS versus linear baseline with 3–5 formative users; freeze the baseline, rubric and value-signal rule before collection. Then record the Gate E decision. Positive value signal → scoped universality proof with Roman Empire / temporal Region; no value signal → rethink the current product proposition. Inconclusive evidence remains explicit. None of these later implementations is opened now.
-4. Keep M4 `ADOPT`, M5 original `ITERATE` and correction `PROCEED_TO_GATE_D_REVIEW` separate. Gate E collection and the formal participant wave have not started.
-5. Preserve confirmed scheduled CI repair #410. Open no new implementation unless a concrete material gap is identified or the later positive Gate E decision explicitly scopes the conditional universality proof.
+1. Review/merge the owner-bypass decision PR; preserve Gate D ADVANCE_TO_GATE_E, M4 ADOPT and M5 history.
+2. After merge, one branch: source suitability first, then minimal shared Region projection only if 3–5 source-supported states are feasible. WIP limit remains one.
+3. Record GENERALIZES / NARROW / FAILS_GENERALITY only from the later proof. Inadequate sources are a legitimate blocked result, not fabricated geometry or an architecture failure by inference.
+4. E1/E2 remain NOT COLLECTED; formal user value unvalidated. No additional product, infrastructure, Global/Focus implementation or automatic publication.
 
 ## Completion rule
 

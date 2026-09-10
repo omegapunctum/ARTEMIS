@@ -1,19 +1,16 @@
 # ARTEMIS — VALIDATION DECISION
 
-Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; the current exception is bounded pre-E1 stabilization, not a new product gate.
-
-
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. The bounded Gate E protocol is prepared; E1 observations remain NOT COLLECTED. Only owner-requested pre-E1 stabilization is in scope; stop implementation after its closeout, then run one independent novice session.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE PENDING`.
-- Дата последнего обновления: 2026-09-09.
+- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE UNVALIDATED`.
+- Дата последнего обновления: 2026-09-10.
 - Active product issue: GitHub issue `#355`.
-- Current public proof: M5 content from PR `#406`, Place-centric UX from merged/published PR `#418` (`b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`) / 9 Places and 11 distinct Presence episodes across 1452–1519. This is the current future-E1 runtime target, not E1 evidence; owner acceptance below belongs to #412.
+- Current public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
-- Active work: `bounded pre-E1 stabilization`, then stop implementation and run E1; observations NOT COLLECTED.
+- Active work: decision/specification only; bounded Temporal Region universality proof may start after decision merge.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.
@@ -74,7 +71,7 @@ The [2026-09-06 closeout and bounded review](work/2026-09-06_M5_UX_CLOSEOUT_AND_
 
 No new assistant manual test, physical-device matrix, real AT/performance pass or paired EN/RU screenshot evidence is invented. Earlier negative findings remain historical evidence. Acceptance closes this bounded correction; formal user value remains unvalidated.
 
-Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Merged #413 accepted the bounded review. The separate explicit exit records `ADVANCE_TO_GATE_E`; Gate D is completed. Gate E evidence preparation is next; collection has not started.
+Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Merged #413 accepted the bounded review. The separate explicit exit records `ADVANCE_TO_GATE_E`; Gate D is completed. The prepared E1/E2 evidence path is NOT EXECUTED and bypassed by explicit owner direction; formal user value remains unvalidated.
 
 ## 5. Current record
 
@@ -100,13 +97,17 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Current corpus | 11 coarse Presence anchors / six periods / 1452–1519 |
 | Public research surface | `/globe/` R&D research prototype |
 | Completed correction | `Temporal Map M5 bounded UX correction v1` / `PROCEED_TO_GATE_D_REVIEW` |
-| Runtime implementation | `COMPLETED / PRs #411–#412`; scope #409 is completed evidence |
+| Current runtime implementation | `COMPLETED + PUBLISHED / PR #419`, after #418; earlier #409/#411/#412 remain completed evidence |
 | Correction acceptance and publication | #412 merged/published; owner acceptance recorded 2026-09-06 |
 | Gate D exit vocabulary | `ADVANCE_TO_GATE_E / NARROW / REJECT` |
 | Gate D review recommendation | `ADVANCE_TO_GATE_E`; exit recorded as `ADVANCE_TO_GATE_E` |
 | #410 maintenance | Scheduled Export Airtable success confirmed, run 34005145312 |
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
+
+| Gate E planned evidence | `NOT COLLECTED / owner_directed_bypass`; E1/E2 not executed |
+| Formal user value | `UNVALIDATED`; no positive value signal |
+| Next authority | `explicit_owner_instruction`; one bounded Region proof after decision merge |
 
 ## 6. Change rule
 

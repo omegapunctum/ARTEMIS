@@ -1,16 +1,16 @@
 # ARTEMIS — PRODUCT SCOPE
 
-Owner-directed bounded correction after #417: one fixed spatial anchor per canonical Place, compact name and visible-episode count; Presence episodes remain distinct in timeline/selection/URL and popup/details. Remove persistent date cards, tethers and spatial displacement. Suppress colliding text by Place priority while retaining interactive dots and hover/focus access. This v4.5 correction preserves the earlier #416 v4.4 future-navigation decision. Mid-segment chevrons on low-opacity dashed links express chronology only, with selected/current transition emphasis. Scrub has one current-time handle and no visible Build from control; default origin is the earliest axis extent (1452). Valid saved `from` values remain internal origins; invalid/missing values use the first axis value, and `at` before origin clamps to origin. No coordinates, historical routes, data, Gate E tasks or future Global+Focus Timeline scope change. Pin the corrected published revision before E1; this is not an E1 result.
+Owner-directed bounded correction after #417: one fixed spatial anchor per canonical Place, compact name and visible-episode count; Presence episodes remain distinct in timeline/selection/URL and popup/details. Remove persistent date cards, tethers and spatial displacement. Suppress colliding text by Place priority while retaining interactive dots and hover/focus access. This v4.5 correction preserves the earlier #416 v4.4 future-navigation decision. Mid-segment chevrons on low-opacity dashed links express chronology only, with selected/current transition emphasis. Scrub has one current-time handle and no visible Build from control; default origin is the earliest axis extent (1452). Valid saved `from` values remain internal origins; invalid/missing values use the first axis value, and `at` before origin clamps to origin. No coordinates, historical routes, data, Gate E tasks or future Global+Focus Timeline scope change. The correction is merged/published through #418/#419; current runtime is #419. E1/E2 are now bypassed by owner direction, not passed.
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). Gate D is completed. PR #415 merged the bounded Gate E protocol; E1 observations remain not collected. No new implementation is opened.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.5.
-- Дата: 2026-09-08.
+- Версия: 4.6.
+- Дата: 2026-09-10.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Gate E evidence preparation`; PR #415 prepared the current bounded protocol; E1 is next and no runtime implementation branch is open.
+- Current increment: `Temporal Region universality proof decision`; implementation only after decision PR merge, user value unvalidated.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -41,7 +41,7 @@ Local/global context, тематические layers, richer Events/States/Proc
 
 ## 2. Scope lock текущего цикла
 
-Foundation и Core Reset уже завершены как prerequisites. Текущий Gate E evidence cycle не должен повторно открывать их.
+Foundation и Core Reset уже завершены как prerequisites. Owner-directed Region proof не должен повторно открывать их.
 
 Completed prerequisites:
 
@@ -55,7 +55,7 @@ Completed prerequisites:
 
 Current authorized work:
 
-- preserve the published #396 interaction;
+- preserve the published #419 Leonardo interaction and distinct Presence semantics;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;
 - preserve the reviewed PR #400 package as the content boundary used by the bounded M5 runtime;
 - preserve the merged PR #401 one-source proof unchanged as M2 evidence;
@@ -64,8 +64,8 @@ Current authorized work:
 - preserve PR #406 as the bounded M5 proof without widening it;
 - preserve the direct M5 product result as exactly `ITERATE`;
 - preserve completed #409/#411/#412 evidence and the 2026-09-06 owner acceptance;
-- preserve completed Gate D / `ADVANCE_TO_GATE_E` and use the bounded Gate E protocol merged in PR #415;
-- no runtime implementation is open without a later evidence-backed bounded decision.
+- preserve completed Gate D / `ADVANCE_TO_GATE_E` and the #415 protocol as prepared / NOT EXECUTED;
+- authorize exactly one bounded Region proof after the owner-bypass decision merges; no runtime work in this decision PR.
 
 ## 3. Обязательный current content scope
 
@@ -144,7 +144,7 @@ Layer combinations, Region alternatives and renderer diagnostics may remain avai
 
 ### 4.1 Accepted future temporal-navigation direction — one time, two synchronized scales
 
-The current single-timeline runtime is preserved for Gate E. For future scale growth, ARTEMIS accepts the following design direction:
+The current single-timeline runtime is preserved; the bounded Region proof does not implement Global/Focus. For future scale growth, ARTEMIS accepts the following design direction:
 
 - **one canonical temporal state** remains the only semantic/query time; there must not be independent `global_time` and `focus_time` truths;
 - **Global Timeline** is the persistent broad-scale world-time control;
@@ -215,9 +215,9 @@ For the current M5 checkpoint:
 
 ## 8. Frozen scope
 
-Outside the currently authorized M5 preservation boundary:
+Outside Leonardo preservation and the single bounded Region proof exception below:
 
-- any source, Presence or broad reconciliation expansion beyond the reviewed M5 package;
+- any Leonardo source/Presence expansion or broad reconciliation; only the separately bounded Region sources/states below are excepted;
 - default local/global context layers;
 - implementation of Global Timeline + Focus Timeline before a separate evidence-backed scope decision;
 - generative AI and AI analysis runtime;
@@ -285,13 +285,17 @@ The earlier post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. The accepted Gate D review and explicit exit record `ADVANCE_TO_GATE_E`; Gate D is completed and Gate E evidence preparation is next. Context/layers, curation/editorial storage, persistence/sharing, new source/data integration and broad renderer/provider improvement remain unopened.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. The accepted Gate D review and explicit exit record `ADVANCE_TO_GATE_E`; Gate D is completed. The owner now bypasses E1/E2 with observations NOT COLLECTED and user value UNVALIDATED; only the bounded Region proof is authorized after decision merge. Context/layers, storage, sharing and broad provider work remain unopened.
 
 The Global Timeline + Focus Timeline direction in section 4.1 is an accepted future constraint, not an opened implementation branch. It requires a separate evidence-backed scope decision before code/schema work.
 
 Public deployment, richer historical terrain, guided learning, source-bound AI, broader World Slices, institutional workflow and VR/AR remain separate decisions.
 
-## 12. Owner documents
+## 12. Bounded Temporal Region proof exception
+
+The canonical scope/acceptance owner is [the owner-bypass decision](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). This v4.6 authorization preserves v4.5 runtime behavior and #416 future navigation. After merge: one Roman Empire entity, 3–5 source-supported temporal polygon/multipolygon states, one focused Region, provenance/temporal validity/uncertainty, through World Model → Explorer State → Render Projection → existing renderer and one canonical time. Source suitability precedes implementation; no adequate source is a legitimate stopping result. No Roman-specific engine, fabricated borders, full historical corpus, contextual layers, dual timelines or backend expansion. Leonardo remains the default published proof until a separate publication decision. GENERALIZES is technical generality only, never validated user value.
+
+## 13. Owner documents
 
 - North Star: `ARTEMIS_CONCEPT.md`;
 - product thesis: `PRODUCT_THESIS.md`;

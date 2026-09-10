@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.4.0",
+  "schema_version": "1.5.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-06",
+  "updated_at": "2026-09-10",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -116,7 +116,12 @@
       "PR #410 — CI repair confirmed by successful scheduled Export Airtable runs, latest 34005145312",
       "PR #411 — merged/published initial bounded UX correction; completed evidence",
       "PR #412 — merged/published follow-up; owner-accepted 2026-09-06; PROCEED_TO_GATE_D_REVIEW",
-      "PR #413 — M5 correction closeout and bounded Gate D evidence review accepted"
+      "PR #413 — M5 correction closeout and bounded Gate D evidence review accepted",
+      "PR #416 — accepted future Global/Focus views of one canonical temporal state; not implemented",
+      "PR #418 — merged/published Place-centric v4.5 / Temporal Map v1.3; owner reports NO FINDINGS, not participant evidence",
+      "PR #419 — merged/published accepted fixed-dot label stabilization, a1479670d7f7628ffb85b887961ff27654e2fa2f",
+      "PR #414 — explicit Gate D exit ADVANCE_TO_GATE_E recorded; completed decision",
+      "PR #415 — bounded Gate E protocol preparation completed; E1/E2 NOT EXECUTED / NOT COLLECTED under later owner bypass"
     ]
   },
   "capability": {
@@ -153,12 +158,15 @@
     "docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md",
     "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md",
     "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md",
-    "docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md"
+    "docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md",
+    "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
   ],
   "blockers": [],
   "next_transition": {
-    "gate": "E",
-    "condition": "M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW. Gate D completed with ADVANCE_TO_GATE_E. Next E1: one independent novice session; material failure -> bounded fix -> failed-task retest; all tasks pass -> E2 same-content ARTEMIS versus linear baseline with 3–5 formative users -> Gate E decision. Value signal -> scoped Roman Empire / Region universality proof; no value signal -> rethink product. E1/E2 observations NOT COLLECTED. Follow docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md; owner acceptance is not task evidence and no later implementation is opened now."
+    "condition": "M5 bounded UX correction completed; Gate D ADVANCE_TO_GATE_E remains historical. After this decision PR merges, exactly one source-first bounded Roman Empire / Temporal Region universality proof; no implementation exists yet. E1/E2 NOT COLLECTED; user value unvalidated.",
+    "authority": "explicit_owner_instruction",
+    "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
+    "target": "TEMPORAL_REGION_PROOF"
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -196,5 +204,13 @@
     "material_implementation_gaps": [],
     "evidence_ref": "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md",
     "exit_record_ref": "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"
+  },
+  "gate_e": {
+    "status": "not_collected",
+    "disposition": "owner_directed_bypass",
+    "e1": "not_collected",
+    "e2": "not_collected",
+    "formal_user_value": "unvalidated",
+    "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
   }
 }

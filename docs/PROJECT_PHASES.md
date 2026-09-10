@@ -1,12 +1,12 @@
-# ARTEMIS — PROJECT PHASES v7.9
+# ARTEMIS — PROJECT PHASES v7.10
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+Current decision: [owner-directed Gate E bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 NOT COLLECTED / owner_directed_bypass; FORMAL USER VALUE UNVALIDATED. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. One source-first Temporal Region proof follows decision merge; no implementation exists yet.
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-06.
-- Current phase: **5.1 — Gate E evidence preparation; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
+- Date: 2026-09-10.
+- Current phase: **5.1 — owner-directed Temporal Region proof; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
@@ -75,7 +75,7 @@ PR `#396` completed the bounded correction:
 - dashed connectors in #412 express chronology only and never historical route geometry; unknown routes remain null;
 - no new Leonardo data, route geometry, historical coordinates or promoted Claims were introduced.
 
-The current bounded corpus remains the four source-bound 1502 Romagna Presences. It is an interaction scaffold, not Leonardo's complete biography.
+The then-current bounded corpus comprised four source-bound 1502 Romagna Presences. It is an interaction scaffold, not Leonardo's complete biography.
 
 ## Phase 4 — Fresh user check of the published loop [completed]
 
@@ -155,6 +155,14 @@ PR #409 scoped seven findings; #411 implemented the package and #412 completed v
 
 It cannot draw unknown routes, add historical content, change Range/Scrub semantics, introduce a second state model or mix Export Airtable maintenance into the product diff. Publication requires automated Core/semantic checks and deterministic responsive evidence; a fresh manual product result follows publication.
 
+## Post-M5 decisions and current execution
+
+- #414 completed the explicit Gate D exit ADVANCE_TO_GATE_E after review #413.
+- #415 completed protocol preparation; E1/E2 were NOT EXECUTED and remain NOT COLLECTED under the later explicit owner bypass. This is completed planning, not completed participant evidence.
+- #416 accepted future Global/Focus views of one canonical time; not implemented.
+- #418 implemented Place-centric v4.5 / Temporal Map v1.3; #419 stabilized fixed-dot label decluttering and is the current published revision `a1479670d7f7628ffb85b887961ff27654e2fa2f`: 9 Places / 11 distinct Presence episodes. Owner acceptance is closed; FORMAL USER VALUE UNVALIDATED.
+- The owner-bypass decision authorizes exactly one source-first Roman Empire / Temporal Region universality proof after merge. No new M6 label, independent engine, dual timeline or automatic publication. Source states must meet the decision's comparability rule. The default Leonardo public proof remains unchanged.
+
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The active work is decision-only Gate E evidence preparation. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision records owner_directed_bypass; E1/E2 NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Next is one bounded Region proof after decision merge; WIP limit one. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.

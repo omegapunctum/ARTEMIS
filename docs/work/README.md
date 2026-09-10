@@ -1,24 +1,24 @@
 # ARTEMIS working documents registry
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. The bounded Gate E protocol is prepared; E1 observations remain NOT COLLECTED. Only owner-requested pre-E1 stabilization is in scope; stop implementation after its closeout, then run one independent novice session.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-09.
+- Updated: 2026-09-10.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
 A filename containing `ACTIVE`, an old status header or an issue reference does not make a document active.
 
-Current published runtime target for future E1: #418 / `b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`, Place-centric Product Scope v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Publication was verified against live runtime/CSS on 2026-09-09. #418 is completed implementation evidence, not participant evidence. A pending stabilization candidate does not replace the published target until merged/publication verified. E1 observations remain NOT COLLECTED.
+Current published runtime: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; E1/E2 NOT COLLECTED, owner_directed_bypass; formal user value UNVALIDATED. No Region implementation exists.
 
 ## Active execution
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md` | Prepared protocol and additional owner acceptance; task evidence not collected | One formative T1–T5 session and evidence readout; no Gate E exit or runtime authorization |
-| `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; prepare a bounded Gate E protocol, collection not started |
+| `2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md` | Owner-bypass decision and one bounded Region proof acceptance contract | Implementation only after decision PR merge; GENERALIZES / NARROW / FAILS_GENERALITY are later proof outcomes |
+| `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D completed by #414 / ADVANCE_TO_GATE_E; retained historical decision, not a pending exit |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
@@ -29,6 +29,12 @@ Current published runtime target for future E1: #418 / `b628a80c4b0dd6c7c5485029
 | `2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md` | completed source/review branch through PR #400; that record did not authorize runtime use | preserved historical evidence; later owner-directed runtime use is bounded by M5/PR #406 |
 | `2026-04-23_RUNTIME_READINESS_RUNBOOK_ACTIVE_v1_0.md` | compatibility operator interpretation for legacy runtime/release signals | replaced by a newer verified compatibility runbook |
 | `moderation-runbook.md` | current compatibility moderation recovery procedure | replaced when moderation behavior changes |
+
+## Planned but not executed participant evidence
+
+| Document | Lifecycle | Disposition |
+|---|---|---|
+| `2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md` | Prepared / NOT EXECUTED | Superseded for current critical path by explicit owner bypass; no E1/E2 observations, no value signal; retained unchanged task/rubric history |
 
 ## Completed M2–M5, correction and Gate D review evidence
 
@@ -75,7 +81,7 @@ Current interaction semantics:
 - earlier dashed connectors expressed chronology only and were never historical route geometry; current #418 uses explicitly labelled renderer-only chronological links and midpoint cues; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; active execution is Gate E evidence preparation. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; current execution is the owner-bypass decision, then the bounded Region proof after merge. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
 
 ## Foundation lifecycle records
 

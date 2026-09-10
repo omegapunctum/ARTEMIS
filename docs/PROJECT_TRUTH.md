@@ -1,20 +1,17 @@
 # ARTEMIS — PROJECT TRUTH
 
-Gate E preparation: [bounded task protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is prepared. The owner reports a further manual check with no findings on 2026-09-06; exact execution details were not supplied. This is additional owner acceptance, not a completed task session. T1–T5 evidence remains NOT COLLECTED; the current exception is bounded pre-E1 stabilization, not a new product gate.
-
-
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. The bounded Gate E protocol is prepared; E1 observations remain NOT COLLECTED. Only owner-requested pre-E1 stabilization is in scope; stop implementation after its closeout, then run one independent novice session.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Статус
 
-Current published E1 runtime target (verified 2026-09-09): merged PR #418, commit `b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`, implements Place-centric Product Scope v4.5 / Temporal Map v1.3. Live `/globe/runtime.js` and `/globe/style.css` match that revision byte-for-byte. There are 9 fixed canonical Place anchors and 11 distinct Presence episodes; `Milan ×2` / `Florence ×2` count visible episodes. Scrub has one current-time handle with default origin 1452 and deterministic legacy `from/at` restoration. #416 Global/Focus navigation remains a future decision, not implemented.
+Current published runtime: #419, merge `a1479670d7f7628ffb85b887961ff27654e2fa2f`, publication verified 2026-09-09 by live runtime/CSS equality. It stabilizes merged/published #418 (`b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`), the Place-centric v4.5 / Temporal Map v1.3 implementation: 9 fixed Place anchors / 11 distinct Presence episodes; repeated counts; presentation-only dashed chronology and midpoint cues; one-handle default Scrub with legacy URL restoration; Range interval semantics; unknown/null historical routes. #416 remains the accepted future Global/Focus decision over one canonical time, not implementation.
 
-This published revision is the target for future E1, not E1 evidence or user-value validation. Gate D remains completed / `ADVANCE_TO_GATE_E`. The pre-E1 label correction is a candidate until separately merged and published; if accepted, pin its verified published revision before collection. E1 observations remain **NOT COLLECTED**.
+The owner reports NO FINDINGS for the published #418 review and accepted #419. This closes owner acceptance only. No independent session/device/task observations are inferred. The subsequent explicit bypass instruction supersedes the earlier unsubstantiated statement that E1 was conducted; E1/E2 stay NOT COLLECTED. The next Region proof is authorized by owner direction after decision merge, not participant evidence. No Roman Empire implementation/data exists yet.
 
 Historical M5 closeout: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-09-09.
+- Дата фиксации: 2026-09-10.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -217,7 +214,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E evidence preparation next / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E owner-directed bypass, E1/E2 NOT COLLECTED / bounded Region proof after decision merge / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 

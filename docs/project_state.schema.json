@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.4.json",
-  "title": "ARTEMIS machine-readable operational state v1.4",
+  "$id": "https://artemis.example/schemas/project-state-v1.5.json",
+  "title": "ARTEMIS machine-readable operational state v1.5",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,6 +17,7 @@
     "architecture_checkpoint",
     "ux_correction_checkpoint",
     "gate_review",
+    "gate_e",
     "work_in_progress_limit",
     "github",
     "capability",
@@ -54,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.4.0"},
+    "schema_version": {"const": "1.5.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -167,6 +168,38 @@
         "evidence_ref": {"const": "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md"}
       }
     },
+    "gate_e": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "disposition",
+        "e1",
+        "e2",
+        "formal_user_value",
+        "decision_ref"
+      ],
+      "properties": {
+        "status": {
+          "const": "not_collected"
+        },
+        "disposition": {
+          "const": "owner_directed_bypass"
+        },
+        "e1": {
+          "const": "not_collected"
+        },
+        "e2": {
+          "const": "not_collected"
+        },
+        "formal_user_value": {
+          "const": "unvalidated"
+        },
+        "decision_ref": {
+          "const": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
+        }
+      }
+    },
     "work_in_progress_limit": {"const": 1},
     "github": {
       "type": "object",
@@ -202,9 +235,11 @@
     "next_transition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["gate", "condition"],
+      "required": ["target", "condition", "authority", "decision_ref"],
       "properties": {
-        "gate": {"enum": ["D", "E", "STOP"]},
+        "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF"]},
+        "authority": {"const": "explicit_owner_instruction"},
+        "decision_ref": {"const": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"},
         "condition": {"type": "string", "minLength": 1}
       }
     }
