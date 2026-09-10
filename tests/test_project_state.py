@@ -230,8 +230,37 @@ def test_completed_gate_d_requires_explicit_exit(missing):
         validate_project_state(state)
 
 
-def test_completed_advancement_must_point_to_gate_e():
+def test_completed_advancement_with_bypass_must_point_to_region_proof():
     state = _state()
     state["next_transition"]["gate"] = "D"
-    with pytest.raises(ProjectStateError, match="completed advancement must point to E"):
+    with pytest.raises(ProjectStateError, match="completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF"):
+        validate_project_state(state)
+
+
+@pytest.mark.parametrize('field,value', [('e1', 'pass'), ('e2', 'completed'), ('status', 'completed'), ('formal_user_value', 'validated'), ('disposition', 'positive_value_signal')])
+def test_owner_bypass_cannot_fabricate_evidence(field, value) -> None:
+    state = _state()
+    state['gate_e'][field] = value
+    with pytest.raises(ProjectStateError, match='schema validation failed'):
+        validate_project_state(state)
+
+
+def test_owner_bypass_requires_registered_authority() -> None:
+    state = _state()
+    state['canonical_refs'].remove(state['gate_e']['decision_ref'])
+    with pytest.raises(ProjectStateError, match='registered decision'):
+        validate_project_state(state)
+    state = _state()
+    state['next_transition'].pop('authority')
+    with pytest.raises(ProjectStateError, match='schema validation failed'):
+        validate_project_state(state)
+
+
+def test_owner_bypass_opens_only_region_proof() -> None:
+    state = _state()
+    assert state['next_transition']['gate'] == 'TEMPORAL_REGION_PROOF'
+    assert state['work_in_progress_limit'] == 1
+    assert state['github']['active_issues'] == [355]
+    state['next_transition']['gate'] = 'E'
+    with pytest.raises(ProjectStateError, match='TEMPORAL_REGION_PROOF'):
         validate_project_state(state)

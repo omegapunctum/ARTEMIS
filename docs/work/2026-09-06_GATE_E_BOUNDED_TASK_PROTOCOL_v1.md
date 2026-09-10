@@ -1,10 +1,14 @@
 # Gate E — bounded task/evidence protocol v1
 
 - Date: 2026-09-06.
-- Status: protocol prepared; task evidence NOT COLLECTED; no Gate E outcome recorded.
+- Status: prepared / NOT EXECUTED; task evidence NOT COLLECTED; superseded for current critical path by [explicit owner bypass](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md) on 2026-09-10. No Gate E value outcome recorded.
 - Entry: Gate D completed with `ADVANCE_TO_GATE_E` in merged [PR #414](https://github.com/omegapunctum/ARTEMIS/pull/414), after accepted review #413.
-- Owner: #355; current stage remains Gate E evidence preparation.
+- Owner: #355; historical planned protocol. The prompts/rubric and original conditional sequence below are retained as written, not current execution authority.
 - Scope: the accepted read-only Leonardo Temporal Map, 11 coarse Presence anchors and six periods across 1452–1519. No runtime/data change.
+
+## Later disposition — 2026-09-10
+
+E1/E2 are intentionally not executed under explicit owner instruction. Observations remain NOT COLLECTED; formal user value UNVALIDATED. The earlier owner statement that E1 was conducted supplied no task observations and is superseded by this explicit correction; do not invent a session. The following protocol remains valid historical planning, not a retrospectively failed or passed test. Region proof authority now comes from the separate owner decision after merge, not a positive Gate E signal.
 
 ## Additional owner acceptance
 
