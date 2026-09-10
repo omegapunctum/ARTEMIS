@@ -1,6 +1,6 @@
 # ARTEMIS — PROJECT TRUTH
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED / NOT ESTABLISHED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Статус
 

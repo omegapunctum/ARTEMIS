@@ -1,11 +1,11 @@
 # ARTEMIS — VALIDATION DECISION
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED / NOT ESTABLISHED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
 
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE PENDING`.
+- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE UNVALIDATED`.
 - Дата последнего обновления: 2026-09-10.
 - Active product issue: GitHub issue `#355`.
 - Current public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
@@ -106,7 +106,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Formal participant wave | `NOT RUN` |
 
 | Gate E planned evidence | `NOT COLLECTED / owner_directed_bypass`; E1/E2 not executed |
-| Formal user value | `UNVALIDATED / NOT ESTABLISHED`; no positive value signal |
+| Formal user value | `UNVALIDATED`; no positive value signal |
 | Next authority | `explicit_owner_instruction`; one bounded Region proof after decision merge |
 
 ## 6. Change rule

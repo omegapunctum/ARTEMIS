@@ -7,7 +7,7 @@
 
 ## Evidence disposition and current truth
 
-The owner consciously bypasses the planned participant-evidence path: E1 = NOT COLLECTED; E2 = NOT COLLECTED; disposition = owner_directed_bypass. The prepared [Gate E protocol](2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is retained as planned / NOT EXECUTED, superseded only for the current critical path. It is neither invalidated nor retrospectively passed. Formal user value remains UNVALIDATED / NOT ESTABLISHED; no positive value signal is inferred. This is not a successful Gate E exit.
+The owner consciously bypasses the planned participant-evidence path: E1 = NOT COLLECTED; E2 = NOT COLLECTED; disposition = owner_directed_bypass. The prepared [Gate E protocol](2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md) is retained as planned / NOT EXECUTED, superseded only for the current critical path. It is neither invalidated nor retrospectively passed. Formal user value remains UNVALIDATED; no positive value signal is inferred. This is not a successful Gate E exit.
 
 The earlier owner statement that E1 was conducted had no task-level observations. This later explicit instruction replaces that interpretation; no participant sessions, dates, devices, metrics or task outcomes are inferred. The owner reports NO FINDINGS for the published #418 review, closing owner manual acceptance only, and accepted #419. Owner acceptance is not independent-user evidence.
 
@@ -35,6 +35,10 @@ After decision merge, open exactly one bounded source/implementation branch:
 - Preserve source conflicts/alternatives only where necessary for honest uncertainty; do not collect multiple reconstructions merely to expand scope.
 
 This is not a Roman Empire historical product: no full 27 BC–476 AD history, provinces, emperors, battles, roads, religions, cultures, cities, military movements, contextual people, historical terrain, complete-border claim or contextual layers. No backend/Airtable, provider federation infrastructure, selector redesign or unrelated refactoring.
+
+### Source-state comparability rule
+
+Treat snapshots as a temporal sequence only when they describe the same Region identity and territorial concept (for example, political control versus influence), with compatible coverage, inclusion criteria, spatial generalization and reconstruction method. Prefer a coherent versioned dataset. For each state record these dimensions and any change in source/method. Differences between incompatible definitions, coverage or reconstruction methods must not be presented as historical territorial change. Use a documented evidence-supported normalization only if it preserves provenance and uncertainty; otherwise keep alternatives separate or exclude the incompatible state. If fewer than three comparable source-supported states remain, stop with a source-feasibility limitation. Do not manufacture comparability by drawing borders or interpolating unsupported intervals.
 
 ## Shared architecture and temporal boundary
 
@@ -69,7 +73,7 @@ No outcome is selected now. A source-blocked or incomplete proof is explicitly u
 
 ## Operational representation and closeout
 
-project_state v1.5 adds a required gate_e record with status/e1/e2 = not_collected, disposition = owner_directed_bypass, formal_user_value = unvalidated, and this decision reference. next_transition points to TEMPORAL_REGION_PROOF with explicit_owner_instruction and the same reference. The gate field still records the historical Gate D completion; historical M4/M5 checkpoints are not repurposed. Schema/validator negative tests reject false passes, missing authority and unregistered decisions. WIP remains one; #355 remains the sole product issue.
+project_state v1.5 adds a required gate_e record with status/e1/e2 = not_collected, disposition = owner_directed_bypass, formal_user_value = unvalidated, and this decision reference. next_transition.target points to TEMPORAL_REGION_PROOF (a work target, not a gate) with explicit_owner_instruction and the same reference. The gate field still records the historical Gate D completion; historical M4/M5 checkpoints are not repurposed. Schema/validator negative tests reject false passes, missing authority and unregistered decisions. WIP remains one; #355 remains the sole product issue.
 
 Record the decision in one PR before synchronizing #355. While unmerged, distinguish the owner instruction from pending repository integration and do not open implementation. After merge, #355 should point to this single source-first proof; participant evidence remains not collected. No new issue is required.
 
@@ -78,6 +82,8 @@ Record the decision in one PR before synchronizing #355. While unmerged, disting
 > ARTEMIS — bounded Roman Empire / Temporal Region universality proof. Work from current main of omegapunctum/ARTEMIS. First verify that docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md is merged. If not, stop; do not implement. Follow its scope and twelve acceptance criteria, current PROJECT_TRUTH, project_state, Product Scope and the existing World Model contract. E1/E2 were intentionally bypassed, remain NOT COLLECTED, and formal user value is UNVALIDATED. Do not claim a Gate E pass or positive user-value signal.
 >
 > Open one bounded branch, WIP 1. First assess source feasibility for one Roman Empire Entity and 3–5 temporally valid Region polygon/multipolygon states. Record source/version/locator/license, native date precision and uncertainty/reconstruction limits. AI is not the Source; no fabricated or plausibly drawn borders. If adequate sources cannot support at least three states, report the bounded source gap and stop without fabricating geometry or an architecture verdict.
+>
+> Apply the source-state comparability rule above before treating snapshots as one temporal sequence; fewer than three comparable states is a source-feasibility stop, not evidence of historical change.
 >
 > Before coding classify existing generic machinery, Leonardo-specific plumbing and missing generic capability. Reuse World Model → Explorer State → Render Projection → existing MapLibre renderer and one canonical temporal state. Generalize only the necessary shared boundary; no Roman-specific engine, independent time, Global/Focus implementation, contextual corpus, backend/Airtable or unrelated refactor. Keep one focused Region and preserve the published Leonardo default until a separate publication decision.
 >

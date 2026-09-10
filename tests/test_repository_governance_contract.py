@@ -51,7 +51,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     assert "NARROW" in priorities
     assert "STOP/RETHINK" in priorities
 
-    assert "Current phase: **5.1 — Gate E evidence preparation" in phases
+    assert "Current phase: **5.1 — owner-directed Temporal Region proof" in phases
     assert "Active issue: **#355**" in phases
     assert "No historical artifact is deleted or reinterpreted by Core Reset" in phases
     assert "#392 does not block the read-only MVP critical path" in phases

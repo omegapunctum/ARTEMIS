@@ -358,8 +358,8 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed M5 must record exactly one product decision")
     if checkpoint["pre_start_decision_record"] is not False:
         raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
-    expected_next_gate = "TEMPORAL_REGION_PROOF" if gate["status"] == "completed" else "D"
-    if payload["next_transition"]["gate"] != expected_next_gate:
+    expected_next_target = "TEMPORAL_REGION_PROOF" if gate["status"] == "completed" else "D"
+    if payload["next_transition"]["target"] != expected_next_target:
         raise ProjectStateError("Gate E cannot open before a completed Gate D decision; completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF")
     if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("owner bypass and next work require one registered decision")

@@ -235,9 +235,9 @@
     "next_transition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["gate", "condition", "authority", "decision_ref"],
+      "required": ["target", "condition", "authority", "decision_ref"],
       "properties": {
-        "gate": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF"]},
+        "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF"]},
         "authority": {"const": "explicit_owner_instruction"},
         "decision_ref": {"const": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"},
         "condition": {"type": "string", "minLength": 1}

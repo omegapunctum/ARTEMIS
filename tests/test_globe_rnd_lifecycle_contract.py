@@ -207,6 +207,6 @@ def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None
     validation = _text("docs/VALIDATION_DECISION.md")
 
     assert "formal user value not yet validated" in truth
-    assert "FORMAL USER VALUE PENDING" in validation
+    assert "FORMAL USER VALUE UNVALIDATED" in validation
     assert "R&D research prototype" in validation
     assert "do not by themselves prove user value" in validation

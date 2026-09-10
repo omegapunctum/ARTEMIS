@@ -119,7 +119,9 @@
       "PR #413 — M5 correction closeout and bounded Gate D evidence review accepted",
       "PR #416 — accepted future Global/Focus views of one canonical temporal state; not implemented",
       "PR #418 — merged/published Place-centric v4.5 / Temporal Map v1.3; owner reports NO FINDINGS, not participant evidence",
-      "PR #419 — merged/published accepted fixed-dot label stabilization, a1479670d7f7628ffb85b887961ff27654e2fa2f"
+      "PR #419 — merged/published accepted fixed-dot label stabilization, a1479670d7f7628ffb85b887961ff27654e2fa2f",
+      "PR #414 — explicit Gate D exit ADVANCE_TO_GATE_E recorded; completed decision",
+      "PR #415 — bounded Gate E protocol preparation completed; E1/E2 NOT EXECUTED / NOT COLLECTED under later owner bypass"
     ]
   },
   "capability": {
@@ -161,10 +163,10 @@
   ],
   "blockers": [],
   "next_transition": {
-    "gate": "TEMPORAL_REGION_PROOF",
     "condition": "M5 bounded UX correction completed; Gate D ADVANCE_TO_GATE_E remains historical. After this decision PR merges, exactly one source-first bounded Roman Empire / Temporal Region universality proof; no implementation exists yet. E1/E2 NOT COLLECTED; user value unvalidated.",
     "authority": "explicit_owner_instruction",
-    "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
+    "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
+    "target": "TEMPORAL_REGION_PROOF"
   },
   "architecture_checkpoint": {
     "id": "M4",
