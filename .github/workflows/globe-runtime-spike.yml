@@ -8,12 +8,16 @@ on:
       - "fixtures/render_projection/**"
       - "fixtures/geospatial_assets/**"
       - "fixtures/globe_runtime/**"
+      - "fixtures/world_slices/roman_empire_region/**"
       - "scripts/build_render_projection_fixtures.py"
       - "scripts/validate_explorer_state_fixtures.py"
       - "scripts/validate_geospatial_assets.py"
       - "scripts/build_globe_spike.py"
+      - "scripts/build_temporal_region_inputs.py"
+      - "scripts/capture_globe_browser_evidence.mjs"
       - "scripts/globe_spike/**"
       - "tests/test_globe_runtime_spike.py"
+      - "tests/test_temporal_region_proof.py"
       - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
       - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
       - "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md"
@@ -26,12 +30,16 @@ on:
       - "fixtures/render_projection/**"
       - "fixtures/geospatial_assets/**"
       - "fixtures/globe_runtime/**"
+      - "fixtures/world_slices/roman_empire_region/**"
       - "scripts/build_render_projection_fixtures.py"
       - "scripts/validate_explorer_state_fixtures.py"
       - "scripts/validate_geospatial_assets.py"
       - "scripts/build_globe_spike.py"
+      - "scripts/build_temporal_region_inputs.py"
+      - "scripts/capture_globe_browser_evidence.mjs"
       - "scripts/globe_spike/**"
       - "tests/test_globe_runtime_spike.py"
+      - "tests/test_temporal_region_proof.py"
       - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
       - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
       - "docs/work/2026-08-14_GATE_D_BROWSER_EVIDENCE_v1.md"
@@ -65,7 +73,15 @@ jobs:
         run: python scripts/build_globe_spike.py --output /tmp/artemis-globe-spike
 
       - name: Run Globe spike contract tests
-        run: pytest -q tests/test_globe_runtime_spike.py
+        run: pytest -q tests/test_globe_runtime_spike.py tests/test_temporal_region_proof.py
+
+      - name: Build bounded Temporal Region proof artifact
+        run: |
+          python scripts/build_temporal_region_inputs.py --verify-excerpt
+          python scripts/build_globe_spike.py --dataset roman_region_proof --output /tmp/artemis-temporal-region-proof
+          test "$(find /tmp/artemis-temporal-region-proof -maxdepth 1 -type f | wc -l)" -ge 15
+          grep -F "Roman Empire" /tmp/artemis-temporal-region-proof/index.html
+          grep -F "not a publication or user-value result" /tmp/artemis-temporal-region-proof/README.txt
 
       - name: Smoke-test static artifact serving
         run: |
@@ -156,6 +172,25 @@ jobs:
 
             test -s "/tmp/artemis-globe-browser-$PROFILE.png"
           done
+
+          python -m http.server 8125 --directory /tmp/artemis-temporal-region-proof >/tmp/artemis-temporal-region-http.log 2>&1 &
+          REGION_SERVER_PID=$!
+          trap 'kill $SERVER_PID $REGION_SERVER_PID 2>/dev/null || true' EXIT
+          sleep 1
+          timeout 90s node scripts/capture_globe_browser_evidence.mjs \
+            --browser "$BROWSER" \
+            --url 'http://127.0.0.1:8125/?time=year-0091' \
+            --width 1440 \
+            --height 900 \
+            --reduced-motion false \
+            --verify-url-state false \
+            --timeout-ms 45000 \
+            --dom /tmp/artemis-temporal-region-dom.html \
+            --screenshot /tmp/artemis-temporal-region.png \
+            > /tmp/artemis-temporal-region-capture.json
+          grep -F 'Roman Empire' /tmp/artemis-temporal-region-dom.html
+          grep -F 'temporalRegion' /tmp/artemis-temporal-region-capture.json
+          test -s /tmp/artemis-temporal-region.png
 
           # Turn the three DOM probes into one machine-readable evidence artifact.
           # Timing remains diagnostic: hosted-runner wall-clock scheduling is not a SLO.
@@ -286,5 +321,8 @@ jobs:
             /tmp/artemis-globe-browser-*-capture.json
             /tmp/artemis-globe-browser-*-dom.html
             /tmp/artemis-globe-browser-*.png
+            /tmp/artemis-temporal-region-capture.json
+            /tmp/artemis-temporal-region-dom.html
+            /tmp/artemis-temporal-region.png
           if-no-files-found: error
           retention-days: 7

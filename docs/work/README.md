@@ -1,23 +1,24 @@
 # ARTEMIS working documents registry
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized; its source audit and bounded implementation are under review in one branch, with no published Region runtime.
 
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-10.
+- Updated: 2026-09-11.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
 A filename containing `ACTIVE`, an old status header or an issue reference does not make a document active.
 
-Current published runtime: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; E1/E2 NOT COLLECTED, owner_directed_bypass; formal user value UNVALIDATED. No Region implementation exists.
+Current published runtime: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; E1/E2 NOT COLLECTED, owner_directed_bypass; formal user value UNVALIDATED. The bounded Region proof branch is not published and does not change the Leonardo default.
 
 ## Active execution
 
 | Document | Role | Exit |
 |---|---|---|
 | `2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md` | Owner-bypass decision and one bounded Region proof acceptance contract | Implementation only after decision PR merge; GENERALIZES / NARROW / FAILS_GENERALITY are later proof outcomes |
+| `2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md` | Source feasibility, comparability audit and bounded proof implementation evidence | Review-only branch evidence; no Region publication or user-value claim |
 | `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D completed by #414 / ADVANCE_TO_GATE_E; retained historical decision, not a pending exit |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |

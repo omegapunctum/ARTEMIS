@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "roman-empire-region-proof-v1",
+  "coverage_mode": "explicitly_incomplete",
+  "entity_ref": "entity-roman-empire",
+  "region_ref": "region-roman-empire",
+  "included_state_count": 3,
+  "included_intervals": [
+    {"start": 91, "end": 105, "precision": "year"},
+    {"start": 106, "end": 113, "precision": "year"},
+    {"start": 114, "end": 116, "precision": "year"}
+  ],
+  "exclusions": [
+    "unselected-cliopatria-snapshots",
+    "unsupported-border-interpolation",
+    "contextual-roman-history"
+  ],
+  "absence_semantics": "not_historical_absence",
+  "promotion_allowed": false
+}

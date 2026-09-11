@@ -713,7 +713,8 @@ def test_life_path_timeline_uses_calendar_range_and_scrub() -> None:
     assert 'id="mode-range"' in html_source
     assert 'id="mode-scrub"' in html_source
     assert 'id="macro-periods"' in html_source
-    assert 'id="layer-controls"' not in html_source
+    assert 'id="semantic-controls" class="semantic-controls" hidden' in html_source
+    assert 'id="layer-controls"' in html_source
     assert 'role="status" aria-live="polite"' in html_source
     assert 'id="path-sequence"' not in html_source
     assert 'id="inspector" aria-label="Selected place details" hidden' in html_source
@@ -767,8 +768,7 @@ def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -
     runtime_source = RUNTIME_JS.read_text(encoding="utf-8")
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
-    assert "Frozen repository review package" in html_source
-    assert "does not query Airtable" in html_source
+    assert "{{RUNTIME_SOURCE_NOTE}}" in html_source
     assert "Sources, limits and prototype status" in html_source
     assert "Sources and uncertainty" in runtime_source
     assert "function renderMacroPeriodControls" in runtime_source
