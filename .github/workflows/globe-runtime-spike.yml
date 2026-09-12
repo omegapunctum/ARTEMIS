@@ -81,7 +81,7 @@ jobs:
           python scripts/build_globe_spike.py --dataset roman_region_proof --output /tmp/artemis-temporal-region-proof
           test "$(find /tmp/artemis-temporal-region-proof -maxdepth 1 -type f | wc -l)" -ge 15
           grep -F "Roman Empire" /tmp/artemis-temporal-region-proof/index.html
-          grep -F "not a publication or user-value result" /tmp/artemis-temporal-region-proof/README.txt
+          grep -F "does not establish historical completeness or validated user value" /tmp/artemis-temporal-region-proof/README.txt
 
       - name: Smoke-test static artifact serving
         run: |

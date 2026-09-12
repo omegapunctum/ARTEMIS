@@ -94,3 +94,23 @@ Stop implementation here unless review identifies a concrete material gap.
 No additional state, new feature, Global/Focus timeline, participant session or
 Gate E pass is opened. E1/E2 remain NOT COLLECTED under the accepted bypass;
 formal user value remains UNVALIDATED.
+
+## Separate Region publication decision — 2026-09-12
+
+After #422 closeout, the owner explicitly confirms merge and publication of the
+existing bounded Region proof at `/ARTEMIS/region/` for interactive review.
+This is the separate publication authorization required by #420; it supersedes
+the earlier publication hold, not the source/uncertainty or user-value limits.
+
+Pages builds `roman_region_proof` with `--public-preview` into its own `region`
+directory. Leonardo remains the default on `/globe/`; root and Atlas routing
+stay unchanged. Public build metadata and labels describe a research preview.
+No historical data, coordinates, runtime interaction, new temporal state or
+Global/Focus implementation is introduced. Rollback is removal of the Region
+build step and redeployment, leaving Leonardo intact.
+
+Merge/deployment require green CI. Verify the resulting Pages deployment and
+`/ARTEMIS/region/build-meta.json` before reporting publication complete. The
+owner's screenshot-level confirmation does not substitute for an interactive
+review: switching the three source-native periods and inspecting provenance
+remain the next check. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.
