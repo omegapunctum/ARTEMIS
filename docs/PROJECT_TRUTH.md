@@ -1,17 +1,19 @@
 # ARTEMIS — PROJECT TRUTH
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). The Region artifact remains unpublished. Next: review the existing artifact and decide publication separately; no additional implementation is opened.
 
 ## Статус
 
-Current published runtime: #419, merge `a1479670d7f7628ffb85b887961ff27654e2fa2f`, publication verified 2026-09-09 by live runtime/CSS equality. It stabilizes merged/published #418 (`b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`), the Place-centric v4.5 / Temporal Map v1.3 implementation: 9 fixed Place anchors / 11 distinct Presence episodes; repeated counts; presentation-only dashed chronology and midpoint cues; one-handle default Scrub with legacy URL restoration; Range interval semantics; unknown/null historical routes. #416 remains the accepted future Global/Focus decision over one canonical time, not implementation.
+Current public deployment: main `5875498b0d8febbdadbd036ec703908408ff8ae4`, [Pages run 34684871951](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684871951), succeeded 2026-09-12 after Pages configuration recovery. The owner reports the site works. The public default is still Leonardo; this deployment does not publish the separately generated Region artifact.
 
-The owner reports NO FINDINGS for the published #418 review and accepted #419. This closes owner acceptance only. No independent session/device/task observations are inferred. The subsequent explicit bypass instruction supersedes the earlier unsubstantiated statement that E1 was conducted; E1/E2 stay NOT COLLECTED. The next Region proof is authorized by owner direction after decision merge, not participant evidence. No Roman Empire implementation/data exists yet.
+Leonardo interaction baseline: #419, merge `a1479670d7f7628ffb85b887961ff27654e2fa2f`, publication verified 2026-09-09 by live runtime/CSS equality. It stabilizes merged/published #418 (`b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`), the Place-centric v4.5 / Temporal Map v1.3 implementation: 9 fixed Place anchors / 11 distinct Presence episodes; repeated counts; presentation-only dashed chronology and midpoint cues; one-handle default Scrub with legacy URL restoration; Range interval semantics; unknown/null historical routes. #416 remains the accepted future Global/Focus decision over one canonical time, not implementation.
+
+The owner reports NO FINDINGS for the published #418 review and accepted #419. This closes owner acceptance only. No independent session/device/task observations are inferred. The subsequent explicit bypass instruction supersedes the earlier unsubstantiated statement that E1 was conducted; E1/E2 stay NOT COLLECTED. The next Region proof is authorized by owner direction after decision merge, not participant evidence. The merged Region package contains one Roman Empire Entity and three comparable Cliopatria territorial reconstructions for 91–105, 106–113 and 114–116 CE; see [source audit and closeout](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md).
 
 Historical M5 closeout: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-09-10.
+- Дата фиксации: 2026-09-12.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -214,7 +216,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E owner-directed bypass, E1/E2 NOT COLLECTED / bounded Region proof after decision merge / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E owner-directed bypass, E1/E2 NOT COLLECTED / bounded Region proof merged in #421 / Region artifact unpublished / formal user value not yet validated**.
 
 Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.5.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-10",
+  "updated_at": "2026-09-12",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -121,7 +121,9 @@
       "PR #418 — merged/published Place-centric v4.5 / Temporal Map v1.3; owner reports NO FINDINGS, not participant evidence",
       "PR #419 — merged/published accepted fixed-dot label stabilization, a1479670d7f7628ffb85b887961ff27654e2fa2f",
       "PR #414 — explicit Gate D exit ADVANCE_TO_GATE_E recorded; completed decision",
-      "PR #415 — bounded Gate E protocol preparation completed; E1/E2 NOT EXECUTED / NOT COLLECTED under later owner bypass"
+      "PR #415 — bounded Gate E protocol preparation completed; E1/E2 NOT EXECUTED / NOT COLLECTED under later owner bypass",
+      "PR #420 — owner-directed E1/E2 bypass and source-first Region proof decision merged; formal user value UNVALIDATED",
+      "PR #421 — bounded Roman Empire Region proof merged at 5875498b0d8febbdadbd036ec703908408ff8ae4; GENERALIZES technical evidence; Region unpublished"
     ]
   },
   "capability": {
@@ -159,11 +161,12 @@
     "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md",
     "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md",
     "docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md",
-    "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
+    "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
+    "docs/work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md"
   ],
   "blockers": [],
   "next_transition": {
-    "condition": "M5 bounded UX correction completed; Gate D ADVANCE_TO_GATE_E remains historical. After this decision PR merges, exactly one source-first bounded Roman Empire / Temporal Region universality proof; no implementation exists yet. E1/E2 NOT COLLECTED; user value unvalidated.",
+    "condition": "The authorized TEMPORAL_REGION_PROOF implementation is merged in PR #421 at 5875498b0d8febbdadbd036ec703908408ff8ae4. Review the existing artifact and close out its technical GENERALIZES evidence; publication requires a separate decision. No further implementation is opened. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
     "target": "TEMPORAL_REGION_PROOF"

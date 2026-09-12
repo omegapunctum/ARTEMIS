@@ -2,7 +2,8 @@
 
 - Date: 2026-09-11
 - Owner: issue #355
-- Status: bounded implementation branch; not merged or published
+- Original 2026-09-11 status: bounded implementation branch; not merged or published
+- Current status (2026-09-12): merged in #421; Region artifact remains unpublished
 - Decision context: [Gate E owner bypass and bounded Temporal Region universality proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md)
 
 ## Source feasibility result
@@ -63,3 +64,33 @@ and formal user value remains UNVALIDATED under the owner decision.
 
 The artifact is review-only and remains unpublished. Leonardo’s published
 default remains unchanged pending a separate publication decision.
+
+## Post-merge closeout — 2026-09-12
+
+PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`.
+The source/implementation audit above is preserved; GENERALIZES remains a
+bounded technical finding, not proof of universal domain coverage or user value.
+
+Exact-merge CI succeeded:
+
+- [Core 34684007001](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684007001).
+- [Globe Boundary 34684006999](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684006999).
+- [Geospatial 34684007028](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684007028).
+- [Globe/browser 34684006973](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684006973),
+  including a 1440×900 Region capture and temporal Region browser assertions.
+  Artifact: [artemis-globe-runtime-spike](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684006973/artifacts/10294708665).
+- [Pages 34684871951](https://github.com/omegapunctum/ARTEMIS/actions/runs/34684871951)
+  succeeded after configuration recovery. The owner reports that the public
+  site works; this is not a report of Region artifact acceptance.
+
+Pages publishes the Leonardo default, not the separately generated Region proof.
+The next bounded action is owner review of this existing Region artifact and an
+explicit publication decision. Review should check the three periods 91–105,
+106–113 and 114–116 CE, changing outlines, source/license access and approximate
+reconstruction wording. It must not interpret omitted years as historical
+absence or changes in snapshot geometry as precise boundary-change dates.
+
+Stop implementation here unless review identifies a concrete material gap.
+No additional state, new feature, Global/Focus timeline, participant session or
+Gate E pass is opened. E1/E2 remain NOT COLLECTED under the accepted bypass;
+formal user value remains UNVALIDATED.
