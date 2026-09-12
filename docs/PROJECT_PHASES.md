@@ -1,11 +1,11 @@
 # ARTEMIS — PROJECT PHASES v7.10
 
-Current decision: [owner-directed Gate E bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 NOT COLLECTED / owner_directed_bypass; FORMAL USER VALUE UNVALIDATED. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. One source-first Temporal Region proof follows decision merge; no implementation exists yet.
+Current decision: [owner-directed Gate E bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 NOT COLLECTED / owner_directed_bypass; FORMAL USER VALUE UNVALIDATED. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). The Region artifact remains unpublished. Next: review the existing artifact and decide publication separately; no additional implementation is opened.
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-10.
+- Date: 2026-09-12.
 - Current phase: **5.1 — owner-directed Temporal Region proof; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
@@ -160,9 +160,9 @@ It cannot draw unknown routes, add historical content, change Range/Scrub semant
 - #414 completed the explicit Gate D exit ADVANCE_TO_GATE_E after review #413.
 - #415 completed protocol preparation; E1/E2 were NOT EXECUTED and remain NOT COLLECTED under the later explicit owner bypass. This is completed planning, not completed participant evidence.
 - #416 accepted future Global/Focus views of one canonical time; not implemented.
-- #418 implemented Place-centric v4.5 / Temporal Map v1.3; #419 stabilized fixed-dot label decluttering and is the current published revision `a1479670d7f7628ffb85b887961ff27654e2fa2f`: 9 Places / 11 distinct Presence episodes. Owner acceptance is closed; FORMAL USER VALUE UNVALIDATED.
-- The owner-bypass decision authorizes exactly one source-first Roman Empire / Temporal Region universality proof after merge. No new M6 label, independent engine, dual timeline or automatic publication. Source states must meet the decision's comparability rule. The default Leonardo public proof remains unchanged.
+- #418 implemented Place-centric v4.5 / Temporal Map v1.3; #419 stabilized fixed-dot label decluttering and is the accepted Leonardo interaction baseline `a1479670d7f7628ffb85b887961ff27654e2fa2f`: 9 Places / 11 distinct Presence episodes. Owner acceptance is closed; FORMAL USER VALUE UNVALIDATED.
+- The owner-bypass decision authorized exactly one source-first Roman Empire / Temporal Region universality proof; #421 merged that implementation with GENERALIZES technical evidence. No new M6 label, independent engine, dual timeline or automatic publication. Source states must meet the decision's comparability rule. The default Leonardo public proof remains unchanged.
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision records owner_directed_bypass; E1/E2 NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Next is one bounded Region proof after decision merge; WIP limit one. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision records owner_directed_bypass; E1/E2 NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Next is review/closeout of the merged Region artifact and a separate publication decision; WIP limit one. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.

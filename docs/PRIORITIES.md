@@ -1,20 +1,20 @@
 # ARTEMIS — PRIORITIES v7.10
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). The Region artifact remains unpublished. Next: review the existing artifact and decide publication separately; no additional implementation is opened.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-10.
-- Active cycle: `Gate E owner bypass / Region proof decision`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
+- Date: 2026-09-12.
+- Active cycle: `Region proof post-merge closeout`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Record owner bypass, then one bounded Temporal Region universality proof
+## P0 — Review the merged Region proof artifact; decide publication separately
 
-Follow [the decision and acceptance contract](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). Current public runtime remains #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`; #416 navigation is future-only and #418/#419 are completed implementation evidence. E1/E2 observations remain NOT COLLECTED. No Region implementation starts before this decision PR merges; no default Leonardo replacement without a separate publication decision.
+Follow [the decision and acceptance contract](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). Leonardo interaction baseline remains #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`; #416 navigation is future-only and #418/#419 are completed implementation evidence. E1/E2 observations remain NOT COLLECTED. Region implementation is completed in #421; no default Leonardo replacement without a separate publication decision.
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
@@ -80,7 +80,7 @@ The recorded post-#396 vocabulary was `ITERATE`, `NARROW` or `STOP/RETHINK`; the
 
 ## P3 — Keep completed correction evidence closed
 
-The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. The #419 stabilization is completed. Only one bounded Temporal Region universality proof is authorized after decision merge; no implementation is opened in this PR.
+The earlier merged decision opened exactly one UX implementation branch, followed by the owner-directed #412 correction. Both are completed evidence; the correction outcome is `PROCEED_TO_GATE_D_REVIEW`. Historical M5 `ITERATE` remains preserved. The #419 stabilization is completed. The authorized bounded Region proof is merged in #421. Closeout adds no implementation.
 
 - preserve both completed proofs and their source/uncertainty boundaries unchanged;
 - preserve `ADOPT` as one semantic path, not a live-federation capability;
@@ -120,9 +120,9 @@ These are technical/product-development foundations, not final user-value eviden
 
 ## Execution order
 
-1. Review/merge the owner-bypass decision PR; preserve Gate D ADVANCE_TO_GATE_E, M4 ADOPT and M5 history.
-2. After merge, one branch: source suitability first, then minimal shared Region projection only if 3–5 source-supported states are feasible. WIP limit remains one.
-3. Record GENERALIZES / NARROW / FAILS_GENERALITY only from the later proof. Inadequate sources are a legitimate blocked result, not fabricated geometry or an architecture failure by inference.
+1. #420 decision and #421 source-first implementation are merged. Preserve Gate D ADVANCE_TO_GATE_E, M4 ADOPT and M5 history.
+2. Review the existing Region artifact: three source-native periods, changing geometry, inspectable provenance and reconstruction limits. WIP limit remains one.
+3. The source audit supports GENERALIZES (technical only). Decide whether to publish a separately labelled Region review surface; implementation and publication are not implied by this closeout.
 4. E1/E2 remain NOT COLLECTED; formal user value unvalidated. No additional product, infrastructure, Global/Focus implementation or automatic publication.
 
 ## Completion rule

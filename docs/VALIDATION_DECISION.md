@@ -1,6 +1,6 @@
 # ARTEMIS — VALIDATION DECISION
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. Exactly one Temporal Region universality proof is authorized after this decision PR is merged; implementation has not started.
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). The Region artifact remains unpublished. Next: review the existing artifact and decide publication separately; no additional implementation is opened.
 
 ## Статус
 
@@ -10,7 +10,7 @@ Current decision: [owner-directed Gate E evidence bypass and bounded Region proo
 - Active product issue: GitHub issue `#355`.
 - Current public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
-- Active work: decision/specification only; bounded Temporal Region universality proof may start after decision merge.
+- Active work: post-merge Region proof review/closeout; #421 supports GENERALIZES (technical only), with no Region publication or user-value result.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
 
 Этот документ фиксирует evidence-backed outcome. Foundation decisions, implementation completion, passing CI and public deployment do not by themselves prove user value.
@@ -107,7 +107,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 
 | Gate E planned evidence | `NOT COLLECTED / owner_directed_bypass`; E1/E2 not executed |
 | Formal user value | `UNVALIDATED`; no positive value signal |
-| Next authority | `explicit_owner_instruction`; one bounded Region proof after decision merge |
+| Next authority | `explicit_owner_instruction`; review of the bounded Region proof merged in #421; publication requires a separate decision |
 
 ## 6. Change rule
 

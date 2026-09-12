@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Temporal Region universality proof decision`" in scope
+    assert "Current increment: `Temporal Region proof closeout`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -131,10 +131,11 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     for decision in expected:
         assert decision in decision_record
 
-    assert "Only one bounded Temporal Region universality proof is authorized after decision merge" in priorities
-    assert "no implementation is opened in this PR" in priorities
+    assert "The authorized bounded Region proof is merged in #421" in priorities
+    assert "Closeout adds no implementation" in priorities
     assert "E1/E2 observations remain NOT COLLECTED" in priorities
-    assert "M5 bounded UX correction completed" in state["next_transition"]["condition"]
+    assert state["ux_correction_checkpoint"]["status"] == "completed"
+    assert "implementation is merged in PR #421" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
