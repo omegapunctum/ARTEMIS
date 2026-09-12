@@ -26,6 +26,10 @@ from scripts.build_leonardo_gate_d_inputs import (  # noqa: E402
     build_gate_d_inputs,
 )
 from scripts.build_render_projection_fixtures import build_all  # noqa: E402
+from scripts.build_temporal_region_inputs import (  # noqa: E402
+    PACKAGE as REGION_PACKAGE_ROOT,
+    build_inputs as build_region_inputs,
+)
 from scripts.validate_geospatial_assets import validate_manifest  # noqa: E402
 
 
@@ -55,7 +59,8 @@ TEMPLATE_DIR = ROOT / "scripts" / "globe_spike"
 SPIKE_ID = "artemis-globe-gate-d-review-v1"
 EXPECTED_ENGINE = "maplibre-gl-js-5.24.0"
 DEFAULT_DATASET = "leonardo_gate_c"
-DATASET_CHOICES = {DEFAULT_DATASET, "contract_fixture"}
+REGION_DATASET = "roman_region_proof"
+DATASET_CHOICES = {DEFAULT_DATASET, "contract_fixture", REGION_DATASET}
 REQUIRED_OUTPUT_FILES = {
     "index.html",
     "runtime.js",
@@ -374,6 +379,9 @@ def _load_semantic_inputs(
         return world, state, LEONARDO_SLICE_ROOT
     if dataset == "contract_fixture":
         return _load(WORLD_PATH), _load(STATE_PATH), WORLD_PATH.parent
+    if dataset == REGION_DATASET:
+        world, state, _presets = build_region_inputs()
+        return world, state, REGION_PACKAGE_ROOT
     raise SpikeBuildError(f"unknown semantic dataset: {dataset!r}")
 
 
@@ -599,10 +607,13 @@ def _build_explorer_views(
         for layer in world.get("layers", [])
     ]
     layer_refs = [option["layer_ref"] for option in layer_options]
-    temporal_presets = (
-        copy.deepcopy(list(LEONARDO_TEMPORAL_PRESETS))
-        if dataset == DEFAULT_DATASET
-        else [
+    if dataset == DEFAULT_DATASET:
+        temporal_presets = copy.deepcopy(list(LEONARDO_TEMPORAL_PRESETS))
+    elif dataset == REGION_DATASET:
+        _region_world, _region_state, region_presets = build_region_inputs()
+        temporal_presets = copy.deepcopy(region_presets)
+    else:
+        temporal_presets = [
             {
                 "preset_id": "fixture-selection",
                 "label": "Contract fixture selection",
@@ -611,7 +622,6 @@ def _build_explorer_views(
                 ),
             }
         ]
-    )
     subsets = _layer_subsets(layer_refs)
     all_layers = sorted(layer_refs)
     views: list[dict[str, Any]] = []
@@ -1282,13 +1292,14 @@ def build_spike(
         for item in projection.get("items", [])
         if item.get("semantic_flags", {}).get("segment_kind") == "inferred_gap"
     ]
-    if not trajectory_gaps:
-        raise SpikeBuildError("runtime dataset must expose at least one trajectory gap")
-    if any(
-        item.get("spatial_status") != "unresolved" or item.get("geometry_refs")
-        for item in trajectory_gaps
-    ):
-        raise SpikeBuildError("trajectory gaps must remain unresolved and geometry-free")
+    if dataset == DEFAULT_DATASET:
+        if not trajectory_gaps:
+            raise SpikeBuildError("runtime dataset must expose at least one trajectory gap")
+        if any(
+            item.get("spatial_status") != "unresolved" or item.get("geometry_refs")
+            for item in trajectory_gaps
+        ):
+            raise SpikeBuildError("trajectory gaps must remain unresolved and geometry-free")
 
     if dataset == "contract_fixture":
         required_primitives = {
@@ -1302,7 +1313,7 @@ def build_spike(
         }
         if not required_primitives.issubset(actual_primitives):
             raise SpikeBuildError("contract fixture lost required renderer primitives")
-    else:
+    elif dataset == DEFAULT_DATASET:
         if world.get("historical_corpus_ready") is not False:
             raise SpikeBuildError("Gate D package must remain not historical-ready")
         if world.get("promotion_allowed") is not False:
@@ -1330,21 +1341,39 @@ def build_spike(
             raise SpikeBuildError("Gate C Region alternatives must remain unresolved")
 
     knowledge_index = _build_knowledge_index(world, projection)
-    base_life_path = _build_life_path_presentation(
-        world=world,
-        base_state=state,
-        base_projection=projection,
-        projection_schema=projection_schema,
-        presentation=life_path_presentation,
-        dataset=dataset,
-    )
-    life_path = _build_m5_whole_life_path(
-        base_life_path=base_life_path,
-        base_state=state,
-        package=major_life_package,
-        anchors=major_life_runtime_anchors,
-        contract=m5_contract,
-    )
+    if dataset == REGION_DATASET:
+        # Region proof views are alternate canonical-time projections. Keep every
+        # temporally valid geometry inspectable without inventing a second runtime
+        # knowledge store; records remain keyed by the shared projection item id.
+        records_by_id = {record["item_id"]: record for record in knowledge_index["records"]}
+        for view in explorer_views["views"]:
+            view_index = _build_knowledge_index(world, view["projection"])
+            for record in view_index["records"]:
+                records_by_id.setdefault(record["item_id"], record)
+        knowledge_index["records"] = [records_by_id[item_id] for item_id in sorted(records_by_id)]
+    if dataset == REGION_DATASET:
+        life_path = {
+            "schema_version": "1.0.0",
+            "available": False,
+            "presentation_only": True,
+            "reason": "bounded Region proof uses the shared Explorer temporal selector; Leonardo Life Path controls are not part of this artifact",
+        }
+    else:
+        base_life_path = _build_life_path_presentation(
+            world=world,
+            base_state=state,
+            base_projection=projection,
+            projection_schema=projection_schema,
+            presentation=life_path_presentation,
+            dataset=dataset,
+        )
+        life_path = _build_m5_whole_life_path(
+            base_life_path=base_life_path,
+            base_state=state,
+            package=major_life_package,
+            anchors=major_life_runtime_anchors,
+            contract=m5_contract,
+        )
     knowledge_item_ids = {
         record["item_id"] for record in knowledge_index["records"]
     }
@@ -1366,6 +1395,29 @@ def build_spike(
     output.mkdir(parents=True, exist_ok=True)
 
     template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
+    is_region = dataset == REGION_DATASET
+    runtime_title = "Roman Empire · Temporal Region proof" if is_region else "Leonardo Life Path"
+    runtime_aria_label = (
+        "ARTEMIS Roman Empire temporal region proof globe"
+        if is_region
+        else "ARTEMIS Leonardo life path globe"
+    )
+    subject_label = "Roman Empire" if is_region else "Leonardo da Vinci"
+    subject_coverage = (
+        "3 source-supported intervals · 91–116 CE"
+        if is_region
+        else "Whole-life proof · 1452–1519"
+    )
+    selection_empty_copy = (
+        "Choose a temporal Region state on the globe."
+        if is_region
+        else "Choose a visible place on the globe."
+    )
+    source_note = (
+        "Cliopatria source reconstruction excerpt. Native year intervals, provenance and uncertainty remain inspectable; this bounded proof is not a publication or user-value result."
+        if is_region
+        else "Frozen repository review package. Claims remain draft/rejected; this preview does not query Airtable."
+    )
     preview_status = (
         "Public research prototype · not a validated product"
         if public_preview
@@ -1379,7 +1431,12 @@ def build_spike(
     (output / "index.html").write_text(
         template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status).replace(
             "{{PUBLIC_PREVIEW_NAV}}", preview_nav
-        ),
+        ).replace("{{RUNTIME_TITLE}}", runtime_title)
+        .replace("{{RUNTIME_ARIA_LABEL}}", runtime_aria_label)
+        .replace("{{SUBJECT_LABEL}}", subject_label)
+        .replace("{{SUBJECT_COVERAGE}}", subject_coverage)
+        .replace("{{SELECTION_EMPTY_COPY}}", selection_empty_copy)
+        .replace("{{RUNTIME_SOURCE_NOTE}}", source_note),
         encoding="utf-8",
     )
     shutil.copyfile(TEMPLATE_DIR / "runtime.js", output / "runtime.js")
@@ -1400,6 +1457,11 @@ def build_spike(
     copied_source_sha256 = _copy_local_sources(
         world, output, source_root=source_root
     )
+    if dataset == REGION_DATASET:
+        for audit_name in ("source_manifest.json", "coverage_manifest.json", "README.md"):
+            audit_path = REGION_PACKAGE_ROOT / audit_name
+            shutil.copyfile(audit_path, output / audit_name)
+            copied_source_sha256[audit_name] = hashlib.sha256(audit_path.read_bytes()).hexdigest()
 
     metadata = {
         "schema_version": "1.0.0",
@@ -1484,8 +1546,40 @@ def build_spike(
         if public_preview
         else "This directory is generated. It is not the public ARTEMIS runtime.\n"
     )
+    if dataset == REGION_DATASET:
+        dataset_note = (
+            "This is a bounded Roman Empire Region proof using three Cliopatria source intervals; it is not a publication or user-value result.\n"
+            "Region geometry is source reconstruction with native year precision; gaps are not interpolated and absence is not historical absence.\n"
+        )
+    else:
+        dataset_note = (
+            "M5 composes seven reviewed major-life Presence candidates with the frozen four-Presence Romagna segment.\n"
+            "Leonardo Life Path offers year-scaled Range and Scrub views across 1452–1519.\n"
+            "Dashed chronology links and directional cues are renderer-only time-order presentation; historical travel routes remain unknown and route geometry remains null.\n"
+            "The six macro periods are presentation-only progressive-refinement controls, not continuous residence claims.\n"
+        )
+    artifact_heading = (
+        "ARTEMIS bounded Temporal Region proof artifact (#355)"
+        if dataset == REGION_DATASET
+        else "ARTEMIS source-aware Globe Gate D review artifact (#355)"
+    )
+    semantic_note = (
+        "The semantic input is the bounded Roman Empire Region package; it is review-required, incomplete and not promotable.\n"
+        if dataset == REGION_DATASET
+        else "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
+    )
+    leonardo_note = (
+        "Its historical Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
+        if dataset != REGION_DATASET
+        else "Source geometry is not asserted as exact historical borders; no interpolation or absence inference is allowed.\n"
+    )
+    place_note = (
+        "Nine CC0 Wikidata points are present-day place references only; exact historical positions remain unknown.\n"
+        if dataset != REGION_DATASET
+        else ""
+    )
     (output / "README.txt").write_text(
-        "ARTEMIS source-aware Globe Gate D review artifact (#355)\n\n"
+        artifact_heading + "\n\n"
         + runtime_boundary
         + "Serve it with any static HTTP server, for example:\n\n"
         f"  python -m http.server 8080 --directory {output}\n\n"
@@ -1493,13 +1587,10 @@ def build_spike(
         "Network access is required only to load the pinned MapLibre GL JS engine from unpkg.\n"
         "Earth context is the bundled Natural Earth 1:110m Land v4.0.0 present-day reference layer.\n"
         "It is real physical-geography context, not historical reconstruction; terrain remains synthetic/non-live.\n"
-        "The default semantic input is the frozen, non-public Leonardo Gate C package.\n"
-        "Its historical Claims remain draft/rejected, all historical geometry remains withheld, and promotion is not allowed.\n"
-        "Nine CC0 Wikidata points are present-day place references only; exact historical positions remain unknown.\n"
-        "M5 composes seven reviewed major-life Presence candidates with the frozen four-Presence Romagna segment.\n"
-        "Leonardo Life Path offers year-scaled Range and Scrub views across 1452–1519.\n"
-        "Dashed chronology links and directional cues are renderer-only time-order presentation; historical travel routes remain unknown and route geometry remains null.\n"
-        "The six macro periods are presentation-only progressive-refinement controls, not continuous residence claims.\n",
+        + semantic_note
+        + leonardo_note
+        + place_note
+        + dataset_note,
         encoding="utf-8",
     )
 

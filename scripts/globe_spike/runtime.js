@@ -1806,7 +1806,9 @@
     const range = byId('temporal-preset');
     const presetLabel = presets[presetIndex]?.label || runtime.activeTemporalPresetId;
     if (range) {
-      range.value = String(presetIndex);
+      range.value = range.tagName === 'SELECT'
+        ? runtime.activeTemporalPresetId
+        : String(presetIndex);
       range.setAttribute('aria-valuetext', presetLabel);
     }
     setText('temporal-preset-value', presetLabel);
@@ -1884,15 +1886,36 @@
   }
 
   function renderExplorerControls() {
+    const semanticControls = byId('semantic-controls');
+    if (semanticControls) semanticControls.hidden = false;
+    document.querySelector('.mode-switch')?.setAttribute('hidden', '');
+    for (const id of ['mode-range', 'mode-scrub', 'range-controls', 'scrub-controls', 'macro-periods', 'presence-sequence']) {
+      const node = byId(id);
+      if (node) node.hidden = true;
+    }
     const presets = runtime.viewIndex?.temporal_presets || [];
     const range = byId('temporal-preset');
     if (range) {
-      range.max = String(Math.max(0, presets.length - 1));
-      range.disabled = presets.length < 2;
-      range.addEventListener('input', (event) => {
-        const preset = presets[Number(event.currentTarget.value)];
-        if (preset) applySemanticView(preset.preset_id, runtime.activeLayerRefs);
-      });
+      if (range.tagName === 'SELECT') {
+        range.replaceChildren(...presets.map((preset) => {
+          const option = document.createElement('option');
+          option.value = preset.preset_id;
+          option.textContent = preset.label;
+          return option;
+        }));
+        range.disabled = presets.length < 2;
+        range.addEventListener('change', (event) => {
+          const preset = presets.find((candidate) => candidate.preset_id === event.currentTarget.value);
+          if (preset) applySemanticView(preset.preset_id, runtime.activeLayerRefs);
+        });
+      } else {
+        range.max = String(Math.max(0, presets.length - 1));
+        range.disabled = presets.length < 2;
+        range.addEventListener('input', (event) => {
+          const preset = presets[Number(event.currentTarget.value)];
+          if (preset) applySemanticView(preset.preset_id, runtime.activeLayerRefs);
+        });
+      }
     }
 
     const layers = byId('layer-controls');

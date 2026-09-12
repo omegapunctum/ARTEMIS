@@ -4,17 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>ARTEMIS · Leonardo Life Path</title>
+  <title>ARTEMIS · {{RUNTIME_TITLE}}</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <main id="app">
-    <section id="globe-shell" aria-label="ARTEMIS Leonardo life path globe">
+    <section id="globe-shell" aria-label="{{RUNTIME_ARIA_LABEL}}">
       <div id="globe"></div>
       <header id="spike-banner">
         <div class="product-label">
-          <strong>ARTEMIS · Leonardo Life Path</strong>
+          <strong>ARTEMIS · {{RUNTIME_TITLE}}</strong>
           <span>{{PUBLIC_PREVIEW_STATUS}}</span>
           <span class="sequence-note">Dashed links and chevrons show time order, not travel routes.</span>
         </div>
@@ -32,12 +32,12 @@
         <button id="close-details" type="button" aria-label="Close place details">×</button>
       </header>
       <section class="selection-section" aria-labelledby="selection-title">
-        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">Choose a visible place on the globe.</div>
+        <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">{{SELECTION_EMPTY_COPY}}</div>
       </section>
       <details id="prototype-details" class="prototype-details">
         <summary>Sources, limits and prototype status</summary>
         <div class="prototype-body">
-          <p class="source-note">Frozen repository review package. Claims remain draft/rejected; this preview does not query Airtable.</p>
+          <p class="source-note">{{RUNTIME_SOURCE_NOTE}}</p>
           <dl class="metrics">
             <div><dt>Selected time</dt><dd id="selected-time">—</dd></div>
             <div><dt>World Slice</dt><dd id="world-slice">—</dd></div>
@@ -59,8 +59,8 @@
     <section id="timeline-dock" aria-labelledby="time-mode-title">
       <header class="timeline-subject">
         <span class="eyebrow">Selected object</span>
-        <h1>Leonardo da Vinci</h1>
-        <p id="path-coverage">Whole-life proof · 1452–1519</p>
+        <h1>{{SUBJECT_LABEL}}</h1>
+        <p id="path-coverage">{{SUBJECT_COVERAGE}}</p>
       </header>
 
       <div class="timeline-workspace">
@@ -73,6 +73,13 @@
         </div>
 
         <nav id="macro-periods" class="macro-periods" aria-label="Major life periods"></nav>
+
+        <div id="semantic-controls" class="semantic-controls" hidden>
+          <label for="temporal-preset">Selected time
+            <select id="temporal-preset" aria-label="Selected canonical time"></select>
+          </label>
+          <div id="layer-controls" class="layer-controls" aria-label="Active semantic layers"></div>
+        </div>
 
         <div id="range-controls" class="timeline-mode">
           <div class="timeline-values">

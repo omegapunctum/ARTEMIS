@@ -179,6 +179,30 @@ async function verifyPlaceLabels(cdp) {
   })()`, true);
 }
 
+async function verifyTemporalRegion(cdp) {
+  return evaluate(cdp, `(async () => {
+    const runtime = window.__ARTEMIS_GLOBE_SPIKE;
+    if (runtime.data.lifePath.available !== false) throw new Error('Region artifact unexpectedly enabled Leonardo Life Path');
+    const presets = runtime.viewIndex?.temporal_presets || [];
+    if (presets.length !== 3) throw new Error('Expected three source-supported Region time presets');
+    const selector = document.getElementById('temporal-preset');
+    if (!selector || selector.options.length !== 3 || selector.hidden) throw new Error('Canonical Region time selector is not available');
+    if (document.querySelector('.mode-switch') && !document.querySelector('.mode-switch').hidden) throw new Error('Leonardo Range/Scrub mode switch leaked into Region proof');
+    const firstItem = (runtime.data.projection.items || []).find(item => item.object_ref === 'region-roman-empire');
+    if (!firstItem || firstItem.object_type !== 'Region' || firstItem.geometry_refs.length !== 1) throw new Error('Initial Region projection is missing');
+    const firstGeometry = firstItem.geometry_refs[0];
+    const second = presets[1];
+    runtime.selectView(second.preset_id, runtime.activeLayerRefs);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const secondItem = (runtime.data.projection.items || []).find(item => item.object_ref === 'region-roman-empire');
+    if (!secondItem || secondItem.temporal_membership !== 'active' || secondItem.geometry_refs.length !== 1) throw new Error('Canonical time did not project an active Region');
+    if (secondItem.geometry_refs[0] === firstGeometry) throw new Error('Changing canonical time did not change Region geometry');
+    if (runtime.data.projection.geometries.some(geometry => geometry.geometry?.type === 'LineString')) throw new Error('Region proof introduced route geometry');
+    if (/numbered place|Build from/i.test(document.body.innerText)) throw new Error('Obsolete Leonardo copy leaked into Region artifact');
+    return {presets: presets.map(p => p.preset_id), firstGeometry, secondGeometry: secondItem.geometry_refs[0], canonicalTime: runtime.data.state.temporal_selection.start, activeRegion: secondItem.object_ref, routeGeometry: null};
+  })()`, true);
+}
+
 async function verifyUrlStateRestoration(cdp, deadline) {
   const interaction = await evaluate(cdp, `(async () => {
     const runtime = window.__ARTEMIS_GLOBE_SPIKE;
@@ -459,7 +483,9 @@ async function main() {
     await cdp.send('Runtime.enable');
     await cdp.send('Page.navigate', { url: options.url });
     const readiness = await waitForVisualReadiness(cdp, deadline);
-    const placeLabels = await verifyPlaceLabels(cdp);
+    const isRegion = await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE?.data?.lifePath?.available === false");
+    const placeLabels = isRegion ? null : await verifyPlaceLabels(cdp);
+    const temporalRegion = isRegion ? await verifyTemporalRegion(cdp) : null;
     const dom = await evaluate(cdp, 'document.documentElement.outerHTML');
     const capture = await cdp.send('Page.captureScreenshot', {
       format: 'png',
@@ -468,10 +494,10 @@ async function main() {
     });
     await writeFile(options.dom, `${dom}\n`, 'utf8');
     await writeFile(options.screenshot, Buffer.from(capture.data, 'base64'));
-    const urlStateRestoration = options.verifyUrlState
+    const urlStateRestoration = !isRegion && options.verifyUrlState
       ? await verifyUrlStateRestoration(cdp, deadline)
       : null;
-    process.stdout.write(`${JSON.stringify({ ...readiness, placeLabels, urlStateRestoration })}\n`);
+    process.stdout.write(`${JSON.stringify({ ...readiness, placeLabels, temporalRegion, urlStateRestoration })}\n`);
   } catch (error) {
     if (browserLog) process.stderr.write(browserLog);
     throw error;
