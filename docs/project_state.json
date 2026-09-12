@@ -166,7 +166,7 @@
   ],
   "blockers": [],
   "next_transition": {
-    "condition": "The authorized TEMPORAL_REGION_PROOF implementation is merged in PR #421 at 5875498b0d8febbdadbd036ec703908408ff8ae4. Review the existing artifact and close out its technical GENERALIZES evidence; publication requires a separate decision. No further implementation is opened. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.",
+    "condition": "The authorized TEMPORAL_REGION_PROOF implementation is merged in PR #421 at 5875498b0d8febbdadbd036ec703908408ff8ae4. Owner authorized separate research-preview publication at /ARTEMIS/region/ on 2026-09-12, after green CI; verify Pages deployment before claiming publication. Then review the existing artifact interactively. No further feature implementation is opened. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
     "target": "TEMPORAL_REGION_PROOF"

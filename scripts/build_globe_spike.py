@@ -1414,7 +1414,7 @@ def build_spike(
         else "Choose a visible place on the globe."
     )
     source_note = (
-        "Cliopatria source reconstruction excerpt. Native year intervals, provenance and uncertainty remain inspectable; this bounded proof is not a publication or user-value result."
+        "Cliopatria source reconstruction excerpt. Native year intervals, provenance and uncertainty remain inspectable; this bounded proof does not establish historical completeness or validated user value."
         if is_region
         else "Frozen repository review package. Claims remain draft/rejected; this preview does not query Airtable."
     )
@@ -1548,7 +1548,7 @@ def build_spike(
     )
     if dataset == REGION_DATASET:
         dataset_note = (
-            "This is a bounded Roman Empire Region proof using three Cliopatria source intervals; it is not a publication or user-value result.\n"
+            "This is a bounded Roman Empire Region proof using three Cliopatria source intervals; it does not establish historical completeness or validated user value.\n"
             "Region geometry is source reconstruction with native year precision; gaps are not interpolated and absence is not historical absence.\n"
         )
     else:

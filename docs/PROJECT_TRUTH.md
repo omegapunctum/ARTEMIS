@@ -1,5 +1,7 @@
 # ARTEMIS — PROJECT TRUTH
 
+Publication decision — 2026-09-12: the owner authorizes a separately labelled public research preview at `/ARTEMIS/region/`, merge and deployment after green CI. Leonardo stays at `/ARTEMIS/globe/`. This supersedes the publication hold recorded below; deployment completion must be verified from Pages, not inferred from authorization. Interactive owner review remains pending; E1/E2 NOT COLLECTED and formal user value UNVALIDATED. See [publication record](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#separate-region-publication-decision--2026-09-12).
+
 Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). The Region artifact remains unpublished. Next: review the existing artifact and decide publication separately; no additional implementation is opened.
 
 ## Статус

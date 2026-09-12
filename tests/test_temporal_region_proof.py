@@ -99,8 +99,29 @@ def test_region_artifact_uses_shared_runtime_and_is_not_leonardo_publication(tmp
     assert "Roman Empire" in html
     assert "temporal-preset" in html
     assert "Leonardo Life Path" not in html
-    assert "not a publication or user-value result" in readme
+    assert "does not establish historical completeness or validated user value" in readme
     assert (output / "source_manifest.json").exists()
     assert (output / "coverage_manifest.json").exists()
     assert len(views["views"]) == 6  # 3 times × 1-layer on/off subsets
     assert all(view["projection"]["source"]["explorer_state_ref"] for view in views["views"])
+
+
+def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Path) -> None:
+    output = tmp_path / "region"
+    metadata = build_spike(output, dataset="roman_region_proof", public_preview=True)
+    html = (output / "index.html").read_text()
+    readme = (output / "README.txt").read_text()
+    assert metadata["public_pages_entrypoint"] is True
+    assert metadata["deployment_mode"] == "public_r_and_d_preview"
+    assert metadata["semantic_dataset"] == "roman_region_proof"
+    assert metadata["temporal_preset_count"] == 3
+    assert metadata["life_path_available"] is False
+    assert "Public research prototype" in html
+    assert "not a public capability" not in html
+    assert "deployed as a public R&D preview" in readme
+    assert "not a publication" not in readme
+    assert "validated user value" in readme
+    workflow = (ROOT / ".github/workflows/pages.yml").read_text()
+    assert "--output pages_artifact/region" in workflow
+    assert "--output pages_artifact/globe" in workflow
+    assert "--dataset roman_region_proof" in workflow
