@@ -33,6 +33,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - root public runtime является малой ARTEMIS Core landing page;
 - `/globe/` — primary public research prototype, явно не product-validated historical capability;
 - `/atlas/` сохраняет прежний Architecture Atlas как compatibility-only surface;
+- `/region/` — separate public R&D preview ограниченного Roman Empire / Temporal Region proof; не новый validated product;
 - real validated Life in Context synchronized multi-layer experience ещё не доступен как продукт;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
@@ -66,7 +67,11 @@ GitHub Pages публикует статический runtime:
 - root Core landing без runtime dependencies;
 - `/globe/` как primary Leonardo research prototype;
 - `/atlas/` как frozen compatibility map с checked-in `data/*` и PWA behavior;
-- все три entry points не требуют backend API.
+- `/region/` как separate public R&D preview ограниченного Roman Empire / Temporal Region proof;
+- все четыре entry points не требуют backend API.
+
+Region publication is availability evidence only: E1/E2 remain NOT COLLECTED,
+formal user value remains UNVALIDATED; Leonardo remains the primary research surface.
 
 GitHub Pages не исполняет FastAPI. Без отдельно настроенного `ARTEMIS_API_BASE` публичный сайт не предоставляет рабочие auth, Research Slices, Stories, Courses, uploads и moderation API.
 
@@ -220,7 +225,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E owner-directed bypass, E1/E2 NOT COLLECTED / bounded Region proof merged in #421 / Region live publication verified (owner-supplied evidence) / formal user value not yet validated**.
 
-Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
+Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a separate public R&D preview. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
 Reviewed/accepted foundation and implementation evidence includes:
 
