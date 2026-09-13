@@ -1,117 +1,81 @@
 # ARTEMIS repository instructions
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+This file is the single entrypoint for agents working in ARTEMIS. It provides repository-wide routing, execution boundaries and invariants. It is not a source of current project state and must not duplicate mutable lifecycle status.
 
-This file is the single entrypoint for agents working in ARTEMIS. It routes to project-owned contracts and does not replace them.
+## Context routing
 
-## Required orientation
+Read only what the task needs.
 
-Before changing the repository:
+For non-trivial work, start with:
 
-1. Read `docs/FOUNDATION_INDEX.md`.
-2. Read `docs/PROJECT_TRUTH.md`.
-3. Read `docs/ARTEMIS_CONCEPT.md`.
-4. Read `docs/ARTEMIS_PRODUCT_SCOPE.md` for the active implementation boundary.
-5. Read `docs/PLATFORM_ARCHITECTURE_DECISION.md` for web/PWA/native, renderer, scaling or repository/storage questions.
-6. Read `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` for knowledge-model work.
-7. Read `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` for temporal/spatial uncertainty semantics.
-8. Read `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md`.
-9. Read `docs/DEVELOPMENT_OPERATING_SYSTEM.md` and `docs/project_state.json` for current execution state.
-10. Read `docs/work/README.md` before using a working document.
-11. Read the task-specific owner documents.
+1. `docs/PROJECT_TRUTH.md` for current capability and factual repository/runtime state;
+2. `docs/project_state.json` for machine-readable phase/gate/checkpoint state;
+3. `docs/work/README.md` for active working-document lifecycle;
+4. one task-specific canonical or active-work owner.
 
-Detailed operational governance lives in `docs/ARTEMIS_MASTER_PROMPT.md`.
+Use `docs/FOUNDATION_INDEX.md` when the correct owner is unclear or the task crosses owner boundaries. Read additional canonical documents only when the task touches their semantics.
 
-## Active foundation boundary
+For small local edits, inspect the affected files and the directly relevant owner/checks instead of loading the full documentation stack.
 
-- ARTEMIS is a source-aware spatial-temporal knowledge model about the world.
-- Space and time are mandatory core coordinates.
-- Core change objects are `Event`, `State`, `Process`, `Trajectory` and temporal `Region`.
-- Evidence is a required trust layer: Claim → EvidenceLink → Source/locator.
-- Co-presence, possible encounter, documented encounter, interaction, influence and causality are distinct.
-- Facts, observations, interpretations, inferences, hypotheses and counterfactuals are distinct.
-- ARTEMIS is web-first; PWA/native packaging is delivery, not a second product architecture.
-- 2D Map and Globe are renderers over one semantic core; timeline is shared Explorer temporal state.
-- Architecture Atlas is a preserved thematic compatibility layer at `/atlas/`.
-- First validation vertical: `Life in Context / Leonardo Temporal Map`.
-- A bounded source-aware Globe/Temporal Map MVP is active under #355; generative AI, causal/counterfactual runtime, VR/AR, universal corpus and production-scale dynamic Earth remain frozen.
-- Current ResearchSlice v2 is compatibility code; #323–#325 are not the active path.
+`docs/ARTEMIS_MASTER_PROMPT.md` is an on-demand agent-governance reference, not a second current-state registry.
 
-## Change discipline
+## Owner routing
 
-- Preserve unrelated changes and completed history.
-- One question has one canonical owner.
-- Update documentation first for product/model/governance changes.
-- Keep North Star, Product Thesis, active scope, current implementation, public deployment and validated value separate.
-- Do not invent evidence, locator, geometry, route, date precision, relation or migration success.
-- Do not convert proximity/co-presence into historical Relation.
-- Do not treat absence in a World Slice as historical absence.
-- Keep Architecture Atlas public data publication in the ETL/release path.
-- Keep Leonardo historical runtime input on the reviewed repository World Model → Explorer State → Render Projection path unless a separate data/storage decision changes it.
-- Do not put credentials, tokens, owner identity or private research in public artifacts/storage/logs.
-- Do not harden a compatibility schema as target without a contract and migration decision.
-- Do not expand a broad product thesis into current implementation without explicit scope/gate authorization.
+Use the owner that matches the question:
 
-## Current execution boundary
+- identity / North Star / attractor → `docs/ARTEMIS_CONCEPT.md`;
+- active product scope → `docs/PRODUCT_THESIS.md`, `docs/ARTEMIS_PRODUCT_SCOPE.md`;
+- current capability → `docs/PROJECT_TRUTH.md`;
+- spatial-temporal semantics → `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- uncertainty → `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md`;
+- entities / relations → `docs/ENTITY_MODEL.md`;
+- claims / evidence / inference → `docs/EPISTEMIC_CONTRACT.md`;
+- AI behavior → `docs/AI_POLICY.md`;
+- platform / renderer / storage boundary → `docs/PLATFORM_ARCHITECTURE_DECISION.md`;
+- repository/runtime layout → `docs/PROJECT_STRUCTURE.md`;
+- execution process → `docs/DEVELOPMENT_OPERATING_SYSTEM.md`.
 
-Latest owner-directed update: #412 merged/published and owner-accepted 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`. Follow `docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md`. Active work is Gate E evidence preparation; vocabulary `ADVANCE_TO_GATE_E / NARROW / REJECT`, exit recorded as `ADVANCE_TO_GATE_E`. M4 `ADOPT` is separate completed evidence. No new implementation without a concrete material gap.
+Working, audit and archive files cannot override the relevant canonical owner.
 
-Foundation v3 is accepted in PR `#328`; the old Concept v2 implementation backlog and PR `#314` are closed.
+## Repository invariants
 
-Active work is issue `#355`. Gate C delivery `#332` / `#360` is completed/FREEZE. Gate D is completed / ADVANCE_TO_GATE_E, following the completed Core Reset and Temporal Map milestones:
+- Distinguish Idea, Decision, Specification, Implementation and Verification.
+- Keep North Star, active scope, implementation, public availability and validated user value separate.
+- Preserve reviewed/frozen contracts unless their own change-control path is explicitly reopened.
+- Do not invent evidence, locators, dates, temporal precision, coordinates, geometry, routes, relations, confidence or migration success.
+- Dataset absence is not historical absence.
+- Co-presence/proximity is not encounter, interaction, influence or causality.
+- AI output is not Source and must not silently mutate canonical knowledge.
+- Preserve one World Model / epistemic core across domains and renderers; renderer/UI state must not redefine domain semantics.
+- Keep secrets, credentials, owner identity and private research out of public repository artifacts and logs.
+- Do not expand implementation scope merely because a change is compatible with the long-term attractor.
 
-- PR `#393` completed Core Reset: root Core landing, `/globe/` primary research surface, `/atlas/` compatibility-only and `ARTEMIS Core Check` isolated as the required product signal;
-- PR `#395` established the calendar-based Leonardo Temporal Map life-path loop;
-- the first published #395 manual check recorded `ITERATE`;
-- PR `#396` implemented and published that bounded correction.
+## Execution
 
-Current Temporal Map behavior:
+Work within the requested task and the scope authorized by its current owner.
 
-- `Range` is a two-handle calendar interval using temporal overlap;
-- `Scrub` keeps a chosen build origin plus one current-time cursor and accumulates the path forward;
-- the full-width bottom timeline is the primary time instrument;
-- map, timeline, selection and URL share one state;
-- first click opens a compact popup without moving the camera;
-- optional further action opens the right detail drawer;
-- double-click may focus the selected place;
-- earlier dashed connectors were chronology-only presentation, never historical route geometry; current #412 uses explicitly labelled renderer-only chronological links; historical routes remain unknown/null.
+For ordinary local repository work, proceed through implementation, the smallest relevant local verification, fixes for failures caused by the requested change, and rerun affected checks without asking for approval at each intermediate step.
 
-The fresh user check of the published #396 loop completed **M1 — UX checkpoint** with `ITERATE`. PR `#400` completed the reviewed major-life candidate package. PR `#401` completed **M2 — One-source proof** with `PROCEED_TO_M3`. PR `#403` completed **M3 — Multi-source proof** with `PROCEED_TO_M4`. **M4 — Architecture decision** is complete with `ADOPT`. PR `#406` later published the owner-directed 11-Presence M5 whole-life proof; the direct product check recorded `ITERATE` in PR `#408`. PR `#409` merged the 2026-09-05 scope decision. Its bounded UX correction in PRs #411/#412 is completed, published and owner-accepted with `PROCEED_TO_GATE_D_REVIEW`. New sources/data, live federation, generic ingestion/storage infrastructure and any second product branch remain closed.
+Stop and surface the blocker when:
 
-Preserve these boundaries:
+- the next action is destructive, irreversible or affects an external/production system and approval is required;
+- the task would change an unauthorized product/domain semantic or a frozen reviewed contract;
+- authoritative sources conflict and the correct owner cannot be resolved;
+- completing the task would materially broaden scope beyond the request.
 
-- #329 / PR #336 World Model fixtures and #330 / PR #337 uncertainty semantics as reviewed READY foundations;
-- completed #344 / PR #351 cross-renderer parity as a required green foundation;
-- #377 as accepted historical foundation evidence; editable refinement remains deferred;
-- #331 `DEFERRED`; derived proximity/co-presence remains separate and documented Relation predicates are prohibited until #331 is explicitly reopened and accepted;
-- #371/#373 deferred and the nine Airtable World Model shadow tables empty; the merged mapping preflight does not authorize historical writes;
-- one World Model → Explorer State → Render Projection path for both 2D and Globe;
-- the Globe explicitly labelled as a public research prototype, not product-validated historical truth;
-- MapLibre as the leading current MVP engine unless measured evidence justifies a different renderer decision;
-- security, compatibility and critical maintenance remain allowed.
-
-The current Gate D historical input is the non-public Leonardo-in-Romagna 1502 scope package under `fixtures/world_slices/leonardo_romagna_1502/v1/`. It is a frozen curation boundary, not READY public historical data. Exact routes, Region boundaries, durations and historical coordinates remain unknown/withheld where unsupported.
+Prefer the smallest complete change. Preserve unrelated work and avoid opportunistic refactoring.
 
 ## Verification
 
-Run the smallest relevant checks while iterating. The required product signal is the `ARTEMIS Core Check` workflow. Before handoff for Core/Temporal Map changes, build the public-preview artifact and run the bounded Core tests listed in `.github/workflows/release-gate.yml` plus any directly owned Globe/runtime checks.
+Run the smallest relevant owned checks for the affected contour. Fix failures caused by the change and rerun affected checks.
 
-Legacy/backend/data work must additionally run its owned checks. The historical repository-wide suite is not a substitute for the Core signal and known #392 review-envelope failures must not be represented as product regressions.
+Do not run unrelated repository-wide suites merely because they exist. Use broader suites only when the changed scope or owner contract requires them.
 
-Useful compatibility checks remain:
-
-```bash
-python scripts/release_check.py  # Architecture Atlas/backend compatibility only
-pytest -q                       # broad suite; report known baseline failures honestly
-```
-
-Documentation-only connector work must still verify:
+For documentation/governance-only changes, verify at minimum:
 
 - changed-file scope;
-- internal links/registry;
-- no contradictory active status;
-- current capability truth;
-- current decision vocabulary;
-- PR diff and GitHub checks.
+- owner/routing consistency;
+- no duplicated or contradictory mutable current state;
+- relevant governance tests or structural checks.
 
-Report structural checks honestly; they are not user validation.
+Report verification honestly. Passing checks are implementation evidence, not user-value validation.
