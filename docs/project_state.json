@@ -1,7 +1,7 @@
 {
   "schema_version": "1.5.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-12",
+  "updated_at": "2026-09-13",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -123,7 +123,8 @@
       "PR #414 — explicit Gate D exit ADVANCE_TO_GATE_E recorded; completed decision",
       "PR #415 — bounded Gate E protocol preparation completed; E1/E2 NOT EXECUTED / NOT COLLECTED under later owner bypass",
       "PR #420 — owner-directed E1/E2 bypass and source-first Region proof decision merged; formal user value UNVALIDATED",
-      "PR #421 — bounded Roman Empire Region proof merged at 5875498b0d8febbdadbd036ec703908408ff8ae4; GENERALIZES technical evidence; Region unpublished"
+      "PR #421 — bounded Roman Empire Region proof merged at 5875498b0d8febbdadbd036ec703908408ff8ae4; GENERALIZES technical evidence; Region live publication verified (owner-supplied evidence)",
+      "PR #423 — separate Region public R&D publication merged at ded28ab2edbe51392be4370080ad6b500c61d882; live publication verified from owner-supplied screenshot and build metadata, recorded 2026-09-13; see source audit verification record"
     ]
   },
   "capability": {
@@ -166,7 +167,7 @@
   ],
   "blockers": [],
   "next_transition": {
-    "condition": "The authorized TEMPORAL_REGION_PROOF implementation is merged in PR #421 at 5875498b0d8febbdadbd036ec703908408ff8ae4. Owner authorized separate research-preview publication at /ARTEMIS/region/ on 2026-09-12, after green CI; verify Pages deployment before claiming publication. Then review the existing artifact interactively. No further feature implementation is opened. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.",
+    "condition": "The authorized TEMPORAL_REGION_PROOF implementation is merged in PR #421. Region live publication verified from owner-supplied /ARTEMIS/region/ screenshot and /ARTEMIS/region/build-meta.json, checked against the separate publication contract; evidence and limits are recorded in docs/work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md. After synchronization PR merge, return to Command Center for the pending interactive Region review. No further feature implementation or capability is opened. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
     "target": "TEMPORAL_REGION_PROOF"

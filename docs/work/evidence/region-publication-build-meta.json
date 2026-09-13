@@ -1,0 +1,75 @@
+{
+  "backend_required": false,
+  "browser_acceptance_profile_count": 3,
+  "build_contract_date": "2026-08-13",
+  "capability_path_is_semantic": false,
+  "deployment_mode": "public_r_and_d_preview",
+  "earth_context": {
+    "asset_ref": "asset-natural-earth-110m-land-v4",
+    "network_required": false,
+    "provider_id": "provider-natural-earth-bundled-vector",
+    "real_dataset_selected": true,
+    "secret_required": false,
+    "semantic_role": "present_day_context",
+    "status": "bundled_real_vector_context"
+  },
+  "engine_family": "MapLibre GL JS",
+  "engine_id": "maplibre-gl-js-5.24.0",
+  "explorer_state_ref": "explorer-state-region-proof",
+  "explorer_view_count": 6,
+  "generated_sha256": {
+    "explorer_views": "f460e18a86000dccd3ebf234b3aced32f1d6006b49831a03992b842dc78f463b",
+    "globe_projection": "e6d1e7cd53ee37f664c71b3e6a0cc12bb3234d645627673e5e81789fa788bdcc",
+    "knowledge_index": "23d2a44c8724f2fd0ebb3ae9a24e8e4fba45e6bd94635e7f733bda668d2f8b44",
+    "life_path": "c69b16727accb64be4d50130e12b2c3ea6cc244d63647ce0729e52d01be0954a",
+    "neutral_projection": "829cfe19437d6916faaeb7a79af7842ecffc68c9eec366e5b40e5b23779c2303"
+  },
+  "globe_primitive_count": 2,
+  "input_sha256": {
+    "acceptance_profiles": "7b1e6780cabf80e61da9adcce1d057d8f7ba1ac8deb654d2a3ab3677f968d933",
+    "capability_path": "823966f576056514d980946852c97b055e1de9a8cec232e92e09c069bb896dd8",
+    "earth_context": "dc9947960599ccb704a7f5f020f854d325731034ab8df5a2918ae3834b5782d4",
+    "engine_evaluation": "6e38fbcb8b37e91cae23fb359e9b3a5f9619597786717a5e4526edebf41f758a",
+    "explorer_state": "d17efd28880e5cd5d912b27028ba2946e005c329c9d4096a998f6a49b34de84d",
+    "geospatial_assets": "433fcbf0a80f6b9db72f20a790fbdeaf80337bf06ba487930d677d09e6a4299f",
+    "life_path_presentation": "481288a0707ee9b5e4a36ddabfb0bda0f65c2c62483890b6772d937da91a4546",
+    "m5_contract": "dc8972dd381a052532750f6323e1e00fdeb57a03bed3923faee491b1daf54f52",
+    "major_life_package": "8df6bd26677f037c741e9e43a00acfe4b7e0ae3190b66866fbfef0b9cf9422fa",
+    "major_life_runtime_anchors": "73f7df950c5d6fc7c854b1ca70db26c8609193ea73071264ff81dbac0f567aed",
+    "source_documents": {
+      "README.md": "7cd5031f807d9b6f844bb42dc58081ed557e8ad7a82ffc591ac2cd173c9ddbbf",
+      "coverage_manifest.json": "1efbdcd1899ee321455232d6e87ead9dfd68a07f8a5fc34657368cd277caec91",
+      "source-cliopatria": "0758ba34c48acb5cf47d1dd3d214b44c2c796d2cbcccc69f60aaf17bed36f839",
+      "source_manifest.json": "e8cdbc1575a5daff1e4e4b8425a8d9483f1451ab0d15d384895ef47169ec446e"
+    },
+    "world_model": "47f41ccb880b3dd8331bd9e59bcd8db8c2d3add442aa3520c5f5f663772c5a9e"
+  },
+  "knowledge_record_count": 6,
+  "life_path_available": false,
+  "life_path_chronological_connector_enabled": false,
+  "life_path_presence_count": 0,
+  "life_path_transition_count": 0,
+  "life_path_view_count": 0,
+  "place_anchor_geometry_count": 0,
+  "projection_id": "render-projection:explorer-state-region-proof",
+  "public_pages_entrypoint": true,
+  "schema_version": "1.0.0",
+  "semantic_dataset": "roman_region_proof",
+  "semantic_item_count": 2,
+  "spike_id": "artemis-globe-gate-d-review-v1",
+  "temporal_preset_count": 3,
+  "terrain": {
+    "asset_ref": "asset-synthetic-present-terrain",
+    "live_provider_selected": false,
+    "status": "synthetic_or_nonlive_provider",
+    "vertical_reference": {
+      "datum": "WGS84",
+      "mode": "ellipsoidal_height",
+      "positive_direction": "up",
+      "unit": "meter"
+    }
+  },
+  "trajectory_gaps": [],
+  "unresolved_item_count": 0,
+  "world_slice_ref": "world-slice-roman-region-v1"
+}
