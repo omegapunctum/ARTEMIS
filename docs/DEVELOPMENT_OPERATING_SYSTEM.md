@@ -1,11 +1,11 @@
-# ARTEMIS — Development Operating System v1.7
+# ARTEMIS — Development Operating System v1.8
 
 Current project state is not duplicated here. Use `docs/PROJECT_TRUTH.md` for current reality, `docs/project_state.json` for machine-readable operational state, and `docs/work/README.md` for active working-document lifecycle.
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.7.
+- Version: 1.8.
 - Date: 2026-09-13.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
@@ -181,9 +181,35 @@ A separate planning artifact is not required when the accepted owner/specificati
 
 ### 6.6 Merge policy and staged rollout
 
-Current rollout: **all merges remain human-authorized**, including `AUTO` work. Agents may prepare and update merge-ready PRs but must not merge without explicit human approval.
+Owner decision — 2026-09-13: after authorizing PR #427, the owner granted
+standing permission for agents to perform future merges and instructed that
+permission to be recorded here. This supersedes the per-PR merge confirmation
+requirement; it does not expand implementation scope or waive human decisions.
 
-Autonomous merge for `AUTO` may be enabled only by a later explicit governance decision after repeated stable cycles demonstrate that classification, scope control, CI/review handling and regression containment are reliable. That later decision must define the exact merge conditions before the restriction is lifted.
+An agent may merge an authorized PR without another merge-confirmation request
+only when all of these conditions hold:
+
+- the PR stays within its accepted owner/specification and declared file scope;
+- all required and relevant checks pass on the exact current head;
+- self-review is complete and no unresolved blocking/material review finding remains;
+- any human review or acceptance required by the task's `REVIEW` contract is recorded;
+- any `DECISION` affecting the change has explicit human authorization; standing
+  merge permission does not authorize the agent to make that decision;
+- no escalation condition in section 6.4 applies, and no task-specific hold or
+  instruction to leave the PR unmerged remains in force;
+- GitHub reports the PR mergeable and repository protections/review requirements
+  are satisfied without bypass.
+
+For `AUTO`, no additional human merge approval is needed once these conditions
+are met. For `REVIEW`, the existing human-review requirement remains; after
+acceptance the agent performs the merge without asking again. Decision records
+may be merged only to record a decision already explicitly authorized by the owner.
+
+Before merging, recheck the current head, checks and review state; use the expected
+head SHA so a changed revision cannot be merged accidentally. Afterwards, report
+the merge commit and distinguish merge completion from any deployment verification.
+This standing permission does not itself authorize new production effects,
+destructive operations or background task pickup. The owner may narrow or revoke it.
 
 GitHub `agent-ready` queueing, background CI/review monitoring and automatic pickup of the next authorized task are a later automation stage. They are not enabled by this contract and require a separate explicit implementation decision.
 

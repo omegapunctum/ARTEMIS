@@ -211,3 +211,26 @@ def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None
     assert "FORMAL USER VALUE UNVALIDATED" in validation
     assert "R&D research prototype" in validation
     assert "do not by themselves prove user value" in validation
+
+
+def test_public_runtime_includes_separate_region_preview_without_promotion() -> None:
+    import copy
+    import jsonschema
+
+    state = _json("docs/project_state.json")
+    schema = _json("docs/project_state.schema.json")
+    expected = "core_landing_globe_primary_atlas_compatibility_region_separate_public_r_and_d_preview"
+    assert state["capability"]["public_runtime"] == expected
+    jsonschema.validate(state, schema)
+    stale = copy.deepcopy(state)
+    stale["capability"]["public_runtime"] = "core_landing_globe_primary_atlas_compatibility"
+    assert not jsonschema.Draft202012Validator(schema).is_valid(stale)
+    assert state["active_vertical"]["id"] == "life-in-context-globe-mvp"
+    assert state["gate_e"]["e1"] == state["gate_e"]["e2"] == "not_collected"
+    assert state["gate_e"]["formal_user_value"] == "unvalidated"
+    assert state["capability"]["globe"] == "public_r_and_d_preview"
+    surfaces = _text("docs/PROJECT_TRUTH.md").split("## 2.", 1)[1].split("## 3.", 1)[0]
+    for route in ("/globe/", "/atlas/", "/region/"):
+        assert route in surfaces
+    assert "separate public R&D preview" in surfaces
+    assert "все три entry points" not in surfaces

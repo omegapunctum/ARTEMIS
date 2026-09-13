@@ -128,7 +128,7 @@
     ]
   },
   "capability": {
-    "public_runtime": "core_landing_globe_primary_atlas_compatibility",
+    "public_runtime": "core_landing_globe_primary_atlas_compatibility_region_separate_public_r_and_d_preview",
     "globe": "public_r_and_d_preview",
     "world_slice": "gate_c_frozen_non_public",
     "temporal_map": "m5_whole_life_runtime_proof_published"
