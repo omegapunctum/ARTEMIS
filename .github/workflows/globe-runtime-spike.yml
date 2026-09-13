@@ -312,7 +312,7 @@ jobs:
           grep -F '1502' /tmp/artemis-globe-interaction-dom.html
 
       - name: Upload generated Globe artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: artemis-globe-runtime-spike
           path: |
