@@ -3,7 +3,7 @@
 - Date: 2026-09-11
 - Owner: issue #355
 - Original 2026-09-11 status: bounded implementation branch; not merged or published
-- Current status (2026-09-12): merged in #421; Region artifact remains unpublished
+- Current status (2026-09-13): live publication verified from owner-supplied screenshot and build metadata; interactive review pending
 - Decision context: [Gate E owner bypass and bounded Temporal Region universality proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md)
 
 ## Source feasibility result
@@ -62,8 +62,9 @@ existing projection and Globe adapters. This does not establish Gate E user
 value, product readiness, or historical exactness. E1/E2 remain NOT COLLECTED
 and formal user value remains UNVALIDATED under the owner decision.
 
-The artifact is review-only and remains unpublished. Leonardo’s published
-default remains unchanged pending a separate publication decision.
+At the original implementation checkpoint the artifact was review-only and unpublished.
+The later publication authorization and verification below supersede that hold;
+Leonardo remains the published default.
 
 ## Post-merge closeout — 2026-09-12
 
@@ -83,7 +84,7 @@ Exact-merge CI succeeded:
   succeeded after configuration recovery. The owner reports that the public
   site works; this is not a report of Region artifact acceptance.
 
-Pages publishes the Leonardo default, not the separately generated Region proof.
+At this 2026-09-12 pre-publication closeout, Pages published the Leonardo default, not the separately generated Region proof.
 The next bounded action is owner review of this existing Region artifact and an
 explicit publication decision. Review should check the three periods 91–105,
 106–113 and 114–116 CE, changing outlines, source/license access and approximate
@@ -114,3 +115,43 @@ Merge/deployment require green CI. Verify the resulting Pages deployment and
 owner's screenshot-level confirmation does not substitute for an interactive
 review: switching the three source-native periods and inspecting provenance
 remain the next check. E1/E2 NOT COLLECTED; formal user value UNVALIDATED.
+
+## Live publication verification — 2026-09-13
+
+**Result: live publication verified (owner-supplied evidence).**
+
+The owner supplied a browser screenshot of the live
+`https://omegapunctum.github.io/ARTEMIS/region/` route with `time=year-91`
+and the contents of `/ARTEMIS/region/build-meta.json` in
+`regionbuild-meta.json.txt`. The agent inspected these supplied artifacts;
+this is not an agent-performed HTTP check. The screenshot shows the rendered
+Roman Empire reconstruction, the 91–105 CE source interval and the label
+“Public research prototype · not a validated product”.
+
+The supplied metadata is preserved in
+[region-publication-build-meta.json](evidence/region-publication-build-meta.json).
+Its publication fields match the separate publication contract:
+
+| Field | Observed value |
+|---|---|
+| `deployment_mode` | `public_r_and_d_preview` |
+| `public_pages_entrypoint` | `true` |
+| `semantic_dataset` | `roman_region_proof` |
+| `world_slice_ref` | `world-slice-roman-region-v1` |
+| `temporal_preset_count` | `3` |
+| `life_path_available` | `false` |
+| `life_path_chronological_connector_enabled` | `false` |
+| `backend_required` | `false` |
+
+PR #423 merged publication as `ded28ab2edbe51392be4370080ad6b500c61d882`.
+The supplied metadata contains no Git commit or Pages run identity, so this
+record does not bind the live response to an exact deployment SHA or claim a
+new HTTP status measurement. The record date is not an inferred capture time.
+
+Publication availability is verified; interaction acceptance is not. Switching
+all three periods, inspecting provenance and evaluating usability remain pending.
+The screenshot's single selected period is not evidence that those tasks passed.
+E1/E2 remain NOT COLLECTED; formal user value remains UNVALIDATED. GENERALIZES
+remains the existing bounded technical finding. No new capability, source/data
+change, gate transition or implementation branch is opened. After synchronization
+PR merge, return to Command Center for the next bounded review transition.
