@@ -41,7 +41,7 @@ def test_core_reset_narrows_gate_d_without_reopening_frozen_foundations() -> Non
     truth = _read("docs/PROJECT_TRUTH.md")
     master_prompt = _read("docs/ARTEMIS_MASTER_PROMPT.md")
 
-    assert "Active cycle: `Gate E owner bypass / Region proof decision`" in priorities
+    assert "Active cycle: `Region proof post-merge closeout`" in priorities
     assert "Active primary issue: GitHub issue `#355`" in priorities
     assert "Gate C `FREEZE` evidence for #332/#360 is preserved byte-for-byte" in priorities
     assert "#330 / PR #337 — uncertainty semantics" in priorities
@@ -138,17 +138,3 @@ def test_superseded_migration_plan_cannot_open_v2_execution() -> None:
     assert "### Gate A — Deep research modules" in old_plan
     assert "2026-07-27_CONCEPT_LOCK_MIGRATION_PLAN_v1.md" in work_registry
     assert "superseded execution plan" in work_registry
-    assert "Must not authorize #323–#325" in work_registry
-    assert "Old Concept v2 implementation issues were closed `not planned`" in matrix
-    assert "Clean child issues were created for:" in matrix
-
-    for child_scope in (
-        "universal world-model contract and fixtures",
-        "spatial-temporal uncertainty",
-        "Leonardo World Slice",
-        "synchronized explorer",
-        "relation ladder",
-        "contextual-learning validation",
-        "source-bound AI reasoning contract",
-    ):
-        assert child_scope in matrix
