@@ -1,16 +1,14 @@
 # ARTEMIS — FOUNDATION INDEX
 
-Current Gate E task/evidence owner: [bounded protocol](work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md). Protocol prepared; task observations not collected.
-
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+Current lifecycle and capability state are intentionally not duplicated here. Use `docs/PROJECT_TRUTH.md` for current reality, `docs/project_state.json` for machine-readable operational state, and `docs/work/README.md` for active working-document lifecycle.
 
 ## Статус
 
 - Тип: canonical foundation index.
-- Версия: 3.8.
-- Дата: 2026-09-04.
+- Версия: 3.9.
+- Дата: 2026-09-13.
 - Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
-- Роль: единственный реестр canonical owner documents, reading order и conflict routing.
+- Роль: единственный реестр canonical owner documents, owner routing и conflict routing.
 
 ## 1. Foundation purpose
 
@@ -26,9 +24,8 @@ Foundation определяет:
 4. как утверждения связываются с evidence;
 5. как различаются proximity, encounter, interaction, influence and causality;
 6. как один semantic core поддерживает many domains and many interfaces;
-7. какой current vertical разрешён;
-8. что действительно работает;
-9. как content/runtime/release/AI остаются управляемыми.
+7. какой owner отвечает на конкретный тип вопроса;
+8. как content/runtime/release/AI остаются управляемыми.
 
 ## 2. Four truth levels
 
@@ -48,7 +45,7 @@ North Star не является release promise. Backend code не являет
 | Document | Owner role |
 |---|---|
 | `README.md` | Root entrypoint and concise current summary |
-| `docs/FOUNDATION_INDEX.md` | Canonical registry, routing and reading order |
+| `docs/FOUNDATION_INDEX.md` | Canonical registry and owner/conflict routing |
 | `docs/ARTEMIS_CONCEPT.md` | North Star identity, long-term attractor and invariants |
 | `docs/PRODUCT_THESIS.md` | Active user, job and broader product hypotheses |
 | `docs/ARTEMIS_PRODUCT_SCOPE.md` | Active implementation/validation scope, frozen work and current exit condition |
@@ -82,7 +79,7 @@ North Star не является release promise. Backend code не являет
 | `docs/RESEARCH_SLICE_SPEC.md` | Current mutable runtime compatibility API/schema |
 | `docs/PROJECT_STRUCTURE.md` | Repository and runtime boundaries |
 | `docs/DOCUMENTATION_SYSTEM.md` | Documentation placement/governance |
-| `docs/ARTEMIS_MASTER_PROMPT.md` | Agent operational governance |
+| `docs/ARTEMIS_MASTER_PROMPT.md` | On-demand agent operational governance; not a current-state registry |
 
 `docs/CONTROLLED_RELEASE_DECISION.md` is preserved as a historical compatibility release decision for the Architecture Atlas/backend baseline. It is **not** the current ARTEMIS Core release owner. Current product/release behavior is routed through `PROJECT_TRUTH.md`, `DEVELOPMENT_OPERATING_SYSTEM.md`, `project_state.json` and executable workflow files.
 
@@ -96,7 +93,7 @@ Accepted:
 - Foundation v3.1 attractor refinement: `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md` / issue `#363` / PR `#364`.
 - Platform architecture: `docs/PLATFORM_ARCHITECTURE_DECISION.md` — accepted 2026-08-29; web-first application, PWA as delivery capability, 2D/Globe as shared-core renderers, Git/GitHub separated from future corpus storage.
 - Migration/disposition: `docs/work/2026-07-28_CONCEPT_V2_TO_V3_MIGRATION_MATRIX.md`.
-- Formal validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated until its broader product protocol is explicitly opened; it is not the immediate post-#396 step.
+- Formal validation design: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated until its broader product protocol is explicitly opened.
 
 Historical:
 
@@ -104,27 +101,32 @@ Historical:
 - Gate A architecture module package — completed Architecture Layer fixtures, not active v3 validation.
 - `docs/CONTROLLED_RELEASE_DECISION.md` — preserved Architecture Atlas/backend controlled-release compatibility decision, not current Core lifecycle authority.
 
-The foundation-maintenance decision is issue `#377` /
-`docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md`; exact status is owned by the refinement
-contract/registry. It does not consume the Gate D product WIP slot and cannot by itself authorize
-runtime/data migration or capability change. Working lifecycle authority remains `docs/work/README.md`.
+The foundation-maintenance decision is issue `#377` / `docs/work/2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md`; exact status is owned by the refinement contract/registry. It cannot by itself authorize runtime/data migration or capability change. Working lifecycle authority remains `docs/work/README.md`.
 
-## 5. Reading order
+## 5. Contextual reading
 
-1. `README.md`.
-2. `docs/FOUNDATION_INDEX.md`.
-3. `docs/PROJECT_TRUTH.md`.
-4. `docs/ARTEMIS_CONCEPT.md`.
-5. `docs/PRODUCT_THESIS.md`.
-6. `docs/ARTEMIS_PRODUCT_SCOPE.md`.
-7. `docs/SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`.
-8. `docs/ENTITY_MODEL.md`.
-9. `docs/EPISTEMIC_CONTRACT.md`.
-10. `docs/AI_POLICY.md` when AI behavior or future AI interaction is relevant.
-11. `docs/PRIORITIES.md`, `docs/PROJECT_PHASES.md` and `docs/DEVELOPMENT_OPERATING_SYSTEM.md`.
-12. `docs/project_state.json`.
-13. `docs/work/README.md`, then active/accepted Foundation records.
-14. Task-specific platform/data/runtime/governance contracts, including `docs/PLATFORM_ARCHITECTURE_DECISION.md` for client platform, renderer, scaling or repository/storage questions.
+There is no mandatory full-document reading stack for every repository edit.
+
+Start from the task and use the minimum authoritative context needed:
+
+1. For non-trivial work, check `docs/PROJECT_TRUTH.md`, `docs/project_state.json` and `docs/work/README.md`.
+2. Read the one canonical or active-work owner that governs the change.
+3. Use this index when owner routing is unclear or the task crosses multiple owner boundaries.
+4. Read additional owners only if the proposed change touches their semantics or creates a conflict.
+5. For a small local edit, inspect the affected files and directly owned checks; do not preload the full foundation stack.
+
+Common contextual routes:
+
+- identity / attractor → `ARTEMIS_CONCEPT.md`;
+- product scope → `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md`;
+- platform / renderer / storage → `PLATFORM_ARCHITECTURE_DECISION.md`;
+- space/time/change → `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md`;
+- uncertainty → `UNCERTAINTY_SEMANTICS_CONTRACT.md`;
+- entities / relations → `ENTITY_MODEL.md`;
+- claims / evidence / inference → `EPISTEMIC_CONTRACT.md`;
+- AI behavior → `AI_POLICY.md`;
+- data/runtime layout → `DATA_CONTRACT.md`, `PROJECT_STRUCTURE.md` and executable checks according to the affected contour;
+- working-document status → `work/README.md`.
 
 ## 6. Routing
 
@@ -234,83 +236,26 @@ A reviewed executable contract cannot be changed merely to make identity-level w
 - Architecture Atlas is a thematic compatibility layer;
 - AI is future/source-bound, not Source and not a silent canonical writer;
 - future AI view/query actions must be visible, reversible and separate from knowledge mutation;
-- the bounded Globe/Temporal Map MVP may be publicly reviewable without becoming a second semantic core or validated product capability;
+- a bounded research preview may be public without becoming a second semantic core or validated product capability;
 - personal knowledge context is future/private and not current canonical entity scope;
 - VR/AR and production-scale dynamic Earth remain future surfaces;
 - attractor guides architecture but does not authorize implementation scope;
 - reviewed contract integrity is not weakened for documentation convenience;
 - one product decision may open at most one next branch.
 
-## 9. Current work status
+## 9. Current-state routing
 
-Active product vertical:
+This index does not own or restate the current phase, gate, checkpoint, active PR sequence, publication status or next execution step.
 
-1. Issue `#355`: `Life in Context / Leonardo Temporal Map`.
+Use:
 
-Completed product/foundation prerequisites:
+- `docs/PROJECT_TRUTH.md` for current capability and maturity;
+- `docs/project_state.json` for current phase/gate/checkpoint and machine-readable next transition;
+- `docs/work/README.md` for active, gated, completed and historical working records;
+- `docs/PRIORITIES.md` and `docs/PROJECT_PHASES.md` for current operational ordering;
+- executable code, tests and workflows for implementation facts.
 
-2. Issues `#332` / `#360` + PR `#362`: Gate C `FREEZE` for the non-public Leonardo-in-Romagna World Slice, 8 August–31 December 1502.
-3. PR `#393`: Core Reset completed — Core landing, `/globe/` primary research surface, `/atlas/` compatibility-only, bounded Core CI.
-4. PR `#395`: calendar-based Leonardo Temporal Map loop implemented.
-5. First published #395 manual check: explicit `ITERATE` feedback result.
-6. PR `#396`: feedback correction implemented and published — primary full-width bottom timeline, distinct Range/Scrub, popup-first selection, optional right drawer and double-click focus.
-
-Active product gate:
-
-7. The fresh user check of the published #396 interaction recorded `ITERATE`: preserve the loop and treat remaining visual issues as non-priority. Gate D was open at that historical checkpoint; its later explicit exit is `ADVANCE_TO_GATE_E`.
-8. M2, M3 and M4 are completed; M4 remains `ADOPT` and did not open a successor.
-9. M5 entered through explicit owner instruction without an intervening repository decision record. PR #406 published the bounded 11-Presence whole-life proof; the direct owner check recorded `ITERATE`. The #409/#411/#412 correction is completed and owner-accepted with `PROCEED_TO_GATE_D_REVIEW` on 2026-09-06. The bounded review in merged #413 is completed evidence; active work is Gate E evidence preparation; Gate D exit is recorded as `ADVANCE_TO_GATE_E`.
-
-Foundation status:
-
-10. Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**.
-11. Issue `#377`: Progressive Refinement Contract v1 — accepted historical foundation evidence. Issue #392 isolates its stale repository-wide READY envelope from the active Core path.
-
-Deferred/gated:
-
-12. Issue `#331`: deferred; required before documented Relation predicates enter the real corpus/runtime.
-13. Issue `#333`: superseded by #355. Issue `#334`: deferred outside the current bounded package work.
-14. Issues `#371` / `#373`: deferred; no Airtable historical import or review is active, and `historical_rows_authorized=false` remains fail-closed.
-15. Issue `#335`: source-bound AI contract (`GATED / NOT ACTIVE`).
-16. Leonardo detail beyond the bounded M5 package, default local/global context and broad layer expansion remain unopened.
-
-Frozen:
-
-- old Concept v2 Gate B–E critical path;
-- AI generation/runtime;
-- causal/counterfactual runtime;
-- public production Globe, universal historical terrain and VR/AR;
-- universal corpus;
-- personal knowledge model;
-- product/platform expansion not opened by evidence.
-
-Completed evidence includes:
-
-- issue `#363` / PR `#364`: Foundation v3.1 long-term attractor and governance guard;
-- issue `#329` / PR `#336`: READY world-model fixture package v1;
-- issue `#330` / PR `#337`: READY uncertainty semantics v1;
-- issues `#339`–`#345` / PRs `#346`–`#352`: renderer architecture, state, projection, asset, runtime-spike, cross-renderer parity and repository-boundary evidence;
-- issues `#332` / `#360` / PR `#362`: Gate C frozen real World Slice boundary and independent review evidence;
-- PRs `#393`, `#395`, `#396`: current Core/Temporal Map implementation sequence.
-
-Active product/governance decision:
-
-- `docs/work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`.
-
-Current interaction contract:
-
-- `docs/work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md`.
-
-Current product-feedback evidence and active branch:
-
-- `docs/work/2026-08-29_GATE_D_POST_396_USER_CHECK_v1.md`.
-- `docs/work/2026-08-29_LEONARDO_MAJOR_LIFE_PRESENCE_SCOPE_v1.md`.
-- `docs/work/2026-09-05_TEMPORAL_MAP_M5_BOUNDED_UX_SCOPE_v1.md`.
-
-Accepted foundation decisions:
-
-- `docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md`.
-- `docs/PLATFORM_ARCHITECTURE_DECISION.md`.
+If those sources disagree, resolve the conflict using the owner hierarchy above rather than copying a snapshot into this registry.
 
 ## 10. Change control
 
