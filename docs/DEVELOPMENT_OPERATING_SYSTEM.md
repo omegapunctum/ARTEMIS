@@ -1,12 +1,12 @@
-# ARTEMIS — Development Operating System v1.6
+# ARTEMIS — Development Operating System v1.7
 
-Current decision: [Gate D exit — ADVANCE_TO_GATE_E](work/2026-09-06_GATE_D_EXIT_DECISION_v1.md). #413 is merged; Gate D is completed. Next is one bounded Gate E task/evidence protocol; collection has not started. No new implementation is opened.
+Current project state is not duplicated here. Use `docs/PROJECT_TRUTH.md` for current reality, `docs/project_state.json` for machine-readable operational state, and `docs/work/README.md` for active working-document lifecycle.
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.6.
-- Date: 2026-09-01.
+- Version: 1.7.
+- Date: 2026-09-13.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
 
@@ -100,7 +100,94 @@ The default knowledge-promotion chain is:
 
 This is a responsibility flow, not an automatic synchronization promise. A stage may be skipped when the active decision deliberately uses a frozen repository fixture/package, as Gate D currently does. No Drive file, Airtable row, AI output or runtime edit becomes canonical merely by existing; promotion requires the owner contract, review state and write/release gate for that contour.
 
-## 6. Gate transition contract
+## 6. Agent autonomy contract
+
+ARTEMIS uses bounded autonomy: humans retain product/semantic authority while agents execute authorized work end to end.
+
+Every non-trivial task must be classified before implementation as `AUTO`, `REVIEW` or `DECISION`. Classification follows the highest-risk part of the task, not the file type. If a task crosses classes, use the stricter class. If ambiguity concerns product/domain semantics, evidence or irreversible effects, classify as `DECISION` until resolved.
+
+### 6.1 AUTO
+
+`AUTO` is work whose intended behavior is already determined by an accepted decision/specification and whose completion does not change product or domain meaning.
+
+Typical `AUTO` work includes:
+
+- local bug fixes that restore already-specified behavior;
+- CI/test repair caused by repository drift or a bounded implementation change;
+- documentation/current-state synchronization that does not make a new decision;
+- deterministic scripts/checks for an already-approved workflow;
+- implementation of an accepted specification with no unresolved product/semantic choice;
+- narrow refactors that preserve behavior and owned contracts.
+
+For `AUTO`, the agent may independently perform:
+
+`inspect → implement → verify → fix → rerun → self-review → open/update PR`
+
+The agent should not request intermediate approval for ordinary choices inside the authorized scope. It may fix CI failures and review findings caused by its change and rerun the affected checks.
+
+### 6.2 REVIEW
+
+`REVIEW` is bounded implementation that is authorized in direction but still benefits from human inspection because it contains non-trivial implementation or presentation judgment.
+
+Typical `REVIEW` work includes:
+
+- bounded UX/runtime changes under an accepted product decision;
+- internal architecture/refactoring choices that preserve canonical semantics but materially reshape implementation;
+- bounded data-pipeline changes inside an already-authorized source/write contour;
+- changes whose acceptance includes a visual, interaction or operator judgment that automated checks cannot fully establish.
+
+The agent may independently run the same full execution loop as `AUTO` and prepare a complete PR, but the result remains pending human review before merge.
+
+### 6.3 DECISION
+
+`DECISION` is work that would create, revise or reopen authority rather than merely execute it.
+
+A human decision is required before implementation when the task would:
+
+- change the North Star, Product Thesis, active product scope or gate/proof transition;
+- change World Model, uncertainty, entity/relation or epistemic semantics;
+- introduce a new fundamental data/geometry type or a competing source of truth;
+- reinterpret historical evidence, provenance, confidence or uncertainty rather than apply an already-approved rule;
+- authorize a new corpus/source write path, destructive migration or irreversible data transformation;
+- publish or operate an external/production effect whose authorization is not already explicit;
+- materially broaden scope beyond the current owner/specification.
+
+Once the human decision is recorded in the correct owner, the resulting implementation task may be reclassified as `AUTO` or `REVIEW`.
+
+### 6.4 Escalation conditions
+
+An agent stops execution and escalates when:
+
+- authoritative owners conflict and the correct owner cannot be resolved deterministically;
+- the requested outcome requires changing an unauthorized product/domain semantic or a frozen reviewed contract;
+- relevant checks cannot be made green without broadening scope or changing the governing specification;
+- a destructive, irreversible, security-sensitive or externally consequential action lacks explicit authorization;
+- new evidence contradicts the assumptions that authorized the task;
+- the task cannot be completed honestly without inventing unsupported evidence, precision, geometry, routes, relations or capability claims.
+
+An agent should not escalate merely because implementation requires normal local judgment, iteration, debugging or repeated verification within the accepted scope.
+
+### 6.5 PR and handoff contract
+
+Every autonomous implementation PR must state:
+
+- autonomy class: `AUTO`, `REVIEW` or implementation-after-`DECISION`;
+- governing owner/specification;
+- intended scope and explicit non-goals;
+- verification performed;
+- unresolved blocker, if any.
+
+A separate planning artifact is not required when the accepted owner/specification already defines the work sufficiently.
+
+### 6.6 Merge policy and staged rollout
+
+Current rollout: **all merges remain human-authorized**, including `AUTO` work. Agents may prepare and update merge-ready PRs but must not merge without explicit human approval.
+
+Autonomous merge for `AUTO` may be enabled only by a later explicit governance decision after repeated stable cycles demonstrate that classification, scope control, CI/review handling and regression containment are reliable. That later decision must define the exact merge conditions before the restriction is lifted.
+
+GitHub `agent-ready` queueing, background CI/review monitoring and automatic pickup of the next authorized task are a later automation stage. They are not enabled by this contract and require a separate explicit implementation decision.
+
+## 7. Gate transition contract
 
 A gate closes only when:
 
@@ -123,7 +210,7 @@ The validator must reject a partial transition. Review artifacts are added only 
 
 `next_transition` is permission/instruction for the next step, not evidence that a later gate or branch is already open.
 
-## 7. Foundation-maintenance contract
+## 8. Foundation-maintenance contract
 
 A foundation-maintenance PR may run between product gates when all of the following hold:
 
@@ -139,7 +226,7 @@ Foundation maintenance does not consume the one-product-gate WIP slot, but it al
 
 When a foundation-maintenance issue closes, the working decision record moves to completed evidence and canonical lifecycle owners must stop describing it as active.
 
-## 8. Pull-request core check
+## 9. Pull-request core check
 
 Every product PR must show:
 
@@ -154,7 +241,7 @@ Compatibility/backend/data paths run their owned checks when touched. Historical
 
 Baseline failures must be named and reproducible; they cannot be used to hide a new regression.
 
-## 9. Current application
+## 10. Current application
 
 The active product vertical is `Life in Context / Leonardo Temporal Map` under issue `#355`.
 
