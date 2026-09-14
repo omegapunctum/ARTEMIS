@@ -35,6 +35,7 @@ def test_generated_presentation_and_evidence_truth(tmp_path, public_preview):
     html = (output / "index.html").read_text()
     readme = (output / "README.txt").read_text()
     profiles = (output / "acceptance-profiles.json").read_text()
+    assert html.count("Dashed links and chevrons show time order, not travel routes.") == 2
     assert "numbered place" not in html.lower()
     assert 'id="scrub-start"' not in html
     assert "No transition connector is rendered" not in readme
@@ -751,7 +752,6 @@ def test_runtime_removes_noop_controls_and_distinguishes_chronology_from_routes(
     html_source = HTML_TEMPLATE.read_text(encoding="utf-8")
 
     assert 'id="temporal-map-status"' in html_source
-    assert "Dashed links and chevrons show time order, not travel routes." in html_source
     assert 'id="toggle-alternatives"' not in html_source
     assert 'id="view-global"' not in html_source
     assert 'id="view-slice"' not in html_source

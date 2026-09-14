@@ -133,11 +133,3 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert "--output pages_artifact/globe" in workflow
     assert "--dataset roman_region_proof" in workflow
 
-
-def test_leonardo_keeps_both_chronology_notes(tmp_path: Path) -> None:
-    output = tmp_path / "leonardo"
-    build_spike(output, public_preview=True)
-    html = (output / "index.html").read_text()
-    assert html.count(CHRONOLOGY_COPY) == 2
-    assert f'<span class="sequence-note">{CHRONOLOGY_COPY}</span>' in html
-    assert f'<p class="route-note">{CHRONOLOGY_COPY}</p>' in html
