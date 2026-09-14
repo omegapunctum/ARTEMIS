@@ -185,17 +185,28 @@ jobs:
 
       - name: Retest published Region provenance and reconstruction disclosure
         env:
-          REGION_URL: ${{ steps.deployment.outputs.page_url }}region/
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
+          set -euo pipefail
           BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
           timeout 120s node scripts/capture_globe_browser_evidence.mjs \
             --browser "$BROWSER" \
-            --url "$REGION_URL" \
+            --url "${PAGES_URL%/}/region/" \
             --width 1440 --height 900 \
             --timeout-ms 90000 \
             --dom /tmp/region-live-retest.html \
             --screenshot /tmp/region-live-retest.png \
             | tee /tmp/region-live-retest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          evidence = json.loads(Path("/tmp/region-live-retest.json").read_text())
+          retest = evidence["regionDisclosureRetest"]
+          assert retest["reconstructionVisible"] is True
+          assert retest["provenanceLinkVisible"] is True
+          assert retest["provenanceClickOpenedManifest"] is True
+          assert len(evidence["temporalRegion"]["snapshots"]) == 3
+          PY
 
       - name: Upload published Region retest evidence
         if: always()
