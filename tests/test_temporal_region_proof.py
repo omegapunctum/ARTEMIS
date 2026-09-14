@@ -15,6 +15,7 @@ from scripts.build_temporal_region_inputs import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CHRONOLOGY_COPY = "Dashed links and chevrons show time order, not travel routes."
 PROJECTION_SCHEMA = json.loads(
     (ROOT / "fixtures/render_projection/v1/schema.json").read_text(encoding="utf-8")
 )
@@ -41,6 +42,7 @@ def test_source_audit_has_three_comparable_native_intervals() -> None:
     ] == [("0091", "0105"), ("0106", "0113"), ("0114", "0116")]
     assert [p["temporal_selection"]["start"] for p in presets] == ["0091", "0106", "0114"]
     assert all(v["reconstruction_mode"] == "scholarly_reconstruction" for v in versions)
+    assert all(v["temporal_extent"]["certainty"] == "approximate" for v in versions)
     assert world["sources"][0]["provenance"]["license"] == "CC-BY-4.0"
     manifest = json.loads((PACKAGE / "source_manifest.json").read_text())
     assert manifest["comparability"]["territorial_concept"] == "political polity territory"
@@ -99,6 +101,9 @@ def test_region_artifact_uses_shared_runtime_and_is_not_leonardo_publication(tmp
     assert "Roman Empire" in html
     assert "temporal-preset" in html
     assert "Leonardo Life Path" not in html
+    assert CHRONOLOGY_COPY not in html
+    assert 'class="sequence-note"' not in html
+    assert 'class="route-note"' not in html
     assert "does not establish historical completeness or validated user value" in readme
     assert (output / "source_manifest.json").exists()
     assert (output / "coverage_manifest.json").exists()
@@ -117,6 +122,9 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert metadata["temporal_preset_count"] == 3
     assert metadata["life_path_available"] is False
     assert "Public research prototype" in html
+    assert CHRONOLOGY_COPY not in html
+    assert 'class="sequence-note"' not in html
+    assert 'class="route-note"' not in html
     assert "not a public capability" not in html
     assert "deployed as a public R&D preview" in readme
     assert "not a publication" not in readme
@@ -125,3 +133,4 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert "--output pages_artifact/region" in workflow
     assert "--output pages_artifact/globe" in workflow
     assert "--dataset roman_region_proof" in workflow
+

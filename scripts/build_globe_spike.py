@@ -1396,6 +1396,7 @@ def build_spike(
 
     template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
     is_region = dataset == REGION_DATASET
+    chronology_copy = "Dashed links and chevrons show time order, not travel routes."
     runtime_title = "Roman Empire · Temporal Region proof" if is_region else "Leonardo Life Path"
     runtime_aria_label = (
         "ARTEMIS Roman Empire temporal region proof globe"
@@ -1436,7 +1437,9 @@ def build_spike(
         .replace("{{SUBJECT_LABEL}}", subject_label)
         .replace("{{SUBJECT_COVERAGE}}", subject_coverage)
         .replace("{{SELECTION_EMPTY_COPY}}", selection_empty_copy)
-        .replace("{{RUNTIME_SOURCE_NOTE}}", source_note),
+        .replace("{{RUNTIME_SOURCE_NOTE}}", source_note)
+        .replace("{{LIFE_PATH_SEQUENCE_NOTE}}", "" if is_region else f'<span class="sequence-note">{chronology_copy}</span>')
+        .replace("{{LIFE_PATH_ROUTE_NOTE}}", "" if is_region else f'<p class="route-note">{chronology_copy}</p>'),
         encoding="utf-8",
     )
     shutil.copyfile(TEMPLATE_DIR / "runtime.js", output / "runtime.js")
