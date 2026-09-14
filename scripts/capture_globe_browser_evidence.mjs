@@ -205,7 +205,7 @@ async function verifyTemporalRegion(cdp) {
       const card = document.getElementById('selection-card');
       for (const disclosure of card.querySelectorAll('details')) disclosure.open = true;
       const details = card.textContent;
-      for (const expected of ['Cliopatria', 'CC-BY-4.0', 'source_manifest.json', 'scholarly_reconstruction', 'approximate', 'not exact historical borders', 'missing coverage is not historical absence', nativeIntervals[index]]) {
+      for (const expected of ['Cliopatria', 'CC-BY-4.0', 'source_manifest.json', 'scholarly_reconstruction', 'source_reconstruction', 'no day precision or interpolation', 'not exact historical borders', 'missing coverage is not historical absence', nativeIntervals[index]]) {
         if (!details.includes(expected)) throw new Error('Region details lost: ' + expected);
       }
       if (!/[/]blob[/][a-f0-9]{40}[/]/.test(details) || !/[/]features[/][0-9]+/.test(details)) throw new Error('Pinned source/evidence locator is missing');

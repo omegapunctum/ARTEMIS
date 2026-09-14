@@ -42,6 +42,7 @@ def test_source_audit_has_three_comparable_native_intervals() -> None:
     ] == [("0091", "0105"), ("0106", "0113"), ("0114", "0116")]
     assert [p["temporal_selection"]["start"] for p in presets] == ["0091", "0106", "0114"]
     assert all(v["reconstruction_mode"] == "scholarly_reconstruction" for v in versions)
+    assert all(v["temporal_extent"]["certainty"] == "approximate" for v in versions)
     assert world["sources"][0]["provenance"]["license"] == "CC-BY-4.0"
     manifest = json.loads((PACKAGE / "source_manifest.json").read_text())
     assert manifest["comparability"]["territorial_concept"] == "political polity territory"
