@@ -196,7 +196,10 @@ async function verifyRegionDisclosure(cdp, deadline) {
     const x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
     if (!link.contains(document.elementFromPoint(x, y))) throw new Error('Provenance link is obstructed or not clickable');
     if (new URL(link.href).origin !== location.origin || !new URL(link.href).pathname.endsWith('/source_manifest.json')) throw new Error('Provenance link escaped the published source package');
-    return { x, y, href: link.href, returnUrl: location.href, note: note.innerText };
+    const sources = (window.__ARTEMIS_GLOBE_SPIKE.data.knowledge.records || []).flatMap(record => record.sources || []);
+    const provenance = sources.find(source => source.provenance?.commit)?.provenance;
+    if (!provenance || !/^[a-f0-9]{40}$/.test(provenance.commit) || provenance.license !== 'CC-BY-4.0') throw new Error('Region source package lacks pinned licensed provenance');
+    return { x, y, href: link.href, returnUrl: location.href, note: note.innerText, sourceCommit: provenance.commit };
   })()`);
   await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: entry.x, y: entry.y, button: 'left', clickCount: 1 });
   await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: entry.x, y: entry.y, button: 'left', clickCount: 1 });
@@ -205,11 +208,11 @@ async function verifyRegionDisclosure(cdp, deadline) {
   while (Date.now() < navigationDeadline) {
     try {
       opened = await evaluate(cdp, `(() => ({ url: location.href, text: document.body?.innerText || '' }))()`);
-      if (opened.url === entry.href && opened.text.includes('"attribution"') && opened.text.includes('CC-BY-4.0') && opened.text.includes('ad28a691b7c07c1fca89d0e0636d324667d2a258')) break;
+      if (opened.url === entry.href && opened.text.includes('"attribution"') && opened.text.includes('CC-BY-4.0') && opened.text.includes(entry.sourceCommit)) break;
     } catch (_) { /* Navigation replaces the evaluation context. */ }
     await delay(100);
   }
-  if (opened?.url !== entry.href || !opened.text.includes('"attribution"') || !opened.text.includes('CC-BY-4.0') || !opened.text.includes('ad28a691b7c07c1fca89d0e0636d324667d2a258')) throw new Error('Failed task: clicking provenance did not open the pinned licensed manifest');
+  if (opened?.url !== entry.href || !opened.text.includes('"attribution"') || !opened.text.includes('CC-BY-4.0') || !opened.text.includes(entry.sourceCommit)) throw new Error('Failed task: clicking provenance did not open the pinned licensed manifest');
   await cdp.send('Page.navigate', { url: entry.returnUrl });
   await waitForVisualReadiness(cdp, deadline);
   return { reconstructionVisible: true, reconstructionText: entry.note, provenanceLinkVisible: true, provenanceClickOpenedManifest: true, manifestUrl: entry.href, license: 'CC-BY-4.0' };
