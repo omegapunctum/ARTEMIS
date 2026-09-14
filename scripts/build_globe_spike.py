@@ -1419,6 +1419,12 @@ def build_spike(
         if is_region
         else "Frozen repository review package. Claims remain draft/rejected; this preview does not query Airtable."
     )
+    region_source_disclosure = (
+        '<span id="region-reconstruction-note">Approximate scholarly reconstruction · not exact historical borders.</span>'
+        '<a id="region-provenance-link" href="./source_manifest.json">Cliopatria · provenance &amp; license (CC-BY-4.0)</a>'
+        if is_region
+        else ""
+    )
     preview_status = (
         "Public research prototype · not a validated product"
         if public_preview
@@ -1438,6 +1444,7 @@ def build_spike(
         .replace("{{SUBJECT_COVERAGE}}", subject_coverage)
         .replace("{{SELECTION_EMPTY_COPY}}", selection_empty_copy)
         .replace("{{RUNTIME_SOURCE_NOTE}}", source_note)
+        .replace("{{REGION_SOURCE_DISCLOSURE}}", region_source_disclosure)
         .replace("{{LIFE_PATH_SEQUENCE_NOTE}}", "" if is_region else f'<span class="sequence-note">{chronology_copy}</span>')
         .replace("{{LIFE_PATH_ROUTE_NOTE}}", "" if is_region else f'<p class="route-note">{chronology_copy}</p>'),
         encoding="utf-8",

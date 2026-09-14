@@ -179,6 +179,42 @@ async function verifyPlaceLabels(cdp) {
   })()`, true);
 }
 
+async function verifyRegionDisclosure(cdp, deadline) {
+  // Retest the two failed user tasks through visible UI, before touching runtime internals.
+  const entry = await evaluate(cdp, `(() => {
+    const note = document.getElementById('region-reconstruction-note');
+    const link = document.getElementById('region-provenance-link');
+    function visible(node) {
+      if (!node || !node.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) return false;
+      const rect = node.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && rect.top >= 0 && rect.left >= 0
+        && rect.bottom <= innerHeight && rect.right <= innerWidth;
+    }
+    if (!visible(note) || note.innerText !== 'Approximate scholarly reconstruction · not exact historical borders.') throw new Error('Failed task: reconstruction limits are not visibly stated');
+    if (!visible(link) || !link.innerText.includes('provenance & license (CC-BY-4.0)')) throw new Error('Failed task: provenance/license access is not visible');
+    const rect = link.getBoundingClientRect();
+    const x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
+    if (!link.contains(document.elementFromPoint(x, y))) throw new Error('Provenance link is obstructed or not clickable');
+    if (new URL(link.href).origin !== location.origin || !new URL(link.href).pathname.endsWith('/source_manifest.json')) throw new Error('Provenance link escaped the published source package');
+    return { x, y, href: link.href, returnUrl: location.href, note: note.innerText };
+  })()`);
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: entry.x, y: entry.y, button: 'left', clickCount: 1 });
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: entry.x, y: entry.y, button: 'left', clickCount: 1 });
+  let opened = null;
+  const navigationDeadline = Math.min(deadline, Date.now() + 15000);
+  while (Date.now() < navigationDeadline) {
+    try {
+      opened = await evaluate(cdp, `(() => ({ url: location.href, text: document.body?.innerText || '' }))()`);
+      if (opened.url === entry.href && opened.text.includes('"attribution"') && opened.text.includes('CC-BY-4.0') && opened.text.includes('ad28a691b7c07c1fca89d0e0636d324667d2a258')) break;
+    } catch (_) { /* Navigation replaces the evaluation context. */ }
+    await delay(100);
+  }
+  if (opened?.url !== entry.href || !opened.text.includes('"attribution"') || !opened.text.includes('CC-BY-4.0') || !opened.text.includes('ad28a691b7c07c1fca89d0e0636d324667d2a258')) throw new Error('Failed task: clicking provenance did not open the pinned licensed manifest');
+  await cdp.send('Page.navigate', { url: entry.returnUrl });
+  await waitForVisualReadiness(cdp, deadline);
+  return { reconstructionVisible: true, reconstructionText: entry.note, provenanceLinkVisible: true, provenanceClickOpenedManifest: true, manifestUrl: entry.href, license: 'CC-BY-4.0' };
+}
+
 async function verifyTemporalRegion(cdp) {
   return evaluate(cdp, `(async () => {
     const runtime = window.__ARTEMIS_GLOBE_SPIKE;
@@ -499,6 +535,7 @@ async function main() {
     const readiness = await waitForVisualReadiness(cdp, deadline);
     const isRegion = await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE?.data?.lifePath?.available === false");
     const placeLabels = isRegion ? null : await verifyPlaceLabels(cdp);
+    const regionDisclosureRetest = isRegion ? await verifyRegionDisclosure(cdp, deadline) : null;
     const temporalRegion = isRegion ? await verifyTemporalRegion(cdp) : null;
     const dom = await evaluate(cdp, 'document.documentElement.outerHTML');
     const capture = await cdp.send('Page.captureScreenshot', {
@@ -511,7 +548,7 @@ async function main() {
     const urlStateRestoration = !isRegion && options.verifyUrlState
       ? await verifyUrlStateRestoration(cdp, deadline)
       : null;
-    process.stdout.write(`${JSON.stringify({ ...readiness, placeLabels, temporalRegion, urlStateRestoration })}\n`);
+    process.stdout.write(`${JSON.stringify({ ...readiness, placeLabels, regionDisclosureRetest, temporalRegion, urlStateRestoration })}\n`);
   } catch (error) {
     if (browserLog) process.stderr.write(browserLog);
     throw error;

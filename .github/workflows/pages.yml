@@ -182,3 +182,26 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Retest published Region provenance and reconstruction disclosure
+        env:
+          REGION_URL: ${{ steps.deployment.outputs.page_url }}region/
+        run: |
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          timeout 120s node scripts/capture_globe_browser_evidence.mjs \
+            --browser "$BROWSER" \
+            --url "$REGION_URL" \
+            --width 1440 --height 900 \
+            --timeout-ms 90000 \
+            --dom /tmp/region-live-retest.html \
+            --screenshot /tmp/region-live-retest.png \
+            | tee /tmp/region-live-retest.json
+
+      - name: Upload published Region retest evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: region-live-failed-task-retest
+          path: /tmp/region-live-retest.*
+          if-no-files-found: warn
+          retention-days: 7

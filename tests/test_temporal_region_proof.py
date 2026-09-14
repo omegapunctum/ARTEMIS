@@ -122,6 +122,13 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert metadata["temporal_preset_count"] == 3
     assert metadata["life_path_available"] is False
     assert "Public research prototype" in html
+    assert '<span id="region-reconstruction-note">Approximate scholarly reconstruction · not exact historical borders.</span>' in html
+    assert '<a id="region-provenance-link" href="./source_manifest.json">' in html
+    assert 'Cliopatria · provenance &amp; license (CC-BY-4.0)</a>' in html
+    manifest = json.loads((output / "source_manifest.json").read_text())
+    assert manifest["license"] == "CC-BY-4.0"
+    assert manifest["attribution"]
+    assert len(manifest["commit"]) == 40
     assert CHRONOLOGY_COPY not in html
     assert 'class="sequence-note"' not in html
     assert 'class="route-note"' not in html
