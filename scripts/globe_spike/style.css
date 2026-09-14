@@ -507,3 +507,16 @@ button:focus-visible { outline: 2px solid #79cfff; outline-offset: 2px; }
 #scrub-controls { grid-template-columns: minmax(0, 1fr) auto; }
 #scrub-controls > input { grid-column: 1; grid-row: 1; min-width: 0; }
 #scrub-controls .scrub-cursor { grid-column: 2; grid-row: 1; }
+
+/* Region source access must remain visible and clickable inside the map banner. */
+#region-reconstruction-note { font-size: 12px; }
+#region-provenance-link {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #c8e4fb;
+  font-size: 12px;
+  text-decoration: underline;
+}
+#region-provenance-link:focus-visible { outline: 2px solid #c8e4fb; outline-offset: 2px; }
