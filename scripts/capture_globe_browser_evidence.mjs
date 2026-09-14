@@ -188,18 +188,32 @@ async function verifyTemporalRegion(cdp) {
     const selector = document.getElementById('temporal-preset');
     if (!selector || selector.options.length !== 3 || selector.hidden) throw new Error('Canonical Region time selector is not available');
     if (document.querySelector('.mode-switch') && !document.querySelector('.mode-switch').hidden) throw new Error('Leonardo Range/Scrub mode switch leaked into Region proof');
-    const firstItem = (runtime.data.projection.items || []).find(item => item.object_ref === 'region-roman-empire');
-    if (!firstItem || firstItem.object_type !== 'Region' || firstItem.geometry_refs.length !== 1) throw new Error('Initial Region projection is missing');
-    const firstGeometry = firstItem.geometry_refs[0];
-    const second = presets[1];
-    runtime.selectView(second.preset_id, runtime.activeLayerRefs);
-    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    const secondItem = (runtime.data.projection.items || []).find(item => item.object_ref === 'region-roman-empire');
-    if (!secondItem || secondItem.temporal_membership !== 'active' || secondItem.geometry_refs.length !== 1) throw new Error('Canonical time did not project an active Region');
-    if (secondItem.geometry_refs[0] === firstGeometry) throw new Error('Changing canonical time did not change Region geometry');
-    if (runtime.data.projection.geometries.some(geometry => geometry.geometry?.type === 'LineString')) throw new Error('Region proof introduced route geometry');
-    if (/numbered place|Build from/i.test(document.body.innerText)) throw new Error('Obsolete Leonardo copy leaked into Region artifact');
-    return {presets: presets.map(p => p.preset_id), firstGeometry, secondGeometry: secondItem.geometry_refs[0], canonicalTime: runtime.data.state.temporal_selection.start, activeRegion: secondItem.object_ref, routeGeometry: null};
+    const snapshots = [];
+    const nativeIntervals = ['91–105 CE', '106–113 CE', '114–116 CE'];
+    for (const [index, preset] of presets.entries()) {
+      selector.value = preset.preset_id;
+      selector.dispatchEvent(new Event('change', { bubbles: true }));
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const item = (runtime.data.projection.items || []).find(item => item.object_ref === 'region-roman-empire');
+      if (!item || item.object_type !== 'Region' || item.temporal_membership !== 'active' || item.geometry_refs.length !== 1) throw new Error('Canonical time did not project an active Region');
+      if (runtime.data.state.temporal_selection.start !== preset.temporal_selection.start) throw new Error('Canonical time differs from selected preset');
+      if (!selector.selectedOptions[0].textContent.includes(nativeIntervals[index])) throw new Error('Selected label lost the source-native interval');
+      const geometry = runtime.data.projection.geometries.find(g => g.geometry_ref === item.geometry_refs[0]);
+      if (!geometry?.geometry) throw new Error('Selected Region geometry is missing');
+      if (runtime.data.projection.geometries.some(g => g.geometry?.type === 'LineString')) throw new Error('Region proof introduced route geometry');
+      runtime.selectItem(item.item_id);
+      const card = document.getElementById('selection-card');
+      for (const disclosure of card.querySelectorAll('details')) disclosure.open = true;
+      const details = card.textContent;
+      for (const expected of ['Cliopatria', 'CC-BY-4.0', 'source_manifest.json', 'scholarly_reconstruction', 'approximate', 'not exact historical borders', 'missing coverage is not historical absence', nativeIntervals[index]]) {
+        if (!details.includes(expected)) throw new Error('Region details lost: ' + expected);
+      }
+      if (!/[/]blob[/][a-f0-9]{40}[/]/.test(details) || !/[/]features[/][0-9]+/.test(details)) throw new Error('Pinned source/evidence locator is missing');
+      if (document.querySelector('.sequence-note, .route-note') || /dashed links|chevrons|not travel routes|numbered place|Build from/i.test(document.body.textContent)) throw new Error('Life Path copy leaked into Region artifact');
+      snapshots.push({ preset: preset.preset_id, interval: nativeIntervals[index], geometryRef: item.geometry_refs[0], geometry: JSON.stringify(geometry.geometry), canonicalTime: runtime.data.state.temporal_selection.start });
+    }
+    if (new Set(snapshots.map(snapshot => snapshot.geometry)).size !== 3) throw new Error('The three source-native outlines are not distinct');
+    return { presets: presets.map(p => p.preset_id), snapshots: snapshots.map(({ geometry, ...snapshot }) => snapshot), routeGeometry: null, chronologyNotesAbsent: true, provenanceAndUncertaintyPreserved: true };
   })()`, true);
 }
 

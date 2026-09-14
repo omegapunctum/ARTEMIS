@@ -15,6 +15,7 @@ from scripts.build_temporal_region_inputs import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CHRONOLOGY_COPY = "Dashed links and chevrons show time order, not travel routes."
 PROJECTION_SCHEMA = json.loads(
     (ROOT / "fixtures/render_projection/v1/schema.json").read_text(encoding="utf-8")
 )
@@ -99,6 +100,9 @@ def test_region_artifact_uses_shared_runtime_and_is_not_leonardo_publication(tmp
     assert "Roman Empire" in html
     assert "temporal-preset" in html
     assert "Leonardo Life Path" not in html
+    assert CHRONOLOGY_COPY not in html
+    assert 'class="sequence-note"' not in html
+    assert 'class="route-note"' not in html
     assert "does not establish historical completeness or validated user value" in readme
     assert (output / "source_manifest.json").exists()
     assert (output / "coverage_manifest.json").exists()
@@ -117,6 +121,9 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert metadata["temporal_preset_count"] == 3
     assert metadata["life_path_available"] is False
     assert "Public research prototype" in html
+    assert CHRONOLOGY_COPY not in html
+    assert 'class="sequence-note"' not in html
+    assert 'class="route-note"' not in html
     assert "not a public capability" not in html
     assert "deployed as a public R&D preview" in readme
     assert "not a publication" not in readme
@@ -125,3 +132,12 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert "--output pages_artifact/region" in workflow
     assert "--output pages_artifact/globe" in workflow
     assert "--dataset roman_region_proof" in workflow
+
+
+def test_leonardo_keeps_both_chronology_notes(tmp_path: Path) -> None:
+    output = tmp_path / "leonardo"
+    build_spike(output, public_preview=True)
+    html = (output / "index.html").read_text()
+    assert html.count(CHRONOLOGY_COPY) == 2
+    assert f'<span class="sequence-note">{CHRONOLOGY_COPY}</span>' in html
+    assert f'<p class="route-note">{CHRONOLOGY_COPY}</p>' in html
