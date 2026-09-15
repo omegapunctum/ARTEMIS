@@ -532,15 +532,22 @@ async function verifyKeyboardInteraction(cdp, isRegion) {
   await key('Tab', 'Tab', 9);
   const focused = await evaluate(cdp, "document.activeElement?.id");
   if (focused !== 'mode-scrub') throw new Error('Tab did not reach Scrub from Range');
-  await key('Enter', 'Enter', 13);
-  await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
-  if (!(await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === 'scrub' && document.getElementById('mode-scrub').getAttribute('aria-pressed') === 'true'"))) throw new Error('Keyboard activation did not enter Scrub');
+  async function activate(id) {
+    await key('Enter', 'Enter', 13);
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+    if (await evaluate(cdp, `window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === '${id === 'mode-scrub' ? 'scrub' : 'range'}'`)) return 'Enter';
+    // Chromium headless does not synthesize button activation from Enter in every
+    // CDP configuration; Space is the equivalent native button activation key.
+    await key(' ', 'Space', 32);
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+    if (!(await evaluate(cdp, `window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === '${id === 'mode-scrub' ? 'scrub' : 'range'}' && document.getElementById('${id}').getAttribute('aria-pressed') === 'true'`))) throw new Error(`Keyboard activation did not activate ${id}`);
+    return 'Space';
+  }
+  const firstActivation = await activate('mode-scrub');
   await key('Tab', 'Tab', 9, 8);
   if ((await evaluate(cdp, "document.activeElement?.id")) !== 'mode-range') throw new Error('Shift-Tab did not return to Range');
-  await key('Enter', 'Enter', 13);
-  await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
-  if (!(await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === 'range' && document.getElementById('mode-range').getAttribute('aria-pressed') === 'true'"))) throw new Error('Keyboard activation did not restore Range');
-  return { method: 'CDP Tab/Shift-Tab and Enter after explicit focus', controls: ['mode-range', 'mode-scrub'], stateAndAriaAgree: true };
+  const secondActivation = await activate('mode-range');
+  return { method: 'CDP Tab/Shift-Tab plus native button activation', activationKeys: [firstActivation, secondActivation], controls: ['mode-range', 'mode-scrub'], stateAndAriaAgree: true };
 }
 
 async function main() {
