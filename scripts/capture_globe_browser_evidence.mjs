@@ -535,12 +535,17 @@ async function verifyKeyboardInteraction(cdp, isRegion) {
   async function activate(id) {
     await key('Enter', 'Enter', 13);
     await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
-    if (await evaluate(cdp, `window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === '${id === 'mode-scrub' ? 'scrub' : 'range'}'`)) return 'Enter';
+    const expectedMode = id === 'mode-scrub' ? 'scrub' : 'range';
+    const stateAndAriaAgree = () => evaluate(
+      cdp,
+      `window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === '${expectedMode}' && document.getElementById('${id}').getAttribute('aria-pressed') === 'true'`
+    );
+    if (await stateAndAriaAgree()) return 'Enter';
     // Chromium headless does not synthesize button activation from Enter in every
     // CDP configuration; Space is the equivalent native button activation key.
     await key(' ', 'Space', 32);
     await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
-    if (!(await evaluate(cdp, `window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === '${id === 'mode-scrub' ? 'scrub' : 'range'}' && document.getElementById('${id}').getAttribute('aria-pressed') === 'true'`))) throw new Error(`Keyboard activation did not activate ${id}`);
+    if (!(await stateAndAriaAgree())) throw new Error(`Keyboard activation did not activate ${id}`);
     return 'Space';
   }
   const firstActivation = await activate('mode-scrub');
