@@ -49,6 +49,8 @@
     "Hosted Chrome 150 clamps headless browser-window width to 500 CSS px; narrower 390 CSS px phone coverage remains a real-device review requirement.",
     "DOM-level accessible-name, target-size, overflow, landmark and reduced-motion checks are not a complete WCAG audit.",
     "Startup and frame metrics are diagnostic only and are not pass/fail thresholds under hosted-runner wall-clock scheduling.",
-    "Gate D is completed with ADVANCE_TO_GATE_E. This hosted profile is implementation/browser evidence, not Gate E T1–T5 participant evidence or user-value validation."
+    "Gate D is completed with ADVANCE_TO_GATE_E. This hosted profile is implementation/browser evidence, not Gate E T1–T5 participant evidence or user-value validation.",
+    "Objective browser checks do not establish visual acceptance or aesthetic quality; visual critique must identify its inspected artifact and reviewer separately.",
+    "Keyboard evidence covers Range/Scrub Tab/Shift-Tab plus native Enter/Space activation and Region selector arrow keys after explicit focus; it is not an exhaustive keyboard traversal or screen-reader audit."
   ]
 }
