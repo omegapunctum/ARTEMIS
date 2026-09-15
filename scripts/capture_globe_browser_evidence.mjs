@@ -503,7 +503,10 @@ async function verifyUrlStateRestoration(cdp, deadline) {
 
 async function verifyKeyboardInteraction(cdp, isRegion) {
   async function key(key, code, virtualKey, modifiers = 0) {
-    await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode: virtualKey, modifiers });
+    await cdp.send('Input.dispatchKeyEvent', {
+      type: 'keyDown', key, code, windowsVirtualKeyCode: virtualKey, nativeVirtualKeyCode: virtualKey, modifiers,
+      ...(key === 'Enter' ? { text: '\\r', unmodifiedText: '\\r' } : {})
+    });
     await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: virtualKey, modifiers });
   }
   await cdp.send('Emulation.setFocusEmulationEnabled', { enabled: true });
