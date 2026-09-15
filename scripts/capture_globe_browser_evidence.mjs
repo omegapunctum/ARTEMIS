@@ -584,7 +584,6 @@ async function main() {
     await cdp.send('Page.navigate', { url: options.url });
     const readiness = await waitForVisualReadiness(cdp, deadline);
     const isRegion = await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE?.data?.lifePath?.available === false");
-    const keyboardInteraction = await verifyKeyboardInteraction(cdp, isRegion);
     const placeLabels = isRegion ? null : await verifyPlaceLabels(cdp);
     const regionDisclosureRetest = isRegion ? await verifyRegionDisclosure(cdp, deadline) : null;
     const temporalRegion = isRegion ? await verifyTemporalRegion(cdp) : null;
@@ -600,6 +599,9 @@ async function main() {
     const urlStateRestoration = !isRegion && options.verifyUrlState
       ? await verifyUrlStateRestoration(cdp, deadline)
       : null;
+    // Run keyboard probes after capture and the existing semantic checks so the
+    // probe cannot alter the captured artifact or downstream domain assertions.
+    const keyboardInteraction = await verifyKeyboardInteraction(cdp, isRegion);
     const sha256 = value => createHash('sha256').update(value).digest('hex');
     const provenance = {
       schemaVersion: '1.0.0',
