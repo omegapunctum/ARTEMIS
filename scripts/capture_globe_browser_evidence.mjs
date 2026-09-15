@@ -530,10 +530,12 @@ async function verifyKeyboardInteraction(cdp, isRegion) {
   const focused = await evaluate(cdp, "document.activeElement?.id");
   if (focused !== 'mode-scrub') throw new Error('Tab did not reach Scrub from Range');
   await key('Enter', 'Enter', 13);
+  await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
   if (!(await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === 'scrub' && document.getElementById('mode-scrub').getAttribute('aria-pressed') === 'true'"))) throw new Error('Keyboard activation did not enter Scrub');
   await key('Tab', 'Tab', 9, 8);
   if ((await evaluate(cdp, "document.activeElement?.id")) !== 'mode-range') throw new Error('Shift-Tab did not return to Range');
   await key('Enter', 'Enter', 13);
+  await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
   if (!(await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === 'range' && document.getElementById('mode-range').getAttribute('aria-pressed') === 'true'"))) throw new Error('Keyboard activation did not restore Range');
   return { method: 'CDP Tab/Shift-Tab and Enter after explicit focus', controls: ['mode-range', 'mode-scrub'], stateAndAriaAgree: true };
 }
