@@ -195,7 +195,9 @@ jobs:
           # Turn the three DOM probes into one machine-readable evidence artifact.
           # Timing remains diagnostic: hosted-runner wall-clock scheduling is not a SLO.
           python - <<'PY'
+          import hashlib
           import json
+          import subprocess
           from html.parser import HTMLParser
           from pathlib import Path
 
@@ -215,6 +217,17 @@ jobs:
           results = []
           for expected in contract["profiles"]:
               profile_id = expected["profile_id"]
+              capture = json.loads(Path(f"/tmp/artemis-globe-browser-{profile_id}-capture.json").read_text())
+              provenance = capture["provenance"]
+              assert provenance["checkoutCommit"] == subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+              assert provenance["visualAcceptance"] == "not_assessed"
+              assert provenance["evidenceKind"] == "automated_browser_check"
+              assert provenance["browser"]["product"]
+              assert provenance["capturedUrl"]
+              assert capture["keyboardInteraction"]["stateAndAriaAgree"] is True
+              for key, suffix in [("domSha256", "dom.html"), ("screenshotSha256", "png")]:
+                  assert provenance[key] == hashlib.sha256(Path(f"/tmp/artemis-globe-browser-{profile_id}-{suffix}" if suffix == "dom.html" else f"/tmp/artemis-globe-browser-{profile_id}.png").read_bytes()).hexdigest()
+              assert provenance["runnerSha256"] == hashlib.sha256(Path("scripts/capture_globe_browser_evidence.mjs").read_bytes()).hexdigest()
               parser = RootAttributes()
               parser.feed(Path(f"/tmp/artemis-globe-browser-{profile_id}-dom.html").read_text())
               attrs = parser.attributes or {}
@@ -223,6 +236,8 @@ jobs:
                   return attrs[f"data-artemis-{name}"]
 
               actual = {
+                  "provenance": provenance,
+                  "keyboard_interaction": capture["keyboardInteraction"],
                   "profile_id": value("viewport-profile"),
                   "layout_mode": value("layout-mode"),
                   "requested_browser_window_css_px": expected["browser_window_css_px"],

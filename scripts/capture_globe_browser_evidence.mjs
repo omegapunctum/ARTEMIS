@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -500,6 +501,43 @@ async function verifyUrlStateRestoration(cdp, deadline) {
   return { interaction, restored, invalidCanonical, popstateRestored };
 }
 
+async function verifyKeyboardInteraction(cdp, isRegion) {
+  async function key(key, code, virtualKey, modifiers = 0) {
+    await cdp.send('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode: virtualKey, modifiers });
+    await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: virtualKey, modifiers });
+  }
+  await cdp.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+  if (isRegion) {
+    const before = await evaluate(cdp, `(() => {
+      const control = document.getElementById('temporal-preset');
+      control.focus();
+      return { value: control.value, count: control.options.length };
+    })()`);
+    await key('Home', 'Home', 36);
+    await key('ArrowDown', 'ArrowDown', 40);
+    const changed = await evaluate(cdp, `(() => {
+      const control = document.getElementById('temporal-preset'), runtime = window.__ARTEMIS_GLOBE_SPIKE;
+      return { focused: document.activeElement === control, value: control.value, expected: control.options[1].value, active: runtime.activeTemporalPresetId };
+    })()`);
+    if (!changed.focused || changed.value !== changed.expected || changed.active !== changed.value) throw new Error('Keyboard Region selector did not update canonical view');
+    await key('Home', 'Home', 36);
+    // Restore the incoming state; the owned three-period scenario runs separately.
+    await evaluate(cdp, `(() => { const control = document.getElementById('temporal-preset'); control.value = ${JSON.stringify(before.value)}; control.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+    return { method: 'CDP keyboard input after explicit focus', control: 'temporal-preset', canonicalViewUpdated: true };
+  }
+  await evaluate(cdp, "document.getElementById('mode-range').focus()");
+  await key('Tab', 'Tab', 9);
+  const focused = await evaluate(cdp, "document.activeElement?.id");
+  if (focused !== 'mode-scrub') throw new Error('Tab did not reach Scrub from Range');
+  await key('Enter', 'Enter', 13);
+  if (!(await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === 'scrub' && document.getElementById('mode-scrub').getAttribute('aria-pressed') === 'true'"))) throw new Error('Keyboard activation did not enter Scrub');
+  await key('Tab', 'Tab', 9, 8);
+  if ((await evaluate(cdp, "document.activeElement?.id")) !== 'mode-range') throw new Error('Shift-Tab did not return to Range');
+  await key('Enter', 'Enter', 13);
+  if (!(await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE.lifePathMode === 'range' && document.getElementById('mode-range').getAttribute('aria-pressed') === 'true'"))) throw new Error('Keyboard activation did not restore Range');
+  return { method: 'CDP Tab/Shift-Tab and Enter after explicit focus', controls: ['mode-range', 'mode-scrub'], stateAndAriaAgree: true };
+}
+
 async function main() {
   const options = parseArguments(process.argv);
   const profileDirectory = await mkdtemp(join(tmpdir(), 'artemis-chrome-profile-'));
@@ -534,9 +572,11 @@ async function main() {
     await cdp.send('Page.navigate', { url: options.url });
     const readiness = await waitForVisualReadiness(cdp, deadline);
     const isRegion = await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE?.data?.lifePath?.available === false");
+    const keyboardInteraction = await verifyKeyboardInteraction(cdp, isRegion);
     const placeLabels = isRegion ? null : await verifyPlaceLabels(cdp);
     const regionDisclosureRetest = isRegion ? await verifyRegionDisclosure(cdp, deadline) : null;
     const temporalRegion = isRegion ? await verifyTemporalRegion(cdp) : null;
+    const capturedUrl = await evaluate(cdp, 'location.href');
     const dom = await evaluate(cdp, 'document.documentElement.outerHTML');
     const capture = await cdp.send('Page.captureScreenshot', {
       format: 'png',
@@ -548,7 +588,26 @@ async function main() {
     const urlStateRestoration = !isRegion && options.verifyUrlState
       ? await verifyUrlStateRestoration(cdp, deadline)
       : null;
-    process.stdout.write(`${JSON.stringify({ ...readiness, placeLabels, regionDisclosureRetest, temporalRegion, urlStateRestoration })}\n`);
+    const sha256 = value => createHash('sha256').update(value).digest('hex');
+    const provenance = {
+      schemaVersion: '1.0.0',
+      evidenceKind: 'automated_browser_check',
+      visualAcceptance: 'not_assessed',
+      capturedUrl,
+      recordedAtUtc: new Date().toISOString(),
+      checkoutCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+      workflowRunUrl: process.env.GITHUB_RUN_ID
+        ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : null,
+      workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT || null,
+      browser: await cdp.send('Browser.getVersion'),
+      requestedWindow: { width: options.width, height: options.height },
+      reducedMotionRequested: options.reducedMotion,
+      runnerSha256: sha256(await readFile(new URL(import.meta.url))),
+      domSha256: sha256(await readFile(options.dom)),
+      screenshotSha256: sha256(await readFile(options.screenshot)),
+      limitations: ['Checkout identity is test-code provenance, not proof of the deployed commit.', 'DOM and screenshot precede the separate URL-restoration scenario.', 'Keyboard checks cover named controls only, not a full keyboard or assistive-technology audit.']
+    };
+    process.stdout.write(`${JSON.stringify({ ...readiness, keyboardInteraction, placeLabels, regionDisclosureRetest, temporalRegion, urlStateRestoration, provenance })}\n`);
   } catch (error) {
     if (browserLog) process.stderr.write(browserLog);
     throw error;
