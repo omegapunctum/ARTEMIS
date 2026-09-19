@@ -333,7 +333,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.6 records the latest Gate D decision")
+        raise ProjectStateError("project_state v1.7 records the latest Gate D decision")
     if gate["status"] not in {"in_progress", "blocked", "completed"}:
         raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
