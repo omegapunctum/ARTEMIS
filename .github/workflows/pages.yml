@@ -25,7 +25,7 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v6
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       - name: Setup Python
@@ -177,11 +177,14 @@ jobs:
       - name: Upload static artifact
         uses: actions/upload-pages-artifact@v5
         with:
+          name: github-pages-${{ github.run_attempt }}
           path: pages_artifact
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
 
       - name: Retest published Region provenance and reconstruction disclosure
         env:
