@@ -358,13 +358,15 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed M5 must record exactly one product decision")
     if checkpoint["pre_start_decision_record"] is not False:
         raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
+    if gate["status"] == "blocked" and not payload["blockers"]:
+        raise ProjectStateError("a blocked Gate D must name at least one blocker")
     region_closed = "region_closeout" in payload
     if region_closed and payload["region_closeout"]["evidence_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("Region closeout requires registered evidence")
     if not region_closed:
         raise ProjectStateError("Gate E evidence recovery requires completed Region closeout")
     if gate["status"] != "completed" or gate.get("decision") != "ADVANCE_TO_GATE_E":
-        raise ProjectStateError("Gate E evidence recovery requires completed Gate D advancement")
+        raise ProjectStateError("Gate E cannot open before completed Gate D advancement")
     if payload["next_transition"]["target"] != "E":
         raise ProjectStateError("Gate E evidence recovery must target E after completed Gate D and Region closeout")
     if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
@@ -375,9 +377,6 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("legacy #333/#334 lifecycle must be superseded/deferred under #355")
     if not {371, 373}.issubset(deferred):
         raise ProjectStateError("Airtable import/review must remain deferred outside Gate D")
-    if gate["status"] == "blocked" and not payload["blockers"]:
-        raise ProjectStateError("a blocked Gate D must name at least one blocker")
-
     for relative in payload["canonical_refs"]:
         if not (ROOT / relative).is_file():
             raise ProjectStateError(f"canonical reference does not exist: {relative}")
