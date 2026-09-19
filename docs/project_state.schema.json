@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.6.json",
-  "title": "ARTEMIS machine-readable operational state v1.6",
+  "$id": "https://artemis.example/schemas/project-state-v1.7.json",
+  "title": "ARTEMIS machine-readable operational state v1.7",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.6.0"},
+    "schema_version": {"const": "1.7.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
