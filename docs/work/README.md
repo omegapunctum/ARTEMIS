@@ -1,5 +1,7 @@
 # ARTEMIS working documents registry
 
+First-Use comprehension correction — accepted 2026-09-19: [2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). This is the single bounded pre-E1 product correction in the Gate E recovery runway. It must be implemented/publication-verified before fresh E1 and consumes the runway's product-correction allowance; another material product correction after fresh E1 requires escalation.
+
 Gate E evidence recovery — accepted 2026-09-19: [2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The runway is self-authorized through E1, at most one bounded E1 correction/retest, E2 with exactly five participants, and evidence-package assembly; only a real escalation or final Gate E outcome returns to Command Center.
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; the later Gate E recovery decision opens evidence collection only.
@@ -37,7 +39,8 @@ Leonardo interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md` | **Accepted current Gate E evidence-recovery specification** | E1 → optional single bounded correction/retest → E2 exactly 5 participants → final Gate E outcome; escalate only on real boundary breach |
+| `2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md` | **Accepted current Gate E evidence-recovery specification** | accepted First-Use correction → fresh E1 → E2 exactly 5 participants → final Gate E outcome; second material product correction requires escalation |
+| `2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md` | **Accepted bounded pre-E1 Product/UX specification** | implement + browser/visual verification + publication verification → fresh E1; no Region/IA/credibility-scoring expansion |
 | `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D completed by #414 / ADVANCE_TO_GATE_E; retained historical decision, not a pending exit |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
