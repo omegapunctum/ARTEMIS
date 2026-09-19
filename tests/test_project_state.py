@@ -256,9 +256,9 @@ def test_owner_bypass_requires_registered_authority() -> None:
         validate_project_state(state)
 
 
-def test_owner_bypass_opens_only_region_proof() -> None:
+def test_owner_bypass_does_not_open_gate_e_after_region_closeout() -> None:
     state = _state()
-    assert state['next_transition']['target'] == 'TEMPORAL_REGION_PROOF'
+    assert state['next_transition']['target'] == 'STOP'
     assert state['work_in_progress_limit'] == 1
     assert state['github']['active_issues'] == [355]
     state['next_transition']['target'] = 'E'
@@ -271,3 +271,40 @@ def test_region_work_is_not_named_as_a_gate() -> None:
     state['next_transition']['gate'] = state['next_transition'].pop('target')
     with pytest.raises(ProjectStateError, match='schema validation failed'):
         validate_project_state(state)
+
+
+@pytest.mark.parametrize("target", ["TEMPORAL_REGION_PROOF", "E", "D"])
+def test_region_closeout_cannot_reopen_product_work(target):
+    state = _state()
+    state["next_transition"]["target"] = target
+    with pytest.raises(ProjectStateError, match="STOP after Region closeout"):
+        validate_project_state(state)
+
+
+def test_stop_requires_region_closeout():
+    state = _state()
+    state.pop("region_closeout")
+    with pytest.raises(ProjectStateError, match="TEMPORAL_REGION_PROOF"):
+        validate_project_state(state)
+
+
+@pytest.mark.parametrize("field,value", [("retest", "PENDING"), ("provenance_license_finding", "open"), ("reconstruction_limits_finding", "open"), ("successor_opened", True), ("generality", "validated_value")])
+def test_region_closeout_rejects_contradictory_completion(field, value):
+    state = _state()
+    state["region_closeout"][field] = value
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
+        validate_project_state(state)
+
+
+def test_region_closeout_requires_registered_evidence():
+    state = _state()
+    state["canonical_refs"].remove(state["region_closeout"]["evidence_ref"])
+    with pytest.raises(ProjectStateError, match="Region closeout requires registered evidence"):
+        validate_project_state(state)
+
+
+def test_pre_closeout_owner_bypass_still_points_to_region():
+    state = _state()
+    state.pop("region_closeout")
+    state["next_transition"]["target"] = "TEMPORAL_REGION_PROOF"
+    validate_project_state(state)

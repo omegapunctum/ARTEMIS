@@ -59,6 +59,7 @@ jobs:
             tests/test_geospatial_assets_contract.py \
             tests/test_globe_repository_boundary.py \
             tests/test_globe_rnd_lifecycle_contract.py \
+            tests/test_project_state.py \
             tests/test_globe_runtime_spike.py \
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \

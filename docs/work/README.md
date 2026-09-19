@@ -1,13 +1,15 @@
 # ARTEMIS working documents registry
 
-Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review remains pending, E1/E2 NOT COLLECTED and formal user value UNVALIDATED. See [verification record](2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only, E1/E2 NOT COLLECTED, formal user value UNVALIDATED. No successor product branch is opened.
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. After merge of this synchronization, return to Command Center; interactive Region review remains pending. No additional implementation is opened.
+Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, E1/E2 NOT COLLECTED and formal user value UNVALIDATED. See [verification record](2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
+
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. Region implementation, publication and interactive owner review are completed; both failed-task findings are resolved / human retest PASS. Return to Command Center with no successor product branch opened. No additional implementation is opened.
 
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-13.
+- Updated: 2026-09-19.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -15,12 +17,24 @@ A filename containing `ACTIVE`, an old status header or an issue reference does 
 
 Leonardo interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; E1/E2 NOT COLLECTED, owner_directed_bypass; formal user value UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
 
+## Completed Region proof and owner review
+
+| Document | Lifecycle | Disposition |
+|---|---|---|
+| `2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md` | Completed decision | Accepted scope preserved; no successor opened |
+| `2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md` | Completed source/implementation/publication evidence | GENERALIZES technical only |
+| `2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md` | Completed human owner review | Both findings resolved / retest PASS; return to Command Center |
+
+## Engineering tooling design
+
+| Document | Lifecycle | Limitation |
+|---|---|---|
+| `2026-09-19_DEVELOPMENT_SKILLS_v1_DESIGN.md` | Design candidate; not installed | plugin-eval unavailable; behavioral evaluation blocked; no product successor |
+
 ## Active execution
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md` | Owner-bypass decision and one bounded Region proof acceptance contract | Accepted in merged #420; scoped implementation completed in #421; no automatic successor |
-| `2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md` | Source feasibility, comparability audit and bounded proof implementation evidence | Merged #421 evidence / GENERALIZES technical only; post-merge closeout recorded; Region live publication verified (owner-supplied evidence) |
 | `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D completed by #414 / ADVANCE_TO_GATE_E; retained historical decision, not a pending exit |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
@@ -84,7 +98,7 @@ Current interaction semantics:
 - earlier dashed connectors expressed chronology only and were never historical route geometry; current #418 uses explicitly labelled renderer-only chronological links and midpoint cues; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; current execution is review/closeout of the Region proof merged in #421. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; Region implementation, publication and interactive owner review are completed; no successor product branch is opened. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
 
 ## Foundation lifecycle records
 

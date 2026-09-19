@@ -294,7 +294,7 @@ Current product implementation sequence:
 13. The direct owner check recorded exactly `ITERATE`: preserve whole-life scope, address relational legibility without inventing routes, and scope the six remaining interface-composition findings.
 14. The 2026-09-05 decision defines the bounded UX artifact, semantic limits, acceptance evidence and stop condition. PR #409 merged it; #411/#412 completed and published it; owner acceptance on 2026-09-06 records `PROCEED_TO_GATE_D_REVIEW`.
 15. #412 added explicitly labelled renderer-only chronology links and compacted the dock; historical routes remain unknown/null. The correction is completed evidence.
-16. Current execution is one decision-only Gate E evidence preparation. Gate D uses `ADVANCE_TO_GATE_E / NARROW / REJECT`; M4 `ADOPT` stays separate. The bounded review is accepted, with exit recorded as `ADVANCE_TO_GATE_E` and no new implementation authorized.
+16. Current execution and next-transition status are owned by `docs/project_state.json`, `docs/PROJECT_TRUTH.md` and `docs/work/README.md`; this operational contract does not open follow-on work. Gate D uses `ADVANCE_TO_GATE_E / NARROW / REJECT`; M4 `ADOPT` stays separate.
 
 Current Temporal Map semantic/UI boundary:
 

@@ -333,7 +333,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.5 records the latest Gate D decision")
+        raise ProjectStateError("project_state v1.6 records the latest Gate D decision")
     if gate["status"] not in {"in_progress", "blocked", "completed"}:
         raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
@@ -358,9 +358,12 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed M5 must record exactly one product decision")
     if checkpoint["pre_start_decision_record"] is not False:
         raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
-    expected_next_target = "TEMPORAL_REGION_PROOF" if gate["status"] == "completed" else "D"
+    region_closed = "region_closeout" in payload
+    if region_closed and payload["region_closeout"]["evidence_ref"] not in payload["canonical_refs"]:
+        raise ProjectStateError("Region closeout requires registered evidence")
+    expected_next_target = ("STOP" if region_closed else "TEMPORAL_REGION_PROOF") if gate["status"] == "completed" else "D"
     if payload["next_transition"]["target"] != expected_next_target:
-        raise ProjectStateError("Gate E cannot open before a completed Gate D decision; completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF")
+        raise ProjectStateError("Gate E cannot open before a completed Gate D decision; completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF before closeout or STOP after Region closeout")
     if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("owner bypass and next work require one registered decision")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":

@@ -1,12 +1,14 @@
 # ARTEMIS — PROJECT PHASES v7.10
 
-Current decision: [owner-directed Gate E bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 NOT COLLECTED / owner_directed_bypass; FORMAL USER VALUE UNVALIDATED. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. After merge of this synchronization, return to Command Center; interactive Region review remains pending. No additional implementation is opened.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only, E1/E2 NOT COLLECTED, formal user value UNVALIDATED. No successor product branch is opened.
+
+Current decision: [owner-directed Gate E bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 NOT COLLECTED / owner_directed_bypass; FORMAL USER VALUE UNVALIDATED. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. Region implementation, publication and interactive owner review are completed; both failed-task findings are resolved / human retest PASS. Return to Command Center with no successor product branch opened. No additional implementation is opened.
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-12.
-- Current phase: **5.1 — owner-directed Temporal Region proof; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
+- Date: 2026-09-19.
+- Current phase: **5.1 — Temporal Region proof completed; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
@@ -165,4 +167,4 @@ It cannot draw unknown routes, add historical content, change Range/Scrub semant
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision records owner_directed_bypass; E1/E2 NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Next, after synchronization merge, is return to Command Center for the pending interactive Region review; WIP limit one. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision records owner_directed_bypass; E1/E2 NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Region interactive owner review is completed; return to Command Center with no successor product branch opened; WIP limit one. Gate D vocabulary is `ADVANCE_TO_GATE_E / NARROW / REJECT`; no gate exit or new implementation is implied by the M5 result.
