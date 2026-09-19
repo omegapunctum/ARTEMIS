@@ -165,11 +165,12 @@
     "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
     "docs/work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md",
     "docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md",
-    "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
+    "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md",
+    "docs/work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md"
   ],
   "blockers": [],
   "next_transition": {
-    "condition": "Execute the accepted Gate E evidence-recovery runway: E1; if triggered, one bounded correction plus focused retest; then E2 with exactly five participants; then return for the final Gate E outcome. No further Command Center decision is required inside this runway unless a real escalation condition occurs. E1/E2 remain NOT COLLECTED until participant observations exist; formal user value remains UNVALIDATED.",
+    "condition": "Implement and publication-verify the accepted Leonardo First-Use Comprehension Correction, then conduct a fresh E1. This accepted pre-E1 correction consumes the single bounded product-correction allowance before E2; any fresh-E1 material failure requiring another product correction is escalation. After E1 clearance, continue to E2 with exactly five participants, then return for the final Gate E outcome. E1/E2 remain NOT COLLECTED until participant observations exist; formal user value remains UNVALIDATED.",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md",
     "target": "E"
