@@ -12,14 +12,14 @@
 
 Gate E participant evidence is reopened as one continuous, pre-authorized runway:
 
-`E1 → (if required: one bounded correction + focused retest) → E2 with exactly 5 participants → final Gate E outcome`.
+`accepted First-Use comprehension correction → fresh E1 → E2 with exactly 5 participants → final Gate E outcome`.
 
 Once this specification is merged, no further Command Center decision is required to:
 
-1. conduct E1;
-2. record E1 evidence;
-3. perform the single bounded correction/retest branch allowed below;
-4. prepare and freeze the E2 linear baseline and comparison protocol;
+1. implement and verify the accepted [Leonardo First-Use Comprehension Correction](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md);
+2. conduct a fresh E1;
+3. record E1 evidence;
+4. prepare and freeze the E2 linear baseline and comparison protocol after E1 clearance;
 5. conduct E2 with exactly five formative participants;
 6. assemble the Gate E evidence package.
 
@@ -50,7 +50,7 @@ The evaluated ARTEMIS condition is the current accepted Leonardo interaction bas
 
 Before each evidence phase, record the tested public URL, UTC time, language, device/browser and available deployment identity. If exact deployed revision cannot be established, record it as unknown rather than infer it.
 
-Do not combine participant observations across materially different product revisions. The only product change permitted inside this runway before E2 is the single bounded E1 correction branch defined in section 6.
+Do not combine participant observations across materially different product revisions. The accepted [Leonardo First-Use Comprehension Correction](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) is the only product correction permitted inside this runway before E2. It must be implemented and publication-verified before the fresh E1.
 
 Existing owner acceptance, Region review, CI, browser automation and agent review do not substitute for E1 or E2 participant evidence.
 
@@ -107,28 +107,20 @@ These branches do not require a new Command Center decision:
 
 Escalate instead of silently revising the protocol when a proposed clarification would change what the task means, change the pass bar, alter accepted product semantics or materially change the comparison question.
 
-## 6. Single bounded E1 correction/retest branch
+## 6. Correction allowance consumed by accepted pre-E1 correction
 
-If E1 produces any `ASSISTED`, `FAIL` or critical trust error attributable to a demonstrated product interaction/comprehension/evidence-access problem, **one bounded correction cycle** is authorized without another Command Center decision.
+The owner accepted [Leonardo First-Use Comprehension Correction v1](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) before E1. That correction consumes the single bounded product-correction allowance that this recovery runway previously reserved for a possible E1 failure.
 
-The correction may address multiple findings from the same E1 session only when they fit one coherent bounded cause. It must:
+The correction is based on owner first-use review evidence, not participant evidence. It must be implemented, browser-verified, self-reviewed, merged and publication-verified before a **fresh** E1 is conducted.
 
-- preserve the accepted temporal/spatial/domain semantics;
-- preserve Place/Presence identity, uncertainty/provenance and unknown-route rules;
-- add no new historical data, coordinates, routes, Relations, source claims or backend dependency;
-- avoid unrelated visual redesign or feature expansion;
-- remain the minimum change required to remove the demonstrated blocker;
-- be implemented and verified under `docs/DEVELOPMENT_OPERATING_SYSTEM.md`.
+After that fresh E1:
 
-Retest only the failed/assisted task(s) plus directly affected regression behavior. Preserve first-attempt and retest evidence separately.
+- all five tasks PASS unaided with zero critical trust errors → E1 clears and E2 preparation opens automatically;
+- `NOT_RUN`, untraceable evidence or observer-recording error → complete/repair only the missing evidence under section 5;
+- a protocol clarification that preserves task meaning and pass criteria may follow section 5;
+- any `ASSISTED`, `FAIL` or critical trust error that requires another material product correction → **stop and escalate**. Do not open a second product correction and do not begin E2.
 
-Where prior assistance or exposure could explain a pass, the focused retest must use a fresh novice for that task.
-
-### Correction branch exit
-
-- If every affected task passes unaided after the bounded correction, no critical trust error remains, and regression checks are clean: E1 is cleared and E2 preparation opens automatically.
-- If any affected task remains `ASSISTED`/`FAIL`, a critical trust error remains, or a second material product correction would be required: **stop and escalate**. Do not begin E2.
-- Preferences or cosmetic observations that do not block the task and do not create a trust error are recorded but do not open a correction branch.
+Preferences or cosmetic observations that do not block a task and do not create a trust error are recorded but do not reopen product correction.
 
 ## 7. E2 preparation — same-content linear baseline
 
@@ -237,7 +229,8 @@ This decision/specification is complete when GitHub records it as the current Ga
 At that point:
 
 - E1 may be conducted without another Command Center decision;
-- the single bounded E1 correction/retest branch may execute if triggered;
+- the accepted pre-E1 First-Use correction may be implemented and publication-verified without another Command Center decision;
+- a fresh E1 follows that implementation; a second material product correction is escalation;
 - E2 preparation and exactly five-participant collection may proceed automatically after E1 clearance;
 - the only planned human decision point is the final Gate E outcome;
 - genuine escalation still stops execution under the governing operating system.
