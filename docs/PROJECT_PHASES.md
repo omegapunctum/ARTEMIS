@@ -1,14 +1,14 @@
-# ARTEMIS — PROJECT PHASES v7.10
+# ARTEMIS — PROJECT PHASES v7.11
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only, E1/E2 NOT COLLECTED, formal user value UNVALIDATED. No successor product branch is opened.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens evidence collection only.
 
-Current decision: [owner-directed Gate E bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 NOT COLLECTED / owner_directed_bypass; FORMAL USER VALUE UNVALIDATED. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. Region implementation, publication and interactive owner review are completed; both failed-task findings are resolved / human retest PASS. Return to Command Center with no successor product branch opened. No additional implementation is opened.
+Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; FORMAL USER VALUE UNVALIDATED. Region remains completed technical-only generalization evidence and is not a recovered Gate E result.
 
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-09-19.
-- Current phase: **5.1 — Temporal Region proof completed; M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW**.
+- Current phase: **5.1 — Gate E evidence recovery active; Temporal Region proof and M5 bounded UX correction completed**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
