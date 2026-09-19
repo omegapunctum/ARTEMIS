@@ -228,7 +228,7 @@ This decision/specification is complete when GitHub records it as the current Ga
 
 At that point:
 
-- E1 may be conducted without another Command Center decision;
+- after the accepted pre-E1 First-Use correction is implemented and publication-verified, a fresh E1 may be conducted without another Command Center decision;
 - the accepted pre-E1 First-Use correction may be implemented and publication-verified without another Command Center decision;
 - a fresh E1 follows that implementation; a second material product correction is escalation;
 - E2 preparation and exactly five-participant collection may proceed automatically after E1 clearance;
