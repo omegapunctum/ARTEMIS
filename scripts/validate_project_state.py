@@ -361,11 +361,14 @@ def validate_project_state(state: dict | None = None) -> dict:
     region_closed = "region_closeout" in payload
     if region_closed and payload["region_closeout"]["evidence_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("Region closeout requires registered evidence")
-    expected_next_target = ("STOP" if region_closed else "TEMPORAL_REGION_PROOF") if gate["status"] == "completed" else "D"
-    if payload["next_transition"]["target"] != expected_next_target:
-        raise ProjectStateError("Gate E cannot open before a completed Gate D decision; completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF before closeout or STOP after Region closeout")
+    if not region_closed:
+        raise ProjectStateError("Gate E evidence recovery requires completed Region closeout")
+    if gate["status"] != "completed" or gate.get("decision") != "ADVANCE_TO_GATE_E":
+        raise ProjectStateError("Gate E evidence recovery requires completed Gate D advancement")
+    if payload["next_transition"]["target"] != "E":
+        raise ProjectStateError("Gate E evidence recovery must target E after completed Gate D and Region closeout")
     if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
-        raise ProjectStateError("owner bypass and next work require one registered decision")
+        raise ProjectStateError("Gate E authority and next work require one registered decision")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
         raise ProjectStateError("Gate D must begin from the frozen non-public Gate C World Slice")
     if 333 not in superseded or 334 not in deferred:
