@@ -164,14 +164,15 @@
     "docs/work/2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md",
     "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
     "docs/work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md",
-    "docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md"
+    "docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md",
+    "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
   ],
   "blockers": [],
   "next_transition": {
-    "condition": "The authorized TEMPORAL_REGION_PROOF implementation is merged in PR #421. Region publication and interactive owner review are completed; both failed-task findings resolved / human retest PASS. Return to Command Center; no successor product branch is opened. GENERALIZES technical only; E1/E2 NOT COLLECTED; formal user value UNVALIDATED. See docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md",
+    "condition": "Execute the accepted Gate E evidence-recovery runway: E1; if triggered, one bounded correction plus focused retest; then E2 with exactly five participants; then return for the final Gate E outcome. No further Command Center decision is required inside this runway unless a real escalation condition occurs. E1/E2 remain NOT COLLECTED until participant observations exist; formal user value remains UNVALIDATED.",
     "authority": "explicit_owner_instruction",
-    "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md",
-    "target": "STOP"
+    "decision_ref": "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md",
+    "target": "E"
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -211,12 +212,12 @@
     "exit_record_ref": "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"
   },
   "gate_e": {
-    "status": "not_collected",
-    "disposition": "owner_directed_bypass",
-    "e1": "not_collected",
-    "e2": "not_collected",
+    "status": "evidence_recovery_authorized",
+    "disposition": "evidence_recovery",
+    "e1": "ready_not_collected",
+    "e2": "conditional_not_collected",
     "formal_user_value": "unvalidated",
-    "decision_ref": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
+    "decision_ref": "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
   },
   "region_closeout": {
     "implementation": "completed",
