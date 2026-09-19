@@ -184,7 +184,6 @@
           "enum": [
             "evidence_recovery_authorized",
             "e1_in_progress",
-            "e1_correction_retest",
             "e1_cleared",
             "e2_preparation",
             "e2_in_progress",
@@ -198,7 +197,6 @@
           "enum": [
             "ready_not_collected",
             "in_progress",
-            "correction_retest",
             "cleared"
           ]
         },
