@@ -67,19 +67,28 @@ async function waitForPageEndpoint(port, deadline) {
   throw new Error('Timed out waiting for a Chrome page target');
 }
 
-async function connectCdp(webSocketUrl) {
+async function connectCdp(webSocketUrl, deadline) {
   const socket = new WebSocket(webSocketUrl);
   await new Promise((resolve, reject) => {
-    socket.addEventListener('open', resolve, { once: true });
-    socket.addEventListener('error', () => reject(new Error('Chrome DevTools WebSocket failed')), { once: true });
+    const timer = setTimeout(() => reject(new Error('Timed out connecting Chrome DevTools')), Math.max(1, deadline - Date.now()));
+    socket.addEventListener('open', () => { clearTimeout(timer); resolve(); }, { once: true });
+    socket.addEventListener('error', () => { clearTimeout(timer); reject(new Error('Chrome DevTools WebSocket failed')); }, { once: true });
   });
 
   let nextId = 0;
   const pending = new Map();
+  socket.addEventListener('close', () => {
+    for (const { reject, timer } of pending.values()) {
+      clearTimeout(timer);
+      reject(new Error('Chrome DevTools WebSocket closed'));
+    }
+    pending.clear();
+  });
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(String(event.data));
     if (!message.id || !pending.has(message.id)) return;
-    const { resolve, reject } = pending.get(message.id);
+    const { resolve, reject, timer } = pending.get(message.id);
+    clearTimeout(timer);
     pending.delete(message.id);
     if (message.error) reject(new Error(JSON.stringify(message.error)));
     else resolve(message.result || {});
@@ -88,7 +97,13 @@ async function connectCdp(webSocketUrl) {
   return {
     async send(method, params = {}) {
       const id = ++nextId;
-      const response = new Promise((resolve, reject) => pending.set(id, { resolve, reject }));
+      const response = new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          pending.delete(id);
+          reject(new Error(`Timed out waiting for Chrome DevTools ${method}`));
+        }, Math.max(1, deadline - Date.now()));
+        pending.set(id, { resolve, reject, timer });
+      });
       socket.send(JSON.stringify({ id, method, params }));
       return response;
     },
@@ -583,14 +598,18 @@ async function main() {
   try {
     const port = await waitForDevToolsPort(profileDirectory, browser, deadline);
     const endpoint = await waitForPageEndpoint(port, deadline);
-    cdp = await connectCdp(endpoint);
+    cdp = await connectCdp(endpoint, deadline);
     await cdp.send('Page.enable');
     await cdp.send('Runtime.enable');
+    process.stderr.write('[browser evidence] initial navigation\n');
     await cdp.send('Page.navigate', { url: options.url });
+    process.stderr.write('[browser evidence] readiness\n');
     const readiness = await waitForVisualReadiness(cdp, deadline);
     const isRegion = await evaluate(cdp, "window.__ARTEMIS_GLOBE_SPIKE?.data?.lifePath?.available === false");
     const placeLabels = isRegion ? null : await verifyPlaceLabels(cdp);
+    process.stderr.write('[browser evidence] regionDisclosureRetest\n');
     const regionDisclosureRetest = isRegion ? await verifyRegionDisclosure(cdp, deadline) : null;
+    process.stderr.write('[browser evidence] temporalRegion\n');
     const temporalRegion = isRegion ? await verifyTemporalRegion(cdp) : null;
     const capturedUrl = await evaluate(cdp, 'location.href');
     const dom = await evaluate(cdp, 'document.documentElement.outerHTML');
@@ -606,10 +625,12 @@ async function main() {
       : null;
     // Run keyboard probes after capture and the existing semantic checks so the
     // probe cannot alter the captured artifact or downstream domain assertions.
+    process.stderr.write('[browser evidence] keyboardInteraction\n');
     const keyboardInteraction = await verifyKeyboardInteraction(cdp, isRegion);
     const sha256 = value => createHash('sha256').update(value).digest('hex');
     const provenance = {
       schemaVersion: '1.0.0',
+      nodeVersion: process.version,
       evidenceKind: 'automated_browser_check',
       visualAcceptance: 'not_assessed',
       capturedUrl,

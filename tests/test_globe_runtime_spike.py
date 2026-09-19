@@ -903,3 +903,7 @@ def test_build_metadata_is_semantically_reproducible(tmp_path: Path) -> None:
     assert _load(first / "globe-projection.json") == _load(second / "globe-projection.json")
     assert _load(first / "knowledge-index.json") == _load(second / "knowledge-index.json")
     assert _load(first / "explorer-views.json") == _load(second / "explorer-views.json")
+
+
+def test_browser_cdp_waits_are_bounded():
+    subprocess.run(["node", "tests/browser_cdp_transport.cjs"], cwd=ROOT, check=True, timeout=10)

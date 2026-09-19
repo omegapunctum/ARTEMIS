@@ -141,3 +141,12 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     assert "--output pages_artifact/globe" in workflow
     assert "--dataset roman_region_proof" in workflow
 
+
+
+def test_pages_retry_deploys_only_current_attempt_artifact():
+    workflow = (ROOT / ".github/workflows/pages.yml").read_text()
+    upload = workflow.split("- name: Upload static artifact", 1)[1].split("- name: Deploy to GitHub Pages", 1)[0]
+    deploy = workflow.split("- name: Deploy to GitHub Pages", 1)[1].split("- name: Retest published Region", 1)[0]
+    assert "name: github-pages-${{ github.run_attempt }}" in upload
+    assert "artifact_name: github-pages-${{ github.run_attempt }}" in deploy
+    assert "ref: ${{ github.sha }}" in workflow

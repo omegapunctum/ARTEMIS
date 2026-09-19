@@ -108,3 +108,14 @@ Inspected baseline: ARTEMIS main `c85414d80785ac36ffae0d8f4406e8faf1dfbf9d`. Fil
 ### Verification provenance
 
 Implementation evidence is the PR's exact-head owned CI, per-profile capture JSON and aggregate `artemis-globe-browser-evidence.json`; each capture binds its DOM/screenshot hashes and test checkout. Pages retains the separate `region-live-failed-task-retest` artifact. Run links and final results are recorded in the implementation PR after checks complete. This document records coverage, not a retroactive PASS for historical captures.
+
+
+## Pages retest reliability correction — 2026-09-19
+
+The initial attempts of [Pages #393](https://github.com/omegapunctum/ARTEMIS/actions/runs/35434657141/attempts/1) and [Pages #394](https://github.com/omegapunctum/ARTEMIS/actions/runs/35444583855) successfully deployed, then the live Region browser retest hit the external 120-second timeout. The original logs did not identify the stalled Chrome command; they do not establish a Region data/UX defect. A later #393 rerun separately failed because two artifacts were named `github-pages`.
+
+The existing CDP runner now bounds connection/command waits by its deadline, rejects pending commands on disconnect, and logs the scenario stage. Pages preserves stderr with its evidence, uses an attempt-specific artifact name consistently for upload/deploy, and checks out the triggering SHA so reruns do not silently build newer main content under an older deployment identity. No assertions or failure gates are disabled.
+
+Regression coverage exercises successful replies, connection timeout, unresponsive command timeout and disconnect using the actual transport function with a fake peer. The existing Region tests guard attempt-specific upload/deploy identity and checkout revision. These are transport/workflow checks, not browser or human evidence.
+
+During PR #437 investigation, the same live Region scenario passed both on the default hosted Node environment and after explicitly selecting Pages' Node 24. This does not support attributing the original hang to Node 24. Original low-level hang cause remains unobserved; the diagnosed runner defect is unbounded CDP waits and absent stage diagnostics. Final exact-head CI and post-merge Pages results are recorded in PR #437. Temporary diagnostic workflow steps are removed before merge. Existing source/license, reconstruction, three-snapshot, keyboard and Leonardo assertions remain intact; E1/E2 and formal value are not changed by this engineering evidence.
