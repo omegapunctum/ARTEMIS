@@ -2,7 +2,7 @@
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens evidence collection only.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; FORMAL USER VALUE UNVALIDATED. Region remains completed technical-only generalization evidence and is not a recovered Gate E result.
+Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md) plus the accepted [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) as the single bounded pre-E1 correction. Implementation/publication verification precedes a fresh E1; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Region remains completed technical-only generalization evidence.
 
 ## Status
 
@@ -167,4 +167,4 @@ It cannot draw unknown routes, add historical content, change Range/Scrub semant
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision authorizes Gate E evidence recovery; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED until participant observations exist. Region interactive owner review is completed; the active successor is evidence recovery only, with WIP limit one. Gate D vocabulary remains historical `ADVANCE_TO_GATE_E / NARROW / REJECT`; the recovery runway does not change M5 or Region semantics.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision authorizes Gate E evidence recovery and one accepted pre-E1 First-Use comprehension correction; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED until participant observations exist. The correction consumes the single product-correction allowance, so a later material E1 failure requiring another product correction is escalation. Region interactive owner review is completed; the active successor is evidence recovery only, with WIP limit one. Gate D vocabulary remains historical `ADVANCE_TO_GATE_E / NARROW / REJECT`; the recovery runway does not change M5 or Region semantics.
