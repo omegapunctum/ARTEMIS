@@ -230,10 +230,12 @@ def test_completed_gate_d_requires_explicit_exit(missing):
         validate_project_state(state)
 
 
-def test_completed_advancement_with_bypass_must_point_to_region_proof():
+def test_gate_e_recovery_requires_completed_gate_d_advancement():
     state = _state()
-    state["next_transition"]["target"] = "D"
-    with pytest.raises(ProjectStateError, match="completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF"):
+    state["gate"]["status"] = "in_progress"
+    state["gate"].pop("decision")
+    state["gate"].pop("evidence_ref")
+    with pytest.raises(ProjectStateError, match="schema validation failed|requires completed Gate D advancement"):
         validate_project_state(state)
 
 
