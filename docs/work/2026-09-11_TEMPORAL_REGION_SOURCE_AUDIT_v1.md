@@ -3,7 +3,7 @@
 - Date: 2026-09-11
 - Owner: issue #355
 - Original 2026-09-11 status: bounded implementation branch; not merged or published
-- Current status (2026-09-13): live publication verified from owner-supplied screenshot and build metadata; interactive review pending
+- Current status (recorded 2026-09-19): implementation, publication and interactive owner review completed; human retest PASS; both failed-task findings resolved. See [owner closeout](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md).
 - Decision context: [Gate E owner bypass and bounded Temporal Region universality proof](2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md)
 
 ## Source feasibility result
@@ -148,7 +148,7 @@ The supplied metadata contains no Git commit or Pages run identity, so this
 record does not bind the live response to an exact deployment SHA or claim a
 new HTTP status measurement. The record date is not an inferred capture time.
 
-Publication availability is verified; interaction acceptance is not. Switching
+Historical verification boundary as of 2026-09-13 (superseded for interaction status by the 2026-09-19 owner closeout): publication availability was verified; interaction acceptance was not. Switching
 all three periods, inspecting provenance and evaluating usability remain pending.
 The screenshot's single selected period is not evidence that those tasks passed.
 E1/E2 remain NOT COLLECTED; formal user value remains UNVALIDATED. GENERALIZES

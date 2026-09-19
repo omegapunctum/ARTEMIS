@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Temporal Region proof closeout`" in scope
+    assert "Current increment: `Temporal Region proof completed`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"

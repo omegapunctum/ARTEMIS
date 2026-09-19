@@ -1,12 +1,14 @@
 # ARTEMIS — PRIORITIES v7.10
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. After merge of this synchronization, return to Command Center; interactive Region review remains pending. No additional implementation is opened.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only, E1/E2 NOT COLLECTED, formal user value UNVALIDATED. No successor product branch is opened.
+
+Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. Region implementation, publication and interactive owner review are completed; both failed-task findings are resolved / human retest PASS. Return to Command Center with no successor product branch opened. No additional implementation is opened.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-12.
-- Active cycle: `Region proof post-merge closeout`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
+- Date: 2026-09-19.
+- Active cycle: `Region completed; no successor opened`; M5 bounded UX correction completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
@@ -121,8 +123,8 @@ These are technical/product-development foundations, not final user-value eviden
 ## Execution order
 
 1. #420 decision and #421 source-first implementation are merged. Preserve Gate D ADVANCE_TO_GATE_E, M4 ADOPT and M5 history.
-2. Review the existing Region artifact: three source-native periods, changing geometry, inspectable provenance and reconstruction limits. WIP limit remains one.
-3. The source audit supports GENERALIZES (technical only). Separate publication is verified from owner-supplied live evidence; interactive review remains pending. After synchronization merge, return to Command Center; no new capability or implementation is opened.
+2. Human Region retest PASS is recorded: three source-native periods switch correctly; provenance/license and approximate scholarly reconstruction are visible. Both failed-task findings are resolved. WIP limit remains one.
+3. The source audit supports GENERALIZES (technical only). Separate publication is verified from owner-supplied live evidence; interactive owner review is completed / human retest PASS. Return to Command Center; no new capability or implementation is opened.
 4. E1/E2 remain NOT COLLECTED; formal user value unvalidated. No additional product, infrastructure, Global/Focus implementation or automatic publication.
 
 ## Completion rule

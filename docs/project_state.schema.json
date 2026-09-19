@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.5.json",
-  "title": "ARTEMIS machine-readable operational state v1.5",
+  "$id": "https://artemis.example/schemas/project-state-v1.6.json",
+  "title": "ARTEMIS machine-readable operational state v1.6",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.5.0"},
+    "schema_version": {"const": "1.6.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -197,6 +197,59 @@
         },
         "decision_ref": {
           "const": "docs/work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md"
+        }
+      }
+    },
+    "region_closeout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "publication",
+        "interactive_owner_review",
+        "acceptance_kind",
+        "recorded_at",
+        "provenance_license_finding",
+        "reconstruction_limits_finding",
+        "retest",
+        "generality",
+        "successor_opened",
+        "evidence_ref"
+      ],
+      "properties": {
+        "implementation": {
+          "const": "completed"
+        },
+        "publication": {
+          "const": "verified"
+        },
+        "interactive_owner_review": {
+          "const": "completed"
+        },
+        "acceptance_kind": {
+          "const": "human_owner_retest_report"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "provenance_license_finding": {
+          "const": "resolved"
+        },
+        "reconstruction_limits_finding": {
+          "const": "resolved"
+        },
+        "retest": {
+          "const": "PASS"
+        },
+        "generality": {
+          "const": "technical_only"
+        },
+        "successor_opened": {
+          "const": false
+        },
+        "evidence_ref": {
+          "const": "docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md"
         }
       }
     },
