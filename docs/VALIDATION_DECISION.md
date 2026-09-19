@@ -111,9 +111,9 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
 
-| Gate E planned evidence | `NOT COLLECTED / owner_directed_bypass`; E1/E2 not executed |
-| Formal user value | `UNVALIDATED`; no positive value signal |
-| Next authority | `explicit_owner_instruction`; bounded Region implementation, publication and interactive owner review completed; return to Command Center without opening a successor |
+| Gate E recovery evidence | `AUTHORIZED / NOT COLLECTED`; E1 ready, E2 conditional on E1 clearance |
+| Formal user value | `UNVALIDATED`; no positive value signal yet |
+| Next authority | [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md); execute E1 → optional one bounded correction/retest → E2 exactly 5 participants; return only on escalation or final Gate E outcome |
 
 ## 6. Change rule
 
