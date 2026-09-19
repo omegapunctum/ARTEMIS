@@ -2,7 +2,7 @@
 
 First-Use comprehension correction — accepted 2026-09-19: [2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). This is the single bounded pre-E1 product correction in the Gate E recovery runway. It must be implemented/publication-verified before fresh E1 and consumes the runway's product-correction allowance; another material product correction after fresh E1 requires escalation.
 
-Gate E evidence recovery — accepted 2026-09-19: [2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The runway is self-authorized through E1, at most one bounded E1 correction/retest, E2 with exactly five participants, and evidence-package assembly; only a real escalation or final Gate E outcome returns to Command Center.
+Gate E evidence recovery — accepted 2026-09-19: [2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The accepted First-Use correction now precedes fresh E1 and consumes the single product-correction allowance; after E1 clearance the runway continues to E2 with exactly five participants and evidence-package assembly. Only a real escalation or final Gate E outcome returns to Command Center.
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; the later Gate E recovery decision opens evidence collection only.
 
@@ -19,7 +19,7 @@ Current decision: [Gate E evidence recovery specification](2026-09-19_GATE_E_EVI
 
 A filename containing `ACTIVE`, an old status header or an issue reference does not make a document active.
 
-Leonardo interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E recovery is authorized, E1 is ready / NOT COLLECTED, E2 is conditional / NOT COLLECTED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
+Leonardo interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E recovery is authorized, the accepted First-Use correction precedes E1, E1 is NOT COLLECTED, E2 is conditional / NOT COLLECTED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
 
 ## Completed Region proof and owner review
 
