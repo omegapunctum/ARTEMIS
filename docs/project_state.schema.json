@@ -181,16 +181,34 @@
       ],
       "properties": {
         "status": {
-          "const": "evidence_recovery_authorized"
+          "enum": [
+            "evidence_recovery_authorized",
+            "e1_in_progress",
+            "e1_correction_retest",
+            "e1_cleared",
+            "e2_preparation",
+            "e2_in_progress",
+            "evidence_complete_awaiting_outcome"
+          ]
         },
         "disposition": {
           "const": "evidence_recovery"
         },
         "e1": {
-          "const": "ready_not_collected"
+          "enum": [
+            "ready_not_collected",
+            "in_progress",
+            "correction_retest",
+            "cleared"
+          ]
         },
         "e2": {
-          "const": "conditional_not_collected"
+          "enum": [
+            "conditional_not_collected",
+            "preparation",
+            "in_progress",
+            "complete"
+          ]
         },
         "formal_user_value": {
           "const": "unvalidated"
