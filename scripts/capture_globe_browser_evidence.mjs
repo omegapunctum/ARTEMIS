@@ -72,11 +72,18 @@ async function connectCdp(webSocketUrl, deadline) {
   await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('Timed out connecting Chrome DevTools')), Math.max(1, deadline - Date.now()));
     socket.addEventListener('open', () => { clearTimeout(timer); resolve(); }, { once: true });
-    socket.addEventListener('error', () => reject(new Error('Chrome DevTools WebSocket failed')), { once: true });
+    socket.addEventListener('error', () => { clearTimeout(timer); reject(new Error('Chrome DevTools WebSocket failed')); }, { once: true });
   });
 
   let nextId = 0;
   const pending = new Map();
+  socket.addEventListener('close', () => {
+    for (const { reject, timer } of pending.values()) {
+      clearTimeout(timer);
+      reject(new Error('Chrome DevTools WebSocket closed'));
+    }
+    pending.clear();
+  });
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(String(event.data));
     if (!message.id || !pending.has(message.id)) return;

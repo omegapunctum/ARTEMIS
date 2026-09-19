@@ -326,6 +326,11 @@ jobs:
           grep -F 'data-artemis-selected-item="rp:event:event-leonardo-cesena-survey"' /tmp/artemis-globe-interaction-dom.html
           grep -F '1502' /tmp/artemis-globe-interaction-dom.html
 
+      - name: Match Pages Node version for diagnostic
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
       - name: Diagnose live Region retest
         run: |
           BROWSER="$(command -v google-chrome || command -v chromium)"
