@@ -630,6 +630,7 @@ async function main() {
     const sha256 = value => createHash('sha256').update(value).digest('hex');
     const provenance = {
       schemaVersion: '1.0.0',
+      nodeVersion: process.version,
       evidenceKind: 'automated_browser_check',
       visualAcceptance: 'not_assessed',
       capturedUrl,

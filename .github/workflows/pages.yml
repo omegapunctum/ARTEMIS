@@ -199,6 +199,7 @@ jobs:
             --timeout-ms 90000 \
             --dom /tmp/region-live-retest.html \
             --screenshot /tmp/region-live-retest.png \
+            2> >(tee /tmp/region-live-retest.log >&2) \
             | tee /tmp/region-live-retest.json
           python - <<'PY'
           import json

@@ -17,6 +17,7 @@ on:
       - "scripts/capture_globe_browser_evidence.mjs"
       - "scripts/globe_spike/**"
       - "tests/test_globe_runtime_spike.py"
+      - "tests/browser_cdp_transport.cjs"
       - "tests/test_temporal_region_proof.py"
       - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
       - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
@@ -39,6 +40,7 @@ on:
       - "scripts/capture_globe_browser_evidence.mjs"
       - "scripts/globe_spike/**"
       - "tests/test_globe_runtime_spike.py"
+      - "tests/browser_cdp_transport.cjs"
       - "tests/test_temporal_region_proof.py"
       - "docs/work/2026-08-08_GLOBE_ENGINE_SPIKE_DECISION_v1.md"
       - "docs/work/2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md"
@@ -325,16 +327,6 @@ jobs:
           grep -F 'data-artemis-selected-presence="presence-cesena-1502-08-10"' /tmp/artemis-globe-interaction-dom.html
           grep -F 'data-artemis-selected-item="rp:event:event-leonardo-cesena-survey"' /tmp/artemis-globe-interaction-dom.html
           grep -F '1502' /tmp/artemis-globe-interaction-dom.html
-
-      - name: Match Pages Node version for diagnostic
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-
-      - name: Diagnose live Region retest
-        run: |
-          BROWSER="$(command -v google-chrome || command -v chromium)"
-          timeout 120s node scripts/capture_globe_browser_evidence.mjs --browser "$BROWSER" --url https://omegapunctum.github.io/ARTEMIS/region/ --width 1440 --height 900 --timeout-ms 90000 --dom /tmp/region-live.html --screenshot /tmp/region-live.png
 
       - name: Upload generated Globe artifact
         uses: actions/upload-artifact@v7
