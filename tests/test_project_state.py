@@ -263,7 +263,6 @@ def test_gate_e_recovery_requires_registered_authority() -> None:
     [
         ("evidence_recovery_authorized", "ready_not_collected", "conditional_not_collected"),
         ("e1_in_progress", "in_progress", "conditional_not_collected"),
-        ("e1_correction_retest", "correction_retest", "conditional_not_collected"),
         ("e1_cleared", "cleared", "conditional_not_collected"),
         ("e2_preparation", "cleared", "preparation"),
         ("e2_in_progress", "cleared", "in_progress"),
@@ -276,6 +275,14 @@ def test_gate_e_recovery_runway_states_are_pre_authorized(status, e1, e2) -> Non
     state["gate_e"]["e1"] = e1
     state["gate_e"]["e2"] = e2
     validate_project_state(state)
+
+
+def test_second_product_correction_after_fresh_e1_is_not_pre_authorized() -> None:
+    state = _state()
+    state["gate_e"]["status"] = "e1_correction_retest"
+    state["gate_e"]["e1"] = "correction_retest"
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
+        validate_project_state(state)
 
 
 def test_e2_cannot_start_before_e1_clearance() -> None:

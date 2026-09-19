@@ -2,7 +2,7 @@
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens evidence collection, not a feature branch.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is ready / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The 2026-09-10 bypass remains historical and Region remains technical-only evidence.
+Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md), with the accepted [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) as the single bounded pre-E1 product correction. E1/E2 remain NOT COLLECTED and formal user value remains UNVALIDATED. Region remains technical-only evidence.
 
 ## Status
 
@@ -16,7 +16,7 @@ Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_
 
 ## P0 — Recover Gate E participant evidence
 
-Follow the accepted [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). Leonardo interaction baseline remains #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`; #416 navigation is future-only and #418/#419 are completed implementation evidence. Run E1 first; if triggered, allow exactly one bounded E1 correction/retest; after E1 clearance prepare/freeze the same-content linear baseline and conduct E2 with exactly five participants; then stop for the final Gate E outcome. E1/E2 observations remain NOT COLLECTED until actually recorded.
+Follow the accepted [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md) and [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). Leonardo interaction baseline remains #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`; #416 navigation is future-only and #418/#419 are completed implementation evidence. Implement and publication-verify the accepted correction first, then conduct a fresh E1. That correction consumes the one product-correction allowance; another material product correction after E1 is escalation. After E1 clearance prepare/freeze the same-content linear baseline and conduct E2 with exactly five participants; then stop for the final Gate E outcome. E1/E2 observations remain NOT COLLECTED until actually recorded.
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 

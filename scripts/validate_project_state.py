@@ -377,7 +377,6 @@ def validate_project_state(state: dict | None = None) -> dict:
     recovery_states = {
         "evidence_recovery_authorized": ("ready_not_collected", "conditional_not_collected"),
         "e1_in_progress": ("in_progress", "conditional_not_collected"),
-        "e1_correction_retest": ("correction_retest", "conditional_not_collected"),
         "e1_cleared": ("cleared", "conditional_not_collected"),
         "e2_preparation": ("cleared", "preparation"),
         "e2_in_progress": ("cleared", "in_progress"),
