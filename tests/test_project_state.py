@@ -238,14 +238,14 @@ def test_completed_advancement_with_bypass_must_point_to_region_proof():
 
 
 @pytest.mark.parametrize('field,value', [('e1', 'pass'), ('e2', 'completed'), ('status', 'completed'), ('formal_user_value', 'validated'), ('disposition', 'positive_value_signal')])
-def test_owner_bypass_cannot_fabricate_evidence(field, value) -> None:
+def test_gate_e_recovery_cannot_fabricate_evidence(field, value) -> None:
     state = _state()
     state['gate_e'][field] = value
     with pytest.raises(ProjectStateError, match='schema validation failed'):
         validate_project_state(state)
 
 
-def test_owner_bypass_requires_registered_authority() -> None:
+def test_gate_e_recovery_requires_registered_authority() -> None:
     state = _state()
     state['canonical_refs'].remove(state['gate_e']['decision_ref'])
     with pytest.raises(ProjectStateError, match='registered decision'):
@@ -256,14 +256,17 @@ def test_owner_bypass_requires_registered_authority() -> None:
         validate_project_state(state)
 
 
-def test_owner_bypass_does_not_open_gate_e_after_region_closeout() -> None:
+def test_gate_e_recovery_is_the_only_authorized_next_target() -> None:
     state = _state()
-    assert state['next_transition']['target'] == 'STOP'
+    assert state['next_transition']['target'] == 'E'
+    assert state['gate_e']['disposition'] == 'evidence_recovery'
     assert state['work_in_progress_limit'] == 1
     assert state['github']['active_issues'] == [355]
-    state['next_transition']['target'] = 'E'
-    with pytest.raises(ProjectStateError, match='TEMPORAL_REGION_PROOF'):
-        validate_project_state(state)
+    for target in ('STOP', 'TEMPORAL_REGION_PROOF', 'D'):
+        changed = copy.deepcopy(state)
+        changed['next_transition']['target'] = target
+        with pytest.raises(ProjectStateError, match='must target E'):
+            validate_project_state(changed)
 
 
 def test_region_work_is_not_named_as_a_gate() -> None:
@@ -273,18 +276,10 @@ def test_region_work_is_not_named_as_a_gate() -> None:
         validate_project_state(state)
 
 
-@pytest.mark.parametrize("target", ["TEMPORAL_REGION_PROOF", "E", "D"])
-def test_region_closeout_cannot_reopen_product_work(target):
-    state = _state()
-    state["next_transition"]["target"] = target
-    with pytest.raises(ProjectStateError, match="STOP after Region closeout"):
-        validate_project_state(state)
-
-
-def test_stop_requires_region_closeout():
+def test_gate_e_recovery_requires_region_closeout():
     state = _state()
     state.pop("region_closeout")
-    with pytest.raises(ProjectStateError, match="TEMPORAL_REGION_PROOF"):
+    with pytest.raises(ProjectStateError, match="requires completed Region closeout"):
         validate_project_state(state)
 
 
@@ -302,9 +297,3 @@ def test_region_closeout_requires_registered_evidence():
     with pytest.raises(ProjectStateError, match="Region closeout requires registered evidence"):
         validate_project_state(state)
 
-
-def test_pre_closeout_owner_bypass_still_points_to_region():
-    state = _state()
-    state.pop("region_closeout")
-    state["next_transition"]["target"] = "TEMPORAL_REGION_PROOF"
-    validate_project_state(state)
