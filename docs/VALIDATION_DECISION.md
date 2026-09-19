@@ -1,14 +1,16 @@
 # ARTEMIS — VALIDATION DECISION
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only, E1/E2 NOT COLLECTED, formal user value UNVALIDATED. No successor product branch is opened.
+Gate E evidence recovery — accepted 2026-09-19: [current specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The specification authorizes the complete E1 → bounded correction/retest if required → E2 (exactly five participants) runway; only escalation or the final Gate E outcome requires a new Command Center decision.
 
-Current decision: [owner-directed Gate E evidence bypass and bounded Region proof](work/2026-09-10_GATE_E_OWNER_BYPASS_AND_REGION_PROOF_v1.md). E1/E2 observations remain NOT COLLECTED; disposition `owner_directed_bypass`; formal user value remains UNVALIDATED. No positive value signal is inferred. Gate D remains COMPLETED / ADVANCE_TO_GATE_E. PR #421 merged at `5875498b0d8febbdadbd036ec703908408ff8ae4`. The bounded Temporal Region proof is implemented; its source audit supports GENERALIZES (technical only). Region live publication verified from owner-supplied browser and build-metadata evidence; see the source audit publication verification record. Region implementation, publication and interactive owner review are completed; both failed-task findings are resolved / human retest PASS. Return to Command Center with no successor product branch opened. No additional implementation is opened.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens participant evidence only.
+
+Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). The owner-directed bypass is retained as completed history, not the current execution disposition. No positive value signal is inferred from Region or owner review. E1/E2 remain NOT COLLECTED until participant evidence exists.
 
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE UNVALIDATED`.
-- Дата последнего обновления: 2026-09-10.
+- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / GATE E EVIDENCE RECOVERY AUTHORIZED / E1 NOT COLLECTED / E2 CONDITIONAL NOT COLLECTED / FORMAL USER VALUE UNVALIDATED`.
+- Дата последнего обновления: 2026-09-19.
 - Active product issue: GitHub issue `#355`.
 - Current public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
@@ -19,7 +21,9 @@ Current decision: [owner-directed Gate E evidence bypass and bounded Region proo
 
 ## 1. Текущее решение
 
-`ADVANCE_TO_GATE_E — GATE D COMPLETED`
+`ADVANCE_TO_GATE_E — GATE D COMPLETED; GATE E EVIDENCE RECOVERY AUTHORIZED`
+
+Execution authority is the accepted [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md).
 
 Зафиксировано:
 
