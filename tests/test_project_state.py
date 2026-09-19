@@ -258,6 +258,44 @@ def test_gate_e_recovery_requires_registered_authority() -> None:
         validate_project_state(state)
 
 
+@pytest.mark.parametrize(
+    "status,e1,e2",
+    [
+        ("evidence_recovery_authorized", "ready_not_collected", "conditional_not_collected"),
+        ("e1_in_progress", "in_progress", "conditional_not_collected"),
+        ("e1_correction_retest", "correction_retest", "conditional_not_collected"),
+        ("e1_cleared", "cleared", "conditional_not_collected"),
+        ("e2_preparation", "cleared", "preparation"),
+        ("e2_in_progress", "cleared", "in_progress"),
+        ("evidence_complete_awaiting_outcome", "cleared", "complete"),
+    ],
+)
+def test_gate_e_recovery_runway_states_are_pre_authorized(status, e1, e2) -> None:
+    state = _state()
+    state["gate_e"]["status"] = status
+    state["gate_e"]["e1"] = e1
+    state["gate_e"]["e2"] = e2
+    validate_project_state(state)
+
+
+def test_e2_cannot_start_before_e1_clearance() -> None:
+    state = _state()
+    state["gate_e"]["status"] = "e2_in_progress"
+    state["gate_e"]["e1"] = "in_progress"
+    state["gate_e"]["e2"] = "in_progress"
+    with pytest.raises(ProjectStateError, match="E2 cannot start before E1 clearance"):
+        validate_project_state(state)
+
+
+def test_completed_e2_evidence_does_not_validate_user_value() -> None:
+    state = _state()
+    state["gate_e"]["status"] = "evidence_complete_awaiting_outcome"
+    state["gate_e"]["e1"] = "cleared"
+    state["gate_e"]["e2"] = "complete"
+    validate_project_state(state)
+    assert state["gate_e"]["formal_user_value"] == "unvalidated"
+
+
 def test_gate_e_recovery_is_the_only_authorized_next_target() -> None:
     state = _state()
     assert state['next_transition']['target'] == 'E'
