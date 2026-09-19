@@ -29,189 +29,77 @@
     "gateCEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "frozen_commit",
-        "frozen_tree",
-        "reviewed_content_digest",
-        "review_registry_ref",
-        "gate_decision_ref",
-        "review_cost_ref"
-      ],
+      "required": ["frozen_commit", "frozen_tree", "reviewed_content_digest", "review_registry_ref", "gate_decision_ref", "review_cost_ref"],
       "properties": {
-        "frozen_commit": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{40}$"
-        },
-        "frozen_tree": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{40}$"
-        },
-        "reviewed_content_digest": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
-        },
-        "review_registry_ref": {
-          "const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"
-        },
-        "gate_decision_ref": {
-          "const": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json"
-        },
-        "review_cost_ref": {
-          "const": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"
-        }
+        "frozen_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "frozen_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "reviewed_content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "review_registry_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/review_registry.json"},
+        "gate_decision_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/gate_c_decision.json"},
+        "review_cost_ref": {"const": "fixtures/world_slices/leonardo_romagna_1502/v1/curation_cost.json"}
       }
     },
     "completedGateC": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "label",
-        "status",
-        "allowed_decisions",
-        "decision",
-        "next_gate",
-        "evidence"
-      ],
+      "required": ["id", "label", "status", "allowed_decisions", "decision", "next_gate", "evidence"],
       "properties": {
-        "id": {
-          "const": "C"
-        },
-        "label": {
-          "type": "string",
-          "minLength": 1
-        },
-        "status": {
-          "const": "completed"
-        },
-        "allowed_decisions": {
-          "const": [
-            "FREEZE",
-            "NARROW",
-            "REJECT"
-          ]
-        },
-        "decision": {
-          "enum": [
-            "FREEZE",
-            "NARROW",
-            "REJECT"
-          ]
-        },
-        "next_gate": {
-          "const": "D"
-        },
-        "evidence": {
-          "$ref": "#/$defs/gateCEvidence"
-        }
+        "id": {"const": "C"},
+        "label": {"type": "string", "minLength": 1},
+        "status": {"const": "completed"},
+        "allowed_decisions": {"const": ["FREEZE", "NARROW", "REJECT"]},
+        "decision": {"enum": ["FREEZE", "NARROW", "REJECT"]},
+        "next_gate": {"const": "D"},
+        "evidence": {"$ref": "#/$defs/gateCEvidence"}
       }
     }
   },
   "properties": {
-    "schema_version": {
-      "const": "1.6.0"
-    },
-    "project": {
-      "const": "ARTEMIS"
-    },
-    "updated_at": {
-      "type": "string",
-      "format": "date"
-    },
-    "north_star_ref": {
-      "const": "docs/ARTEMIS_CONCEPT.md"
-    },
+    "schema_version": {"const": "1.6.0"},
+    "project": {"const": "ARTEMIS"},
+    "updated_at": {"type": "string", "format": "date"},
+    "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
     "active_vertical": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "label",
-        "issue"
-      ],
+      "required": ["id", "label", "issue"],
       "properties": {
-        "id": {
-          "const": "life-in-context-globe-mvp"
-        },
-        "label": {
-          "type": "string",
-          "minLength": 1
-        },
-        "issue": {
-          "const": 355
-        }
+        "id": {"const": "life-in-context-globe-mvp"},
+        "label": {"type": "string", "minLength": 1},
+        "issue": {"const": 355}
       }
     },
     "phase": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "status"
-      ],
+      "required": ["id", "status"],
       "properties": {
-        "id": {
-          "const": "5.1"
-        },
-        "status": {
-          "const": "active"
-        }
+        "id": {"const": "5.1"},
+        "status": {"const": "active"}
       }
     },
     "completed_gates": {
       "type": "array",
       "minItems": 1,
       "maxItems": 1,
-      "items": {
-        "$ref": "#/$defs/completedGateC"
-      }
+      "items": {"$ref": "#/$defs/completedGateC"}
     },
     "gate": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "label",
-        "status",
-        "allowed_decisions"
-      ],
+      "required": ["id", "label", "status", "allowed_decisions"],
       "properties": {
-        "id": {
-          "enum": [
-            "D",
-            "E"
-          ]
-        },
-        "label": {
-          "type": "string",
-          "minLength": 1
-        },
-        "status": {
-          "enum": [
-            "in_progress",
-            "blocked",
-            "completed"
-          ]
-        },
+        "id": {"enum": ["D", "E"]},
+        "label": {"type": "string", "minLength": 1},
+        "status": {"enum": ["in_progress", "blocked", "completed"]},
         "allowed_decisions": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
+          "items": {"type": "string", "minLength": 1}
         },
-        "decision": {
-          "enum": [
-            "ADVANCE_TO_GATE_E",
-            "NARROW",
-            "REJECT"
-          ]
-        },
-        "evidence_ref": {
-          "const": "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"
-        }
+        "decision": {"enum": ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]},
+        "evidence_ref": {"const": "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"}
       }
     },
     "current_checkpoint": {
@@ -231,169 +119,53 @@
         "governance_alignment_ref"
       ],
       "properties": {
-        "id": {
-          "const": "M5"
-        },
-        "label": {
-          "const": "Whole-Life Runtime Proof"
-        },
-        "kind": {
-          "const": "bounded_runtime_proof"
-        },
-        "status": {
-          "enum": [
-            "awaiting_manual_product_check",
-            "completed"
-          ]
-        },
-        "allowed_decisions": {
-          "const": [
-            "ITERATE",
-            "NARROW",
-            "STOP"
-          ]
-        },
-        "decision": {
-          "enum": [
-            "ITERATE",
-            "NARROW",
-            "STOP"
-          ]
-        },
-        "implementation_pr": {
-          "const": 406
-        },
-        "merged_commit": {
-          "const": "24243b7ff09029bddedc3592c2ef2963813f146d"
-        },
-        "published_url": {
-          "const": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519"
-        },
-        "entry_authority": {
-          "const": "explicit_owner_instruction"
-        },
-        "pre_start_decision_record": {
-          "const": false
-        },
-        "governance_alignment_ref": {
-          "const": "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md"
-        }
+        "id": {"const": "M5"},
+        "label": {"const": "Whole-Life Runtime Proof"},
+        "kind": {"const": "bounded_runtime_proof"},
+        "status": {"enum": ["awaiting_manual_product_check", "completed"]},
+        "allowed_decisions": {"const": ["ITERATE", "NARROW", "STOP"]},
+        "decision": {"enum": ["ITERATE", "NARROW", "STOP"]},
+        "implementation_pr": {"const": 406},
+        "merged_commit": {"const": "24243b7ff09029bddedc3592c2ef2963813f146d"},
+        "published_url": {"const": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519"},
+        "entry_authority": {"const": "explicit_owner_instruction"},
+        "pre_start_decision_record": {"const": false},
+        "governance_alignment_ref": {"const": "docs/work/2026-09-03_TEMPORAL_MAP_M5_GOVERNANCE_ALIGNMENT_v1.md"}
       }
     },
     "architecture_checkpoint": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "status",
-        "allowed_decisions",
-        "decision",
-        "evidence_ref"
-      ],
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "status", "allowed_decisions", "decision", "evidence_ref"],
       "properties": {
-        "id": {
-          "const": "M4"
-        },
-        "status": {
-          "const": "completed"
-        },
-        "allowed_decisions": {
-          "const": [
-            "ADOPT",
-            "NARROW",
-            "REJECT"
-          ]
-        },
-        "decision": {
-          "const": "ADOPT"
-        },
-        "evidence_ref": {
-          "const": "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md"
-        }
+        "id": {"const": "M4"}, "status": {"const": "completed"},
+        "allowed_decisions": {"const": ["ADOPT", "NARROW", "REJECT"]},
+        "decision": {"const": "ADOPT"},
+        "evidence_ref": {"const": "docs/work/2026-09-01_TEMPORAL_MAP_M4_ARCHITECTURE_DECISION_v1.md"}
       }
     },
     "ux_correction_checkpoint": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "status",
-        "allowed_decisions",
-        "decision",
-        "implementation_prs",
-        "merged_commit",
-        "acceptance_kind",
-        "accepted_at",
-        "evidence_ref"
-      ],
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "status", "allowed_decisions", "decision", "implementation_prs", "merged_commit", "acceptance_kind", "accepted_at", "evidence_ref"],
       "properties": {
-        "id": {
-          "const": "M5_BOUNDED_UX_CORRECTION"
-        },
-        "status": {
-          "const": "completed"
-        },
-        "allowed_decisions": {
-          "const": [
-            "PROCEED_TO_GATE_D_REVIEW",
-            "ITERATE",
-            "NARROW",
-            "STOP"
-          ]
-        },
-        "decision": {
-          "const": "PROCEED_TO_GATE_D_REVIEW"
-        },
-        "implementation_prs": {
-          "const": [
-            411,
-            412
-          ]
-        },
-        "merged_commit": {
-          "const": "d100f2cb09d743c31184c4a4b33b32258678b929"
-        },
-        "acceptance_kind": {
-          "const": "owner_acceptance_report"
-        },
-        "accepted_at": {
-          "type": "string",
-          "format": "date"
-        },
-        "evidence_ref": {
-          "const": "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md"
-        }
+        "id": {"const": "M5_BOUNDED_UX_CORRECTION"}, "status": {"const": "completed"},
+        "allowed_decisions": {"const": ["PROCEED_TO_GATE_D_REVIEW", "ITERATE", "NARROW", "STOP"]},
+        "decision": {"const": "PROCEED_TO_GATE_D_REVIEW"},
+        "implementation_prs": {"const": [411, 412]},
+        "merged_commit": {"const": "d100f2cb09d743c31184c4a4b33b32258678b929"},
+        "acceptance_kind": {"const": "owner_acceptance_report"},
+        "accepted_at": {"type": "string", "format": "date"},
+        "evidence_ref": {"const": "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md"}
       }
     },
     "gate_review": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "status",
-        "recommendation",
-        "material_implementation_gaps",
-        "exit_record_ref",
-        "evidence_ref"
-      ],
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "recommendation", "material_implementation_gaps", "exit_record_ref", "evidence_ref"],
       "properties": {
-        "status": {
-          "const": "bounded_review_completed_exit_recorded"
-        },
-        "recommendation": {
-          "const": "ADVANCE_TO_GATE_E"
-        },
-        "material_implementation_gaps": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "exit_record_ref": {
-          "const": "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"
-        },
-        "evidence_ref": {
-          "const": "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md"
-        }
+        "status": {"const": "bounded_review_completed_exit_recorded"},
+        "recommendation": {"const": "ADVANCE_TO_GATE_E"},
+        "material_implementation_gaps": {"type": "array", "items": {"type": "string"}},
+        "exit_record_ref": {"const": "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md"},
+        "evidence_ref": {"const": "docs/work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md"}
       }
     },
     "gate_e": {
@@ -481,142 +253,47 @@
         }
       }
     },
-    "work_in_progress_limit": {
-      "const": 1
-    },
+    "work_in_progress_limit": {"const": 1},
     "github": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "active_issues",
-        "paused_issues",
-        "deferred_issues",
-        "superseded_issues",
-        "completed_issues",
-        "completed_prerequisites"
-      ],
+      "required": ["active_issues", "paused_issues", "deferred_issues", "superseded_issues", "completed_issues", "completed_prerequisites"],
       "properties": {
-        "active_issues": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "type": "integer"
-          }
-        },
-        "paused_issues": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "integer"
-          }
-        },
-        "deferred_issues": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "integer"
-          }
-        },
-        "superseded_issues": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "integer"
-          }
-        },
-        "completed_issues": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "integer"
-          }
-        },
-        "completed_prerequisites": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        }
+        "active_issues": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer"}},
+        "paused_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "deferred_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "superseded_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "completed_issues": {"type": "array", "uniqueItems": true, "items": {"type": "integer"}},
+        "completed_prerequisites": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
       }
     },
     "capability": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "public_runtime",
-        "globe",
-        "world_slice",
-        "temporal_map"
-      ],
+      "required": ["public_runtime", "globe", "world_slice", "temporal_map"],
       "properties": {
-        "public_runtime": {
-          "const": "core_landing_globe_primary_atlas_compatibility_region_separate_public_r_and_d_preview"
-        },
-        "globe": {
-          "const": "public_r_and_d_preview"
-        },
-        "world_slice": {
-          "enum": [
-            "scope_curation",
-            "gate_c_frozen_non_public",
-            "gate_c_rejected_non_public",
-            "projected_non_public"
-          ]
-        },
-        "temporal_map": {
-          "const": "m5_whole_life_runtime_proof_published"
-        }
+        "public_runtime": {"const": "core_landing_globe_primary_atlas_compatibility_region_separate_public_r_and_d_preview"},
+        "globe": {"const": "public_r_and_d_preview"},
+        "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]},
+        "temporal_map": {"const": "m5_whole_life_runtime_proof_published"}
       }
     },
     "canonical_refs": {
       "type": "array",
       "minItems": 5,
       "uniqueItems": true,
-      "items": {
-        "type": "string",
-        "pattern": "^docs/"
-      }
+      "items": {"type": "string", "pattern": "^docs/"}
     },
-    "blockers": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
+    "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
     "next_transition": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "target",
-        "condition",
-        "authority",
-        "decision_ref"
-      ],
+      "required": ["target", "condition", "authority", "decision_ref"],
       "properties": {
-        "target": {
-          "enum": [
-            "D",
-            "E",
-            "STOP",
-            "TEMPORAL_REGION_PROOF"
-          ]
-        },
-        "authority": {
-          "const": "explicit_owner_instruction"
-        },
-        "decision_ref": {
-          "const": "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
-        },
-        "condition": {
-          "type": "string",
-          "minLength": 1
-        }
+        "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF"]},
+        "authority": {"const": "explicit_owner_instruction"},
+        "decision_ref": {"const": "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"},
+        "condition": {"type": "string", "minLength": 1}
       }
     }
   }
