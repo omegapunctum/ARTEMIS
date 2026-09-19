@@ -235,7 +235,7 @@ def test_gate_e_recovery_requires_completed_gate_d_advancement():
     state["gate"]["status"] = "in_progress"
     state["gate"].pop("decision")
     state["gate"].pop("evidence_ref")
-    with pytest.raises(ProjectStateError, match="schema validation failed|requires completed Gate D advancement"):
+    with pytest.raises(ProjectStateError, match="schema validation failed|Gate E cannot open"):
         validate_project_state(state)
 
 
