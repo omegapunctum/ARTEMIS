@@ -333,7 +333,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.6 records the latest Gate D decision")
+        raise ProjectStateError("project_state v1.7 records the latest Gate D decision")
     if gate["status"] not in {"in_progress", "blocked", "completed"}:
         raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
@@ -358,23 +358,39 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed M5 must record exactly one product decision")
     if checkpoint["pre_start_decision_record"] is not False:
         raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
+    if gate["status"] == "blocked" and not payload["blockers"]:
+        raise ProjectStateError("a blocked Gate D must name at least one blocker")
     region_closed = "region_closeout" in payload
     if region_closed and payload["region_closeout"]["evidence_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("Region closeout requires registered evidence")
-    expected_next_target = ("STOP" if region_closed else "TEMPORAL_REGION_PROOF") if gate["status"] == "completed" else "D"
-    if payload["next_transition"]["target"] != expected_next_target:
-        raise ProjectStateError("Gate E cannot open before a completed Gate D decision; completed advancement with owner bypass must point to TEMPORAL_REGION_PROOF before closeout or STOP after Region closeout")
+    if not region_closed:
+        raise ProjectStateError("Gate E evidence recovery requires completed Region closeout")
+    if gate["status"] != "completed" or gate.get("decision") != "ADVANCE_TO_GATE_E":
+        raise ProjectStateError("Gate E cannot open before completed Gate D advancement")
+    if payload["next_transition"]["target"] != "E":
+        raise ProjectStateError("Gate E evidence recovery must target E after completed Gate D and Region closeout")
     if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
-        raise ProjectStateError("owner bypass and next work require one registered decision")
+        raise ProjectStateError("Gate E authority and next work require one registered decision")
+    gate_e = payload["gate_e"]
+    if gate_e["e2"] != "conditional_not_collected" and gate_e["e1"] != "cleared":
+        raise ProjectStateError("E2 cannot start before E1 clearance")
+    recovery_states = {
+        "evidence_recovery_authorized": ("ready_not_collected", "conditional_not_collected"),
+        "e1_in_progress": ("in_progress", "conditional_not_collected"),
+        "e1_correction_retest": ("correction_retest", "conditional_not_collected"),
+        "e1_cleared": ("cleared", "conditional_not_collected"),
+        "e2_preparation": ("cleared", "preparation"),
+        "e2_in_progress": ("cleared", "in_progress"),
+        "evidence_complete_awaiting_outcome": ("cleared", "complete"),
+    }
+    if (gate_e["e1"], gate_e["e2"]) != recovery_states[gate_e["status"]]:
+        raise ProjectStateError("Gate E recovery status/evidence state mismatch")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
         raise ProjectStateError("Gate D must begin from the frozen non-public Gate C World Slice")
     if 333 not in superseded or 334 not in deferred:
         raise ProjectStateError("legacy #333/#334 lifecycle must be superseded/deferred under #355")
     if not {371, 373}.issubset(deferred):
         raise ProjectStateError("Airtable import/review must remain deferred outside Gate D")
-    if gate["status"] == "blocked" and not payload["blockers"]:
-        raise ProjectStateError("a blocked Gate D must name at least one blocker")
-
     for relative in payload["canonical_refs"]:
         if not (ROOT / relative).is_file():
             raise ProjectStateError(f"canonical reference does not exist: {relative}")
