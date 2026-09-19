@@ -371,6 +371,20 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("Gate E evidence recovery must target E after completed Gate D and Region closeout")
     if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("Gate E authority and next work require one registered decision")
+    gate_e = payload["gate_e"]
+    if gate_e["e2"] != "conditional_not_collected" and gate_e["e1"] != "cleared":
+        raise ProjectStateError("E2 cannot start before E1 clearance")
+    recovery_states = {
+        "evidence_recovery_authorized": ("ready_not_collected", "conditional_not_collected"),
+        "e1_in_progress": ("in_progress", "conditional_not_collected"),
+        "e1_correction_retest": ("correction_retest", "conditional_not_collected"),
+        "e1_cleared": ("cleared", "conditional_not_collected"),
+        "e2_preparation": ("cleared", "preparation"),
+        "e2_in_progress": ("cleared", "in_progress"),
+        "evidence_complete_awaiting_outcome": ("cleared", "complete"),
+    }
+    if (gate_e["e1"], gate_e["e2"]) != recovery_states[gate_e["status"]]:
+        raise ProjectStateError("Gate E recovery status/evidence state mismatch")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
         raise ProjectStateError("Gate D must begin from the frozen non-public Gate C World Slice")
     if 333 not in superseded or 334 not in deferred:
