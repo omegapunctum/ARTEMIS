@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Temporal Region proof completed`" in scope
+    assert "Current increment: `Gate E evidence recovery`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -133,9 +133,10 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
 
     assert "The authorized bounded Region proof is merged in #421" in priorities
     assert "Closeout adds no implementation" in priorities
-    assert "E1/E2 observations remain NOT COLLECTED" in priorities
+    assert "E1 is ready / NOT COLLECTED" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
-    assert "implementation is merged in PR #421" in state["next_transition"]["condition"]
+    assert "Execute the accepted Gate E evidence-recovery runway" in state["next_transition"]["condition"]
+    assert "exactly five participants" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
@@ -226,7 +227,9 @@ def test_public_runtime_includes_separate_region_preview_without_promotion() -> 
     stale["capability"]["public_runtime"] = "core_landing_globe_primary_atlas_compatibility"
     assert not jsonschema.Draft202012Validator(schema).is_valid(stale)
     assert state["active_vertical"]["id"] == "life-in-context-globe-mvp"
-    assert state["gate_e"]["e1"] == state["gate_e"]["e2"] == "not_collected"
+    assert state["gate_e"]["disposition"] == "evidence_recovery"
+    assert state["gate_e"]["e1"] == "ready_not_collected"
+    assert state["gate_e"]["e2"] == "conditional_not_collected"
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
     assert state["capability"]["globe"] == "public_r_and_d_preview"
     surfaces = _text("docs/PROJECT_TRUTH.md").split("## 2.", 1)[1].split("## 3.", 1)[0]
