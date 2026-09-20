@@ -697,7 +697,6 @@ async function main() {
     '--use-gl=angle',
     '--use-angle=swiftshader',
     '--enable-unsafe-swiftshader',
-    '--run-all-compositor-stages-before-draw',
     '--remote-debugging-port=0',
     `--user-data-dir=${profileDirectory}`,
     `--window-size=${options.width},${options.height}`,
