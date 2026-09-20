@@ -25,7 +25,7 @@ class Element {
   getAttribute(key) { return this.attrs[key]; }
   hasAttribute(key) { return key in this.attrs; }
   addEventListener(key, callback) { this.events[key] = callback; }
-  scrollIntoView() {}
+  scrollIntoView() { this.scrolled = true; }
   focus() { this.focused = true; }
   closest() { return this.skip ? this : null; }
   contains(element) { return this.children.includes(element); }
@@ -64,6 +64,7 @@ context.updateLifePathMarkers();
 assert.equal(sequence.children[1].attrs['aria-pressed'], 'true');
 assert.equal(markerB.attrs['aria-pressed'], 'true');
 assert.equal(periodButton.attrs['aria-current'], 'true');
+assert.equal(periodButton.scrolled, true);
 sequence.children[1].events.focus();
 assert.ok(markerB.classes.has('is-emphasized'));
 sequence.children[1].events.blur();
@@ -204,12 +205,49 @@ console.log('M5 chronology, filtering, emphasis, focus, presentation-only connec
 visible = [...presences]; runtime.lifePathMode = 'range'; runtime.selectedPresenceId = 'a';
 assert.equal(context.lifePathConnectorGeoJson().features[0].properties.emphasis, 1);
 runtime.lifePathMode = 'scrub';
+assert.equal(context.lifePathConnectorGeoJson().features[0].properties.emphasis, 1);
+runtime.selectedPresenceId = null;
 assert.equal(context.lifePathConnectorGeoJson().features[0].properties.emphasis, 2);
 assert.equal(runtime.data.lifePath.transitions[0].route_geometry, null);
 assert.equal(context.lifePathConnectorGeoJson().features[0].properties.route_geometry, null);
 window.ARTEMIS_I18N.setLanguage('ru');
 assert.equal(window.ARTEMIS_I18N.t('Dashed links and chevrons show time order, not travel routes.'), 'Пунктир и указатели показывают порядок во времени, не маршруты движения.');
 console.log('Place anchors, repeated episode selection/counts, saved Scrub URLs and chronology emphasis: passed');
+
+// One arrival transition per selected episode, even for repeated Places.
+{
+  const episodes = [0, 1, 2, 3].map(index => ({index, presence_id: `p${index}`, place_ref: index % 2 ? 'milan' : 'florence'}));
+  const transitions = episodes.slice(1).map((p, i) => ({transition_id: `t${i}`, from_presence_ref: `p${i}`, to_presence_ref: p.presence_id, route_geometry: null}));
+  const r = {data: {lifePath: {transitions}}, lifePathMode: 'range', selectedPresenceId: null};
+  const ctx = vm.createContext({runtime: r, visibleLifePathPresences: () => episodes});
+  vm.runInContext(fn('chronologyEmphasis'), ctx);
+  for (const [id, expected] of [['p0', [1,0,0]], ['p1', [1,0,0]], ['p2', [0,1,0]], ['p3', [0,0,1]]]) {
+    r.selectedPresenceId = id;
+    assert.deepEqual(transitions.map(t => ctx.chronologyEmphasis(t)), expected);
+  }
+  r.selectedPresenceId = null; r.lifePathMode = 'scrub';
+  assert.deepEqual(transitions.map(t => ctx.chronologyEmphasis(t)), [0,0,2]);
+  assert.ok(transitions.every(t => t.route_geometry === null));
+}
+// Coarse period context covers source-native Romagna episodes without adding
+// them to the historical major-life membership records.
+{
+  const period = {period_id: 'florence-ii', presence_refs: ['florence'], axis_start_index: 48, axis_end_index: 54};
+  const ctx = vm.createContext({runtime: {data: {lifePath: {macro_periods: [period]}}}});
+  vm.runInContext(fn('presencePeriod'), ctx);
+  assert.equal(ctx.presencePeriod({presence_id: 'cesena', axis_start_index: 50, axis_end_index: 50}), period);
+  assert.equal(ctx.presencePeriod({presence_id: 'outside', axis_start_index: 60, axis_end_index: 60}), undefined);
+  assert.deepEqual(period.presence_refs, ['florence']);
+}
+for (const [en, ru] of [
+  ['Sources supporting this presence · 2', 'Источники, подтверждающие это присутствие · 2'],
+  ['Life periods', 'Периоды жизни'], ['Documented presences', 'Документированные присутствия'],
+  ['Within the selected interval', 'Внутри выбранного периода'],
+  ['From the beginning to the current time', 'От начала до текущего времени'],
+  ['Why these sources?', 'Почему эти источники?'],
+  ['Other historical sources may exist; this list is not exhaustive.', 'Могут существовать другие исторические источники; этот список не исчерпывающий.'],
+  ['ARTEMIS does not assign source reliability or credibility scores here.', 'ARTEMIS не присваивает здесь источникам оценки надёжности или достоверности.']
+]) assert.equal(window.ARTEMIS_I18N.t(en), ru);
 
 // Dense labels: priority wins, text suppression never modifies anchor identity.
 {
