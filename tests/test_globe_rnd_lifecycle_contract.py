@@ -135,7 +135,8 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Closeout adds no implementation" in priorities
     assert "single bounded pre-E1 product correction" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
-    assert "Implement and publication-verify the accepted Leonardo First-Use Comprehension Correction" in state["next_transition"]["condition"]
+    assert "Conduct a fresh E1 with one independent novice" in state["next_transition"]["condition"]
+    assert "publication-verified Leonardo First-Use Comprehension Correction (#439)" in state["next_transition"]["condition"]
     assert "exactly five participants" in state["next_transition"]["condition"]
     assert "another product correction is escalation" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
