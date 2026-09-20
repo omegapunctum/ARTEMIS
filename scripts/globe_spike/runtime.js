@@ -733,7 +733,7 @@
     const section = document.createElement('details');
     section.className = 'knowledge-section knowledge-disclosure';
     const summary = document.createElement('summary');
-    summary.textContent = `${label} · ${count}`;
+    summary.textContent = count === undefined ? label : `${label} · ${count}`;
     section.append(summary);
     host.append(section);
     return section;
@@ -800,8 +800,8 @@
     }
   }
 
-  function addUncertainties(host, record) {
-    const section = knowledgeDisclosure(host, 'Material uncertainty', (record.uncertainties || []).length);
+  function addUncertainties(host, record, label = 'Material uncertainty') {
+    const section = knowledgeDisclosure(host, label, (record.uncertainties || []).length);
     if (!(record.uncertainties || []).length) {
       appendText(section, 'p', 'No material uncertainty is referenced by this projection item.', 'empty-note');
     }
@@ -868,11 +868,11 @@
     }
   }
 
-  function addCoverage(host) {
+  function addCoverage(host, label = 'Coverage / corpus limits') {
     const coverage = runtime.data?.projection?.coverage || {};
     const policy = coverage.coverage_policy || {};
     const exclusions = policy.known_exclusion_ids || [];
-    const section = knowledgeDisclosure(host, 'Coverage / corpus limits', exclusions.length);
+    const section = knowledgeDisclosure(host, label, exclusions.length);
     appendText(
       section,
       'p',
@@ -989,6 +989,37 @@
     ) || null;
   }
 
+  function addPresenceSources(host, record) {
+    const sources = record.sources || [];
+    const section = knowledgeDisclosure(host, 'Sources supporting this presence', sources.length);
+    section.classList.add('presence-sources');
+    for (const source of sources) {
+      const sourceId = source.id || source.source_id;
+      const row = document.createElement('article');
+      row.className = 'evidence-group';
+      const href = safeSourceHref(source.artifact_uri || source.uri || source.url);
+      if (href) {
+        const link = appendText(row, 'a', source.title || sourceId);
+        link.href = href;
+        link.target = '_blank';
+        link.rel = 'noopener';
+      } else {
+        appendText(row, 'strong', source.title || sourceId);
+      }
+      appendText(row, 'div', sourceId, 'record-id');
+      appendText(row, 'div', source.organization || source.uri || source.url, 'record-meta');
+      for (const evidence of record.evidence_links || []) {
+        if (evidence.source_id === sourceId) appendText(row, 'code', evidence.locator, 'evidence-locator');
+      }
+      section.append(row);
+    }
+    const why = knowledgeDisclosure(section, 'Why these sources?');
+    why.classList.add('source-scope');
+    appendText(why, 'p', 'These sources are included in the current reviewed evidence for this displayed record.');
+    appendText(why, 'p', 'Other historical sources may exist; this list is not exhaustive.');
+    appendText(why, 'p', 'ARTEMIS does not assign source reliability or credibility scores here.');
+  }
+
   function renderLifePathPresence(presence) {
     const card = byId('selection-card');
     if (!card || !presence) return;
@@ -1001,16 +1032,19 @@
     card.dataset.presenceId = presence.presence_id;
     appendText(card, 'div', presence.place_label, 'stop-card-title');
     appendText(card, 'div', formatPresenceTime(presence), 'stop-card-date');
-    appendText(card, 'p', presence.short_description, 'stop-card-activity');
+    appendText(card, 'p', 'Documented presence', 'stop-card-activity');
+    const context = appendText(card, 'p', '', 'stop-card-context');
+    appendText(context, 'span', 'Related documented context', 'context-label');
+    appendText(context, 'span', presence.short_description);
 
     const facts = document.createElement('dl');
     facts.className = 'stop-fact-list';
     for (const [label, value] of [
       ['Duration', presence.duration_status === 'range_not_continuous_position'
-        ? 'Source-bounded residence period; not a continuous daily position'
-        : 'Not established beyond the documented source anchor'],
-      ['Position', `${String(presence.spatial_precision || 'named place').replaceAll('_', ' ')}; exact historical position unknown`],
-      ['Route', transition ? 'Exact route unknown; dashed links show order only' : 'First documented presence']
+        ? 'Residence range; daily presence not established'
+        : 'Not established'],
+      ['Exact historical position', 'Unknown'],
+      ['Route', 'Unknown']
     ]) {
       const row = document.createElement('div');
       appendText(row, 'dt', label);
@@ -1018,67 +1052,37 @@
       facts.append(row);
     }
     card.append(facts);
+    addPresenceSources(card, eventRecord || presence);
+    addUncertainties(card, eventRecord || presence, 'What remains uncertain');
 
     const details = document.createElement('details');
     details.className = 'knowledge-details';
     const summary = document.createElement('summary');
-    summary.textContent = 'Sources and uncertainty';
+    summary.textContent = 'Record and location details';
     const body = document.createElement('div');
     body.className = 'knowledge-details-body';
+    appendText(body, 'p', presence.duration_status === 'range_not_continuous_position'
+      ? 'Source-bounded residence period; not a continuous daily position'
+      : 'Not established beyond the documented source anchor');
+    appendText(body, 'p', `${String(presence.spatial_precision || 'named place').replaceAll('_', ' ')}; exact historical position unknown`);
+    appendText(body, 'p', transition ? 'Exact route unknown; dashed links show order only' : 'First documented presence');
     if (eventRecord) {
       appendText(body, 'div', eventRecord.item_id, 'record-id');
       addEvidence(body, eventRecord);
-      addUncertainties(body, eventRecord);
     }
     if (presenceRecord) {
       const presence = knowledgeDisclosure(body, 'Place-anchor evidence', (presenceRecord.claims || []).length);
       addEvidence(presence, presenceRecord);
-      addUncertainties(presence, presenceRecord);
-    }
-    if (!eventRecord && (presence.sources || []).length) {
-      const sourceSection = knowledgeDisclosure(body, 'Reviewed package sources', presence.sources.length);
-      const evidenceBySource = new Map();
-      for (const evidence of presence.evidence_links || []) {
-        const rows = evidenceBySource.get(evidence.source_id) || [];
-        rows.push(evidence);
-        evidenceBySource.set(evidence.source_id, rows);
-      }
-      for (const source of presence.sources) {
-        const row = document.createElement('article');
-        row.className = 'evidence-group';
-        const sourceHref = safeSourceHref(source.url);
-        if (sourceHref) {
-          const link = document.createElement('a');
-          link.href = sourceHref;
-          link.target = '_blank';
-          link.rel = 'noopener';
-          link.textContent = source.title || source.source_id;
-          row.append(link);
-        } else {
-          appendText(row, 'strong', source.title || source.source_id);
-        }
-        appendText(row, 'div', source.organization, 'record-meta');
-        for (const evidence of evidenceBySource.get(source.source_id) || []) {
-          appendText(row, 'code', evidence.locator, 'evidence-locator');
-        }
-        sourceSection.append(row);
-      }
-      const uncertaintySection = knowledgeDisclosure(
-        body, 'Material uncertainty', (presence.uncertainties || []).length
-      );
-      for (const uncertainty of presence.uncertainties || []) {
-        const card = document.createElement('article');
-        card.className = 'uncertainty-card';
-        appendText(card, 'strong', uncertainty.dimension);
-        appendText(card, 'p', uncertainty.description);
-        appendText(card, 'p', `Effect: ${uncertainty.effect}`, 'uncertainty-effect');
-        uncertaintySection.append(card);
-      }
+      addUncertainties(presence, presenceRecord, 'What remains uncertain');
     }
     appendPlaceEpisodes(body, presence);
-    addCoverage(body);
     details.append(summary, body);
     card.append(details);
+    const coverageHost = byId('presence-prototype-coverage');
+    if (coverageHost) {
+      coverageHost.replaceChildren();
+      addCoverage(coverageHost, 'Prototype coverage');
+    }
   }
 
   function syncLifePathSelectionControls() {
@@ -1131,9 +1135,12 @@
     runtime.popupPresenceId = null;
     renderLifePathPresence(presence);
     const inspector = byId('inspector');
-    if (inspector) inspector.hidden = false;
+    if (inspector) {
+      inspector.hidden = false;
+      inspector.scrollTop = 0;
+    }
     document.documentElement.dataset.artemisDetailsOpen = 'true';
-    if (options.focus !== false) byId('selection-card')?.focus({ preventScroll: false });
+    if (options.focus !== false) byId('selection-card')?.focus({ preventScroll: true });
   }
 
   function showPresencePopup(presence) {
@@ -1228,8 +1235,14 @@
   }
 
   function presencePeriod(presence) {
-    return (runtime.data?.lifePath?.macro_periods || []).find(
+    const periods = runtime.data?.lifePath?.macro_periods || [];
+    return periods.find(
       (period) => period.presence_refs.includes(presence.presence_id)
+    ) || periods.find(
+      // Romagna source anchors have no major-life membership ref. Show their
+      // containing coarse time context, without asserting residence there.
+      (period) => period.axis_start_index <= presence.axis_start_index
+        && period.axis_end_index >= presence.axis_end_index
     );
   }
 
@@ -1291,10 +1304,17 @@
   }
 
   function chronologyEmphasis(transition) {
+    const visible = visibleLifePathPresences();
+    const selected = visible.find(p => p.presence_id === runtime.selectedPresenceId);
     const current = runtime.lifePathMode === 'scrub'
-      ? [...visibleLifePathPresences()].sort((a, b) => a.index - b.index).at(-1)?.presence_id : null;
-    if (current && transition.to_presence_ref === current) return 2;
-    return [transition.from_presence_ref, transition.to_presence_ref].includes(runtime.selectedPresenceId) ? 1 : 0;
+      ? [...visible].sort((a, b) => a.index - b.index).at(-1) : null;
+    const episode = selected || current;
+    if (!episode) return 0;
+    // Prefer the arrival; the first visible episode has only an outgoing link.
+    const incoming = (runtime.data?.lifePath?.transitions || []).find(t =>
+      t.to_presence_ref === episode.presence_id && visible.some(p => p.presence_id === t.from_presence_ref));
+    const active = incoming ? transition === incoming : transition.from_presence_ref === episode.presence_id;
+    return active ? (selected ? 1 : 2) : 0;
   }
 
   function updateLifePathConnectors() {
@@ -1321,7 +1341,7 @@
         runtime.chronologyCues.set(id, cue);
       }
       // MapLibre owns outer marker opacity; emphasis belongs to the cue glyph.
-      cue.marker.getElement().firstChild.style.opacity = [0.25, 0.7, 0.95][feature.properties.emphasis];
+      cue.marker.getElement().firstChild.style.opacity = [0.12, 0.95, 0.95][feature.properties.emphasis];
     }
     for (const [id, cue] of runtime.chronologyCues) {
       if (!visible.has(id)) {cue.marker.remove(); runtime.chronologyCues.delete(id);}
@@ -1462,6 +1482,8 @@
     setText('range-start-value', startLabel);
     setText('range-end-value', endLabel);
     setText('scrub-current-value', endLabel);
+    setText('active-mode-explanation', runtime.lifePathMode === 'scrub'
+      ? 'From the beginning to the current time' : 'Within the selected interval');
     byId('range-start')?.setAttribute('aria-valuetext', startLabel);
     byId('range-end')?.setAttribute('aria-valuetext', endLabel);
     byId('scrub-current')?.setAttribute('aria-valuetext', endLabel);
@@ -1610,9 +1632,9 @@
         id: 'life-path-chronology-line', type: 'line', source: 'life-path-chronology',
         paint: {
           'line-color': '#a8bed0',
-          'line-width': ['case', ['==', ['get', 'emphasis'], 2], 2.2, 1.4],
+          'line-width': ['case', ['>', ['get', 'emphasis'], 0], 2.2, 1.4],
           'line-dasharray': [1.5, 2.2],
-          'line-opacity': ['match', ['get', 'emphasis'], 2, 0.9, 1, 0.65, 0.22]
+          'line-opacity': ['match', ['get', 'emphasis'], 2, 0.9, 1, 0.9, 0.16]
         }
       });
     }
@@ -1889,7 +1911,7 @@
     const semanticControls = byId('semantic-controls');
     if (semanticControls) semanticControls.hidden = false;
     document.querySelector('.mode-switch')?.setAttribute('hidden', '');
-    for (const id of ['mode-range', 'mode-scrub', 'range-controls', 'scrub-controls', 'macro-periods', 'presence-sequence']) {
+    for (const id of ['mode-range', 'mode-scrub', 'range-controls', 'scrub-controls', 'macro-periods', 'presence-sequence', 'life-period-row', 'documented-presence-row', 'active-mode-explanation', 'presence-prototype-coverage']) {
       const node = byId(id);
       if (node) node.hidden = true;
     }

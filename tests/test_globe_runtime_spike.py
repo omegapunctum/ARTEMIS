@@ -770,9 +770,13 @@ def test_runtime_uses_progressive_disclosure_and_names_its_repository_source() -
 
     assert "{{RUNTIME_SOURCE_NOTE}}" in html_source
     assert "Sources, limits and prototype status" in html_source
-    assert "Sources and uncertainty" in runtime_source
+    assert "Record and location details" in runtime_source
     assert "function renderMacroPeriodControls" in runtime_source
-    assert "Reviewed package sources" in runtime_source
+    assert "Sources supporting this presence" in runtime_source
+    assert "Reviewed package sources" not in runtime_source
+    assert "What remains uncertain" in runtime_source
+    assert "Why these sources?" in runtime_source
+    assert "Prototype coverage" in runtime_source
     assert "knowledgeDisclosure" in runtime_source
     assert "Claims & evidence" in runtime_source
     assert "Material uncertainty" in runtime_source

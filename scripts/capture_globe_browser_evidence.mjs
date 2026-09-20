@@ -308,7 +308,7 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     for (const cue of runtime.chronologyCues.values()) {
       const [a, b] = cue.coordinates, point = cue.marker.getLngLat();
       if (Math.abs(point.lng - (a[0]+b[0])/2) > 1e-9 || Math.abs(point.lat - (a[1]+b[1])/2) > 1e-9) throw new Error('Direction cue must stay at segment midpoint');
-      if (![0.25, 0.7, 0.95].includes(Number(cue.marker.getElement().firstChild.style.opacity))) throw new Error('Cue emphasis missing from glyph');
+      if (![0.12, 0.95].includes(Number(cue.marker.getElement().firstChild.style.opacity))) throw new Error('Cue emphasis missing from glyph');
       if (cue.marker.getElement().getAttribute('aria-hidden') !== 'true') throw new Error('Direction cue is presentation only');
     }
     document.getElementById('close-details')?.click();
@@ -370,7 +370,7 @@ async function verifyUrlStateRestoration(cdp, deadline) {
     'Leonardo documented in the Cesena survey context',
     'Not established beyond the documented source anchor',
     'exact historical position unknown',
-    'Sources and uncertainty'
+    'Record and location details'
   ]) {
     if (!interaction.cardText.includes(requiredText)) {
       throw new Error(`Life-path presence card did not expose ${requiredText}`);
@@ -570,6 +570,111 @@ async function verifyKeyboardInteraction(cdp, isRegion) {
   return { method: 'CDP Tab/Shift-Tab plus native button activation', activationKeys: [firstActivation, secondActivation], controls: ['mode-range', 'mode-scrub'], stateAndAriaAgree: true };
 }
 
+async function verifyFirstUse(cdp, options) {
+  const result = await evaluate(cdp, `(async () => {
+    const r = window.__ARTEMIS_GLOBE_SPIKE;
+    const initial = r.selectedPresenceId;
+    const life = r.data.lifePath;
+    const original = JSON.stringify(life);
+    const check = (ok, message) => { if (!ok) throw new Error('First-use: ' + message); };
+    document.getElementById('language-en').click();
+    check(document.getElementById('life-period-label').innerText === 'Life periods', 'life-period label');
+    check(document.getElementById('documented-presence-label').innerText === 'Documented presences', 'Presence label');
+    check(document.querySelectorAll('#macro-periods button').length === 6, 'six coarse periods');
+    check(document.querySelectorAll('#presence-sequence button').length === 11, 'eleven episodes');
+    check(document.getElementById('active-mode-explanation').textContent === 'Within the selected interval', 'Range explanation');
+    const checked = [];
+    for (const p of life.presences) {
+      r.selectPresence(p.presence_id, {openDetails: true});
+      const card = document.getElementById('selection-card');
+      const period = life.macro_periods.find(x => x.presence_refs.includes(p.presence_id))
+        || life.macro_periods.find(x => x.axis_start_index <= p.axis_start_index && x.axis_end_index >= p.axis_end_index);
+      check(card.dataset.presenceId === p.presence_id, 'detail identity');
+      check(document.querySelector('#presence-sequence button[aria-pressed="true"]').dataset.presenceId === p.presence_id, 'row identity');
+      check(document.querySelector('#macro-periods button[aria-current="true"]').dataset.periodId === period.period_id, 'containing period');
+      check(r.placeMarkers.get(p.place_ref).getElement().getAttribute('aria-pressed') === 'true', 'map anchor');
+      check(new URLSearchParams(location.search).get('presence') === p.presence_id, 'URL identity');
+      const top = [...card.children].slice(0, 5);
+      check(top[0].textContent === p.place_label && top[1].className === 'stop-card-date', 'Place then source-native time');
+      check(top[2].textContent === 'Documented presence' && top[3].textContent.includes(p.short_description), 'record/context');
+      check(top[4].textContent.includes('Exact historical positionUnknown') && top[4].textContent.includes('RouteUnknown'), 'explicit spatial/route limits');
+      check(top[4].textContent.includes(p.duration_status === 'range_not_continuous_position' ? 'Residence range; daily presence not established' : 'Not established'), 'duration limit');
+      check(top.every(el => el.getBoundingClientRect().bottom <= document.getElementById('inspector').getBoundingClientRect().bottom), 'first-open limits inside drawer viewport');
+      check(![...card.querySelectorAll('summary')].some(s => /Reviewed package|Material uncertainty|Coverage.*corpus/.test(s.textContent)), 'primary vocabulary');
+      const global = document.getElementById('presence-prototype-coverage');
+      check(!card.contains(global) && !global.querySelector('details').open && !document.getElementById('prototype-details').open, 'collapsed global coverage outside selected evidence');
+      const record = r.knowledgeByItem.get(p.event_item_id) || p;
+      const sources = card.querySelector('.presence-sources');
+      check(!sources.open && sources.querySelector('summary').textContent === 'Sources supporting this presence · ' + record.sources.length, 'direct counted source disclosure');
+      sources.open = true;
+      for (const source of record.sources) check(sources.textContent.includes(source.title), 'existing source title');
+      for (const evidence of record.evidence_links) check([...sources.querySelectorAll('code')].some(c => c.textContent === evidence.locator), 'existing locator');
+      const why = sources.querySelector('.source-scope');
+      check(why.textContent.includes('current reviewed evidence for this displayed record'), 'reviewed inclusion meaning');
+      check(why.textContent.includes('Other historical sources may exist; this list is not exhaustive.'), 'non-exhaustiveness');
+      check(why.textContent.includes('does not assign source reliability or credibility scores'), 'no source scoring');
+      const links = (await r.map.getSource('life-path-chronology').getData()).features;
+      const active = links.filter(f => f.properties.emphasis > 0);
+      const arrival = life.transitions.find(t => t.to_presence_ref === p.presence_id);
+      check(active.length === 1 && active[0].properties.transition_id === (arrival || life.transitions[0]).transition_id, 'one episode-specific transition');
+      check(links.every(f => f.properties.route_geometry === null && f.properties.is_historical_route_geometry === false), 'null historical routes');
+      checked.push({presence: p.presence_id, place: p.place_ref, sources: record.sources.length, transition: active[0].properties.transition_id});
+    }
+    check(JSON.stringify(life) === original, 'source/domain data unchanged');
+    r.selectPresence(initial, {openDetails: true});
+    return {episodes: checked, initial, domainDataUnchanged: true, visualAcceptance: 'not_assessed'};
+  })()`, true);
+  async function capture(suffix) {
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+    const screenshot = options.screenshot.replace(/\.png$/, '-' + suffix + '.png');
+    const dom = options.dom.replace(/\.html$/, '-' + suffix + '.html');
+    const png = await cdp.send('Page.captureScreenshot', {format: 'png', fromSurface: true, captureBeyondViewport: false});
+    await writeFile(screenshot, Buffer.from(png.data, 'base64'));
+    await writeFile(dom, await evaluate(cdp, 'document.documentElement.outerHTML'), 'utf8');
+    return {screenshot, dom, screenshotSha256: createHash('sha256').update(await readFile(screenshot)).digest('hex')};
+  }
+  const details = await capture('details');
+  // Native keyboard disclosure activation, followed by source/locator capture.
+  await evaluate(cdp, "document.querySelector('.presence-sources > summary').focus()");
+  await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+  await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+  if (!await evaluate(cdp, "document.querySelector('.presence-sources').open")) throw new Error('Sources not reachable by keyboard');
+  const sources = await capture('sources');
+  await evaluate(cdp, `(() => {
+    const why = document.querySelector('.source-scope'); why.open = true;
+    why.scrollIntoView({block: 'center'});
+  })()`);
+  const sourceScope = await capture('why-sources');
+  const localized = await evaluate(cdp, `(() => {
+    document.getElementById('language-ru').click();
+    const card = document.getElementById('selection-card');
+    const why = card.querySelector('.source-scope'); why.open = true;
+    window.ARTEMIS_I18N.refresh();
+    if (!why.textContent.includes('не исчерпывающий') || !why.textContent.includes('не присваивает') || !why.textContent.includes('текущие проверенные свидетельства')) throw new Error('Russian source explanation lost');
+    if (document.getElementById('life-period-label').innerText !== 'Периоды жизни' || document.getElementById('documented-presence-label').innerText !== 'Документированные присутствия') throw new Error('Russian row labels lost');
+    if (!card.querySelector('.presence-sources > summary').innerText.startsWith('Источники, подтверждающие это присутствие')) throw new Error('Russian source heading lost');
+    card.querySelector('.presence-sources').open = false;
+    document.getElementById('inspector').scrollTop = 0;
+    return true;
+  })()`);
+  const russian = await capture('details-ru');
+  await evaluate(cdp, `(() => {
+    document.getElementById('language-en').click();
+    const coverage = document.querySelector('#presence-prototype-coverage details');
+    coverage.open = true; coverage.scrollIntoView({block: 'center'});
+  })()`);
+  const coverage = await capture('coverage');
+  await evaluate(cdp, `(() => {
+    document.querySelector('#presence-prototype-coverage details').open = false;
+    document.getElementById('language-en').click();
+    document.getElementById('mode-scrub').click();
+    if (document.getElementById('active-mode-explanation').textContent !== 'From the beginning to the current time') throw new Error('Scrub explanation lost');
+    document.getElementById('mode-range').click();
+    window.__ARTEMIS_GLOBE_SPIKE.selectPresence(${JSON.stringify(result.initial)});
+  })()`);
+  return {...result, localized, keyboardSourceDisclosure: true, captures: {details, sources, sourceScope, russian, coverage}};
+}
+
 async function main() {
   const options = parseArguments(process.argv);
   const profileDirectory = await mkdtemp(join(tmpdir(), 'artemis-chrome-profile-'));
@@ -620,6 +725,7 @@ async function main() {
     });
     await writeFile(options.dom, `${dom}\n`, 'utf8');
     await writeFile(options.screenshot, Buffer.from(capture.data, 'base64'));
+    const firstUse = isRegion ? null : await verifyFirstUse(cdp, options);
     const urlStateRestoration = !isRegion && options.verifyUrlState
       ? await verifyUrlStateRestoration(cdp, deadline)
       : null;
@@ -647,7 +753,9 @@ async function main() {
       screenshotSha256: sha256(await readFile(options.screenshot)),
       limitations: ['Checkout identity is test-code provenance, not proof of the deployed commit.', 'DOM and screenshot precede the separate URL-restoration scenario.', 'Keyboard checks cover named controls only, not a full keyboard or assistive-technology audit.']
     };
-    process.stdout.write(`${JSON.stringify({ ...readiness, keyboardInteraction, placeLabels, regionDisclosureRetest, temporalRegion, urlStateRestoration, provenance })}\n`);
+    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, provenance };
+    if (options.report) await writeFile(options.report, JSON.stringify(report, null, 2) + '\n', 'utf8');
+    process.stdout.write(`${JSON.stringify(report)}\n`);
   } catch (error) {
     if (browserLog) process.stderr.write(browserLog);
     throw error;

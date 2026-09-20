@@ -35,6 +35,7 @@
       <section class="selection-section" aria-labelledby="selection-title">
         <div id="selection-card" class="selection-card empty" tabindex="-1" aria-live="polite">{{SELECTION_EMPTY_COPY}}</div>
       </section>
+      <section id="presence-prototype-coverage" aria-label="Prototype coverage"></section>
       <details id="prototype-details" class="prototype-details">
         <summary>Sources, limits and prototype status</summary>
         <div class="prototype-body">
@@ -73,7 +74,10 @@
           </div>
         </div>
 
-        <nav id="macro-periods" class="macro-periods" aria-label="Major life periods"></nav>
+        <div id="life-period-row" class="temporal-navigation-row">
+          <span class="navigation-row-label" id="life-period-label">Life periods</span>
+          <nav id="macro-periods" class="macro-periods" aria-labelledby="life-period-label"></nav>
+        </div>
 
         <div id="semantic-controls" class="semantic-controls" hidden>
           <label for="temporal-preset">Selected time
@@ -99,8 +103,14 @@
           </label>
           <input id="scrub-current" type="range" min="0" max="0" step="1" value="0" />
         </div>
-        <nav id="presence-sequence" aria-label="Chronological presences"></nav>
-        <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
+        <div id="documented-presence-row" class="temporal-navigation-row">
+          <span class="navigation-row-label" id="documented-presence-label">Documented presences</span>
+          <nav id="presence-sequence" aria-labelledby="documented-presence-label"></nav>
+        </div>
+        <div id="temporal-status-group">
+          <span id="active-mode-explanation"></span>
+          <p id="temporal-map-status" class="path-status" role="status" aria-live="polite">Loading documented presences…</p>
+        </div>
       </div>
 
       <div class="timeline-summary">
