@@ -1097,6 +1097,9 @@
     const periodId = selected && presencePeriod(selected)?.period_id;
     for (const button of byId('macro-periods')?.querySelectorAll('button') || []) {
       button.setAttribute('aria-current', String(button.dataset.periodId === periodId));
+      if (button.dataset.periodId === periodId) {
+        button.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+      }
     }
   }
 

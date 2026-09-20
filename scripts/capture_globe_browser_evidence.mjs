@@ -592,6 +592,9 @@ async function verifyFirstUse(cdp, options) {
       check(card.dataset.presenceId === p.presence_id, 'detail identity');
       check(document.querySelector('#presence-sequence button[aria-pressed="true"]').dataset.presenceId === p.presence_id, 'row identity');
       check(document.querySelector('#macro-periods button[aria-current="true"]').dataset.periodId === period.period_id, 'containing period');
+      const periodBounds = document.querySelector('#macro-periods button[aria-current="true"]').getBoundingClientRect();
+      const periodRow = document.getElementById('macro-periods').getBoundingClientRect();
+      check(periodBounds.right > periodRow.left && periodBounds.left < periodRow.right, 'containing period visible in scrolling row');
       check(r.placeMarkers.get(p.place_ref).getElement().getAttribute('aria-pressed') === 'true', 'map anchor');
       check(new URLSearchParams(location.search).get('presence') === p.presence_id, 'URL identity');
       const top = [...card.children].slice(0, 5);

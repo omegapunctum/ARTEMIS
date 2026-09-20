@@ -25,7 +25,7 @@ class Element {
   getAttribute(key) { return this.attrs[key]; }
   hasAttribute(key) { return key in this.attrs; }
   addEventListener(key, callback) { this.events[key] = callback; }
-  scrollIntoView() {}
+  scrollIntoView() { this.scrolled = true; }
   focus() { this.focused = true; }
   closest() { return this.skip ? this : null; }
   contains(element) { return this.children.includes(element); }
@@ -64,6 +64,7 @@ context.updateLifePathMarkers();
 assert.equal(sequence.children[1].attrs['aria-pressed'], 'true');
 assert.equal(markerB.attrs['aria-pressed'], 'true');
 assert.equal(periodButton.attrs['aria-current'], 'true');
+assert.equal(periodButton.scrolled, true);
 sequence.children[1].events.focus();
 assert.ok(markerB.classes.has('is-emphasized'));
 sequence.children[1].events.blur();
