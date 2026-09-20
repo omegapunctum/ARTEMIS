@@ -609,6 +609,14 @@ async function verifyFirstUse(cdp, options) {
       sources.open = true;
       for (const source of record.sources) check(sources.textContent.includes(source.title), 'existing source title');
       for (const evidence of record.evidence_links) check([...sources.querySelectorAll('code')].some(c => c.textContent === evidence.locator), 'existing locator');
+      for (const link of sources.querySelectorAll('a')) {
+        const luminance = color => color.match(/[0-9.]+/g).slice(0, 3).map(Number).map(v => {
+          v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+        }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+        const text = luminance(getComputedStyle(link).color);
+        const background = luminance(getComputedStyle(link.closest('.evidence-group')).backgroundColor);
+        check((Math.max(text, background) + 0.05) / (Math.min(text, background) + 0.05) >= 4.5, 'source link contrast');
+      }
       const why = sources.querySelector('.source-scope');
       check(why.textContent.includes('current reviewed evidence for this displayed record'), 'reviewed inclusion meaning');
       check(why.textContent.includes('Other historical sources may exist; this list is not exhaustive.'), 'non-exhaustiveness');

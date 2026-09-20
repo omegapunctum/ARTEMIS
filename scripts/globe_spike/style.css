@@ -351,7 +351,8 @@ input[type="range"] { min-height: 30px; accent-color: #5fb8ff; }
 .record-meta,
 .empty-note { color: #9eb0c4; font-size: 12px; }
 .evidence-row { display: grid; gap: 3px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #24384f; }
-.evidence-row a { color: #83d2ff; font-weight: 650; }
+.evidence-row a,
+.presence-sources a { color: #83d2ff; font-weight: 650; }
 .evidence-locator { color: #f1c986; }
 .uncertainty-card { border-color: #8b6a34; background: #201a12; }
 .uncertainty-effect { color: #ffd9a0; }
@@ -522,6 +523,7 @@ button:focus-visible { outline: 2px solid #79cfff; outline-offset: 2px; }
 .context-label { display: block; color: #aebfd1; font-size: 11px; margin-bottom: 3px; }
 .stop-fact-list > div { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .source-scope p { color: #b9cadd; font-size: 12px; line-height: 1.45; }
+.presence-sources .evidence-group { display: grid; gap: 4px; }
 .presence-sources summary::before,
 #presence-prototype-coverage summary::before,
 .selection-card[data-presence-id] > details > summary::before {
