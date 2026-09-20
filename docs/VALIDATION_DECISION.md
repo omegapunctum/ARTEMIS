@@ -1,6 +1,6 @@
 # ARTEMIS — VALIDATION DECISION
 
-Gate E evidence recovery — accepted 2026-09-19: [current specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The specification authorizes the complete E1 → bounded correction/retest if required → E2 (exactly five participants) runway; only escalation or the final Gate E outcome requires a new Command Center decision.
+Gate E evidence recovery — accepted 2026-09-19: [current specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The specification authorizes the runway: completed pre-E1 correction → fresh E1 → E2 (exactly five participants); the single correction allowance is consumed, and another material product correction requires escalation. See [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md); only escalation or the final Gate E outcome requires a new Command Center decision.
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens participant evidence only.
 
@@ -10,9 +10,10 @@ Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_
 
 - Тип: canonical validation outcome document.
 - Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / GATE E EVIDENCE RECOVERY AUTHORIZED / E1 NOT COLLECTED / E2 CONDITIONAL NOT COLLECTED / FORMAL USER VALUE UNVALIDATED`.
-- Дата последнего обновления: 2026-09-19.
+- Дата последнего обновления: 2026-09-20.
 - Active product issue: GitHub issue `#355`.
-- Current public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
+- Current public presentation: #439 / `be992184f04f020bb7f769b980403d0899f0950b`, human-accepted and publication-verified; see [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). E1/E2 remain NOT COLLECTED.
+- Historical public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
 - Completed work: Region implementation, publication and interactive owner review; #421 supports GENERALIZES (technical only), with separately verified public R&D availability and no user-value result.
 - Formal Foundation v3 protocol: `docs/work/2026-07-28_FOUNDATION_V3_VALIDATION_PLAN_v1.md` remains gated.
@@ -103,7 +104,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Current corpus | 11 coarse Presence anchors / six periods / 1452–1519 |
 | Public research surface | `/globe/` R&D research prototype |
 | Completed correction | `Temporal Map M5 bounded UX correction v1` / `PROCEED_TO_GATE_D_REVIEW` |
-| Current runtime implementation | `COMPLETED + PUBLISHED / PR #419`, after #418; earlier #409/#411/#412 remain completed evidence |
+| Current runtime implementation | `COMPLETED + PUBLISHED / PR #439`; human acceptance and publication verified; #419/#418 and earlier #409/#411/#412 remain completed evidence |
 | Correction acceptance and publication | #412 merged/published; owner acceptance recorded 2026-09-06 |
 | Gate D exit vocabulary | `ADVANCE_TO_GATE_E / NARROW / REJECT` |
 | Gate D review recommendation | `ADVANCE_TO_GATE_E`; exit recorded as `ADVANCE_TO_GATE_E` |

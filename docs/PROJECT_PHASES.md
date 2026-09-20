@@ -2,7 +2,7 @@
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens evidence collection only.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md) plus the accepted [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) as the single bounded pre-E1 correction. Implementation/publication verification precedes a fresh E1; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Region remains completed technical-only generalization evidence.
+Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md) plus the accepted [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) as the single bounded pre-E1 correction. The correction is implemented in #439, human-accepted and publication-verified; [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md) makes fresh E1 the next transition; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Region remains completed technical-only generalization evidence.
 
 ## Status
 

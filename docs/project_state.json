@@ -1,7 +1,7 @@
 {
   "schema_version": "1.7.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-19",
+  "updated_at": "2026-09-20",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -170,7 +170,7 @@
   ],
   "blockers": [],
   "next_transition": {
-    "condition": "Implement and publication-verify the accepted Leonardo First-Use Comprehension Correction, then conduct a fresh E1. This accepted pre-E1 correction consumes the single bounded product-correction allowance before E2; any fresh-E1 material failure requiring another product correction is escalation. After E1 clearance, continue to E2 with exactly five participants, then return for the final Gate E outcome. E1/E2 remain NOT COLLECTED until participant observations exist; formal user value remains UNVALIDATED.",
+    "condition": "Conduct a fresh E1 with one independent novice after the human-accepted, implemented and publication-verified Leonardo First-Use Comprehension Correction (#439). Publication evidence: docs/work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md. This accepted pre-E1 correction consumes the single bounded product-correction allowance before E2; any fresh-E1 material failure requiring another product correction is escalation. After E1 clearance, continue to E2 with exactly five participants, then return for the final Gate E outcome. E1/E2 remain NOT COLLECTED until participant observations exist; formal user value remains UNVALIDATED.",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md",
     "target": "E"

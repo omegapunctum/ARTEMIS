@@ -1,6 +1,6 @@
 # ARTEMIS working documents registry
 
-First-Use comprehension correction — accepted 2026-09-19: [2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). This is the single bounded pre-E1 product correction in the Gate E recovery runway. It must be implemented/publication-verified before fresh E1 and consumes the runway's product-correction allowance; another material product correction after fresh E1 requires escalation.
+First-Use comprehension correction — accepted 2026-09-19: [2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). This is the single bounded pre-E1 product correction in the Gate E recovery runway. It is implemented in #439, human-accepted and publication-verified; see [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Fresh E1 is next. It consumes the runway's product-correction allowance; another material product correction after fresh E1 requires escalation.
 
 Gate E evidence recovery — accepted 2026-09-19: [2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The accepted First-Use correction now precedes fresh E1 and consumes the single product-correction allowance; after E1 clearance the runway continues to E2 with exactly five participants and evidence-package assembly. Only a real escalation or final Gate E outcome returns to Command Center.
 
@@ -13,13 +13,13 @@ Current decision: [Gate E evidence recovery specification](2026-09-19_GATE_E_EVI
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-19.
+- Updated: 2026-09-20.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
 A filename containing `ACTIVE`, an old status header or an issue reference does not make a document active.
 
-Leonardo interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E recovery is authorized, the accepted First-Use correction precedes E1, E1 is NOT COLLECTED, E2 is conditional / NOT COLLECTED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
+Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Historical interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E recovery is authorized, the accepted First-Use correction precedes E1, E1 is NOT COLLECTED, E2 is conditional / NOT COLLECTED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
 
 ## Completed Region proof and owner review
 
@@ -40,7 +40,8 @@ Leonardo interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`
 | Document | Role | Exit |
 |---|---|---|
 | `2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md` | **Accepted current Gate E evidence-recovery specification** | accepted First-Use correction → fresh E1 → E2 exactly 5 participants → final Gate E outcome; second material product correction requires escalation |
-| `2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md` | **Accepted bounded pre-E1 Product/UX specification** | implement + browser/visual verification + publication verification → fresh E1; no Region/IA/credibility-scoring expansion |
+| `2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md` | **Accepted bounded pre-E1 Product/UX specification** | implementation + human acceptance + publication verified in #439; fresh E1 next; no Region/IA/credibility-scoring expansion |
+| `2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md` | Completed implementation/publication evidence | fresh E1 next; no participant evidence or value claim |
 | `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D completed by #414 / ADVANCE_TO_GATE_E; retained historical decision, not a pending exit |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
