@@ -1,5 +1,7 @@
 # Leonardo First-Use correction — implementation/publication closeout
 
+Lifecycle update — 2026-09-23: the [owner-directed Gate E closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md) supersedes all fresh-E1/E2 next-step instructions below. Gate E is closed, E2 NOT COLLECTED / WAIVED, comparative user value UNVALIDATED; no successor opened. The original decision/evidence is preserved below as history.
+
 - Date: 2026-09-20.
 - Type: completed implementation, human acceptance and publication evidence; not participant evidence.
 - Scope/authority: issue #355; [accepted First-Use specification](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) and [Gate E recovery specification](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md).
