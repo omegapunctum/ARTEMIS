@@ -1,22 +1,22 @@
-# ARTEMIS — PRIORITIES v7.11
+# ARTEMIS — PRIORITIES v7.12
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens evidence collection, not a feature branch.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without opening a successor.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md), with the accepted [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) as the single bounded pre-E1 product correction. E1/E2 remain NOT COLLECTED and formal user value remains UNVALIDATED. Region remains technical-only evidence.
+Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-19.
-- Active cycle: `Gate E evidence recovery`; Region and M5 correction remain completed evidence.
+- Date: 2026-09-23.
+- Active cycle: `Gate E closed — awaiting Command Center decision`; no successor execution is authorized.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Recover Gate E participant evidence
+## P0 — Respect Gate E closeout; no successor execution
 
-Follow the accepted [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md) and [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). Historical Leonardo interaction baseline is #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`; #416 navigation is future-only and #418/#419 are completed implementation evidence. The correction is implemented in #439, human-accepted and publication-verified; see [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Conduct a fresh E1 next. That correction consumes the one product-correction allowance; another material product correction after E1 is escalation. After E1 clearance prepare/freeze the same-content linear baseline and conduct E2 with exactly five participants; then stop for the final Gate E outcome. E1/E2 observations remain NOT COLLECTED until actually recorded.
+Follow the [owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). The single bounded pre-E1 product correction is completed in #439 and publication-verified. Preserve the semantic core; the current Leonardo/Globe scaffold does not establish full Life in Context. Bounded contextual composition is the next candidate proof, not permission to add Presence data or create an isolated renderer/domain. A separate accepted specification and authorization are required before implementation.
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 
@@ -125,7 +125,7 @@ These are technical/product-development foundations, not final user-value eviden
 1. #420 decision and #421 source-first implementation are merged. Preserve Gate D ADVANCE_TO_GATE_E, M4 ADOPT and M5 history.
 2. Human Region retest PASS is recorded: three source-native periods switch correctly; provenance/license and approximate scholarly reconstruction are visible. Both failed-task findings are resolved. WIP limit remains one.
 3. The source audit supports GENERALIZES (technical only). Separate publication is verified from owner-supplied live evidence; interactive owner review is completed / human retest PASS. Return to Command Center; no new capability or implementation is opened.
-4. E1/E2 remain NOT COLLECTED; formal user value unvalidated. No additional product, infrastructure, Global/Focus implementation or automatic publication.
+4. Gate E closed; E1 owner-reported PASS; E2 NOT COLLECTED / WAIVED; comparative and formal user value unvalidated. No additional product, infrastructure, Global/Focus implementation or automatic publication.
 
 ## Completion rule
 

@@ -1,25 +1,25 @@
 # ARTEMIS working documents registry
 
-First-Use comprehension correction — accepted 2026-09-19: [2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). This is the single bounded pre-E1 product correction in the Gate E recovery runway. It is implemented in #439, human-accepted and publication-verified; see [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Fresh E1 is next. It consumes the runway's product-correction allowance; another material product correction after fresh E1 requires escalation.
+First-Use correction: implemented in #439, human-accepted and publication-verified; preserved as completed evidence. The former fresh-E1 handoff is superseded by the [owner closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md).
 
-Gate E evidence recovery — accepted 2026-09-19: [2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The accepted First-Use correction now precedes fresh E1 and consumes the single product-correction allowance; after E1 clearance the runway continues to E2 with exactly five participants and evidence-package assembly. Only a real escalation or final Gate E outcome returns to Command Center.
+Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner decision](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); its participant sequence is no longer current execution authority.
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; the later Gate E recovery decision opens evidence collection only.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; Gate E is now closed without opening a successor.
 
-Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, E1/E2 NOT COLLECTED and formal user value UNVALIDATED. See [verification record](2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
+Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, at that recording date E1/E2 were NOT COLLECTED and formal user value UNVALIDATED. See [verification record](2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
 
-Current decision: [Gate E evidence recovery specification](2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). The 2026-09-10 bypass and Region proof remain completed historical decision/evidence. E1/E2 are still NOT COLLECTED and formal user value remains UNVALIDATED; this registry now authorizes the recovery runway rather than treating the bypass as the current critical-path disposition.
+Current decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-20.
+- Updated: 2026-09-23.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
 A filename containing `ACTIVE`, an old status header or an issue reference does not make a document active.
 
-Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Historical interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E recovery is authorized, the accepted First-Use correction precedes E1, E1 is NOT COLLECTED, E2 is conditional / NOT COLLECTED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
+Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Historical interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E is closed by owner decision, E1 is owner-reported PASS, E2 is NOT COLLECTED / WAIVED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
 
 ## Completed Region proof and owner review
 
@@ -35,14 +35,26 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 |---|---|---|
 | `2026-09-19_DEVELOPMENT_SKILLS_v1_DESIGN.md` | Design candidate; not installed | plugin-eval unavailable; behavioral evaluation blocked; no product successor |
 
-## Active execution
+## Gate E closeout and completed recovery records
+
+| Document | Lifecycle | Disposition |
+|---|---|---|
+| `2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md` | Current owner-directed closeout | Gate E closed; E2 not collected/waived; comparative value unvalidated; STOP, no successor |
+| `2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md` | Historical authorization; execution superseded | E2 waived by closeout; no current collection transition |
+| `2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md` | Completed specification/implementation evidence | #439 human-accepted and publication-verified |
+| `2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md` | Completed publication evidence | Former E1 handoff superseded; no comparative value claim |
+
+Multi-Perspective Review is accepted as decision-preparation evidence
+by the owner; its bounded implication and provenance limits are recorded in
+the closeout above. Preserve the semantic core; the current Leonardo/Globe
+scaffold does not establish full Life in Context. Bounded contextual composition
+is a candidate proof only, not active implementation.
+
+## Maintained runtime contracts and compatibility procedures
 
 | Document | Role | Exit |
 |---|---|---|
-| `2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md` | **Accepted current Gate E evidence-recovery specification** | accepted First-Use correction → fresh E1 → E2 exactly 5 participants → final Gate E outcome; second material product correction requires escalation |
-| `2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md` | **Accepted bounded pre-E1 Product/UX specification** | implementation + human acceptance + publication verified in #439; fresh E1 next; no Region/IA/credibility-scoring expansion |
-| `2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md` | Completed implementation/publication evidence | fresh E1 next; no participant evidence or value claim |
-| `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed Gate D exit and current next-step boundary | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
+| `2026-09-06_GATE_D_EXIT_DECISION_v1.md` | Completed historical Gate D exit | `ADVANCE_TO_GATE_E`; completed history, later owner bypass does not revise this exit |
 | `2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md` | #355 active Globe/Temporal Map MVP product/governance decision | Gate D completed by #414 / ADVANCE_TO_GATE_E; retained historical decision, not a pending exit |
 | `2026-08-08_GLOBE_RUNTIME_SPIKE_RUNBOOK_v1.md` | executable generated Globe build/runbook used during #355 MVP work | replaced by a maintained-app runbook after an evidence-backed promotion decision or archived after stop decision |
 | `2026-08-14_GATE_D_EARTH_CONTEXT_PROVIDER_POLICY_v1.md` | #355 current Earth-context provenance/license/cache/secret boundary | replaced only by a reviewed provider decision or archived with the Globe contour |
@@ -58,7 +70,7 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 
 | Document | Lifecycle | Disposition |
 |---|---|---|
-| `2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md` | Prepared / NOT EXECUTED | Historical protocol basis reused by the accepted 2026-09-19 recovery specification; no retrospective E1/E2 observations or value signal |
+| `2026-09-06_GATE_E_BOUNDED_TASK_PROTOCOL_v1.md` | Prepared / NOT EXECUTED | Historical protocol basis; E1 owner report is recorded with limitations in the closeout; E2 waived/not collected; no comparative value signal |
 
 ## Completed M2–M5, correction and Gate D review evidence
 
@@ -105,7 +117,7 @@ Current interaction semantics:
 - earlier dashed connectors expressed chronology only and were never historical route geometry; current #418 uses explicitly labelled renderer-only chronological links and midpoint cues; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; Region implementation, publication and interactive owner review are completed. The active successor is Gate E evidence recovery only; no new feature/capability branch is opened. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; Region implementation, publication and interactive owner review are completed. Gate E is closed; no successor product branch is opened. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
 
 ## Foundation lifecycle records
 

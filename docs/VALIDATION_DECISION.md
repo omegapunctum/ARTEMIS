@@ -1,18 +1,18 @@
 # ARTEMIS — VALIDATION DECISION
 
-Gate E evidence recovery — accepted 2026-09-19: [current specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. The specification authorizes the runway: completed pre-E1 correction → fresh E1 → E2 (exactly five participants); the single correction allowance is consumed, and another material product correction requires escalation. See [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md); only escalation or the final Gate E outcome requires a new Command Center decision.
+Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner decision](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); its participant sequence is no longer current execution authority.
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens participant evidence only.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without a comparative value outcome.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). The owner-directed bypass is retained as completed history, not the current execution disposition. No positive value signal is inferred from Region or owner review. E1/E2 remain NOT COLLECTED until participant evidence exists.
+Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Статус
 
 - Тип: canonical validation outcome document.
-- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / GATE E EVIDENCE RECOVERY AUTHORIZED / E1 NOT COLLECTED / E2 CONDITIONAL NOT COLLECTED / FORMAL USER VALUE UNVALIDATED`.
-- Дата последнего обновления: 2026-09-20.
+- Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / GATE E CLOSED / E1 OWNER-REPORTED PASS / E2 NOT COLLECTED / WAIVED / FORMAL USER VALUE UNVALIDATED`.
+- Дата последнего обновления: 2026-09-23.
 - Active product issue: GitHub issue `#355`.
-- Current public presentation: #439 / `be992184f04f020bb7f769b980403d0899f0950b`, human-accepted and publication-verified; see [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). E1/E2 remain NOT COLLECTED.
+- Current public presentation: #439 / `be992184f04f020bb7f769b980403d0899f0950b`, human-accepted and publication-verified; see [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). E1 is owner-reported PASS; E2 is NOT COLLECTED / WAIVED.
 - Historical public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.
 - Recorded correction result: `PROCEED_TO_GATE_D_REVIEW` (owner acceptance, 2026-09-06).
 - Completed work: Region implementation, publication and interactive owner review; #421 supports GENERALIZES (technical only), with separately verified public R&D availability and no user-value result.
@@ -22,9 +22,9 @@ Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_
 
 ## 1. Текущее решение
 
-`ADVANCE_TO_GATE_E — GATE D COMPLETED; GATE E EVIDENCE RECOVERY AUTHORIZED`
+`GATE E CLOSED — OWNER_DIRECTED_CLOSEOUT; NO VALUE_SIGNAL`
 
-Execution authority is the accepted [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md).
+Current authority is the [owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); the recovery execution runway is superseded.
 
 Зафиксировано:
 
@@ -78,17 +78,17 @@ The [2026-09-06 closeout and bounded review](work/2026-09-06_M5_UX_CLOSEOUT_AND_
 
 No new assistant manual test, physical-device matrix, real AT/performance pass or paired EN/RU screenshot evidence is invented. Earlier negative findings remain historical evidence. Acceptance closes this bounded correction; formal user value remains unvalidated.
 
-Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Merged #413 accepted the bounded review. The separate explicit exit records `ADVANCE_TO_GATE_E`; Gate D is completed. The prepared E1/E2 evidence path is NOT EXECUTED and bypassed by explicit owner direction; formal user value remains unvalidated.
+Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separately as a completed architecture checkpoint. Merged #413 accepted the bounded review. The separate explicit exit records `ADVANCE_TO_GATE_E`; Gate D is completed. The original E1/E2 bypass remains historical; the later recovery is now closed by owner decision with E1 owner-reported PASS and E2 waived/not collected. Formal user value remains unvalidated.
 
 ## 5. Current record
 
 | Field | Value |
 |---|---|
 | Foundation decision | `ACCEPTED / PR #328` |
-| Formal user-value decision | `PENDING` |
+| Formal user-value decision | `UNVALIDATED`; Gate E closed without VALUE_SIGNAL |
 | Active vertical | `Life in Context / Leonardo Temporal Map` |
 | Active issue | `#355` |
-| Current gate | `D / COMPLETED / ADVANCE_TO_GATE_E` |
+| Latest closeout | `E / CLOSED / OWNER_DIRECTED_CLOSEOUT`; historical D exit preserved |
 | Architecture Gate A fixtures | `3/3 READY` / preserved technical evidence, not user-value evidence |
 | World-model contract evidence | `READY / #329 / PR #336` |
 | Uncertainty semantics | `READY / #330 / PR #337` |
@@ -112,9 +112,9 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 | Same-content formal baseline | `NOT RUN` |
 | Formal participant wave | `NOT RUN` |
 
-| Gate E recovery evidence | `AUTHORIZED / NOT COLLECTED`; E1 ready, E2 conditional on E1 clearance |
+| Gate E closeout | `CLOSED`; E1 owner-reported PASS; E2 NOT COLLECTED / WAIVED |
 | Formal user value | `UNVALIDATED`; no positive value signal yet |
-| Next authority | [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md); execute E1 → optional one bounded correction/retest → E2 exactly 5 participants; return only on escalation or final Gate E outcome |
+| Next authority | [Owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); STOP / return to Command Center; no successor opened |
 
 ## 6. Change rule
 

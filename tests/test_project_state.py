@@ -23,6 +23,22 @@ def _state() -> dict:
     return json.loads(STATE_PATH.read_text(encoding="utf-8"))
 
 
+def _historical_gate_e_recovery() -> dict:
+    state = _state()
+    ref = "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
+    state["gate_e"] = {
+        "status": "evidence_recovery_authorized",
+        "disposition": "evidence_recovery",
+        "e1": "ready_not_collected",
+        "e2": "conditional_not_collected",
+        "formal_user_value": "unvalidated",
+        "decision_ref": ref,
+    }
+    state["next_transition"]["target"] = "E"
+    state["next_transition"]["decision_ref"] = ref
+    return state
+
+
 def _historical_gate_c_payload() -> dict:
     state = _state()
     state["gate"] = copy.deepcopy(state["completed_gates"][0])
@@ -269,8 +285,8 @@ def test_gate_e_recovery_requires_registered_authority() -> None:
         ("evidence_complete_awaiting_outcome", "cleared", "complete"),
     ],
 )
-def test_gate_e_recovery_runway_states_are_pre_authorized(status, e1, e2) -> None:
-    state = _state()
+def test_gate_e_recovery_runway_states_were_authorized_under_historical_decision(status, e1, e2) -> None:
+    state = _historical_gate_e_recovery()
     state["gate_e"]["status"] = status
     state["gate_e"]["e1"] = e1
     state["gate_e"]["e2"] = e2
@@ -286,7 +302,7 @@ def test_second_product_correction_after_fresh_e1_is_not_pre_authorized() -> Non
 
 
 def test_e2_cannot_start_before_e1_clearance() -> None:
-    state = _state()
+    state = _historical_gate_e_recovery()
     state["gate_e"]["status"] = "e2_in_progress"
     state["gate_e"]["e1"] = "in_progress"
     state["gate_e"]["e2"] = "in_progress"
@@ -295,7 +311,7 @@ def test_e2_cannot_start_before_e1_clearance() -> None:
 
 
 def test_completed_e2_evidence_does_not_validate_user_value() -> None:
-    state = _state()
+    state = _historical_gate_e_recovery()
     state["gate_e"]["status"] = "evidence_complete_awaiting_outcome"
     state["gate_e"]["e1"] = "cleared"
     state["gate_e"]["e2"] = "complete"
@@ -303,17 +319,62 @@ def test_completed_e2_evidence_does_not_validate_user_value() -> None:
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
 
 
-def test_gate_e_recovery_is_the_only_authorized_next_target() -> None:
+def test_owner_closeout_stops_without_opening_a_successor() -> None:
     state = _state()
-    assert state['next_transition']['target'] == 'E'
-    assert state['gate_e']['disposition'] == 'evidence_recovery'
-    assert state['work_in_progress_limit'] == 1
-    assert state['github']['active_issues'] == [355]
-    for target in ('STOP', 'TEMPORAL_REGION_PROOF', 'D'):
+    assert state["work_in_progress_limit"] == 1
+    assert state["github"]["active_issues"] == [355]
+    assert state["gate_e"]["status"] == "closed"
+    assert state["gate_e"]["disposition"] == "owner_directed_closeout"
+    assert state["gate_e"]["e1"] == "owner_reported_pass"
+    assert state["gate_e"]["e2"] == "waived_not_collected"
+    assert state["gate_e"]["formal_user_value"] == "unvalidated"
+    assert state["gate_e"]["comparative_user_value"] == "unvalidated"
+    assert state["gate_e"]["successor_opened"] is False
+    assert state["next_transition"]["target"] == "STOP"
+    for target in ("E", "TEMPORAL_REGION_PROOF", "D"):
         changed = copy.deepcopy(state)
-        changed['next_transition']['target'] = target
-        with pytest.raises(ProjectStateError, match='must target E'):
+        changed["next_transition"]["target"] = target
+        with pytest.raises(ProjectStateError, match="closed Gate E must STOP"):
             validate_project_state(changed)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("e1", "cleared"),
+    ("e2", "complete"),
+    ("disposition", "evidence_recovery"),
+    ("comparative_user_value", "validated"),
+    ("successor_opened", True),
+])
+def test_closeout_cannot_promote_evidence_or_open_successor(field, value):
+    state = _state()
+    state["gate_e"][field] = value
+    with pytest.raises(ProjectStateError):
+        validate_project_state(state)
+
+
+@pytest.mark.parametrize("missing", ["comparative_user_value", "successor_opened"])
+def test_closeout_requires_explicit_value_and_successor_limits(missing):
+    state = _state()
+    state["gate_e"].pop(missing)
+    with pytest.raises(ProjectStateError, match="closeout must preserve"):
+        validate_project_state(state)
+
+
+def test_closeout_authority_cannot_resume_recovery():
+    state = _state()
+    state["gate_e"].update(status="e2_in_progress", e1="cleared", e2="in_progress")
+    state["next_transition"]["target"] = "E"
+    with pytest.raises(ProjectStateError, match="closeout cannot resume"):
+        validate_project_state(state)
+
+
+def test_closeout_cannot_use_old_recovery_authority():
+    state = _state()
+    ref = "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
+    state["gate_e"]["decision_ref"] = ref
+    state["next_transition"]["decision_ref"] = ref
+    with pytest.raises(ProjectStateError, match="explicit owner decision"):
+        validate_project_state(state)
 
 
 def test_region_work_is_not_named_as_a_gate() -> None:
@@ -343,4 +404,3 @@ def test_region_closeout_requires_registered_evidence():
     state["canonical_refs"].remove(state["region_closeout"]["evidence_ref"])
     with pytest.raises(ProjectStateError, match="Region closeout requires registered evidence"):
         validate_project_state(state)
-
