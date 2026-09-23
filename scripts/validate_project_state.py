@@ -333,7 +333,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.7 records the latest Gate D decision")
+        raise ProjectStateError("project_state v1.8 preserves the latest Gate D decision")
     if gate["status"] not in {"in_progress", "blocked", "completed"}:
         raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
@@ -367,23 +367,42 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("Gate E evidence recovery requires completed Region closeout")
     if gate["status"] != "completed" or gate.get("decision") != "ADVANCE_TO_GATE_E":
         raise ProjectStateError("Gate E cannot open before completed Gate D advancement")
-    if payload["next_transition"]["target"] != "E":
-        raise ProjectStateError("Gate E evidence recovery must target E after completed Gate D and Region closeout")
-    if payload["gate_e"]["decision_ref"] != payload["next_transition"]["decision_ref"] or payload["gate_e"]["decision_ref"] not in payload["canonical_refs"]:
-        raise ProjectStateError("Gate E authority and next work require one registered decision")
     gate_e = payload["gate_e"]
-    if gate_e["e2"] != "conditional_not_collected" and gate_e["e1"] != "cleared":
-        raise ProjectStateError("E2 cannot start before E1 clearance")
-    recovery_states = {
-        "evidence_recovery_authorized": ("ready_not_collected", "conditional_not_collected"),
-        "e1_in_progress": ("in_progress", "conditional_not_collected"),
-        "e1_cleared": ("cleared", "conditional_not_collected"),
-        "e2_preparation": ("cleared", "preparation"),
-        "e2_in_progress": ("cleared", "in_progress"),
-        "evidence_complete_awaiting_outcome": ("cleared", "complete"),
-    }
-    if (gate_e["e1"], gate_e["e2"]) != recovery_states[gate_e["status"]]:
-        raise ProjectStateError("Gate E recovery status/evidence state mismatch")
+    decision_ref = gate_e["decision_ref"]
+    if decision_ref != payload["next_transition"]["decision_ref"] or decision_ref not in payload["canonical_refs"]:
+        raise ProjectStateError("Gate E authority and next work require one registered decision")
+    if gate_e["status"] == "closed":
+        if decision_ref != "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md":
+            raise ProjectStateError("Gate E closeout requires its explicit owner decision")
+        if payload["next_transition"]["target"] != "STOP":
+            raise ProjectStateError("closed Gate E must STOP without opening a successor")
+        expected = {
+            "disposition": "owner_directed_closeout",
+            "e1": "owner_reported_pass",
+            "e2": "waived_not_collected",
+            "formal_user_value": "unvalidated",
+            "comparative_user_value": "unvalidated",
+            "successor_opened": False,
+        }
+        if any(gate_e.get(key) != value for key, value in expected.items()):
+            raise ProjectStateError("Gate E closeout must preserve report provenance, waived E2 and unvalidated value")
+    else:
+        if decision_ref != "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md" or gate_e["disposition"] != "evidence_recovery":
+            raise ProjectStateError("historical recovery requires its own authority; closeout cannot resume evidence collection")
+        if payload["next_transition"]["target"] != "E":
+            raise ProjectStateError("Gate E evidence recovery must target E")
+        if gate_e["e2"] != "conditional_not_collected" and gate_e["e1"] != "cleared":
+            raise ProjectStateError("E2 cannot start before E1 clearance")
+        recovery_states = {
+            "evidence_recovery_authorized": ("ready_not_collected", "conditional_not_collected"),
+            "e1_in_progress": ("in_progress", "conditional_not_collected"),
+            "e1_cleared": ("cleared", "conditional_not_collected"),
+            "e2_preparation": ("cleared", "preparation"),
+            "e2_in_progress": ("cleared", "in_progress"),
+            "evidence_complete_awaiting_outcome": ("cleared", "complete"),
+        }
+        if (gate_e["e1"], gate_e["e2"]) != recovery_states[gate_e["status"]]:
+            raise ProjectStateError("Gate E recovery status/evidence state mismatch")
     if payload["capability"]["world_slice"] != "gate_c_frozen_non_public":
         raise ProjectStateError("Gate D must begin from the frozen non-public Gate C World Slice")
     if 333 not in superseded or 334 not in deferred:
