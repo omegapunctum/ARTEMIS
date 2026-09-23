@@ -1,14 +1,14 @@
-# ARTEMIS — PROJECT PHASES v7.11
+# ARTEMIS — PROJECT PHASES v7.12
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens evidence collection only.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without opening a successor.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md) plus the accepted [Leonardo First-Use Comprehension Correction](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md) as the single bounded pre-E1 correction. The correction is implemented in #439, human-accepted and publication-verified; [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md) makes fresh E1 the next transition; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED. Region remains completed technical-only generalization evidence.
+Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-19.
-- Current phase: **5.1 — Gate E evidence recovery active; Temporal Region proof and M5 bounded UX correction completed**.
+- Date: 2026-09-23.
+- Current phase: **5.1 — Gate E closed by owner decision; no successor opened**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
@@ -160,11 +160,11 @@ It cannot draw unknown routes, add historical content, change Range/Scrub semant
 ## Post-M5 decisions and current execution
 
 - #414 completed the explicit Gate D exit ADVANCE_TO_GATE_E after review #413.
-- #415 completed protocol preparation; E1/E2 were NOT EXECUTED and remain NOT COLLECTED under the later explicit owner bypass. This is completed planning, not completed participant evidence.
+- #415 completed protocol preparation; E1/E2 were NOT EXECUTED / NOT COLLECTED under the historical owner bypass. The later recovery is now closed with E1 owner-reported PASS and E2 waived/not collected; the prepared protocol itself is not participant evidence.
 - #416 accepted future Global/Focus views of one canonical time; not implemented.
 - #418 implemented Place-centric v4.5 / Temporal Map v1.3; #419 stabilized fixed-dot label decluttering and is the accepted Leonardo interaction baseline `a1479670d7f7628ffb85b887961ff27654e2fa2f`: 9 Places / 11 distinct Presence episodes. Owner acceptance is closed; FORMAL USER VALUE UNVALIDATED.
 - The owner-bypass decision authorized exactly one source-first Roman Empire / Temporal Region universality proof; #421 merged that implementation with GENERALIZES technical evidence. No new M6 label, independent engine, dual timeline or automatic publication. Source states must meet the decision's comparability rule. The default Leonardo public proof remains unchanged.
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; original M5 remains complete with `ITERATE`; its UX correction is complete with `PROCEED_TO_GATE_D_REVIEW`. The current decision authorizes Gate E evidence recovery and one accepted pre-E1 First-Use comprehension correction; E1/E2 remain NOT COLLECTED and FORMAL USER VALUE UNVALIDATED until participant observations exist. The correction consumes the single product-correction allowance, so a later material E1 failure requiring another product correction is escalation. Region interactive owner review is completed; the active successor is evidence recovery only, with WIP limit one. Gate D vocabulary remains historical `ADVANCE_TO_GATE_E / NARROW / REJECT`; the recovery runway does not change M5 or Region semantics.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 and its correction retain their historical results. Gate E is closed by the [owner decision](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); E2 is waived/not collected and comparative user value remains unvalidated. Bounded contextual composition is a candidate only. Return to Command Center before any successor specification/implementation authorization. Region remains completed technical-only evidence.
