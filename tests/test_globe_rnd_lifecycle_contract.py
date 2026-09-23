@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Gate E evidence recovery`" in scope
+    assert "Current increment: `Gate E closed — no successor opened`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -135,10 +135,9 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Closeout adds no implementation" in priorities
     assert "single bounded pre-E1 product correction" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
-    assert "Conduct a fresh E1 with one independent novice" in state["next_transition"]["condition"]
-    assert "publication-verified Leonardo First-Use Comprehension Correction (#439)" in state["next_transition"]["condition"]
-    assert "exactly five participants" in state["next_transition"]["condition"]
-    assert "another product correction is escalation" in state["next_transition"]["condition"]
+    assert state["next_transition"]["target"] == "STOP"
+    assert "candidate proof only" in state["next_transition"]["condition"]
+    assert "separate specification and authorization" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
@@ -229,9 +228,9 @@ def test_public_runtime_includes_separate_region_preview_without_promotion() -> 
     stale["capability"]["public_runtime"] = "core_landing_globe_primary_atlas_compatibility"
     assert not jsonschema.Draft202012Validator(schema).is_valid(stale)
     assert state["active_vertical"]["id"] == "life-in-context-globe-mvp"
-    assert state["gate_e"]["disposition"] == "evidence_recovery"
-    assert state["gate_e"]["e1"] == "ready_not_collected"
-    assert state["gate_e"]["e2"] == "conditional_not_collected"
+    assert state["gate_e"]["disposition"] == "owner_directed_closeout"
+    assert state["gate_e"]["e1"] == "owner_reported_pass"
+    assert state["gate_e"]["e2"] == "waived_not_collected"
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
     assert state["capability"]["globe"] == "public_r_and_d_preview"
     surfaces = _text("docs/PROJECT_TRUTH.md").split("## 2.", 1)[1].split("## 3.", 1)[0]
@@ -239,3 +238,32 @@ def test_public_runtime_includes_separate_region_preview_without_promotion() -> 
         assert route in surfaces
     assert "separate public R&D preview" in surfaces
     assert "все три entry points" not in surfaces
+
+
+def test_current_owners_close_gate_e_without_comparative_value_or_successor():
+    state = _json("docs/project_state.json")
+    ref = state["gate_e"]["decision_ref"]
+    closeout = _text(ref)
+    assert "owner-reported PASS" in closeout
+    assert "Raw task observations" in closeout
+    assert "Multi-Perspective Review" in closeout
+    assert "no full review artifact" in closeout
+    assert "not full **Life in Context**" in closeout
+    assert "R2, agents, MCP, memory and simulation" in closeout
+    for path in (
+        "docs/PROJECT_TRUTH.md", "docs/work/README.md", "docs/PRIORITIES.md",
+        "docs/PROJECT_PHASES.md", "docs/VALIDATION_DECISION.md",
+        "docs/ARTEMIS_PRODUCT_SCOPE.md",
+    ):
+        text = _text(path)
+        assert ref.split("/")[-1] in text
+        assert "Gate E closed" in text
+        assert "E2 NOT COLLECTED / WAIVED" in text
+        assert "Comparative user value remains UNVALIDATED" in text
+        assert "No successor product branch is opened" in text
+        for stale in (
+            "Conduct a fresh E1 next", "Fresh E1 is next",
+            "fresh E1 the next transition", "fresh E1 next",
+            "execute E1 →", "The active successor is Gate E evidence recovery",
+        ):
+            assert stale not in text, (path, stale)
