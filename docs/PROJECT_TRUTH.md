@@ -1,14 +1,14 @@
 # ARTEMIS — PROJECT TRUTH
 
-First-Use comprehension correction — accepted 2026-09-19: [Leonardo First-Use Comprehension Correction v1](work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). It is the one bounded pre-E1 product correction inside Gate E recovery and consumes the runway's single product-correction allowance. Implemented in #439, human-accepted and publication-verified on 2026-09-20; see [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). The next transition is fresh E1; any later material E1 failure requiring another product correction is escalation. E1/E2 remain NOT COLLECTED and formal user value remains UNVALIDATED.
+First-Use correction: implemented in #439, human-accepted and publication-verified; preserved as completed evidence. The former fresh-E1 handoff is superseded by the [owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md).
 
-Gate E evidence recovery — accepted 2026-09-19: [current decision/specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional on E1 clearance / NOT COLLECTED; formal user value remains UNVALIDATED. The authorized runway is accepted First-Use correction → implementation/publication verification → fresh E1 → E2 with exactly five participants → final Gate E outcome. No new Command Center decision is required inside that runway except a real escalation or the final Gate E outcome.
+Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner decision](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); its participant sequence is no longer current execution authority.
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; the later Gate E recovery decision opens participant-evidence collection only, not a new product capability.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; Gate E is now closed without opening a successor.
 
-Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, E1/E2 NOT COLLECTED and formal user value UNVALIDATED. See [verification record](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
+Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, at that recording date E1/E2 were NOT COLLECTED and formal user value UNVALIDATED. See [verification record](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). The 2026-09-10 owner-directed bypass remains historical authority for why Region proceeded without participant evidence; it no longer blocks recovery of E1/E2 evidence. E1/E2 observations remain NOT COLLECTED and formal user value remains UNVALIDATED until participant evidence is actually recorded. Region remains completed GENERALIZES technical-only evidence and does not count as a Gate E value signal.
+Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Статус
 
@@ -18,7 +18,7 @@ Current Leonardo presentation: #439, merge `be992184f04f020bb7f769b980403d0899f0
 
 Historical Leonardo interaction baseline: #419, merge `a1479670d7f7628ffb85b887961ff27654e2fa2f`, publication verified 2026-09-09 by live runtime/CSS equality. It stabilizes merged/published #418 (`b628a80c4b0dd6c7c5485029c4ce4d1c49d4eec4`), the Place-centric v4.5 / Temporal Map v1.3 implementation: 9 fixed Place anchors / 11 distinct Presence episodes; repeated counts; presentation-only dashed chronology and midpoint cues; one-handle default Scrub with legacy URL restoration; Range interval semantics; unknown/null historical routes. #416 remains the accepted future Global/Focus decision over one canonical time, not implementation.
 
-The owner reports NO FINDINGS for the published #418 review and accepted #419. This closes owner acceptance only. No independent session/device/task observations are inferred. The historical bypass left E1/E2 NOT COLLECTED; the 2026-09-19 recovery specification now authorizes collection without retroactively inventing a session. The completed Region proof was authorized by owner direction, not participant evidence. The merged Region package contains one Roman Empire Entity and three comparable Cliopatria territorial reconstructions for 91–105, 106–113 and 114–116 CE; see [source audit and closeout](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md).
+The owner reports NO FINDINGS for the published #418 review and accepted #419. This closes owner acceptance only. No independent session/device/task observations are inferred. The historical bypass left E1/E2 NOT COLLECTED; the later recovery is now closed; E1 is owner-reported PASS, while E2 was waived without collection. The completed Region proof was authorized by owner direction, not participant evidence. The merged Region package contains one Roman Empire Entity and three comparable Cliopatria territorial reconstructions for 91–105, 106–113 and 114–116 CE; see [source audit and closeout](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md).
 
 Historical M5 closeout: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
@@ -78,7 +78,7 @@ GitHub Pages публикует статический runtime:
 - `/region/` как separate public R&D preview ограниченного Roman Empire / Temporal Region proof;
 - все четыре entry points не требуют backend API.
 
-Region publication is availability evidence only: E1/E2 remain NOT COLLECTED,
+Region publication is availability evidence only: E2 is NOT COLLECTED / WAIVED,
 formal user value remains UNVALIDATED; Leonardo remains the primary research surface.
 
 GitHub Pages не исполняет FastAPI. Без отдельно настроенного `ARTEMIS_API_BASE` публичный сайт не предоставляет рабочие auth, Research Slices, Stories, Courses, uploads и moderation API.
@@ -231,9 +231,9 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ## 7. Текущий operational verdict
 
-ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E owner-directed bypass, E1/E2 NOT COLLECTED / bounded Region proof merged in #421 / Region live publication verified (owner-supplied evidence) / formal user value not yet validated**.
+ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E closed by owner decision, E1 owner-reported PASS, E2 NOT COLLECTED / WAIVED / bounded Region proof merged in #421 / Region live publication verified (owner-supplied evidence) / formal user value not yet validated**.
 
-Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a separate public R&D preview. The Globe remains non-product-validated and consumes draft/rejected historical Claims. Foundation contracts remain ahead of user evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
+Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a separate public R&D preview. The Globe remains non-product-validated and consumes draft/rejected historical Claims. The current Leonardo/Globe scaffold does not establish full Life in Context. Foundation contracts remain ahead of comparative user-value evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
 Reviewed/accepted foundation and implementation evidence includes:
 
@@ -268,7 +268,7 @@ Completed/deferred Airtable data-governance evidence now includes:
 - #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
 - #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
-Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D is completed with ADVANCE_TO_GATE_E; #355 remains the active product umbrella for Gate E preparation. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
+Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D is completed with ADVANCE_TO_GATE_E; Gate E is now closed by owner decision. #355 remains the product umbrella awaiting Command Center, without successor execution authority. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 
@@ -276,7 +276,7 @@ Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESS
 
 1. preserve M4 `ADOPT`, the honest M4 → M5 deviation record and PR #406 as the bounded 11-Presence proof;
 2. preserve the direct M5 result as exactly `ITERATE`;
-3. preserve #409/#411/#412 as completed scope/implementation/publication/owner-acceptance evidence; preserve accepted closeout #413 and the explicit Gate D exit `ADVANCE_TO_GATE_E`; prepare one bounded Gate E evidence protocol;
+3. preserve #409/#411/#412 as completed scope/implementation/publication/owner-acceptance evidence; preserve accepted closeout #413 and the historical Gate D exit `ADVANCE_TO_GATE_E`; respect the owner-directed Gate E closeout and return to Command Center without opening a successor;
 4. keep unknown routes geometry-free and distinguish chronology from historical travel;
 5. preserve #410 as scheduled-CI-confirmed maintenance evidence; do not reopen that repair.
 
