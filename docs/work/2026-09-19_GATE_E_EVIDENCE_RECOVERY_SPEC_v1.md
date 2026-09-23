@@ -1,5 +1,7 @@
 # Gate E — evidence recovery decision/specification v1
 
+Lifecycle update — 2026-09-23: the [owner-directed Gate E closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md) supersedes all fresh-E1/E2 next-step instructions below. Gate E is closed, E2 NOT COLLECTED / WAIVED, comparative user value UNVALIDATED; no successor opened. The original decision/evidence is preserved below as history.
+
 - Date: 2026-09-19.
 - Status: **ACCEPTED / current Gate E execution authority**.
 - Owner: issue #355.
