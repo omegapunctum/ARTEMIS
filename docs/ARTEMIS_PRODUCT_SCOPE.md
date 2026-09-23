@@ -1,12 +1,12 @@
 # ARTEMIS — PRODUCT SCOPE
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. The later Gate E recovery decision opens participant evidence only, without changing product capability.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without a comparative value outcome.
 
-Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, E1/E2 NOT COLLECTED and formal user value UNVALIDATED. See [verification record](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
+Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, at that recording date E1/E2 were NOT COLLECTED and formal user value UNVALIDATED. See [verification record](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
 
-Owner-directed bounded correction after #417: one fixed spatial anchor per canonical Place, compact name and visible-episode count; Presence episodes remain distinct in timeline/selection/URL and popup/details. Remove persistent date cards, tethers and spatial displacement. Suppress colliding text by Place priority while retaining interactive dots and hover/focus access. This v4.5 correction preserves the earlier #416 v4.4 future-navigation decision. Mid-segment chevrons on low-opacity dashed links express chronology only, with selected/current transition emphasis. Scrub has one current-time handle and no visible Build from control; default origin is the earliest axis extent (1452). Valid saved `from` values remain internal origins; invalid/missing values use the first axis value, and `at` before origin clamps to origin. No coordinates, historical routes, data, Gate E tasks or future Global+Focus Timeline scope change. The correction is merged/published through #418/#419; the Leonardo interaction baseline is #419. The 2026-09-10 bypass remains historical and did not pass E1/E2; the accepted 2026-09-19 Gate E recovery specification now authorizes collecting that missing participant evidence.
+Owner-directed bounded correction after #417: one fixed spatial anchor per canonical Place, compact name and visible-episode count; Presence episodes remain distinct in timeline/selection/URL and popup/details. Remove persistent date cards, tethers and spatial displacement. Suppress colliding text by Place priority while retaining interactive dots and hover/focus access. This v4.5 correction preserves the earlier #416 v4.4 future-navigation decision. Mid-segment chevrons on low-opacity dashed links express chronology only, with selected/current transition emphasis. Scrub has one current-time handle and no visible Build from control; default origin is the earliest axis extent (1452). Valid saved `from` values remain internal origins; invalid/missing values use the first axis value, and `at` before origin clamps to origin. No coordinates, historical routes, data, Gate E tasks or future Global+Focus Timeline scope change. The correction is merged/published through #418/#419; the Leonardo interaction baseline is #419. The 2026-09-10 bypass remains historical and did not pass E1/E2; the subsequent recovery is now closed by the 2026-09-23 owner decision.
 
-Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md). E1 is authorized / NOT COLLECTED; E2 is conditional / NOT COLLECTED; formal user value remains UNVALIDATED. This is an evidence-collection decision, not a capability expansion. Region remains completed technical-only generalization evidence.
+Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Статус
 
@@ -14,7 +14,7 @@ Current decision: [Gate E evidence recovery specification](work/2026-09-19_GATE_
 - Версия: 4.7.
 - Дата: 2026-09-19.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Gate E evidence recovery`; Region proof remains completed technical evidence; user value unvalidated.
+- Current increment: `Gate E closed — no successor opened`; Region remains completed technical evidence; comparative user value unvalidated.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -217,6 +217,8 @@ For the current M5 checkpoint:
 - PR #314 is not a Foundation prerequisite;
 - no new public backend is required unless evidence shows the static read-only loop is insufficient.
 
+The owner accepts Multi-Perspective System Review v1 as decision-preparation evidence: preserve the semantic core, but the current Leonardo/Globe scaffold does not establish full Life in Context. Bounded contextual composition is a candidate only; no data, implementation or successor branch is authorized. R2, agents, MCP, memory and simulation remain deferred.
+
 ## 8. Frozen scope
 
 Outside Leonardo preservation and the single bounded Region proof exception below:
@@ -289,7 +291,7 @@ The earlier post-#396 result vocabulary was:
 - `NARROW` — reduce the loop/content scope;
 - `STOP/RETHINK` — stop this approach and revisit the hypothesis.
 
-The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. The accepted Gate D review and explicit exit record `ADVANCE_TO_GATE_E`; Gate D is completed. The owner now bypasses E1/E2 with observations NOT COLLECTED and user value UNVALIDATED; the single authorized bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Context/layers, storage, sharing and broad provider work remain unopened.
+The recorded M1 result is `ITERATE`; M2 completed through PR #401 with `PROCEED_TO_M3`; M3 completed through PR #403 with `PROCEED_TO_M4`; M4 completed with `ADOPT`; M5 completed with `ITERATE`. PR #409 scoped the correction implemented and published through #411/#412, now completed with `PROCEED_TO_GATE_D_REVIEW`. The accepted Gate D review and explicit exit record `ADVANCE_TO_GATE_E`; Gate D is completed. Gate E is now closed by owner decision with E1 owner-reported PASS, E2 NOT COLLECTED / WAIVED and comparative user value UNVALIDATED; the single authorized bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Context/layers, storage, sharing and broad provider work remain unopened.
 
 The Global Timeline + Focus Timeline direction in section 4.1 is an accepted future constraint, not an opened implementation branch. It requires a separate evidence-backed scope decision before code/schema work.
 
