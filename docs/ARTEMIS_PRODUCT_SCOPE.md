@@ -6,7 +6,9 @@ Publication verification — 2026-09-13: **live publication verified** from owne
 
 Owner-directed bounded correction after #417: one fixed spatial anchor per canonical Place, compact name and visible-episode count; Presence episodes remain distinct in timeline/selection/URL and popup/details. Remove persistent date cards, tethers and spatial displacement. Suppress colliding text by Place priority while retaining interactive dots and hover/focus access. This v4.5 correction preserves the earlier #416 v4.4 future-navigation decision. Mid-segment chevrons on low-opacity dashed links express chronology only, with selected/current transition emphasis. Scrub has one current-time handle and no visible Build from control; default origin is the earliest axis extent (1452). Valid saved `from` values remain internal origins; invalid/missing values use the first axis value, and `at` before origin clamps to origin. No coordinates, historical routes, data, Gate E tasks or future Global+Focus Timeline scope change. The correction is merged/published through #418/#419; the Leonardo interaction baseline is #419. The 2026-09-10 bypass remains historical and did not pass E1/E2; the subsequent recovery is now closed by the 2026-09-23 owner decision.
 
-Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+
+Current bounded scope — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is the only owner-authorized successor under `REVIEW`: one artifact `ATL.1466.1 / fol. 733 verso`, two attributed competing dating Claims using existing epistemic and temporal contracts. **EVIDENCE_CLOSURE_REQUIRED** before reviewed case data or runtime work; no additional scholars, new canonical type, source ranking, second case or generalized conflict system. This authorization does not revise Gate E/value or the deferred contextual composition result.
 
 ## Статус
 
@@ -14,7 +16,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23
 - Версия: 4.7.
 - Дата: 2026-09-19.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Gate E closed — no successor opened`; Region remains completed technical evidence; comparative user value unvalidated.
+- Current increment: `Epistemic Conflict / Uncertainty Proof v1 authorized — evidence closure required`; Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
