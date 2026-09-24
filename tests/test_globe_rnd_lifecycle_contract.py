@@ -136,8 +136,8 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "single bounded pre-E1 product correction" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
     assert state["next_transition"]["target"] == "STOP"
-    assert "candidate proof only" in state["next_transition"]["condition"]
-    assert "separate specification and authorization" in state["next_transition"]["condition"]
+    assert "contextual composition DEFERRED" in state["next_transition"]["condition"]
+    assert "No Product Specification, implementation authorization or successor" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
@@ -250,6 +250,15 @@ def test_current_owners_close_gate_e_without_comparative_value_or_successor():
     assert "no full review artifact" in closeout
     assert "not full **Life in Context**" in closeout
     assert "R2, agents, MCP, memory and simulation" in closeout
+    contextual = state["contextual_composition"]
+    contextual_closeout = _text(contextual["closeout_ref"])
+    assert "accepted" in contextual_closeout.lower()
+    assert "STOP_PROOF_A" in contextual_closeout
+    assert "NO_QUALIFYING_SNAPSHOT" in contextual_closeout
+    assert "DEFERRED" in contextual_closeout
+    assert "candidate inventory" in contextual_closeout.lower()
+    assert state["next_transition"]["decision_ref"] == contextual["closeout_ref"]
+    assert state["next_transition"]["target"] == "STOP"
     for path in (
         "docs/PROJECT_TRUTH.md", "docs/work/README.md", "docs/PRIORITIES.md",
         "docs/PROJECT_PHASES.md", "docs/VALIDATION_DECISION.md",
@@ -257,6 +266,7 @@ def test_current_owners_close_gate_e_without_comparative_value_or_successor():
     ):
         text = _text(path)
         assert ref.split("/")[-1] in text
+        assert contextual["closeout_ref"].split("/")[-1] in text
         assert "Gate E closed" in text
         assert "E2 NOT COLLECTED / WAIVED" in text
         assert "Comparative user value remains UNVALIDATED" in text
