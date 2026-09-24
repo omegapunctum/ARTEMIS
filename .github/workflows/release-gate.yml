@@ -51,6 +51,16 @@ jobs:
           assert metadata["capability_path_is_semantic"] is False
           PY
 
+      - name: Build the non-public ATL conflict review proof
+        run: python scripts/build_atl_conflict_proof.py --output /tmp/artemis-atl-conflict-proof
+
+      - name: Attach ATL conflict review proof to PR run
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: atl-conflict-review-proof
+          path: /tmp/artemis-atl-conflict-proof/
+
       - name: Run ARTEMIS Core regression tests
         run: |
           pytest -q \
@@ -68,4 +78,5 @@ jobs:
             tests/test_renderer_parity.py \
             tests/test_temporal_map_m2_proof.py \
             tests/test_temporal_map_m3_proof.py \
-            tests/test_uncertainty_fixtures.py
+            tests/test_uncertainty_fixtures.py \
+            tests/test_atl_conflict_proof.py
