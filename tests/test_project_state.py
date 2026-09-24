@@ -347,7 +347,13 @@ def test_owner_closeout_preserved_with_one_evidence_gated_successor() -> None:
     assert proof["evidence_state"] == "not_closed"
     assert proof["runtime_data_promotion_authorized"] is False
     assert proof["implementation_completion"] == "not_started"
-    assert proof["specification_provenance"] == "owner_reported_accepted_text_not_in_repository"
+    assert proof["decision"] == "NARROW_EPISTEMIC_CONFLICT_PROOF_V1"
+    assert proof["product_ux_disposition"] == "SPEC_AMENDMENT_READY"
+    assert proof["specification_provenance"] == "consolidated_owner_handoff_and_accepted_amendment_in_repository"
+    assert proof["specification_ref"] in state["canonical_refs"]
+    assert proof["implementation_started"] is False
+    assert proof["numerical_query_envelopes_required"] is False
+    assert proof["case_specific_range_scrub_authorized"] is False
     assert proof["human_review"] == "pending"
     assert proof["additional_successor_opened"] is False
     assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
@@ -428,6 +434,9 @@ def test_contextual_closeout_remains_registered_without_being_current_transition
 
 @pytest.mark.parametrize("field,value", [
     ("evidence_state", "closed"),
+    ("implementation_started", True),
+    ("numerical_query_envelopes_required", True),
+    ("case_specific_range_scrub_authorized", True),
     ("runtime_data_promotion_authorized", True),
     ("implementation_completion", "completed"),
     ("human_review", "accepted"),
@@ -445,6 +454,11 @@ def test_conflict_authorization_requires_registered_current_decision():
     ref = state["epistemic_conflict_proof"]["decision_ref"]
     state["canonical_refs"].remove(ref)
     with pytest.raises(ProjectStateError, match="registered owner authority"):
+        validate_project_state(state)
+    state = _state()
+    ref = state["epistemic_conflict_proof"]["specification_ref"]
+    state["canonical_refs"].remove(ref)
+    with pytest.raises(ProjectStateError, match="registered accepted specification"):
         validate_project_state(state)
     state = _state()
     state.pop("epistemic_conflict_proof")

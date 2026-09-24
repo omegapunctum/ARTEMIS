@@ -6,7 +6,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23
 
 Historical bounded research closeout — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. No Product Specification, implementation or successor is authorized; `next_transition` was **STOP / Command Center** at that closeout.
 
-Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) on `ATL.1466.1 / fol. 733 verso` is authorized as implementation-after-DECISION / `REVIEW`. Research/curation evidence is not closed: **EVIDENCE_CLOSURE_REQUIRED** before data or runtime promotion. Prior Gate E and contextual dispositions are unchanged. No further successor is authorized.
+Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) on `ATL.1466.1 / fol. 733 verso` is authorized as implementation-after-DECISION / `REVIEW`. `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` is recorded in [accepted specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Research/curation evidence is not closed: **EVIDENCE_CLOSURE_REQUIRED** before data or runtime promotion; numerical query envelopes and case-specific Range/Scrub are outside v1. Prior Gate E and contextual dispositions are unchanged. No further successor is authorized.
 
 ## Status
 
