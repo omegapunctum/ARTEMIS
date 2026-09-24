@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.11.0",
+  "schema_version": "1.12.0",
   "project": "ARTEMIS",
   "updated_at": "2026-09-24",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
@@ -170,14 +170,16 @@
     "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md",
     "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md",
     "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
-    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md"
+    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md",
+    "docs/work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md",
+    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md"
   ],
   "blockers": [],
   "next_transition": {
     "target": "EPISTEMIC_CONFLICT_PROOF",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
-    "condition": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1 / SPEC_AMENDMENT_READY: bounded Product Specification v1.1 recorded for one artifact ATL.1466.1 / fol. 733 verso and two unresolved source-native dating assertions. EVIDENCE_CLOSURE_REQUIRED before historical data promotion or runtime work: exact common Claim subject, reproducible Museo Galileo locators, direct-vs-mediated provenance, separately reviewed Claims and EvidenceLinks, existing epistemic classification/source-conflict uncertainty, circa wording, and reviewed conditional two-period-use provenance. Numerical query envelopes and case-specific Range/Scrub are outside v1. Research stop at the obsolete envelope gate was not an evidence failure. Gate E closed without VALUE_SIGNAL; E2 waived/not collected; comparative/formal value UNVALIDATED; contextual composition DEFERRED; no further successor."
+    "condition": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1 / SPEC_AMENDMENT_READY: owner ACCEPT_EVIDENCE_PACKAGE for package atl-1466-1-733v-dating-attribution-v1 at PR #451 head 5e0c86e7dcc985e4ecd38789772c02e55a5021c3, merged cd12755ed6442e556524ac5ab12f034c25bf7885. Narrowed evidence gate accepted/closed; implementation-ready under specification v1.1, implementation_started=false. Evidence human review accepted; future implementation presentation/interaction review remains pending before its merge. No numerical query envelopes or case-specific Range/Scrub; one artifact and two unresolved source-native mediated scholarly attributions only. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected, comparative/formal value UNVALIDATED; contextual composition DEFERRED; no additional successor."
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -238,14 +240,14 @@
     "closeout_ref": "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"
   },
   "epistemic_conflict_proof": {
-    "status": "authorized_evidence_closure_required",
+    "status": "implementation_ready",
     "autonomy": "review_implementation_after_decision",
     "subject": "ATL.1466.1 / fol. 733 verso",
-    "evidence_state": "not_closed",
+    "evidence_state": "accepted",
     "specification_provenance": "consolidated_owner_handoff_and_accepted_amendment_in_repository",
-    "runtime_data_promotion_authorized": false,
+    "runtime_data_promotion_authorized": true,
     "implementation_completion": "not_started",
-    "human_review": "pending",
+    "human_review": "accepted",
     "additional_successor_opened": false,
     "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
     "decision": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1",
@@ -253,7 +255,17 @@
     "specification_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md",
     "implementation_started": false,
     "numerical_query_envelopes_required": false,
-    "case_specific_range_scrub_authorized": false
+    "case_specific_range_scrub_authorized": false,
+    "evidence_verdict": "ACCEPT_EVIDENCE_PACKAGE",
+    "evidence_package_id": "atl-1466-1-733v-dating-attribution-v1",
+    "evidence_package_ref": "docs/work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md",
+    "evidence_package_blob": "170d1a7ef2fa5aecd504805d4e5b173d4de16f26",
+    "reviewed_pr_head": "5e0c86e7dcc985e4ecd38789772c02e55a5021c3",
+    "evidence_merge_commit": "cd12755ed6442e556524ac5ab12f034c25bf7885",
+    "evidence_review_comment_id": 5811369499,
+    "evidence_closeout_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md",
+    "human_review_scope": "evidence_package_only",
+    "implementation_presentation_review": "pending"
   },
   "region_closeout": {
     "implementation": "completed",

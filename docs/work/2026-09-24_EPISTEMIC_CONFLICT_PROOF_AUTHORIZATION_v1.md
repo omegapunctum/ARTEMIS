@@ -5,9 +5,9 @@
 - Authority: explicit Command Center implementation authorization supplied in the owner-provided Engineering handoff. Classification: implementation-after-`DECISION`, `REVIEW`.
 - Subject: exactly one artifact, Codex Atlanticus `ATL.1466.1 / fol. 733 verso`.
 - Intended scholarly positions, pending reviewed Claim-level evidence: Heydenreich **circa 1490** and Pedretti **circa 1514–1515**. These are attributions, not established dates of production.
-- Current execution state: **EVIDENCE_CLOSURE_REQUIRED**. Historical-data promotion and runtime implementation are stopped at the evidence gate.
+- Initial execution state: **EVIDENCE_CLOSURE_REQUIRED** (historical until PR #451 acceptance). Current state: [owner-accepted evidence package / implementation-ready](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md); implementation not started.
 
-Current owner decision (2026-09-24): **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1`**; Product & UX disposition: **`SPEC_AMENDMENT_READY`**. The accepted bounded Product Specification and accepted Amendment are durably consolidated in [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The original standalone text was absent from GitHub; v1.1 explicitly identifies its owner-provided handoff and narrowing provenance. This v1.1 record is the current bounded implementation authority. `implementation_started = false`.
+Current owner decision (2026-09-24): **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1`**; Product & UX disposition: **`SPEC_AMENDMENT_READY`**. The accepted bounded Product Specification and accepted Amendment are durably consolidated in [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The original standalone text was absent from GitHub; v1.1 explicitly identifies its owner-provided handoff and narrowing provenance. This v1.1 record is the current bounded implementation authority. `implementation_started = false`. Owner-accepted [evidence package v1](2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) and its exact revision are recorded in the [closeout](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md).
 
 ## Authorized bounded behavior
 
@@ -23,7 +23,7 @@ The future bounded implementation requires a human presentation/interaction revi
 
 ## Mandatory research/curation closure before runtime
 
-The required package is **not closed in main**. Before importing case data or implementing runtime behavior, a reviewed versioned package must establish:
+At this authorization's initial recording, the required package was **not closed in main**. The later owner verdict `ACCEPT_EVIDENCE_PACKAGE` closes this gate at the [accepted revision](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md). The following list preserves the acceptance criteria applied to that package. Before importing case data or implementing runtime behavior, a reviewed versioned package must establish:
 
 1. a reproducible Museo Galileo locator for both dating attributions, Pedretti's cited reasoning and the attributed possible two-period use;
 2. whether the attribution is mediated by the catalogue or supported by separately reviewed direct Heydenreich/Pedretti publication locators;
@@ -32,10 +32,10 @@ The required package is **not closed in main**. Before importing case data or im
 5. reviewed canonical epistemic classification and the provenance of the conditional two-period qualifier;
 6. one exact common bounded Claim subject and source-native `circa` expressions (`c.1490`, `c.1514–1515`) preserved as unresolved alternative scholarly assertions, without invented years or bounds.
 
-The eight post-narrowing evidence conditions are expanded in [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Reviewed numerical query envelopes for either expression are **not** required for v1. The Research `STOP_CONFLICT_PROOF_V1` occurred solely under the superseded envelope prerequisite; no common-subject/evidence evaluation was completed. It is **not** a historical or evidence failure of the case. Case-specific reviewed Claims, EvidenceLinks, locators, provenance, classification and qualifier remain unclosed. An engineering agent must not substitute its own interpretation for Research/curation closure. **EVIDENCE_CLOSURE_REQUIRED** remains in force.
+The eight post-narrowing evidence conditions are expanded in [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Reviewed numerical query envelopes for either expression are **not** required for v1. The Research `STOP_CONFLICT_PROOF_V1` occurred solely under the superseded envelope prerequisite; no common-subject/evidence evaluation was completed. It is **not** a historical or evidence failure of the case. At the earlier Research stop these case-specific items were unclosed; the owner later accepted the [bounded package](2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md). **EVIDENCE_CLOSURE_REQUIRED is cleared** for this v1 contour. Engineering must consume the accepted revision without reinterpreting its evidence.
 
 ## Lifecycle and preserved decisions
 
 This one authorized successor replaces the earlier `STOP / Command Center` next transition only within this exact contour. It does not reverse the [Gate E owner-directed closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md): E2 remains NOT COLLECTED / WAIVED and formal/comparative value remains UNVALIDATED. [Contextual composition](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) remains DEFERRED. Region GENERALIZES remains technical only. No public or implementation capability is claimed. Issue #355 remains the single existing product umbrella; there is no parallel successor.
 
-The next permitted action is Research/curation evidence closure under the narrowed [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md) boundary. Return to Command Center if the exact Claim subject, honest provenance or reviewed Claims/EvidenceLinks cannot be established under existing semantics. This decision record does **not** constitute the evidence package or authorize promotion before review.
+The next permitted action, following the [accepted evidence closeout](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md), is bounded Engineering implementation under [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Return to Command Center if the exact Claim subject, honest provenance or reviewed Claims/EvidenceLinks cannot be established under existing semantics. This decision record does **not** constitute the evidence package or authorize promotion before review.

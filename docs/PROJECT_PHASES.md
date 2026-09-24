@@ -6,13 +6,13 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23
 
 Historical bounded research closeout — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. No Product Specification, implementation or successor is authorized; `next_transition` was **STOP / Command Center** at that closeout.
 
-Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) on `ATL.1466.1 / fol. 733 verso` is authorized as implementation-after-DECISION / `REVIEW`. `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` is recorded in [accepted specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Research/curation evidence is not closed: **EVIDENCE_CLOSURE_REQUIRED** before data or runtime promotion; numerical query envelopes and case-specific Range/Scrub are outside v1. Prior Gate E and contextual dispositions are unchanged. No further successor is authorized.
+Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) on `ATL.1466.1 / fol. 733 verso` is authorized as implementation-after-DECISION / `REVIEW`. `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` is recorded in [accepted specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The owner accepted [package v1](work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) through PR #451 head `5e0c86e7dcc985e4ecd38789772c02e55a5021c3`; [closeout](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) marks the proof **implementation-ready**, with implementation not started. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Prior Gate E and contextual dispositions are unchanged. No further successor is authorized.
 
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-09-24.
-- Current phase: **5.1 — Gate E closed; one bounded conflict proof authorized, evidence closure required**.
+- Current phase: **5.1 — Gate E closed; one bounded conflict proof implementation-ready, evidence accepted**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
