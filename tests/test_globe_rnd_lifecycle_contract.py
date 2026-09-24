@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Gate E closed — no successor opened`" in scope
+    assert "Current increment: `Epistemic Conflict / Uncertainty Proof v1 authorized — evidence closure required`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -135,9 +135,9 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Closeout adds no implementation" in priorities
     assert "single bounded pre-E1 product correction" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
-    assert state["next_transition"]["target"] == "STOP"
+    assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
+    assert "EVIDENCE_CLOSURE_REQUIRED" in state["next_transition"]["condition"]
     assert "contextual composition DEFERRED" in state["next_transition"]["condition"]
-    assert "No Product Specification, implementation authorization or successor" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
     assert "PROCEED_TO_M3" in m2
@@ -257,8 +257,12 @@ def test_current_owners_close_gate_e_without_comparative_value_or_successor():
     assert "NO_QUALIFYING_SNAPSHOT" in contextual_closeout
     assert "DEFERRED" in contextual_closeout
     assert "candidate inventory" in contextual_closeout.lower()
-    assert state["next_transition"]["decision_ref"] == contextual["closeout_ref"]
-    assert state["next_transition"]["target"] == "STOP"
+    proof = state["epistemic_conflict_proof"]
+    proof_decision = _text(proof["decision_ref"])
+    assert "EVIDENCE_CLOSURE_REQUIRED" in proof_decision
+    assert "not present in GitHub" in proof_decision
+    assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
+    assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
     for path in (
         "docs/PROJECT_TRUTH.md", "docs/work/README.md", "docs/PRIORITIES.md",
         "docs/PROJECT_PHASES.md", "docs/VALIDATION_DECISION.md",
@@ -267,10 +271,10 @@ def test_current_owners_close_gate_e_without_comparative_value_or_successor():
         text = _text(path)
         assert ref.split("/")[-1] in text
         assert contextual["closeout_ref"].split("/")[-1] in text
+        assert proof["decision_ref"].split("/")[-1] in text
         assert "Gate E closed" in text
         assert "E2 NOT COLLECTED / WAIVED" in text
         assert "Comparative user value remains UNVALIDATED" in text
-        assert "No successor product branch is opened" in text
         for stale in (
             "Conduct a fresh E1 next", "Fresh E1 is next",
             "fresh E1 the next transition", "fresh E1 next",
