@@ -8,12 +8,14 @@ Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-0
 
 Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, at that recording date E1/E2 were NOT COLLECTED and formal user value UNVALIDATED. See [verification record](2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
 
-Current decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+
+Current bounded research closeout — recorded 2026-09-24: [Contextual Snapshot Candidate Search v1](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized for research only; owner-reported outcomes are `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED**; Product Specification and implementation are not authorized. Next transition stays **STOP / Command Center**; no successor opened. Source-level search detail was not supplied with this closeout.
 
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-23.
+- Updated: 2026-09-24.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -29,6 +31,12 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 | `2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md` | Completed source/implementation/publication evidence | GENERALIZES technical only |
 | `2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md` | Completed human owner review | Both findings resolved / retest PASS; return to Command Center |
 
+## Completed contextual research branch
+
+| Document | Lifecycle | Disposition |
+|---|---|---|
+| `2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md` | Bounded research closeout, owner-reported outcomes | Accepted research authorization → `STOP_PROOF_A` → `NO_QUALIFYING_SNAPSHOT` → contextual composition `DEFERRED`; no Product Specification/implementation authorization; STOP / Command Center |
+
 ## Engineering tooling design
 
 | Document | Lifecycle | Limitation |
@@ -39,7 +47,7 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 
 | Document | Lifecycle | Disposition |
 |---|---|---|
-| `2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md` | Current owner-directed closeout | Gate E closed; E2 not collected/waived; comparative value unvalidated; STOP, no successor |
+| `2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md` | Completed owner-directed Gate E closeout | Gate E closed; E2 not collected/waived; comparative value unvalidated; STOP, no successor |
 | `2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md` | Historical authorization; execution superseded | E2 waived by closeout; no current collection transition |
 | `2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md` | Completed specification/implementation evidence | #439 human-accepted and publication-verified |
 | `2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md` | Completed publication evidence | Former E1 handoff superseded; no comparative value claim |
@@ -48,7 +56,7 @@ Multi-Perspective Review is accepted as decision-preparation evidence
 by the owner; its bounded implication and provenance limits are recorded in
 the closeout above. Preserve the semantic core; the current Leonardo/Globe
 scaffold does not establish full Life in Context. Bounded contextual composition
-is a candidate proof only, not active implementation.
+was a research candidate; the bounded search is now closed with no qualifying snapshot, so contextual composition is deferred.
 
 ## Maintained runtime contracts and compatibility procedures
 
