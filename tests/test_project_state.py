@@ -26,6 +26,7 @@ def _state() -> dict:
 def _historical_gate_e_recovery() -> dict:
     state = _state()
     state.pop("contextual_composition")
+    state.pop("epistemic_conflict_proof")
     ref = "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
     state["gate_e"] = {
         "status": "evidence_recovery_authorized",
@@ -320,7 +321,7 @@ def test_completed_e2_evidence_does_not_validate_user_value() -> None:
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
 
 
-def test_owner_closeout_stops_without_opening_a_successor() -> None:
+def test_owner_closeout_preserved_with_one_evidence_gated_successor() -> None:
     state = _state()
     assert state["work_in_progress_limit"] == 1
     assert state["github"]["active_issues"] == [355]
@@ -331,7 +332,7 @@ def test_owner_closeout_stops_without_opening_a_successor() -> None:
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
     assert state["gate_e"]["comparative_user_value"] == "unvalidated"
     assert state["gate_e"]["successor_opened"] is False
-    assert state["next_transition"]["target"] == "STOP"
+    assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
     contextual = state["contextual_composition"]
     assert contextual["status"] == "deferred"
     assert contextual["research_authorization"] == "contextual_snapshot_candidate_search_v1"
@@ -341,11 +342,19 @@ def test_owner_closeout_stops_without_opening_a_successor() -> None:
     assert contextual["product_specification_authorized"] is False
     assert contextual["implementation_authorized"] is False
     assert contextual["successor_opened"] is False
-    assert state["next_transition"]["decision_ref"] == contextual["closeout_ref"]
-    for target in ("E", "TEMPORAL_REGION_PROOF", "D"):
+    proof = state["epistemic_conflict_proof"]
+    assert proof["status"] == "authorized_evidence_closure_required"
+    assert proof["evidence_state"] == "not_closed"
+    assert proof["runtime_data_promotion_authorized"] is False
+    assert proof["implementation_completion"] == "not_started"
+    assert proof["specification_provenance"] == "owner_reported_accepted_text_not_in_repository"
+    assert proof["human_review"] == "pending"
+    assert proof["additional_successor_opened"] is False
+    assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
+    for target in ("E", "TEMPORAL_REGION_PROOF", "D", "STOP"):
         changed = copy.deepcopy(state)
         changed["next_transition"]["target"] = target
-        with pytest.raises(ProjectStateError, match="closed Gate E must STOP"):
+        with pytest.raises(ProjectStateError, match="only the owner-authorized bounded conflict proof"):
             validate_project_state(changed)
 
 
@@ -402,10 +411,10 @@ def test_contextual_closeout_cannot_claim_more_evidence_or_authority(field, valu
         validate_project_state(state)
 
 
-def test_contextual_closeout_is_bound_to_current_stop_decision():
+def test_contextual_closeout_remains_registered_without_being_current_transition():
     state = _state()
     state["next_transition"]["decision_ref"] = state["gate_e"]["decision_ref"]
-    with pytest.raises(ProjectStateError, match="STOP must cite"):
+    with pytest.raises(ProjectStateError, match="bounded conflict proof must cite"):
         validate_project_state(state)
     state = _state()
     state["canonical_refs"].remove(state["contextual_composition"]["closeout_ref"])
@@ -414,6 +423,32 @@ def test_contextual_closeout_is_bound_to_current_stop_decision():
     state = _state()
     state.pop("contextual_composition")
     with pytest.raises(ProjectStateError, match="registered evidence"):
+        validate_project_state(state)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("evidence_state", "closed"),
+    ("runtime_data_promotion_authorized", True),
+    ("implementation_completion", "completed"),
+    ("human_review", "accepted"),
+    ("additional_successor_opened", True),
+])
+def test_conflict_authorization_cannot_fabricate_evidence_or_runtime(field, value):
+    state = _state()
+    state["epistemic_conflict_proof"][field] = value
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
+        validate_project_state(state)
+
+
+def test_conflict_authorization_requires_registered_current_decision():
+    state = _state()
+    ref = state["epistemic_conflict_proof"]["decision_ref"]
+    state["canonical_refs"].remove(ref)
+    with pytest.raises(ProjectStateError, match="registered owner authority"):
+        validate_project_state(state)
+    state = _state()
+    state.pop("epistemic_conflict_proof")
+    with pytest.raises(ProjectStateError, match="registered owner authority"):
         validate_project_state(state)
 
 
