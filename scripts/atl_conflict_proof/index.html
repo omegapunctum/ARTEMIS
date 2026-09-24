@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ARTEMIS · disputed dating proof</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; background: #101720; color: #edf1f4; }
+    * { box-sizing: border-box; }
+    body { margin: 0 auto; padding: clamp(1rem, 4vw, 3rem); max-width: 58rem; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: clamp(1.5rem, 4vw, 2.3rem); }
+    h2 { font-size: 1.25rem; }
+    .muted, small { color: #c0ccd8; }
+    .status, .limits { padding: .8rem 1rem; border: 1px solid #526778; border-radius: .65rem; }
+    .scope { margin: 1.5rem 0; }
+    .positions { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,19rem),1fr)); gap: 1rem; margin: 1.25rem 0; }
+    article { background: #192532; border: 1px solid #647e8a; border-radius: .8rem; padding: 1.2rem; }
+    article[data-focused="true"] { outline: 2px solid #bdd7e3; outline-offset: 3px; }
+    .date { font-size: 1.35rem; font-weight: 650; }
+    button, a { color: #b4d9ed; }
+    button { border: 1px solid #8ba5b0; border-radius: .4rem; padding: .55rem .8rem; background: #263849; cursor: pointer; min-height: 2.8rem; }
+    button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid #f0d991; outline-offset: 3px; }
+    details { border-top: 1px solid #526778; margin-top: 1rem; padding-top: 1rem; }
+    summary { cursor: pointer; }
+    code { white-space: normal; overflow-wrap: anywhere; }
+    .limits { margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="muted">ARTEMIS · bounded research proof</p>
+    <h1 id="artifact">Loading reviewed artifact…</h1>
+    <p class="status">Dating disputed · two attributed scholarly positions · neither is an established production date.</p>
+    <p id="scope" class="scope"></p>
+  </header>
+  <main>
+    <h2>Two interpretations of one artifact</h2>
+    <p class="muted">The dates are approximate source expressions. They are separate alternatives, not the endpoints of one continuous date range. Selecting a card only changes inspection focus.</p>
+    <section id="positions" class="positions" aria-label="Alternative scholarly datings"></section>
+    <button id="clear-focus" type="button" hidden>Show both without focus</button>
+    <section class="limits" aria-label="Evidence and limits">
+      <h2>What remains unresolved</h2>
+      <p id="conflict"></p>
+      <p id="qualifier"></p>
+      <p>No exact year, numerical query bounds or timeline filtering is asserted for these positions. Missing evidence is not historical absence.</p>
+      <p id="review-status" class="muted"></p>
+    </section>
+  </main>
+  <script>
+    'use strict';
+    async function initialize() {
+      const response = await fetch('./proof.json');
+      if (!response.ok) throw new Error('Reviewed proof record is unavailable');
+      const data = await response.json();
+      const record = data.record;
+      if (record.object_ref !== data.explorer_state.selection.primary_object_ref || record.claims.length !== 2) throw new Error('Proof identity/Claim closure failed');
+      document.getElementById('artifact').textContent = record.label + ' — one artifact';
+      document.getElementById('scope').textContent = data.subject_scope;
+      const conflict = record.uncertainties.find(item => item.dimension === 'source_conflict' && item.subject_or_claim_ref === record.object_ref);
+      if (!conflict || conflict.basis_claim_refs.length !== 2) throw new Error('Source conflict closure failed');
+      document.getElementById('conflict').textContent = conflict.description + ' ' + conflict.effect;
+      document.getElementById('qualifier').textContent = data.conditional_qualifier;
+      document.getElementById('review-status').textContent = data.review_status;
+      const claims = [...record.claims];
+      const host = document.getElementById('positions');
+      const clear = document.getElementById('clear-focus');
+      const byClaim = new Map(claims.map(claim => [claim.id, claim]));
+      const currentFocus = () => {
+        const id = new URL(location.href).searchParams.get('claim');
+        return byClaim.has(id) ? id : null;
+      };
+      const setFocus = id => {
+        const url = new URL(location.href);
+        if (id) url.searchParams.set('claim', id);
+        else url.searchParams.delete('claim');
+        history.replaceState(null, '', url);
+        renderFocus();
+      };
+      const renderFocus = () => {
+        const focused = currentFocus();
+        for (const article of host.querySelectorAll('article')) {
+          article.dataset.focused = String(article.dataset.claimId === focused);
+          article.querySelector('button').textContent = article.dataset.claimId === focused ? 'Inspecting this position' : 'Inspect this position';
+          article.querySelector('button').setAttribute('aria-pressed', String(article.dataset.claimId === focused));
+        }
+        clear.hidden = !focused;
+      };
+      for (const claim of claims) {
+        const evidence = record.evidence_links.filter(link => link.claim_id === claim.id);
+        if (evidence.length !== 1) throw new Error('Each Claim requires its own EvidenceLink');
+        const source = record.sources.find(item => item.id === evidence[0].source_id);
+        if (!source || !source.uri.startsWith('https://teche.museogalileo.it/')) throw new Error('Unexpected source provenance');
+        const article = document.createElement('article');
+        article.dataset.claimId = claim.id;
+        const h3 = document.createElement('h3');
+        h3.textContent = claim.statement;
+        article.append(h3);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.addEventListener('click', () => setFocus(claim.id));
+        article.append(button);
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        summary.textContent = 'Source, locator and uncertainty';
+        details.append(summary);
+        const provenance = document.createElement('p');
+        provenance.textContent = 'Attribution mediated by the Museo Galileo catalogue; the scholar’s original publication was not independently inspected.';
+        details.append(provenance);
+        const link = document.createElement('a');
+        link.href = source.uri;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = source.title;
+        details.append(link);
+        const locator = document.createElement('p');
+        locator.textContent = 'Locator: ' + evidence[0].locator;
+        details.append(locator);
+        for (const uncertainty of record.uncertainties.filter(item => item.subject_or_claim_ref === claim.id)) {
+          const p = document.createElement('p');
+          p.textContent = uncertainty.description;
+          details.append(p);
+        }
+        article.append(details);
+        host.append(article);
+      }
+      clear.addEventListener('click', () => setFocus(null));
+      addEventListener('popstate', renderFocus);
+      renderFocus();
+    }
+    initialize().catch(error => {
+      document.getElementById('artifact').textContent = 'Review proof unavailable';
+      document.getElementById('scope').textContent = error.message;
+    });
+  </script>
+</body>
+</html>
