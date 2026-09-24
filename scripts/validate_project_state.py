@@ -333,7 +333,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.8 preserves the latest Gate D decision")
+        raise ProjectStateError("project_state v1.9 preserves the latest Gate D decision")
     if gate["status"] not in {"in_progress", "blocked", "completed"}:
         raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
@@ -369,13 +369,19 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("Gate E cannot open before completed Gate D advancement")
     gate_e = payload["gate_e"]
     decision_ref = gate_e["decision_ref"]
-    if decision_ref != payload["next_transition"]["decision_ref"] or decision_ref not in payload["canonical_refs"]:
-        raise ProjectStateError("Gate E authority and next work require one registered decision")
+    if decision_ref not in payload["canonical_refs"]:
+        raise ProjectStateError("Gate E authority requires a registered decision")
     if gate_e["status"] == "closed":
         if decision_ref != "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md":
             raise ProjectStateError("Gate E closeout requires its explicit owner decision")
         if payload["next_transition"]["target"] != "STOP":
             raise ProjectStateError("closed Gate E must STOP without opening a successor")
+        contextual_ref = "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"
+        contextual = payload.get("contextual_composition")
+        if not contextual or contextual["closeout_ref"] != contextual_ref or contextual_ref not in payload["canonical_refs"]:
+            raise ProjectStateError("contextual composition closeout requires registered evidence")
+        if payload["next_transition"]["decision_ref"] != contextual_ref:
+            raise ProjectStateError("STOP must cite the current contextual research closeout")
         expected = {
             "disposition": "owner_directed_closeout",
             "e1": "owner_reported_pass",
@@ -387,6 +393,8 @@ def validate_project_state(state: dict | None = None) -> dict:
         if any(gate_e.get(key) != value for key, value in expected.items()):
             raise ProjectStateError("Gate E closeout must preserve report provenance, waived E2 and unvalidated value")
     else:
+        if decision_ref != payload["next_transition"]["decision_ref"]:
+            raise ProjectStateError("historical Gate E recovery requires matching transition authority")
         if decision_ref != "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md" or gate_e["disposition"] != "evidence_recovery":
             raise ProjectStateError("historical recovery requires its own authority; closeout cannot resume evidence collection")
         if payload["next_transition"]["target"] != "E":
