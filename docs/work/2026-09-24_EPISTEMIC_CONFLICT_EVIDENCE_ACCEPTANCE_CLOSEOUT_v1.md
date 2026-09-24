@@ -1,0 +1,14 @@
+# Epistemic Conflict Proof v1 — evidence acceptance closeout
+
+- Owner verdict: **`ACCEPT_EVIDENCE_PACKAGE`**, supplied for PR #451 and recorded in [PR comment 5811369499](https://github.com/omegapunctum/ARTEMIS/pull/451#issuecomment-5811369499) against head `5e0c86e7dcc985e4ecd38789772c02e55a5021c3`.
+- Package: [`atl-1466-1-733v-dating-attribution-v1`](2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md), reviewed blob `170d1a7ef2fa5aecd504805d4e5b173d4de16f26`, single-file PR #451 at head `5e0c86e7dcc985e4ecd38789772c02e55a5021c3`; merged into `main` at `cd12755ed6442e556524ac5ab12f034c25bf7885`.
+- Merge gate: head unchanged after recording verdict; GitHub mergeable; Core CI run 35978166052 succeeded on that head; no review threads. Merged with expected head SHA under `DEVELOPMENT_OPERATING_SYSTEM.md` §6.6.
+- Provenance limit: the owner did not provide a separate timestamped reviewed SHA, live catalogue inspection transcript or per-entry catalogue revision. The owner-supplied acceptance binds to the PR head checked at acceptance and merge. It does not claim a newly independent catalogue audit or verification of uninspected direct publications.
+
+## Disposition
+
+The narrowed **evidence gate is closed / accepted**. `EVIDENCE_CLOSURE_REQUIRED` is cleared for the authorized one-artifact v1 contour. Its implementation is **ready**, not started. The owner acceptance here is **evidence-package human review only**; the future `REVIEW` implementation still needs its own human presentation/interaction acceptance before its PR may merge. Repository source and runtime remain unchanged by this lifecycle closeout.
+
+The package records one exact common architectural-drawing subject on `ATL.1466.1 / fol. 733 verso`, two separately attributed, catalogue-mediated dating Claims (Heydenreich `c.1490`, Pedretti `c.1514–1515`) and distinct locators/EvidenceLinks in one Museo Galileo Source. Existing `source_conflict` uncertainty remains unresolved. No historical winner, exact date, closed numerical query envelope, Range/Scrub membership, third scholar/case, new `Conflict` object or generalized engine is accepted. Conditional two-period-use discussion remains attributed and does not establish use in two periods.
+
+This owner verdict accepts a bounded research package, **not** production-date truth, implementation completion, published capability, human UX acceptance or user value. Gate E remains closed without `VALUE_SIGNAL`; E2 remains NOT COLLECTED / WAIVED, comparative/formal value UNVALIDATED, contextual composition DEFERRED, Region GENERALIZES technical only. Issue #355 remains the umbrella. The next authorized step is Engineering implementation under [v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md), with no additional product authorization required.

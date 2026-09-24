@@ -12,7 +12,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE
 
 Historical bounded research closeout — recorded 2026-09-24: [Contextual Snapshot Candidate Search v1](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized for research only; owner-reported outcomes are `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED**; Product Specification and implementation are not authorized. That closeout returned to **STOP / Command Center**; the later conflict-proof authorization supersedes that transition. Source-level search detail was not supplied with this closeout.
 
-Current owner authorization — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) opens one bounded `REVIEW` proof on `ATL.1466.1 / fol. 733 verso`, subject to **EVIDENCE_CLOSURE_REQUIRED**. **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY`**: [accepted specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md) narrows v1 away from numerical query envelopes and case-specific Range/Scrub. Exact Claim subject, reviewed Claims/EvidenceLinks and locators remain unclosed; no runtime/data promotion or implementation has begun. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
+Current owner authorization — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) opens one bounded `REVIEW` proof on `ATL.1466.1 / fol. 733 verso`, under **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY`** and [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). [Package v1](2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) received `ACCEPT_EVIDENCE_PACKAGE` and the [evidence closeout](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) marks the proof **implementation-ready**; implementation has not begun. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
 
 ## Status
 
@@ -39,12 +39,12 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 |---|---|---|
 | `2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md` | Bounded research closeout, owner-reported outcomes | Accepted research authorization → `STOP_PROOF_A` → `NO_QUALIFYING_SNAPSHOT` → contextual composition `DEFERRED`; no Product Specification/implementation authorization; STOP / Command Center |
 
-## Authorized conflict proof — evidence gate
+## Authorized conflict proof — evidence accepted / implementation-ready
 
 | Document | Lifecycle | Gate |
 |---|---|---|
-| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md` | Current narrowed owner authorization; no implementation started | `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `EVIDENCE_CLOSURE_REQUIRED`; reviewed Claim subject, Claims/EvidenceLinks, locators, provenance, classification and conditional qualifier remain unclosed; human presentation review before implementation merge |
-| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md` | Accepted bounded Product Specification with `SPEC_AMENDMENT_READY` | Consolidated owner handoff and accepted narrowing; numerical envelopes and case-specific Range/Scrub outside v1; not a research evidence package |
+| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md` | Current narrowed owner authorization; no implementation started | `NARROW_EPISTEMIC_CONFLICT_PROOF_V1`; owner-accepted evidence package closes gate; human presentation review still required before implementation merge |
+| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md` | Accepted bounded Product Specification with `SPEC_AMENDMENT_READY` | Consolidated owner handoff and accepted narrowing; numerical envelopes and case-specific Range/Scrub outside v1; evidence package is separate |
 
 ## Engineering tooling design
 

@@ -8,7 +8,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23
 
 Historical bounded research decision — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. This was not E2 or a formal user-value outcome; that closeout did not authorize Product Specification, implementation or successor. Its `STOP / Command Center` transition is superseded by the later bounded conflict-proof authorization.
 
-Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is authorized under `REVIEW`. **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` / `EVIDENCE_CLOSURE_REQUIRED`** under [accepted specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md): reviewed case Claims, EvidenceLinks, locators and exact subject are unclosed; numerical query envelopes and case-specific Range/Scrub are outside v1. This is an authorization, not a Gate E value signal, implementation result or comparative novice outcome. Gate E remains closed; E2 waived/not collected, comparative/formal value UNVALIDATED and contextual composition DEFERRED.
+Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is authorized under `REVIEW`. **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` / evidence accepted / implementation-ready** under [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md): [package v1](work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) received owner `ACCEPT_EVIDENCE_PACKAGE`, recorded in the [closeout](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md). Numerical query envelopes and case-specific Range/Scrub remain outside v1; implementation has not started. This is an authorization, not a Gate E value signal, implementation result or comparative novice outcome. Gate E remains closed; E2 waived/not collected, comparative/formal value UNVALIDATED and contextual composition DEFERRED.
 
 ## Статус
 
@@ -118,7 +118,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 
 | Gate E closeout | `CLOSED`; E1 owner-reported PASS; E2 NOT COLLECTED / WAIVED |
 | Formal user value | `UNVALIDATED`; no positive value signal yet |
-| Next authority | [Bounded conflict-proof authorization](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md); `EVIDENCE_CLOSURE_REQUIRED` before data/runtime promotion; human `REVIEW` still pending |
+| Next authority | [Bounded conflict-proof authorization](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md); [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) makes this contour implementation-ready; future human presentation `REVIEW` still pending |
 
 ## 6. Change rule
 
