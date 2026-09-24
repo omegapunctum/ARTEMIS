@@ -4,9 +4,11 @@ Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner dec
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without a comparative value outcome.
 
-Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
-Bounded research decision — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ends with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. This is not E2 or a formal user-value outcome; no Product Specification, implementation authorization or successor. `next_transition` remains **STOP / Command Center**.
+Historical bounded research decision — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. This was not E2 or a formal user-value outcome; that closeout did not authorize Product Specification, implementation or successor. Its `STOP / Command Center` transition is superseded by the later bounded conflict-proof authorization.
+
+Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is authorized under `REVIEW`. **EVIDENCE_CLOSURE_REQUIRED** for the two scholarly dating Claims and their independent reviewed temporal envelopes. This is an authorization, not a Gate E value signal, implementation result or comparative novice outcome. Gate E remains closed; E2 waived/not collected, comparative/formal value UNVALIDATED and contextual composition DEFERRED.
 
 ## Статус
 
@@ -116,7 +118,7 @@ Gate D retains `ADVANCE_TO_GATE_E / NARROW / REJECT`. M4 `ADOPT` is stored separ
 
 | Gate E closeout | `CLOSED`; E1 owner-reported PASS; E2 NOT COLLECTED / WAIVED |
 | Formal user value | `UNVALIDATED`; no positive value signal yet |
-| Next authority | [Owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); STOP / return to Command Center; no successor opened |
+| Next authority | [Bounded conflict-proof authorization](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md); `EVIDENCE_CLOSURE_REQUIRED` before data/runtime promotion; human `REVIEW` still pending |
 
 ## 6. Change rule
 

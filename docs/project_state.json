@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.9.0",
+  "schema_version": "1.10.0",
   "project": "ARTEMIS",
   "updated_at": "2026-09-24",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
@@ -168,14 +168,15 @@
     "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md",
     "docs/work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md",
     "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md",
-    "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"
+    "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md",
+    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"
   ],
   "blockers": [],
   "next_transition": {
-    "target": "STOP",
+    "target": "EPISTEMIC_CONFLICT_PROOF",
     "authority": "explicit_owner_instruction",
-    "decision_ref": "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md",
-    "condition": "Gate E remains closed without VALUE_SIGNAL; E2 NOT COLLECTED / WAIVED; comparative user value UNVALIDATED. Contextual Snapshot Candidate Search v1: owner-reported STOP_PROOF_A and NO_QUALIFYING_SNAPSHOT; contextual composition DEFERRED. No Product Specification, implementation authorization or successor. Return to Command Center; R2, agents, MCP, memory and simulation remain deferred."
+    "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
+    "condition": "Epistemic Conflict / Uncertainty Proof v1 authorized by the owner for one artifact ATL.1466.1 / fol. 733 verso and two dating positions, implementation-after-DECISION / REVIEW. EVIDENCE_CLOSURE_REQUIRED before historical data promotion or runtime implementation: reviewed case-specific Claims, EvidenceLinks, Museo Galileo locators and temporal envelopes are absent from main. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected and comparative/formal value UNVALIDATED; contextual composition DEFERRED; no further successor."
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -234,6 +235,18 @@
     "implementation_authorized": false,
     "successor_opened": false,
     "closeout_ref": "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"
+  },
+  "epistemic_conflict_proof": {
+    "status": "authorized_evidence_closure_required",
+    "autonomy": "review_implementation_after_decision",
+    "subject": "ATL.1466.1 / fol. 733 verso",
+    "evidence_state": "not_closed",
+    "specification_provenance": "owner_reported_accepted_text_not_in_repository",
+    "runtime_data_promotion_authorized": false,
+    "implementation_completion": "not_started",
+    "human_review": "pending",
+    "additional_successor_opened": false,
+    "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"
   },
   "region_closeout": {
     "implementation": "completed",

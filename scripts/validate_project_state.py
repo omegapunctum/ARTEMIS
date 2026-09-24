@@ -333,7 +333,7 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("completed Gate C must remain in completed issue history")
 
     if gate["id"] != "D":
-        raise ProjectStateError("project_state v1.9 preserves the latest Gate D decision")
+        raise ProjectStateError("project_state v1.10 preserves the latest Gate D decision")
     if gate["status"] not in {"in_progress", "blocked", "completed"}:
         raise ProjectStateError("Gate D must be in_progress, blocked or completed")
     if gate["allowed_decisions"] != ["ADVANCE_TO_GATE_E", "NARROW", "REJECT"]:
@@ -374,14 +374,20 @@ def validate_project_state(state: dict | None = None) -> dict:
     if gate_e["status"] == "closed":
         if decision_ref != "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md":
             raise ProjectStateError("Gate E closeout requires its explicit owner decision")
-        if payload["next_transition"]["target"] != "STOP":
-            raise ProjectStateError("closed Gate E must STOP without opening a successor")
+        if payload["next_transition"]["target"] != "EPISTEMIC_CONFLICT_PROOF":
+            raise ProjectStateError("closed Gate E permits only the owner-authorized bounded conflict proof")
         contextual_ref = "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"
         contextual = payload.get("contextual_composition")
         if not contextual or contextual["closeout_ref"] != contextual_ref or contextual_ref not in payload["canonical_refs"]:
             raise ProjectStateError("contextual composition closeout requires registered evidence")
-        if payload["next_transition"]["decision_ref"] != contextual_ref:
-            raise ProjectStateError("STOP must cite the current contextual research closeout")
+        proof_ref = "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"
+        proof = payload.get("epistemic_conflict_proof")
+        if not proof or proof["decision_ref"] != proof_ref or proof_ref not in payload["canonical_refs"]:
+            raise ProjectStateError("bounded conflict proof requires registered owner authority")
+        if payload["next_transition"]["decision_ref"] != proof_ref:
+            raise ProjectStateError("bounded conflict proof must cite its registered authority")
+        if proof["evidence_state"] != "not_closed" or proof["runtime_data_promotion_authorized"] is not False:
+            raise ProjectStateError("conflict proof cannot promote historical data before reviewed evidence closure")
         expected = {
             "disposition": "owner_directed_closeout",
             "e1": "owner_reported_pass",
