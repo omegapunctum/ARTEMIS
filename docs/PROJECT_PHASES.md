@@ -1,13 +1,15 @@
-# ARTEMIS — PROJECT PHASES v7.12
+# ARTEMIS — PROJECT PHASES v7.13
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without opening a successor.
 
-Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+
+Current bounded research closeout — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. No Product Specification, implementation or successor is authorized; `next_transition` stays **STOP / Command Center**.
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-23.
+- Date: 2026-09-24.
 - Current phase: **5.1 — Gate E closed by owner decision; no successor opened**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
@@ -167,4 +169,4 @@ It cannot draw unknown routes, add historical content, change Range/Scrub semant
 
 ## Rule
 
-One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 and its correction retain their historical results. Gate E is closed by the [owner decision](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); E2 is waived/not collected and comparative user value remains unvalidated. Bounded contextual composition is a candidate only. Return to Command Center before any successor specification/implementation authorization. Region remains completed technical-only evidence.
+One active product vertical and at most one active milestone. M4 remains complete with `ADOPT`; M5 and its correction retain their historical results. Gate E is closed by the [owner decision](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); E2 is waived/not collected and comparative user value remains unvalidated. The bounded contextual search closed with no qualifying snapshot; contextual composition is deferred. Return to Command Center before any successor specification/implementation authorization. Region remains completed technical-only evidence.

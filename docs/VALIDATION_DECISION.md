@@ -4,13 +4,15 @@ Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner dec
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without a comparative value outcome.
 
-Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+
+Bounded research decision — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ends with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. This is not E2 or a formal user-value outcome; no Product Specification, implementation authorization or successor. `next_transition` remains **STOP / Command Center**.
 
 ## Статус
 
 - Тип: canonical validation outcome document.
 - Статус решения: `GATE D COMPLETED / ADVANCE_TO_GATE_E / GATE E CLOSED / E1 OWNER-REPORTED PASS / E2 NOT COLLECTED / WAIVED / FORMAL USER VALUE UNVALIDATED`.
-- Дата последнего обновления: 2026-09-23.
+- Дата последнего обновления: 2026-09-24.
 - Active product issue: GitHub issue `#355`.
 - Current public presentation: #439 / `be992184f04f020bb7f769b980403d0899f0950b`, human-accepted and publication-verified; see [publication closeout](work/2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). E1 is owner-reported PASS; E2 is NOT COLLECTED / WAIVED.
 - Historical public proof: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f`, stabilizing #418 Place-centric v4.5 / Temporal Map v1.3; 9 Places / 11 Presence episodes. Owner reports NO FINDINGS for #418 and accepted #419; this is not independent-user evidence.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.8.json",
-  "title": "ARTEMIS machine-readable operational state v1.8",
+  "$id": "https://artemis.example/schemas/project-state-v1.9.json",
+  "title": "ARTEMIS machine-readable operational state v1.9",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.8.0"},
+    "schema_version": {"const": "1.9.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -221,6 +221,22 @@
         }
       }
     },
+    "contextual_composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "research_authorization", "proof_a", "search_disposition", "evidence_provenance", "product_specification_authorized", "implementation_authorized", "successor_opened", "closeout_ref"],
+      "properties": {
+        "status": {"const": "deferred"},
+        "research_authorization": {"const": "contextual_snapshot_candidate_search_v1"},
+        "proof_a": {"const": "STOP_PROOF_A"},
+        "search_disposition": {"const": "NO_QUALIFYING_SNAPSHOT"},
+        "evidence_provenance": {"const": "owner_reported_disposition_only"},
+        "product_specification_authorized": {"const": false},
+        "implementation_authorized": {"const": false},
+        "successor_opened": {"const": false},
+        "closeout_ref": {"const": "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"}
+      }
+    },
     "region_closeout": {
       "type": "object",
       "additionalProperties": false,
@@ -313,7 +329,7 @@
       "properties": {
         "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF"]},
         "authority": {"const": "explicit_owner_instruction"},
-        "decision_ref": {"enum": ["docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md", "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md"]},
+        "decision_ref": {"enum": ["docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md", "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md", "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"]},
         "condition": {"type": "string", "minLength": 1}
       }
     }

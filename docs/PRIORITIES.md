@@ -1,13 +1,15 @@
-# ARTEMIS — PRIORITIES v7.12
+# ARTEMIS — PRIORITIES v7.13
 
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without opening a successor.
 
-Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+
+Current bounded research closeout — 2026-09-24: [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized as research; owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT` close this search. Contextual composition is **DEFERRED**; no Product Specification/implementation authorization or successor. Remain at **STOP / Command Center**. Candidate/source detail is not present in the supplied record.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-23.
+- Date: 2026-09-24.
 - Active cycle: `Gate E closed — awaiting Command Center decision`; no successor execution is authorized.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
@@ -16,7 +18,7 @@ Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-2
 
 ## P0 — Respect Gate E closeout; no successor execution
 
-Follow the [owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). The single bounded pre-E1 product correction is completed in #439 and publication-verified. Preserve the semantic core; the current Leonardo/Globe scaffold does not establish full Life in Context. Bounded contextual composition is the next candidate proof, not permission to add Presence data or create an isolated renderer/domain. A separate accepted specification and authorization are required before implementation.
+Follow the [Gate E owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md) and the [contextual research closeout](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md). The single bounded pre-E1 product correction is completed in #439 and publication-verified. Preserve the semantic core; the current Leonardo/Globe scaffold does not establish full Life in Context. The authorized contextual snapshot search returned owner-reported `NO_QUALIFYING_SNAPSHOT` after `STOP_PROOF_A`; contextual composition is deferred. Return to Command Center. A separate accepted Product Specification and authorization would be required before any implementation.
 
 M1 is complete with `ITERATE`. PR #400 completed the independently reviewed major-life candidate package. PR #401 completed M2, PR #403 completed M3, and PR #405 recorded M4 as `ADOPT`. The owner then directly instructed M5 without an intervening repository decision record. PR #406 merged and published the bounded whole-life proof. That sequence is a recorded governance deviation, not retroactive authorization invented for M4.
 

@@ -6,7 +6,7 @@ Publication verification — 2026-09-13: **live publication verified** from owne
 
 Owner-directed bounded correction after #417: one fixed spatial anchor per canonical Place, compact name and visible-episode count; Presence episodes remain distinct in timeline/selection/URL and popup/details. Remove persistent date cards, tethers and spatial displacement. Suppress colliding text by Place priority while retaining interactive dots and hover/focus access. This v4.5 correction preserves the earlier #416 v4.4 future-navigation decision. Mid-segment chevrons on low-opacity dashed links express chronology only, with selected/current transition emphasis. Scrub has one current-time handle and no visible Build from control; default origin is the earliest axis extent (1452). Valid saved `from` values remain internal origins; invalid/missing values use the first axis value, and `at` before origin clamps to origin. No coordinates, historical routes, data, Gate E tasks or future Global+Focus Timeline scope change. The correction is merged/published through #418/#419; the Leonardo interaction baseline is #419. The 2026-09-10 bypass remains historical and did not pass E1/E2; the subsequent recovery is now closed by the 2026-09-23 owner decision.
 
-Current decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; bounded contextual composition is a candidate only. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
 ## Статус
 
@@ -217,7 +217,7 @@ For the current M5 checkpoint:
 - PR #314 is not a Foundation prerequisite;
 - no new public backend is required unless evidence shows the static read-only loop is insufficient.
 
-The owner accepts Multi-Perspective System Review v1 as decision-preparation evidence: preserve the semantic core, but the current Leonardo/Globe scaffold does not establish full Life in Context. Bounded contextual composition is a candidate only; no data, implementation or successor branch is authorized. R2, agents, MCP, memory and simulation remain deferred.
+The owner accepts Multi-Perspective System Review v1 as decision-preparation evidence: preserve the semantic core, but the current Leonardo/Globe scaffold does not establish full Life in Context. The bounded [contextual snapshot research branch](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) closed with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`; contextual composition is now DEFERRED. No Product Specification, data, implementation or successor branch is authorized. R2, agents, MCP, memory and simulation remain deferred.
 
 ## 8. Frozen scope
 

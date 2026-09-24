@@ -25,6 +25,7 @@ def _state() -> dict:
 
 def _historical_gate_e_recovery() -> dict:
     state = _state()
+    state.pop("contextual_composition")
     ref = "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
     state["gate_e"] = {
         "status": "evidence_recovery_authorized",
@@ -331,6 +332,16 @@ def test_owner_closeout_stops_without_opening_a_successor() -> None:
     assert state["gate_e"]["comparative_user_value"] == "unvalidated"
     assert state["gate_e"]["successor_opened"] is False
     assert state["next_transition"]["target"] == "STOP"
+    contextual = state["contextual_composition"]
+    assert contextual["status"] == "deferred"
+    assert contextual["research_authorization"] == "contextual_snapshot_candidate_search_v1"
+    assert contextual["proof_a"] == "STOP_PROOF_A"
+    assert contextual["search_disposition"] == "NO_QUALIFYING_SNAPSHOT"
+    assert contextual["evidence_provenance"] == "owner_reported_disposition_only"
+    assert contextual["product_specification_authorized"] is False
+    assert contextual["implementation_authorized"] is False
+    assert contextual["successor_opened"] is False
+    assert state["next_transition"]["decision_ref"] == contextual["closeout_ref"]
     for target in ("E", "TEMPORAL_REGION_PROOF", "D"):
         changed = copy.deepcopy(state)
         changed["next_transition"]["target"] = target
@@ -364,7 +375,7 @@ def test_closeout_authority_cannot_resume_recovery():
     state = _state()
     state["gate_e"].update(status="e2_in_progress", e1="cleared", e2="in_progress")
     state["next_transition"]["target"] = "E"
-    with pytest.raises(ProjectStateError, match="closeout cannot resume"):
+    with pytest.raises(ProjectStateError, match="matching transition authority"):
         validate_project_state(state)
 
 
@@ -372,8 +383,37 @@ def test_closeout_cannot_use_old_recovery_authority():
     state = _state()
     ref = "docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md"
     state["gate_e"]["decision_ref"] = ref
-    state["next_transition"]["decision_ref"] = ref
     with pytest.raises(ProjectStateError, match="explicit owner decision"):
+        validate_project_state(state)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("status", "authorized"),
+    ("search_disposition", "QUALIFYING_SNAPSHOT"),
+    ("evidence_provenance", "source_reviewed"),
+    ("product_specification_authorized", True),
+    ("implementation_authorized", True),
+    ("successor_opened", True),
+])
+def test_contextual_closeout_cannot_claim_more_evidence_or_authority(field, value):
+    state = _state()
+    state["contextual_composition"][field] = value
+    with pytest.raises(ProjectStateError, match="schema validation failed"):
+        validate_project_state(state)
+
+
+def test_contextual_closeout_is_bound_to_current_stop_decision():
+    state = _state()
+    state["next_transition"]["decision_ref"] = state["gate_e"]["decision_ref"]
+    with pytest.raises(ProjectStateError, match="STOP must cite"):
+        validate_project_state(state)
+    state = _state()
+    state["canonical_refs"].remove(state["contextual_composition"]["closeout_ref"])
+    with pytest.raises(ProjectStateError, match="registered evidence"):
+        validate_project_state(state)
+    state = _state()
+    state.pop("contextual_composition")
+    with pytest.raises(ProjectStateError, match="registered evidence"):
         validate_project_state(state)
 
 
