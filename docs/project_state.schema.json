@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.9.json",
-  "title": "ARTEMIS machine-readable operational state v1.9",
+  "$id": "https://artemis.example/schemas/project-state-v1.10.json",
+  "title": "ARTEMIS machine-readable operational state v1.10",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.9.0"},
+    "schema_version": {"const": "1.10.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -237,6 +237,23 @@
         "closeout_ref": {"const": "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"}
       }
     },
+    "epistemic_conflict_proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "autonomy", "subject", "evidence_state", "specification_provenance", "runtime_data_promotion_authorized", "implementation_completion", "human_review", "additional_successor_opened", "decision_ref"],
+      "properties": {
+        "status": {"const": "authorized_evidence_closure_required"},
+        "autonomy": {"const": "review_implementation_after_decision"},
+        "subject": {"const": "ATL.1466.1 / fol. 733 verso"},
+        "evidence_state": {"const": "not_closed"},
+        "specification_provenance": {"const": "owner_reported_accepted_text_not_in_repository"},
+        "runtime_data_promotion_authorized": {"const": false},
+        "implementation_completion": {"const": "not_started"},
+        "human_review": {"const": "pending"},
+        "additional_successor_opened": {"const": false},
+        "decision_ref": {"const": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"}
+      }
+    },
     "region_closeout": {
       "type": "object",
       "additionalProperties": false,
@@ -327,9 +344,9 @@
       "additionalProperties": false,
       "required": ["target", "condition", "authority", "decision_ref"],
       "properties": {
-        "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF"]},
+        "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF", "EPISTEMIC_CONFLICT_PROOF"]},
         "authority": {"const": "explicit_owner_instruction"},
-        "decision_ref": {"enum": ["docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md", "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md", "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"]},
+        "decision_ref": {"enum": ["docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md", "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md", "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md", "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"]},
         "condition": {"type": "string", "minLength": 1}
       }
     }
