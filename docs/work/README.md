@@ -12,7 +12,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE
 
 Historical bounded research closeout — recorded 2026-09-24: [Contextual Snapshot Candidate Search v1](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized for research only; owner-reported outcomes are `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED**; Product Specification and implementation are not authorized. That closeout returned to **STOP / Command Center**; the later conflict-proof authorization supersedes that transition. Source-level search detail was not supplied with this closeout.
 
-Current owner authorization — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) opens one bounded `REVIEW` proof on `ATL.1466.1 / fol. 733 verso`, under **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY`** and [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). [Package v1](2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) received `ACCEPT_EVIDENCE_PACKAGE` and the [evidence closeout](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) marks the proof **implementation-ready**; implementation has not begun. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
+Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Owner-accepted [evidence package](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and separate owner presentation/interaction acceptance of PR #453 are recorded in the [technical implementation closeout](2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). The merged review artifact is non-public; no comparative/formal value is validated. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
 
 ## Status
 
@@ -39,12 +39,13 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 |---|---|---|
 | `2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md` | Bounded research closeout, owner-reported outcomes | Accepted research authorization → `STOP_PROOF_A` → `NO_QUALIFYING_SNAPSHOT` → contextual composition `DEFERRED`; no Product Specification/implementation authorization; STOP / Command Center |
 
-## Authorized conflict proof — evidence accepted / implementation-ready
+## Bounded conflict proof — non-public technical implementation completed
 
 | Document | Lifecycle | Gate |
 |---|---|---|
-| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md` | Current narrowed owner authorization; no implementation started | `NARROW_EPISTEMIC_CONFLICT_PROOF_V1`; owner-accepted evidence package closes gate; human presentation review still required before implementation merge |
+| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md` | Narrowed owner authorization; implementation status is superseded by the later technical closeout | `NARROW_EPISTEMIC_CONFLICT_PROOF_V1`; evidence and presentation accepted for PR #453 |
 | `2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md` | Accepted bounded Product Specification with `SPEC_AMENDMENT_READY` | Consolidated owner handoff and accepted narrowing; numerical envelopes and case-specific Range/Scrub outside v1; evidence package is separate |
+| `2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md` | Technical implementation and owner presentation review recorded | PR #453 exact head, merge and CI; non-public only; comparative/formal value UNVALIDATED |
 
 ## Engineering tooling design
 

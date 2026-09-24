@@ -388,6 +388,8 @@ def validate_project_state(state: dict | None = None) -> dict:
             raise ProjectStateError("bounded conflict proof requires registered accepted specification")
         if proof["evidence_package_ref"] not in payload["canonical_refs"] or proof["evidence_closeout_ref"] not in payload["canonical_refs"]:
             raise ProjectStateError("bounded conflict proof requires registered accepted evidence package and closeout")
+        if proof["implementation_closeout_ref"] not in payload["canonical_refs"] or not (ROOT / proof["implementation_closeout_ref"]).is_file():
+            raise ProjectStateError("bounded conflict proof requires registered implementation closeout")
         package_path = ROOT / proof["evidence_package_ref"]
         if not package_path.is_file() or subprocess.check_output(
             ["git", "hash-object", str(package_path)], cwd=ROOT, text=True
@@ -395,8 +397,10 @@ def validate_project_state(state: dict | None = None) -> dict:
             raise ProjectStateError("accepted conflict evidence package must match reviewed blob")
         if payload["next_transition"]["decision_ref"] != proof_ref:
             raise ProjectStateError("bounded conflict proof must cite its registered authority")
-        if proof["evidence_state"] != "accepted" or proof["implementation_started"] is not False or proof["implementation_presentation_review"] != "pending":
-            raise ProjectStateError("conflict proof evidence acceptance cannot imply runtime implementation or presentation acceptance")
+        if (proof["evidence_state"] != "accepted" or proof["implementation_started"] is not True
+                or proof["implementation_presentation_review"] != "accepted"
+                or proof["implementation_completion"] != "completed_non_public_review_proof"):
+            raise ProjectStateError("conflict proof implementation closeout requires accepted evidence and presentation review")
         expected = {
             "disposition": "owner_directed_closeout",
             "e1": "owner_reported_pass",

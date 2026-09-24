@@ -40,7 +40,7 @@ def _reviewed_input() -> tuple[dict, str]:
     state = json.loads(STATE.read_text(encoding="utf-8"))["epistemic_conflict_proof"]
     raw = PACKAGE.read_bytes()
     blob = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
-    if state["status"] not in {"implementation_ready", "implementation_in_progress"} or state["evidence_state"] != "accepted" or blob != state["evidence_package_blob"]:
+    if state["status"] not in {"implementation_ready", "implementation_in_progress", "technical_implementation_completed"} or state["evidence_state"] != "accepted" or blob != state["evidence_package_blob"]:
         raise ConflictProofError("proof requires the exact owner-accepted evidence package")
     text = raw.decode("utf-8")
     required = (

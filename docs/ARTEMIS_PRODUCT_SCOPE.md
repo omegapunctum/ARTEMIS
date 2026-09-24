@@ -8,7 +8,7 @@ Owner-directed bounded correction after #417: one fixed spatial anchor per canon
 
 Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
-Current bounded scope — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is the only owner-authorized successor under `REVIEW`: one artifact `ATL.1466.1 / fol. 733 verso`, two attributed competing dating Claims using existing epistemic and temporal contracts. **`NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` / evidence accepted / implementation-ready** under [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md) and [owner acceptance closeout](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md); numerical query envelopes and case-specific Range/Scrub are outside v1. Implementation has not started; no additional scholars, new canonical type, source ranking, second case or generalized conflict system. This authorization does not revise Gate E/value or the deferred contextual composition result.
+Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) remains the one authorized contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
 
 ## Статус
 
@@ -16,7 +16,7 @@ Current bounded scope — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 - Версия: 4.7.
 - Дата: 2026-09-19.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Epistemic Conflict / Uncertainty Proof v1 implementation-ready — evidence accepted`; Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
+- Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.

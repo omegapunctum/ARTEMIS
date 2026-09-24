@@ -6,13 +6,13 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23
 
 Historical bounded research closeout — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. No Product Specification, implementation or successor is authorized; `next_transition` was **STOP / Command Center** at that closeout.
 
-Current owner authorization — 2026-09-24: one bounded [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) on `ATL.1466.1 / fol. 733 verso` is authorized as implementation-after-DECISION / `REVIEW`. `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` is recorded in [accepted specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The owner accepted [package v1](work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) through PR #451 head `5e0c86e7dcc985e4ecd38789772c02e55a5021c3`; [closeout](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) marks the proof **implementation-ready**, with implementation not started. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Prior Gate E and contextual dispositions are unchanged. No further successor is authorized.
+Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) remains the one authorized contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
 
 ## Status
 
 - Type: canonical operational phases document.
 - Date: 2026-09-24.
-- Current phase: **5.1 — Gate E closed; one bounded conflict proof implementation-ready, evidence accepted**.
+- Current phase: **5.1 — Gate E closed; bounded conflict proof technically implemented and owner presentation-reviewed; comparative/formal value unvalidated**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
