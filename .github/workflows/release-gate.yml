@@ -54,6 +54,13 @@ jobs:
       - name: Build the non-public ATL conflict review proof
         run: python scripts/build_atl_conflict_proof.py --output /tmp/artemis-atl-conflict-proof
 
+      - name: Attach ATL conflict review proof to PR run
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: atl-conflict-review-proof
+          path: /tmp/artemis-atl-conflict-proof/
+
       - name: Run ARTEMIS Core regression tests
         run: |
           pytest -q \
