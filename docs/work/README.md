@@ -4,13 +4,15 @@ First-Use correction: implemented in #439, human-accepted and publication-verifi
 
 Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner decision](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); its participant sequence is no longer current execution authority.
 
-Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That closeout opened no successor product branch; Gate E is now closed without opening a successor.
+Owner review closeout — recorded 2026-09-19: [human Region retest PASS](2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. That Region closeout opened no successor product branch; Gate E was later closed by owner decision.
 
 Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, at that recording date E1/E2 were NOT COLLECTED and formal user value UNVALIDATED. See [verification record](2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
 
-Gate E decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. No successor product branch is opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
+Gate E decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
-Current bounded research closeout — recorded 2026-09-24: [Contextual Snapshot Candidate Search v1](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized for research only; owner-reported outcomes are `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED**; Product Specification and implementation are not authorized. Next transition stays **STOP / Command Center**; no successor opened. Source-level search detail was not supplied with this closeout.
+Historical bounded research closeout — recorded 2026-09-24: [Contextual Snapshot Candidate Search v1](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized for research only; owner-reported outcomes are `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED**; Product Specification and implementation are not authorized. That closeout returned to **STOP / Command Center**; the later conflict-proof authorization supersedes that transition. Source-level search detail was not supplied with this closeout.
+
+Current owner authorization — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) opens one bounded `REVIEW` proof on `ATL.1466.1 / fol. 733 verso`, subject to **EVIDENCE_CLOSURE_REQUIRED**. Case-specific reviewed Claims, EvidenceLinks, locators and temporal normalization are absent; no runtime/data promotion occurs. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
 
 ## Status
 
@@ -36,6 +38,12 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 | Document | Lifecycle | Disposition |
 |---|---|---|
 | `2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md` | Bounded research closeout, owner-reported outcomes | Accepted research authorization → `STOP_PROOF_A` → `NO_QUALIFYING_SNAPSHOT` → contextual composition `DEFERRED`; no Product Specification/implementation authorization; STOP / Command Center |
+
+## Authorized conflict proof — evidence gate
+
+| Document | Lifecycle | Gate |
+|---|---|---|
+| `2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md` | Owner-authorized bounded `REVIEW` direction; no implementation started | `EVIDENCE_CLOSURE_REQUIRED`: Research/curation must close reviewed Claims/EvidenceLinks, locators, classification and temporal envelopes before data/runtime promotion; human presentation review before merge |
 
 ## Engineering tooling design
 
@@ -125,7 +133,7 @@ Current interaction semantics:
 - earlier dashed connectors expressed chronology only and were never historical route geometry; current #418 uses explicitly labelled renderer-only chronological links and midpoint cues; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
 
-The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; Region implementation, publication and interactive owner review are completed. Gate E is closed; no successor product branch is opened. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No new feature branch is opened.
+The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; Region implementation, publication and interactive owner review are completed. Gate E is closed; the later bounded conflict proof is authorized but blocked on evidence closure. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312. No conflict runtime is implemented.
 
 ## Foundation lifecycle records
 
