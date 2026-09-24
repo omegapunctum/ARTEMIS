@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Epistemic Conflict / Uncertainty Proof v1 implementation-ready — evidence accepted`" in scope
+    assert "Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -136,7 +136,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "single bounded pre-E1 product correction" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
     assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
-    assert "evidence gate accepted/closed" in state["next_transition"]["condition"]
+    assert "non-public technical proof implemented" in state["next_transition"]["condition"]
     assert "contextual composition DEFERRED" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["architecture_checkpoint"]["decision"] == "ADOPT"
@@ -269,6 +269,10 @@ def test_current_owners_close_gate_e_without_comparative_value_or_successor():
     assert "ACCEPT_EVIDENCE_PACKAGE" in proof_closeout
     assert proof["reviewed_pr_head"] in proof_closeout
     assert proof["evidence_package_id"] in proof_closeout
+    implementation_closeout = _text(proof["implementation_closeout_ref"])
+    assert proof["implementation_pr_head"] in implementation_closeout
+    assert proof["implementation_merge_commit"] in implementation_closeout
+    assert "UNVALIDATED" in implementation_closeout
     assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
     assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
     for path in (

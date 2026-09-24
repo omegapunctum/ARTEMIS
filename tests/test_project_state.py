@@ -321,7 +321,7 @@ def test_completed_e2_evidence_does_not_validate_user_value() -> None:
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
 
 
-def test_owner_closeout_preserved_with_one_implementation_ready_successor() -> None:
+def test_owner_closeout_preserved_with_one_technically_completed_proof() -> None:
     state = _state()
     assert state["work_in_progress_limit"] == 1
     assert state["github"]["active_issues"] == [355]
@@ -343,26 +343,31 @@ def test_owner_closeout_preserved_with_one_implementation_ready_successor() -> N
     assert contextual["implementation_authorized"] is False
     assert contextual["successor_opened"] is False
     proof = state["epistemic_conflict_proof"]
-    assert proof["status"] == "implementation_ready"
+    assert proof["status"] == "technical_implementation_completed"
     assert proof["evidence_state"] == "accepted"
     assert proof["evidence_verdict"] == "ACCEPT_EVIDENCE_PACKAGE"
     assert proof["evidence_package_id"] == "atl-1466-1-733v-dating-attribution-v1"
     assert proof["evidence_package_ref"] in state["canonical_refs"]
     assert proof["evidence_closeout_ref"] in state["canonical_refs"]
+    assert proof["implementation_closeout_ref"] in state["canonical_refs"]
     assert proof["evidence_package_blob"] == "170d1a7ef2fa5aecd504805d4e5b173d4de16f26"
     assert proof["reviewed_pr_head"] == "5e0c86e7dcc985e4ecd38789772c02e55a5021c3"
     assert proof["runtime_data_promotion_authorized"] is True
-    assert proof["implementation_completion"] == "not_started"
+    assert proof["implementation_completion"] == "completed_non_public_review_proof"
     assert proof["decision"] == "NARROW_EPISTEMIC_CONFLICT_PROOF_V1"
     assert proof["product_ux_disposition"] == "SPEC_AMENDMENT_READY"
     assert proof["specification_provenance"] == "consolidated_owner_handoff_and_accepted_amendment_in_repository"
     assert proof["specification_ref"] in state["canonical_refs"]
-    assert proof["implementation_started"] is False
+    assert proof["implementation_started"] is True
     assert proof["numerical_query_envelopes_required"] is False
     assert proof["case_specific_range_scrub_authorized"] is False
     assert proof["human_review"] == "accepted"
     assert proof["human_review_scope"] == "evidence_package_only"
-    assert proof["implementation_presentation_review"] == "pending"
+    assert proof["implementation_presentation_review"] == "accepted"
+    assert proof["implementation_pr"] == 453
+    assert proof["implementation_pr_head"] == "71ea23a223334ec676ff8e1d9fe778785542eacb"
+    assert proof["implementation_merge_commit"] == "5c421648378d91166c35cc453af1b60e0c39659a"
+    assert proof["implementation_review_comment_id"] == 5812445343
     assert proof["additional_successor_opened"] is False
     assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
     for target in ("E", "TEMPORAL_REGION_PROOF", "D", "STOP"):
@@ -442,13 +447,14 @@ def test_contextual_closeout_remains_registered_without_being_current_transition
 
 @pytest.mark.parametrize("field,value", [
     ("evidence_state", "not_closed"),
-    ("implementation_started", True),
+    ("implementation_started", False),
     ("numerical_query_envelopes_required", True),
     ("case_specific_range_scrub_authorized", True),
     ("runtime_data_promotion_authorized", False),
-    ("implementation_completion", "completed"),
+    ("implementation_completion", "not_started"),
     ("human_review", "pending"),
-    ("implementation_presentation_review", "accepted"),
+    ("implementation_presentation_review", "pending"),
+    ("implementation_pr_head", "unreviewed"),
     ("additional_successor_opened", True),
 ])
 def test_conflict_authorization_cannot_fabricate_evidence_or_runtime(field, value):
@@ -466,6 +472,10 @@ def test_conflict_authorization_requires_registered_current_decision():
     state = _state()
     state["canonical_refs"].remove(state["epistemic_conflict_proof"]["evidence_closeout_ref"])
     with pytest.raises(ProjectStateError, match="registered accepted evidence package"):
+        validate_project_state(state)
+    state = _state()
+    state["canonical_refs"].remove(state["epistemic_conflict_proof"]["implementation_closeout_ref"])
+    with pytest.raises(ProjectStateError, match="registered implementation closeout"):
         validate_project_state(state)
     state = _state()
     ref = state["epistemic_conflict_proof"]["decision_ref"]
