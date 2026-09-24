@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.10.0",
+  "schema_version": "1.11.0",
   "project": "ARTEMIS",
   "updated_at": "2026-09-24",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
@@ -169,14 +169,15 @@
     "docs/work/2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md",
     "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md",
     "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md",
-    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"
+    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
+    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md"
   ],
   "blockers": [],
   "next_transition": {
     "target": "EPISTEMIC_CONFLICT_PROOF",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
-    "condition": "Epistemic Conflict / Uncertainty Proof v1 authorized by the owner for one artifact ATL.1466.1 / fol. 733 verso and two dating positions, implementation-after-DECISION / REVIEW. EVIDENCE_CLOSURE_REQUIRED before historical data promotion or runtime implementation: reviewed case-specific Claims, EvidenceLinks, Museo Galileo locators and temporal envelopes are absent from main. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected and comparative/formal value UNVALIDATED; contextual composition DEFERRED; no further successor."
+    "condition": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1 / SPEC_AMENDMENT_READY: bounded Product Specification v1.1 recorded for one artifact ATL.1466.1 / fol. 733 verso and two unresolved source-native dating assertions. EVIDENCE_CLOSURE_REQUIRED before historical data promotion or runtime work: exact common Claim subject, reproducible Museo Galileo locators, direct-vs-mediated provenance, separately reviewed Claims and EvidenceLinks, existing epistemic classification/source-conflict uncertainty, circa wording, and reviewed conditional two-period-use provenance. Numerical query envelopes and case-specific Range/Scrub are outside v1. Research stop at the obsolete envelope gate was not an evidence failure. Gate E closed without VALUE_SIGNAL; E2 waived/not collected; comparative/formal value UNVALIDATED; contextual composition DEFERRED; no further successor."
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -241,12 +242,18 @@
     "autonomy": "review_implementation_after_decision",
     "subject": "ATL.1466.1 / fol. 733 verso",
     "evidence_state": "not_closed",
-    "specification_provenance": "owner_reported_accepted_text_not_in_repository",
+    "specification_provenance": "consolidated_owner_handoff_and_accepted_amendment_in_repository",
     "runtime_data_promotion_authorized": false,
     "implementation_completion": "not_started",
     "human_review": "pending",
     "additional_successor_opened": false,
-    "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"
+    "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
+    "decision": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1",
+    "product_ux_disposition": "SPEC_AMENDMENT_READY",
+    "specification_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md",
+    "implementation_started": false,
+    "numerical_query_envelopes_required": false,
+    "case_specific_range_scrub_authorized": false
   },
   "region_closeout": {
     "implementation": "completed",

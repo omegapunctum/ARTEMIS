@@ -384,6 +384,8 @@ def validate_project_state(state: dict | None = None) -> dict:
         proof = payload.get("epistemic_conflict_proof")
         if not proof or proof["decision_ref"] != proof_ref or proof_ref not in payload["canonical_refs"]:
             raise ProjectStateError("bounded conflict proof requires registered owner authority")
+        if proof["specification_ref"] not in payload["canonical_refs"]:
+            raise ProjectStateError("bounded conflict proof requires registered accepted specification")
         if payload["next_transition"]["decision_ref"] != proof_ref:
             raise ProjectStateError("bounded conflict proof must cite its registered authority")
         if proof["evidence_state"] != "not_closed" or proof["runtime_data_promotion_authorized"] is not False:

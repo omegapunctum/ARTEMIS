@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.10.json",
-  "title": "ARTEMIS machine-readable operational state v1.10",
+  "$id": "https://artemis.example/schemas/project-state-v1.11.json",
+  "title": "ARTEMIS machine-readable operational state v1.11",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.10.0"},
+    "schema_version": {"const": "1.11.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -240,13 +240,19 @@
     "epistemic_conflict_proof": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "autonomy", "subject", "evidence_state", "specification_provenance", "runtime_data_promotion_authorized", "implementation_completion", "human_review", "additional_successor_opened", "decision_ref"],
+      "required": ["status", "autonomy", "subject", "evidence_state", "decision", "product_ux_disposition", "specification_provenance", "specification_ref", "implementation_started", "numerical_query_envelopes_required", "case_specific_range_scrub_authorized", "runtime_data_promotion_authorized", "implementation_completion", "human_review", "additional_successor_opened", "decision_ref"],
       "properties": {
         "status": {"const": "authorized_evidence_closure_required"},
         "autonomy": {"const": "review_implementation_after_decision"},
         "subject": {"const": "ATL.1466.1 / fol. 733 verso"},
         "evidence_state": {"const": "not_closed"},
-        "specification_provenance": {"const": "owner_reported_accepted_text_not_in_repository"},
+        "decision": {"const": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1"},
+        "product_ux_disposition": {"const": "SPEC_AMENDMENT_READY"},
+        "specification_provenance": {"const": "consolidated_owner_handoff_and_accepted_amendment_in_repository"},
+        "specification_ref": {"const": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md"},
+        "implementation_started": {"const": false},
+        "numerical_query_envelopes_required": {"const": false},
+        "case_specific_range_scrub_authorized": {"const": false},
         "runtime_data_promotion_authorized": {"const": false},
         "implementation_completion": {"const": "not_started"},
         "human_review": {"const": "pending"},
