@@ -19,7 +19,7 @@ def test_agent_and_documentation_routing_have_single_registries() -> None:
     assert "single entrypoint for agents" in agents
     assert "docs/FOUNDATION_INDEX.md" in agents
     assert "docs/work/README.md" in agents
-    assert "единственный реестр canonical owner documents" in foundation
+    assert "sole registry of canonical owner documents" in foundation
     assert "Текущий canonical layer зарегистрирован только" in documentation
     assert "Полный canonical set" in structure
     assert "working-layer lifecycle registry" in work_registry

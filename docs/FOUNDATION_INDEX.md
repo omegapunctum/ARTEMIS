@@ -2,41 +2,41 @@
 
 Current lifecycle and capability state are intentionally not duplicated here. Use `docs/PROJECT_TRUTH.md` for current reality, `docs/project_state.json` for machine-readable operational state, and `docs/work/README.md` for active working-document lifecycle.
 
-## Статус
+## Status
 
-- Тип: canonical foundation index.
-- Версия: 3.9.
-- Дата: 2026-09-13.
-- Статус: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
-- Роль: единственный реестр canonical owner documents, owner routing и conflict routing.
+- Type: canonical foundation index.
+- Version: 3.9.
+- Date: 2026-09-13.
+- Status: active; Foundation v3.1 attractor refinement accepted in PR `#364`.
+- Role: the sole registry of canonical owner documents, owner routing and conflict routing.
 
 ## 1. Foundation purpose
 
-Foundation-layer сохраняет ARTEMIS как одну source-aware spatial-temporal knowledge model about the world, а не набор несвязанных map, timeline, cards, backend, courses, AI and 3D features.
+The foundation layer preserves ARTEMIS as one source-aware spatial-temporal knowledge model about the world, rather than a collection of disconnected map, timeline, card, backend, course, AI and 3D features.
 
-Технический термин `World Model` сохраняется. Его identity-level interpretation принадлежит `ARTEMIS_CONCEPT.md`; reviewed executable spatial-temporal semantics остаются в `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` и меняются только через собственный review path.
+The technical term `World Model` is retained. Its identity-level interpretation belongs to `ARTEMIS_CONCEPT.md`; reviewed executable spatial-temporal semantics remain in `SPATIOTEMPORAL_WORLD_MODEL_CONTRACT.md` and change only through that contract's review path.
 
-Foundation определяет:
+The foundation defines:
 
-1. что такое ARTEMIS и каков его long-term attractor;
-2. как моделируются space, time and change;
-3. какие knowledge objects существуют;
-4. как утверждения связываются с evidence;
-5. как различаются proximity, encounter, interaction, influence and causality;
-6. как один semantic core поддерживает many domains and many interfaces;
-7. какой owner отвечает на конкретный тип вопроса;
-8. как content/runtime/release/AI остаются управляемыми.
+1. what ARTEMIS is and what its long-term attractor is;
+2. how space, time and change are modeled;
+3. which knowledge objects exist;
+4. how claims connect to evidence;
+5. how proximity, encounter, interaction, influence and causality are distinguished;
+6. how one semantic core supports many domains and interfaces;
+7. which owner answers each type of question;
+8. how content, runtime, release and AI remain governed.
 
 ## 2. Four truth levels
 
 | Level | Owner | Question |
 |---|---|---|
-| North Star | `ARTEMIS_CONCEPT.md` | Чем является ARTEMIS, каков его attractor и какие инварианты нельзя нарушить? |
-| Active product | `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md` | Для кого и что проверяется сейчас? |
-| Current reality | `PROJECT_TRUTH.md` | Что фактически работает? |
-| Validated outcome | `VALIDATION_DECISION.md` + active validation record | Что доказано и какая одна следующая ветвь может быть разрешена? |
+| North Star | `ARTEMIS_CONCEPT.md` | What is ARTEMIS, what is its attractor, and which invariants must not be violated? |
+| Active product | `PRODUCT_THESIS.md`, `ARTEMIS_PRODUCT_SCOPE.md` | For whom and what is being tested now? |
+| Current reality | `PROJECT_TRUTH.md` | What actually works? |
+| Validated outcome | `VALIDATION_DECISION.md` + active validation record | What has been proven, and which single next branch may be authorized? |
 
-North Star не является release promise. Backend code не является public capability. Document/schema не является user-value evidence. Attractor and broader Product Thesis do not authorize implementation scope.
+The North Star is not a release promise. Backend code is not a public capability. A document or schema is not evidence of user value. The attractor and broader Product Thesis do not authorize implementation scope.
 
 ## 3. Canonical registry
 
