@@ -57,7 +57,7 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 
 | Document | Lifecycle | Scope |
 |---|---|---|
-| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Next authorized task specification; independent specification review required before implementation | DOS v1.9 delegated successor to completed verification baseline; existing Leonardo task and neutral EN/RU source-status copy only; no new product gate, corpus promotion or user-value claim |
+| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Accepted bounded task specification; independent AI specification acceptance recorded before implementation | DOS v1.9 delegated successor to completed verification baseline; existing Leonardo task and neutral EN/RU source-status copy only; no new product gate, corpus promotion or user-value claim |
 
 ## Engineering tooling design
 
