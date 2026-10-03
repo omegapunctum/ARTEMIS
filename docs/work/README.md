@@ -23,7 +23,7 @@ Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty
 
 A filename containing `ACTIVE`, an old status header or an issue reference does not make a document active.
 
-Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Historical interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E is closed by owner decision, E1 is owner-reported PASS, E2 is NOT COLLECTED / WAIVED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
+Historical First-Use presentation baseline: #439, publication-verified 2026-09-20; [closeout](2026-09-20_LEONARDO_FIRST_USE_PUBLICATION_CLOSEOUT_v1.md). Historical interaction baseline: #419 / `a1479670d7f7628ffb85b887961ff27654e2fa2f` (publication verified 2026-09-09), after completed #418 Place-centric correction. #416 future Global/Focus decision is preserved. Owner acceptance is closed; Gate E is closed by owner decision, E1 is owner-reported PASS, E2 is NOT COLLECTED / WAIVED, and formal user value remains UNVALIDATED. The bounded Region proof is merged in #421 and is published as a separate public R&D preview (owner-supplied live evidence). Historical Leonardo-only Pages run 34684871951 successfully deployed main 5875498b on 2026-09-12 with Leonardo as default.
 
 ## Completed Region proof and owner review
 
@@ -53,11 +53,13 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 |---|---|---|
 | `2026-10-03_AUTONOMOUS_VERIFICATION_BASELINE_v1.md` | Completed technical evidence / TECHNICAL_PASS | PR #457 merged; exact-head CI and independent AI acceptance; live Globe/Region byte verification PASS in Pages 37096385991; no new product gate/corpus/public ATL |
 
-## Source-aware Leonardo task — bounded maintenance
+Current Leonardo source-status presentation: #460, independently AI-accepted, merged and live byte-verified. See [bounded task closeout](2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md#technical-implementation-and-publication-closeout--2026-10-03); historical Claim statuses and product/gate dispositions remain unchanged.
+
+## Completed source-aware Leonardo maintenance
 
 | Document | Lifecycle | Scope |
 |---|---|---|
-| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Accepted bounded task specification; independent AI specification acceptance recorded before implementation | DOS v1.9 delegated successor to completed verification baseline; existing Leonardo task and neutral EN/RU source-status copy only; no new product gate, corpus promotion or user-value claim |
+| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Completed technical evidence / TECHNICAL_TASK_PASS | PR #459 specification / #460 implementation independently AI-accepted and merged; two Chromium research loops, 355 Core tests and live Globe/Region byte verification PASS; no historical promotion, new product gate or value claim; next candidate remains proposal only |
 
 ## Engineering tooling design
 

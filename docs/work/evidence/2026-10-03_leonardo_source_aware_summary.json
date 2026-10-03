@@ -1,0 +1,278 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_kind": "automated_technical_task_with_independent_AI_review",
+  "task": "SOURCE_AWARE_RESEARCH_LOOP_V1",
+  "outcome": "TECHNICAL_TASK_PASS",
+  "pull_request": 460,
+  "reviewed_head": "07a60bb61105b24942ebf5e10fdce91bae73c6a0",
+  "reviewed_tree": "34a08b905c870f19e2b106b9ffa349abadb664e5",
+  "ci_checkout": "9adf214ce5baa16652c4f97e303437a9318b595b",
+  "ci_checkout_tree": "34a08b905c870f19e2b106b9ffa349abadb664e5",
+  "implementation_merge": "87df1bd13d019a969e0782a4c9e3d73bd5dc0273",
+  "independent_reviewer": "/root/architecture_audit",
+  "independent_verdict": "ACCEPT_IMPLEMENTATION",
+  "unresolved_material_findings": 0,
+  "historical_evidence_promoted": false,
+  "user_value": "UNVALIDATED",
+  "core_run": 37135417060,
+  "core_tests_passed": 355,
+  "browser_artifact": {
+    "id": 11278052335,
+    "sha256": "8d30e2a9cabac9eacecd5f554dc23a84f761bb8d30ae120f28973ccd0e95c842",
+    "retention_days": 14
+  },
+  "primary_bindings_and_disclosed_statuses": [
+    {
+      "presenceId": "presence-rimini-1502-08-08",
+      "claimId": "claim-rimini-presence-1502-08-08",
+      "sourceId": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; chronological entry transcribing the 8 August 1502 Rimini note and identifying Manuscript L folio 78r",
+      "sourceUrl": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+      "reviewState": "draft",
+      "evidenceState": "missing",
+      "confidence": "unknown",
+      "evidenceReviewState": "draft",
+      "disclosedClaims": [
+        {
+          "claimId": "claim-rimini-presence-1502-08-08",
+          "reviewState": "draft",
+          "confidence": "unknown",
+          "evidenceState": "missing"
+        }
+      ]
+    },
+    {
+      "presenceId": "presence-cesena-1502-08-10",
+      "claimId": "claim-cesena-presence-1502-08-10",
+      "sourceId": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; chronological entry transcribing the 10 August 1502 Cesena note and identifying Manuscript L folio 46v",
+      "sourceUrl": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+      "reviewState": "draft",
+      "evidenceState": "missing",
+      "confidence": "unknown",
+      "evidenceReviewState": "draft",
+      "disclosedClaims": [
+        {
+          "claimId": "claim-cesena-presence-1502-08-10",
+          "reviewState": "draft",
+          "confidence": "unknown",
+          "evidenceState": "missing"
+        },
+        {
+          "claimId": "claim-cesena-survey-folios-9r-10r",
+          "reviewState": "rejected",
+          "confidence": "low",
+          "evidenceState": "missing"
+        }
+      ]
+    },
+    {
+      "presenceId": "presence-cesenatico-1502-09-06",
+      "claimId": "claim-cesenatico-presence-1502-09-06",
+      "sourceId": "source-uniurb-volpe-chronology",
+      "locator": "Printed p. 16; chronological entry transcribing the 6 September 1502 Cesenatico note and identifying Manuscript L folio 66v",
+      "sourceUrl": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+      "reviewState": "draft",
+      "evidenceState": "missing",
+      "confidence": "unknown",
+      "evidenceReviewState": "draft",
+      "disclosedClaims": [
+        {
+          "claimId": "claim-cesenatico-dated-folio-66v",
+          "reviewState": "draft",
+          "confidence": "unknown",
+          "evidenceState": "missing"
+        },
+        {
+          "claimId": "claim-cesenatico-presence-1502-09-06",
+          "reviewState": "draft",
+          "confidence": "unknown",
+          "evidenceState": "missing"
+        }
+      ]
+    },
+    {
+      "presenceId": "presence-imola-autumn-1502",
+      "claimId": "claim-imola-map-work-autumn-1502",
+      "sourceId": "source-rct-imola-map",
+      "locator": "Collection item 912284; catalogue map-work and autumn 1502 context",
+      "sourceUrl": "https://www.rct.uk/collection/912284/a-map-of-imola",
+      "reviewState": "draft",
+      "evidenceState": "missing",
+      "confidence": "unknown",
+      "evidenceReviewState": "draft",
+      "disclosedClaims": [
+        {
+          "claimId": "claim-imola-map-work-autumn-1502",
+          "reviewState": "draft",
+          "confidence": "unknown",
+          "evidenceState": "missing"
+        },
+        {
+          "claimId": "claim-imola-street-sketch-source-object",
+          "reviewState": "draft",
+          "confidence": "unknown",
+          "evidenceState": "missing"
+        }
+      ]
+    }
+  ],
+  "browser_cases": [
+    {
+      "browser": "Chrome/134.0.6998.35",
+      "recorded_at_utc": "2026-10-03T16:04:20.029Z",
+      "requested_window": {
+        "width": 1440,
+        "height": 900
+      },
+      "reduced_motion": true,
+      "runner_sha256": "b70cb397f4f3342971f9e3617bc281013df200d2899f286d45831839dbe49b21",
+      "outcome": "TECHNICAL_TASK_PASS",
+      "range_presence_count": 4,
+      "scrub_presence_count": 7,
+      "empty_presence_count": 0,
+      "range_selected": "presence-rimini-1502-08-08",
+      "scrub_selected": "presence-cesenatico-1502-09-06",
+      "keyboard_sources": true,
+      "keyboard_uncertainty": true,
+      "domain_data_unchanged": true,
+      "captures": [
+        {
+          "name": "1440-source-aware-source-status-en.png",
+          "dimensions_px": [
+            1440,
+            761
+          ],
+          "sha256": "ecce6f0433eb1f335f95a0ee27eaa913f2644a876318c47e11914e7c7dd85a24"
+        },
+        {
+          "name": "1440-source-aware-source-status-ru.png",
+          "dimensions_px": [
+            1440,
+            761
+          ],
+          "sha256": "777ecd397fe012f1700c82ad20fbb22f110df471265e13dc07e5228ccf61b690"
+        },
+        {
+          "name": "1440-source-aware-cesena-claim-status.png",
+          "dimensions_px": [
+            1440,
+            761
+          ],
+          "sha256": "4e10b9979b248d7443eebf1fa38d47ed2cdc784044bee814eb6ea8642074b763"
+        },
+        {
+          "name": "1440-source-aware-range-keyboard.png",
+          "dimensions_px": [
+            1440,
+            761
+          ],
+          "sha256": "8a8dea4f47e9584c97c4758df3926253e05b33c4bc37cbc0c0fcb4f0e97d4bdc"
+        },
+        {
+          "name": "1440-source-aware-scrub-restored.png",
+          "dimensions_px": [
+            1440,
+            761
+          ],
+          "sha256": "4c8cdb4283854423b7656caccf3ae789cd43d1b802bc3378f39df76dcd7aa605"
+        },
+        {
+          "name": "1440-source-aware-empty-corpus.png",
+          "dimensions_px": [
+            1440,
+            761
+          ],
+          "sha256": "0ec26ba59395bceb26daf9d20a419319724118472779de83e41fbcd52cb246d3"
+        }
+      ]
+    },
+    {
+      "browser": "Chrome/134.0.6998.35",
+      "recorded_at_utc": "2026-10-03T16:04:49.385Z",
+      "requested_window": {
+        "width": 500,
+        "height": 900
+      },
+      "reduced_motion": true,
+      "runner_sha256": "b70cb397f4f3342971f9e3617bc281013df200d2899f286d45831839dbe49b21",
+      "outcome": "TECHNICAL_TASK_PASS",
+      "range_presence_count": 4,
+      "scrub_presence_count": 7,
+      "empty_presence_count": 0,
+      "range_selected": "presence-rimini-1502-08-08",
+      "scrub_selected": "presence-cesenatico-1502-09-06",
+      "keyboard_sources": true,
+      "keyboard_uncertainty": true,
+      "domain_data_unchanged": true,
+      "captures": [
+        {
+          "name": "500-source-aware-source-status-en.png",
+          "dimensions_px": [
+            500,
+            761
+          ],
+          "sha256": "d7b3a987b0d569b488e25b75f71ad6b502fa3a6ae9e949deb77ff28d0de45812"
+        },
+        {
+          "name": "500-source-aware-source-status-ru.png",
+          "dimensions_px": [
+            500,
+            761
+          ],
+          "sha256": "2870d66b3ff6c3bfc60b7c20bb564b5dcb401a4046134c12cfca19f0fbdbc1ee"
+        },
+        {
+          "name": "500-source-aware-cesena-claim-status.png",
+          "dimensions_px": [
+            500,
+            761
+          ],
+          "sha256": "16a482c668e41c65d8870f8900bf55a1c78658566ef5343b5cb17eaf67d0b323"
+        },
+        {
+          "name": "500-source-aware-range-keyboard.png",
+          "dimensions_px": [
+            500,
+            761
+          ],
+          "sha256": "29b8c88c247b05103c00fcbd2a872e15cb67cddb55ea0ed969a88c6ef079f157"
+        },
+        {
+          "name": "500-source-aware-scrub-restored.png",
+          "dimensions_px": [
+            500,
+            761
+          ],
+          "sha256": "b412a348f390bf31cf24c8d800199dfa2a2ea464bf0638cc339317dffe21c9fc"
+        },
+        {
+          "name": "500-source-aware-empty-corpus.png",
+          "dimensions_px": [
+            500,
+            761
+          ],
+          "sha256": "4f1d037e2cb9253585fb37acac4d95868b1fd6e89a70236d7e63d9c11150521c"
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "run_id": 37135770302,
+    "source_commit": "87df1bd13d019a969e0782a4c9e3d73bd5dc0273",
+    "attempt": 1,
+    "verification": "live_metadata_equality_and_every_manifest_file_SHA256",
+    "outcome": "PASS",
+    "globe_files": 16,
+    "region_files": 20,
+    "region_reconstruction_provenance_retest": "PASS",
+    "region_snapshots": 3
+  },
+  "limitations": [
+    "Source URL/locator bindings were checked against existing repository data; remote source availability and historical evidence were not revalidated.",
+    "Keyboard disclosure evidence tests native activation after named-control focus; this is not a full Tab-navigation or assistive-technology audit.",
+    "CI browser cases test the built artifact; separate release verification identifies the deployed bytes.",
+    "Independent AI screenshot review is scoped technical review, not human comprehension, participant evidence or user-value validation.",
+    "Requested browser windows differ from actual capture sizes; dimensions are reported per capture."
+  ]
+}
