@@ -1,6 +1,6 @@
 # SOURCE_AWARE_RESEARCH_LOOP_V1
 
-Status: accepted next authorized bounded task specification under the delegated audit sequence; implementation has not started. Independent AI specification acceptance is recorded below. This is not historical evidence promotion or a new product gate.
+Status: completed bounded technical task / `TECHNICAL_TASK_PASS`. Specification and implementation independently AI-accepted; PR #460 merged and live publication byte-verified. The closeout below supersedes the preparation-era next-action wording. This is not historical evidence promotion or a new product gate.
 
 Authority: current `docs/DEVELOPMENT_OPERATING_SYSTEM.md` v1.9, section 6, explicitly delegates verification of existing proofs followed by one source-aware Leonardo task over existing data. The orchestrator selected this task after completed technical baseline PRs #457/#458. [Baseline evidence](2026-10-03_AUTONOMOUS_VERIFICATION_BASELINE_v1.md) records `TECHNICAL_PASS`, independent AI acceptance and live Globe/Region verification in Pages run `37096385991`. This specification records the next bounded task, not a reopened historical gate.
 
@@ -104,3 +104,41 @@ Deliver a compact result matrix tied to revision, browser/viewport and reproduci
 Outcomes: `TECHNICAL_TASK_PASS`, `BOUNDED_CORRECTION_REQUIRED`, or `BLOCKED_SOURCE_STATUS_OR_SEMANTICS`. PASS requires zero unresolved critical/material findings and honest status disclosure. A genuinely unreachable external source is a recorded access limitation, not authority to replace its content or locator.
 
 Stop after the bounded task is verified or a source/semantic blocker is concretely identified. No new corpus, next UI surface, historical review promotion, simulated-user validation or automatic successor follows. If the interface already satisfies a requirement, preserve it without optional redesign.
+
+
+## Technical implementation and publication closeout — 2026-10-03
+
+Outcome: **TECHNICAL_TASK_PASS**. Specification PR #459 merged at `f2c394e4dc4e39ee9fc5691fbee72f1713347f76`; implementation PR #460 merged at `87df1bd13d019a969e0782a4c9e3d73bd5dc0273`. No unresolved material finding remains in this bounded task. Frozen package, Claim/EvidenceLink/source statuses, coordinates, temporal values and null historical routes were not changed. `docs/project_state.json` retains the existing product/gate state; this is completed maintenance, not a new product gate.
+
+Exact independent implementation acceptance: agent `/root/architecture_audit`, `ACCEPT_IMPLEMENTATION`, PR #460 head `07a60bb61105b24942ebf5e10fdce91bae73c6a0`. CI checked merge candidate `9adf214ce5baa16652c4f97e303437a9318b595b`; its tree `34a08b905c870f19e2b106b9ffa349abadb664e5` exactly matches the reviewed head and local implementation tree. This checkout identity is technical-test provenance, not a deployed SHA. The independent review examined both reports, EN/RU source explanations, Cesena rejected-status capture, keyboard captures and Romagna header DOM. Retained headings introduce no new material contradiction with accessible disclaimer, statuses and uncertainty; they remain under the accepted First-Use hierarchy.
+
+### Changes and task results
+
+The unconditional reviewed-evidence sentence is replaced by linked-source wording and a pointer to recorded Claim review/evidence statuses in EN/RU. The non-exhaustive-source-list and no-credibility-score meanings remain. Existing browser evidence is extended with normal mouse/native keyboard input; no parallel framework or new runtime state is introduced. The regression executes the shipped source/Claim rendering and localization functions against all four generated existing records, preserving every Claim status and locator.
+
+| Reproducible action | Result at both widths |
+|---|---|
+| Range 1502–1502; select each episode in the sequence | Exactly Rimini, Cesena, Cesenatico, Imola / four Places; correct popup then drawer; single click does not move camera |
+| Sources → Record and location details → Claims & evidence | Four primary bindings above remain exact; all primary Claims draft / unknown / missing, EvidenceLinks draft |
+| Cesena deeper Claim disclosure | Separate survey-folios 9r–10r Claim visibly rejected / low / missing; additional locators are not promoted |
+| EN/RU source explanation and deeper status | Neutral verification disclaimer/status pointer preserved; native status values remain visible |
+| Reload selected Range URL | Range 1502–1502 and Rimini identity restored; drawer state is outside URL contract |
+| Scrub 1452 → 1502; select Cesenatico; reload | Seven episodes / seven Places and selected Cesenatico identity restored; accumulation does not assert itinerary |
+| Range 1501–1501 | Zero records; corpus-qualified empty state and cleared selection, no historical-absence assertion |
+| Native keyboard Sources / What remains uncertain disclosure | Both activate after named-control focus; source/uncertainty content remains accessible |
+
+Core run [37135417060](https://github.com/omegapunctum/ARTEMIS/actions/runs/37135417060) passed **355 tests** and both research loops. Runtime Spike `37135416894`, Repository Boundary `37135416957` and Geospatial Assets `37135417031` also passed on the same head. Local Core checks passed 355 tests; the directly relevant file passed 38. Frozen input validators, JS syntax, transport and diff checks passed. Browser evidence used Chrome `134.0.6998.35`, reduced motion, requested windows 1440×900 / 500×900; actual source-aware captures are **1440×761 / 500×761**. Initial pre-scenario captures have different heights and are not evidence for a 900-pixel viewport.
+
+The first Core browser attempt `37112270247` failed on a test precondition: Sources was already open after the diagnostic First-Use loop, and native Space correctly closed it. The harness now records initial state, closes if needed and opens using native Space with focus/frame checks; it never substitutes a synthetic `.open` assignment for activation. This repaired the verifier, not product behavior. Local Chromium could not run because the execution sandbox rejected its Unix socket; the cloud browser had WebGL disabled. Neither environment produced task PASS; actual browser evidence comes from CI.
+
+Browser artifact `11278052335`, SHA-256 `8d30e2a9cabac9eacecd5f554dc23a84f761bb8d30ae120f28973ccd0e95c842`, contains both reports and captures with 14-day retention. Runner SHA-256 is `b70cb397f4f3342971f9e3617bc281013df200d2899f286d45831839dbe49b21`; local/remote runner bytes and capture hashes were checked. Durable scoped results and capture identities are retained in [technical summary](evidence/2026-10-03_leonardo_source_aware_summary.json); archived checks are reproducible using the reviewed code and frozen inputs.
+
+### Separate live publication verification
+
+Pages [37135770302](https://github.com/omegapunctum/ARTEMIS/actions/runs/37135770302), attempt 1, completed SUCCESS from source `87df1bd13d019a969e0782a4c9e3d73bd5dc0273`. Live build metadata matched the checked release artifacts and every manifest file SHA-256 matched: **Globe 16 files / Region 20 files**. Region browser retest also passed reconstruction wording, clickable provenance/license and three source-native snapshots. This establishes release byte identity and existing R&D availability; it does not convert the earlier CI checkout into deployment evidence or establish historical truth/user value. Later documentation-only deployments may carry a newer source/run identity; use their release manifest and workflow verification rather than treating this historical closeout SHA as eternally live.
+
+### Limits, stop and one next candidate
+
+External source reachability and historical content were not revalidated. A linked publication/locator remains distinct from accepted historical evidence or inspection of the manuscript original. Keyboard proof covers activation of named focused controls plus existing mode Tab/Shift-Tab checks, not a full accessibility/navigation audit. AI screenshot/technical review does not establish human comprehension, comparative value or formal value. Gate E closed, contextual composition DEFERRED and the ATL proof non-public dispositions remain unchanged.
+
+The authorized task stops here. Next concrete Command Center question, **proposal only**: should one read-only reproducibility audit check `claim-cesena-presence-1502-08-10` against the already registered Volpe printed p. 16 / Manuscript L 46v locator? Research would reproduce the passage and distinguish publication from original manuscript; Product would compare literal scope with existing wording; Architecture would independently verify identity/locator and frozen-byte preservation. Possible outcomes: `REPRODUCIBLE_MATCH`, `WORDING_OR_LOCATOR_DISCREPANCY`, `SOURCE_ACCESS_BLOCKED`. Stop after one source and independent reproduction; no substitute source/corpus, rejected-folios borrowing, status promotion or frozen edit. Auditing all four Claims immediately is broader; closing a historical evidence gate would require separate authority. No successor is opened by this proposal.
