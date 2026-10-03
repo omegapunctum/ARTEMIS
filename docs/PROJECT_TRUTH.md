@@ -201,8 +201,8 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 - Airtable World Model shadow schema as a historical corpus, canonical storage authority or product capability;
 - frozen 154-row Airtable plan as imported data, round-trip parity evidence or historical readiness;
 - Gate C package integrated into Airtable as a validated shadow copy;
-- a completed Gate D user-value decision; implementation of #393/#395/#396 does not itself close the gate;
-- first-class State, Process, Trajectory and temporal Region schemas in current public runtime;
+- a validated user-value result from Gate D; its historical exit is completed, but implementation of #393/#395/#396 alone proves neither gate closure nor value;
+- general-purpose public State, Process and Trajectory capabilities; the separate bounded temporal Region R&D preview does not establish a validated general Region capability;
 - product-ready 3D Globe, production dynamic terrain or VR experience; `/globe/` is only a bounded public R&D review route;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;

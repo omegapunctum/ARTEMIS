@@ -1,8 +1,8 @@
-# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.5
+# ARTEMIS — СТРУКТУРА ПРОЕКТА v4.6
 
 Статус: updated canonical project structure document.
 Назначение документа: фиксировать canonical структуру репозитория, архитектурные boundaries, documentation system и место концептуального основания проекта в doc-system.
-Дата обновления: 2026-08-29.
+Дата обновления: 2026-10-03.
 
 ---
 
@@ -92,9 +92,13 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 |---|---|
 | Public ARTEMIS Core landing | generated `/` from `scripts/globe_spike/root-index.html` |
 | Primary Leonardo Globe/Temporal Map research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
+| Separate Roman Empire Temporal Region public R&D preview | generated `/region/` via `scripts/build_globe_spike.py --dataset roman_region_proof --public-preview` |
+| Non-public ATL dating-conflict review proof | `scripts/build_atl_conflict_proof.py`; CI artifact only, excluded from Pages |
 | Architecture Atlas compatibility frontend | source `index.html`, deployed at `/atlas/` |
 | Backend compatibility runtime | `app/main.py` |
 | Architecture Atlas ETL | `scripts/export_airtable.py` |
+| Public preview release identity / byte verification | `scripts/verify_public_artifact.py`; Pages stamps source commit, run identity and file hashes, then verifies live bytes |
+| Non-public ATL browser regression | `scripts/capture_atl_conflict_browser_evidence.mjs`; Core CI technical evidence |
 | Current Core product signal | `ARTEMIS Core Check` / current Core-owned workflow path |
 | Architecture Atlas/backend compatibility release check | `scripts/release_check.py` |
 | World-model fixture validation | `scripts/validate_world_model_fixtures.py` |
@@ -113,6 +117,8 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 - generated Core landing is the default public entrypoint;
 - generated `/globe/` is primary but remains explicitly non-product-validated public R&D;
 - source `index.html` is deployed under `/atlas/` as compatibility-only;
+- `/region/` is a separate public R&D preview, not a validated general Region capability;
+- the ATL conflict proof remains non-public and is not copied into Pages;
 - Explorer State validator is a validation entrypoint, not a frontend/backend runtime entrypoint;
 - working Explorer State and Temporal Map records remain registered through `docs/work/README.md`; they do not become competing canonical semantic owners;
 - legacy-слои не могут становиться скрытым альтернативным active product runtime.
