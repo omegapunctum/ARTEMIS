@@ -600,6 +600,71 @@ def test_primary_selection_exposes_claim_source_and_repeatable_locator(tmp_path:
     assert record["projection_losses"][0]["reason"] == "unknown_spatial_extent"
 
 
+def test_source_list_explanation_preserves_claim_status_and_localized_status_pointer(tmp_path: Path) -> None:
+    """Execute shipped source/Claim renderers; linked sources never promote status."""
+    output = tmp_path / "globe"
+    build_spike(output)
+    objects = {
+        "event-leonardo-rimini-note", "event-leonardo-cesena-survey",
+        "event-leonardo-cesenatico-port-note", "event-leonardo-imola-map-context",
+    }
+    records = [r for r in _load(output / "knowledge-index.json")["records"] if r["object_ref"] in objects]
+    assert len(records) == 4
+    assert all(c["review_state"] in {"draft", "rejected"} for r in records for c in r["claims"])
+    cesena = next(r for r in records if r["object_ref"] == "event-leonardo-cesena-survey")
+    assert next(c for c in cesena["claims"] if c["id"] == "claim-cesena-survey-folios-9r-10r")["review_state"] == "rejected"
+    harness = r"""
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const source = fs.readFileSync('scripts/globe_spike/runtime.js', 'utf8');
+const records = JSON.parse(process.argv[1]);
+const original = JSON.stringify(records);
+class Node {
+  constructor(tag) { this.tag = tag; this.textContent = ''; this.children = []; this.classList = {add() {}}; }
+  append(...children) { this.children.push(...children); }
+}
+const document = {createElement: tag => new Node(tag), documentElement: {dataset: {}},
+  readyState: 'loading', addEventListener() {}, getElementById() { return null; }};
+function appendText(host, tag, text, className) {
+  const node = document.createElement(tag); node.textContent = text; node.className = className;
+  host.append(node); return node;
+}
+function knowledgeDisclosure(host, label) {
+  const node = document.createElement('details'); appendText(node, 'summary', label); host.append(node); return node;
+}
+function fn(name) {
+  const start = source.indexOf('  function ' + name + '(');
+  assert(start >= 0); return source.slice(start, source.indexOf('\n  function ', start + 1));
+}
+const render = new Function('document', 'appendText', 'knowledgeDisclosure', 'safeSourceHref',
+  fn('addPresenceSources') + fn('addEvidence') + ';return {addPresenceSources, addEvidence};')(
+    document, appendText, knowledgeDisclosure, value => value);
+const flat = node => [node, ...node.children.flatMap(flat)];
+const window = {};
+new Function('document', 'window', fs.readFileSync('scripts/globe_spike/localization.js', 'utf8'))(document, window);
+for (const record of records) {
+  const host = new Node('div'); render.addPresenceSources(host, record); render.addEvidence(host, record);
+  const nodes = flat(host), text = nodes.map(n => n.textContent).join('\n');
+  assert(!text.includes('current reviewed evidence'));
+  for (const claim of record.claims) {
+    assert(text.includes(claim.review_state + ' · confidence ' + claim.confidence + ' · evidence ' + claim.evidence_state));
+  }
+  for (const link of record.evidence_links) assert(nodes.some(n => n.tag === 'code' && n.textContent === link.locator));
+  const explanation = nodes.find(n => n.textContent === 'These sources are linked to this displayed record.');
+  const pointer = nodes.find(n => n.textContent.includes('Inclusion here does not mean the historical claims have been verified.'));
+  assert(explanation && pointer && pointer.textContent.includes('See “Claims & evidence”'));
+  window.ARTEMIS_I18N.setLanguage('ru');
+  assert.equal(window.ARTEMIS_I18N.t(explanation.textContent), 'Эти источники связаны с показанной записью.');
+  assert(window.ARTEMIS_I18N.t(pointer.textContent).includes('не означает, что исторические утверждения проверены'));
+  assert(window.ARTEMIS_I18N.t(pointer.textContent).includes('«Утверждения и свидетельства»'));
+  window.ARTEMIS_I18N.setLanguage('en');
+  assert.equal(window.ARTEMIS_I18N.t(pointer.textContent), pointer.textContent);
+}
+assert.equal(JSON.stringify(records), original, 'Rendering must not mutate recorded evidence');
+"""
+    subprocess.run(["node", "-e", harness, json.dumps(records)], cwd=ROOT, check=True)
+
+
 def test_local_source_artifacts_are_copied_with_reviewed_checksums(tmp_path: Path) -> None:
     output = tmp_path / "globe-spike"
     metadata = build_spike(output, dataset="contract_fixture")

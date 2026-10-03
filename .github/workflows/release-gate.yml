@@ -61,6 +61,36 @@ jobs:
           assert metadata["capability_path_is_semantic"] is False
           PY
 
+      - name: Verify Leonardo source-aware research loop in Chromium
+        env:
+          NODE_PATH: /tmp/artemis-browser-tools/node_modules
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/artemis-leonardo-browser-evidence
+          python -m http.server 8765 --bind 127.0.0.1 --directory /tmp/artemis-core-preview > /tmp/artemis-leonardo-browser-evidence/server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
+          for width in 1440 500; do
+            timeout 180s node scripts/capture_globe_browser_evidence.mjs \
+              --browser "$BROWSER" --url http://127.0.0.1:8765/ \
+              --width "$width" --height 900 --timeout-ms 150000 \
+              --reduced-motion true --verify-url-state true --source-aware-research true \
+              --dom "/tmp/artemis-leonardo-browser-evidence/$width.html" \
+              --screenshot "/tmp/artemis-leonardo-browser-evidence/$width.png" \
+              --report "/tmp/artemis-leonardo-browser-evidence/$width.json" \
+              2> >(tee "/tmp/artemis-leonardo-browser-evidence/$width.log" >&2)
+          done
+
+      - name: Attach Leonardo source-aware browser evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: leonardo-source-aware-browser-evidence
+          path: /tmp/artemis-leonardo-browser-evidence/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Build the non-public ATL conflict review proof
         run: python scripts/build_atl_conflict_proof.py --output /tmp/artemis-atl-conflict-proof
 

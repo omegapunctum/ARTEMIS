@@ -27,6 +27,7 @@ function parseArguments(argv) {
   values.timeoutMs = Number(values['timeout-ms'] || 30000);
   values.reducedMotion = values['reduced-motion'] === 'true';
   values.verifyUrlState = values['verify-url-state'] === 'true';
+  values.sourceAwareResearch = values['source-aware-research'] === 'true';
   if (![values.width, values.height, values.timeoutMs].every(Number.isFinite)) {
     throw new Error('Width, height and timeout must be finite numbers');
   }
@@ -36,8 +37,8 @@ function parseArguments(argv) {
 async function waitForDevToolsPort(profileDirectory, browser, deadline) {
   const portFile = join(profileDirectory, 'DevToolsActivePort');
   while (Date.now() < deadline) {
-    if (browser.exitCode !== null) {
-      throw new Error(`Chrome exited before DevTools became available: ${browser.exitCode}`);
+    if (browser.exitCode !== null || browser.signalCode !== null) {
+      throw new Error(`Chrome exited before DevTools became available: ${browser.exitCode ?? browser.signalCode}`);
     }
     try {
       const [port] = (await readFile(portFile, 'utf8')).trim().split(/\r?\n/);
@@ -621,7 +622,9 @@ async function verifyFirstUse(cdp, options) {
         check((Math.max(text, background) + 0.05) / (Math.min(text, background) + 0.05) >= 4.5, 'source link contrast');
       }
       const why = sources.querySelector('.source-scope');
-      check(why.textContent.includes('current reviewed evidence for this displayed record'), 'reviewed inclusion meaning');
+      check(why.textContent.includes('These sources are linked to this displayed record.')
+        && why.textContent.includes('does not mean the historical claims have been verified')
+        && why.textContent.includes('See “Claims & evidence”'), 'status-neutral source inclusion');
       check(why.textContent.includes('Other historical sources may exist; this list is not exhaustive.'), 'non-exhaustiveness');
       check(why.textContent.includes('does not assign source reliability or credibility scores'), 'no source scoring');
       const links = (await r.map.getSource('life-path-chronology').getData()).features;
@@ -646,9 +649,24 @@ async function verifyFirstUse(cdp, options) {
   }
   const details = await capture('details');
   // Native keyboard disclosure activation, followed by source/locator capture.
+  // The diagnostic loop above can leave its last record's Sources open when
+  // there was no initial selection to restore. Establish the closed precondition
+  // with keyboard input too; otherwise a working Space toggle looks like failure.
+  await cdp.send('Emulation.setFocusEmulationEnabled', {enabled: true});
   await evaluate(cdp, "document.querySelector('.presence-sources > summary').focus()");
-  await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
-  await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+  await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  if (!await evaluate(cdp, "document.hasFocus() && document.activeElement === document.querySelector('.presence-sources > summary')")) throw new Error('Sources summary did not receive keyboard focus');
+  const sourcesInitiallyOpen = await evaluate(cdp, "document.querySelector('.presence-sources').open");
+  async function toggleSourcesWithKeyboard() {
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  }
+  if (sourcesInitiallyOpen) {
+    await toggleSourcesWithKeyboard();
+    if (await evaluate(cdp, "document.querySelector('.presence-sources').open")) throw new Error('Sources did not close with keyboard');
+  }
+  await toggleSourcesWithKeyboard();
   if (!await evaluate(cdp, "document.querySelector('.presence-sources').open")) throw new Error('Sources not reachable by keyboard');
   const sources = await capture('sources');
   await evaluate(cdp, `(() => {
@@ -661,7 +679,10 @@ async function verifyFirstUse(cdp, options) {
     const card = document.getElementById('selection-card');
     const why = card.querySelector('.source-scope'); why.open = true;
     window.ARTEMIS_I18N.refresh();
-    if (!why.textContent.includes('не исчерпывающий') || !why.textContent.includes('не присваивает') || !why.textContent.includes('текущие проверенные свидетельства')) throw new Error('Russian source explanation lost');
+    if (!why.textContent.includes('не исчерпывающий') || !why.textContent.includes('не присваивает')
+      || !why.textContent.includes('Эти источники связаны с показанной записью.')
+      || !why.textContent.includes('не означает, что исторические утверждения проверены')
+      || !why.textContent.includes('«Утверждения и свидетельства»')) throw new Error('Russian source explanation lost');
     if (document.getElementById('life-period-label').innerText !== 'Периоды жизни' || document.getElementById('documented-presence-label').innerText !== 'Документированные присутствия') throw new Error('Russian row labels lost');
     if (!card.querySelector('.presence-sources > summary').innerText.startsWith('Источники, подтверждающие это присутствие')) throw new Error('Russian source heading lost');
     card.querySelector('.presence-sources').open = false;
@@ -683,7 +704,215 @@ async function verifyFirstUse(cdp, options) {
     document.getElementById('mode-range').click();
     window.__ARTEMIS_GLOBE_SPIKE.selectPresence(${JSON.stringify(result.initial)});
   })()`);
-  return {...result, localized, keyboardSourceDisclosure: true, captures: {details, sources, sourceScope, russian, coverage}};
+  return {...result, localized, keyboardSourceDisclosure: true,
+    keyboardSourceDisclosureMethod: 'Native Space activation after explicit summary focus; not full keyboard navigation',
+    sourcesInitiallyOpen, captures: {details, sources, sourceScope, russian, coverage}};
+}
+
+async function verifySourceAwareResearch(cdp, options, deadline) {
+  // This task uses browser input. Runtime reads below diagnose identity and data
+  // preservation; they never select an episode or change temporal state.
+  const bindings = [
+    ['presence-rimini-1502-08-08', 'claim-rimini-presence-1502-08-08', 'source-uniurb-volpe-chronology', '78r'],
+    ['presence-cesena-1502-08-10', 'claim-cesena-presence-1502-08-10', 'source-uniurb-volpe-chronology', '46v'],
+    ['presence-cesenatico-1502-09-06', 'claim-cesenatico-presence-1502-09-06', 'source-uniurb-volpe-chronology', '66v'],
+    ['presence-imola-autumn-1502', 'claim-imola-map-work-autumn-1502', 'source-rct-imola-map', '912284'],
+  ];
+  const rangeIds = bindings.map(row => row[0]);
+  const scrubIds = [
+    'presence-leonardo-vinci-birth-1452',
+    'presence-leonardo-florence-st-luke-1472',
+    'presence-leonardo-milan-altarpiece-contract-1483',
+    ...rangeIds,
+  ];
+  const captures = [];
+  const original = await evaluate(cdp, 'JSON.stringify(window.__ARTEMIS_GLOBE_SPIKE.data.lifePath)');
+  const check = (ok, message) => { if (!ok) throw new Error('Source-aware task: ' + message); };
+  async function settle() {
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  }
+  async function click(selector) {
+    await evaluate(cdp, `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({block: 'nearest', inline: 'nearest'})`);
+    await settle();
+    const point = await evaluate(cdp, `(() => {
+      const node = document.querySelector(${JSON.stringify(selector)});
+      if (!node) throw new Error('Missing control: ' + ${JSON.stringify(selector)});
+      const box = node.getBoundingClientRect(), x = box.x + box.width / 2, y = box.y + box.height / 2;
+      if (!box.width || !box.height || !node.contains(document.elementFromPoint(x, y))) throw new Error('Obstructed control: ' + ${JSON.stringify(selector)});
+      return {x, y};
+    })()`);
+    await cdp.send('Input.dispatchMouseEvent', {type: 'mousePressed', button: 'left', clickCount: 1, ...point});
+    await cdp.send('Input.dispatchMouseEvent', {type: 'mouseReleased', button: 'left', clickCount: 1, ...point});
+    await settle();
+  }
+  async function key(key, code, virtualKey) {
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key, code, windowsVirtualKeyCode: virtualKey});
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key, code, windowsVirtualKeyCode: virtualKey});
+  }
+  async function slider(id, year) {
+    const state = await evaluate(cdp, `(() => {
+      const input = document.getElementById(${JSON.stringify(id)});
+      input.focus();
+      return {min: Number(input.min), max: Number(input.max), target: window.__ARTEMIS_GLOBE_SPIKE.data.lifePath.time_axis.values.indexOf(${JSON.stringify(year)})};
+    })()`);
+    check(state.target >= state.min && state.target <= state.max, 'calendar year outside slider');
+    const fromEnd = state.max - state.target < state.target - state.min;
+    await key(fromEnd ? 'End' : 'Home', fromEnd ? 'End' : 'Home', fromEnd ? 35 : 36);
+    for (let i = 0; i < (fromEnd ? state.max - state.target : state.target - state.min); i++) {
+      await key(fromEnd ? 'ArrowLeft' : 'ArrowRight', fromEnd ? 'ArrowLeft' : 'ArrowRight', fromEnd ? 37 : 39);
+    }
+    await settle();
+    check(await evaluate(cdp, `document.getElementById(${JSON.stringify(id)}).getAttribute('aria-valuetext') === ${JSON.stringify(year)}`), 'native keyboard slider year');
+  }
+  async function state() {
+    return evaluate(cdp, `(() => {
+      const r = window.__ARTEMIS_GLOBE_SPIKE;
+      return {mode: r.lifePathMode, start: r.data.lifePath.time_axis.values[r.lifePathStartIndex],
+        end: r.data.lifePath.time_axis.values[r.lifePathEndIndex], selected: r.selectedPresenceId,
+        visible: [...document.querySelectorAll('#presence-sequence button')].filter(b => !b.hidden).map(b => b.dataset.presenceId),
+        places: [...document.querySelectorAll('.life-path-marker')].filter(b => !b.hidden).map(b => b.dataset.placeId),
+        count: Number(document.documentElement.dataset.artemisVisiblePresenceCount), url: location.href};
+    })()`);
+  }
+  async function membership(expected, mode, start, end) {
+    const current = await state();
+    check(JSON.stringify([...current.visible].sort()) === JSON.stringify([...expected].sort()), 'exact Presence membership');
+    check(current.count === expected.length && current.places.length === expected.length, 'Presence/Place counts');
+    check(current.mode === mode && current.start === start && current.end === end, 'temporal controls/state agree');
+    return current;
+  }
+  async function capture(suffix) {
+    const screenshot = options.screenshot.replace(/\.png$/, '-source-aware-' + suffix + '.png');
+    const dom = options.dom.replace(/\.html$/, '-source-aware-' + suffix + '.html');
+    const image = await cdp.send('Page.captureScreenshot', {format: 'png', fromSurface: true, captureBeyondViewport: false});
+    await writeFile(screenshot, Buffer.from(image.data, 'base64'));
+    await writeFile(dom, await evaluate(cdp, 'document.documentElement.outerHTML'));
+    captures.push({screenshot, dom, screenshotSha256: createHash('sha256').update(await readFile(screenshot)).digest('hex')});
+  }
+  async function reload(expected) {
+    await evaluate(cdp, "document.documentElement.dataset.artemisSourceAwareReload = 'before'");
+    await cdp.send('Page.reload', {ignoreCache: false});
+    while (Date.now() < deadline) {
+      if (await evaluate(cdp, "document.documentElement?.dataset.artemisSourceAwareReload !== 'before'").catch(() => false)) break;
+      await delay(100);
+    }
+    await waitForVisualReadiness(cdp, deadline);
+    const restored = await membership(expected.visible, expected.mode, expected.start, expected.end);
+    check(restored.selected === expected.selected, 'selected stable identity survives URL reload');
+    return restored;
+  }
+
+  await click('#language-en');
+  if (await evaluate(cdp, "!document.getElementById('inspector').hidden")) await click('#close-details');
+  await click('#mode-range');
+  await slider('range-start', '1502');
+  await slider('range-end', '1502');
+  await membership(rangeIds, 'range', '1502', '1502');
+  const records = [];
+  for (const [presenceId, claimId, sourceId, locatorFragment] of bindings) {
+    const camera = await evaluate(cdp, 'JSON.stringify({center: window.__ARTEMIS_GLOBE_SPIKE.map.getCenter(), zoom: window.__ARTEMIS_GLOBE_SPIKE.map.getZoom()})');
+    await click('#presence-sequence button[data-presence-id="' + presenceId + '"]');
+    check(await evaluate(cdp, `window.__ARTEMIS_GLOBE_SPIKE.popupPresenceId === ${JSON.stringify(presenceId)} && document.getElementById('inspector').hidden`), 'single selection opens correct compact popup');
+    check(await evaluate(cdp, 'JSON.stringify({center: window.__ARTEMIS_GLOBE_SPIKE.map.getCenter(), zoom: window.__ARTEMIS_GLOBE_SPIKE.map.getZoom()})') === camera, 'single click must not move camera');
+    await click('.popup-details');
+    check(await evaluate(cdp, `document.getElementById('selection-card').dataset.presenceId === ${JSON.stringify(presenceId)} && !document.getElementById('inspector').hidden && !document.querySelector('.presence-popup-card')`), 'correct drawer replaces popup');
+    await click('.presence-sources > summary');
+    const record = await evaluate(cdp, `(() => {
+      const r = window.__ARTEMIS_GLOBE_SPIKE, p = r.data.lifePath.presences.find(p => p.presence_id === ${JSON.stringify(presenceId)});
+      const record = r.knowledgeByItem.get(p.event_item_id), claim = record.claims.find(c => c.id === ${JSON.stringify(claimId)});
+      const evidence = record.evidence_links.find(e => e.claim_id === claim?.id && e.source_id === ${JSON.stringify(sourceId)} && e.locator.includes(${JSON.stringify(locatorFragment)}));
+      const source = record.sources.find(s => s.id === evidence?.source_id), sources = document.querySelector('.presence-sources');
+      if (!claim || !evidence || !source || !sources.open) throw new Error('Claim/source binding missing');
+      if (![...sources.querySelectorAll('code')].some(c => c.textContent === evidence.locator)) throw new Error('Visible source disclosure lost exact locator');
+      const href = source.artifact_uri || source.uri || source.url;
+      if (![...sources.querySelectorAll('a')].some(a => a.href === href)) throw new Error('Source URL missing');
+      return {presenceId: p.presence_id, claimId: claim.id, sourceId: source.id, locator: evidence.locator,
+        sourceUrl: href, reviewState: claim.review_state, evidenceState: claim.evidence_state,
+        confidence: claim.confidence, evidenceReviewState: evidence.review_state};
+    })()`);
+    check(record.reviewState === 'draft' && record.evidenceState === 'missing' && record.confidence === 'unknown' && record.evidenceReviewState === 'draft', 'historical source status must stay unpromoted');
+    await click('#selection-card > .knowledge-details > summary');
+    await click('#selection-card > .knowledge-details .knowledge-details-body > .knowledge-disclosure > summary');
+    record.disclosedClaims = await evaluate(cdp, `(() => {
+      const r = window.__ARTEMIS_GLOBE_SPIKE, p = r.data.lifePath.presences.find(p => p.presence_id === ${JSON.stringify(presenceId)});
+      const record = r.knowledgeByItem.get(p.event_item_id);
+      return record.claims.map(claim => {
+        const group = [...document.querySelectorAll('#selection-card .evidence-group')].find(g => g.querySelector('.record-id')?.textContent === claim.id);
+        const meta = group?.querySelector('.record-meta');
+        const expected = claim.review_state + ' · confidence ' + claim.confidence + ' · evidence ' + claim.evidence_state;
+        if (!meta?.checkVisibility() || meta.innerText !== expected) throw new Error('Recorded Claim status not disclosed: ' + claim.id);
+        for (const link of record.evidence_links.filter(e => e.claim_id === claim.id)) {
+          const row = [...group.querySelectorAll('.evidence-row')].find(e => [...e.querySelectorAll('code')].some(c => c.textContent === link.locator));
+          if (!row || !row.innerText.includes(link.relation_to_claim + ' · ' + link.evidence_strength + ' · ' + link.review_state)) throw new Error('Evidence relation/status not disclosed');
+        }
+        return {claimId: claim.id, reviewState: claim.review_state, confidence: claim.confidence, evidenceState: claim.evidence_state};
+      });
+    })()`);
+    if (presenceId === rangeIds[1]) {
+      check(record.disclosedClaims.some(c => c.claimId === 'claim-cesena-survey-folios-9r-10r'
+        && c.reviewState === 'rejected' && c.confidence === 'low' && c.evidenceState === 'missing'), 'Cesena folios 9r–10r rejection must remain distinct');
+      await evaluate(cdp, `([...document.querySelectorAll('#selection-card .evidence-group')].find(g => g.querySelector('.record-id')?.textContent === 'claim-cesena-survey-folios-9r-10r')).querySelector('.record-meta').scrollIntoView({block: 'center'})`);
+      await settle();
+      await capture('cesena-claim-status');
+    }
+    records.push(record);
+    if (presenceId === rangeIds[0]) {
+      await click('.source-scope > summary');
+      await capture('source-status-en');
+      for (const lang of ['en', 'ru']) {
+        await click('#language-' + lang);
+        const status = await evaluate(cdp, `(() => {
+          const card = document.getElementById('selection-card'), why = card.querySelector('.source-scope');
+          const claim = [...card.querySelectorAll('.evidence-group')].find(g => g.querySelector('.record-id')?.textContent === ${JSON.stringify(claimId)});
+          const meta = claim?.querySelector('.record-meta');
+          if (!meta || !meta.checkVisibility()) throw new Error('Claim status not visibly disclosed');
+          return {copy: why.innerText, status: meta.innerText};
+        })()`);
+        check(status.status === 'draft · confidence unknown · evidence missing', 'native Claim status visible in both locales');
+        check(status.copy.includes(lang === 'en' ? 'These sources are linked to this displayed record.' : 'Эти источники связаны с показанной записью.'), 'neutral source binding in both locales');
+        check(status.copy.includes(lang === 'en' ? 'See “Claims & evidence”' : '«Утверждения и свидетельства»'), 'status disclosure pointer');
+        check(!status.copy.includes('current reviewed evidence') && !status.copy.includes('текущие проверенные свидетельства'), 'no unconditional reviewed-evidence promotion');
+        if (lang === 'ru') await capture('source-status-ru');
+      }
+      await click('#language-en');
+    }
+    await click('#close-details');
+  }
+  // Exercise source access with keyboard on the same normal sequence selection.
+  await click('#presence-sequence button[data-presence-id="' + rangeIds[0] + '"]');
+  const rangeRestored = await reload(await membership(rangeIds, 'range', '1502', '1502'));
+  await click('.popup-details');
+  await evaluate(cdp, "document.querySelector('.presence-sources > summary').focus()");
+  await key(' ', 'Space', 32);
+  await settle();
+  check(await evaluate(cdp, "document.querySelector('.presence-sources').open"), 'native keyboard source disclosure');
+  await evaluate(cdp, "document.querySelector('#selection-card > .knowledge-disclosure:not(.presence-sources) > summary').focus()");
+  await key(' ', 'Space', 32);
+  await settle();
+  check(await evaluate(cdp, `(() => {
+    const section = document.querySelector('#selection-card > .knowledge-disclosure:not(.presence-sources)');
+    return section.open && [...section.querySelectorAll('.uncertainty-card')].some(node => node.checkVisibility() && node.innerText.trim());
+  })()`), 'native keyboard uncertainty disclosure');
+  await capture('range-keyboard');
+  await click('#close-details');
+  await click('#mode-scrub');
+  await slider('scrub-current', '1502');
+  await membership(scrubIds, 'scrub', '1452', '1502');
+  await click('#presence-sequence button[data-presence-id="' + rangeIds[2] + '"]');
+  const scrubRestored = await reload(await membership(scrubIds, 'scrub', '1452', '1502'));
+  await capture('scrub-restored');
+  await click('#mode-range');
+  await slider('range-start', '1501');
+  await slider('range-end', '1501');
+  const empty = await membership([], 'range', '1501', '1501');
+  check(await evaluate(cdp, "document.getElementById('selection-card').textContent.includes('No documented presence overlaps this calendar window.')"), 'corpus-qualified empty state');
+  check(empty.selected === null, 'empty corpus window clears selected Presence');
+  await capture('empty-corpus');
+  check(await evaluate(cdp, 'JSON.stringify(window.__ARTEMIS_GLOBE_SPIKE.data.lifePath)') === original, 'frozen presentation input unchanged');
+  return {outcome: 'TECHNICAL_TASK_PASS', method: 'CDP mouse and native keyboard input; runtime reads for diagnostics only',
+    records, rangeRestored, scrubRestored, empty, keyboardSourceDisclosure: true, keyboardUncertaintyDisclosure: true,
+    domainDataUnchanged: true, captures,
+    limitations: ['Source URLs and locators verified against the existing package; remote source reachability and historical evidence were not revalidated.', 'Automated technical task evidence, not human comprehension or user-value validation.']};
 }
 
 async function main() {
@@ -743,6 +972,9 @@ async function main() {
     // probe cannot alter the captured artifact or downstream domain assertions.
     process.stderr.write('[browser evidence] keyboardInteraction\n');
     const keyboardInteraction = await verifyKeyboardInteraction(cdp, isRegion);
+    const sourceAwareResearch = !isRegion && options.sourceAwareResearch
+      ? await verifySourceAwareResearch(cdp, options, deadline)
+      : null;
     const sha256 = value => createHash('sha256').update(value).digest('hex');
     const provenance = {
       schemaVersion: '1.0.0',
@@ -763,7 +995,7 @@ async function main() {
       screenshotSha256: sha256(await readFile(options.screenshot)),
       limitations: ['Checkout identity is test-code provenance, not proof of the deployed commit.', 'DOM and screenshot precede the separate URL-restoration scenario.', 'Keyboard checks cover named controls only, not a full keyboard or assistive-technology audit.']
     };
-    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, provenance };
+    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, sourceAwareResearch, provenance };
     if (options.report) await writeFile(options.report, JSON.stringify(report, null, 2) + '\n', 'utf8');
     process.stdout.write(`${JSON.stringify(report)}\n`);
   } catch (error) {
