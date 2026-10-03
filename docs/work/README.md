@@ -47,11 +47,11 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 | `2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md` | Accepted bounded Product Specification with `SPEC_AMENDMENT_READY` | Consolidated owner handoff and accepted narrowing; numerical envelopes and case-specific Range/Scrub outside v1; evidence package is separate |
 | `2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md` | Technical implementation and owner presentation review recorded | PR #453 exact head, merge and CI; non-public only; comparative/formal value UNVALIDATED |
 
-## Active engineering verification maintenance
+## Completed engineering verification maintenance
 
 | Document | Lifecycle | Scope |
 |---|---|---|
-| `2026-10-03_AUTONOMOUS_VERIFICATION_BASELINE_v1.md` | Active, owner-authorized AI execution | Existing ATL browser regression, release revision binding and current-owner sync; no new product gate/corpus/public ATL |
+| `2026-10-03_AUTONOMOUS_VERIFICATION_BASELINE_v1.md` | Completed technical evidence / TECHNICAL_PASS | PR #457 merged; exact-head CI and independent AI acceptance; live Globe/Region byte verification PASS in Pages 37096385991; no new product gate/corpus/public ATL |
 
 ## Engineering tooling design
 
