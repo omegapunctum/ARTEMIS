@@ -1015,7 +1015,8 @@
     }
     const why = knowledgeDisclosure(section, 'Why these sources?');
     why.classList.add('source-scope');
-    appendText(why, 'p', 'These sources are included in the current reviewed evidence for this displayed record.');
+    appendText(why, 'p', 'These sources are linked to this displayed record.');
+    appendText(why, 'p', 'Inclusion here does not mean the historical claims have been verified. See “Claims & evidence” for their recorded review and evidence status.');
     appendText(why, 'p', 'Other historical sources may exist; this list is not exhaustive.');
     appendText(why, 'p', 'ARTEMIS does not assign source reliability or credibility scores here.');
   }
