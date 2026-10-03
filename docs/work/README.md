@@ -53,6 +53,12 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 |---|---|---|
 | `2026-10-03_AUTONOMOUS_VERIFICATION_BASELINE_v1.md` | Completed technical evidence / TECHNICAL_PASS | PR #457 merged; exact-head CI and independent AI acceptance; live Globe/Region byte verification PASS in Pages 37096385991; no new product gate/corpus/public ATL |
 
+## Source-aware Leonardo task — bounded maintenance
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Next authorized task specification; independent specification review required before implementation | DOS v1.9 delegated successor to completed verification baseline; existing Leonardo task and neutral EN/RU source-status copy only; no new product gate, corpus promotion or user-value claim |
+
 ## Engineering tooling design
 
 | Document | Lifecycle | Limitation |
