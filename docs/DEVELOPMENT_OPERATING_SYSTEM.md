@@ -1,12 +1,12 @@
-# ARTEMIS — Development Operating System v1.8
+# ARTEMIS — Development Operating System v1.9
 
 Current project state is not duplicated here. Use `docs/PROJECT_TRUTH.md` for current reality, `docs/project_state.json` for machine-readable operational state, and `docs/work/README.md` for active working-document lifecycle.
 
 ## Status
 
 - Type: canonical operational governance.
-- Version: 1.8.
-- Date: 2026-09-13.
+- Version: 1.9.
+- Date: 2026-10-03.
 - Machine-readable state: `docs/project_state.json`.
 - Schema: `docs/project_state.schema.json`.
 
@@ -102,7 +102,20 @@ This is a responsibility flow, not an automatic synchronization promise. A stage
 
 ## 6. Agent autonomy contract
 
-ARTEMIS uses bounded autonomy: humans retain product/semantic authority while agents execute authorized work end to end.
+Owner instruction — 2026-10-02, activated 2026-10-03: the owner requested
+fully AI-operated development, assigned work to subagents, and instructed execution
+to begin. Agents execute, review and merge the authorized work without a required
+human development step. This prospective delegation supersedes the former mandatory
+human implementation/presentation review; it does not rewrite historical acceptance.
+
+The delegated direction is the bounded audit sequence: autonomous verification of
+existing proofs, then one source-aware Leonardo research task over existing data.
+Each stage needs its own durable owner/specification and independent review before
+implementation. The current technical stage is registered in `docs/work/README.md`.
+This delegation is not permission to bypass frozen-contract change control, repository
+protections, evidence/source rights, destructive-operation authorization or external
+access controls. Product agents, MCP, memory and simulation remain deferred product
+features; AI development agents do not implement those features by implication.
 
 Every non-trivial task must be classified before implementation as `AUTO`, `REVIEW` or `DECISION`. Classification follows the highest-risk part of the task, not the file type. If a task crosses classes, use the stricter class. If ambiguity concerns product/domain semantics, evidence or irreversible effects, classify as `DECISION` until resolved.
 
@@ -127,7 +140,7 @@ The agent should not request intermediate approval for ordinary choices inside t
 
 ### 6.2 REVIEW
 
-`REVIEW` is bounded implementation that is authorized in direction but still benefits from human inspection because it contains non-trivial implementation or presentation judgment.
+`REVIEW` is bounded implementation that is authorized in direction but requires independent AI inspection because it contains non-trivial implementation or presentation judgment.
 
 Typical `REVIEW` work includes:
 
@@ -136,13 +149,13 @@ Typical `REVIEW` work includes:
 - bounded data-pipeline changes inside an already-authorized source/write contour;
 - changes whose acceptance includes a visual, interaction or operator judgment that automated checks cannot fully establish.
 
-The agent may independently run the same full execution loop as `AUTO` and prepare a complete PR, but the result remains pending human review before merge.
+The agent may independently run the same full execution loop as `AUTO` and prepare a complete PR, but the result remains pending independent AI review before merge. The reviewer must be a distinct agent instance from the author, inspect the current commit and relevant browser/test evidence, and record a durable verdict with no unresolved critical/material findings. Self-review does not replace this review. AI acceptance establishes technical conformity, not human comprehension or user value.
 
 ### 6.3 DECISION
 
 `DECISION` is work that would create, revise or reopen authority rather than merely execute it.
 
-A human decision is required before implementation when the task would:
+A durable decision in the correct owner is required before implementation when the task would:
 
 - change the North Star, Product Thesis, active product scope or gate/proof transition;
 - change World Model, uncertainty, entity/relation or epistemic semantics;
@@ -152,7 +165,17 @@ A human decision is required before implementation when the task would:
 - publish or operate an external/production effect whose authorization is not already explicit;
 - materially broaden scope beyond the current owner/specification.
 
-Once the human decision is recorded in the correct owner, the resulting implementation task may be reclassified as `AUTO` or `REVIEW`.
+Within the delegated audit sequence, the orchestrator may prepare and record a
+bounded decision after independent AI review of its scope, evidence and semantic
+impact. Once recorded in the correct owner, implementation may be classified as
+`AUTO` or `REVIEW`. Choices outside that delegated direction remain unauthorized;
+record a scope/access blocker rather than invent permission. Frozen evidence or
+semantic contracts retain their own explicit reopening requirements.
+
+Every delegated decision must name the question, alternatives, preferred action,
+owner/specification, acceptance evidence and stop condition. AI-generated assertions
+are not source evidence. Formal/comparative user value remains unvalidated without
+actual user evidence, regardless of agent verdicts.
 
 ### 6.4 Escalation conditions
 
@@ -184,7 +207,8 @@ A separate planning artifact is not required when the accepted owner/specificati
 Owner decision — 2026-09-13: after authorizing PR #427, the owner granted
 standing permission for agents to perform future merges and instructed that
 permission to be recorded here. This supersedes the per-PR merge confirmation
-requirement; it does not expand implementation scope or waive human decisions.
+requirement; it does not expand implementation scope. The later 2026-10-03
+delegation governs independent AI review and decisions within its stated direction.
 
 An agent may merge an authorized PR without another merge-confirmation request
 only when all of these conditions hold:
@@ -192,18 +216,19 @@ only when all of these conditions hold:
 - the PR stays within its accepted owner/specification and declared file scope;
 - all required and relevant checks pass on the exact current head;
 - self-review is complete and no unresolved blocking/material review finding remains;
-- any human review or acceptance required by the task's `REVIEW` contract is recorded;
-- any `DECISION` affecting the change has explicit human authorization; standing
-  merge permission does not authorize the agent to make that decision;
+- independent AI review required by the current `REVIEW` contract is recorded on the exact current head; historical human review remains preserved as historical evidence;
+- any `DECISION` affecting the change is recorded in its governing owner and stays
+  within explicit owner authorization or the delegated audit sequence;
+  standing merge permission alone does not authorize a new decision;
 - no escalation condition in section 6.4 applies, and no task-specific hold or
   instruction to leave the PR unmerged remains in force;
 - GitHub reports the PR mergeable and repository protections/review requirements
   are satisfied without bypass.
 
 For `AUTO`, no additional human merge approval is needed once these conditions
-are met. For `REVIEW`, the existing human-review requirement remains; after
-acceptance the agent performs the merge without asking again. Decision records
-may be merged only to record a decision already explicitly authorized by the owner.
+are met. For `REVIEW`, independent AI acceptance is required; afterwards the agent merges
+without asking again. Decision records may be merged only within the explicit
+owner authorization or the independently reviewed delegated direction above.
 
 Before merging, recheck the current head, checks and review state; use the expected
 head SHA so a changed revision cannot be merged accidentally. Afterwards, report

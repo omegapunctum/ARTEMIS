@@ -17,7 +17,7 @@ Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-09-24.
+- Updated: 2026-10-03.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -46,6 +46,12 @@ Current Leonardo presentation: #439, publication-verified 2026-09-20; [closeout]
 | `2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md` | Narrowed owner authorization; implementation status is superseded by the later technical closeout | `NARROW_EPISTEMIC_CONFLICT_PROOF_V1`; evidence and presentation accepted for PR #453 |
 | `2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md` | Accepted bounded Product Specification with `SPEC_AMENDMENT_READY` | Consolidated owner handoff and accepted narrowing; numerical envelopes and case-specific Range/Scrub outside v1; evidence package is separate |
 | `2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md` | Technical implementation and owner presentation review recorded | PR #453 exact head, merge and CI; non-public only; comparative/formal value UNVALIDATED |
+
+## Active engineering verification maintenance
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-03_AUTONOMOUS_VERIFICATION_BASELINE_v1.md` | Active, owner-authorized AI execution | Existing ATL browser regression, release revision binding and current-owner sync; no new product gate/corpus/public ATL |
 
 ## Engineering tooling design
 

@@ -55,6 +55,8 @@ jobs:
             tests/test_geospatial_assets_contract.py \
             tests/test_globe_repository_boundary.py \
             tests/test_globe_rnd_lifecycle_contract.py \
+            tests/test_project_state.py \
+            tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \
@@ -174,6 +176,13 @@ jobs:
             --output pages_artifact/atlas/deployment-config.js
           node --check pages_artifact/atlas/deployment-config.js
 
+      - name: Bind public previews to the checked release revision
+        run: |
+          python scripts/verify_public_artifact.py stamp --directory pages_artifact/globe \
+            --source-sha "${{ github.sha }}" --run-id "${{ github.run_id }}" --run-attempt "${{ github.run_attempt }}"
+          python scripts/verify_public_artifact.py stamp --directory pages_artifact/region \
+            --source-sha "${{ github.sha }}" --run-id "${{ github.run_id }}" --run-attempt "${{ github.run_attempt }}"
+
       - name: Upload static artifact
         uses: actions/upload-pages-artifact@v5
         with:
@@ -185,6 +194,26 @@ jobs:
         uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
+
+      - name: Verify published previews against checked release artifacts
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          for preview in globe region; do
+            python scripts/verify_public_artifact.py verify \
+              --directory "pages_artifact/$preview" --source-sha "${{ github.sha }}" \
+              --url "${PAGES_URL%/}/$preview/" | tee "/tmp/$preview-release-verification.json"
+          done
+
+      - name: Upload public release verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: public-release-verification
+          path: /tmp/*-release-verification.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Retest published Region provenance and reconstruction disclosure
         env:

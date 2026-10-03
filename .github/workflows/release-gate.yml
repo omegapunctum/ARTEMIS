@@ -24,6 +24,16 @@ jobs:
       - name: Install Core dependencies
         run: pip install jsonschema==4.25.1 pytest
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Install bounded browser verification dependencies
+        run: |
+          npm install --prefix /tmp/artemis-browser-tools --no-package-lock --no-save playwright@1.51.1
+          node /tmp/artemis-browser-tools/node_modules/playwright/cli.js install --with-deps chromium
+
       - name: Validate source-aware Core inputs
         run: |
           python scripts/validate_leonardo_world_slice.py
@@ -54,6 +64,23 @@ jobs:
       - name: Build the non-public ATL conflict review proof
         run: python scripts/build_atl_conflict_proof.py --output /tmp/artemis-atl-conflict-proof
 
+      - name: Verify non-public ATL proof in Chromium
+        env:
+          NODE_PATH: /tmp/artemis-browser-tools/node_modules
+        run: |
+          node scripts/capture_atl_conflict_browser_evidence.mjs \
+            --proof-dir /tmp/artemis-atl-conflict-proof \
+            --output /tmp/artemis-atl-browser-evidence
+
+      - name: Attach ATL browser verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: atl-conflict-browser-evidence
+          path: /tmp/artemis-atl-browser-evidence/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Attach ATL conflict review proof to PR run
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
@@ -70,6 +97,7 @@ jobs:
             tests/test_globe_repository_boundary.py \
             tests/test_globe_rnd_lifecycle_contract.py \
             tests/test_project_state.py \
+            tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \
