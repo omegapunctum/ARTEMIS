@@ -6,6 +6,8 @@ Authority: current `docs/DEVELOPMENT_OPERATING_SYSTEM.md` v1.9, section 6, expli
 
 Classification: bounded decision under that existing delegation; resulting presentation implementation is `REVIEW`. Record independent specification acceptance with reviewer identity and exact revision before runtime edits, then follow the current operating system for implementation acceptance and merge. Directional specification review: independent agent `/root/architecture_audit` returned `ACCEPT_SPECIFICATION` for preparation artifact `source-aware-contract-draft.md` on 2026-10-03, as reported by the orchestrator. This accepts the bounded direction only; the reviewer must reread and bind acceptance to the finalized specification bytes before runtime edits. Final-byte review: independent agent `/root/architecture_audit` returned `ACCEPT_SPECIFICATION`, no material findings, for this specification SHA-256 `5aa38d790f8cf00cd0db63c0c3036b06e8f40fa8d96459ec2305ee0294c8a2b0` and its registry entry on 2026-10-03. That hash identifies the reviewed specification before this verdict paragraph/status update; it is not a self-hash of the resulting file. Product/gate state remains unchanged: Gate E closed without VALUE_SIGNAL, contextual composition DEFERRED, conflict proof completed/non-public, comparative/formal value UNVALIDATED.
 
+Specification amendment review: independent agent `/root/architecture_audit` returned `ACCEPT_SPECIFICATION_AMENDMENT`, no material findings, for SHA-256 `127b0c1f578fd7a50f3bd0bf9a7505fed905ae09907095ace59729f31abe5be0` on 2026-10-03. That hash precedes this verdict paragraph. The amendment explicitly supersedes the old presentation sentence and requires visible Cesena rejected status; implementation scope is unchanged.
+
 ## Question and boundary
 
 Can the existing Leonardo interface let a reader identify the four Romagna Presence anchors in the 1502 corpus, inspect their sources and locators, recover the selected view, and distinguish those anchors from unsupported route, duration, exact-position and historical-verification claims?
@@ -58,7 +60,7 @@ These are existing repository bindings, not new historical validation. The insti
 3. Select Range 1501–1501: no overlapping corpus Presence; the empty state must not imply historical absence.
 4. Select each Romagna episode using the existing sequence or Place interaction: correct compact popup and identity, no camera movement from single click.
 5. Open details: popup closes, correct drawer opens, place/time/context remain coherent, and duration, exact-position and route limitations remain accessible.
-6. Open Sources and the deeper Claims & evidence disclosure: source identity, URL, locator and recorded review/evidence status correspond to that selected item. Background/contextual evidence remains distinguishable from supporting evidence.
+6. Open Sources and the deeper Claims & evidence disclosure: source identity, URL, locator and recorded review/evidence status correspond to that selected item. Background/contextual evidence remains distinguishable from supporting evidence. Cesena also contains `claim-cesena-survey-folios-9r-10r` with `rejected / low / missing`; verify that status is visible in the deeper disclosure. Additional locators in the source list are not individually accepted support for the primary Presence claim. Preserve the separate draft folio-66v Claim in Cesenatico and draft RCT-912686 sketch Claim in Imola.
 7. Reload a captured Range URL and a Scrub URL: mode, calendar values, visible Presence set and stable selected Presence identity restore. Open drawer state need not restore; it is not part of the current URL contract.
 8. Repeat essential source/uncertainty access by keyboard and at an existing supported narrow viewport; no hidden-only evidence, unreachable disclosure or overlay obstruction may prevent the task.
 
@@ -67,6 +69,8 @@ UI anchors already present: `#mode-range`, `#mode-scrub`, `#range-start`, `#rang
 URL examples: `?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08`; `?mode=scrub&from=1452&at=1502&presence=presence-cesenatico-1502-09-06`. Preserve any existing item/localization state according to its owner; do not create a new persistence mechanism.
 
 ## Confirmed copy discrepancy and bounded correction
+
+Prospective presentation amendment: this accepted task narrowly supersedes section 4.2 item 1 of the completed [First-Use correction specification](2026-09-19_LEONARDO_FIRST_USE_COMPREHENSION_CORRECTION_v1.md). Replace its unconditional reviewed-evidence meaning with the status-neutral meaning below. Section 4.2 items 2/3, source access, existing headings and all other accepted requirements remain in force. The historical specification and its completed acceptance are preserved; this amendment changes no Claim or evidence authority.
 
 `addPresenceSources()` currently states, without examining status: “These sources are included in the current reviewed evidence for this displayed record.” Its Russian translation likewise says “проверенные свидетельства”. The Romagna historical Claims retain draft/unknown/missing states and EvidenceLinks retain draft. Deeper `addEvidence()` displays those values. The unconditional review claim is therefore broader than the recorded historical review status.
 
