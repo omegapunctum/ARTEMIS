@@ -649,9 +649,24 @@ async function verifyFirstUse(cdp, options) {
   }
   const details = await capture('details');
   // Native keyboard disclosure activation, followed by source/locator capture.
+  // The diagnostic loop above can leave its last record's Sources open when
+  // there was no initial selection to restore. Establish the closed precondition
+  // with keyboard input too; otherwise a working Space toggle looks like failure.
+  await cdp.send('Emulation.setFocusEmulationEnabled', {enabled: true});
   await evaluate(cdp, "document.querySelector('.presence-sources > summary').focus()");
-  await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
-  await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+  await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  if (!await evaluate(cdp, "document.hasFocus() && document.activeElement === document.querySelector('.presence-sources > summary')")) throw new Error('Sources summary did not receive keyboard focus');
+  const sourcesInitiallyOpen = await evaluate(cdp, "document.querySelector('.presence-sources').open");
+  async function toggleSourcesWithKeyboard() {
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32});
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  }
+  if (sourcesInitiallyOpen) {
+    await toggleSourcesWithKeyboard();
+    if (await evaluate(cdp, "document.querySelector('.presence-sources').open")) throw new Error('Sources did not close with keyboard');
+  }
+  await toggleSourcesWithKeyboard();
   if (!await evaluate(cdp, "document.querySelector('.presence-sources').open")) throw new Error('Sources not reachable by keyboard');
   const sources = await capture('sources');
   await evaluate(cdp, `(() => {
@@ -689,7 +704,9 @@ async function verifyFirstUse(cdp, options) {
     document.getElementById('mode-range').click();
     window.__ARTEMIS_GLOBE_SPIKE.selectPresence(${JSON.stringify(result.initial)});
   })()`);
-  return {...result, localized, keyboardSourceDisclosure: true, captures: {details, sources, sourceScope, russian, coverage}};
+  return {...result, localized, keyboardSourceDisclosure: true,
+    keyboardSourceDisclosureMethod: 'Native Space activation after explicit summary focus; not full keyboard navigation',
+    sourcesInitiallyOpen, captures: {details, sources, sourceScope, russian, coverage}};
 }
 
 async function verifySourceAwareResearch(cdp, options, deadline) {
