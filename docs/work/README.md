@@ -68,11 +68,11 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 | `2026-10-04_CESENA_SOURCE_REPRODUCIBILITY_AUDIT_v1.md` | Completed read-only research / WORDING_OR_LOCATOR_DISCREPANCY | Owner continuation executes the prior one-source candidate; date/place/46v reproduced, complete survey-qualified wording not reproduced; no frozen edit or historical promotion |
 | `2026-10-04_UNIFIED_EXPLORER_ADVISORY_v1.md` | Completed architecture/product advisory; recommendation only | One Explorer direction; existing Globe/Region share runtime, legacy Atlas requires a mapping proof; no navigation implementation, corpus intake or product successor opened |
 
-## Owner-authorized Explorer navigation maintenance
+## Completed Explorer navigation maintenance
 
 | Document | Lifecycle | Scope |
 |---|---|---|
-| `2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md` | Owner-authorized decision; specification independently AI-accepted; implementation next | Common native Leonardo/Region navigation and presentation-only EN/RU continuity; existing routes and semantic state remain separate; no Atlas intake, overlay, projection switch or product-gate transition |
+| `2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md` | Completed bounded implementation, AI review and live verification | Native public Leonardo/Region navigation, isolated restorable semantic state, EN/RU continuity and restored public-Region source access; exact implementation/publication evidence in task closeout; no product-gate transition or automatic successor |
 
 ## Engineering tooling design
 

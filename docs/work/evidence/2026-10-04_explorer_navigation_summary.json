@@ -1,0 +1,1487 @@
+{
+  "schema_version": "1.0.0",
+  "recorded_at": "2026-10-04",
+  "task": "Explorer Example Navigation v1",
+  "implementation": {
+    "pr": 464,
+    "reviewed_head": "3ff8627e446f67d81763f26ddc570376a57abb21",
+    "tree": "67fa762b1b6b9207023a9644b26f934efdda7f0b",
+    "ci_candidate": "d752b0eceaf90c0f3512c4a8d282f725774be376",
+    "ci_tree_matches_head": true,
+    "merge_commit": "ee352ba6ec1a213e4ff2e2eb5f322d12598c2717",
+    "independent_ai_review": {
+      "agent": "/root/navigation_review",
+      "verdict": "ACCEPT_IMPLEMENTATION",
+      "material_findings": [],
+      "github_review_id": 5405924597,
+      "human_review": false
+    },
+    "checks": [
+      {
+        "name": "ARTEMIS Core Check",
+        "run": 37199995243,
+        "conclusion": "success",
+        "tests_passed": 363
+      },
+      {
+        "name": "Globe Runtime Spike Gate",
+        "run": 37199995365,
+        "conclusion": "success"
+      },
+      {
+        "name": "Globe Repository Boundary Gate",
+        "run": 37199995270,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "browser_evidence": {
+    "artifact_id": 11302304167,
+    "artifact_name": "shared-preview-navigation-browser-evidence",
+    "zip_sha256": "d9eff42ca69580c6aefe7518f156fa4d1e771193a58c3342eb145a2667db7005",
+    "all_26_navigation_png_hashes_verified": true,
+    "reports": [
+      {
+        "report": "1440.json",
+        "report_sha256": "b3f4452c336ab885e4652e9d9e215b226fff321a68ec902e6160d53178461a68",
+        "browser": {
+          "protocolVersion": "1.3",
+          "product": "Chrome/134.0.6998.35",
+          "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.0.0 Safari/537.36",
+          "jsVersion": "13.4.114.14"
+        },
+        "checkout_commit": "d752b0eceaf90c0f3512c4a8d282f725774be376",
+        "runner_sha256": "d482fd9f44d6d3acc60e343ee7bedaf31077ea379da0baa81153d933e37a231e",
+        "requested_window": {
+          "width": 1440,
+          "height": 900
+        },
+        "defaults": {
+          "leonardo": {
+            "lifePathAvailable": true,
+            "mode": "range",
+            "start": "1452",
+            "end": "1519",
+            "preset": "life-path-0-10",
+            "layers": [
+              "layer-engineering-work",
+              "layer-global-simultaneity",
+              "layer-leonardo-trajectory",
+              "layer-local-context"
+            ],
+            "presence": null,
+            "item": null,
+            "temporal": {
+              "mode": "interval",
+              "start": "1452",
+              "end": "1519",
+              "precision": "year",
+              "calendar": "proleptic_gregorian"
+            }
+          },
+          "region": {
+            "lifePathAvailable": false,
+            "mode": "range",
+            "start": null,
+            "end": null,
+            "preset": "year-91",
+            "layers": [
+              "layer-political-territory"
+            ],
+            "presence": null,
+            "item": "rp:region_geometry:region-roman-empire:region-geometry-91-105",
+            "temporal": {
+              "calendar": "proleptic_gregorian",
+              "end": "0091",
+              "mode": "instant",
+              "precision": "year",
+              "start": "0091"
+            }
+          }
+        },
+        "transitions": [
+          {
+            "locale": "en",
+            "outward": {
+              "method": "native mouse input",
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/?lang=en"
+            },
+            "inward": {
+              "method": "native Enter after explicit focus",
+              "href": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=en"
+            },
+            "defaultsIsolated": true,
+            "regionDetailsClose": {
+              "method": "native Enter on close button",
+              "focusRestored": true,
+              "semanticStatePreserved": true
+            }
+          },
+          {
+            "locale": "ru",
+            "outward": {
+              "method": "native Enter after explicit focus",
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/?lang=ru"
+            },
+            "inward": {
+              "method": "native Enter after explicit focus",
+              "href": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=ru"
+            },
+            "defaultsIsolated": true,
+            "regionDetailsClose": {
+              "method": "native Escape",
+              "focusRestored": true,
+              "semanticStatePreserved": true
+            }
+          }
+        ],
+        "restorations": [
+          {
+            "dataset": "leonardo",
+            "saved": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=ru&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+            "semantic": {
+              "lifePathAvailable": true,
+              "mode": "range",
+              "start": "1502",
+              "end": "1502",
+              "preset": "life-path-3-6",
+              "layers": [
+                "layer-engineering-work",
+                "layer-global-simultaneity",
+                "layer-leonardo-trajectory",
+                "layer-local-context"
+              ],
+              "presence": "presence-rimini-1502-08-08",
+              "item": "rp:event:event-leonardo-rimini-note",
+              "temporal": {
+                "mode": "instant",
+                "start": "1502",
+                "end": "1502",
+                "precision": "year",
+                "calendar": "proleptic_gregorian"
+              }
+            },
+            "back": true,
+            "reopen": true,
+            "sourceDisclosures": {
+              "dataset": "leonardo",
+              "method": "native Space after explicit summary focus; source link focus",
+              "disclosures": [
+                {
+                  "index": 0,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 2,
+                  "hasSource": false,
+                  "uncertainty": true
+                },
+                {
+                  "index": 3,
+                  "hasSource": true,
+                  "uncertainty": true
+                },
+                {
+                  "index": 4,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 5,
+                  "hasSource": true,
+                  "uncertainty": true
+                },
+                {
+                  "index": 6,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 7,
+                  "hasSource": false,
+                  "uncertainty": true
+                }
+              ],
+              "source": {
+                "href": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+                "text": "Cronologia vinciana (1502–1503)"
+              }
+            }
+          },
+          {
+            "dataset": "region",
+            "saved": "http://127.0.0.1:8766/ARTEMIS/region/?time=year-106&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-106-113&lang=ru",
+            "semantic": {
+              "lifePathAvailable": false,
+              "mode": "range",
+              "start": null,
+              "end": null,
+              "preset": "year-106",
+              "layers": [
+                "layer-political-territory"
+              ],
+              "presence": null,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-106-113",
+              "temporal": {
+                "calendar": "proleptic_gregorian",
+                "end": "0106",
+                "mode": "instant",
+                "precision": "year",
+                "start": "0106"
+              }
+            },
+            "back": true,
+            "reopen": true,
+            "sourceDisclosures": {
+              "dataset": "region",
+              "method": "native Space after explicit summary focus; source link focus",
+              "disclosures": [
+                {
+                  "index": 0,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 1,
+                  "hasSource": false,
+                  "uncertainty": true
+                }
+              ],
+              "source": {
+                "href": "http://127.0.0.1:8766/ARTEMIS/region/sources/cliopatria-excerpt.json",
+                "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+              }
+            },
+            "detailsClose": {
+              "method": "native Escape",
+              "focusRestored": true,
+              "semanticStatePreserved": true
+            }
+          }
+        ],
+        "source_access": [
+          {
+            "locale": "en",
+            "dataset": "region",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 1,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/sources/cliopatria-excerpt.json",
+              "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+            }
+          },
+          {
+            "locale": "ru",
+            "dataset": "region",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 1,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/sources/cliopatria-excerpt.json",
+              "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+            }
+          },
+          {
+            "locale": "en",
+            "dataset": "leonardo",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 2,
+                "hasSource": false,
+                "uncertainty": true
+              },
+              {
+                "index": 3,
+                "hasSource": true,
+                "uncertainty": true
+              },
+              {
+                "index": 4,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 5,
+                "hasSource": true,
+                "uncertainty": true
+              },
+              {
+                "index": 6,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 7,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+              "text": "Cronologia vinciana (1502–1503)"
+            }
+          }
+        ],
+        "captures": [
+          {
+            "file": "1440-navigation-leonardo-missing-locale.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1452&end=1519",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 760
+            },
+            "header_bottom": 137,
+            "png_sha256": "fd784f2e346f650e402bd3e0c2c256e1ec3b89c66467e9693912bdcc977488df",
+            "dom_sha256": "a5773c2732d7ac1c02df66db6a7c7d25ed130de0196aecd15742c85d55085405"
+          },
+          {
+            "file": "1440-navigation-region-missing-locale.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "e7f7753a47b58e64984ec834ffe520dce27ff749feca696c59c9b637c57f3cd1",
+            "dom_sha256": "b5b3714c13be28191d8d483ca829575fdf232de856a797051c960ad33420075d"
+          },
+          {
+            "file": "1440-navigation-leonardo-en.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=en&mode=range&start=1452&end=1519",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 137,
+            "png_sha256": "68f8aa34207d2216ec6f131fd8bc62469eadd1d97e95404c674ef917a4dc1186",
+            "dom_sha256": "f87042b2d1410dbe723878f4110c7503e17ebe4ae018788689f922e0eb0167f8"
+          },
+          {
+            "file": "1440-navigation-region-en.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=en&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "e7f7753a47b58e64984ec834ffe520dce27ff749feca696c59c9b637c57f3cd1",
+            "dom_sha256": "3ad4316423d213376eaab01f2390f1c7c9293f0772883fd85306095fd06a279c"
+          },
+          {
+            "file": "1440-navigation-region-sources-en.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=en&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "6225acec91a7b070a41b33cc49952d1945522adf30a2c10ba095e983d4f21c07",
+            "dom_sha256": "71f78dd8dff48bcd22f7b09f963ec7b360441ba89009b484c7b1a92702b8d73d"
+          },
+          {
+            "file": "1440-navigation-leonardo-ru.png",
+            "dataset": "leonardo",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=ru&mode=range&start=1452&end=1519",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 137,
+            "png_sha256": "9975275e1eccbb3b3f1de4dc03297da13b841673d480194ba57c9b46b7a45c0c",
+            "dom_sha256": "4ba2e76101685432cfd8f30134fc28f944098ebf91ba71d49a0344b8801999e4"
+          },
+          {
+            "file": "1440-navigation-region-ru.png",
+            "dataset": "region",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=ru&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "2803afc4fa9818ce64154765f68854d60e097cc194eddbf76b63cec88c441a71",
+            "dom_sha256": "d9c31756b17c50497fbba4a8c561a3dccb65cf26c38015f9d4689fde41411300"
+          },
+          {
+            "file": "1440-navigation-region-sources-ru.png",
+            "dataset": "region",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=ru&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "3fb8ec9a58d2258e1380d6e0bcd06fb1676d7640f8b5c4bba542582195de78e2",
+            "dom_sha256": "f5d080a1200e7db2d718850a1064b69dd15b5bea7fed0ddd1cb949201ba9aa11"
+          },
+          {
+            "file": "1440-navigation-leonardo-sources-ru.png",
+            "dataset": "leonardo",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=ru&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 137,
+            "png_sha256": "7b89fbf8fd39bbd764c91a4de180fc14e623857cfe9cc320b5fdb301b77902b1",
+            "dom_sha256": "d5e01d2502ff1d268cf3d5392ae72527524963fa098f07a7c7bfc15f5358745f"
+          },
+          {
+            "file": "1440-navigation-leonardo-sources-en.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=en&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 137,
+            "png_sha256": "ad653959437e404401d5441b067700dfe9d9d5007b9a6138d75372443b373c1c",
+            "dom_sha256": "90a52110845cb213ba5dc1934b483f26c963dc811e8d9bcd914e64f64abac4dc"
+          },
+          {
+            "file": "1440-navigation-region-saved-sources-ru.png",
+            "dataset": "region",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?time=year-106&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-106-113&lang=ru",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "429f9eb8257c129c26bb3eab623c26cf2ac8c4774a8138c9afc6e8d0da4960f2",
+            "dom_sha256": "17c11cb19342b72e4cba6c556320dde5de6361be4feb5ea3873f7eca9abfa442"
+          },
+          {
+            "file": "1440-navigation-leonardo-invalid-locale.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=invalid&unknown=foreign&mode=range&start=1452&end=1519#foreign",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 137,
+            "png_sha256": "dbb372dfc283d9040e84622d95eeadfa94597d53aa27fb443f9c146d97819a67",
+            "dom_sha256": "de7bb78b03da487757bce2990bbd9895e01a7ff77e47af9c09e57667295f5b60"
+          },
+          {
+            "file": "1440-navigation-region-invalid-locale.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=invalid&unknown=foreign&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105#foreign",
+            "actual_viewport": {
+              "width": 1440,
+              "height": 761
+            },
+            "header_bottom": 179,
+            "png_sha256": "e7f7753a47b58e64984ec834ffe520dce27ff749feca696c59c9b637c57f3cd1",
+            "dom_sha256": "cfb95758abbc5b5f23887aef6397d1240113972937a56055b4a83aefba61eccc"
+          }
+        ],
+        "keyboard_scope": "Named navigation/language controls and selected-record disclosures after explicit focus; not a full keyboard audit",
+        "value_validation": "not_assessed"
+      },
+      {
+        "report": "500.json",
+        "report_sha256": "e4fe9fecfdf417ba4149940523edf0bc804d31201b2c09ec4501f7a2df780aff",
+        "browser": {
+          "protocolVersion": "1.3",
+          "product": "Chrome/134.0.6998.35",
+          "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.0.0 Safari/537.36",
+          "jsVersion": "13.4.114.14"
+        },
+        "checkout_commit": "d752b0eceaf90c0f3512c4a8d282f725774be376",
+        "runner_sha256": "d482fd9f44d6d3acc60e343ee7bedaf31077ea379da0baa81153d933e37a231e",
+        "requested_window": {
+          "width": 500,
+          "height": 900
+        },
+        "defaults": {
+          "leonardo": {
+            "lifePathAvailable": true,
+            "mode": "range",
+            "start": "1452",
+            "end": "1519",
+            "preset": "life-path-0-10",
+            "layers": [
+              "layer-engineering-work",
+              "layer-global-simultaneity",
+              "layer-leonardo-trajectory",
+              "layer-local-context"
+            ],
+            "presence": null,
+            "item": null,
+            "temporal": {
+              "mode": "interval",
+              "start": "1452",
+              "end": "1519",
+              "precision": "year",
+              "calendar": "proleptic_gregorian"
+            }
+          },
+          "region": {
+            "lifePathAvailable": false,
+            "mode": "range",
+            "start": null,
+            "end": null,
+            "preset": "year-91",
+            "layers": [
+              "layer-political-territory"
+            ],
+            "presence": null,
+            "item": "rp:region_geometry:region-roman-empire:region-geometry-91-105",
+            "temporal": {
+              "calendar": "proleptic_gregorian",
+              "end": "0091",
+              "mode": "instant",
+              "precision": "year",
+              "start": "0091"
+            }
+          }
+        },
+        "transitions": [
+          {
+            "locale": "en",
+            "outward": {
+              "method": "native mouse input",
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/?lang=en"
+            },
+            "inward": {
+              "method": "native Enter after explicit focus",
+              "href": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=en"
+            },
+            "defaultsIsolated": true,
+            "regionDetailsClose": {
+              "method": "native Enter on close button",
+              "focusRestored": true,
+              "semanticStatePreserved": true
+            }
+          },
+          {
+            "locale": "ru",
+            "outward": {
+              "method": "native Enter after explicit focus",
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/?lang=ru"
+            },
+            "inward": {
+              "method": "native Enter after explicit focus",
+              "href": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=ru"
+            },
+            "defaultsIsolated": true,
+            "regionDetailsClose": {
+              "method": "native Escape",
+              "focusRestored": true,
+              "semanticStatePreserved": true
+            }
+          }
+        ],
+        "restorations": [
+          {
+            "dataset": "leonardo",
+            "saved": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=ru&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+            "semantic": {
+              "lifePathAvailable": true,
+              "mode": "range",
+              "start": "1502",
+              "end": "1502",
+              "preset": "life-path-3-6",
+              "layers": [
+                "layer-engineering-work",
+                "layer-global-simultaneity",
+                "layer-leonardo-trajectory",
+                "layer-local-context"
+              ],
+              "presence": "presence-rimini-1502-08-08",
+              "item": "rp:event:event-leonardo-rimini-note",
+              "temporal": {
+                "mode": "instant",
+                "start": "1502",
+                "end": "1502",
+                "precision": "year",
+                "calendar": "proleptic_gregorian"
+              }
+            },
+            "back": true,
+            "reopen": true,
+            "sourceDisclosures": {
+              "dataset": "leonardo",
+              "method": "native Space after explicit summary focus; source link focus",
+              "disclosures": [
+                {
+                  "index": 0,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 2,
+                  "hasSource": false,
+                  "uncertainty": true
+                },
+                {
+                  "index": 3,
+                  "hasSource": true,
+                  "uncertainty": true
+                },
+                {
+                  "index": 4,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 5,
+                  "hasSource": true,
+                  "uncertainty": true
+                },
+                {
+                  "index": 6,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 7,
+                  "hasSource": false,
+                  "uncertainty": true
+                }
+              ],
+              "source": {
+                "href": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+                "text": "Cronologia vinciana (1502–1503)"
+              }
+            }
+          },
+          {
+            "dataset": "region",
+            "saved": "http://127.0.0.1:8766/ARTEMIS/region/?time=year-106&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-106-113&lang=ru",
+            "semantic": {
+              "lifePathAvailable": false,
+              "mode": "range",
+              "start": null,
+              "end": null,
+              "preset": "year-106",
+              "layers": [
+                "layer-political-territory"
+              ],
+              "presence": null,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-106-113",
+              "temporal": {
+                "calendar": "proleptic_gregorian",
+                "end": "0106",
+                "mode": "instant",
+                "precision": "year",
+                "start": "0106"
+              }
+            },
+            "back": true,
+            "reopen": true,
+            "sourceDisclosures": {
+              "dataset": "region",
+              "method": "native Space after explicit summary focus; source link focus",
+              "disclosures": [
+                {
+                  "index": 0,
+                  "hasSource": true,
+                  "uncertainty": false
+                },
+                {
+                  "index": 1,
+                  "hasSource": false,
+                  "uncertainty": true
+                }
+              ],
+              "source": {
+                "href": "http://127.0.0.1:8766/ARTEMIS/region/sources/cliopatria-excerpt.json",
+                "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+              }
+            },
+            "detailsClose": {
+              "method": "native Escape",
+              "focusRestored": true,
+              "semanticStatePreserved": true
+            }
+          }
+        ],
+        "source_access": [
+          {
+            "locale": "en",
+            "dataset": "region",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 1,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/sources/cliopatria-excerpt.json",
+              "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+            }
+          },
+          {
+            "locale": "ru",
+            "dataset": "region",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 1,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "http://127.0.0.1:8766/ARTEMIS/region/sources/cliopatria-excerpt.json",
+              "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+            }
+          },
+          {
+            "locale": "en",
+            "dataset": "leonardo",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 2,
+                "hasSource": false,
+                "uncertainty": true
+              },
+              {
+                "index": 3,
+                "hasSource": true,
+                "uncertainty": true
+              },
+              {
+                "index": 4,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 5,
+                "hasSource": true,
+                "uncertainty": true
+              },
+              {
+                "index": 6,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 7,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+              "text": "Cronologia vinciana (1502–1503)"
+            }
+          }
+        ],
+        "captures": [
+          {
+            "file": "500-navigation-leonardo-missing-locale.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1452&end=1519",
+            "actual_viewport": {
+              "width": 500,
+              "height": 760
+            },
+            "header_bottom": 170,
+            "png_sha256": "7d8e947a3cfd9285f8dc02655250304d453611946ec5e74be18beba68c18c98e",
+            "dom_sha256": "7942a30def1110f1214a570bbe639f356d952aa34a146dd6e377db638dcb0913"
+          },
+          {
+            "file": "500-navigation-region-missing-locale.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 223,
+            "png_sha256": "85b8ab966c13cbc15a8125ffc4260cd9f8b9327834b38746d284e204804799d3",
+            "dom_sha256": "e28e847ca9201a67a2154271d93e08382e782c4051574132c84e2616ccf72c94"
+          },
+          {
+            "file": "500-navigation-leonardo-en.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=en&mode=range&start=1452&end=1519",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 170,
+            "png_sha256": "6e434a2cd32e0ea5aa4b5313812bf86d4b729201dd240ef6e32c1d55ee6687a8",
+            "dom_sha256": "320649b0b98d53473e9827268a693d7dbb3fdb7b9dbf0e069d124f71a095328b"
+          },
+          {
+            "file": "500-navigation-region-en.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=en&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 223,
+            "png_sha256": "a8f52cb5f02abd26caa0c9f34113e4a15af08fd7e7bc13795d285137bd0af743",
+            "dom_sha256": "8018c26f970adabfafdae3a2683e3ef05b5bc72533f07ae7b7f6ba40d69b6640"
+          },
+          {
+            "file": "500-navigation-region-sources-en.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=en&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 223,
+            "png_sha256": "f8ccbabf039f274ad5ffcd1d782834af3e78e167a2514b3a06c9dc35256d090c",
+            "dom_sha256": "6ef12176ecefa98dc90283bb822238bc441abf27a64e6c0914c33da306f5a72e"
+          },
+          {
+            "file": "500-navigation-leonardo-ru.png",
+            "dataset": "leonardo",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=ru&mode=range&start=1452&end=1519",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 232,
+            "png_sha256": "63dfc17567e3162b700ea7cd2d465b156c1071a3f53f323fe6c44adf1f0115b5",
+            "dom_sha256": "9ec873f2312fa425bcd5dce8a4e0891fd249277e3f11bc43c33bc8b8eedb91d8"
+          },
+          {
+            "file": "500-navigation-region-ru.png",
+            "dataset": "region",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=ru&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 311,
+            "png_sha256": "f5effdfce9c50cc2ef6ffbcda96f31aa24788ce5a2071c9b7e17fc4def8a7c5f",
+            "dom_sha256": "b3064f14659fab2b99983e03ea94572e4b8924e1b8937ce727de64b207514784"
+          },
+          {
+            "file": "500-navigation-region-sources-ru.png",
+            "dataset": "region",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=ru&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 311,
+            "png_sha256": "48bcb332db0d60accb8b9ce7207c88380beb3324a1b3bd77fadbcb1c7b5473d3",
+            "dom_sha256": "c0b68af08aa1001c9c2b5a1a021f278fe9bc1f82e1eb2fd28e493f7086622180"
+          },
+          {
+            "file": "500-navigation-leonardo-sources-ru.png",
+            "dataset": "leonardo",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=ru&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 232,
+            "png_sha256": "819b5c3dbba3678a0cba4193275e19fef09933359201210eaf8aeff6a3d43112",
+            "dom_sha256": "87edeaf0bc15f999a0e15f356f2f888cc9d2f3073e333fc3dff5b967a0c6d253"
+          },
+          {
+            "file": "500-navigation-leonardo-sources-en.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=en&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 170,
+            "png_sha256": "68a12c24e7b0753dffefd3da533405831eb731de62f0d412130101d374d71052",
+            "dom_sha256": "e3d69b1dd31ea669e5eede668c399bdef1791c1d1b4518c97465d5d0ae36638a"
+          },
+          {
+            "file": "500-navigation-region-saved-sources-ru.png",
+            "dataset": "region",
+            "locale": "ru",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?time=year-106&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-106-113&lang=ru",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 311,
+            "png_sha256": "f33a950e9269ff9091d9861928fa819306e79203d0641f7316ea041a33e0170e",
+            "dom_sha256": "f0fd6ac631f47925fbc18914a9b8e3a05f5b4459cf13e283ba394b99309f5366"
+          },
+          {
+            "file": "500-navigation-leonardo-invalid-locale.png",
+            "dataset": "leonardo",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/globe/?lang=invalid&unknown=foreign&mode=range&start=1452&end=1519#foreign",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 170,
+            "png_sha256": "be12a0c70e177d3855475f5b2624d98aecda865391b0ea67e8055b9cf98b0a3a",
+            "dom_sha256": "d1a79e5931d5c6dfb8c199f9abd7924d09a3e0481befa2dd74c56071c19cc40d"
+          },
+          {
+            "file": "500-navigation-region-invalid-locale.png",
+            "dataset": "region",
+            "locale": "en",
+            "url": "http://127.0.0.1:8766/ARTEMIS/region/?lang=invalid&unknown=foreign&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105#foreign",
+            "actual_viewport": {
+              "width": 500,
+              "height": 761
+            },
+            "header_bottom": 223,
+            "png_sha256": "85b8ab966c13cbc15a8125ffc4260cd9f8b9327834b38746d284e204804799d3",
+            "dom_sha256": "1e51f9ae347d9403a81c5301dd7ec686af09af80d8e42518b3d79e7a19bed306"
+          }
+        ],
+        "keyboard_scope": "Named navigation/language controls and selected-record disclosures after explicit focus; not a full keyboard audit",
+        "value_validation": "not_assessed"
+      }
+    ]
+  },
+  "limits": [
+    "AI review and automated checks are technical evidence; human comprehension and comparative/formal product value remain UNVALIDATED.",
+    "Native keyboard checks cover named navigation/language/drawer/disclosure controls after explicit focus, not a complete accessibility audit.",
+    "Restoration checks compare semantic time and selected record; camera and open drawer restoration are outside the contract.",
+    "Existing source URLs/locators remain accessible; remote source reachability and historical evidence were not revalidated.",
+    "One dataset per existing page; no Atlas intake, combined timeline/overlay, projection switch, historical/source promotion or new product gate."
+  ],
+  "publication": {
+    "source_commit": "ee352ba6ec1a213e4ff2e2eb5f322d12598c2717",
+    "pages_run": 37200481441,
+    "conclusion": "success",
+    "byte_verification": {
+      "artifact_id": 11302985218,
+      "zip_sha256": "016276374cffa36a3133c1992a1e9bcc62cf3d97fce174a5fd64ae2a3762dbfc",
+      "globe": {
+        "status": "PASS",
+        "source_commit": "ee352ba6ec1a213e4ff2e2eb5f322d12598c2717",
+        "workflow_run_id": "37200481441",
+        "workflow_run_attempt": "1",
+        "semantic_dataset": "leonardo_gate_c",
+        "file_count": 16,
+        "verification": "live",
+        "url": "https://omegapunctum.github.io/ARTEMIS/globe/"
+      },
+      "region": {
+        "status": "PASS",
+        "source_commit": "ee352ba6ec1a213e4ff2e2eb5f322d12598c2717",
+        "workflow_run_id": "37200481441",
+        "workflow_run_attempt": "1",
+        "semantic_dataset": "roman_region_proof",
+        "file_count": 20,
+        "verification": "live",
+        "url": "https://omegapunctum.github.io/ARTEMIS/region/"
+      }
+    },
+    "region_retest": {
+      "artifact_id": 11302851069,
+      "zip_sha256": "1a8fedacb8425d831b7d63a1155e8666fefedaf6df5d46ce91eb5ac6e5b47df4",
+      "snapshot_count": 3,
+      "reconstruction_visible": true,
+      "provenance_link_visible": true,
+      "native_link_opened_manifest": true,
+      "license": "CC-BY-4.0"
+    },
+    "navigation": {
+      "artifact_id": 11302594285,
+      "zip_sha256": "a1ab3ccf389fdbcea7edaaaed30da10ace1d0ed6690440ae7abde4bfe6687ef6",
+      "report_sha256": "1fe625316c392dffbbfd80f93ebe8b62a1478b2bc448d9800443f147c74b1872",
+      "runner_sha256": "d482fd9f44d6d3acc60e343ee7bedaf31077ea379da0baa81153d933e37a231e",
+      "checkout_commit": "ee352ba6ec1a213e4ff2e2eb5f322d12598c2717",
+      "browser": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/154.0.8037.57",
+        "revision": "@73c14f6228d7cd537c855007e8f88678969cc0eb",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "jsVersion": "15.4.80.11"
+      },
+      "routes": {
+        "leonardo": "https://omegapunctum.github.io/ARTEMIS/globe/",
+        "region": "https://omegapunctum.github.io/ARTEMIS/region/"
+      },
+      "transitions": [
+        {
+          "locale": "en",
+          "outward": {
+            "method": "native mouse input",
+            "href": "https://omegapunctum.github.io/ARTEMIS/region/?lang=en"
+          },
+          "inward": {
+            "method": "native Enter after explicit focus",
+            "href": "https://omegapunctum.github.io/ARTEMIS/globe/?lang=en"
+          },
+          "defaultsIsolated": true,
+          "regionDetailsClose": {
+            "method": "native Enter on close button",
+            "focusRestored": true,
+            "semanticStatePreserved": true
+          }
+        },
+        {
+          "locale": "ru",
+          "outward": {
+            "method": "native Enter after explicit focus",
+            "href": "https://omegapunctum.github.io/ARTEMIS/region/?lang=ru"
+          },
+          "inward": {
+            "method": "native Enter after explicit focus",
+            "href": "https://omegapunctum.github.io/ARTEMIS/globe/?lang=ru"
+          },
+          "defaultsIsolated": true,
+          "regionDetailsClose": {
+            "method": "native Escape",
+            "focusRestored": true,
+            "semanticStatePreserved": true
+          }
+        }
+      ],
+      "restorations": [
+        {
+          "dataset": "leonardo",
+          "saved": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=ru&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+          "semantic": {
+            "lifePathAvailable": true,
+            "mode": "range",
+            "start": "1502",
+            "end": "1502",
+            "preset": "life-path-3-6",
+            "layers": [
+              "layer-engineering-work",
+              "layer-global-simultaneity",
+              "layer-leonardo-trajectory",
+              "layer-local-context"
+            ],
+            "presence": "presence-rimini-1502-08-08",
+            "item": "rp:event:event-leonardo-rimini-note",
+            "temporal": {
+              "mode": "instant",
+              "start": "1502",
+              "end": "1502",
+              "precision": "year",
+              "calendar": "proleptic_gregorian"
+            }
+          },
+          "back": true,
+          "reopen": true,
+          "sourceDisclosures": {
+            "dataset": "leonardo",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 2,
+                "hasSource": false,
+                "uncertainty": true
+              },
+              {
+                "index": 3,
+                "hasSource": true,
+                "uncertainty": true
+              },
+              {
+                "index": 4,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 5,
+                "hasSource": true,
+                "uncertainty": true
+              },
+              {
+                "index": 6,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 7,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+              "text": "Cronologia vinciana (1502–1503)"
+            }
+          }
+        },
+        {
+          "dataset": "region",
+          "saved": "https://omegapunctum.github.io/ARTEMIS/region/?time=year-106&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-106-113&lang=ru",
+          "semantic": {
+            "lifePathAvailable": false,
+            "mode": "range",
+            "start": null,
+            "end": null,
+            "preset": "year-106",
+            "layers": [
+              "layer-political-territory"
+            ],
+            "presence": null,
+            "item": "rp:region_geometry:region-roman-empire:region-geometry-106-113",
+            "temporal": {
+              "calendar": "proleptic_gregorian",
+              "end": "0106",
+              "mode": "instant",
+              "precision": "year",
+              "start": "0106"
+            }
+          },
+          "back": true,
+          "reopen": true,
+          "sourceDisclosures": {
+            "dataset": "region",
+            "method": "native Space after explicit summary focus; source link focus",
+            "disclosures": [
+              {
+                "index": 0,
+                "hasSource": true,
+                "uncertainty": false
+              },
+              {
+                "index": 1,
+                "hasSource": false,
+                "uncertainty": true
+              }
+            ],
+            "source": {
+              "href": "https://omegapunctum.github.io/ARTEMIS/region/sources/cliopatria-excerpt.json",
+              "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+            }
+          },
+          "detailsClose": {
+            "method": "native Escape",
+            "focusRestored": true,
+            "semanticStatePreserved": true
+          }
+        }
+      ],
+      "source_access": [
+        {
+          "locale": "en",
+          "dataset": "region",
+          "method": "native Space after explicit summary focus; source link focus",
+          "disclosures": [
+            {
+              "index": 0,
+              "hasSource": true,
+              "uncertainty": false
+            },
+            {
+              "index": 1,
+              "hasSource": false,
+              "uncertainty": true
+            }
+          ],
+          "source": {
+            "href": "https://omegapunctum.github.io/ARTEMIS/region/sources/cliopatria-excerpt.json",
+            "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+          }
+        },
+        {
+          "locale": "ru",
+          "dataset": "region",
+          "method": "native Space after explicit summary focus; source link focus",
+          "disclosures": [
+            {
+              "index": 0,
+              "hasSource": true,
+              "uncertainty": false
+            },
+            {
+              "index": 1,
+              "hasSource": false,
+              "uncertainty": true
+            }
+          ],
+          "source": {
+            "href": "https://omegapunctum.github.io/ARTEMIS/region/sources/cliopatria-excerpt.json",
+            "text": "Bennett et al. (2025), Cliopatria, Scientific Data 12:247, doi:10.1038/s41597-025-04516-9; Seshat Global History Databank contributors"
+          }
+        },
+        {
+          "locale": "en",
+          "dataset": "leonardo",
+          "method": "native Space after explicit summary focus; source link focus",
+          "disclosures": [
+            {
+              "index": 0,
+              "hasSource": true,
+              "uncertainty": false
+            },
+            {
+              "index": 2,
+              "hasSource": false,
+              "uncertainty": true
+            },
+            {
+              "index": 3,
+              "hasSource": true,
+              "uncertainty": true
+            },
+            {
+              "index": 4,
+              "hasSource": true,
+              "uncertainty": false
+            },
+            {
+              "index": 5,
+              "hasSource": true,
+              "uncertainty": true
+            },
+            {
+              "index": 6,
+              "hasSource": true,
+              "uncertainty": false
+            },
+            {
+              "index": 7,
+              "hasSource": false,
+              "uncertainty": true
+            }
+          ],
+          "source": {
+            "href": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+            "text": "Cronologia vinciana (1502–1503)"
+          }
+        }
+      ],
+      "all_13_navigation_png_hashes_verified": true,
+      "captures": [
+        {
+          "file": "live-navigation-leonardo-missing-locale.png",
+          "dataset": "leonardo",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1452&end=1519",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "16a6cd8e5141e4404ef82329eb3f86dd9f8c4652c96c523a08769801173bba2c",
+          "dom_sha256": "79bf5cf518c75ba7d7b06a3d4a930663bd7e66e624a406ca8e7b121198285012"
+        },
+        {
+          "file": "live-navigation-region-missing-locale.png",
+          "dataset": "region",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "4ff2fe4c063dfed369384ff64547788847ddf9aa78d4921e422565dd1b17febe",
+          "dom_sha256": "f0313e7133577ec06d9d9558a768f3fe1f13b51171261bb0d2698e4d72405d44"
+        },
+        {
+          "file": "live-navigation-leonardo-en.png",
+          "dataset": "leonardo",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/globe/?lang=en&mode=range&start=1452&end=1519",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "d82a1e2f4164bf0a41c3029ccbf539356c44571982893f2d1e4a4f323399163e",
+          "dom_sha256": "8262864af0c6b4d74c0a3f92326c0b93120b97b06f95cdd1bae67d72e724106e"
+        },
+        {
+          "file": "live-navigation-region-en.png",
+          "dataset": "region",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?lang=en&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "23e46933c5b813ec82c561a6dcb5ed40f5190e0b8e7ea1101ecb226ff859d56c",
+          "dom_sha256": "d4778c607b3598aba4c653ae47bf086e44cf4fecc12e0c0f318d1b8aae0a60d1"
+        },
+        {
+          "file": "live-navigation-region-sources-en.png",
+          "dataset": "region",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?lang=en&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "be25b769e4d4abf226ae79f421a3be5c21d9ef3e4f730e58bb0ceb4795317323",
+          "dom_sha256": "67542e2dd86688165c0693a4bdd50ea2a1cc7a661080c112b5a52ed4766cc5e4"
+        },
+        {
+          "file": "live-navigation-leonardo-ru.png",
+          "dataset": "leonardo",
+          "locale": "ru",
+          "url": "https://omegapunctum.github.io/ARTEMIS/globe/?lang=ru&mode=range&start=1452&end=1519",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "421475674660559c13703d5e0b8654240a2adbb9776e57157b1229a3652af83b",
+          "dom_sha256": "85e5ec0f18669a66a01aa6cab5489332a21227bb80d7e6175d474ff471f5b29d"
+        },
+        {
+          "file": "live-navigation-region-ru.png",
+          "dataset": "region",
+          "locale": "ru",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?lang=ru&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "5e2999cb1ecce8aeb27c77a7a18902a70d13b32f107fe0471c774dab897681ea",
+          "dom_sha256": "faa777f9b13afde57348b26b61a8f2a756f26d6d7a78005424a90856ee1987c0"
+        },
+        {
+          "file": "live-navigation-region-sources-ru.png",
+          "dataset": "region",
+          "locale": "ru",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?lang=ru&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "e5c6bc23d4231616db948d8cfd91c730856716974ef356737acc507d6dc0fd38",
+          "dom_sha256": "89b98398f10750ef19ab1b7c0f15f8b4664a23d1f7fe2bed54c4bde965be3743"
+        },
+        {
+          "file": "live-navigation-leonardo-sources-ru.png",
+          "dataset": "leonardo",
+          "locale": "ru",
+          "url": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=ru&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "e60cf2da621db2cfe2f1f6f577412ac0f82a418e55b9315a1078f3f47e87ed32",
+          "dom_sha256": "dc63885e52efd4520b5635aa6e4200da51b9340bc0cc8ba04aa9b091f7c4ee55"
+        },
+        {
+          "file": "live-navigation-leonardo-sources-en.png",
+          "dataset": "leonardo",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/globe/?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=en&camera=foreign&diagnostic=foreign&unknown=foreign&item=rp%3Aevent%3Aevent-leonardo-rimini-note#foreign",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "c87cdf5630c52a31dbe7c5e12d87bbb66fc2e23ff8c6f1edbe20431b15eb9205",
+          "dom_sha256": "0f4b0eaaf2441c29e485674b6ba68a29e2b1c95d186f0928c75452b6da5a7623"
+        },
+        {
+          "file": "live-navigation-region-saved-sources-ru.png",
+          "dataset": "region",
+          "locale": "ru",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?time=year-106&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-106-113&lang=ru",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "348ee72caa49a3a1dfd5b8ae0e8a003c57b11b4138e551e92694ebfc82066ccf",
+          "dom_sha256": "07659ba8146d74d501ae115b2d8b72c86cfe426e8d6139dd6eb65fe30705a983"
+        },
+        {
+          "file": "live-navigation-leonardo-invalid-locale.png",
+          "dataset": "leonardo",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/globe/?lang=invalid&unknown=foreign&mode=range&start=1452&end=1519#foreign",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "b738106998cc514b0e18e92f36482b30ce97c5d24b03b4c0f226d8ed7334a479",
+          "dom_sha256": "8c71fdc8227bafb28f195a758d530dc5bc8cad6276c563256fc928650c2efdd3"
+        },
+        {
+          "file": "live-navigation-region-invalid-locale.png",
+          "dataset": "region",
+          "locale": "en",
+          "url": "https://omegapunctum.github.io/ARTEMIS/region/?lang=invalid&unknown=foreign&time=year-91&layers=layer-political-territory&item=rp%3Aregion_geometry%3Aregion-roman-empire%3Aregion-geometry-91-105#foreign",
+          "actual_viewport": {
+            "width": 1440,
+            "height": 757
+          },
+          "png_sha256": "4ff2fe4c063dfed369384ff64547788847ddf9aa78d4921e422565dd1b17febe",
+          "dom_sha256": "684741843cf9a35dfd63704cbba041c0da1735377aa0bac85f630f815e52f7ca"
+        }
+      ]
+    }
+  }
+}

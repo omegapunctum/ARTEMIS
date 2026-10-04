@@ -1,6 +1,6 @@
 # Explorer example navigation v1
 
-- Status: owner-authorized bounded decision/specification; independently AI-accepted before implementation. No implementation or verification is claimed here.
+- Status: completed bounded navigation maintenance; specification and prospective source-access amendment independently AI-accepted before their runtime edits. Exact-head implementation review and separate live publication verification are recorded below.
 - Date: 2026-10-04.
 - Authority: the owner's explicit **«Начинай»** in response to the recommended next step of common Leonardo ↔ Region navigation. This specific instruction opens this navigation task; the earlier [Unified Explorer advisory](2026-10-04_UNIFIED_EXPLORER_ADVISORY_v1.md) alone did not authorize implementation.
 - Classification: explicit owner decision; subsequent implementation is `REVIEW` under current [Development Operating System](../DEVELOPMENT_OPERATING_SYSTEM.md). Independent specification acceptance must precede runtime edits; independent implementation review must inspect the exact PR revision and relevant browser evidence before merge.
@@ -95,6 +95,28 @@ Amendment acceptance: independent agent `/root/navigation_review` returned **ACC
 
 Main risks are cross-dataset query leakage, misleading combined-context presentation, deployment-prefix breakage, untranslated labels and additional header collisions. The allowlist, explicit example/coverage labels, native relative links and scoped browser checks address those risks without changing domain meaning.
 
-Readiness: independent agent `/root/architecture_audit` returned **ACCEPT_SPECIFICATION**, no material findings, on 2026-10-04 for specification SHA-256 `42f562d103efc90754a2ac2300cf3eb0aa0502b7766c005ddab166dfbeb14546`, the canonical scope amendment and registry entry. This hash identifies the reviewed bytes before the status/verdict paragraph update, not a self-hash of this resulting document. Implementation may begin after recording acceptance; separate exact-head implementation review and live publication verification remain required. No historical/source data edit is authorized. If a required fix needs a new semantic owner decision, a broader dataset/state design or removal of an existing provenance obligation, record the precise blocker and stop that expansion.
+Specification readiness — historical: independent agent `/root/architecture_audit` returned **ACCEPT_SPECIFICATION**, no material findings, on 2026-10-04 for specification SHA-256 `42f562d103efc90754a2ac2300cf3eb0aa0502b7766c005ddab166dfbeb14546`, the canonical scope amendment and registry entry. This hash identifies the reviewed bytes before the status/verdict paragraph update, not a self-hash of this resulting document. This acceptance preceded implementation; exact-head implementation review and live publication verification are recorded below. No historical/source data edit is authorized. If a required fix needs a new semantic owner decision, a broader dataset/state design or removal of an existing provenance obligation, record the precise blocker and stop that expansion.
 
 Complete when the two existing examples are mutually reachable with honest labels, isolated restorable state, EN/RU continuity, passing relevant checks and independent implementation acceptance; record live verification separately. Then stop. No Atlas migration, 2D toggle, new dataset, common timeline, general shell framework, context overlay or automatic successor follows.
+
+## Technical implementation and publication closeout — 2026-10-04
+
+PR [#464](https://github.com/omegapunctum/ARTEMIS/pull/464) implemented native navigation between the existing public Leonardo and Roman Region examples, visible example/coverage/R&D labels and presentation-only EN/RU continuity. Cross-example links transfer only normalized language and start the target's own defaults. Each page retains its separate semantic time/selection URL contract. The native public-Region details control restores access to its existing selected record; opening/closing changes no selection, time or URL. Non-public behavior and frozen historical/source data remain unchanged.
+
+| Evidence | Recorded identity / outcome |
+|---|---|
+| Reviewed implementation head / tree | `3ff8627e446f67d81763f26ddc570376a57abb21` / `67fa762b1b6b9207023a9644b26f934efdda7f0b` |
+| CI candidate | `d752b0eceaf90c0f3512c4a8d282f725774be376`; identical tree |
+| Independent AI review | `/root/navigation_review`: **ACCEPT_IMPLEMENTATION**, no material findings; exact-head GitHub review `5405924597`, recorded before merge |
+| Required checks | Core [37199995243](https://github.com/omegapunctum/ARTEMIS/actions/runs/37199995243): SUCCESS, **363 tests PASS**, source-aware/ATL/browser scenarios PASS; Runtime [37199995365](https://github.com/omegapunctum/ARTEMIS/actions/runs/37199995365) and Boundary [37199995270](https://github.com/omegapunctum/ARTEMIS/actions/runs/37199995270): SUCCESS |
+| CI browser evidence | Artifact `11302304167`, Chrome `134.0.6998.35`, actual widths 1440/500 and heights 760/761, EN/RU; all 26 navigation PNG hashes verified and relevant screenshots independently inspected |
+| Merge / verified publication source | `ee352ba6ec1a213e4ff2e2eb5f322d12598c2717` |
+| Separate live verification | Pages [37200481441](https://github.com/omegapunctum/ARTEMIS/actions/runs/37200481441): SUCCESS; Globe **16 files**, Region **20 files**, manifest/byte verification **PASS**; Region three-snapshot provenance/license/reconstruction retest **PASS** |
+| Live navigation evidence | Artifact `11302594285`, Chrome `154.0.8037.57`, actual viewport **1440×757**, EN/RU; native navigation, Back and independent saved-URL reopening **PASS**; all 13 navigation PNG hashes verified |
+| Durable evidence summary | [Exact identities, reports, capture hashes and limits](evidence/2026-10-04_explorer_navigation_summary.json) |
+
+Browser checks compare the selected Leonardo Range/Presence and non-default Region period/item after native Back and a separate reopening from another document. The first Region source-access failure and accepted prospective correction remain recorded above. Two later harness failures were corrected without weakening semantic equality: a same-URL fragment navigation did not reconstruct a document, and the first Region view for a period had empty layers. The final verifier leaves for the other document before reopening the exact saved URL, and selects the actual current-layer Region view. No product state is injected to establish PASS.
+
+Local functional checks exercised language/URL and Region drawer behavior; public/private generated semantic JSON/GeoJSON were byte-identical excluding build metadata. The 137 affected runtime/Region/governance checks passed after the source-access correction; 95 relevant governance/state/lifecycle checks also passed. The mechanical UI scan reported only three pre-existing stylesheet warnings, confirmed identical in the baseline; it was not a visual acceptance result.
+
+This is technical/UI conformity and public availability evidence. It does not establish a full accessibility audit, camera/drawer restoration, human comprehension, fresh historical-source validation or comparative/formal product value. The task is closed. Gate E remains closed without VALUE_SIGNAL, contextual composition DEFERRED and conflict proof non-public; value remains UNVALIDATED. No automatic successor, Atlas migration, combined dataset/timeline or 2D toggle is opened.

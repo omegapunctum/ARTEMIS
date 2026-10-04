@@ -29,7 +29,7 @@ The owner reports NO FINDINGS for the published #418 review and accepted #419. T
 Historical M5 closeout: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-09-20.
+- Дата фиксации: 2026-10-04.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -83,6 +83,8 @@ GitHub Pages публикует статический runtime:
 - `/atlas/` как frozen compatibility map с checked-in `data/*` и PWA behavior;
 - `/region/` как separate public R&D preview ограниченного Roman Empire / Temporal Region proof;
 - все четыре entry points не требуют backend API.
+
+The public Leonardo and Roman Region previews provide native links to each other, visible current-example, bounded coverage and research-prototype labels. EN/RU follows the allowlisted `lang` URL parameter; each target starts its own existing defaults. Region's native details control exposes the current selected record and its existing sources/uncertainty without changing selection or time. Atlas retains its compatibility link. These capabilities span separate pages; datasets remain separate and product value is unvalidated. See [independently reviewed implementation and separate live verification](work/2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md#technical-implementation-and-publication-closeout--2026-10-04).
 
 Region publication is availability evidence only: E2 is NOT COLLECTED / WAIVED,
 formal user value remains UNVALIDATED; Leonardo remains the primary research surface.
