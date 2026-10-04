@@ -74,6 +74,12 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 |---|---|---|
 | `2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md` | Completed bounded implementation, AI review and live verification | Native public Leonardo/Region navigation, isolated restorable semantic state, EN/RU continuity and restored public-Region source access; exact implementation/publication evidence in task closeout; no product-gate transition or automatic successor |
 
+## Completed one-record Atlas mapping research
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-04_ATLAS_ONE_RECORD_MAPPING_PROOF_v1.md` | Completed read-only research / ONE_RECORD_MAPPING_FEASIBLE_WITH_GAPS | One existing Park Hill record maps conceptually to Entity/Object; identity/source/rights/time/coordinate losses explicit; no runtime intake or historical promotion; one coordinate-check proposal only |
+
 ## Engineering tooling design
 
 | Document | Lifecycle | Limitation |
