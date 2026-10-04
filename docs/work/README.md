@@ -17,7 +17,7 @@ Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-10-03.
+- Updated: 2026-10-04.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -60,6 +60,13 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 | Document | Lifecycle | Scope |
 |---|---|---|
 | `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Completed technical evidence / TECHNICAL_TASK_PASS | PR #459 specification / #460 implementation independently AI-accepted and merged; two Chromium research loops, 355 Core tests and live Globe/Region byte verification PASS; no historical promotion, new product gate or value claim; next candidate remains proposal only |
+
+## Completed read-only continuation and architecture advisory
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-04_CESENA_SOURCE_REPRODUCIBILITY_AUDIT_v1.md` | Completed read-only research / WORDING_OR_LOCATOR_DISCREPANCY | Owner continuation executes the prior one-source candidate; date/place/46v reproduced, complete survey-qualified wording not reproduced; no frozen edit or historical promotion |
+| `2026-10-04_UNIFIED_EXPLORER_ADVISORY_v1.md` | Completed architecture/product advisory; recommendation only | One Explorer direction; existing Globe/Region share runtime, legacy Atlas requires a mapping proof; no navigation implementation, corpus intake or product successor opened |
 
 ## Engineering tooling design
 
