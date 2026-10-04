@@ -1,0 +1,315 @@
+{
+  "schema_version": "1.0.0",
+  "mapping_id": "atlas-park-hill-one-record-research-v1",
+  "status": "ONE_RECORD_MAPPING_FEASIBLE_WITH_GAPS",
+  "artifact_role": "research evidence; not a World Model payload or executable adapter specification",
+  "source_revision": {
+    "repository": "omegapunctum/ARTEMIS",
+    "commit": "636e70befce5738a7fb764076cc32797c2252ae0",
+    "tree": "a10b619a2b480f06e6b88e6bb1bf62d093a2d12c"
+  },
+  "source_files": [
+    {
+      "path": "data/features.json",
+      "sha256": "309e1e6d6cbf714b6a20a6f42b1b32fd89a7701c96af1f21dddbd8190ffef520"
+    },
+    {
+      "path": "data/features.geojson",
+      "sha256": "caf734481a3a182e4861af1daef00bac2273c87d54c0d459d172778258c8a9d1"
+    },
+    {
+      "path": "data/id_aliases.json",
+      "sha256": "1e33195983c9e68bf0ac8a26ebab7a48534d748d8edbb433ff11168100f68422"
+    },
+    {
+      "path": "data/sources.json",
+      "sha256": "e72e06fa069084e13627ee16bd73d57572c03342a177098f3a8c5f09ac0a7347"
+    },
+    {
+      "path": "data/media.json",
+      "sha256": "5c4267603317f6f778663e34933fa370518574ee48432fc31f8b7b8bf56ab379"
+    },
+    {
+      "path": "data/relations.json",
+      "sha256": "6b46ec3312e4f7301013a6d9ffebc5ac682ff7ae5478ec616a410fe5c2c7b0a5"
+    }
+  ],
+  "selected_record_hashes": {
+    "canonicalization": "UTF-8 JSON, ensure_ascii=False, sort_keys=True, separators=(comma,colon)",
+    "raw_record": "681bcef2c70b04d1df2432b079bc79c8a21d2ab06eea688c05864c97fa4d8c59",
+    "geojson_record": "c3cb885af0847784d457575f47da5b4beb11fcb1578b37193d580b3c83124f45",
+    "source_record": "6ea333f9a94c7211ed49ee97a86ec9972231cce153628c9958a6911ba3cbe3f1",
+    "media_record": "5b9d0433410d9ec443070f5b94c9ff2d7f9eac1af77ba18b35552125374d1fa2"
+  },
+  "input_snapshot": {
+    "feature": {
+      "type": "Feature",
+      "id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.4582,
+          53.38163
+        ]
+      },
+      "properties": {
+        "id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+        "canonical_publish_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+        "source_record_id": "recs15CbqhEKwSKen",
+        "legacy_ids": [
+          "recs15CbqhEKwSKen"
+        ],
+        "airtable_record_id": "recs15CbqhEKwSKen",
+        "external_id": null,
+        "source_draft_id": null,
+        "origin_key": "recs15CbqhEKwSKen",
+        "layer_id": "brutalism_uk",
+        "layer_type": "architecture",
+        "name_ru": "Парк-Хилл в Шеффилде",
+        "name_en": "Park Hill, Sheffield",
+        "date_start": "1957",
+        "date_construction_end": null,
+        "date_end": "1960",
+        "longitude": -1.4582,
+        "latitude": 53.38163,
+        "influence_radius_km": 1,
+        "title_short": "Террасный жилой мегакомплекс с «улицами в небе»",
+        "description": "Крупный муниципальный жилой комплекс, ступенчато следующий рельефу холма. Каркас из обнажённого бетона и широкие галереи — «улицы в небе» — связывают квартиры с коллективными пространствами.",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Park_Hill_May_2025.jpg",
+        "source_url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+        "source_ids": [
+          "src_park_hill_historic_england"
+        ],
+        "source_refs": [
+          {
+            "source_id": "src_park_hill_historic_england",
+            "roles": [
+              "coordinate_evidence",
+              "date_evidence",
+              "description_evidence",
+              "general_reference"
+            ],
+            "is_primary": true
+          }
+        ],
+        "media_ids": [
+          "media_park_hill_sheffield_tiger_2025"
+        ],
+        "media_refs": [
+          {
+            "media_id": "media_park_hill_sheffield_tiger_2025",
+            "display_role": "primary",
+            "sort_order": 1
+          }
+        ],
+        "relation_ids": [
+          "609a2665-ffcb-4ed7-8f85-3850f67371c0",
+          "f2d062e1-57a8-4285-a3c8-811547476cb1"
+        ],
+        "source_license": "CC BY-SA",
+        "coordinates_confidence": "exact",
+        "coordinates_source": "Official Site",
+        "sequence_order": null,
+        "tags": [
+          "architecture",
+          "brutalism",
+          "concrete",
+          "housing",
+          "england"
+        ],
+        "validated": true,
+        "date_valid": true,
+        "has_geometry": true
+      }
+    },
+    "source": {
+      "id": "src_park_hill_historic_england",
+      "source_record_id": "recTbIt12LIx7CtVg",
+      "url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+      "bibliographic_locator": "National Heritage List for England, entry 1246881",
+      "title": "Park Hill",
+      "author_or_organization": "Historic England",
+      "source_type": "institutional",
+      "accessed_at": "2026-07-22",
+      "review_status": "reviewed",
+      "content_license": null
+    },
+    "media": {
+      "id": "media_park_hill_sheffield_tiger_2025",
+      "source_record_id": "recNzVUfpxn9XkdIp",
+      "asset_url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Park_Hill_May_2025.jpg",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:Park_Hill_May_2025.jpg",
+      "creator": "Sheffield Tiger",
+      "license": "CC BY-SA",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution_text": "Park Hill, Sheffield — Sheffield Tiger, CC BY-SA 4.0, via Wikimedia Commons",
+      "media_type": "image",
+      "review_status": "reviewed"
+    }
+  },
+  "identity_mapping": {
+    "target_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+    "target_type": "Entity",
+    "entity_kind": "Object",
+    "source_alias": "recs15CbqhEKwSKen",
+    "alias_already_resolves": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+    "labels": {
+      "en": "Park Hill, Sheffield",
+      "ru": "Парк-Хилл в Шеффилде"
+    }
+  },
+  "core_mapping_candidates": {
+    "entity_lifetime": {
+      "temporal_extent": null,
+      "certainty": "unknown",
+      "reason": "Legacy date_start/date_end may concern construction; they do not establish the whole object lifetime."
+    },
+    "spatial_extent": {
+      "approved_geometry": null,
+      "precision": "unknown",
+      "legacy_point_candidate": {
+        "type": "Point",
+        "coordinates": [
+          -1.4582,
+          53.38163
+        ]
+      },
+      "official_grid_reference_candidate": "SK 36064 87093",
+      "legacy_point_equivalence_verified": false,
+      "reason": "Preserve the legacy point separately; no source-bound conversion, footprint, centroid or entrance inference."
+    },
+    "legacy_claim_candidates": [
+      {
+        "topic": "legacy_date_fields",
+        "statement": "The pinned legacy record contains date_start=1957, date_end=1960, and no date_construction_end value.",
+        "origin": "imported",
+        "review_state": "draft",
+        "confidence": "unknown",
+        "evidence_state": "missing",
+        "evidence_link_refs": []
+      },
+      {
+        "topic": "legacy_point",
+        "statement": "The pinned legacy record contains the point [-1.4582, 53.38163].",
+        "origin": "imported",
+        "review_state": "draft",
+        "confidence": "unknown",
+        "evidence_state": "missing",
+        "evidence_link_refs": []
+      }
+    ],
+    "official_source_research_candidates": [
+      {
+        "topic": "identity",
+        "locator": "Official List Entry: number, name and statutory addresses",
+        "native_record_number": "1246881",
+        "review_state": "draft"
+      },
+      {
+        "topic": "construction",
+        "locator": "Details, first paragraph",
+        "native_expression": "1957-60",
+        "precision": "year",
+        "semantic_role": "construction; not lifetime",
+        "normalization_approved": false,
+        "review_state": "draft"
+      },
+      {
+        "topic": "formal_opening",
+        "locator": "Details, first paragraph",
+        "native_expression": "1961",
+        "precision": "year",
+        "semantic_role": "separate opening assertion",
+        "normalization_approved": false,
+        "review_state": "draft"
+      },
+      {
+        "topic": "listing_reference_location",
+        "locator": "Location: National Grid Reference; Details: Listing NGR",
+        "native_expression": "SK 36064 87093",
+        "compact_expression": "SK3606487093",
+        "semantic_role": "listing reference location",
+        "normalization_approved": false,
+        "review_state": "draft"
+      }
+    ]
+  },
+  "source_observation": {
+    "publisher": "Historic England",
+    "url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+    "accessed_on": "2026-10-04",
+    "mode": "live official-page inspection; no immutable full-page artifact captured",
+    "rights_locator": "End of official list entry, text-content licence statement",
+    "text_license_declared": "Open Government Licence v3.0, except where otherwise stated",
+    "detailed_license_terms_verified": false,
+    "map_rights_separate": true,
+    "map_downloaded": false,
+    "media_rights_independently_verified": false,
+    "media_included_in_target": false
+  },
+  "legacy_link_inventory": [
+    {
+      "relation_id": "609a2665-ffcb-4ed7-8f85-3850f67371c0",
+      "relation_type": "same_movement",
+      "source_feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+      "target_feature_id": "2760f275-b68a-4ff9-bc8e-01fdb12d3652",
+      "record_sha256": "8cc4c2c8f5a28c9a218684561b34415ab22f5906b37e4db523dd3d6ce6452454",
+      "target_relation_created": false,
+      "reason": "Legacy shared classification is not a substantive historical interaction or influence; other endpoints are outside the one-record scope."
+    },
+    {
+      "relation_id": "f2d062e1-57a8-4285-a3c8-811547476cb1",
+      "relation_type": "same_movement",
+      "source_feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+      "target_feature_id": "71ab11dd-f159-43d3-bcf9-711380973f0e",
+      "record_sha256": "d298388024f5b0019d3858a20b8a7ef7533dad68953b79980cb07963fd3cf80d",
+      "target_relation_created": false,
+      "reason": "Legacy shared classification is not a substantive historical interaction or influence; other endpoints are outside the one-record scope."
+    }
+  ],
+  "field_dispositions": {
+    "date_start/date_end/date_construction_end": "preserve in snapshot; withhold Entity lifetime and Event/State creation pending claim-level specification",
+    "coordinates_confidence=exact": "legacy metadata only; target precision unknown",
+    "source_refs roles": "candidate evidence roles; not automatic Claim-level EvidenceLinks",
+    "Source review_status=reviewed": "compatibility scope retained; no new World Model claim acceptance",
+    "description/title_short/tags": "legacy descriptive metadata; no blanket historical source support",
+    "source_license=CC BY-SA": "ambiguous legacy field; cannot license institutional text or maps",
+    "Media license/creator/attribution": "separate declared rights/provenance; omit target media until independently checked",
+    "same_movement relations": "inventory only; no target Relation or imported high confidence",
+    "influence_radius_km=1": "presentation metadata only; no Region, influence area or uncertainty radius"
+  },
+  "existing_reviewed_package_boundary": {
+    "path": "docs/work/validation_modules/briefs/module_b_reference_brief.md",
+    "reference_ids": [
+      "B-C3",
+      "B-E3",
+      "B-S2"
+    ],
+    "role": "historical reviewed design-intent evidence retained in its own package; not copied, re-reviewed or promoted here",
+    "additional_endpoints_or_relations_imported": false
+  },
+  "losses_and_unknowns": [
+    "Object lifetime is unknown; construction and opening are separate candidate assertions.",
+    "Legacy WGS84 point has no verified source-bound equivalence to the official grid reference; precision and temporal applicability remain unresolved.",
+    "No footprint, boundary, historical appearance or image rights are established.",
+    "Full descriptive text is not an atomic historical Claim; exported roles and validation flags do not replace claim review.",
+    "Existing source/package identities are cross-referenced, not silently merged."
+  ],
+  "excluded_promotions": [
+    "historical claims or confidence",
+    "exact geometry or political Region",
+    "same_movement as causal relation",
+    "media or map reuse",
+    "bulk corpus intake",
+    "public runtime capability",
+    "product gate or validated value"
+  ],
+  "historical_promotion_allowed": false,
+  "runtime_intake_allowed": false,
+  "bulk_intake_allowed": false,
+  "next_step": {
+    "status": "proposal_only",
+    "action": "Check the Park Hill listing grid-reference meaning and reproducible coordinate transformation for a source-bound reference anchor; retain unknown historical footprint/time and omit media.",
+    "implementation_authorized": false
+  }
+}
