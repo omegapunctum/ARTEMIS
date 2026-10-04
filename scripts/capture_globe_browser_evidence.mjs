@@ -28,6 +28,7 @@ function parseArguments(argv) {
   values.reducedMotion = values['reduced-motion'] === 'true';
   values.verifyUrlState = values['verify-url-state'] === 'true';
   values.sourceAwareResearch = values['source-aware-research'] === 'true';
+  values.sharedPreviewNavigation = values['shared-preview-navigation'] === 'true';
   if (![values.width, values.height, values.timeoutMs].every(Number.isFinite)) {
     throw new Error('Width, height and timeout must be finite numbers');
   }
@@ -915,6 +916,261 @@ async function verifySourceAwareResearch(cdp, options, deadline) {
     limitations: ['Source URLs and locators verified against the existing package; remote source reachability and historical evidence were not revalidated.', 'Automated technical task evidence, not human comprehension or user-value validation.']};
 }
 
+async function verifySharedPreviewNavigation(cdp, options, deadline) {
+  const base = new URL('../', options.url);
+  const routes = {leonardo: new URL('globe/', base), region: new URL('region/', base)};
+  const captures = [], transitions = [], restorations = [], sourceAccess = [], defaults = {};
+  const check = (ok, message) => { if (!ok) throw new Error('Example navigation: ' + message); };
+  async function settle() {
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  }
+  async function key(key, code, virtualKey) {
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyDown', key, code, windowsVirtualKeyCode: virtualKey,
+      ...(key === 'Enter' ? {text: '\r', unmodifiedText: '\r'} : {})});
+    await cdp.send('Input.dispatchKeyEvent', {type: 'keyUp', key, code, windowsVirtualKeyCode: virtualKey});
+  }
+  async function waitNavigation(previousToken, path) {
+    let arrived = false;
+    while (Date.now() < deadline) {
+      arrived = await evaluate(cdp, `location.pathname === ${JSON.stringify(path)} && document.documentElement?.dataset.navigationProbeToken !== ${JSON.stringify(previousToken)}`).catch(() => false);
+      if (arrived) break;
+      await delay(100);
+    }
+    check(arrived, 'document navigation did not reach ' + path);
+    await waitForVisualReadiness(cdp, deadline);
+    await cdp.send('Emulation.setFocusEmulationEnabled', {enabled: true});
+  }
+  async function mark() {
+    const token = String(Date.now()) + '-' + Math.random();
+    // A diagnostic document token only; never supplies temporal/selection state.
+    await evaluate(cdp, `document.documentElement.dataset.navigationProbeToken = ${JSON.stringify(token)}`);
+    return token;
+  }
+  async function navigate(url) {
+    const token = await mark();
+    await cdp.send('Page.navigate', {url: String(url)});
+    await waitNavigation(token, new URL(url).pathname);
+  }
+  async function input(selector, keyboard = false, navigates = false) {
+    await evaluate(cdp, `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({block: 'nearest', inline: 'nearest'})`);
+    await settle();
+    const point = await evaluate(cdp, `(() => {
+      const node = document.querySelector(${JSON.stringify(selector)});
+      if (!node) throw new Error('Missing control: ' + ${JSON.stringify(selector)});
+      const box = node.getBoundingClientRect(), x = box.x + box.width / 2, y = box.y + box.height / 2;
+      if (!box.width || !box.height || !node.contains(document.elementFromPoint(x,y))) throw new Error('Obstructed control: ' + ${JSON.stringify(selector)});
+      node.focus({preventScroll:true});
+      if (document.activeElement !== node) throw new Error('Control did not receive focus');
+      return {x,y,href:node.href || null};
+    })()`);
+    const token = navigates ? await mark() : null;
+    if (keyboard) await key('Enter','Enter',13);
+    else {
+      await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:point.x,y:point.y});
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:point.x,y:point.y});
+    }
+    if (navigates) await waitNavigation(token,new URL(point.href).pathname);
+    else await settle();
+    return {method: keyboard ? 'native Enter after explicit focus' : 'native mouse input', href:point.href};
+  }
+  async function semantic() {
+    return evaluate(cdp, `(() => {
+      const r = window.__ARTEMIS_GLOBE_SPIKE;
+      return {lifePathAvailable:r.data.lifePath.available, mode:r.lifePathMode,
+        start:r.data.lifePath.time_axis?.values[r.lifePathStartIndex] ?? null,
+        end:r.data.lifePath.time_axis?.values[r.lifePathEndIndex] ?? null,
+        preset:r.activeTemporalPresetId, layers:[...r.activeLayerRefs].sort(),
+        presence:r.selectedPresenceId, item:r.selectedItemId, temporal:r.data.state.temporal_selection};
+    })()`);
+  }
+  async function inspect(dataset,lang,suffix) {
+    const result = await evaluate(cdp, `(() => {
+      const dataset=${JSON.stringify(dataset)}, lang=${JSON.stringify(lang)};
+      const names = lang === 'ru' ? {leonardo:'Леонардо · 1452–1519',region:'Римская империя · 91–116 н. э.'} : {leonardo:'Leonardo · 1452–1519',region:'Roman Empire · 91–116 CE'};
+      const status=lang === 'ru' ? 'Публичный исследовательский прототип · продуктовая ценность не подтверждена' : 'Public research prototype · not a validated product';
+      const coverage=dataset === 'leonardo' ? (lang === 'ru' ? '11 выбранных эпизодов присутствия · 1452–1519' : '11 selected presence episodes · 1452–1519') : (lang === 'ru' ? '3 реконструированных периода · 91–116 н. э.' : '3 reconstructed periods · 91–116 CE');
+      const nav=document.getElementById('research-examples');
+      if (!nav || nav.getAttribute('aria-label') !== (lang === 'ru' ? 'Исследовательские примеры' : 'Research examples')) throw new Error('Navigation accessible name');
+      const current=document.getElementById('example-'+dataset), other=document.getElementById('example-'+(dataset === 'region' ? 'leonardo' : 'region'));
+      if (current?.getAttribute('aria-current') !== 'page' || current.tagName !== 'SPAN' || current.innerText !== names[dataset]) throw new Error('Current example indication');
+      if (other?.tagName !== 'A' || other.innerText !== names[dataset === 'region' ? 'leonardo' : 'region']) throw new Error('Sibling native link');
+      const sibling=new URL(other.href);
+      if ([...sibling.searchParams].length !== 1 || sibling.searchParams.get('lang') !== lang || sibling.hash) throw new Error('Foreign state in sibling link');
+      const atlas=document.getElementById('atlas-compatibility-link'), atlasUrl=new URL(atlas.href);
+      if (atlasUrl.pathname !== ${JSON.stringify(new URL('atlas/',base).pathname)} || atlasUrl.search || atlasUrl.hash || !atlas.innerText.includes(lang === 'ru' ? 'режим совместимости' : 'compatibility')) throw new Error('Atlas compatibility boundary');
+      if (!document.getElementById('example-coverage')?.innerText.includes(coverage) || !document.body.innerText.includes(status)) throw new Error('Visible coverage/status');
+      if (document.getElementById('language-'+lang).getAttribute('aria-pressed') !== 'true' || document.getElementById('language-'+(lang === 'en' ? 'ru' : 'en')).getAttribute('aria-pressed') !== 'false') throw new Error('Language pressed state');
+      const visible=node => { if (!node?.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})) return false; const b=node.getBoundingClientRect(); return b.width>0 && b.height>0 && b.left>=0 && b.top>=0 && b.right<=innerWidth+1 && b.bottom<=innerHeight+1; };
+      for (const node of [nav,current,other,atlas,document.getElementById('example-coverage')]) if (!visible(node)) throw new Error('Header information outside viewport');
+      if (document.documentElement.scrollWidth > innerWidth+1) throw new Error('Horizontal overflow');
+      const header=document.getElementById('spike-banner').getBoundingClientRect();
+      for (const node of document.querySelectorAll('#timeline-dock, .maplibregl-ctrl-top-right, .maplibregl-ctrl-top-left')) {
+        if (!visible(node)) continue;
+        const b=node.getBoundingClientRect();
+        if (Math.min(header.right,b.right)-Math.max(header.left,b.left)>1 && Math.min(header.bottom,b.bottom)-Math.max(header.top,b.top)>1) throw new Error('Header overlaps time/map controls');
+      }
+      if (dataset === 'region') {
+        for (const id of ['region-reconstruction-note','region-provenance-link']) if (!visible(document.getElementById(id))) throw new Error('Region provenance obligation hidden');
+        const detailsButton=document.getElementById('region-details');
+        if (!visible(detailsButton) || detailsButton.disabled || detailsButton.getAttribute('aria-controls') !== 'inspector'
+          || detailsButton.innerText !== (lang === 'ru' ? 'Сведения о регионе' : 'Region details')) throw new Error('Region evidence entry unavailable');
+        if (!document.getElementById('region-reconstruction-note').innerText.includes('Approximate scholarly reconstruction') || !document.getElementById('region-provenance-link').innerText.includes('CC-BY-4.0')) throw new Error('Region limits/license lost');
+        if (window.__ARTEMIS_GLOBE_SPIKE.data.lifePath.available !== false || document.getElementById('temporal-preset').options.length !== 3) throw new Error('Region dataset isolation');
+      } else if (window.__ARTEMIS_GLOBE_SPIKE.data.lifePath.presences.length !== 11) throw new Error('Leonardo dataset isolation');
+      return {dataset,locale:lang,url:location.href,sibling:other.href,atlas:atlas.href,current:current.innerText,coverage,status,viewport:{width:innerWidth,height:innerHeight},headerBottom:header.bottom};
+    })()`);
+    const screenshot=options.screenshot.replace(/\.png$/,'-navigation-'+suffix+'.png');
+    const dom=options.dom.replace(/\.html$/,'-navigation-'+suffix+'.html');
+    const image=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});
+    await writeFile(screenshot,Buffer.from(image.data,'base64'));
+    await writeFile(dom,await evaluate(cdp,'document.documentElement.outerHTML'));
+    captures.push({...result,screenshot,dom,screenshotSha256:createHash('sha256').update(await readFile(screenshot)).digest('hex')});
+    return result;
+  }
+  async function assertDefault(dataset,lang) {
+    check(JSON.stringify(await semantic()) === JSON.stringify(defaults[dataset]),dataset+' target did not start in its own default state');
+    const url=new URL(await evaluate(cdp,'location.href'));
+    const permitted=dataset === 'region' ? ['time','layers','item','lang'] : ['mode','start','end','presence','item','lang'];
+    check([...url.searchParams.keys()].every(name=>permitted.includes(name)) && !url.hash,'foreign query/hash survived cross-example navigation');
+    check(url.searchParams.get('lang') === lang,'target locale continuity');
+  }
+  async function reloadSaved(saved,expected) {
+    // Back has already returned to this exact saved URL. Page.navigate to the
+    // same URL containing a fragment can be a same-document navigation, which
+    // cannot prove reconstruction from URL and retains the document token.
+    // Leave the source document first, then explicitly reopen the exact saved
+    // URL. A different dataset document prevents a fragment-only no-op.
+    check(await evaluate(cdp,'location.href') === saved,'reopen is not starting from the captured saved URL');
+    const opposite=new URL(saved).pathname === routes.leonardo.pathname ? routes.region : routes.leonardo;
+    await navigate(opposite);
+    await navigate(saved);
+    check(JSON.stringify(await semantic()) === JSON.stringify(expected),'saved URL did not restore semantic time/selection');
+  }
+  async function back(saved,expected) {
+    const history=await cdp.send('Page.getNavigationHistory');
+    const target=history.entries[history.currentIndex-1];
+    check(target?.url === saved,'native browser history lost saved source URL');
+    const token=await mark();
+    await cdp.send('Page.navigateToHistoryEntry',{entryId:target.id});
+    await waitNavigation(token,new URL(saved).pathname);
+    check(JSON.stringify(await semantic()) === JSON.stringify(expected),'Back did not restore semantic time/selection');
+  }
+  async function disclosures(dataset) {
+    // Reopening a selected saved URL establishes the selection; native Space is
+    // the only operation that opens disclosures in this keyboard evidence.
+    if (dataset === 'leonardo') {
+      const presence = await evaluate(cdp, 'window.__ARTEMIS_GLOBE_SPIKE.selectedPresenceId');
+      await input('#presence-sequence button[data-presence-id="' + presence + '"]', true);
+      await input('.popup-details', true);
+    } else {
+      const before = await semantic(), url = await evaluate(cdp, 'location.href');
+      await input('#region-details', true);
+      check(await evaluate(cdp, "!document.getElementById('inspector').hidden && document.getElementById('region-details').getAttribute('aria-expanded') === 'true'"), 'Region details did not open with native input');
+      check(JSON.stringify(before) === JSON.stringify(await semantic()) && url === await evaluate(cdp, 'location.href'), 'Opening Region details changed selection/time/URL');
+    }
+    const selectors=await evaluate(cdp,`(() => {
+      const card=document.getElementById('selection-card');
+      return [...card.querySelectorAll('details')].map((d,i)=>({index:i,hasSource:!!d.querySelector('a'),uncertainty:!!d.querySelector('.uncertainty-card')})).filter(d=>d.hasSource||d.uncertainty);
+    })()`);
+    check(selectors.some(d=>d.hasSource) && selectors.some(d=>d.uncertainty),'source/uncertainty disclosures missing');
+    const results=[];
+    for (const entry of selectors) {
+      await evaluate(cdp,`(() => {
+        const summary=document.querySelectorAll('#selection-card details')[${entry.index}].querySelector('summary');
+        summary.scrollIntoView({block:'nearest'});summary.focus({preventScroll:true});
+        if(document.activeElement!==summary)throw new Error('Disclosure focus failed: '+JSON.stringify({
+          dataset:${JSON.stringify(dataset)},index:${entry.index},summary:summary.textContent,
+          inspectorHidden:document.getElementById('inspector').hidden,
+          visible:summary.checkVisibility({checkVisibilityCSS:true}),
+          focused:document.activeElement?.outerHTML?.slice(0,300),
+          parents:[...function*(){for(let p=summary.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')yield {label:p.querySelector('summary')?.textContent,open:p.open};}()]
+        }));
+      })()`);
+      await settle();
+      const open=await evaluate(cdp,`document.querySelectorAll('#selection-card details')[${entry.index}].open`);
+      if (!open) {await key(' ','Space',32);await settle();}
+      check(await evaluate(cdp,`document.querySelectorAll('#selection-card details')[${entry.index}].open`),'native Space did not open disclosure');
+      results.push(entry);
+    }
+    const accessible=await evaluate(cdp,`(() => {const card=document.getElementById('selection-card');const link=[...card.querySelectorAll('a')].find(a=>a.checkVisibility({checkVisibilityCSS:true}));if(!link)throw new Error('No disclosed source link');link.scrollIntoView({block:'nearest'});link.focus({preventScroll:true});if(document.activeElement!==link)throw new Error('Source link cannot receive keyboard focus');return {href:link.href,text:link.textContent};})()`);
+    return {dataset,method:'native Space after explicit summary focus; source link focus',disclosures:results,source:accessible};
+  }
+  async function closeRegionDetails(escape = false) {
+    const before=await semantic(), url=await evaluate(cdp,'location.href');
+    if (escape) {await key('Escape','Escape',27);await settle();}
+    else await input('#close-details',true);
+    check(await evaluate(cdp,"document.getElementById('inspector').hidden && document.getElementById('region-details').getAttribute('aria-expanded') === 'false' && document.activeElement === document.getElementById('region-details')"),'Region details close did not restore entry focus');
+    check(JSON.stringify(before)===JSON.stringify(await semantic())&&url===await evaluate(cdp,'location.href'),'Closing Region details changed selection/time/URL');
+    return {method:escape?'native Escape':'native Enter on close button',focusRestored:true,semanticStatePreserved:true};
+  }
+  // Capture actual clean defaults rather than invent a cross-dataset timeline.
+  for (const dataset of ['leonardo','region']) {
+    await navigate(routes[dataset]);
+    defaults[dataset]=await semantic();
+    await inspect(dataset,'en',dataset+'-missing-locale');
+  }
+  for (const lang of ['en','ru']) {
+    await navigate(new URL('?lang='+lang,routes.leonardo));
+    await inspect('leonardo',lang,'leonardo-'+lang);
+    const outward=await input('#example-region',lang==='ru',true);
+    await assertDefault('region',lang);
+    await inspect('region',lang,'region-'+lang);
+    sourceAccess.push({locale:lang,...await disclosures('region')});
+    await inspect('region',lang,'region-sources-'+lang);
+    const close=await closeRegionDetails(lang==='ru');
+    const inward=await input('#example-leonardo',true,true);
+    await assertDefault('leonardo',lang);
+    transitions.push({locale:lang,outward,inward,defaultsIsolated:true,regionDetailsClose:close});
+  }
+  // URL containing valid semantic state plus intentionally unrelated parameters.
+  const savedLeonardo=new URL('?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=en&camera=foreign&diagnostic=foreign&unknown=foreign#foreign',routes.leonardo);
+  await navigate(savedLeonardo);
+  const before=await semantic(), beforeUrl=await evaluate(cdp,'location.href');
+  await input('#language-ru',true);
+  const saved=await evaluate(cdp,'location.href'), expected=await semantic();
+  const previous=new URL(beforeUrl), localized=new URL(saved);previous.searchParams.delete('lang');localized.searchParams.delete('lang');
+  check(previous.href===localized.href && JSON.stringify(before)===JSON.stringify(expected),'locale change changed source semantics/query/hash');
+  check(new URL(saved).searchParams.get('lang')==='ru','language button did not write locale');
+  await input('#example-region',true,true);await assertDefault('region','ru');
+  await back(saved,expected);await reloadSaved(saved,expected);
+  restorations.push({dataset:'leonardo',saved,semantic:expected,back:true,reopen:true,sourceDisclosures:await disclosures('leonardo')});
+  await inspect('leonardo','ru','leonardo-sources-ru');
+  const englishSaved=new URL(saved);englishSaved.searchParams.set('lang','en');
+  await navigate(englishSaved);
+  sourceAccess.push({locale:'en',...await disclosures('leonardo')});
+  await inspect('leonardo','en','leonardo-sources-en');
+  // A non-default Region period and selected Region item; values come from its
+  // own existing view index, then the saved URL is applied by normal navigation.
+  await navigate(new URL('?lang=ru',routes.region));
+  const regionChoice=await evaluate(cdp,`(() => {
+    const r=window.__ARTEMIS_GLOBE_SPIKE,p=r.viewIndex.temporal_presets[1];
+    // A preset has both empty-layer and political-territory views. Preserve the
+    // dataset's active layers when choosing its non-default saved period.
+    const layers=[...r.activeLayerRefs].sort();
+    const v=[...r.viewByKey.values()].find(v=>v.temporal_preset_id===p.preset_id
+      && JSON.stringify([...v.active_layer_refs].sort())===JSON.stringify(layers));
+    const item=v?.projection.items.find(i=>i.object_type==='Region');
+    if(!item)throw new Error('Non-default Region view has no Region item for current layers: '+JSON.stringify({preset:p.preset_id,layers}));
+    return {preset:p.preset_id,layers:layers.join(','),item:item.item_id};
+  })()`);
+  const regionUrl=new URL(routes.region);for(const [k,v]of Object.entries({time:regionChoice.preset,layers:regionChoice.layers,item:regionChoice.item,lang:'ru'}))regionUrl.searchParams.set(k,v);
+  await navigate(regionUrl);const regionSaved=await evaluate(cdp,'location.href'), regionState=await semantic();
+  check(regionState.preset===regionChoice.preset&&regionState.item===regionChoice.item,'Region saved state was not selected');
+  await input('#example-leonardo',true,true);await assertDefault('leonardo','ru');
+  await back(regionSaved,regionState);await reloadSaved(regionSaved,regionState);
+  restorations.push({dataset:'region',saved:regionSaved,semantic:regionState,back:true,reopen:true,sourceDisclosures:await disclosures('region')});
+  await inspect('region','ru','region-saved-sources-ru');
+  restorations.at(-1).detailsClose=await closeRegionDetails(true);
+  for(const dataset of ['leonardo','region']) {
+    await navigate(new URL('?lang=invalid&unknown=foreign#foreign',routes[dataset]));
+    await inspect(dataset,'en',dataset+'-invalid-locale');
+    const target=dataset==='region'?'leonardo':'region';await input('#example-'+target,true,true);await assertDefault(target,'en');
+  }
+  return {routes:Object.fromEntries(Object.entries(routes).map(([k,v])=>[k,v.href])),defaults,transitions,restorations,sourceAccess,captures,
+    keyboardScope:'Named navigation/language controls and selected-record disclosures after explicit focus; not a full keyboard audit',
+    valueValidation:'not_assessed'};
+}
+
 async function main() {
   const options = parseArguments(process.argv);
   const profileDirectory = await mkdtemp(join(tmpdir(), 'artemis-chrome-profile-'));
@@ -975,6 +1231,9 @@ async function main() {
     const sourceAwareResearch = !isRegion && options.sourceAwareResearch
       ? await verifySourceAwareResearch(cdp, options, deadline)
       : null;
+    const sharedPreviewNavigation = options.sharedPreviewNavigation
+      ? await verifySharedPreviewNavigation(cdp, options, deadline)
+      : null;
     const sha256 = value => createHash('sha256').update(value).digest('hex');
     const provenance = {
       schemaVersion: '1.0.0',
@@ -995,7 +1254,7 @@ async function main() {
       screenshotSha256: sha256(await readFile(options.screenshot)),
       limitations: ['Checkout identity is test-code provenance, not proof of the deployed commit.', 'DOM and screenshot precede the separate URL-restoration scenario.', 'Keyboard checks cover named controls only, not a full keyboard or assistive-technology audit.']
     };
-    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, sourceAwareResearch, provenance };
+    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, sourceAwareResearch, sharedPreviewNavigation, provenance };
     if (options.report) await writeFile(options.report, JSON.stringify(report, null, 2) + '\n', 'utf8');
     process.stdout.write(`${JSON.stringify(report)}\n`);
   } catch (error) {

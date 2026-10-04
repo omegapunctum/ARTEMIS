@@ -249,3 +249,28 @@ jobs:
           path: /tmp/region-live-retest.*
           if-no-files-found: warn
           retention-days: 7
+
+      - name: Verify published research example navigation
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/artemis-navigation-live-evidence
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          timeout 300s node scripts/capture_globe_browser_evidence.mjs \
+            --browser "$BROWSER" --url "${PAGES_URL%/}/globe/" \
+            --width 1440 --height 900 --timeout-ms 270000 \
+            --reduced-motion true --shared-preview-navigation true \
+            --dom /tmp/artemis-navigation-live-evidence/live.html \
+            --screenshot /tmp/artemis-navigation-live-evidence/live.png \
+            --report /tmp/artemis-navigation-live-evidence/live.json \
+            2> >(tee /tmp/artemis-navigation-live-evidence/live.log >&2)
+
+      - name: Upload published navigation evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: shared-preview-navigation-live-evidence
+          path: /tmp/artemis-navigation-live-evidence/
+          if-no-files-found: warn
+          retention-days: 7

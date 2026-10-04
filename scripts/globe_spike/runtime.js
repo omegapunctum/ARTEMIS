@@ -1122,11 +1122,33 @@
     const restoreFocus = inspector?.contains(document.activeElement);
     if (inspector) inspector.hidden = true;
     document.documentElement.dataset.artemisDetailsOpen = 'false';
+    const regionDetails = byId('region-details');
+    regionDetails?.setAttribute('aria-expanded', 'false');
     if (restoreFocus) {
       const target = [...(byId('presence-sequence')?.querySelectorAll('button') || [])]
         .find((button) => button.dataset.presenceId === runtime.selectedPresenceId && !button.hidden);
-      (target || byId('mode-range'))?.focus({ preventScroll: true });
+      const regionTarget = regionDetails?.disabled ? byId('temporal-preset') : regionDetails;
+      (regionTarget || target || byId('mode-range'))?.focus({ preventScroll: true });
     }
+  }
+
+  function bindRegionDetailsControls() {
+    const button = byId('region-details');
+    if (!button) return;
+    button.addEventListener('click', () => {
+      if (button.disabled || !runtime.selectedItemId) return;
+      const inspector = byId('inspector');
+      if (!inspector) return;
+      inspector.hidden = false;
+      inspector.scrollTop = 0;
+      button.setAttribute('aria-expanded', 'true');
+      document.documentElement.dataset.artemisDetailsOpen = 'true';
+      byId('selection-card')?.focus({ preventScroll: true });
+    });
+    byId('close-details')?.addEventListener('click', closeDetailsDrawer);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
+    });
   }
 
   function openDetailsDrawer(presenceId, options = {}) {
@@ -1524,22 +1546,55 @@
     applyLifePathView();
   }
 
-  function bindLifePathControls() {
+  function bindLanguageControls(publicNavigation = false) {
+    const applyLanguage = (language, updateUrl = false) => {
+      window.ARTEMIS_I18N?.setLanguage(language);
+      for (const value of ['en', 'ru']) {
+        byId(`language-${value}`)?.setAttribute('aria-pressed', String(value === language));
+      }
+      if (publicNavigation) {
+        for (const link of byId('research-examples').querySelectorAll('a[data-example-route]')) {
+          link.setAttribute('href', `${link.dataset.exampleRoute}?lang=${language}`);
+        }
+        if (updateUrl) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('lang', language);
+          window.history.replaceState(window.history.state, '', url);
+        }
+      }
+      requestAnimationFrame(() => { syncOverlayLayout(); layoutPlaceLabels(); });
+    };
     for (const lang of ['en', 'ru']) {
       byId(`language-${lang}`)?.addEventListener('click', () => {
-        window.ARTEMIS_I18N?.setLanguage(lang);
-        for (const value of ['en', 'ru']) byId(`language-${value}`)?.setAttribute('aria-pressed', String(value === lang));
-        requestAnimationFrame(() => { syncOverlayLayout(); layoutPlaceLabels(); });
+        applyLanguage(lang, publicNavigation);
       });
     }
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
-    });
+    if (publicNavigation) {
+      const restoreLanguage = () => {
+        const value = new URL(window.location.href).searchParams.get('lang');
+        applyLanguage(value === 'ru' ? 'ru' : 'en');
+      };
+      restoreLanguage();
+      window.addEventListener('popstate', restoreLanguage);
+    }
+  }
+
+  function bindOverlayLayout() {
     const layoutObserver = new ResizeObserver(syncOverlayLayout);
     for (const id of ['timeline-dock', 'spike-banner', 'attribution-status']) {
       if (byId(id)) layoutObserver.observe(byId(id));
     }
     syncOverlayLayout();
+  }
+
+  function bindLifePathControls() {
+    if (!byId('research-examples')) {
+      bindLanguageControls();
+      bindOverlayLayout();
+    }
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
+    });
     const update = (startIndex, endIndex) => {
       runtime.lifePathStartIndex = startIndex;
       runtime.lifePathEndIndex = endIndex;
@@ -1766,6 +1821,11 @@
   }
 
   function clearCanonicalSelection(message = 'No semantic object selected.', options = {}) {
+    const regionDetails = byId('region-details');
+    if (regionDetails) {
+      regionDetails.disabled = true;
+      closeDetailsDrawer();
+    }
     runtime.selectedItemId = null;
     document.documentElement.dataset.artemisSelectedPresence = '';
     document.documentElement.dataset.artemisSelectedItem = '';
@@ -1804,6 +1864,8 @@
       semantic_flags: projectionItem.semantic_flags,
       projection_losses: losses
     });
+    const regionDetails = byId('region-details');
+    if (regionDetails) regionDetails.disabled = false;
     renderUnresolved(runtime.data.projection);
     if (options.focus) byId('selection-card')?.focus({ preventScroll: false });
     if (options.syncUrl !== false) syncUrlState();
@@ -2146,5 +2208,10 @@
     });
   }
 
+  if (byId('research-examples')) {
+    bindLanguageControls(true);
+    bindOverlayLayout();
+    bindRegionDetailsControls();
+  }
   main().catch(fatal);
 })();

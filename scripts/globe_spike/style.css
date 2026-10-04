@@ -407,6 +407,17 @@ summary:focus-visible {
 .language-switch { display: flex; gap: 2px; }
 .language-switch button { border: 1px solid #36516e; border-radius: 6px; background: #0c1927; color: #c8e4fb; font-size: 12px; }
 .language-switch button[aria-pressed="true"] { background: #215f9d; color: white; }
+#region-details { min-height: 36px; padding: 5px 9px; border: 1px solid #36516e; border-radius: 6px; background: #0c1927; color: #c8e4fb; font-size: 14px; }
+#region-details:hover:enabled { background: #1e4f84; }
+#region-details:disabled { opacity: 0.65; cursor: default; }
+#spike-banner.has-example-navigation { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.has-example-navigation .banner-actions { max-width: 230px; }
+#research-examples { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 8px; pointer-events: auto; }
+#research-examples > * { display: inline-flex; align-items: center; min-height: 36px; padding: 5px 9px; border: 1px solid #36516e; border-radius: 6px; background: #0c1927; color: #c8e4fb; font-size: 14px; }
+#research-examples a { text-decoration: none; }
+#research-examples [aria-current="page"] { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; background: #17314a; }
+#research-examples a:hover { background: #1e4f84; }
+#research-examples a:focus-visible { outline: 2px solid #79cfff; outline-offset: 2px; }
 #timeline-dock { min-height: 0; grid-template-columns: 160px minmax(0, 1fr); padding: 8px 16px; gap: 12px; }
 .timeline-summary { display: none; }
 .timeline-subject h1 { font-size: 17px; }
@@ -458,6 +469,9 @@ button:focus-visible { outline: 2px solid #79cfff; outline-offset: 2px; }
   #spike-banner { gap: 8px; }
   .banner-actions { display: flex; }
   .banner-actions .preview-nav-link { display: none; }
+  #spike-banner.has-example-navigation { grid-template-columns: minmax(0, 1fr); }
+  .has-example-navigation .banner-actions { max-width: none; justify-content: flex-start; }
+  .has-example-navigation .banner-actions .preview-nav-link { display: inline-flex; min-height: 32px; padding: 5px 9px; font-size: 11px; }
   .timeline-subject h1 { font-size: 13px; }
 }
 

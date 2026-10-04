@@ -1,7 +1,9 @@
 import hashlib
 import json
 import subprocess
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urljoin
 
 import pytest
 
@@ -10,6 +12,7 @@ from scripts.build_globe_spike import (
     ASSET_MANIFEST_PATH,
     CAPABILITY_PATH,
     DEFAULT_DATASET,
+    REGION_DATASET,
     EARTH_CONTEXT_PATH,
     ENGINE_EVALUATION_PATH,
     EXPECTED_ENGINE,
@@ -48,6 +51,251 @@ def test_generated_presentation_and_evidence_truth(tmp_path, public_preview):
 
 def test_m5_chronology_and_localization_behavior() -> None:
     subprocess.run(["node", "tests/m5_ux_behavior.cjs"], cwd=ROOT, check=True)
+
+
+@pytest.mark.parametrize("dataset", [DEFAULT_DATASET, REGION_DATASET, "contract_fixture"])
+@pytest.mark.parametrize("public_preview", [False, True])
+def test_example_navigation_is_scoped_to_built_public_examples(tmp_path, dataset, public_preview):
+    output = tmp_path / dataset
+    build_spike(output, dataset=dataset, public_preview=public_preview)
+
+    class Elements(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.by_id = {}
+
+        def handle_starttag(self, tag, attrs):
+            values = dict(attrs)
+            if "id" in values:
+                self.by_id[values["id"]] = (tag, values)
+
+    parsed = Elements()
+    parsed.feed((output / "index.html").read_text())
+    supported = public_preview and dataset in {DEFAULT_DATASET, REGION_DATASET}
+    assert ("region-details" in parsed.by_id) is (public_preview and dataset == REGION_DATASET)
+    if public_preview and dataset == REGION_DATASET:
+        assert parsed.by_id["region-details"][1]["aria-controls"] == "inspector"
+        assert parsed.by_id["region-details"][1]["aria-expanded"] == "false"
+        assert "disabled" in parsed.by_id["region-details"][1]
+        assert parsed.by_id["inspector"][1]["aria-label"] == "Selected region details"
+        assert "hidden" in parsed.by_id["inspector"][1]
+        assert parsed.by_id["close-details"][1]["aria-label"] == "Close region details"
+    else:
+        assert parsed.by_id["inspector"][1]["aria-label"] == "Selected place details"
+    assert ("research-examples" in parsed.by_id) is supported
+    assert ("example-coverage" in parsed.by_id) is supported
+    if not supported:
+        return
+    assert parsed.by_id["research-examples"] == ("nav", {"id": "research-examples", "aria-label": "Research examples"})
+    current, other = ("region", "leonardo") if dataset == REGION_DATASET else ("leonardo", "region")
+    assert parsed.by_id[f"example-{current}"][0] == "span"
+    assert parsed.by_id[f"example-{current}"][1]["aria-current"] == "page"
+    target = "globe" if other == "leonardo" else "region"
+    tag, attrs = parsed.by_id[f"example-{other}"]
+    assert tag == "a"
+    assert attrs["href"] == attrs["data-example-route"] == f"../{target}/"
+    assert "aria-current" not in attrs
+    assert parsed.by_id["atlas-compatibility-link"][1]["href"] == "../atlas/"
+    for base in ["https://example.test/", "https://example.test/ARTEMIS/"]:
+        origin = base + ("region/" if dataset == REGION_DATASET else "globe/")
+        assert urljoin(origin, attrs["href"]) == base + target + "/"
+        assert urljoin(origin, "../atlas/") == base + "atlas/"
+    private_output = tmp_path / "private-baseline"
+    build_spike(private_output, dataset=dataset)
+    semantic_files = [
+        path for path in output.iterdir()
+        if path.suffix in {".json", ".geojson"} and path.name != "build-meta.json"
+    ]
+    assert semantic_files
+    for path in semantic_files:
+        assert path.read_bytes() == (private_output / path.name).read_bytes(), path.name
+
+
+def test_example_language_binding_preserves_own_url_and_allowlists_outgoing_state(tmp_path):
+    output = tmp_path / "globe"
+    build_spike(output, public_preview=True)
+    source = (output / "runtime.js").read_text()
+    language_binding = "function bindLanguageControls" + source.split("function bindLanguageControls", 1)[1].split("function bindOverlayLayout", 1)[0]
+    url_sync = "function syncUrlState" + source.split("function syncUrlState", 1)[1].split("function currentProjectionItem", 1)[0]
+    harness = r"""
+const assert = require('node:assert/strict');
+const listeners = {};
+function element() {
+  return {attrs: {}, events: {}, setAttribute(k, v) {this.attrs[k] = v;}, addEventListener(k, fn) {this.events[k] = fn;}};
+}
+const en = element(), ru = element(), other = element(), atlas = element();
+other.dataset = {exampleRoute: '../region/'};
+atlas.attrs.href = '../atlas/';
+const elements = {'language-en': en, 'language-ru': ru, 'research-examples': {querySelectorAll() {return [other];}}};
+function byId(id) {return elements[id];}
+let activeLanguage;
+const initial = 'https://example.test/ARTEMIS/globe/?mode=scrub&from=1452&at=1502&presence=presence-rimini&item=event-rimini&unknown=keep&lang=ru#saved';
+const window = {
+  location: {href: initial},
+  ARTEMIS_I18N: {setLanguage(lang) {activeLanguage = lang;}},
+  history: {state: {prior: true}, replaceState(state, _, url) {this.state = state; window.location.href = String(url);}},
+  addEventListener(type, fn) {(listeners[type] ||= []).push(fn);}
+};
+function requestAnimationFrame(fn) {fn();}
+function syncOverlayLayout() {}
+function layoutPlaceLabels() {}
+const runtime = {data: {lifePath: {available: true, time_axis: {values: ['1452', '1502']}}}, lifePathStartIndex: 0, lifePathEndIndex: 1, lifePathMode: 'scrub', selectedPresenceId: 'presence-rimini', selectedItemId: 'event-rimini'};
+"""
+    assertions = r"""
+bindLanguageControls(true);
+assert.equal(activeLanguage, 'ru');
+assert.equal(ru.attrs['aria-pressed'], 'true');
+assert.equal(en.attrs['aria-pressed'], 'false');
+assert.equal(window.location.href, initial);
+assert.equal(other.attrs.href, '../region/?lang=ru');
+assert.equal(atlas.attrs.href, '../atlas/');
+en.events.click();
+const changed = new URL(window.location.href);
+const before = new URL(initial);
+before.searchParams.set('lang', 'en');
+assert.equal(changed.href, before.href);
+assert.equal(window.history.state.prior, true);
+assert.equal(other.attrs.href, '../region/?lang=en');
+syncUrlState();
+assert.equal(new URL(window.location.href).searchParams.get('lang'), 'en');
+assert.equal(new URL(window.location.href).hash, '#saved');
+runtime.data.lifePath.available = false;
+runtime.activeTemporalPresetId = 'period-106-113';
+runtime.activeLayerRefs = ['region'];
+runtime.selectedItemId = 'region-state';
+syncUrlState();
+assert.equal(new URL(window.location.href).searchParams.get('lang'), 'en');
+assert.equal(new URL(window.location.href).searchParams.get('time'), 'period-106-113');
+for (const value of [null, 'RU', 'fr', 'ru<script>', 'en']) {
+  const url = new URL(initial);
+  if (value === null) url.searchParams.delete('lang');
+  else url.searchParams.set('lang', value);
+  window.location.href = url.href;
+  for (const fn of listeners.popstate) fn();
+  assert.equal(activeLanguage, 'en');
+  assert.equal(other.attrs.href, '../region/?lang=en');
+  assert.equal(window.location.href, url.href);
+}
+other.dataset.exampleRoute = '../globe/';
+window.location.href = 'https://example.test/region/?time=period-114-116&item=state-region&diagnostics=true&lang=en#period';
+ru.events.click();
+assert.equal(other.attrs.href, '../globe/?lang=ru');
+assert.equal(window.location.href, 'https://example.test/region/?time=period-114-116&item=state-region&diagnostics=true&lang=ru#period');
+// Non-public Leonardo keeps its existing in-memory-only language behavior.
+const priorUrl = window.location.href;
+const priorListeners = listeners.popstate.length;
+bindLanguageControls(false);
+en.events.click();
+assert.equal(activeLanguage, 'en');
+assert.equal(window.location.href, priorUrl);
+assert.equal(listeners.popstate.length, priorListeners);
+"""
+    subprocess.run(["node", "-e", harness + language_binding + url_sync + assertions], check=True)
+    localization = (output / "localization.js").read_text()
+    localization_harness = r"""
+const assert = require('node:assert/strict');
+const window = {};
+const document = {documentElement: {dataset: {}}, readyState: 'loading', addEventListener() {}, getElementById() {return null;}};
+"""
+    localization_assertions = r"""
+window.ARTEMIS_I18N.setLanguage('ru');
+for (const [en, ru] of [
+  ['Research examples', 'Исследовательские примеры'],
+  ['Leonardo · 1452–1519', 'Леонардо · 1452–1519'],
+  ['Roman Empire · 91–116 CE', 'Римская империя · 91–116 н. э.'],
+  ['11 selected presence episodes · 1452–1519', '11 выбранных эпизодов присутствия · 1452–1519'],
+  ['3 reconstructed periods · 91–116 CE', '3 реконструированных периода · 91–116 н. э.'],
+  ['Public research prototype · not a validated product', 'Публичный исследовательский прототип · продуктовая ценность не подтверждена'],
+  ['Architecture Atlas · compatibility', 'Архитектурный атлас · режим совместимости']
+  ,['Region details', 'Сведения о регионе']
+  ,['Selected region details', 'Сведения о выбранном регионе']
+  ,['Selected region', 'Выбранный регион']
+  ,['Close region details', 'Закрыть сведения о регионе']
+]) assert.equal(window.ARTEMIS_I18N.t(en), ru);
+"""
+    subprocess.run(["node", "-e", localization_harness + localization + localization_assertions], check=True)
+
+
+def test_public_region_details_controls_reveal_existing_record_without_state_changes():
+    source = RUNTIME_JS.read_text()
+    functions = "\n".join(
+        "function " + name + source.split("function " + name, 1)[1].split("\n  function ", 1)[0]
+        for name in ["closeDetailsDrawer", "bindRegionDetailsControls", "clearCanonicalSelection", "selectKnowledgeItem"]
+    )
+    harness = r"""
+const assert = require('node:assert/strict');
+const elements = {};
+let focused;
+function element(id) {
+  const node = {id, attrs: {}, events: {}, hidden: false, dataset: {}, classList: {add() {}}, setAttribute(k,v) {this.attrs[k] = v;}, removeAttribute(k) {delete this.attrs[k];}, addEventListener(k, fn) {this.events[k] = fn;}, focus() {focused = this; document.activeElement = this;}};
+  elements[id] = node;
+  return node;
+}
+const button = element('region-details');
+button.disabled = true;
+const inspector = element('inspector');
+inspector.hidden = true;
+inspector.contains = node => node === card || node === close;
+const card = element('selection-card');
+const close = element('close-details');
+const preset = element('temporal-preset');
+const keys = [];
+const document = {activeElement: null, documentElement: {dataset: {}}, addEventListener(type, fn) {if (type === 'keydown') keys.push(fn);}, querySelectorAll() {return [];}};
+function byId(id) {return elements[id];}
+let rendered = 0, synced = 0;
+const item = {item_id: 'region-item', object_ref: 'region-roman-empire'};
+const runtime = {selectedItemId: null, selectedPresenceId: null, data: {lifePath: {available: false}, state: {selection: {}}, projection: {items: [item], losses: []}}, knowledgeByItem: new Map([[item.item_id, {item_id: item.item_id}]])};
+const window = {location: {href: 'https://example.test/ARTEMIS/region/?time=period-106-113&item=region-item&lang=ru#record'}};
+function currentProjectionItem(id) {return id === item.item_id ? item : null;}
+function updateCanonicalSelection(value) {runtime.data.state.selection.primary_object_ref = value.object_ref;}
+function renderKnowledgeRecord() {rendered += 1;}
+function renderUnresolved() {}
+function syncUrlState() {synced += 1;}
+"""
+    assertions = r"""
+bindRegionDetailsControls();
+assert.equal(inspector.hidden, true);
+button.events.click();
+assert.equal(inspector.hidden, true);
+selectKnowledgeItem(item.item_id, {syncUrl: false});
+assert.equal(button.disabled, false);
+assert.equal(inspector.hidden, true);
+const before = JSON.stringify(runtime);
+const savedUrl = window.location.href;
+button.events.click();
+assert.equal(inspector.hidden, false);
+assert.equal(button.attrs['aria-expanded'], 'true');
+assert.equal(focused, card);
+assert.equal(rendered, 1);
+assert.equal(JSON.stringify(runtime), before);
+assert.equal(window.location.href, savedUrl);
+assert.equal(synced, 0);
+close.focus();
+close.events.click();
+assert.equal(inspector.hidden, true);
+assert.equal(button.attrs['aria-expanded'], 'false');
+assert.equal(focused, button);
+button.events.click();
+for (const fn of keys) fn({key: 'Escape'});
+assert.equal(inspector.hidden, true);
+assert.equal(button.attrs['aria-expanded'], 'false');
+assert.equal(focused, button);
+assert.equal(JSON.stringify(runtime), before);
+assert.equal(window.location.href, savedUrl);
+button.events.click();
+clearCanonicalSelection('No semantic object selected.', {syncUrl: false});
+assert.equal(inspector.hidden, true);
+assert.equal(button.disabled, true);
+assert.equal(button.attrs['aria-expanded'], 'false');
+assert.equal(focused, preset);
+assert.equal(window.location.href, savedUrl);
+// Non-public artifacts have no button, hence no new handlers.
+delete elements['region-details'];
+const priorHandlers = keys.length;
+bindRegionDetailsControls();
+assert.equal(keys.length, priorHandlers);
+"""
+    subprocess.run(["node", "-e", harness + functions + assertions], check=True)
 
 
 def test_open_details_removes_popup_without_mutating_selection_or_url() -> None:
