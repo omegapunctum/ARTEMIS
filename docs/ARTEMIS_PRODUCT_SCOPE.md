@@ -13,10 +13,11 @@ Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.7.
-- Дата: 2026-09-19.
+- Версия: 4.8.
+- Дата: 2026-10-04.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
+- Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; bounded Explorer navigation maintenance separately authorized under section 2. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
+
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
 - Thematic compatibility surface retained: `Architecture Atlas` at `/atlas/`.
@@ -47,6 +48,8 @@ Local/global context, тематические layers, richer Events/States/Proc
 
 ## 2. Scope lock текущего цикла
 
+Owner-directed navigation maintenance — 2026-10-04: after the [unified Explorer advisory](work/2026-10-04_UNIFIED_EXPLORER_ADVISORY_v1.md), the owner instructed execution of the next bounded step. [Explorer Example Navigation v1](work/2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md) authorizes common native navigation between existing public Leonardo and Roman Region previews, explicit example/coverage/R&D labels and presentation-only EN/RU continuity. Independent specification acceptance must be recorded before runtime edits; implementation is REVIEW under the current Development Operating System. This prospective authorization does not reopen the completed conflict proof, Gate E, contextual composition or frozen historical evidence. Existing routes and dataset-specific semantic state remain separate; root landing, Atlas intake, simultaneous overlays, 2D/Globe switching, source/status promotion and backend/storage work are outside this task. Product/gate state remains unchanged; comparative/formal value UNVALIDATED.
+
 Foundation и Core Reset уже завершены как prerequisites. Owner-directed Region proof не должен повторно открывать их.
 
 Completed prerequisites:
@@ -60,6 +63,8 @@ Completed prerequisites:
 - feedback correction / PR `#396`.
 
 Current authorized work:
+
+- execute the separately owner-authorized Explorer Example Navigation v1 maintenance above, stopping after independently reviewed implementation and publication verification;
 
 - preserve the published #419 Leonardo interaction and distinct Presence semantics;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;
