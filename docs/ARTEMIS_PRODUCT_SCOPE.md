@@ -52,6 +52,8 @@ Owner-directed navigation maintenance — 2026-10-04: after the [unified Explore
 
 Foundation и Core Reset уже завершены как prerequisites. Owner-directed Region proof не должен повторно открывать их.
 
+The navigation task's required source-access correction is limited to a native public-Region control for its existing selected record, accurate Region drawer labels and close/Escape/focus behavior, as prospectively specified in the task amendment. The drawer stays closed by default; opening must not change temporal selection, URL or historical content. This repairs access to existing information rather than opening a new semantic contour.
+
 Completed prerequisites:
 
 - Foundation v3 / v3.1 identity and World Model boundaries;

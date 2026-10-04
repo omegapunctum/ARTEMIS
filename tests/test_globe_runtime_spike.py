@@ -72,6 +72,16 @@ def test_example_navigation_is_scoped_to_built_public_examples(tmp_path, dataset
     parsed = Elements()
     parsed.feed((output / "index.html").read_text())
     supported = public_preview and dataset in {DEFAULT_DATASET, REGION_DATASET}
+    assert ("region-details" in parsed.by_id) is (public_preview and dataset == REGION_DATASET)
+    if public_preview and dataset == REGION_DATASET:
+        assert parsed.by_id["region-details"][1]["aria-controls"] == "inspector"
+        assert parsed.by_id["region-details"][1]["aria-expanded"] == "false"
+        assert "disabled" in parsed.by_id["region-details"][1]
+        assert parsed.by_id["inspector"][1]["aria-label"] == "Selected region details"
+        assert "hidden" in parsed.by_id["inspector"][1]
+        assert parsed.by_id["close-details"][1]["aria-label"] == "Close region details"
+    else:
+        assert parsed.by_id["inspector"][1]["aria-label"] == "Selected place details"
     assert ("research-examples" in parsed.by_id) is supported
     assert ("example-coverage" in parsed.by_id) is supported
     if not supported:
@@ -197,9 +207,95 @@ for (const [en, ru] of [
   ['3 reconstructed periods · 91–116 CE', '3 реконструированных периода · 91–116 н. э.'],
   ['Public research prototype · not a validated product', 'Публичный исследовательский прототип · продуктовая ценность не подтверждена'],
   ['Architecture Atlas · compatibility', 'Архитектурный атлас · режим совместимости']
+  ,['Region details', 'Сведения о регионе']
+  ,['Selected region details', 'Сведения о выбранном регионе']
+  ,['Selected region', 'Выбранный регион']
+  ,['Close region details', 'Закрыть сведения о регионе']
 ]) assert.equal(window.ARTEMIS_I18N.t(en), ru);
 """
     subprocess.run(["node", "-e", localization_harness + localization + localization_assertions], check=True)
+
+
+def test_public_region_details_controls_reveal_existing_record_without_state_changes():
+    source = RUNTIME_JS.read_text()
+    functions = "\n".join(
+        "function " + name + source.split("function " + name, 1)[1].split("\n  function ", 1)[0]
+        for name in ["closeDetailsDrawer", "bindRegionDetailsControls", "clearCanonicalSelection", "selectKnowledgeItem"]
+    )
+    harness = r"""
+const assert = require('node:assert/strict');
+const elements = {};
+let focused;
+function element(id) {
+  const node = {id, attrs: {}, events: {}, hidden: false, dataset: {}, classList: {add() {}}, setAttribute(k,v) {this.attrs[k] = v;}, removeAttribute(k) {delete this.attrs[k];}, addEventListener(k, fn) {this.events[k] = fn;}, focus() {focused = this; document.activeElement = this;}};
+  elements[id] = node;
+  return node;
+}
+const button = element('region-details');
+button.disabled = true;
+const inspector = element('inspector');
+inspector.hidden = true;
+inspector.contains = node => node === card || node === close;
+const card = element('selection-card');
+const close = element('close-details');
+const preset = element('temporal-preset');
+const keys = [];
+const document = {activeElement: null, documentElement: {dataset: {}}, addEventListener(type, fn) {if (type === 'keydown') keys.push(fn);}, querySelectorAll() {return [];}};
+function byId(id) {return elements[id];}
+let rendered = 0, synced = 0;
+const item = {item_id: 'region-item', object_ref: 'region-roman-empire'};
+const runtime = {selectedItemId: null, selectedPresenceId: null, data: {lifePath: {available: false}, state: {selection: {}}, projection: {items: [item], losses: []}}, knowledgeByItem: new Map([[item.item_id, {item_id: item.item_id}]])};
+const window = {location: {href: 'https://example.test/ARTEMIS/region/?time=period-106-113&item=region-item&lang=ru#record'}};
+function currentProjectionItem(id) {return id === item.item_id ? item : null;}
+function updateCanonicalSelection(value) {runtime.data.state.selection.primary_object_ref = value.object_ref;}
+function renderKnowledgeRecord() {rendered += 1;}
+function renderUnresolved() {}
+function syncUrlState() {synced += 1;}
+"""
+    assertions = r"""
+bindRegionDetailsControls();
+assert.equal(inspector.hidden, true);
+button.events.click();
+assert.equal(inspector.hidden, true);
+selectKnowledgeItem(item.item_id, {syncUrl: false});
+assert.equal(button.disabled, false);
+assert.equal(inspector.hidden, true);
+const before = JSON.stringify(runtime);
+const savedUrl = window.location.href;
+button.events.click();
+assert.equal(inspector.hidden, false);
+assert.equal(button.attrs['aria-expanded'], 'true');
+assert.equal(focused, card);
+assert.equal(rendered, 1);
+assert.equal(JSON.stringify(runtime), before);
+assert.equal(window.location.href, savedUrl);
+assert.equal(synced, 0);
+close.focus();
+close.events.click();
+assert.equal(inspector.hidden, true);
+assert.equal(button.attrs['aria-expanded'], 'false');
+assert.equal(focused, button);
+button.events.click();
+for (const fn of keys) fn({key: 'Escape'});
+assert.equal(inspector.hidden, true);
+assert.equal(button.attrs['aria-expanded'], 'false');
+assert.equal(focused, button);
+assert.equal(JSON.stringify(runtime), before);
+assert.equal(window.location.href, savedUrl);
+button.events.click();
+clearCanonicalSelection('No semantic object selected.', {syncUrl: false});
+assert.equal(inspector.hidden, true);
+assert.equal(button.disabled, true);
+assert.equal(button.attrs['aria-expanded'], 'false');
+assert.equal(focused, preset);
+assert.equal(window.location.href, savedUrl);
+// Non-public artifacts have no button, hence no new handlers.
+delete elements['region-details'];
+const priorHandlers = keys.length;
+bindRegionDetailsControls();
+assert.equal(keys.length, priorHandlers);
+"""
+    subprocess.run(["node", "-e", harness + functions + assertions], check=True)
 
 
 def test_open_details_removes_popup_without_mutating_selection_or_url() -> None:

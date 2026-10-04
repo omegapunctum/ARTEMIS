@@ -70,6 +70,29 @@ Use existing Core/browser tooling and add only coverage needed for this change. 
 
 ## Risks, readiness and stop
 
+### Bounded source-access correction — 2026-10-04
+
+The first actual navigation browser run (`37198362254`, head `f8c7a8d99d28adf5d3567e386a81d5c246216fad`) failed on Region source-disclosure focus. Inspection found an existing UI defect: Region renders its selected record into an always-hidden inspector, and close/Escape handlers are bound only for Leonardo. This is a real source-access failure; earlier checks that assigned disclosure state did not establish visibility. The accepted requirement that both examples expose sources/uncertainty cannot be satisfied by altering the verifier to reveal hidden product DOM.
+
+Authorize only this corrective public-Region interaction:
+
+- Add a native **Region details / Сведения о регионе** button in the existing header, with `aria-controls` and `aria-expanded`; enable it only when the existing current Region record can be inspected.
+- Open the already-rendered record and focus its detail card. Opening changes no selection, temporal state, query or historical assertion. Keep the inspector closed initially and on cross-example navigation; do not add automatic map-picking/selection behavior.
+- Bind closing and Escape for this public Region drawer, restore focus to the opening button, and keep expanded/disabled state truthful when selection is cleared.
+- Give the Region inspector/close control and selected-record eyebrow accurate EN/RU Region wording, preserving the existing record title, native source content, reconstruction note and license.
+- Verify opening, close/Escape, focus restoration and semantic/URL invariance with actual input and focused local behavior checks. The browser scenario must open the drawer through its native control, open disclosures through native Space, then close before navigating; no synthetic visibility/open assignment may establish PASS.
+
+This amendment restores required source access inside the same task. It does not authorize a general drawer redesign, new Region knowledge, non-public behavior, dataset composition or a new product gate. Independent exact-byte specification amendment acceptance must be recorded before these runtime edits.
+
+| Corrected Region control | EN | RU |
+|---|---|---|
+| Opening button / initial title | Region details | Сведения о регионе |
+| Inspector accessible name | Selected region details | Сведения о выбранном регионе |
+| Selected-record eyebrow | Selected region | Выбранный регион |
+| Close accessible name | Close region details | Закрыть сведения о регионе |
+
+Amendment acceptance: independent agent `/root/navigation_review` returned **ACCEPT_SPECIFICATION_AMENDMENT**, no material findings, for SHA-256 `a02dc3d196b5e8d8421f58f63c3584328f2fee9c57de092d45cf557bdcbec097` and the canonical scope source-access paragraph on 2026-10-04. The hash identifies the reviewed bytes before this verdict paragraph, not a self-hash. This acceptance was recorded before corrective runtime edits; exact-head implementation/browser review remains required.
+
 Main risks are cross-dataset query leakage, misleading combined-context presentation, deployment-prefix breakage, untranslated labels and additional header collisions. The allowlist, explicit example/coverage labels, native relative links and scoped browser checks address those risks without changing domain meaning.
 
 Readiness: independent agent `/root/architecture_audit` returned **ACCEPT_SPECIFICATION**, no material findings, on 2026-10-04 for specification SHA-256 `42f562d103efc90754a2ac2300cf3eb0aa0502b7766c005ddab166dfbeb14546`, the canonical scope amendment and registry entry. This hash identifies the reviewed bytes before the status/verdict paragraph update, not a self-hash of this resulting document. Implementation may begin after recording acceptance; separate exact-head implementation review and live publication verification remain required. No historical/source data edit is authorized. If a required fix needs a new semantic owner decision, a broader dataset/state design or removal of an existing provenance obligation, record the precise blocker and stop that expansion.

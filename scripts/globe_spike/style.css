@@ -407,6 +407,9 @@ summary:focus-visible {
 .language-switch { display: flex; gap: 2px; }
 .language-switch button { border: 1px solid #36516e; border-radius: 6px; background: #0c1927; color: #c8e4fb; font-size: 12px; }
 .language-switch button[aria-pressed="true"] { background: #215f9d; color: white; }
+#region-details { min-height: 36px; padding: 5px 9px; border: 1px solid #36516e; border-radius: 6px; background: #0c1927; color: #c8e4fb; font-size: 14px; }
+#region-details:hover:enabled { background: #1e4f84; }
+#region-details:disabled { opacity: 0.65; cursor: default; }
 #spike-banner.has-example-navigation { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
 .has-example-navigation .banner-actions { max-width: 230px; }
 #research-examples { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 8px; pointer-events: auto; }

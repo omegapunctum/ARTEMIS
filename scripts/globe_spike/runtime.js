@@ -1122,11 +1122,33 @@
     const restoreFocus = inspector?.contains(document.activeElement);
     if (inspector) inspector.hidden = true;
     document.documentElement.dataset.artemisDetailsOpen = 'false';
+    const regionDetails = byId('region-details');
+    regionDetails?.setAttribute('aria-expanded', 'false');
     if (restoreFocus) {
       const target = [...(byId('presence-sequence')?.querySelectorAll('button') || [])]
         .find((button) => button.dataset.presenceId === runtime.selectedPresenceId && !button.hidden);
-      (target || byId('mode-range'))?.focus({ preventScroll: true });
+      const regionTarget = regionDetails?.disabled ? byId('temporal-preset') : regionDetails;
+      (regionTarget || target || byId('mode-range'))?.focus({ preventScroll: true });
     }
+  }
+
+  function bindRegionDetailsControls() {
+    const button = byId('region-details');
+    if (!button) return;
+    button.addEventListener('click', () => {
+      if (button.disabled || !runtime.selectedItemId) return;
+      const inspector = byId('inspector');
+      if (!inspector) return;
+      inspector.hidden = false;
+      inspector.scrollTop = 0;
+      button.setAttribute('aria-expanded', 'true');
+      document.documentElement.dataset.artemisDetailsOpen = 'true';
+      byId('selection-card')?.focus({ preventScroll: true });
+    });
+    byId('close-details')?.addEventListener('click', closeDetailsDrawer);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
+    });
   }
 
   function openDetailsDrawer(presenceId, options = {}) {
@@ -1799,6 +1821,11 @@
   }
 
   function clearCanonicalSelection(message = 'No semantic object selected.', options = {}) {
+    const regionDetails = byId('region-details');
+    if (regionDetails) {
+      regionDetails.disabled = true;
+      closeDetailsDrawer();
+    }
     runtime.selectedItemId = null;
     document.documentElement.dataset.artemisSelectedPresence = '';
     document.documentElement.dataset.artemisSelectedItem = '';
@@ -1837,6 +1864,8 @@
       semantic_flags: projectionItem.semantic_flags,
       projection_losses: losses
     });
+    const regionDetails = byId('region-details');
+    if (regionDetails) regionDetails.disabled = false;
     renderUnresolved(runtime.data.projection);
     if (options.focus) byId('selection-card')?.focus({ preventScroll: false });
     if (options.syncUrl !== false) syncUrlState();
@@ -2182,6 +2211,7 @@
   if (byId('research-examples')) {
     bindLanguageControls(true);
     bindOverlayLayout();
+    bindRegionDetailsControls();
   }
   main().catch(fatal);
 })();

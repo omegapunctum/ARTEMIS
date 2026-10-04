@@ -1455,6 +1455,12 @@ def build_spike(
         if public_preview
         else ""
     )
+    has_region_details = has_example_navigation and is_region
+    if has_region_details:
+        preview_nav += (
+            '<button id="region-details" type="button" aria-controls="inspector" '
+            'aria-expanded="false" disabled>Region details</button>'
+        )
     (output / "index.html").write_text(
         template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status).replace(
             "{{PUBLIC_PREVIEW_NAV}}", preview_nav
@@ -1469,7 +1475,11 @@ def build_spike(
         .replace("{{RUNTIME_SOURCE_NOTE}}", source_note)
         .replace("{{REGION_SOURCE_DISCLOSURE}}", region_source_disclosure)
         .replace("{{LIFE_PATH_SEQUENCE_NOTE}}", "" if is_region else f'<span class="sequence-note">{chronology_copy}</span>')
-        .replace("{{LIFE_PATH_ROUTE_NOTE}}", "" if is_region else f'<p class="route-note">{chronology_copy}</p>'),
+        .replace("{{LIFE_PATH_ROUTE_NOTE}}", "" if is_region else f'<p class="route-note">{chronology_copy}</p>')
+        .replace('aria-label="Selected place details"', 'aria-label="Selected region details"' if has_region_details else 'aria-label="Selected place details"')
+        .replace('class="eyebrow">Selected presence', 'class="eyebrow">Selected region' if has_region_details else 'class="eyebrow">Selected presence')
+        .replace('id="selection-title">Place details', 'id="selection-title">Region details' if has_region_details else 'id="selection-title">Place details')
+        .replace('aria-label="Close place details"', 'aria-label="Close region details"' if has_region_details else 'aria-label="Close place details"'),
         encoding="utf-8",
     )
     shutil.copyfile(TEMPLATE_DIR / "runtime.js", output / "runtime.js")

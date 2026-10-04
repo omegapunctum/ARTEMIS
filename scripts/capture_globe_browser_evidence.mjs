@@ -1011,6 +1011,9 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
       }
       if (dataset === 'region') {
         for (const id of ['region-reconstruction-note','region-provenance-link']) if (!visible(document.getElementById(id))) throw new Error('Region provenance obligation hidden');
+        const detailsButton=document.getElementById('region-details');
+        if (!visible(detailsButton) || detailsButton.disabled || detailsButton.getAttribute('aria-controls') !== 'inspector'
+          || detailsButton.innerText !== (lang === 'ru' ? 'Сведения о регионе' : 'Region details')) throw new Error('Region evidence entry unavailable');
         if (!document.getElementById('region-reconstruction-note').innerText.includes('Approximate scholarly reconstruction') || !document.getElementById('region-provenance-link').innerText.includes('CC-BY-4.0')) throw new Error('Region limits/license lost');
         if (window.__ARTEMIS_GLOBE_SPIKE.data.lifePath.available !== false || document.getElementById('temporal-preset').options.length !== 3) throw new Error('Region dataset isolation');
       } else if (window.__ARTEMIS_GLOBE_SPIKE.data.lifePath.presences.length !== 11) throw new Error('Leonardo dataset isolation');
@@ -1051,6 +1054,11 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
       const presence = await evaluate(cdp, 'window.__ARTEMIS_GLOBE_SPIKE.selectedPresenceId');
       await input('#presence-sequence button[data-presence-id="' + presence + '"]', true);
       await input('.popup-details', true);
+    } else {
+      const before = await semantic(), url = await evaluate(cdp, 'location.href');
+      await input('#region-details', true);
+      check(await evaluate(cdp, "!document.getElementById('inspector').hidden && document.getElementById('region-details').getAttribute('aria-expanded') === 'true'"), 'Region details did not open with native input');
+      check(JSON.stringify(before) === JSON.stringify(await semantic()) && url === await evaluate(cdp, 'location.href'), 'Opening Region details changed selection/time/URL');
     }
     const selectors=await evaluate(cdp,`(() => {
       const card=document.getElementById('selection-card');
@@ -1059,7 +1067,17 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
     check(selectors.some(d=>d.hasSource) && selectors.some(d=>d.uncertainty),'source/uncertainty disclosures missing');
     const results=[];
     for (const entry of selectors) {
-      await evaluate(cdp,`(() => {const summary=document.querySelectorAll('#selection-card details')[${entry.index}].querySelector('summary');summary.scrollIntoView({block:'nearest'});summary.focus({preventScroll:true});if(document.activeElement!==summary)throw new Error('Disclosure focus failed');})()`);
+      await evaluate(cdp,`(() => {
+        const summary=document.querySelectorAll('#selection-card details')[${entry.index}].querySelector('summary');
+        summary.scrollIntoView({block:'nearest'});summary.focus({preventScroll:true});
+        if(document.activeElement!==summary)throw new Error('Disclosure focus failed: '+JSON.stringify({
+          dataset:${JSON.stringify(dataset)},index:${entry.index},summary:summary.textContent,
+          inspectorHidden:document.getElementById('inspector').hidden,
+          visible:summary.checkVisibility({checkVisibilityCSS:true}),
+          focused:document.activeElement?.outerHTML?.slice(0,300),
+          parents:[...function*(){for(let p=summary.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')yield {label:p.querySelector('summary')?.textContent,open:p.open};}()]
+        }));
+      })()`);
       await settle();
       const open=await evaluate(cdp,`document.querySelectorAll('#selection-card details')[${entry.index}].open`);
       if (!open) {await key(' ','Space',32);await settle();}
@@ -1068,6 +1086,14 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
     }
     const accessible=await evaluate(cdp,`(() => {const card=document.getElementById('selection-card');const link=[...card.querySelectorAll('a')].find(a=>a.checkVisibility({checkVisibilityCSS:true}));if(!link)throw new Error('No disclosed source link');link.scrollIntoView({block:'nearest'});link.focus({preventScroll:true});if(document.activeElement!==link)throw new Error('Source link cannot receive keyboard focus');return {href:link.href,text:link.textContent};})()`);
     return {dataset,method:'native Space after explicit summary focus; source link focus',disclosures:results,source:accessible};
+  }
+  async function closeRegionDetails(escape = false) {
+    const before=await semantic(), url=await evaluate(cdp,'location.href');
+    if (escape) {await key('Escape','Escape',27);await settle();}
+    else await input('#close-details',true);
+    check(await evaluate(cdp,"document.getElementById('inspector').hidden && document.getElementById('region-details').getAttribute('aria-expanded') === 'false' && document.activeElement === document.getElementById('region-details')"),'Region details close did not restore entry focus');
+    check(JSON.stringify(before)===JSON.stringify(await semantic())&&url===await evaluate(cdp,'location.href'),'Closing Region details changed selection/time/URL');
+    return {method:escape?'native Escape':'native Enter on close button',focusRestored:true,semanticStatePreserved:true};
   }
   // Capture actual clean defaults rather than invent a cross-dataset timeline.
   for (const dataset of ['leonardo','region']) {
@@ -1083,9 +1109,10 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
     await inspect('region',lang,'region-'+lang);
     sourceAccess.push({locale:lang,...await disclosures('region')});
     await inspect('region',lang,'region-sources-'+lang);
+    const close=await closeRegionDetails(lang==='ru');
     const inward=await input('#example-leonardo',true,true);
     await assertDefault('leonardo',lang);
-    transitions.push({locale:lang,outward,inward,defaultsIsolated:true});
+    transitions.push({locale:lang,outward,inward,defaultsIsolated:true,regionDetailsClose:close});
   }
   // URL containing valid semantic state plus intentionally unrelated parameters.
   const savedLeonardo=new URL('?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=en&camera=foreign&diagnostic=foreign&unknown=foreign#foreign',routes.leonardo);
@@ -1114,6 +1141,8 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
   await input('#example-leonardo',true,true);await assertDefault('leonardo','ru');
   await back(regionSaved,regionState);await reloadSaved(regionSaved,regionState);
   restorations.push({dataset:'region',saved:regionSaved,semantic:regionState,back:true,reopen:true,sourceDisclosures:await disclosures('region')});
+  await inspect('region','ru','region-saved-sources-ru');
+  restorations.at(-1).detailsClose=await closeRegionDetails(true);
   for(const dataset of ['leonardo','region']) {
     await navigate(new URL('?lang=invalid&unknown=foreign#foreign',routes[dataset]));
     await inspect(dataset,'en',dataset+'-invalid-locale');
