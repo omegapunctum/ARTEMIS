@@ -59,7 +59,7 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 
 | Document | Lifecycle | Scope |
 |---|---|---|
-| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Completed technical evidence / TECHNICAL_TASK_PASS | PR #459 specification / #460 implementation independently AI-accepted and merged; two Chromium research loops, 355 Core tests and live Globe/Region byte verification PASS; no historical promotion, new product gate or value claim; next candidate remains proposal only |
+| `2026-10-03_SOURCE_AWARE_RESEARCH_LOOP_v1.md` | Completed technical evidence / TECHNICAL_TASK_PASS | PR #459 specification / #460 implementation independently AI-accepted and merged; two Chromium research loops, 355 Core tests and live Globe/Region byte verification PASS; no historical promotion, new product gate or value claim; Cesena was proposal only at that closeout, with later read-only continuation recorded below |
 
 ## Completed read-only continuation and architecture advisory
 
