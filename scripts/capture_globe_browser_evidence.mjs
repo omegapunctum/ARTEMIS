@@ -1142,7 +1142,17 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
   // A non-default Region period and selected Region item; values come from its
   // own existing view index, then the saved URL is applied by normal navigation.
   await navigate(new URL('?lang=ru',routes.region));
-  const regionChoice=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_GLOBE_SPIKE,p=r.viewIndex.temporal_presets[1],v=[...r.viewByKey.values()].find(v=>v.temporal_preset_id===p.preset_id);return {preset:p.preset_id,layers:v.active_layer_refs.join(','),item:v.projection.items.find(i=>i.object_type==='Region').item_id};})()`);
+  const regionChoice=await evaluate(cdp,`(() => {
+    const r=window.__ARTEMIS_GLOBE_SPIKE,p=r.viewIndex.temporal_presets[1];
+    // A preset has both empty-layer and political-territory views. Preserve the
+    // dataset's active layers when choosing its non-default saved period.
+    const layers=[...r.activeLayerRefs].sort();
+    const v=[...r.viewByKey.values()].find(v=>v.temporal_preset_id===p.preset_id
+      && JSON.stringify([...v.active_layer_refs].sort())===JSON.stringify(layers));
+    const item=v?.projection.items.find(i=>i.object_type==='Region');
+    if(!item)throw new Error('Non-default Region view has no Region item for current layers: '+JSON.stringify({preset:p.preset_id,layers}));
+    return {preset:p.preset_id,layers:layers.join(','),item:item.item_id};
+  })()`);
   const regionUrl=new URL(routes.region);for(const [k,v]of Object.entries({time:regionChoice.preset,layers:regionChoice.layers,item:regionChoice.item,lang:'ru'}))regionUrl.searchParams.set(k,v);
   await navigate(regionUrl);const regionSaved=await evaluate(cdp,'location.href'), regionState=await semantic();
   check(regionState.preset===regionChoice.preset&&regionState.item===regionChoice.item,'Region saved state was not selected');
