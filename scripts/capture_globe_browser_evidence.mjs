@@ -1035,6 +1035,14 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
     check(url.searchParams.get('lang') === lang,'target locale continuity');
   }
   async function reloadSaved(saved,expected) {
+    // Back has already returned to this exact saved URL. Page.navigate to the
+    // same URL containing a fragment can be a same-document navigation, which
+    // cannot prove reconstruction from URL and retains the document token.
+    // Leave the source document first, then explicitly reopen the exact saved
+    // URL. A different dataset document prevents a fragment-only no-op.
+    check(await evaluate(cdp,'location.href') === saved,'reopen is not starting from the captured saved URL');
+    const opposite=new URL(saved).pathname === routes.leonardo.pathname ? routes.region : routes.leonardo;
+    await navigate(opposite);
     await navigate(saved);
     check(JSON.stringify(await semantic()) === JSON.stringify(expected),'saved URL did not restore semantic time/selection');
   }
