@@ -1430,15 +1430,38 @@ def build_spike(
         if public_preview
         else "Generated review artifact — not a public capability"
     )
+    has_example_navigation = public_preview and dataset in {DEFAULT_DATASET, REGION_DATASET}
+    example_navigation = ""
+    if has_example_navigation:
+        example_links = []
+        for key, route, label in (
+            ("leonardo", "../globe/", "Leonardo · 1452–1519"),
+            ("region", "../region/", "Roman Empire · 91–116 CE"),
+        ):
+            if (key == "region") == is_region:
+                example_links.append(f'<span id="example-{key}" aria-current="page">{label}</span>')
+            else:
+                example_links.append(f'<a id="example-{key}" href="{route}" data-example-route="{route}">{label}</a>')
+        coverage = (
+            "3 reconstructed periods · 91–116 CE"
+            if is_region else "11 selected presence episodes · 1452–1519"
+        )
+        example_navigation = (
+            '<nav id="research-examples" aria-label="Research examples">'
+            + "".join(example_links) + '</nav>'
+        )
     preview_nav = (
-        '<a class="preview-nav-link" href="../atlas/">Architecture Atlas · compatibility</a>'
+        '<a id="atlas-compatibility-link" class="preview-nav-link" href="../atlas/">Architecture Atlas · compatibility</a>'
         if public_preview
         else ""
     )
     (output / "index.html").write_text(
         template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status).replace(
             "{{PUBLIC_PREVIEW_NAV}}", preview_nav
-        ).replace("{{RUNTIME_TITLE}}", runtime_title)
+        ).replace("{{PUBLIC_EXAMPLE_NAV}}", example_navigation)
+        .replace("{{PUBLIC_EXAMPLE_COVERAGE}}", f'<span id="example-coverage">{coverage}</span>' if has_example_navigation else "")
+        .replace("{{PUBLIC_PREVIEW_CLASS}}", "has-example-navigation" if has_example_navigation else "")
+        .replace("{{RUNTIME_TITLE}}", runtime_title)
         .replace("{{RUNTIME_ARIA_LABEL}}", runtime_aria_label)
         .replace("{{SUBJECT_LABEL}}", subject_label)
         .replace("{{SUBJECT_COVERAGE}}", subject_coverage)

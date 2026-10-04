@@ -12,14 +12,16 @@
   <main id="app">
     <section id="globe-shell" aria-label="{{RUNTIME_ARIA_LABEL}}">
       <div id="globe"></div>
-      <header id="spike-banner">
+      <header id="spike-banner" class="{{PUBLIC_PREVIEW_CLASS}}">
         <div class="product-label">
           <strong>ARTEMIS · {{RUNTIME_TITLE}}</strong>
           <span>{{PUBLIC_PREVIEW_STATUS}}</span>
+          {{PUBLIC_EXAMPLE_COVERAGE}}
           {{LIFE_PATH_SEQUENCE_NOTE}}
           {{REGION_SOURCE_DISCLOSURE}}
         </div>
         <div class="banner-actions"><div class="language-switch" role="group" aria-label="Language"><button id="language-en" type="button" aria-pressed="true">EN</button><button id="language-ru" type="button" aria-pressed="false">RU</button></div>{{PUBLIC_PREVIEW_NAV}}</div>
+        {{PUBLIC_EXAMPLE_NAV}}
       </header>
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>

@@ -91,6 +91,41 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Build both public research examples for navigation verification
+        run: |
+          python scripts/build_globe_spike.py --public-preview --output /tmp/artemis-navigation-preview/ARTEMIS/globe
+          python scripts/build_globe_spike.py --dataset roman_region_proof --public-preview --output /tmp/artemis-navigation-preview/ARTEMIS/region
+
+      - name: Verify shared preview navigation in Chromium
+        env:
+          NODE_PATH: /tmp/artemis-browser-tools/node_modules
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/artemis-navigation-browser-evidence
+          python -m http.server 8766 --bind 127.0.0.1 --directory /tmp/artemis-navigation-preview > /tmp/artemis-navigation-browser-evidence/server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
+          for width in 1440 500; do
+            timeout 300s node scripts/capture_globe_browser_evidence.mjs \
+              --browser "$BROWSER" --url http://127.0.0.1:8766/ARTEMIS/globe/ \
+              --width "$width" --height 900 --timeout-ms 270000 \
+              --reduced-motion true --shared-preview-navigation true \
+              --dom "/tmp/artemis-navigation-browser-evidence/$width.html" \
+              --screenshot "/tmp/artemis-navigation-browser-evidence/$width.png" \
+              --report "/tmp/artemis-navigation-browser-evidence/$width.json" \
+              2> >(tee "/tmp/artemis-navigation-browser-evidence/$width.log" >&2)
+          done
+
+      - name: Attach shared preview navigation browser evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: shared-preview-navigation-browser-evidence
+          path: /tmp/artemis-navigation-browser-evidence/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Build the non-public ATL conflict review proof
         run: python scripts/build_atl_conflict_proof.py --output /tmp/artemis-atl-conflict-proof
 

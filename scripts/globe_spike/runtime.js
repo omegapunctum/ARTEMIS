@@ -1524,22 +1524,55 @@
     applyLifePathView();
   }
 
-  function bindLifePathControls() {
+  function bindLanguageControls(publicNavigation = false) {
+    const applyLanguage = (language, updateUrl = false) => {
+      window.ARTEMIS_I18N?.setLanguage(language);
+      for (const value of ['en', 'ru']) {
+        byId(`language-${value}`)?.setAttribute('aria-pressed', String(value === language));
+      }
+      if (publicNavigation) {
+        for (const link of byId('research-examples').querySelectorAll('a[data-example-route]')) {
+          link.setAttribute('href', `${link.dataset.exampleRoute}?lang=${language}`);
+        }
+        if (updateUrl) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('lang', language);
+          window.history.replaceState(window.history.state, '', url);
+        }
+      }
+      requestAnimationFrame(() => { syncOverlayLayout(); layoutPlaceLabels(); });
+    };
     for (const lang of ['en', 'ru']) {
       byId(`language-${lang}`)?.addEventListener('click', () => {
-        window.ARTEMIS_I18N?.setLanguage(lang);
-        for (const value of ['en', 'ru']) byId(`language-${value}`)?.setAttribute('aria-pressed', String(value === lang));
-        requestAnimationFrame(() => { syncOverlayLayout(); layoutPlaceLabels(); });
+        applyLanguage(lang, publicNavigation);
       });
     }
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
-    });
+    if (publicNavigation) {
+      const restoreLanguage = () => {
+        const value = new URL(window.location.href).searchParams.get('lang');
+        applyLanguage(value === 'ru' ? 'ru' : 'en');
+      };
+      restoreLanguage();
+      window.addEventListener('popstate', restoreLanguage);
+    }
+  }
+
+  function bindOverlayLayout() {
     const layoutObserver = new ResizeObserver(syncOverlayLayout);
     for (const id of ['timeline-dock', 'spike-banner', 'attribution-status']) {
       if (byId(id)) layoutObserver.observe(byId(id));
     }
     syncOverlayLayout();
+  }
+
+  function bindLifePathControls() {
+    if (!byId('research-examples')) {
+      bindLanguageControls();
+      bindOverlayLayout();
+    }
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !byId('inspector')?.hidden) closeDetailsDrawer();
+    });
     const update = (startIndex, endIndex) => {
       runtime.lifePathStartIndex = startIndex;
       runtime.lifePathEndIndex = endIndex;
@@ -2146,5 +2179,9 @@
     });
   }
 
+  if (byId('research-examples')) {
+    bindLanguageControls(true);
+    bindOverlayLayout();
+  }
   main().catch(fatal);
 })();
