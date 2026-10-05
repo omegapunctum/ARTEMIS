@@ -155,12 +155,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await idle('Place anchors '+reason);
     const actual=await evaluate(cdp,`(async()=>{
       const r=window.__ARTEMIS_EXPLORER,source=await r.map.getSource('workspace-features').getData(),mapBounds=r.map.getContainer().getBoundingClientRect();
-      const renderedPlaceIds=new Set(r.map.queryRenderedFeatures({layers:['workspace-points']}).map(f=>f.id));
+      const nativePoint=f=>({id:f.id,renderKey:f.properties.render_key,place:f.properties.place_ref,state:{selected:f.state?.selected,current:f.state?.current}});
       return {visible:r.visibleItems.filter(i=>i.layer_id==='leonardo').map(i=>i.item_id),state:r.state,
+        sourceRenderKeys:source.features.map(f=>({id:f.id,renderKey:f.properties.render_key,kind:f.properties.kind})),
+        nativeChronology:r.map.getProjection().type==='mercator'?r.map.queryRenderedFeatures({layers:['workspace-chronology']}).map(f=>({id:f.id,renderKey:f.properties.render_key,emphasis:f.state?.emphasis})):[],
         anchors:[...document.querySelectorAll('.workspace-place-marker')].map(n=>{
           const feature=source.features.find(f=>f.id==='place-anchor:'+n.dataset.placeRef),bounds=n.getBoundingClientRect(),style=getComputedStyle(n),pixel=feature&&r.map.project(feature.geometry.coordinates);
           return {place:n.dataset.placeRef,name:n.querySelector('.place-name')?.textContent,count:n.querySelector('.place-count')?.textContent,aria:n.getAttribute('aria-label'),pressed:n.getAttribute('aria-pressed'),selected:n.classList.contains('is-selected'),current:n.classList.contains('is-current'),labelVisible:getComputedStyle(n.querySelector('.place-label')).visibility!=='hidden',
-            rendered:feature&&renderedPlaceIds.has(feature.id)&&bounds.width>0&&bounds.height>0&&style.visibility!=='hidden'&&style.display!=='none'&&Number(style.opacity)>0,
+            positionEligible:Boolean(feature&&pixel&&Number.isFinite(pixel.x)&&Number.isFinite(pixel.y)&&pixel.x>=0&&pixel.y>=0&&pixel.x<=mapBounds.width&&pixel.y<=mapBounds.height&&bounds.width>0&&bounds.height>0&&style.visibility!=='hidden'&&style.display!=='none'&&Number(style.opacity)>0),
+            nativePoints:pixel?r.map.queryRenderedFeatures(pixel,{layers:['workspace-points']}).filter(f=>f.properties.place_ref===n.dataset.placeRef).map(nativePoint):[],
             center:{x:bounds.left+bounds.width/2,y:bounds.top+bounds.height/2},projected:pixel?{x:mapBounds.left+pixel.x,y:mapBounds.top+pixel.y}:null};
         }),
         points:source.features.filter(f=>f.properties.layer_id==='leonardo'&&f.geometry.type==='Point').map(f=>({id:f.id,properties:f.properties,coordinates:f.geometry.coordinates,state:r.map.getFeatureState({source:'workspace-features',id:f.id})})),
@@ -168,6 +171,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
         chronologyCues:[...document.querySelectorAll('.workspace-chronology-cue')].map(n=>({id:n.dataset.transitionId,emphasis:Number(n.dataset.emphasis),opacity:Number(getComputedStyle(n.firstChild).opacity)})),
         markerPaint:r.map.getPaintProperty('workspace-points','circle-radius'),chronologyPaint:r.map.getPaintProperty('workspace-chronology','line-opacity')};
     })()`,true);
+    check(actual.sourceRenderKeys.every(feature=>typeof feature.id==='string'&&feature.renderKey===feature.id)&&new Set(actual.sourceRenderKeys.map(feature=>feature.renderKey)).size===actual.sourceRenderKeys.length,reason+' renderer feature keys are missing, duplicated or disconnected from existing source IDs');
     const groups=new Map();
     for(const presence of expectedBundle.leonardo.lifePath.presences.filter(p=>actual.visible.includes(p.presence_item_id))){if(!groups.has(presence.place_ref))groups.set(presence.place_ref,[]);groups.get(presence.place_ref).push(presence);}
     check(actual.anchors.length===groups.size&&actual.points.length===groups.size,reason+' duplicated/omitted a Place anchor');
@@ -175,7 +179,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     for(const [place,episodes] of groups){
       const anchor=actual.anchors.find(a=>a.place===place),point=actual.points.find(p=>p.properties.place_ref===place);
       check(anchor&&point,reason+' missing existing Place '+place);
-      if(anchor.rendered){check(anchor.projected&&Number.isFinite(anchor.projected.x)&&Number.isFinite(anchor.projected.y)&&Math.hypot(anchor.center.x-anchor.projected.x,anchor.center.y-anchor.projected.y)<=2,reason+' DOM Place anchor displaced from native map coordinate '+place+' '+JSON.stringify({center:anchor.center,projected:anchor.projected}));}
+      if(anchor.positionEligible){
+        check(anchor.projected&&Number.isFinite(anchor.projected.x)&&Number.isFinite(anchor.projected.y)&&Math.hypot(anchor.center.x-anchor.projected.x,anchor.center.y-anchor.projected.y)<=2,reason+' DOM Place anchor displaced from native map coordinate '+place+' '+JSON.stringify({center:anchor.center,projected:anchor.projected}));
+        check(anchor.nativePoints.length>0,reason+' native point query omitted a visible Place '+place);
+        for(const rendered of anchor.nativePoints){check(rendered.id===point.id&&rendered.renderKey===point.id,reason+' rendered Place ID disconnected from source feature '+place+' '+JSON.stringify({sourceId:point.id,renderedId:rendered.id}));check(typeof rendered.state.selected==='boolean'&&typeof rendered.state.current==='boolean'&&rendered.state.selected===point.state.selected&&rendered.state.current===point.state.current,reason+' rendered selected/current state disconnected from source feature '+place);}
+      }
       check(anchor.name===episodes[0].place_label&&anchor.aria?.includes(episodes[0].place_label),reason+' lost Place name/accessibility');
       check(point.id==='place-anchor:'+place&&JSON.stringify(point.coordinates)===JSON.stringify(episodes[0].coordinates),reason+' moved a fixed Place reference');
       check(point.properties.episode_count===episodes.length,reason+' episode count does not match visible Presences');
@@ -183,7 +191,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       if(episodes.length>1)check(anchor.count?.includes(String(episodes.length)),reason+' repeated Place count hidden from label');
       if(episodes.some(p=>p.presence_item_id===actual.state.selectedItemId)){check(anchor.selected&&anchor.pressed==='true'&&anchor.labelVisible&&point.state.selected===true,reason+' selected Place emphasis missing');}
     }
-    check(!groups.size||actual.anchors.some(anchor=>anchor.rendered),reason+' no frontside native Place anchor was checked');
+    check(!groups.size||actual.anchors.some(anchor=>anchor.positionEligible),reason+' no visible projected DOM Place anchor was checked');
     const policy=expectedBundle.leonardo.lifePath.route_policy;
     check(policy.historical_route_geometry_permitted===false&&policy.chronological_connector_is_route===false,'chronology policy promoted a route');
     check(actual.chronology.every(line=>line.properties.route_geometry===null),'chronology introduced historical route geometry');
@@ -196,6 +204,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       const expected=emphasizedEpisode&&(incoming?transition===incoming:transition.from_presence_ref===emphasizedEpisode.presence_id)?selectedEpisode?2:1:0;
       check(line.state.emphasis===expected,reason+' selected/current chronology policy changed for '+line.id);
     }
+    for(const rendered of actual.nativeChronology){
+      const line=actual.chronology.find(line=>line.id===rendered.id);
+      check(line&&rendered.renderKey===line.id,reason+' rendered chronology ID disconnected from source feature '+JSON.stringify(rendered));
+      check(typeof rendered.emphasis==='number'&&rendered.emphasis===line.state.emphasis,reason+' rendered chronology emphasis disconnected from source state '+rendered.id);
+    }
     check(actual.chronologyCues.length===actual.chronology.filter(line=>JSON.stringify(line.coordinates[0])!==JSON.stringify(line.coordinates[1])).length,reason+' non-route chronology cues missing');
     for(const cue of actual.chronologyCues){const line=actual.chronology.find(line=>line.id===cue.id);check(line&&cue.emphasis===line.state.emphasis&&cue.opacity===(cue.emphasis ? .95 : .12),reason+' chronology cue presentation does not match native emphasis');}
     for(const point of actual.points){const anchor=actual.anchors.find(a=>a.place===point.properties.place_ref),selected=point.properties.place_ref===selectedEpisode?.place_ref,current=point.properties.place_ref===currentEpisode?.place_ref;check(point.state.selected===selected&&point.state.current===current&&anchor.selected===selected&&anchor.current===current,reason+' stale Place selected/current emphasis');}
@@ -205,7 +218,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       check(anchor?.current&&point?.state.current===true,reason+' current accumulated Place emphasis missing');
       if(!selectedEpisode&&actual.chronology.length)check(actual.chronology.some(line=>line.state.emphasis===1),reason+' current chronology emphasis missing');
     }
-    placeAnchorChecks.push({case:reason,presenceCount:actual.visible.length,placeCount:groups.size,anchors:actual.anchors,pointStates:actual.points.map(p=>({place:p.properties.place_ref,state:p.state})),pointCoordinatesSha256:sha256(actual.points.map(p=>({place:p.properties.place_ref,coordinates:p.coordinates}))),chronology:actual.chronology,chronologyCues:actual.chronologyCues,paint:{markers:actual.markerPaint,chronology:actual.chronologyPaint}});
+    placeAnchorChecks.push({case:reason,presenceCount:actual.visible.length,placeCount:groups.size,anchors:actual.anchors,pointStates:actual.points.map(p=>({place:p.properties.place_ref,state:p.state})),pointCoordinatesSha256:sha256(actual.points.map(p=>({place:p.properties.place_ref,coordinates:p.coordinates}))),sourceRenderKeys:actual.sourceRenderKeys,chronology:actual.chronology,nativeChronology:actual.nativeChronology,chronologyCues:actual.chronologyCues,paint:{markers:actual.markerPaint,chronology:actual.chronologyPaint}});
   }
   async function capture(suffix) {
     await idle('capture '+suffix);

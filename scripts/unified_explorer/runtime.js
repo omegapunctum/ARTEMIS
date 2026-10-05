@@ -118,7 +118,9 @@
         if (from && to && visible.has(from.presence_item_id) && visible.has(to.presence_item_id) && from.coordinates && to.coordinates) features.push({type:'Feature',id:transition.transition_id,geometry:{type:'LineString',coordinates:[from.coordinates,to.coordinates]},properties:{kind:'chronology',layer_id:'leonardo',route_geometry:null}});
       }
     }
-    return {type:'FeatureCollection',features};
+    // Technical renderer key binds native tile IDs to presentation feature state.
+    // Native input/item IDs and geometry are retained; source objects are not mutated.
+    return {type:'FeatureCollection',features:features.map(feature => ({...feature,properties:{...feature.properties,render_key:feature.id}}))};
   }
   function chronologyCues(bundle,items,state) {
     const emphasis = presentationEmphasis(bundle,items,state);
@@ -323,7 +325,7 @@
     map.on('load',() => {
       map.addSource('earth-context',{type:'geojson',data:context});
       map.addLayer({id:'earth-land',type:'fill',source:'earth-context',filter:['==',['get','semantic_role'],'present_day_context'],paint:{'fill-color':'#17334a','fill-outline-color':'#68a8c4'}});
-      map.addSource('workspace-features',{type:'geojson',data:featuresFor(bundle,runtime.visibleItems)});
+      map.addSource('workspace-features',{type:'geojson',promoteId:'render_key',data:featuresFor(bundle,runtime.visibleItems)});
       map.addLayer({id:'workspace-regions',type:'fill',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'fill-color':['match',['get','native_start'],91,'#36ccb9',106,'#73d0ec','#b6a3f1'],'fill-opacity':['case',['boolean',['feature-state','selected'],false],.4,.24]}});
       map.addLayer({id:'workspace-region-outlines',type:'line',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'line-color':'#74d8cf','line-width':['case',['boolean',['feature-state','selected'],false],2.2,1.4]}});
       map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':'#a8bed0','line-width':['case',['>', ['coalesce',['feature-state','emphasis'],0],0],2.2,1.4],'line-dasharray':[1.5,2.2],'line-opacity':['match',['coalesce',['feature-state','emphasis'],0],2,.95,1,.8,.35]}});

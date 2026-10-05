@@ -27,6 +27,26 @@ for (const cursorYear of [105,106,113,114,116,117,1451,1452,1502,1519]) {
 const wide = h.normalizeState(bundle,{...base,startYear:91,endYear:1519,layers:['leonardo','roman','architecture']});
 assert.equal(h.query(bundle,wide).length,45);
 const features = h.featuresFor(bundle,h.query(bundle,wide));
+const renderKeys = features.features.map(feature => feature.properties.render_key);
+assert.equal(new Set(renderKeys).size,features.features.length);
+assert(features.features.every(feature => typeof feature.id === 'string' && feature.properties.render_key === feature.id));
+assert.deepEqual([...new Set(features.features.map(feature => feature.properties.kind))].sort(),['chronology','presence','reference','region']);
+for (const reference of bundle.architecture.references) {
+  const feature = features.features.find(item => item.id === reference.item_id);
+  assert.equal(feature.properties.item_id,reference.item_id);
+  assert.equal(feature.properties.render_key,reference.item_id);
+  assert.deepEqual(feature.geometry,reference.raw_feature.geometry);
+}
+for (const version of bundle.roman.versions) for (const primitive of version.globe.primitives.filter(item => item.item_id === version.item_id)) {
+  const feature = features.features.find(item => item.id === primitive.primitive_id);
+  assert.equal(feature.properties.item_id,version.item_id);
+  assert.equal(feature.properties.geometry_ref,primitive.geometry_ref || version.geometry_version.id);
+  assert.deepEqual(feature.geometry.coordinates,primitive.coordinates);
+}
+for (const transition of bundle.leonardo.lifePath.transitions) {
+  const feature = features.features.find(item => item.id === transition.transition_id);
+  if (feature) assert.equal(feature.properties.route_geometry,null);
+}
 const groups = h.placeGroups(bundle,h.query(bundle,wide));
 assert.equal(groups.length,9);
 assert.equal(groups.reduce((count,group) => count+group.presences.length,0),11);
