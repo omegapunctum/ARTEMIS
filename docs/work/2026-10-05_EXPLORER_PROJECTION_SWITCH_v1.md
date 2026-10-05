@@ -28,8 +28,20 @@ The research subagent `/root/park_hill_resolution` checked [NHLE 1246881](https:
 
 Keep the official listing-reference candidate and legacy point separately; cause of the 252.5 m discrepancy, centroid/entrance and historical validity remain unknown. No source locator explains the legacy coordinate's derivation. More description-reading would not change the safe action; **stop coordinate research** without replacing Atlas data. Prior #467 calculation evidence remains immutable. No map/photo reused.
 
+## Implementation and release evidence
+
+The implementation artifact is complete: public-only native controls; renderer-local projection changes on the existing map; ready/no-op/error behavior; truthful retained-mode declarations even if rollback fails; localized map-neutral prompts; URL/history and amended navigation allowlist. Non-public builds have no projection controls. The source and geometry inputs are unchanged. The application still uses MapLibre's native Globe projection, which can adapt toward Mercator at higher zoom; this does not introduce terrain or make the current scaffold product-ready.
+
+Local checks: 47 runtime/build tests PASS, including the focused Node behavioral test; 125 distinct relevant semantic-parity, render-projection, repository-governance, state/lifecycle and Core-boundary tests PASS. The two subsequently affected language/error tests and existing M5 Node behavior were rechecked. Synthetic parity validator PASS, including unresolved objects and boundary states. JS syntax, workflow YAML and changed-file scope/diff checks PASS. Two public examples build successfully. No unrelated backend suite was run.
+
+`--projection-switch true` extends the existing native browser harness. Before/after hashes compare actual World Slice/state/neutral projection/adapter data, knowledge/source/evidence/uncertainty, selected item/Presence, time/layers, source disclosures and camera. It exercises Leonardo Range/Scrub, native time and picking in 2D, all three Region periods, saved URLs, invalid/default view, history and presentation-only cross-example navigation. A fresh native render/idle settlement is required before captures; requested projection type alone is insufficient. Two widths (1440/500) each capture both datasets, EN/RU and both projections. These are bounded technical checks, not a complete accessibility/usability audit or historical validation.
+
+Authoring environment: the cloud browser cannot initialize WebGL; previous exact-head CI screenshots supplied incumbent visual context. Current interaction/rendering acceptance therefore requires the CI Chromium artifacts. The original design is preserved; no heuristic design detector is added to CI.
+
+Release acceptance is recorded durably on the implementation PR's exact final head: independent AI implementation/browser verdict, relevant CI results and artifacts, expected-head merge, followed by separate Pages run/live-byte/build-metadata/browser verification. These release operations must pass before delivery is reported as accepted or published. They establish technical conformity and availability, not human comprehension or comparative/formal user value. This record avoids another code-changing closeout PR solely to copy mutable Actions status; the PR/checks are the release evidence trail.
+
 ## Delivery and stop
 
-Status at this prospective decision commit: implementation not yet started. Relevant tests, frozen implementation identity, AI review, merge and separate publication evidence will be recorded in this task/PR as they occur. No successful result is claimed prospectively.
+Historical status at the prospective decision commit: implementation was not yet started. It preceded runtime edits. The implementation/evidence section above records the resulting artifact; exact release identity and live verification remain separate evidence in the implementation PR.
 
 Stop this cycle after the completed, verified presentation capability is delivered. Do not silently start Atlas intake, mixed-era composition, new evidence normalization or a successor gate. Preserve Gate E closed without VALUE_SIGNAL, contextual composition DEFERRED, conflict proof non-public, comparative/formal value UNVALIDATED. The owner's request removes unnecessary intermediate handoffs; it does not remove source/semantic/frozen-contract boundaries.

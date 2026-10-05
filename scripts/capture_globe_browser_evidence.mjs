@@ -29,6 +29,7 @@ function parseArguments(argv) {
   values.verifyUrlState = values['verify-url-state'] === 'true';
   values.sourceAwareResearch = values['source-aware-research'] === 'true';
   values.sharedPreviewNavigation = values['shared-preview-navigation'] === 'true';
+  values.projectionSwitch = values['projection-switch'] === 'true';
   if (![values.width, values.height, values.timeoutMs].every(Number.isFinite)) {
     throw new Error('Width, height and timeout must be finite numbers');
   }
@@ -995,7 +996,7 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
       if (current?.getAttribute('aria-current') !== 'page' || current.tagName !== 'SPAN' || current.innerText !== names[dataset]) throw new Error('Current example indication');
       if (other?.tagName !== 'A' || other.innerText !== names[dataset === 'region' ? 'leonardo' : 'region']) throw new Error('Sibling native link');
       const sibling=new URL(other.href);
-      if ([...sibling.searchParams].length !== 1 || sibling.searchParams.get('lang') !== lang || sibling.hash) throw new Error('Foreign state in sibling link');
+      if ([...sibling.searchParams.keys()].sort().join(',') !== 'lang,view' || sibling.searchParams.get('lang') !== lang || sibling.searchParams.get('view') !== window.__ARTEMIS_GLOBE_SPIKE.presentationView || sibling.hash) throw new Error('Foreign state in sibling link');
       const atlas=document.getElementById('atlas-compatibility-link'), atlasUrl=new URL(atlas.href);
       if (atlasUrl.pathname !== ${JSON.stringify(new URL('atlas/',base).pathname)} || atlasUrl.search || atlasUrl.hash || !atlas.innerText.includes(lang === 'ru' ? 'режим совместимости' : 'compatibility')) throw new Error('Atlas compatibility boundary');
       if (!document.getElementById('example-coverage')?.innerText.includes(coverage) || !document.body.innerText.includes(status)) throw new Error('Visible coverage/status');
@@ -1030,7 +1031,7 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
   async function assertDefault(dataset,lang) {
     check(JSON.stringify(await semantic()) === JSON.stringify(defaults[dataset]),dataset+' target did not start in its own default state');
     const url=new URL(await evaluate(cdp,'location.href'));
-    const permitted=dataset === 'region' ? ['time','layers','item','lang'] : ['mode','start','end','presence','item','lang'];
+    const permitted=dataset === 'region' ? ['time','layers','item','lang','view'] : ['mode','start','end','presence','item','lang','view'];
     check([...url.searchParams.keys()].every(name=>permitted.includes(name)) && !url.hash,'foreign query/hash survived cross-example navigation');
     check(url.searchParams.get('lang') === lang,'target locale continuity');
   }
@@ -1171,6 +1172,283 @@ async function verifySharedPreviewNavigation(cdp, options, deadline) {
     valueValidation:'not_assessed'};
 }
 
+async function verifyProjectionSwitch(cdp, options, deadline) {
+  // Native UI input drives this scenario. Runtime reads compare actual state;
+  // no fixture substitution, test-hook mutation or synthetic renderer pass.
+  const base = new URL('../', options.url);
+  const routes = {leonardo: new URL('globe/', base), region: new URL('region/', base)};
+  const captures = [], comparisons = [], histories = [], defaults = {}, picking = [], renderSettlements = [];
+  const check = (ok, message) => { if (!ok) throw new Error('Projection switch: ' + message); };
+  const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  async function settle() {
+    await evaluate(cdp, 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))', true);
+  }
+  async function mapIdle(reason) {
+    const timeoutMs=Math.min(20000,deadline-Date.now());
+    check(timeoutMs>0,'render settlement exhausted the scenario deadline');
+    const result=await evaluate(cdp, `(async () => {
+      const r=window.__ARTEMIS_GLOBE_SPIKE,map=r.map;
+      if(!map)throw new Error('Map unavailable before native render settlement');
+      await new Promise((resolve,reject) => {
+        const timeout=setTimeout(() => {map.off('idle',idle);reject(new Error('Native map idle timed out'));},${timeoutMs});
+        function idle() {
+          clearTimeout(timeout);
+          // App-owned idle listeners reposition labels and chronology cues.
+          // Two frames then include their resulting DOM/layout updates.
+          requestAnimationFrame(() => requestAnimationFrame(resolve));
+        }
+        map.once('idle',idle);
+        // This public repaint request guarantees a fresh native render/idle
+        // event even if a fast map was already idle before this observer.
+        // It supplies no semantic or UI state and skips no engine transition.
+        map.triggerRepaint();
+      });
+      const result={loaded:map.loaded(),moving:map.isMoving(),projection:map.getProjection().type,
+        ready:document.documentElement.dataset.artemisVisualReady==='true'};
+      if(!result.loaded||result.moving||!result.ready)throw new Error('Native idle did not establish rendered readiness: '+JSON.stringify(result));
+      return result;
+    })()`,true);
+    renderSettlements.push({reason,...result});
+    return result;
+  }
+  async function key(key, code, virtualKey) {
+    await cdp.send('Input.dispatchKeyEvent', {type:'keyDown',key,code,windowsVirtualKeyCode:virtualKey,
+      ...(key === 'Enter' ? {text:'\r',unmodifiedText:'\r'} : {})});
+    await cdp.send('Input.dispatchKeyEvent', {type:'keyUp',key,code,windowsVirtualKeyCode:virtualKey});
+    await settle();
+  }
+  async function click(selector, keyboard = false) {
+    const point = await evaluate(cdp, `(() => {
+      const node=document.querySelector(${JSON.stringify(selector)});
+      if(!node)throw new Error('Missing control '+${JSON.stringify(selector)});
+      node.scrollIntoView({block:'nearest',inline:'nearest'});
+      node.focus({preventScroll:true});
+      const b=node.getBoundingClientRect(), x=b.x+b.width/2,y=b.y+b.height/2;
+      if(node.disabled || !b.width || !b.height || !node.contains(document.elementFromPoint(x,y))) throw new Error('Control obstructed '+${JSON.stringify(selector)});
+      if(document.activeElement!==node)throw new Error('Control cannot receive focus');
+      return {x,y,href:node.href || null};
+    })()`);
+    if (keyboard) await key(' ', 'Space', 32);
+    else {
+      await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:point.x,y:point.y});
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:point.x,y:point.y});
+      await settle();
+    }
+    return point;
+  }
+  async function navigate(url) {
+    // A native page navigation to a different dataset/document reconstructs the
+    // state; wait for load rather than mutate a diagnostic document token.
+    const priorOrigin = await evaluate(cdp, 'performance.timeOrigin');
+    await cdp.send('Page.navigate',{url:String(url)});
+    let arrived=false;
+    while (Date.now()<deadline) {
+      arrived=await evaluate(cdp,`performance.timeOrigin!==${JSON.stringify(priorOrigin)} && location.pathname===${JSON.stringify(new URL(url).pathname)}`).catch(()=>false);
+      if(arrived)break;await delay(100);
+    }
+    check(arrived,'new document did not load');
+    await waitForVisualReadiness(cdp,deadline);
+    // Load may canonicalize semantic query parameters, but the URL's origin/path
+    // and expected presentation mode remain independently checked below.
+    check(await evaluate(cdp, `location.pathname===${JSON.stringify(new URL(url).pathname)}`),'navigation reached wrong dataset');
+    await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:true});
+    await mapIdle('document navigation');
+  }
+  async function semantic() {
+    return evaluate(cdp, `(() => {
+      const r=window.__ARTEMIS_GLOBE_SPIKE;
+      return {dataset:r.data.meta.semantic_dataset,lifePathAvailable:r.data.lifePath.available,
+        state:r.data.state, mode:r.lifePathMode,start:r.lifePathStartIndex,end:r.lifePathEndIndex,
+        preset:r.activeTemporalPresetId,layers:[...r.activeLayerRefs].sort(),
+        presence:r.selectedPresenceId,item:r.selectedItemId};
+    })()`);
+  }
+  async function snapshot() {
+    return evaluate(cdp, `(async () => {
+      const r=window.__ARTEMIS_GLOBE_SPIKE;
+      return {data:r.data,viewIndex:r.viewIndex,knowledge:[...r.knowledgeByItem],
+        semanticSource:await r.map.getSource('artemis-semantic').getData(),
+        chronology:r.map.getSource('life-path-chronology') ? await r.map.getSource('life-path-chronology').getData() : null,
+        item:r.selectedItemId,presence:r.selectedPresenceId,preset:r.activeTemporalPresetId,
+        mode:r.lifePathMode,start:r.lifePathStartIndex,end:r.lifePathEndIndex,layers:[...r.activeLayerRefs].sort(),
+        alternatives:r.alternativesVisible,popup:r.popupPresenceId,
+        inspectorHidden:document.getElementById('inspector').hidden,
+        disclosures:[...document.querySelectorAll('#selection-card details')].map(d=>({label:d.querySelector('summary')?.textContent,open:d.open})),
+        card:document.getElementById('selection-card').textContent,
+        unresolved:document.getElementById('unresolved-items')?.textContent || null,
+        camera:{center:r.map.getCenter().toArray(),zoom:r.map.getZoom(),bearing:r.map.getBearing(),pitch:r.map.getPitch()}};
+    })()`,true);
+  }
+  async function mode(expected) {
+    const actual=await evaluate(cdp, `(() => {
+      const r=window.__ARTEMIS_GLOBE_SPIKE,button=document.getElementById('view-'+${JSON.stringify(expected)});
+      return {view:r.presentationView,projection:r.map.getProjection().type,ready:r.projectionReady,
+        pressed:button.getAttribute('aria-pressed'),other:document.getElementById('view-'+(${JSON.stringify(expected)}==='map'?'globe':'map')).getAttribute('aria-pressed'),
+        disabled:button.disabled,url:new URL(location.href).searchParams.get('view') || 'globe'};
+    })()`);
+    check(actual.view===expected && actual.projection===(expected==='map'?'mercator':'globe') && actual.ready && !actual.disabled && actual.pressed==='true' && actual.other==='false' && actual.url===expected,'UI/runtime/URL projection disagreement: '+JSON.stringify(actual));
+    return actual;
+  }
+  async function capture(dataset,lang,view,suffix='') {
+    await mapIdle('capture '+dataset+'/'+lang+'/'+view);
+    await mode(view);
+    const layout=await evaluate(cdp, `(() => {
+      const lang=${JSON.stringify(lang)},view=${JSON.stringify(view)};
+      const names=lang==='ru'?{globe:'Глобус',map:'Карта 2D'}:{globe:'Globe',map:'2D map'};
+      const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
+      for(const id of ['projection-switch','view-globe','view-map'])if(!visible(document.getElementById(id)))throw new Error('Projection control outside viewport: '+id);
+      for(const v of ['globe','map'])if(document.getElementById('view-'+v).innerText!==names[v])throw new Error('Projection label lost locale');
+      if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
+      const header=document.getElementById('spike-banner').getBoundingClientRect();
+      for(const node of document.querySelectorAll('#timeline-dock,.maplibregl-ctrl-top-right,.maplibregl-ctrl-top-left')) {
+        if(!visible(node))continue;const b=node.getBoundingClientRect();
+        if(Math.min(header.right,b.right)-Math.max(header.left,b.left)>1&&Math.min(header.bottom,b.bottom)-Math.max(header.top,b.top)>1)throw new Error('Header overlaps map/time control');
+      }
+      return {width:innerWidth,height:innerHeight,headerBottom:header.bottom};
+    })()`);
+    const stem='-projection-'+dataset+'-'+lang+'-'+view+(suffix?'-'+suffix:'');
+    const screenshot=options.screenshot.replace(/\.png$/,stem+'.png'),dom=options.dom.replace(/\.html$/,stem+'.html');
+    const image=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});
+    await writeFile(screenshot,Buffer.from(image.data,'base64'));
+    await writeFile(dom,await evaluate(cdp,'document.documentElement.outerHTML'));
+    captures.push({dataset,locale:lang,view,...layout,screenshot,dom,screenshotSha256:createHash('sha256').update(await readFile(screenshot)).digest('hex')});
+  }
+  async function toggle(view,scenario,keyboard=false) {
+    await mapIdle('before '+scenario);
+    const before=await snapshot(),beforeUrl=new URL(await evaluate(cdp,'location.href'));
+    await click('#view-'+view,keyboard);await mapIdle('after '+scenario);await mode(view);
+    const after=await snapshot(),afterUrl=new URL(await evaluate(cdp,'location.href'));
+    check(JSON.stringify(before)===JSON.stringify(after),scenario+' changed semantic/source/selection/disclosure/camera state');
+    beforeUrl.searchParams.delete('view');afterUrl.searchParams.delete('view');
+    check(beforeUrl.href===afterUrl.href,scenario+' changed semantic URL or hash');
+    comparisons.push({scenario,view,method:keyboard?'native Space after explicit focus':'native mouse',beforeSha256:hash(before),afterSha256:hash(after),knowledgeBeforeSha256:hash(before.knowledge),knowledgeAfterSha256:hash(after.knowledge),neutralProjectionSha256:hash(before.data.projection),adapterSourceSha256:hash(before.semanticSource),disclosuresBeforeSha256:hash(before.disclosures),disclosuresAfterSha256:hash(after.disclosures),semanticSourceDisclosureCameraPreserved:true});
+  }
+  async function slider(id,year) {
+    const bounds=await evaluate(cdp,`(() => {const n=document.getElementById(${JSON.stringify(id)});n.focus();return {min:Number(n.min),max:Number(n.max),target:window.__ARTEMIS_GLOBE_SPIKE.data.lifePath.time_axis.values.indexOf(${JSON.stringify(year)})};})()`);
+    check(bounds.target>=bounds.min&&bounds.target<=bounds.max,'native temporal slider target missing');
+    const fromEnd=bounds.max-bounds.target<bounds.target-bounds.min;
+    await key(fromEnd?'End':'Home',fromEnd?'End':'Home',fromEnd?35:36);
+    for(let i=0;i<(fromEnd?bounds.max-bounds.target:bounds.target-bounds.min);i++)await key(fromEnd?'ArrowLeft':'ArrowRight',fromEnd?'ArrowLeft':'ArrowRight',fromEnd?37:39);
+    check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).getAttribute('aria-valuetext')===${JSON.stringify(year)}`),'2D keyboard timeline did not update');
+    await mode('map');
+  }
+  async function openSources(dataset) {
+    if(dataset==='leonardo')await click('.popup-details');else await click('#region-details');
+    const disclosures=await evaluate(cdp,`[...document.querySelectorAll('#selection-card details')].map((d,i)=>({i,source:!!d.querySelector('a'),uncertainty:!!d.querySelector('.uncertainty-card')})).filter(d=>d.source||d.uncertainty)`);
+    check(disclosures.some(d=>d.source)&&disclosures.some(d=>d.uncertainty),'source/uncertainty access missing');
+    for(const {i} of disclosures){
+      await evaluate(cdp,`document.querySelectorAll('#selection-card details')[${i}].querySelector('summary').focus()`);
+      if(!await evaluate(cdp,`document.querySelectorAll('#selection-card details')[${i}].open`))await key(' ','Space',32);
+      check(await evaluate(cdp,`document.querySelectorAll('#selection-card details')[${i}].open`),'native source disclosure failed');
+    }
+    check(await evaluate(cdp,"[...document.querySelectorAll('#selection-card a')].some(a=>a.checkVisibility({checkVisibilityCSS:true}))"),'no visible source link');
+    return disclosures;
+  }
+  async function historyStep(direction,expectedView,expectedSemantic) {
+    const history=await cdp.send('Page.getNavigationHistory'),entry=history.entries[history.currentIndex+direction];
+    check(!!entry,'missing presentation history entry');
+    await cdp.send('Page.navigateToHistoryEntry',{entryId:entry.id});
+    let restored=false;
+    while(Date.now()<deadline){
+      restored=await evaluate(cdp,`window.__ARTEMIS_GLOBE_SPIKE.presentationView===${JSON.stringify(expectedView)}`).catch(()=>false);
+      if(restored)break;await delay(100);
+    }
+    check(restored,'Back/Forward did not restore presentation');await mapIdle('presentation history');await mode(expectedView);
+    check(JSON.stringify(await semantic())===JSON.stringify(expectedSemantic),'Back/Forward lost recorded semantic state');
+  }
+  async function pickRegion() {
+    // A read-only rendered hit identifies the actual native mouse target.
+    await mapIdle('before native Region picking');
+    const point=await evaluate(cdp,`(() => {
+      const r=window.__ARTEMIS_GLOBE_SPIKE,canvas=r.map.getCanvas().getBoundingClientRect();
+      for(let y=canvas.top+20;y<canvas.bottom-20;y+=12)for(let x=canvas.left+20;x<canvas.right-20;x+=12){
+        if(document.elementFromPoint(x,y)!==r.map.getCanvas())continue;
+        const hit=r.map.queryRenderedFeatures([x-canvas.left,y-canvas.top],{layers:['artemis-region-primary-fill']}).find(f=>f.properties.item_id);
+        if(hit)return {x,y,item:hit.properties.item_id};
+      }throw new Error('No unobstructed Region feature pixel for native 2D picking');
+    })()`);
+    await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:point.x,y:point.y});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:point.x,y:point.y});await settle();
+    check((await semantic()).item===point.item,'2D Region canvas picking lost item identity');
+    picking.push({dataset:'region',view:'map',method:'native mouse on rendered Region pixel',item:point.item});
+    return point;
+  }
+  // Clean defaults are captured from each real dataset, separately from view.
+  for(const dataset of ['leonardo','region']){await navigate(routes[dataset]);defaults[dataset]=await semantic();await mode('globe');}
+  const leonardo=new URL('?mode=range&start=1502&end=1502&presence=presence-rimini-1502-08-08&lang=en&view=globe&unknown=preserve#preserve',routes.leonardo);
+  await navigate(leonardo);
+  check((await semantic()).presence==='presence-rimini-1502-08-08','non-default Leonardo saved selection failed');
+  await openSources('leonardo');
+  await capture('leonardo','en','globe');await toggle('map','Leonardo Range source drawer');await capture('leonardo','en','map');
+  await click('#language-ru');await capture('leonardo','ru','map');await toggle('globe','Leonardo Russian source drawer',true);await capture('leonardo','ru','globe');
+  await click('#close-details');await click('#language-en');await toggle('map','Leonardo Range map interaction');
+  await slider('range-start','1501');await slider('range-end','1501');
+  check((await semantic()).presence===null,'empty 2D Range retained out-of-window Presence');
+  await slider('range-end','1502');await slider('range-start','1502');
+  // Locate the existing anchor by accessible label, without assuming a new ID.
+  const cesenaSelector=await evaluate(cdp,`(() => {const n=[...document.querySelectorAll('.life-path-marker')].find(n=>n.getAttribute('aria-label')?.startsWith('Show Cesena summary,'));if(!n||n.hidden)throw new Error('Cesena anchor unavailable in 2D');return '.life-path-marker[data-place-id="'+n.dataset.placeId+'"]';})()`);
+  await click(cesenaSelector);await delay(320);
+  check((await semantic()).presence==='presence-cesena-1502-08-10','2D map marker failed to select existing Presence');
+  picking.push({dataset:'leonardo',view:'map',method:'native mouse on existing map Place anchor',presence:(await semantic()).presence});
+  await click('#mode-scrub');await slider('scrub-current','1502');
+  await toggle('globe','Leonardo Scrub selected Presence');await toggle('map','Leonardo Scrub round trip',true);
+  const saved=await evaluate(cdp,'location.href'),savedSemantic=await semantic();
+  await toggle('globe','Leonardo presentation history entry');await historyStep(-1,'map',savedSemantic);await historyStep(1,'globe',savedSemantic);
+  histories.push({dataset:'leonardo',back:true,forward:true,semanticPreserved:true});
+  await navigate(routes.region);await navigate(saved);await mode('map');
+  check(JSON.stringify(await semantic())===JSON.stringify(savedSemantic),'saved 2D Leonardo URL lost semantic state');
+  histories.at(-1).savedUrlReopened=true;
+  const regionSnapshots=[];
+  await navigate(new URL('?lang=en&view=map',routes.region));
+  for(let index=0;index<3;index++){
+    await evaluate(cdp,"document.getElementById('temporal-preset').focus()");await key('Home','Home',36);
+    for(let step=0;step<index;step++)await key('ArrowDown','ArrowDown',40);
+    await mode('map');
+    const selected=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_GLOBE_SPIKE,p=r.viewIndex.temporal_presets[${index}],item=r.data.projection.items.find(i=>i.object_type==='Region');if(r.activeTemporalPresetId!==p.preset_id||!item)throw new Error('2D Region native time failed');return {preset:p.preset_id,item:item.item_id,geometryRefs:item.geometry_refs};})()`);
+    await pickRegion();await openSources('region');await toggle('globe','Region preset '+index+' source drawer');
+    if(index===1){await capture('region','en','globe');await toggle('map','Region English capture');await capture('region','en','map');await click('#language-ru');await capture('region','ru','map');await toggle('globe','Region Russian source drawer',true);await capture('region','ru','globe');await click('#language-en');}
+    await toggle('map','Region preset '+index+' round trip');
+    await click('#close-details');regionSnapshots.push(selected);
+  }
+  check(new Set(regionSnapshots.map(s=>s.geometryRefs.join(','))).size===3,'2D Region presets did not select distinct native outlines');
+  const regionLayer=await evaluate(cdp, `(() => {const n=[...document.querySelectorAll('#layer-controls input')].find(n=>n.checked);if(!n)throw new Error('No active Region layer');return '#layer-controls input[value=\"'+n.value+'\"]';})()`);
+  await click(regionLayer,true);await click(regionLayer,true);await mode('map');
+  check((await semantic()).item===null,'native Region layer round trip did not establish unselected picking precondition');
+  await delay(250);
+  // Find a currently rendered Region pixel. Query is read-only; only native
+  // mouse input below changes picking/selection, using the existing handlers.
+  await pickRegion();
+  const regionSaved=await evaluate(cdp,'location.href'),regionSemantic=await semantic();
+  await toggle('globe','Region picked item');await historyStep(-1,'map',regionSemantic);await historyStep(1,'globe',regionSemantic);
+  histories.push({dataset:'region',back:true,forward:true,semanticPreserved:true});
+  await navigate(routes.leonardo);await navigate(regionSaved);await mode('map');
+  check(JSON.stringify(await semantic())===JSON.stringify(regionSemantic),'saved 2D Region URL lost semantic state');histories.at(-1).savedUrlReopened=true;
+  const crossExample=[];
+  for(const dataset of ['region','leonardo']){
+    await navigate(new URL('?lang=ru&view=map',routes[dataset]));
+    const target=dataset==='region'?'leonardo':'region';
+    const link=await evaluate(cdp,`document.getElementById('example-'+${JSON.stringify(target)}).href`),url=new URL(link);
+    check([...url.searchParams.keys()].sort().join(',')==='lang,view'&&url.searchParams.get('lang')==='ru'&&url.searchParams.get('view')==='map'&&!url.hash,'cross-example presentation allowlist failed');
+    const clicked=await click('#example-'+target);
+    while(Date.now()<deadline){if(await evaluate(cdp,`location.pathname===${JSON.stringify(routes[target].pathname)}`).catch(()=>false))break;await delay(100);}
+    await waitForVisualReadiness(cdp,deadline);await mode('map');
+    check(JSON.stringify(await semantic())===JSON.stringify(defaults[target]),'cross-example link leaked foreign semantics');
+    check(await evaluate(cdp,"document.getElementById('language-ru').getAttribute('aria-pressed')==='true'"),'cross-example link lost locale');
+    crossExample.push({from:dataset,to:target,href:clicked.href,view:'map',locale:'ru',targetSemanticDefaults:true});
+  }
+  const invalid=[];
+  for(const dataset of ['leonardo','region']){
+    await navigate(new URL('?lang=en&view=invalid',routes[dataset]));await mode('globe');
+    invalid.push({dataset,invalidViewDefaultsTo:'globe'});
+  }
+  return {outcome:'TECHNICAL_PROJECTION_PASS',method:'Native mouse/Space controls, native keyboard timeline and native canvas/marker picking; actual runtime snapshots',
+    defaults,comparisons,renderSettlements,regionSnapshots,picking,histories,crossExample,invalid,captures,
+    valueValidation:'not_assessed',
+    limitations:['One MapLibre engine using two cartographic projections; not independent adapter parity.',
+      'Runtime/source geometry and knowledge equality are technical checks, not historical validation.',
+      'Named control focus and keyboard activation only; not a complete keyboard or assistive technology audit.']};
+}
+
 async function main() {
   const options = parseArguments(process.argv);
   const profileDirectory = await mkdtemp(join(tmpdir(), 'artemis-chrome-profile-'));
@@ -1234,6 +1512,9 @@ async function main() {
     const sharedPreviewNavigation = options.sharedPreviewNavigation
       ? await verifySharedPreviewNavigation(cdp, options, deadline)
       : null;
+    const projectionSwitch = options.projectionSwitch
+      ? await verifyProjectionSwitch(cdp, options, deadline)
+      : null;
     const sha256 = value => createHash('sha256').update(value).digest('hex');
     const provenance = {
       schemaVersion: '1.0.0',
@@ -1254,7 +1535,7 @@ async function main() {
       screenshotSha256: sha256(await readFile(options.screenshot)),
       limitations: ['Checkout identity is test-code provenance, not proof of the deployed commit.', 'DOM and screenshot precede the separate URL-restoration scenario.', 'Keyboard checks cover named controls only, not a full keyboard or assistive-technology audit.']
     };
-    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, sourceAwareResearch, sharedPreviewNavigation, provenance };
+    const report = { ...readiness, keyboardInteraction, placeLabels, firstUse, regionDisclosureRetest, temporalRegion, urlStateRestoration, sourceAwareResearch, sharedPreviewNavigation, projectionSwitch, provenance };
     if (options.report) await writeFile(options.report, JSON.stringify(report, null, 2) + '\n', 'utf8');
     process.stdout.write(`${JSON.stringify(report)}\n`);
   } catch (error) {

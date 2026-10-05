@@ -1431,6 +1431,9 @@ def build_spike(
         else "Generated review artifact — not a public capability"
     )
     has_example_navigation = public_preview and dataset in {DEFAULT_DATASET, REGION_DATASET}
+    if has_example_navigation:
+        runtime_aria_label = runtime_aria_label.removesuffix(" globe") + " map"
+        selection_empty_copy = selection_empty_copy.replace("on the globe", "on the map")
     example_navigation = ""
     if has_example_navigation:
         example_links = []
@@ -1465,6 +1468,12 @@ def build_spike(
         template.replace("{{PUBLIC_PREVIEW_STATUS}}", preview_status).replace(
             "{{PUBLIC_PREVIEW_NAV}}", preview_nav
         ).replace("{{PUBLIC_EXAMPLE_NAV}}", example_navigation)
+        .replace("{{PUBLIC_PROJECTION_SWITCH}}", (
+            '<div id="projection-switch" role="group" aria-label="Map view">'
+            '<button id="view-globe" type="button" aria-pressed="true" disabled>Globe</button>'
+            '<button id="view-map" type="button" aria-pressed="false" disabled>2D map</button></div>'
+        ) if has_example_navigation else "")
+        .replace("{{PUBLIC_PROJECTION_STATUS}}", '<p id="projection-status" role="status" aria-live="polite" hidden></p>' if has_example_navigation else "")
         .replace("{{PUBLIC_EXAMPLE_COVERAGE}}", f'<span id="example-coverage">{coverage}</span>' if has_example_navigation else "")
         .replace("{{PUBLIC_PREVIEW_CLASS}}", "has-example-navigation" if has_example_navigation else "")
         .replace("{{RUNTIME_TITLE}}", runtime_title)
