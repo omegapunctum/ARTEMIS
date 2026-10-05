@@ -477,7 +477,9 @@ button:focus-visible { outline: 2px solid #79cfff; outline-offset: 2px; }
   .banner-actions .preview-nav-link { display: none; }
   #spike-banner.has-example-navigation { grid-template-columns: minmax(0, 1fr); }
   .has-example-navigation .banner-actions { max-width: none; justify-content: flex-start; }
-  .has-example-navigation .banner-actions .preview-nav-link { display: inline-flex; min-height: 32px; padding: 5px 9px; font-size: 11px; }
+  .has-example-navigation .banner-actions .preview-nav-link { display: inline-flex; flex: 1 1 150px; min-width: 0; min-height: 36px; padding: 5px 9px; font-size: 11px; white-space: normal; overflow-wrap: anywhere; }
+  .has-example-navigation .banner-actions #projection-switch,
+  .has-example-navigation .banner-actions .language-switch { flex-shrink: 0; }
   .timeline-subject h1 { font-size: 13px; }
 }
 

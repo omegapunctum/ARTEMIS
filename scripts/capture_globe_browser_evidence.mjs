@@ -605,7 +605,7 @@ async function verifyFirstUse(cdp, options) {
       check(top[2].textContent === 'Documented presence' && top[3].textContent.includes(p.short_description), 'record/context');
       check(top[4].textContent.includes('Exact historical positionUnknown') && top[4].textContent.includes('RouteUnknown'), 'explicit spatial/route limits');
       check(top[4].textContent.includes(p.duration_status === 'range_not_continuous_position' ? 'Residence range; daily presence not established' : 'Not established'), 'duration limit');
-      check(top.every(el => el.getBoundingClientRect().bottom <= document.getElementById('inspector').getBoundingClientRect().bottom), 'first-open limits inside drawer viewport');
+      check(top.every(el => el.getBoundingClientRect().bottom <= document.getElementById('inspector').getBoundingClientRect().bottom), 'first-open limits inside drawer viewport: ' + JSON.stringify({presence:p.presence_id, viewport:{width:innerWidth,height:innerHeight}, inspector:document.getElementById('inspector').getBoundingClientRect().toJSON(), primary:top.map(el=>({className:el.className,text:el.textContent.slice(0,100),rect:el.getBoundingClientRect().toJSON()}))}));
       check(![...card.querySelectorAll('summary')].some(s => /Reviewed package|Material uncertainty|Coverage.*corpus/.test(s.textContent)), 'primary vocabulary');
       const global = document.getElementById('presence-prototype-coverage');
       check(!card.contains(global) && !global.querySelector('details').open && !document.getElementById('prototype-details').open, 'collapsed global coverage outside selected evidence');
@@ -1539,6 +1539,23 @@ async function main() {
     if (options.report) await writeFile(options.report, JSON.stringify(report, null, 2) + '\n', 'utf8');
     process.stdout.write(`${JSON.stringify(report)}\n`);
   } catch (error) {
+    // Save the failing UI before teardown. This is diagnostic evidence only;
+    // the original assertion remains fatal and no successful report is emitted.
+    if (cdp) {
+      const failureDom=options.dom.replace(/\.html$/, '')+'-failure.html';
+      const failureScreenshot=options.screenshot.replace(/\.png$/, '')+'-failure.png';
+      const diagnostics=await Promise.race([
+        Promise.allSettled([
+          evaluate(cdp,'document.documentElement.outerHTML').then(dom=>writeFile(failureDom,dom,'utf8')).then(()=>failureDom),
+          cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false})
+            .then(capture=>writeFile(failureScreenshot,Buffer.from(capture.data,'base64'))).then(()=>failureScreenshot)
+        ]),
+        delay(3000).then(()=>null)
+      ]);
+      process.stderr.write('[browser evidence] failure diagnostics '+JSON.stringify(diagnostics
+        ? diagnostics.map(result=>result.status==='fulfilled'?{path:result.value}:{captureError:String(result.reason)})
+        : {captureError:'Best-effort capture exceeded three seconds'})+'\n');
+    }
     if (browserLog) process.stderr.write(browserLog);
     throw error;
   } finally {
