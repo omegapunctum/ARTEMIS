@@ -17,7 +17,7 @@ Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-10-04.
+- Updated: 2026-10-05.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -79,6 +79,12 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 | Document | Lifecycle | Scope |
 |---|---|---|
 | `2026-10-04_ATLAS_ONE_RECORD_MAPPING_PROOF_v1.md` | Completed read-only research / ONE_RECORD_MAPPING_FEASIBLE_WITH_GAPS | One existing Park Hill record maps conceptually to Entity/Object; identity/source/rights/time/coordinate losses explicit; no runtime intake or historical promotion; one coordinate-check proposal only |
+
+## Completed Park Hill coordinate research
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-05_PARK_HILL_COORDINATE_CHECK_v1.md` | Completed research calculation / REFERENCE_POINT_DISCREPANCY | Later owner continuation executes the coordinate proposal; explicit offline transformation and isolated checks reproduce about 252.5 m separation; listing-reference candidate only, source accuracy/geometry/time unknown; no data replacement or runtime intake |
 
 ## Engineering tooling design
 

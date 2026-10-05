@@ -1,0 +1,2 @@
+# Research-only wheel; script also rejects a differing bundled PROJ version.
+pyproj==3.7.2
