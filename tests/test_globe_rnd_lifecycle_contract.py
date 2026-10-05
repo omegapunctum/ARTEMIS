@@ -215,13 +215,13 @@ def test_iteration_and_publication_do_not_equal_formal_user_validation() -> None
     assert "do not by themselves prove user value" in validation
 
 
-def test_public_runtime_includes_separate_region_preview_without_promotion() -> None:
+def test_public_runtime_includes_unified_layers_and_region_entry_without_promotion() -> None:
     import copy
     import jsonschema
 
     state = _json("docs/project_state.json")
     schema = _json("docs/project_state.schema.json")
-    expected = "core_landing_globe_primary_atlas_compatibility_region_separate_public_r_and_d_preview"
+    expected = "core_landing_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview"
     assert state["capability"]["public_runtime"] == expected
     jsonschema.validate(state, schema)
     stale = copy.deepcopy(state)
@@ -236,7 +236,10 @@ def test_public_runtime_includes_separate_region_preview_without_promotion() -> 
     surfaces = _text("docs/PROJECT_TRUTH.md").split("## 2.", 1)[1].split("## 3.", 1)[0]
     for route in ("/globe/", "/atlas/", "/region/"):
         assert route in surfaces
-    assert "separate public R&D preview" in surfaces
+    assert "one immutable input/projection envelope" in surfaces
+    assert "same `unified-bundle.json`" in surfaces
+    assert "atemporal imported reference context" in surfaces
+    assert "UNVALIDATED" in surfaces
     assert "все три entry points" not in surfaces
 
 

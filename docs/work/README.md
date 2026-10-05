@@ -92,6 +92,12 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 |---|---|---|
 | `2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md` | Completed bounded implementation artifact; exact-head release acceptance/publication trail in implementation PR | Fresh owner autonomous direction and two independent prospective AI acceptances; public Leonardo/Region Globe/2D over shared semantic state; release evidence required before accepted/published delivery; no Atlas intake, automatic successor or gate transition |
 
+## Owner-directed unified layer workspace
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md` | Accepted prospective decision/specification; bounded implementation and exact-head release review in progress | Fresh explicit owner correction, independent Architecture/Product scope review, one persistent map/state/calendar with M5, native Roman versions and 31 atemporal Atlas references; exact-head CI/AI and separate publication evidence required; no historical promotion or gate reopening |
+
 ## Engineering tooling design
 
 | Document | Lifecycle | Limitation |
@@ -158,7 +164,7 @@ Core Reset is **completed**, not active work:
 
 - PR `#393` isolated ARTEMIS Core delivery;
 - root is the Core landing;
-- `/globe/` is the primary Leonardo research prototype;
+- `/globe/` is the primary research prototype; the owner-directed 2026-10-05 implementation composes Leonardo, Roman versions and atemporal architecture references in one persistent Explorer;
 - `/atlas/` is compatibility-only;
 - ARTEMIS Core Check is the required product signal.
 
@@ -168,7 +174,7 @@ The first Leonardo Temporal Map implementation cycle is also completed:
 - the first published manual check produced `ITERATE`;
 - PR `#396` implemented that correction and is published.
 
-Current interaction semantics:
+Historical #418/#419 interaction semantics, preserved in the isolated regression build:
 
 - `Range` = two-handle calendar interval using temporal overlap;
 - `Scrub` = default origin 1452 + one current-time cursor, with deterministic legacy `from/at` restoration, progressively accumulating the path;
@@ -179,6 +185,8 @@ Current interaction semantics:
 - double-click may focus the selected place;
 - earlier dashed connectors expressed chronology only and were never historical route geometry; current #418 uses explicitly labelled renderer-only chronological links and midpoint cues; historical routes remain unknown/null;
 - no new Leonardo data, exact route, duration or historical coordinate is implied by the interaction.
+
+The current registered unified build is separately governed by `2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md`: three independent layers, one CE query/calendar and map, native year fields/range handles, one record/source inspector and shared URL/history. The accepted scope and exact-head release evidence govern that delivery; the historical interaction list above is not a separate current public product.
 
 The fresh user check of the published #396 loop completed M1 with `ITERATE`. PR #400 completed the reviewed major-life candidate package. PR #401 completed M2 with `PROCEED_TO_M3`; PR #403 completed M3 with `PROCEED_TO_M4`; PR #405 recorded M4 `ADOPT` without opening a successor. The owner then directly instructed M5; no intervening repository decision record exists. PR #406 published the bounded 11-Presence whole-life proof. **The direct M5 check recorded `ITERATE`.** PR #409 scoped the correction; #411/#412 implemented and published it. The owner accepted #412 on 2026-09-06 with `PROCEED_TO_GATE_D_REVIEW`. These PRs are completed evidence; Region implementation, publication and interactive owner review are completed. Gate E is closed. The bounded conflict proof's evidence gate is accepted/closed; PR #453 completed its non-public technical implementation, and the separate presentation/interaction review is accepted. This establishes no public capability or comparative/formal user value; both value assessments remain UNVALIDATED, and no additional successor is authorized. #410 is confirmed by green scheduled Export Airtable runs, latest 34005145312.
 
@@ -222,7 +230,7 @@ No real Gate C historical row import is active. PR #372 merged the schema/mappin
 - the completed #344 parity contract remains a fail-closed semantic requirement for renderer changes;
 - the Leonardo-in-Romagna 1502 Gate C package remains frozen with draft/rejected historical Claims and geometry withheld where unsupported;
 - M5 may render the reviewed 11-Presence package only through present-day source-bound place anchors; it cannot create exact historical positions, routes, boundaries, Relations or Airtable rows;
-- additional Presence data and default context/layer expansion are separate possible branches, not current scope.
+- additional Presence data and historical context expansion remain separate branches; only the existing-input unified layers in the 2026-10-05 owner decision are current scope.
 
 ## Accepted Attractor-refinement rule from #363 / PR #364
 

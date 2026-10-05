@@ -29,7 +29,7 @@ The owner reports NO FINDINGS for the published #418 review and accepted #419. T
 Historical M5 closeout: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-10-04.
+- Дата фиксации: 2026-10-05.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -45,9 +45,9 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 
 - Foundation documentation не реализует world model runtime;
 - root public runtime является малой ARTEMIS Core landing page;
-- `/globe/` — primary public research prototype, явно не product-validated historical capability;
+- `/globe/` — primary public research prototype; текущая зарегистрированная сборка добавляет independent layers, без product-validated historical capability;
 - `/atlas/` сохраняет прежний Architecture Atlas как compatibility-only surface;
-- `/region/` — separate public R&D preview ограниченного Roman Empire / Temporal Region proof; не новый validated product;
+- зарегистрированная сборка `/region/` — совместимый начальный профиль того же shared-layer Explorer для ограниченного Roman Empire / Temporal Region proof; не новый validated product;
 - real validated Life in Context synchronized multi-layer experience ещё не доступен как продукт;
 - Claim/Evidence discipline сохраняется как trust layer;
 - Research Brief/revisions остаются optional future research capabilities, а не current public core;
@@ -74,19 +74,25 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 - Foundation v3.1 / #363 / PR #364 is completed. Gate D is completed with ADVANCE_TO_GATE_E under #355; current implementation and public R&D access do not themselves complete it or prove user value.
 - #368 established the original six-table empty/non-authoritative Airtable World Model shadow schema. Merged PR #372 extends that preflight surface with three additional empty shadow-only tables plus parity fields, but **no Gate C historical row has been written**. Issues #371/#373 are deferred outside the Gate D critical path.
 
-## 2. Что доступно публично
+## 2. Публичный runtime и зарегистрированная сборка
 
-GitHub Pages публикует статический runtime:
+Earlier verified live releases are identified above. The current checked-in Pages publication build registers these static routes; availability of this tree requires the separate release evidence described below:
 
 - root Core landing без runtime dependencies;
-- `/globe/` как primary Leonardo research prototype;
+- `/globe/` как primary shared-layer Explorer research prototype;
 - `/atlas/` как frozen compatibility map с checked-in `data/*` и PWA behavior;
-- `/region/` как separate public R&D preview ограниченного Roman Empire / Temporal Region proof;
+- `/region/` как совместимый Roman initial-state/deep-link entry в тот же Explorer и тот же состав данных;
 - все четыре entry points не требуют backend API.
 
-The public Leonardo and Roman Region previews provide native links to each other, visible current-example, bounded coverage and research-prototype labels. EN/RU follows the allowlisted `lang` URL parameter; each target starts its own existing defaults. Region's native details control exposes the current selected record and its existing sources/uncertainty without changing selection or time. Atlas retains its compatibility link. These capabilities span separate pages; datasets remain separate and product value is unvalidated. See [independently reviewed implementation and separate live verification](work/2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md#technical-implementation-and-publication-closeout--2026-10-04).
+Historical separate-page navigation baseline: the public Leonardo and Roman Region previews provided native links to each other, visible current-example, bounded coverage and research-prototype labels. EN/RU follows the allowlisted `lang` URL parameter; each target starts its own existing defaults. Region's native details control exposes the current selected record and its existing sources/uncertainty without changing selection or time. Atlas retains its compatibility link. These capabilities span separate pages; datasets remain separate and product value is unvalidated. See [independently reviewed implementation and separate live verification](work/2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md#technical-implementation-and-publication-closeout--2026-10-04).
 
-The shared public-preview builder/runtime now implements a native Globe / 2D map choice for those two examples on the same MapLibre instance and semantic payload. Presentation URL/history restores `view=globe|map`; common example links carry `lang` and `view` while retaining each target's semantic defaults. Time, selection, layers, source/evidence/uncertainty access and historical status are preserved within each example. This is cartographic presentation switching, not Atlas intake or an independent new semantic renderer. The [bounded implementation and release evidence](work/2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md#implementation-and-release-evidence) separates checked-in capability, exact-head CI/AI acceptance and subsequent live publication verification; availability is established only by that separate verification. Product value remains unvalidated.
+Historical #468 projection baseline: the shared public-preview builder/runtime implemented a native Globe / 2D map choice for those two examples on the same MapLibre instance and semantic payload. Presentation URL/history restores `view=globe|map`; common example links carry `lang` and `view` while retaining each target's semantic defaults. Time, selection, layers, source/evidence/uncertainty access and historical status are preserved within each example. This is cartographic presentation switching, not Atlas intake or an independent new semantic renderer. The [bounded implementation and release evidence](work/2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md#implementation-and-release-evidence) separates checked-in capability, exact-head CI/AI acceptance and subsequent live publication verification; availability is established only by that separate verification. Product value remains unvalidated.
+
+Current registered runtime build: `scripts/build_unified_explorer.py` composes one immutable input/projection envelope and registry, one calendar query, application ExplorerWorkspaceState, selection resolver and persistent MapLibre instance. Leonardo, Roman Empire and Architecture references are independent layers in the open document; layer, time, language, Globe/2D and Back/Forward actions preserve that environment. Both public routes build the same `unified-bundle.json`; only their initial profiles differ. Earlier isolated Globe/Region builds remain reproducible regression evidence. Canonical ExplorerState v1 inputs remain verbatim source-derived inputs in the bundle; the application workspace camera and technical selection identifiers are not canonical state fields, and no composed-state migration/validation is claimed. See [owner-directed specification and delivery boundary](work/2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md).
+
+The bounded input is all 11 accepted M5 Presences plus the frozen Gate C source package, three unchanged Roman interval reconstructions (91–105, 106–113, 114–116 CE), and all 31 existing Atlas points as atemporal imported reference context. One CE year query axis spans 91–1519; it is coverage of dated inputs, not complete history. Range collects interval overlaps and keeps Roman versions separate; Scrub evaluates Roman territory at the cursor, while Leonardo accumulates from its native origin only when the cursor reaches that coverage. Cursor 100 remains 100 with Leonardo empty. Architecture has unknown historical applicability/position/precision; literal construction/BCE dates and legacy flags stay inspectable metadata and never filter historical existence. No new Claim, EvidenceLink, historical status or source acceptance is inferred.
+
+This checked-in capability description does not assert publication of the current tree: exact-head CI/independent AI acceptance, expected-head merge and separate Pages every-file byte/metadata/live-native-browser verification are required by the delivery record. Historical live evidence above proves its named earlier releases. Formal/comparative user value remains UNVALIDATED.
 
 Region publication is availability evidence only: E2 is NOT COLLECTED / WAIVED,
 formal user value remains UNVALIDATED; Leonardo remains the primary research surface.
@@ -208,7 +214,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 - frozen 154-row Airtable plan as imported data, round-trip parity evidence or historical readiness;
 - Gate C package integrated into Airtable as a validated shadow copy;
 - a validated user-value result from Gate D; its historical exit is completed, but implementation of #393/#395/#396 alone proves neither gate closure nor value;
-- general-purpose public State, Process and Trajectory capabilities; the separate bounded temporal Region R&D preview does not establish a validated general Region capability;
+- general-purpose public State, Process and Trajectory capabilities; the bounded Roman Region layer does not establish a validated general Region capability;
 - product-ready 3D Globe, production dynamic terrain or VR experience; `/globe/` is only a bounded public R&D review route;
 - production-hardened multi-node backend;
 - публично развернутый end-to-end Research Slice workflow: share-контракт реализован в коде, но отдельный API runtime и `ARTEMIS_API_BASE` ещё не опубликованы;
@@ -243,7 +249,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E closed by owner decision, E1 owner-reported PASS, E2 NOT COLLECTED / WAIVED / bounded Region proof merged in #421 / Region live publication verified (owner-supplied evidence) / formal user value not yet validated**.
 
-Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a separate public R&D preview. The Globe remains non-product-validated and consumes draft/rejected historical Claims. The current Leonardo/Globe scaffold does not establish full Life in Context. Foundation contracts remain ahead of comparative user-value evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
+Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a compatible initial-state entry into the same shared-layer Explorer. The Globe remains non-product-validated and consumes draft/rejected historical Claims. The current Leonardo/Globe scaffold does not establish full Life in Context. Foundation contracts remain ahead of comparative user-value evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
 Reviewed/accepted foundation and implementation evidence includes:
 
@@ -278,7 +284,7 @@ Completed/deferred Airtable data-governance evidence now includes:
 - #368 / PR #369 — original six-table empty executable non-authoritative Airtable World Model shadow schema;
 - #371 / merged PR #372 — completed lossless schema/mapping preflight with three additional empty shadow tables and a 154-row frozen semantic-ID plan; #371/#373 are deferred and historical writes remain unauthorized.
 
-Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D is completed with ADVANCE_TO_GATE_E; Gate E is now closed by owner decision. #355 remains the product umbrella awaiting Command Center, without successor execution authority. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
+Issue #377 is foundation maintenance whose exact lifecycle is owned by `PROGRESSIVE_REFINEMENT_CONTRACT.md` and its review registry. It is completed through PR #378, but does not enter the product issue lifecycle sets, consume the product-gate WIP slot or change current capability. Gate D is completed with ADVANCE_TO_GATE_E; Gate E is now closed by owner decision. #355 remains the product umbrella; fresh owner direction separately authorizes the bounded unified-layer delivery recorded on 2026-10-05, without opening a product gate or automatic successor. The runtime may read/render the frozen Gate C package plus the separate contextual place-anchor overlay, but contract acceptance does not authorize runtime/storage mutation, Airtable writes or product-ready capability. There is no active Airtable import issue.
 
 #371/#373 могут возобновиться только отдельным lifecycle decision. Если #371 будет reopened, следующий разрешённый шаг — independent review frozen row plan; только после успешного review можно отдельно разрешить controlled live import, обязательный readback/row-level validation и normalized round-trip parity against the frozen Gate C package.
 

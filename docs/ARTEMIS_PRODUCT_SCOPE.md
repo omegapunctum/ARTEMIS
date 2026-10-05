@@ -13,7 +13,7 @@ Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.11.
+- Версия: 4.12.
 - Дата: 2026-10-05.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
 - Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; bounded Explorer navigation maintenance completed under section 2. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
@@ -56,6 +56,8 @@ Owner-directed coordinate research — 2026-10-05: the later owner continuation 
 
 Owner-directed autonomous Explorer cycle — 2026-10-05: the owner's fresh instruction to work maximally without repeated stops, with subagents as needed, expands the development direction for one complete [Explorer Globe / 2D presentation cycle](work/2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md). Prospective independent Architecture and Product AI reviews accept `BOUNDED_PROJECTION_SWITCH_V1`: public Leonardo and Roman Region gain a native EN/RU Globe/2D choice on the same map and semantic input; default Globe, allowlisted `view=globe|map`, URL/history restoration and navigation carrying only `lang` plus `view`. This explicitly amends the earlier language-only presentation allowlist. Dataset, time, selection, layers, sources, uncertainty and historical status remain shared within each example; target examples start their own semantic defaults. No Atlas intake, new source/geometry, frozen contract change, mixed historical scene or product-gate transition is authorized. Record this decision before runtime edits; implementation is `REVIEW`, independently accepted on its exact final head before merge. Delivery includes relevant CI and separate live publication verification; comparative/formal value remains UNVALIDATED.
 
+Fresh owner correction — 2026-10-05: after #468 the owner explicitly requires Leonardo, Roman Empire and architecture objects to be layers in **one persistent globe environment**, rather than pages that reload. [Unified Layer Explorer v1](work/2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md) prospectively records `BOUNDED_UNIFIED_LAYER_EXPLORER_V1` and independent Architecture/Product scope reviews. It authorizes one composed, source-pinned input/projection registry and shared calendar/state/MapLibre instance, with the existing 11-Presence M5 input, three native Roman reconstructions and 31 unchanged Atlas points as explicitly **atemporal imported reference context**. This fresh direction supersedes the earlier cycle's no-Atlas/no-composition restriction only for this bounded workspace; it does not retrospectively authorize that work. Historical applicability/lifetime/position of architectural references remain unknown; raw dates/validation flags do not become existence or historical acceptance. Global Scrub before 1452 keeps its cursor and returns an empty Leonardo trace; a wide Range preserves separately dated Roman versions without union/interpolation or simultaneity. Shared URLs, camera, layers and source disclosures are preserved; `/region/` becomes a compatible initial-state entry into the same bundle, while `/atlas/` retains its compatibility runtime. Implementation is `REVIEW` after the decision record, with exact-head AI/browser acceptance, CI and separate live verification. No frozen input/schema, historical promotion, source write, gate reopening or validated-value claim follows. The shared application ExplorerWorkspaceState orchestrates the preserved canonical ExplorerState v1 inputs; it is not a combined canonical state-schema migration. The v4.5 fixed Place anchor/name/visible-count and selected/current chronology presentation invariants remain required within the Leonardo layer.
+
 Foundation и Core Reset уже завершены как prerequisites. Owner-directed Region proof не должен повторно открывать их.
 
 The completed correction exposes only the existing selected public-Region record through a native details control with accurate Region labels and close/Escape/focus behavior. Its inspector stays closed by default; opening changes no temporal selection, URL or historical content.
@@ -72,7 +74,7 @@ Completed prerequisites:
 
 Current authorized work:
 
-- preserve the completed Explorer Example Navigation v1 maintenance and its recorded verification; no automatic successor is authorized;
+- execute the explicitly owner-directed Unified Layer Explorer v1 cycle above; preserve completed navigation/projection evidence as earlier bounded stages, not an automatic successor authority;
 
 - preserve the published #419 Leonardo interaction and distinct Presence semantics;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;

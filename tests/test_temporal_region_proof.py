@@ -139,7 +139,8 @@ def test_public_region_preview_is_separate_and_truthfully_labelled(tmp_path: Pat
     workflow = (ROOT / ".github/workflows/pages.yml").read_text()
     assert "--output pages_artifact/region" in workflow
     assert "--output pages_artifact/globe" in workflow
-    assert "--dataset roman_region_proof" in workflow
+    assert "scripts/build_unified_explorer.py --entry-profile roman" in workflow
+    assert "cmp pages_artifact/globe/unified-bundle.json pages_artifact/region/unified-bundle.json" in workflow
 
 
 

@@ -4,7 +4,8 @@ import { spawn, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
@@ -1583,7 +1584,11 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  process.stderr.write(`${error?.stack || error}\n`);
-  process.exitCode = 1;
-});
+export { delay, waitForDevToolsPort, waitForPageEndpoint, connectCdp, evaluate };
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    process.stderr.write(`${error?.stack || error}\n`);
+    process.exitCode = 1;
+  });
+}

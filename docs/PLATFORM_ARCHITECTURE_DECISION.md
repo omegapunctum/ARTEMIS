@@ -92,6 +92,8 @@ This is a semantic architecture decision, not authorization for live federation,
 
 ## 2. Scaling decision
 
+Owner-directed implementation boundary — 2026-10-05: [Unified Layer Explorer v1](work/2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md) makes the existing Leonardo, Roman Region and bounded architecture reference inputs layers in one persistent workspace. Register their distinct source-native identities, temporal/epistemic roles and provenance in one immutable composed projection envelope; use one query/application ExplorerWorkspaceState/selection resolver and MapLibre instance. Layer switches must not navigate documents or replace the active dataset metadata. `/region/` is a compatible initial-state entry into the same bundle, not a second running environment. Architecture's unknown historical time remains explicitly atemporal reference context under Data Contract §2.2. This authorizes bounded implementation, not a second semantic core, historical corpus promotion or a universal federation framework. The workspace state orchestrates source-derived projections and explicitly retains canonical ExplorerState v1 inputs verbatim; technical item IDs and renderer-local camera do not become canonical selection or domain fields. This is not a canonical state-schema replacement, mixed World Slice migration or historical-data authority.
+
 Corpus growth does not require migration from a Web Application to a desktop program.
 
 The scaling boundary is **data access and projection**, not client packaging.

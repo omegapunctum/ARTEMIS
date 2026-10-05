@@ -91,68 +91,34 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Build both public research examples for navigation verification
+      - name: Build both entries into the persistent unified Explorer
         run: |
-          python scripts/build_globe_spike.py --public-preview --output /tmp/artemis-navigation-preview/ARTEMIS/globe
-          python scripts/build_globe_spike.py --dataset roman_region_proof --public-preview --output /tmp/artemis-navigation-preview/ARTEMIS/region
+          python scripts/build_unified_explorer.py --entry-profile leonardo --output /tmp/artemis-unified-preview/globe
+          python scripts/build_unified_explorer.py --entry-profile roman --output /tmp/artemis-unified-preview/region
+          cmp /tmp/artemis-unified-preview/globe/unified-bundle.json /tmp/artemis-unified-preview/region/unified-bundle.json
 
-      - name: Verify shared preview navigation in Chromium
+      - name: Verify native unified layer workspace in Chromium
         env:
           NODE_PATH: /tmp/artemis-browser-tools/node_modules
         run: |
           set -euo pipefail
-          mkdir -p /tmp/artemis-navigation-browser-evidence
-          python -m http.server 8766 --bind 127.0.0.1 --directory /tmp/artemis-navigation-preview > /tmp/artemis-navigation-browser-evidence/server.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill "$SERVER_PID"' EXIT
           BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
           for width in 1440 500; do
-            timeout 300s node scripts/capture_globe_browser_evidence.mjs \
-              --browser "$BROWSER" --url http://127.0.0.1:8766/ARTEMIS/globe/ \
+            timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
+              --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
               --width "$width" --height 900 --timeout-ms 270000 \
-              --reduced-motion true --shared-preview-navigation true \
-              --dom "/tmp/artemis-navigation-browser-evidence/$width.html" \
-              --screenshot "/tmp/artemis-navigation-browser-evidence/$width.png" \
-              --report "/tmp/artemis-navigation-browser-evidence/$width.json" \
-              2> >(tee "/tmp/artemis-navigation-browser-evidence/$width.log" >&2)
+              --output "/tmp/artemis-unified-browser-evidence/$width" \
+              2> >(tee "/tmp/artemis-unified-$width.log" >&2)
           done
 
-      - name: Attach shared preview navigation browser evidence
+      - name: Attach persistent unified Explorer browser evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: shared-preview-navigation-browser-evidence
-          path: /tmp/artemis-navigation-browser-evidence/
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Verify Globe and 2D presentation on both research examples
-        env:
-          NODE_PATH: /tmp/artemis-browser-tools/node_modules
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/artemis-projection-browser-evidence
-          python -m http.server 8767 --bind 127.0.0.1 --directory /tmp/artemis-navigation-preview > /tmp/artemis-projection-browser-evidence/server.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill "$SERVER_PID"' EXIT
-          BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
-          for width in 1440 500; do
-            timeout 300s node scripts/capture_globe_browser_evidence.mjs \
-              --browser "$BROWSER" --url http://127.0.0.1:8767/ARTEMIS/globe/ \
-              --width "$width" --height 900 --timeout-ms 270000 \
-              --reduced-motion true --projection-switch true \
-              --dom "/tmp/artemis-projection-browser-evidence/$width.html" \
-              --screenshot "/tmp/artemis-projection-browser-evidence/$width.png" \
-              --report "/tmp/artemis-projection-browser-evidence/$width.json" \
-              2> >(tee "/tmp/artemis-projection-browser-evidence/$width.log" >&2)
-          done
-
-      - name: Attach Globe and 2D presentation browser evidence
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: projection-switch-browser-evidence
-          path: /tmp/artemis-projection-browser-evidence/
+          name: unified-explorer-browser-evidence
+          path: |
+            /tmp/artemis-unified-browser-evidence/
+            /tmp/artemis-unified-*.log
           if-no-files-found: warn
           retention-days: 14
 
@@ -194,6 +160,8 @@ jobs:
             tests/test_project_state.py \
             tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
+            tests/test_unified_explorer.py \
+            tests/test_unified_explorer_browser.py \
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \
             tests/test_leonardo_world_slice.py \

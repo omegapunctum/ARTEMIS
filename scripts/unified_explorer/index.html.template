@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-entry-profile="{{ENTRY_PROFILE}}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ARTEMIS · Explorer</title><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css"><link rel="stylesheet" href="./style.css"></head>
+<body><main id="app">
+  <div id="map" aria-label="ARTEMIS shared spatial explorer"></div>
+  <header id="workspace-header">
+    <div class="workspace-title"><strong>ARTEMIS · Explorer</strong><span data-i18n="preview">Public research prototype · user value unvalidated</span></div>
+    <div class="presentation-controls"><div role="group" aria-label="Map view"><button id="view-globe" type="button" aria-pressed="true" disabled data-i18n="globe">Globe</button><button id="view-map" type="button" aria-pressed="false" disabled data-i18n="map">2D map</button></div><div role="group" aria-label="Language"><button id="language-en" type="button" aria-pressed="true">EN</button><button id="language-ru" type="button" aria-pressed="false">RU</button></div></div>
+    <fieldset id="layer-controls"><legend data-i18n="layers">Layers</legend>
+      <label><input id="layer-leonardo" type="checkbox" value="leonardo" checked disabled><span data-i18n="leonardo">Leonardo</span><small>1452–1519 · <span data-i18n="eleven">11 selected presences</span></small></label>
+      <label><input id="layer-roman" type="checkbox" value="roman" checked disabled><span data-i18n="roman">Roman Empire</span><small>91–116 CE · <span data-i18n="three">3 reconstructions</span></small></label>
+      <label><input id="layer-architecture" type="checkbox" value="architecture" disabled><span data-i18n="architecture">Architecture references</span><small data-i18n="atemporal">Atemporal · historical applicability unknown</small></label>
+    </fieldset>
+    <div id="layer-status" role="status" aria-live="polite"></div>
+    <div class="record-picker"><label for="record-select" data-i18n="visible">Visible records</label><select id="record-select" disabled><option value="" data-i18n="choose">Choose a record</option></select></div>
+    <p id="workspace-error" role="status" hidden></p>
+  </header>
+  <aside id="inspector" aria-label="Selected record details" hidden>
+    <header class="drawer-header"><h1 id="selection-title"></h1><button id="close-details" type="button" aria-label="Close record details">×</button></header>
+    <p id="selection-scope"></p><div id="selection-facts"></div><div id="place-episodes" hidden></div><button id="focus-selection" type="button" data-i18n="focus">Focus map on this record</button>
+    <details id="sources-disclosure"><summary id="sources-summary"></summary><div id="selection-sources"></div></details>
+    <details id="evidence-disclosure"><summary data-i18n="evidence">Claims, evidence and uncertainty</summary><div id="selection-evidence"></div></details>
+    <details id="input-disclosure"><summary data-i18n="raw">Source-native input and provenance</summary><div id="selection-input"></div></details>
+  </aside>
+  <div id="attribution" class="map-note"></div>
+  <section id="time-dock" aria-label="Shared calendar selection">
+    <div class="time-heading"><div role="group" aria-label="Timeline mode"><button id="mode-range" type="button" aria-pressed="true" data-i18n="range">Range</button><button id="mode-scrub" type="button" aria-pressed="false" data-i18n="scrub">Scrub</button></div><nav aria-label="Named time intervals"><button id="period-roman" type="button">91–116 CE</button><button id="period-leonardo" type="button">1452–1519</button><button id="period-all" type="button">91–1519</button></nav></div>
+    <div id="range-controls"><label for="time-start"><span data-i18n="from">From</span><input id="time-start" type="number" min="91" max="1519" value="1452"></label><div class="dual-range"><input id="range-start-handle" type="range" min="91" max="1519" value="1452" aria-label="Interval start year CE"><input id="range-end-handle" type="range" min="91" max="1519" value="1519" aria-label="Interval end year CE"></div><label for="time-end"><span data-i18n="to">To</span><input id="time-end" type="number" min="91" max="1519" value="1519"></label></div>
+    <div id="scrub-controls" hidden><label for="cursor-year" data-i18n="cursor">Current year CE</label><input id="cursor-year" type="number" min="91" max="1519" value="1519"><input id="time-cursor" type="range" min="91" max="1519" value="1519" aria-label="Shared year cursor"></div>
+    <p id="time-status" role="status" aria-live="polite"></p><p id="route-note" data-i18n="routes">Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.</p>
+  </section>
+  <div id="fatal-error" role="alert" hidden></div>
+</main><script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script><script src="./runtime.js"></script></body></html>
