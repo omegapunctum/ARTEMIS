@@ -1211,13 +1211,13 @@ async function verifyProjectionSwitch(cdp, options, deadline) {
     renderSettlements.push({reason,...result});
     return result;
   }
-  async function key(key, code, virtualKey) {
+  async function key(key, code, virtualKey, navigates = false) {
     await cdp.send('Input.dispatchKeyEvent', {type:'keyDown',key,code,windowsVirtualKeyCode:virtualKey,
       ...(key === 'Enter' ? {text:'\r',unmodifiedText:'\r'} : {})});
     await cdp.send('Input.dispatchKeyEvent', {type:'keyUp',key,code,windowsVirtualKeyCode:virtualKey});
-    await settle();
+    if (!navigates) await settle();
   }
-  async function click(selector, keyboard = false) {
+  async function click(selector, keyboard = false, navigates = false) {
     const point = await evaluate(cdp, `(() => {
       const node=document.querySelector(${JSON.stringify(selector)});
       if(!node)throw new Error('Missing control '+${JSON.stringify(selector)});
@@ -1228,31 +1228,40 @@ async function verifyProjectionSwitch(cdp, options, deadline) {
       if(document.activeElement!==node)throw new Error('Control cannot receive focus');
       return {x,y,href:node.href || null};
     })()`);
-    if (keyboard) await key(' ', 'Space', 32);
+    if (keyboard) await key(navigates ? 'Enter' : ' ', navigates ? 'Enter' : 'Space', navigates ? 13 : 32, navigates);
     else {
       await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:point.x,y:point.y});
       await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:point.x,y:point.y});
-      await settle();
+      // A navigation destroys the source document. Awaiting its animation
+      // frames here can reject before the destination context is ready.
+      if (!navigates) await settle();
     }
     return point;
   }
-  async function navigate(url) {
-    // A native page navigation to a different dataset/document reconstructs the
-    // state; wait for load rather than mutate a diagnostic document token.
-    const priorOrigin = await evaluate(cdp, 'performance.timeOrigin');
-    await cdp.send('Page.navigate',{url:String(url)});
+  async function waitDocumentNavigation(priorOrigin, path) {
     let arrived=false;
     while (Date.now()<deadline) {
-      arrived=await evaluate(cdp,`performance.timeOrigin!==${JSON.stringify(priorOrigin)} && location.pathname===${JSON.stringify(new URL(url).pathname)}`).catch(()=>false);
+      try {
+        arrived=await evaluate(cdp,`performance.timeOrigin!==${JSON.stringify(priorOrigin)} && location.pathname===${JSON.stringify(path)}`);
+      } catch (error) {
+        // Only a context being replaced during the requested navigation may
+        // remain pending. Other transport/runtime failures stay immediately fatal.
+        if (!/Inspected target navigated or closed|Execution context was destroyed|Cannot find (?:default execution context|context with specified id)/.test(String(error))) throw error;
+      }
       if(arrived)break;await delay(100);
     }
-    check(arrived,'new document did not load');
+    check(arrived,'new destination document did not load: '+path);
     await waitForVisualReadiness(cdp,deadline);
-    // Load may canonicalize semantic query parameters, but the URL's origin/path
-    // and expected presentation mode remain independently checked below.
-    check(await evaluate(cdp, `location.pathname===${JSON.stringify(new URL(url).pathname)}`),'navigation reached wrong dataset');
+    check(await evaluate(cdp, `location.pathname===${JSON.stringify(path)}`),'navigation reached wrong dataset');
     await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:true});
     await mapIdle('document navigation');
+  }
+  async function navigate(url) {
+    // Read-only document identity distinguishes a new destination context from
+    // source-page readiness, without mutating either page or semantic state.
+    const priorOrigin = await evaluate(cdp, 'performance.timeOrigin');
+    await cdp.send('Page.navigate',{url:String(url)});
+    await waitDocumentNavigation(priorOrigin,new URL(url).pathname);
   }
   async function semantic() {
     return evaluate(cdp, `(() => {
@@ -1429,9 +1438,9 @@ async function verifyProjectionSwitch(cdp, options, deadline) {
     const target=dataset==='region'?'leonardo':'region';
     const link=await evaluate(cdp,`document.getElementById('example-'+${JSON.stringify(target)}).href`),url=new URL(link);
     check([...url.searchParams.keys()].sort().join(',')==='lang,view'&&url.searchParams.get('lang')==='ru'&&url.searchParams.get('view')==='map'&&!url.hash,'cross-example presentation allowlist failed');
-    const clicked=await click('#example-'+target);
-    while(Date.now()<deadline){if(await evaluate(cdp,`location.pathname===${JSON.stringify(routes[target].pathname)}`).catch(()=>false))break;await delay(100);}
-    await waitForVisualReadiness(cdp,deadline);await mode('map');
+    const priorOrigin=await evaluate(cdp,'performance.timeOrigin');
+    const clicked=await click('#example-'+target,false,true);
+    await waitDocumentNavigation(priorOrigin,routes[target].pathname);await mode('map');
     check(JSON.stringify(await semantic())===JSON.stringify(defaults[target]),'cross-example link leaked foreign semantics');
     check(await evaluate(cdp,"document.getElementById('language-ru').getAttribute('aria-pressed')==='true'"),'cross-example link lost locale');
     crossExample.push({from:dataset,to:target,href:clicked.href,view:'map',locale:'ru',targetSemanticDefaults:true});
