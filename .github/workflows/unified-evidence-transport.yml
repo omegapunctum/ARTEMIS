@@ -1,0 +1,100 @@
+name: Unified evidence transport
+on:
+  push:
+    branches: [chore/unified-evidence-transport-20261005]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  png:
+    name: PNG ${{ matrix.width }} ${{ matrix.capture }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        width: ['1440', '500']
+        capture:
+          - selected-leonardo-en-globe
+          - selected-leonardo-ru-map
+          - wide-range-en-globe
+          - wide-range-ru-map
+          - scrub1502-current-en-globe
+          - repeated-florence-source-en-map
+          - atemporal-raw-negative-dates-ru-map
+          - region-entry-en-globe
+          - roman100-en-globe
+    steps:
+      - name: Download immutable native Core evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: unified-explorer-browser-evidence
+          path: evidence
+          github-token: ${{ github.token }}
+          run-id: '37291218681'
+      - name: Log original PNG bytes in numbered chunks
+        run: |
+          python - <<'PY'
+          import base64, hashlib, json, pathlib
+          root = pathlib.Path("evidence")
+          width, capture = "${{ matrix.width }}", "${{ matrix.capture }}"
+          head = "7c0450a6f7ab9b0d9dca92a1e6bef490c2b5a76b"
+          def unique(name):
+              paths = [p for p in root.rglob(name) if p.is_file() and p.parent.name == width]
+              if len(paths) != 1:
+                  raise RuntimeError(f"Expected exactly one width={width} {name}, found {paths}")
+              return paths[0]
+          report = json.loads(unique("report.json").read_text())
+          if report["provenance"]["checkoutCommit"] != head or report["provenance"]["bundleSha256"] != "7cd59ee925f5c24245ef049ab4b7dddda537ae6c0ef094f52178be559fe8a069" or report["provenance"]["workflowRunUrl"] != "https://github.com/omegapunctum/ARTEMIS/actions/runs/37291218681":
+              raise RuntimeError("Evidence checkout does not match exact source head")
+          if report["outcome"] != "TECHNICAL_UNIFIED_WORKSPACE_PASS":
+              raise RuntimeError("Evidence report is not a successful native proof")
+          path = unique(capture + ".png")
+          data = path.read_bytes()
+          if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+              raise RuntimeError("Evidence is not a PNG")
+          digest = hashlib.sha256(data).hexdigest()
+          record = [c for c in report["captures"] if c["case"] == capture]
+          if len(record) != 1 or record[0]["screenshotSha256"] != digest:
+              raise RuntimeError("Original report screenshot digest mismatch")
+          encoded = base64.b64encode(data).decode("ascii")
+          chunks = [encoded[offset:offset + 12000] for offset in range(0, len(encoded), 12000)]
+          print(f"ARTEMIS_IMAGE_BEGIN width={width} name={capture}.png sha256={digest} bytes={len(data)} chunks={len(chunks)}", flush=True)
+          for index, chunk in enumerate(chunks, 1):
+              print(f"ARTEMIS_IMAGE_CHUNK {index:04d}/{len(chunks):04d} {chunk}", flush=True)
+          print(f"ARTEMIS_IMAGE_END width={width} name={capture}.png sha256={digest}", flush=True)
+          PY
+  reports:
+    name: Original native evidence reports
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download immutable native Core evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: unified-explorer-browser-evidence
+          path: evidence
+          github-token: ${{ github.token }}
+          run-id: '37291218681'
+      - name: Log both original report JSON documents
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, sys
+          root = pathlib.Path("evidence")
+          head = "7c0450a6f7ab9b0d9dca92a1e6bef490c2b5a76b"
+          for width in ("1440", "500"):
+              paths = [p for p in root.rglob("report.json") if p.is_file() and p.parent.name == width]
+              if len(paths) != 1:
+                  raise RuntimeError(f"Expected exactly one width={width} report, found {paths}")
+              data = paths[0].read_bytes()
+              report = json.loads(data)
+              if report["provenance"]["checkoutCommit"] != head or report["provenance"]["bundleSha256"] != "7cd59ee925f5c24245ef049ab4b7dddda537ae6c0ef094f52178be559fe8a069" or report["provenance"]["workflowRunUrl"] != "https://github.com/omegapunctum/ARTEMIS/actions/runs/37291218681" or report["outcome"] != "TECHNICAL_UNIFIED_WORKSPACE_PASS":
+                  raise RuntimeError("Wrong source checkout or unsuccessful native evidence")
+              digest = hashlib.sha256(data).hexdigest()
+              print(f"ARTEMIS_REPORT_BEGIN width={width} sha256={digest} bytes={len(data)}", flush=True)
+              sys.stdout.write(data.decode("utf-8"))
+              if not data.endswith(b"\n"):
+                  sys.stdout.write("\n")
+              print(f"ARTEMIS_REPORT_END width={width} sha256={digest}", flush=True)
+          PY
