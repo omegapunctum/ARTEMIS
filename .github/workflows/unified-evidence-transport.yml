@@ -57,10 +57,11 @@ jobs:
                 const allowedKeys=new Set([...allowed].map(p=>'place-anchor:'+p));
                 const finite=n=>Number.isFinite(n)?n:null;
                 const id=value=>typeof value==='number'&&Number.isFinite(value)?value:typeof value==='string'&&(allowedKeys.has(value)||/^\d+$/.test(value))?value:null;
-                const flags=state=>({selected:state?.selected===true,current:state?.current===true});
+                const flags=state=>({selected:state?.selected===true,current:state?.current===true,selectedPresent:typeof state?.selected==='boolean',currentPresent:typeof state?.current==='boolean'});
                 const box=m.getContainer().getBoundingClientRect();
                 const all=m.queryRenderedFeatures({layers:['workspace-points']});
-                const rendered=all.filter(f=>allowed.has(f.properties.place_ref)).map(f=>({place:f.properties.place_ref,id:id(f.id),idType:typeof f.id,renderKey:typeof f.properties.render_key==='string'&&allowedKeys.has(f.properties.render_key)?f.properties.render_key:null,state:id(f.id)!==null?flags(m.getFeatureState({source:'workspace-features',id:f.id})):flags(null)}));
+                const nativeRecord=f=>({place:f.properties.place_ref,id:id(f.id),idType:typeof f.id,renderKey:typeof f.properties.render_key==='string'&&allowedKeys.has(f.properties.render_key)?f.properties.render_key:null,returnedState:flags(f.state),queriedState:id(f.id)!==null?flags(m.getFeatureState({source:'workspace-features',id:f.id})):flags(null)});
+                const rendered=all.filter(f=>allowed.has(f.properties.place_ref)).map(nativeRecord),sourceNative=m.querySourceFeatures('workspace-features').filter(f=>allowed.has(f.properties.place_ref)).map(nativeRecord);
                 const anchors=[...document.querySelectorAll('.workspace-place-marker')].filter(n=>allowed.has(n.dataset.placeRef)).map(n=>{
                   const bounds=n.getBoundingClientRect(),style=getComputedStyle(n),feature=source.features.find(f=>f.id==='place-anchor:'+n.dataset.placeRef),projected=feature&&m.project(feature.geometry.coordinates);
                   return {place:n.dataset.placeRef,sourceId:feature?.id&&allowedKeys.has(feature.id)?feature.id:null,nativeSourceState:feature?flags(m.getFeatureState({source:'workspace-features',id:feature.id})):flags(null),
@@ -68,10 +69,15 @@ jobs:
                     width:finite(bounds.width),height:finite(bounds.height),opacity:finite(Number(style.opacity)),visibility:['visible','hidden','collapse'].includes(style.visibility)?style.visibility:null,position:['absolute','relative','static','fixed','sticky'].includes(style.position)?style.position:null,
                     originalEligibility:Boolean(feature&&all.some(f=>f.id===feature.id)&&bounds.width>0&&bounds.height>0&&style.visibility!=='hidden'&&style.display!=='none'&&Number(style.opacity)>0)};
                 });
-                return {scope:'public nine Place IDs and numeric renderer diagnostics only',head:'114f6df41d0f5193c5f7b6e66f92c470c6914c1b',projection:m.getProjection().type==='globe'?'globe':'map',mapBounds:{left:finite(box.left),top:finite(box.top),width:finite(box.width),height:finite(box.height)},nativeRenderedFeatureCount:all.length,rendered,anchors};
+                const pointQueries=anchors.map(anchor=>({place:anchor.place,features:anchor.projected?m.queryRenderedFeatures([anchor.projected.x-box.left,anchor.projected.y-box.top],{layers:['workspace-points']}).filter(f=>allowed.has(f.properties.place_ref)).map(nativeRecord):[]}));
+                return {sourceLoaded:m.isSourceLoaded('workspace-features'),pointLayerVisible:m.getLayoutProperty('workspace-points','visibility')!=='none',zoom:finite(m.getZoom()),pitch:finite(m.getPitch()),sourceNative,pointQueries,scope:'public nine Place IDs and numeric renderer diagnostics only',head:'114f6df41d0f5193c5f7b6e66f92c470c6914c1b',projection:m.getProjection().type==='globe'?'globe':'map',mapBounds:{left:finite(box.left),top:finite(box.top),width:finite(box.width),height:finite(box.height)},nativeRenderedFeatureCount:all.length,rendered,anchors};
               }
               const diagnostic=await evaluate('('+diagnose.toString()+')()');
               console.log('ARTEMIS_POSITION_DIAGNOSTIC '+JSON.stringify(diagnostic));
+              const button=await evaluate("(()=>{const n=document.getElementById('view-map'),b=n.getBoundingClientRect();return {x:b.left+b.width/2,y:b.top+b.height/2};})()");
+              await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...button});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...button});
+              await evaluate("(async()=>{const m=window.__ARTEMIS_EXPLORER.map;await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{m.off('idle',done);reject(new Error('Native idle deadline'));},20000);function done(){clearTimeout(timer);requestAnimationFrame(()=>requestAnimationFrame(resolve));}m.once('idle',done);m.triggerRepaint();});if(!m.loaded()||m.isMoving()||m.getProjection().type!=='mercator')throw new Error('Native map view not settled');return true;})()");
+              console.log('ARTEMIS_POSITION_DIAGNOSTIC '+JSON.stringify(await evaluate('('+diagnose.toString()+')()')));
             }finally{await browser.close();}
           })().catch(()=>{console.error('Bounded public native position diagnostic failed');process.exitCode=1;});
           JS
