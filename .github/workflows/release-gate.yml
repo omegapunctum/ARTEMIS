@@ -126,6 +126,36 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Verify Globe and 2D presentation on both research examples
+        env:
+          NODE_PATH: /tmp/artemis-browser-tools/node_modules
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/artemis-projection-browser-evidence
+          python -m http.server 8767 --bind 127.0.0.1 --directory /tmp/artemis-navigation-preview > /tmp/artemis-projection-browser-evidence/server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
+          for width in 1440 500; do
+            timeout 300s node scripts/capture_globe_browser_evidence.mjs \
+              --browser "$BROWSER" --url http://127.0.0.1:8767/ARTEMIS/globe/ \
+              --width "$width" --height 900 --timeout-ms 270000 \
+              --reduced-motion true --projection-switch true \
+              --dom "/tmp/artemis-projection-browser-evidence/$width.html" \
+              --screenshot "/tmp/artemis-projection-browser-evidence/$width.png" \
+              --report "/tmp/artemis-projection-browser-evidence/$width.json" \
+              2> >(tee "/tmp/artemis-projection-browser-evidence/$width.log" >&2)
+          done
+
+      - name: Attach Globe and 2D presentation browser evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: projection-switch-browser-evidence
+          path: /tmp/artemis-projection-browser-evidence/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Build the non-public ATL conflict review proof
         run: python scripts/build_atl_conflict_proof.py --output /tmp/artemis-atl-conflict-proof
 

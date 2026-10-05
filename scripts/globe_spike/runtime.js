@@ -30,6 +30,8 @@
   const startedAt = performance.now();
   const runtime = {
     map: null,
+    presentationView: 'globe',
+    projectionReady: false,
     data: null,
     viewIndex: null,
     viewByKey: new Map(),
@@ -1462,7 +1464,7 @@
       closeDetailsDrawer();
       clearCanonicalSelection(
         visible.length
-          ? 'Choose a visible place on the globe.'
+          ? (byId('projection-switch') ? 'Choose a visible place on the map.' : 'Choose a visible place on the globe.')
           : 'No documented presence overlaps this calendar window.',
         { syncUrl: false }
       );
@@ -1546,6 +1548,85 @@
     applyLifePathView();
   }
 
+  function presentationViewFromUrl() {
+    return new URL(window.location.href).searchParams.get('view') === 'map' ? 'map' : 'globe';
+  }
+
+  function updateExampleLinks(language = window.ARTEMIS_I18N?.language || 'en') {
+    const view = runtime.projectionReady ? runtime.presentationView : presentationViewFromUrl();
+    for (const link of byId('research-examples')?.querySelectorAll('a[data-example-route]') || []) {
+      link.setAttribute('href', `${link.dataset.exampleRoute}?lang=${language}&view=${view}`);
+    }
+  }
+
+  function renderPresentationControls() {
+    for (const view of ['globe', 'map']) {
+      const button = byId(`view-${view}`);
+      if (!button) continue;
+      button.disabled = !runtime.projectionReady;
+      button.setAttribute('aria-pressed', String(view === runtime.presentationView));
+    }
+    document.documentElement.dataset.artemisPresentationView = runtime.presentationView;
+  }
+
+  function syncPresentationUrl(historyMode) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('view', runtime.presentationView);
+    window.history[historyMode === 'push' ? 'pushState' : 'replaceState'](
+      window.history.state, '', url
+    );
+  }
+
+  function applyPresentationView(view, historyMode = false) {
+    if (!runtime.projectionReady) return false;
+    const next = view === 'map' ? 'map' : 'globe';
+    const previous = runtime.presentationView;
+    const actualView = () => runtime.map.getProjection().type === 'mercator' ? 'map' : 'globe';
+    const status = byId('projection-status');
+    try {
+      if (next !== actualView()) {
+        runtime.map.setProjection({ type: next === 'map' ? 'mercator' : 'globe' });
+        runtime.map.once('idle', () => { positionChronologyCues(); layoutPlaceLabels(); });
+      }
+      if (actualView() !== next) throw new Error('Projection was not applied');
+      runtime.presentationView = next;
+      if (status) status.hidden = true;
+      if (historyMode && (next !== previous || historyMode === 'replace')) syncPresentationUrl(historyMode);
+    } catch (_error) {
+      // A native operation may throw after changing its requested projection.
+      // Restore where possible, then declare the actual retained native mode.
+      try {
+        if (actualView() !== previous) runtime.map.setProjection({ type: previous === 'map' ? 'mercator' : 'globe' });
+      } catch (_rollbackError) { /* Read the retained native projection below. */ }
+      runtime.presentationView = actualView();
+      syncPresentationUrl('replace');
+      if (status) {
+        status.hidden = false;
+        status.textContent = 'Could not complete the view change. The controls show the current view; try again.';
+        window.ARTEMIS_I18N?.refresh();
+      }
+      renderPresentationControls();
+      updateExampleLinks();
+      return false;
+    }
+    renderPresentationControls();
+    updateExampleLinks();
+    return true;
+  }
+
+  function restorePresentationViewFromUrl() {
+    const url = new URL(window.location.href);
+    const value = url.searchParams.get('view');
+    applyPresentationView(presentationViewFromUrl(), value && !['globe', 'map'].includes(value) ? 'replace' : false);
+  }
+
+  function bindPresentationControls() {
+    for (const view of ['globe', 'map']) {
+      byId(`view-${view}`)?.addEventListener('click', () => applyPresentationView(view, 'push'));
+    }
+    window.addEventListener('popstate', restorePresentationViewFromUrl);
+  }
+
   function bindLanguageControls(publicNavigation = false) {
     const applyLanguage = (language, updateUrl = false) => {
       window.ARTEMIS_I18N?.setLanguage(language);
@@ -1553,9 +1634,7 @@
         byId(`language-${value}`)?.setAttribute('aria-pressed', String(value === language));
       }
       if (publicNavigation) {
-        for (const link of byId('research-examples').querySelectorAll('a[data-example-route]')) {
-          link.setAttribute('href', `${link.dataset.exampleRoute}?lang=${language}`);
-        }
+        updateExampleLinks(language);
         if (updateUrl) {
           const url = new URL(window.location.href);
           url.searchParams.set('lang', language);
@@ -2185,7 +2264,11 @@
     });
 
     map.on('load', () => {
-      if (typeof map.setProjection === 'function') map.setProjection({ type: 'globe' });
+      if (!byId('projection-switch') && typeof map.setProjection === 'function') map.setProjection({ type: 'globe' });
+      if (byId('projection-switch')) {
+        runtime.projectionReady = true;
+        restorePresentationViewFromUrl();
+      }
       verifyEarthContextRender(map, acceptanceProfiles);
       addContextLayers(map, context);
       addSemanticLayers(map, runtime.data.globe);
@@ -2210,6 +2293,7 @@
 
   if (byId('research-examples')) {
     bindLanguageControls(true);
+    bindPresentationControls();
     bindOverlayLayout();
     bindRegionDetailsControls();
   }

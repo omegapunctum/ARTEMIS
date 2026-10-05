@@ -49,6 +49,10 @@ def test_generated_presentation_and_evidence_truth(tmp_path, public_preview):
     assert metadata == json.loads((output / "build-meta.json").read_text())
 
 
+def test_presentation_projection_behavior() -> None:
+    subprocess.run(["node", "tests/explorer_projection_behavior.cjs"], cwd=ROOT, check=True)
+
+
 def test_m5_chronology_and_localization_behavior() -> None:
     subprocess.run(["node", "tests/m5_ux_behavior.cjs"], cwd=ROOT, check=True)
 
@@ -82,6 +86,13 @@ def test_example_navigation_is_scoped_to_built_public_examples(tmp_path, dataset
         assert parsed.by_id["close-details"][1]["aria-label"] == "Close region details"
     else:
         assert parsed.by_id["inspector"][1]["aria-label"] == "Selected place details"
+    assert ("projection-switch" in parsed.by_id) is supported
+    assert ("projection-status" in parsed.by_id) is supported
+    if supported:
+        assert parsed.by_id["globe-shell"][1]["aria-label"].endswith(" map")
+        for view in ["globe", "map"]:
+            assert "disabled" in parsed.by_id[f"view-{view}"][1]
+            assert parsed.by_id[f"view-{view}"][1]["aria-pressed"] == str(view == "globe").lower()
     assert ("research-examples" in parsed.by_id) is supported
     assert ("example-coverage" in parsed.by_id) is supported
     if not supported:
@@ -115,7 +126,7 @@ def test_example_language_binding_preserves_own_url_and_allowlists_outgoing_stat
     output = tmp_path / "globe"
     build_spike(output, public_preview=True)
     source = (output / "runtime.js").read_text()
-    language_binding = "function bindLanguageControls" + source.split("function bindLanguageControls", 1)[1].split("function bindOverlayLayout", 1)[0]
+    language_binding = "function presentationViewFromUrl" + source.split("function presentationViewFromUrl", 1)[1].split("function bindOverlayLayout", 1)[0]
     url_sync = "function syncUrlState" + source.split("function syncUrlState", 1)[1].split("function currentProjectionItem", 1)[0]
     harness = r"""
 const assert = require('node:assert/strict');
@@ -147,7 +158,7 @@ assert.equal(activeLanguage, 'ru');
 assert.equal(ru.attrs['aria-pressed'], 'true');
 assert.equal(en.attrs['aria-pressed'], 'false');
 assert.equal(window.location.href, initial);
-assert.equal(other.attrs.href, '../region/?lang=ru');
+assert.equal(other.attrs.href, '../region/?lang=ru&view=globe');
 assert.equal(atlas.attrs.href, '../atlas/');
 en.events.click();
 const changed = new URL(window.location.href);
@@ -155,7 +166,7 @@ const before = new URL(initial);
 before.searchParams.set('lang', 'en');
 assert.equal(changed.href, before.href);
 assert.equal(window.history.state.prior, true);
-assert.equal(other.attrs.href, '../region/?lang=en');
+assert.equal(other.attrs.href, '../region/?lang=en&view=globe');
 syncUrlState();
 assert.equal(new URL(window.location.href).searchParams.get('lang'), 'en');
 assert.equal(new URL(window.location.href).hash, '#saved');
@@ -173,13 +184,13 @@ for (const value of [null, 'RU', 'fr', 'ru<script>', 'en']) {
   window.location.href = url.href;
   for (const fn of listeners.popstate) fn();
   assert.equal(activeLanguage, 'en');
-  assert.equal(other.attrs.href, '../region/?lang=en');
+  assert.equal(other.attrs.href, '../region/?lang=en&view=globe');
   assert.equal(window.location.href, url.href);
 }
 other.dataset.exampleRoute = '../globe/';
 window.location.href = 'https://example.test/region/?time=period-114-116&item=state-region&diagnostics=true&lang=en#period';
 ru.events.click();
-assert.equal(other.attrs.href, '../globe/?lang=ru');
+assert.equal(other.attrs.href, '../globe/?lang=ru&view=globe');
 assert.equal(window.location.href, 'https://example.test/region/?time=period-114-116&item=state-region&diagnostics=true&lang=ru#period');
 // Non-public Leonardo keeps its existing in-memory-only language behavior.
 const priorUrl = window.location.href;
@@ -200,6 +211,10 @@ const document = {documentElement: {dataset: {}}, readyState: 'loading', addEven
     localization_assertions = r"""
 window.ARTEMIS_I18N.setLanguage('ru');
 for (const [en, ru] of [
+  ['Map view', 'Вид карты'],
+  ['Globe', 'Глобус'],
+  ['2D map', 'Карта 2D'],
+  ['Could not complete the view change. The controls show the current view; try again.', 'Не удалось завершить смену вида. Кнопки показывают текущий вид; попробуйте снова.'],
   ['Research examples', 'Исследовательские примеры'],
   ['Leonardo · 1452–1519', 'Леонардо · 1452–1519'],
   ['Roman Empire · 91–116 CE', 'Римская империя · 91–116 н. э.'],

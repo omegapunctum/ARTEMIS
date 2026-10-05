@@ -250,7 +250,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-      - name: Verify published research example navigation
+      - name: Verify published navigation and Globe / 2D presentation
         env:
           PAGES_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
@@ -260,7 +260,7 @@ jobs:
           timeout 300s node scripts/capture_globe_browser_evidence.mjs \
             --browser "$BROWSER" --url "${PAGES_URL%/}/globe/" \
             --width 1440 --height 900 --timeout-ms 270000 \
-            --reduced-motion true --shared-preview-navigation true \
+            --reduced-motion true --shared-preview-navigation true --projection-switch true \
             --dom /tmp/artemis-navigation-live-evidence/live.html \
             --screenshot /tmp/artemis-navigation-live-evidence/live.png \
             --report /tmp/artemis-navigation-live-evidence/live.json \

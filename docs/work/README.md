@@ -86,6 +86,12 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 |---|---|---|
 | `2026-10-05_PARK_HILL_COORDINATE_CHECK_v1.md` | Completed research calculation / REFERENCE_POINT_DISCREPANCY | Later owner continuation executes the coordinate proposal; explicit offline transformation and isolated checks reproduce about 252.5 m separation; listing-reference candidate only, source accuracy/geometry/time unknown; no data replacement or runtime intake |
 
+## Autonomous Explorer presentation cycle
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md` | Completed bounded implementation artifact; exact-head release acceptance/publication trail in implementation PR | Fresh owner autonomous direction and two independent prospective AI acceptances; public Leonardo/Region Globe/2D over shared semantic state; release evidence required before accepted/published delivery; no Atlas intake, automatic successor or gate transition |
+
 ## Engineering tooling design
 
 | Document | Lifecycle | Limitation |

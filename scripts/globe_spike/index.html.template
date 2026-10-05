@@ -20,8 +20,9 @@
           {{LIFE_PATH_SEQUENCE_NOTE}}
           {{REGION_SOURCE_DISCLOSURE}}
         </div>
-        <div class="banner-actions"><div class="language-switch" role="group" aria-label="Language"><button id="language-en" type="button" aria-pressed="true">EN</button><button id="language-ru" type="button" aria-pressed="false">RU</button></div>{{PUBLIC_PREVIEW_NAV}}</div>
+        <div class="banner-actions">{{PUBLIC_PROJECTION_SWITCH}}<div class="language-switch" role="group" aria-label="Language"><button id="language-en" type="button" aria-pressed="true">EN</button><button id="language-ru" type="button" aria-pressed="false">RU</button></div>{{PUBLIC_PREVIEW_NAV}}</div>
         {{PUBLIC_EXAMPLE_NAV}}
+        {{PUBLIC_PROJECTION_STATUS}}
       </header>
       <div id="attribution-status" class="map-note attribution-note"></div>
     </section>
