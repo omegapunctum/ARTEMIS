@@ -68,7 +68,7 @@ async function verifyBytes(options, base, deadline) {
 }
 
 async function runScenario(cdp,options,url,deadline,expectedBundle) {
-  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[];
+  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[];
   let documentOrigin=null,mapObjectId=null,immutableHash=null;
   const bundleHash=sha256(expectedBundle);
   async function settle() {await evaluate(cdp,'new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))',true);}
@@ -151,6 +151,54 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(JSON.stringify(actual)===JSON.stringify(expected),reason+' membership mismatch '+JSON.stringify(actual));
     checks.push({case:reason,state:current.state,counts:actual,itemIds:current.visible.map(i=>i.itemId),documentTimeOrigin:current.origin});return current;
   }
+  async function placeAnchors(reason) {
+    await idle('Place anchors '+reason);
+    const actual=await evaluate(cdp,`(async()=>{
+      const r=window.__ARTEMIS_EXPLORER,source=await r.map.getSource('workspace-features').getData();
+      return {visible:r.visibleItems.filter(i=>i.layer_id==='leonardo').map(i=>i.item_id),state:r.state,
+        anchors:[...document.querySelectorAll('.workspace-place-marker')].map(n=>({place:n.dataset.placeRef,name:n.querySelector('.place-name')?.textContent,count:n.querySelector('.place-count')?.textContent,aria:n.getAttribute('aria-label'),pressed:n.getAttribute('aria-pressed'),selected:n.classList.contains('is-selected'),current:n.classList.contains('is-current'),labelVisible:getComputedStyle(n.querySelector('.place-label')).visibility!=='hidden'})),
+        points:source.features.filter(f=>f.properties.layer_id==='leonardo'&&f.geometry.type==='Point').map(f=>({id:f.id,properties:f.properties,coordinates:f.geometry.coordinates,state:r.map.getFeatureState({source:'workspace-features',id:f.id})})),
+        chronology:source.features.filter(f=>f.properties.kind==='chronology').map(f=>({id:f.id,properties:f.properties,coordinates:f.geometry.coordinates,state:r.map.getFeatureState({source:'workspace-features',id:f.id})})),
+        chronologyCues:[...document.querySelectorAll('.workspace-chronology-cue')].map(n=>({id:n.dataset.transitionId,emphasis:Number(n.dataset.emphasis),opacity:Number(getComputedStyle(n.firstChild).opacity)})),
+        markerPaint:r.map.getPaintProperty('workspace-points','circle-radius'),chronologyPaint:r.map.getPaintProperty('workspace-chronology','line-opacity')};
+    })()`,true);
+    const groups=new Map();
+    for(const presence of expectedBundle.leonardo.lifePath.presences.filter(p=>actual.visible.includes(p.presence_item_id))){if(!groups.has(presence.place_ref))groups.set(presence.place_ref,[]);groups.get(presence.place_ref).push(presence);}
+    check(actual.anchors.length===groups.size&&actual.points.length===groups.size,reason+' duplicated/omitted a Place anchor');
+    check(new Set(actual.anchors.map(a=>a.place)).size===groups.size,reason+' duplicated Place IDs');
+    for(const [place,episodes] of groups){
+      const anchor=actual.anchors.find(a=>a.place===place),point=actual.points.find(p=>p.properties.place_ref===place);
+      check(anchor&&point,reason+' missing existing Place '+place);
+      check(anchor.name===episodes[0].place_label&&anchor.aria?.includes(episodes[0].place_label),reason+' lost Place name/accessibility');
+      check(point.id==='place-anchor:'+place&&JSON.stringify(point.coordinates)===JSON.stringify(episodes[0].coordinates),reason+' moved a fixed Place reference');
+      check(point.properties.episode_count===episodes.length,reason+' episode count does not match visible Presences');
+      const itemIds=typeof point.properties.presence_item_ids==='string'?JSON.parse(point.properties.presence_item_ids):point.properties.presence_item_ids;check(JSON.stringify([...itemIds].sort())===JSON.stringify(episodes.map(p=>p.presence_item_id).sort()),reason+' Place anchor collapsed/substituted Presence IDs');
+      if(episodes.length>1)check(anchor.count?.includes(String(episodes.length)),reason+' repeated Place count hidden from label');
+      if(episodes.some(p=>p.presence_item_id===actual.state.selectedItemId)){check(anchor.selected&&anchor.pressed==='true'&&anchor.labelVisible&&point.state.selected===true,reason+' selected Place emphasis missing');}
+    }
+    const policy=expectedBundle.leonardo.lifePath.route_policy;
+    check(policy.historical_route_geometry_permitted===false&&policy.chronological_connector_is_route===false,'chronology policy promoted a route');
+    check(actual.chronology.every(line=>line.properties.route_geometry===null),'chronology introduced historical route geometry');
+    const selectedEpisode=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_item_id===actual.state.selectedItemId);
+    const visibleEpisodes=expectedBundle.leonardo.lifePath.presences.filter(p=>actual.visible.includes(p.presence_item_id)).sort((a,b)=>a.index-b.index);
+    const currentEpisode=actual.state.mode==='scrub'?visibleEpisodes.at(-1):null,emphasizedEpisode=selectedEpisode||currentEpisode;
+    const incoming=emphasizedEpisode&&expectedBundle.leonardo.lifePath.transitions.find(t=>t.to_presence_ref===emphasizedEpisode.presence_id&&visibleEpisodes.some(p=>p.presence_id===t.from_presence_ref));
+    for(const line of actual.chronology){
+      const transition=expectedBundle.leonardo.lifePath.transitions.find(t=>t.transition_id===line.id);
+      const expected=emphasizedEpisode&&(incoming?transition===incoming:transition.from_presence_ref===emphasizedEpisode.presence_id)?selectedEpisode?2:1:0;
+      check(line.state.emphasis===expected,reason+' selected/current chronology policy changed for '+line.id);
+    }
+    check(actual.chronologyCues.length===actual.chronology.filter(line=>JSON.stringify(line.coordinates[0])!==JSON.stringify(line.coordinates[1])).length,reason+' non-route chronology cues missing');
+    for(const cue of actual.chronologyCues){const line=actual.chronology.find(line=>line.id===cue.id);check(line&&cue.emphasis===line.state.emphasis&&cue.opacity===(cue.emphasis ? .95 : .12),reason+' chronology cue presentation does not match native emphasis');}
+    for(const point of actual.points){const anchor=actual.anchors.find(a=>a.place===point.properties.place_ref),selected=point.properties.place_ref===selectedEpisode?.place_ref,current=point.properties.place_ref===currentEpisode?.place_ref;check(point.state.selected===selected&&point.state.current===current&&anchor.selected===selected&&anchor.current===current,reason+' stale Place selected/current emphasis');}
+    check(JSON.stringify(actual.markerPaint).includes('feature-state')&&JSON.stringify(actual.chronologyPaint).includes('feature-state'),reason+' native styles ignore selected/current presentation state');
+    if(actual.state.mode==='scrub'&&actual.visible.length){
+      const latest=currentEpisode,anchor=actual.anchors.find(a=>a.place===latest.place_ref),point=actual.points.find(p=>p.properties.place_ref===latest.place_ref);
+      check(anchor?.current&&point?.state.current===true,reason+' current accumulated Place emphasis missing');
+      if(!selectedEpisode&&actual.chronology.length)check(actual.chronology.some(line=>line.state.emphasis===1),reason+' current chronology emphasis missing');
+    }
+    placeAnchorChecks.push({case:reason,presenceCount:actual.visible.length,placeCount:groups.size,anchors:actual.anchors,pointStates:actual.points.map(p=>({place:p.properties.place_ref,state:p.state})),pointCoordinatesSha256:sha256(actual.points.map(p=>({place:p.properties.place_ref,coordinates:p.coordinates}))),chronology:actual.chronology,chronologyCues:actual.chronologyCues,paint:{markers:actual.markerPaint,chronology:actual.chronologyPaint}});
+  }
   async function capture(suffix) {
     await idle('capture '+suffix);
     const layout=await evaluate(cdp,`(() => {
@@ -181,7 +229,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(restored,'shared Back/Forward state restoration failed');await idle('history');await stable(direction<0?'Back':'Forward');
   }
 
-  await navigate(url);await membership({leonardo:11,roman:0,architecture:0},'default Leonardo entry');
+  await navigate(url);await membership({leonardo:11,roman:0,architecture:0},'default Leonardo entry');await placeAnchors('default11Presences9Places');
   await click('#mode-scrub');await number('cursor-year',100);
   const early=await membership({leonardo:0,roman:1,architecture:0},'Scrub100 Roman only');
   check(early.state.cursorYear===100,'global cursor clamped to Leonardo origin');
@@ -194,13 +242,13 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(unrelated.state.selectedItemId===roman100.itemId&&JSON.stringify(unrelated.disclosures)===JSON.stringify(romanDetails.disclosures)&&unrelated.card===romanDetails.card,'unrelated architecture layer changed Roman source selection');
   check(JSON.stringify(unrelated.camera)===JSON.stringify(cameraBefore)&&unrelated.state.cursorYear===100,'enabling reference layer changed camera/time');
   await membership({leonardo:0,roman:1,architecture:31},'atemporal references at100');await capture('roman100-en-globe');
-  await number('cursor-year',1502);const later=await membership({leonardo:7,roman:0,architecture:31},'Scrub1502 Leonardo trace');
+  await number('cursor-year',1502);const later=await membership({leonardo:7,roman:0,architecture:31},'Scrub1502 Leonardo trace');await placeAnchors('Scrub1502 current');await capture('scrub1502-current-en-globe');
   check(later.state.selectedItemId===null,'own time visibility did not clear Roman selection');
   await click('#mode-range');await number('time-start',1502);await number('time-end',1502);
   const range=await membership({leonardo:4,roman:0,architecture:31},'Range1502 Leonardo only');
   const cesena=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id==='presence-cesena-1502-08-10');
   check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');
-  const leo=await snapshot();await layer('roman',false);const preserved=await snapshot();
+  await placeAnchors('Range1502 selectedCesena');const leo=await snapshot();await layer('roman',false);const preserved=await snapshot();
   check(preserved.state.selectedItemId===cesena.presence_item_id&&preserved.card===leo.card&&JSON.stringify(preserved.disclosures)===JSON.stringify(leo.disclosures),'unrelated Roman layer changed Leonardo source disclosure');
   await layer('roman',true);
   for(const lang of ['en','ru']){await click('#language-'+lang);for(const mode of ['globe','map']){await view(mode);await capture('selected-leonardo-'+lang+'-'+mode);}}
@@ -220,7 +268,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const bce=referenceChecks.filter(r=>Object.values(r.rawDates).some(v=>/^-\d|BCE/.test(String(v))));check(bce.length>0,'raw BCE references not exercised');
   const bceExample=bce[0];await select(bceExample.item);await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');await capture('atemporal-raw-negative-dates-en-map');await click('#language-ru');await capture('atemporal-raw-negative-dates-ru-map');await click('#language-en');
   const selectedReference=(await snapshot()).state.selectedItemId;await layer('architecture',false);check((await snapshot()).state.selectedItemId===null,'hiding selected reference layer did not clear selection');await layer('architecture',true);await close();
-  await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');
+  await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
+  const repeated=expectedBundle.leonardo.lifePath.presences.filter(p=>p.place_ref==='place-florence');check(repeated.length===2,'accepted repeated Florence episodes missing');
+  await evaluate(cdp,`(() => {const n=document.querySelector('.workspace-place-marker[data-place-ref="place-florence"]');if(!n?.checkVisibility({checkVisibilityCSS:true}))throw new Error('Florence Place anchor hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Florence anchor cannot receive focus');})()`);
+  await key(' ','Space',32);await stable('native Florence anchor keyboard selection');await placeAnchors('native Florence grouped anchor');
+  for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
+  await disclose('sources-disclosure');await capture('repeated-florence-source-en-map');await close();
   const nativeRoman=await evaluate(cdp,`(async()=>{const r=window.__ARTEMIS_EXPLORER,features=(await r.map.getSource('workspace-features').getData()).features;return features.filter(f=>f.properties.layer_id==='roman').map(f=>({item:f.properties.item_id,geometry:f.geometry}));})()`,true);
   check(nativeRoman.length===3&&new Set(nativeRoman.map(r=>r.item)).size===3,'eligible Roman versions were merged/dropped');
   const nativeGeometries=nativeRoman.map(r=>({item:r.item,geometrySha256:sha256(r.geometry)}));
@@ -249,7 +302,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const version=expectedBundle.roman.versions[1];const romanLegacy=new URL('region/',base);romanLegacy.searchParams.set('time',version.preset_id);romanLegacy.searchParams.set('layers','layer-political-territory');romanLegacy.searchParams.set('item',version.item_id);romanLegacy.searchParams.set('lang','en');romanLegacy.searchParams.set('view','map');await navigate(romanLegacy);
   const translatedRoman=await snapshot();check(translatedRoman.state.selectedItemId===version.item_id&&translatedRoman.state.startYear===106&&translatedRoman.state.endYear===113,'legacy Roman saved state translation failed');legacy.push({entry:'roman',url:romanLegacy.href,state:translatedRoman.state});
   await disclose('sources-disclosure');await capture('legacy-roman-source-en-map');
-  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
+  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
     valueValidation:'not_assessed',limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Architecture references retain imported metadata; no historical applicability or source acceptance is inferred.','Shared URL restoration compares exact workspace fields and native renderer camera numbers.','Same engine and cartographic projection comparison, not independent renderer-adapter proof.','Named controls and native input only; not a complete assistive technology audit.']};
 }
 

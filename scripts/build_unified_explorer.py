@@ -220,7 +220,8 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
         "role": "read_only_input_and_projection_envelope", "historical_corpus_ready": False,
         "calendar": {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1519, "coverage_complete": False, "architecture_dates_define_coverage": False},
         "input_ledger": _ledger(_input_paths()), "registry": registry,
-        "leonardo": {"lifePath": life_path, "knowledge": knowledge, "projection": _read(leonardo_dir / "projection.json"), "globe": _read(leonardo_dir / "globe-projection.json"), "sourcePackage": _read(spike.MAJOR_LIFE_PACKAGE_PATH), "runtimeAnchors": _read(spike.MAJOR_LIFE_RUNTIME_ANCHORS_PATH)},
+        "source_native_state_role": "preserved_canonical_inputs_orchestrated_by_application_workspace_state_not_a_canonical_state_migration",
+        "leonardo": {"lifePath": life_path, "knowledge": knowledge, "explorerState": _read(leonardo_dir / "explorer-state.json"), "projection": _read(leonardo_dir / "projection.json"), "globe": _read(leonardo_dir / "globe-projection.json"), "sourcePackage": _read(spike.MAJOR_LIFE_PACKAGE_PATH), "runtimeAnchors": _read(spike.MAJOR_LIFE_RUNTIME_ANCHORS_PATH)},
         "roman": {"versions": versions, "knowledge": roman_knowledge, "sourceManifest": _read(spike.REGION_PACKAGE_ROOT / "source_manifest.json"), "worldInput": roman_world},
         "architecture": architecture,
     }
@@ -285,6 +286,7 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "input_sha256": {row["path"]: row["sha256"] for row in bundle["input_ledger"]},
             "generated_sha256": {"unified_bundle": bundle_sha},
             "value_validation": "UNVALIDATED",
+            "source_native_state_role": bundle["source_native_state_role"],
         }
         _write(output / "build-meta.json", metadata)
         (output / "README.txt").write_text("ARTEMIS one persistent shared-layer Explorer. Public R&D preview; formal user value UNVALIDATED.\nLeonardo: 11 accepted presentation Presences, unknown/null historical routes.\nRoman Empire: three unchanged native interval reconstructions; no geometric union or interpolation.\nArchitecture: 31 atemporal imported reference points; historical applicability/position/precision unknown. Raw dates and legacy export flags are metadata only.\n", encoding="utf-8")

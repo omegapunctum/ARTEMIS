@@ -27,6 +27,40 @@ for (const cursorYear of [105,106,113,114,116,117,1451,1452,1502,1519]) {
 const wide = h.normalizeState(bundle,{...base,startYear:91,endYear:1519,layers:['leonardo','roman','architecture']});
 assert.equal(h.query(bundle,wide).length,45);
 const features = h.featuresFor(bundle,h.query(bundle,wide));
+const groups = h.placeGroups(bundle,h.query(bundle,wide));
+assert.equal(groups.length,9);
+assert.equal(groups.reduce((count,group) => count+group.presences.length,0),11);
+assert.equal(groups.find(group => group.place_ref === 'place-florence').presences.length,2);
+assert.equal(groups.find(group => group.place_ref === 'place-milan').presences.length,2);
+const placeAnchors = features.features.filter(feature => feature.properties.kind === 'presence');
+assert.equal(placeAnchors.length,9);
+for (const group of groups) {
+  const anchor = placeAnchors.find(feature => feature.properties.place_ref === group.place_ref);
+  assert.deepEqual(anchor.geometry.coordinates,group.presences[0].coordinates);
+  assert(group.presences.every(presence => JSON.stringify(presence.coordinates) === JSON.stringify(anchor.geometry.coordinates)));
+  assert.equal(anchor.properties.episode_count,group.presences.length);
+  assert.deepEqual(JSON.parse(anchor.properties.presence_item_ids),group.presences.map(presence => presence.presence_item_id));
+  assert.equal(h.placeChoice(group,wide).presence_item_id,group.presences[0].presence_item_id);
+  assert.equal(h.placeChoice(group,{...wide,mode:'scrub'}).presence_item_id,group.presences.at(-1).presence_item_id);
+  for (const presence of group.presences) assert.equal(h.placeChoice(group,{...wide,selectedItemId:presence.presence_item_id}).presence_item_id,presence.presence_item_id);
+}
+const leo1502 = h.normalizeState(bundle,{...base,startYear:1502,endYear:1502});
+assert.equal(h.placeGroups(bundle,h.query(bundle,leo1502)).length,4);
+const cesena = bundle.leonardo.lifePath.presences.find(presence => presence.place_ref === 'place-cesena');
+const emphasisState = h.normalizeState(bundle,{...base,mode:'scrub',cursorYear:1502,selectedItemId:cesena.presence_item_id});
+const emphasis = h.presentationEmphasis(bundle,h.query(bundle,emphasisState),emphasisState);
+assert.equal(emphasis.selectedPlace,'place-cesena');
+assert.equal(emphasis.currentPlace,'place-imola');
+assert.equal(emphasis.selectedPresence,cesena.presence_id);
+assert(emphasis.transitions.some(transition => transition.emphasis === 2));
+assert.equal(emphasis.transitions.filter(transition => transition.emphasis > 0).length,1);
+const currentEmphasisState = {...emphasisState,selectedItemId:null};
+assert(h.presentationEmphasis(bundle,h.query(bundle,currentEmphasisState),currentEmphasisState).transitions.some(transition => transition.emphasis === 1));
+for (const cue of h.chronologyCues(bundle,h.query(bundle,wide),wide)) {
+  assert.equal(cue.renderer_only,true); assert.equal(cue.route_geometry,null);
+  assert.deepEqual(cue.midpoint,[(cue.coordinates[0][0]+cue.coordinates[1][0])/2,(cue.coordinates[0][1]+cue.coordinates[1][1])/2]);
+}
+assert.equal(h.presentationEmphasis(bundle,h.query(bundle,preLeonardo),preLeonardo).currentPlace,null);
 const regions = features.features.filter(feature => feature.properties.kind === 'region');
 assert.equal(regions.length,3);
 assert.deepEqual(regions.map(feature => [feature.properties.native_start,feature.properties.native_end]),[[91,105],[106,113],[114,116]]);

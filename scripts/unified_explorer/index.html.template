@@ -17,7 +17,7 @@
   </header>
   <aside id="inspector" aria-label="Selected record details" hidden>
     <header class="drawer-header"><h1 id="selection-title"></h1><button id="close-details" type="button" aria-label="Close record details">×</button></header>
-    <p id="selection-scope"></p><div id="selection-facts"></div><button id="focus-selection" type="button" data-i18n="focus">Focus map on this record</button>
+    <p id="selection-scope"></p><div id="selection-facts"></div><div id="place-episodes" hidden></div><button id="focus-selection" type="button" data-i18n="focus">Focus map on this record</button>
     <details id="sources-disclosure"><summary id="sources-summary"></summary><div id="selection-sources"></div></details>
     <details id="evidence-disclosure"><summary data-i18n="evidence">Claims, evidence and uncertainty</summary><div id="selection-evidence"></div></details>
     <details id="input-disclosure"><summary data-i18n="raw">Source-native input and provenance</summary><div id="selection-input"></div></details>

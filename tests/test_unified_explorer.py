@@ -41,6 +41,11 @@ def test_m5_native_identity_dates_epistemic_records_and_null_routes(bundle, nati
     assert composed["route_policy"]["geometry"] is None
     assert all(row["route_geometry"] is None for row in composed["transitions"])
     assert bundle["leonardo"]["knowledge"] == json.loads((native_builds / "leonardo" / "knowledge-index.json").read_text())
+    state = json.loads((native_builds / "leonardo" / "explorer-state.json").read_text())
+    assert bundle["leonardo"]["explorerState"] == state
+    assert bundle["leonardo"]["projection"]["source"]["explorer_state_ref"] == state["state_id"]
+    assert bundle["leonardo"]["globe"]["source"]["explorer_state_ref"] == state["state_id"]
+    assert bundle["source_native_state_role"] == "preserved_canonical_inputs_orchestrated_by_application_workspace_state_not_a_canonical_state_migration"
     for filename, key in [("projection.json", "projection"), ("globe-projection.json", "globe")]:
         assert bundle["leonardo"][key] == json.loads((native_builds / "leonardo" / filename).read_text())
     assert bundle["leonardo"]["sourcePackage"] == json.loads(spike.MAJOR_LIFE_PACKAGE_PATH.read_text())
@@ -59,6 +64,9 @@ def test_roman_native_intervals_geometry_and_epistemic_statuses(bundle, native_b
         assert row["geometry_version"] == version
         assert row["geometry_version"]["spatial_extent"]["geometry"] == source_feature["geometry"]
         assert row["temporal_selection"] == preset["temporal_selection"]
+        assert row["state"] == next(v["state"] for v in json.loads((native_builds / "roman" / "explorer-views.json").read_text())["views"] if v["temporal_preset_id"] == preset["preset_id"] and v["active_layer_refs"])
+        assert row["projection"]["source"]["explorer_state_ref"] == row["state"]["state_id"]
+        assert row["globe"]["source"]["explorer_state_ref"] == row["state"]["state_id"]
         primitives = [p for p in row["globe"]["primitives"] if p["item_id"] == row["item_id"]]
         assert len(primitives) == 1
         assert primitives[0]["coordinates"] == source_feature["geometry"]["coordinates"]
@@ -189,6 +197,7 @@ def test_entry_profiles_are_only_initial_presentation_and_share_bundle_bytes(tmp
         assert meta["engine_id"] == "maplibre-gl-js-5.24.0"
         assert meta["terrain"] == {"asset_ref": None, "runtime_enabled": False, "live_provider_selected": False, "status": "not_enabled_in_unified_runtime"}
         assert meta["value_validation"] == "UNVALIDATED"
+        assert meta["source_native_state_role"] == "preserved_canonical_inputs_orchestrated_by_application_workspace_state_not_a_canonical_state_migration"
         for row in json.loads((tmp_path / profile / "unified-bundle.json").read_text())["input_ledger"]:
             assert hashlib.sha256((tmp_path / profile / "inputs" / row["path"]).read_bytes()).hexdigest() == row["sha256"]
         assert (tmp_path / profile / "sources" / "cliopatria-excerpt.json").read_bytes() == (spike.REGION_PACKAGE_ROOT / "sources" / "cliopatria-excerpt.json").read_bytes()

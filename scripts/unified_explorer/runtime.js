@@ -69,12 +69,35 @@
     for (const key of ['zoom','pitch','bearing']) params.set(key,state.camera[key]);
     return url;
   }
+  // Application WorkspaceState coordinates native inputs. It is not a migrated
+  // canonical ExplorerState v1 and does not rewrite the retained input states.
+  function placeGroups(bundle, items) {
+    const visible = new Set(items.filter(item => item.kind === 'presence').map(item => item.item_id)), groups = new Map();
+    for (const presence of bundle.leonardo.lifePath.presences) {
+      if (!visible.has(presence.presence_item_id)) continue;
+      if (!groups.has(presence.place_ref)) groups.set(presence.place_ref,{place_ref:presence.place_ref,label:presence.place_label,coordinates:presence.coordinates,presences:[]});
+      groups.get(presence.place_ref).presences.push(presence);
+    }
+    return freeze([...groups.values()].map(group => ({...group,presences:group.presences.sort((a,b) => a.index-b.index)})));
+  }
+  function placeChoice(group, state) {
+    return group.presences.find(item => item.presence_item_id === state.selectedItemId)
+      || (state.mode === 'scrub' ? group.presences.at(-1) : group.presences[0]);
+  }
+  function presentationEmphasis(bundle, items, state) {
+    const visible = new Set(items.map(item => item.item_id));
+    const presences = bundle.leonardo.lifePath.presences.filter(item => visible.has(item.presence_item_id)).sort((a,b) => a.index-b.index);
+    const selected = presences.find(item => item.presence_item_id === state.selectedItemId), current = state.mode === 'scrub' ? presences.at(-1) : null;
+    const episode = selected || current;
+    const incoming = episode && bundle.leonardo.lifePath.transitions.find(transition => transition.to_presence_ref === episode.presence_id && presences.some(presence => presence.presence_id === transition.from_presence_ref));
+    return freeze({selectedPresence:selected?.presence_id || null,currentPresence:current?.presence_id || null,selectedPlace:selected?.place_ref || null,currentPlace:current?.place_ref || null,transitions:bundle.leonardo.lifePath.transitions.map(transition => ({id:transition.transition_id,emphasis:episode && (incoming ? transition === incoming : transition.from_presence_ref === episode.presence_id) ? selected ? 2 : 1 : 0}))});
+  }
   function featuresFor(bundle, items) {
     const features = [], visible = new Set(items.map(item => item.item_id));
+    for (const group of placeGroups(bundle,items)) if (group.coordinates) features.push({type:'Feature',id:`place-anchor:${group.place_ref}`,geometry:{type:'Point',coordinates:group.coordinates},properties:{item_id:group.presences[0].presence_item_id,place_ref:group.place_ref,layer_id:'leonardo',kind:'presence',episode_count:group.presences.length,presence_item_ids:JSON.stringify(group.presences.map(item => item.presence_item_id))}});
     for (const item of items) {
       if (item.kind === 'presence') {
-        const presence = bundle.leonardo.lifePath.presences.find(value => value.presence_item_id === item.item_id);
-        if (presence?.coordinates) features.push({type:'Feature',id:item.item_id,geometry:{type:'Point',coordinates:presence.coordinates},properties:{item_id:item.item_id,layer_id:item.layer_id,kind:item.kind}});
+        continue; // One fixed Place anchor; all Presence identities remain selectable.
       } else if (item.kind === 'reference') {
         const reference = bundle.architecture.references.find(value => value.item_id === item.item_id);
         features.push({type:'Feature',id:item.item_id,geometry:reference.geometry,properties:{item_id:item.item_id,layer_id:item.layer_id,kind:item.kind}});
@@ -97,11 +120,15 @@
     }
     return {type:'FeatureCollection',features};
   }
-  const helpers = Object.freeze({defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,freeze});
+  function chronologyCues(bundle,items,state) {
+    const emphasis = presentationEmphasis(bundle,items,state);
+    return freeze(featuresFor(bundle,items).features.filter(feature => feature.properties.kind === 'chronology').filter(feature => JSON.stringify(feature.geometry.coordinates[0]) !== JSON.stringify(feature.geometry.coordinates[1])).map(feature => ({id:feature.id,coordinates:feature.geometry.coordinates,midpoint:[(feature.geometry.coordinates[0][0]+feature.geometry.coordinates[1][0])/2,(feature.geometry.coordinates[0][1]+feature.geometry.coordinates[1][1])/2],emphasis:emphasis.transitions.find(transition => transition.id === feature.id)?.emphasis || 0,renderer_only:true,route_geometry:null})));
+  }
+  const helpers = Object.freeze({defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
-  const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null};
-  window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
+  const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map()};
+  window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get placeGroups(){return runtime.bundle ? placeGroups(runtime.bundle,runtime.visibleItems) : [];},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
   let renderedSelection = null, restoringCamera = false, recordSignature = '';
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
@@ -118,12 +145,25 @@
     return {presence,record};
   }
   function sourcesFor(input) { return input.sources || input.record?.sources || input.presence?.sources || []; }
+  function renderEpisodeChoices(selected) {
+    const host = byId('place-episodes'), group = selected?.kind === 'presence' ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.presences.some(presence => presence.presence_item_id === selected.item_id)) : null;
+    host.hidden = !group || group.presences.length < 2;
+    if (host.hidden) { host.replaceChildren(); return; }
+    const signature = `${runtime.state.language}|${selected.item_id}|${group.presences.map(item => item.presence_item_id).join('|')}`;
+    if (host.dataset.signature === signature) return;
+    host.dataset.signature = signature; host.replaceChildren(node('span',runtime.state.language === 'ru' ? 'Видимые присутствия в этом месте' : 'Visible presences at this place'));
+    for (const presence of group.presences) {
+      const button = node('button',presence.temporal.source_native?.length < 25 ? presence.temporal.source_native : `${presence.temporal.start} — ${presence.temporal.end}`);
+      button.type = 'button'; button.dataset.presenceItemId = presence.presence_item_id; button.setAttribute('aria-pressed',String(presence.presence_item_id === selected.item_id));
+      button.addEventListener('click',() => selectItem(presence.presence_item_id)); host.append(button);
+    }
+  }
   function renderInspector() {
     const selected = runtime.registry.get(runtime.state.selectedItemId), inspector = byId('inspector');
-    if (!selected) { inspector.hidden = true; renderedSelection = null; return; }
+    if (!selected) { inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
     inspector.hidden = false;
     // Layer/time/projection changes that retain this item preserve native disclosures.
-    if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); return; }
+    if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); renderEpisodeChoices(selected); return; }
     renderedSelection = selected.item_id; inspector.scrollTop = 0;
     inspector.dataset.itemId = selected.item_id;
     for (const id of ['selection-facts','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
@@ -151,7 +191,7 @@
     }
     if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a','Source manifest · provenance & license'); link.href = './source_manifest.json'; sourceHost.append(link); inputJson(sourceHost,runtime.bundle.roman.sourceManifest); }
     inputJson(byId('selection-input'),{registry:selected,source_native_input:input,input_ledger:runtime.bundle.input_ledger});
-    renderInspectorLanguage(selected); layout();
+    renderInspectorLanguage(selected); renderEpisodeChoices(selected); layout();
   }
   function renderInspectorLanguage(selected) { const input = sourceRecord(selected); text('selection-title',selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : selected.label); text('selection-scope',t(selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence')); text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`); }
   function renderControls() {
@@ -190,11 +230,61 @@
     if (runtime.ready) {
       if (membershipChanged) runtime.map.getSource('workspace-features').setData(featuresFor(runtime.bundle,runtime.visibleItems));
       if (JSON.stringify(previous.camera) !== JSON.stringify(next.camera)) { restoringCamera = true; try { runtime.map.jumpTo(next.camera); } finally { restoringCamera = false; } }
+      updatePlacePresentation();
     }
     renderControls(); renderInspector(); if (options.history !== false) history(options.history || 'push');
     return runtime.state;
   }
   function selectItem(itemId) { return applyState({selectedItemId:itemId}); }
+  function layoutPlaceLabels() {
+    if (!runtime.ready) return;
+    const canvas = runtime.map.getCanvas(), occupied = [];
+    const emphasis = presentationEmphasis(runtime.bundle,runtime.visibleItems,runtime.state), groups = placeGroups(runtime.bundle,runtime.visibleItems), ends = new Set([groups[0]?.place_ref,groups.at(-1)?.place_ref]);
+    const priority = place => place === emphasis.selectedPlace ? 0 : place === emphasis.currentPlace ? 1 : ends.has(place) ? 2 : (groups.find(group => group.place_ref === place)?.presences.length || 0) > 1 ? 3 : 4;
+    const markers = [...runtime.placeMarkers].sort((a,b) => priority(a[0])-priority(b[0]));
+    const points = markers.map(([place,marker]) => ({place,...runtime.map.project(marker.getLngLat())}));
+    for (const [place,marker] of markers) {
+      const label = marker.getElement().querySelector('.place-label'), point = runtime.map.project(marker.getLngLat()), width = label.offsetWidth, height = label.offsetHeight;
+      const candidates = [[9,-10],[-width-9,-10],[9,-height-12],[-width-9,12],[9,12],[-width/2,-height-20],[-width/2,20]];
+      const fits = ([dx,dy]) => { const rect = {left:point.x+dx,right:point.x+dx+width,top:point.y+dy,bottom:point.y+dy+height}; return rect.left >= 0 && rect.right <= canvas.clientWidth && rect.top >= 0 && rect.bottom <= canvas.clientHeight && !points.some(other => other.place !== place && rect.left < other.x+8 && rect.right > other.x-8 && rect.top < other.y+8 && rect.bottom > other.y-8) && !occupied.some(other => rect.left < other.right+3 && rect.right > other.left-3 && rect.top < other.bottom+3 && rect.bottom > other.top-3); };
+      const placement = candidates.find(fits), [dx,dy] = placement || candidates[0];
+      label.classList.toggle('is-suppressed',!placement); label.style.left = `${16+dx}px`; label.style.top = `${16+dy}px`;
+      if (placement) occupied.push({left:point.x+dx,right:point.x+dx+width,top:point.y+dy,bottom:point.y+dy+height});
+    }
+    for (const {marker,coordinates} of runtime.chronologyMarkers.values()) { const from = runtime.map.project(coordinates[0]), to = runtime.map.project(coordinates[1]); marker.getElement().firstChild.style.transform = `rotate(${Math.atan2(to.y-from.y,to.x-from.x)}rad)`; }
+  }
+  function updatePlacePresentation() {
+    const groups = placeGroups(runtime.bundle,runtime.visibleItems), emphasis = presentationEmphasis(runtime.bundle,runtime.visibleItems,runtime.state), visiblePlaces = new Set(groups.map(group => group.place_ref));
+    for (const [place,marker] of runtime.placeMarkers) if (!visiblePlaces.has(place)) { marker.remove(); runtime.placeMarkers.delete(place); }
+    for (const group of groups) {
+      let marker = runtime.placeMarkers.get(group.place_ref);
+      if (!marker) {
+        const button = node('button','', 'workspace-place-marker'); button.type = 'button'; button.dataset.placeRef = group.place_ref;
+        const dot = node('span','', 'place-dot'); dot.setAttribute('aria-hidden','true'); button.append(dot);
+        const label = node('span','', 'place-label'); label.append(node('span','', 'place-name'),node('span','', 'place-count')); button.append(label);
+        button.addEventListener('click',() => { const active = placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === group.place_ref); if (active) selectItem(placeChoice(active,runtime.state).presence_item_id); });
+        button.addEventListener('dblclick',event => { event.preventDefault(); event.stopPropagation(); const active = placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === group.place_ref); if (active) { selectItem(placeChoice(active,runtime.state).presence_item_id); focusSelection(); } });
+        marker = new maplibregl.Marker({element:button,anchor:'center'}).setLngLat(group.coordinates).addTo(runtime.map); runtime.placeMarkers.set(group.place_ref,marker);
+      }
+      const button = marker.getElement(); button.querySelector('.place-name').textContent = group.label; button.querySelector('.place-count').textContent = group.presences.length > 1 ? ` ×${group.presences.length}` : '';
+      button.setAttribute('aria-label',runtime.state.language === 'ru' ? `${group.label} · видимых присутствий: ${group.presences.length}; двойной щелчок — фокус карты` : `${group.label} · ${group.presences.length} visible presences; double-click to focus map`);
+      button.setAttribute('aria-pressed',String(group.place_ref === emphasis.selectedPlace)); button.classList.toggle('is-selected',group.place_ref === emphasis.selectedPlace); button.classList.toggle('is-current',group.place_ref === emphasis.currentPlace);
+      runtime.map.setFeatureState({source:'workspace-features',id:`place-anchor:${group.place_ref}`},{selected:group.place_ref === emphasis.selectedPlace,current:group.place_ref === emphasis.currentPlace});
+    }
+    for (const transition of emphasis.transitions) runtime.map.setFeatureState({source:'workspace-features',id:transition.id},{emphasis:transition.emphasis});
+    const cues = chronologyCues(runtime.bundle,runtime.visibleItems,runtime.state), cueIds = new Set(cues.map(cue => cue.id));
+    for (const [id,cue] of runtime.chronologyMarkers) if (!cueIds.has(id)) { cue.marker.remove(); runtime.chronologyMarkers.delete(id); }
+    for (const cue of cues) {
+      let rendered = runtime.chronologyMarkers.get(cue.id);
+      if (!rendered) { const glyph = node('span','', 'workspace-chronology-cue'); glyph.dataset.transitionId = cue.id; glyph.setAttribute('aria-hidden','true'); glyph.append(node('span','▸')); rendered = {coordinates:cue.coordinates,marker:new maplibregl.Marker({element:glyph,anchor:'center'}).setLngLat(cue.midpoint).addTo(runtime.map)}; runtime.chronologyMarkers.set(cue.id,rendered); }
+      rendered.marker.getElement().dataset.emphasis = String(cue.emphasis); rendered.marker.getElement().firstChild.style.opacity = cue.emphasis ? '.95' : '.12';
+    }
+    for (const item of runtime.visibleItems.filter(item => item.kind !== 'presence')) {
+      if (item.kind === 'reference') runtime.map.setFeatureState({source:'workspace-features',id:item.item_id},{selected:item.item_id === runtime.state.selectedItemId});
+      else for (const primitive of runtime.bundle.roman.versions.find(version => version.item_id === item.item_id).globe.primitives) runtime.map.setFeatureState({source:'workspace-features',id:primitive.primitive_id},{selected:item.item_id === runtime.state.selectedItemId});
+    }
+    layoutPlaceLabels();
+  }
   function focusSelection() {
     const selected = runtime.registry.get(runtime.state.selectedItemId); if (!selected || !runtime.ready) return;
     const feature = featuresFor(runtime.bundle,[selected]).features.find(item => item.properties.item_id === selected.item_id); if (!feature) return;
@@ -234,15 +324,16 @@
       map.addSource('earth-context',{type:'geojson',data:context});
       map.addLayer({id:'earth-land',type:'fill',source:'earth-context',filter:['==',['get','semantic_role'],'present_day_context'],paint:{'fill-color':'#17334a','fill-outline-color':'#68a8c4'}});
       map.addSource('workspace-features',{type:'geojson',data:featuresFor(bundle,runtime.visibleItems)});
-      map.addLayer({id:'workspace-regions',type:'fill',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'fill-color':['match',['get','native_start'],91,'#36ccb9',106,'#73d0ec','#b6a3f1'],'fill-opacity':.24}});
-      map.addLayer({id:'workspace-region-outlines',type:'line',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'line-color':'#74d8cf','line-width':1.4}});
-      map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':'#a8bed0','line-width':1.4,'line-dasharray':[1.5,2.2],'line-opacity':.55}});
-      map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['match',['get','kind'],'reference',5,6],'circle-color':['match',['get','kind'],'reference','#f0b55a','#268dad'],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
+      map.addLayer({id:'workspace-regions',type:'fill',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'fill-color':['match',['get','native_start'],91,'#36ccb9',106,'#73d0ec','#b6a3f1'],'fill-opacity':['case',['boolean',['feature-state','selected'],false],.4,.24]}});
+      map.addLayer({id:'workspace-region-outlines',type:'line',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'line-color':'#74d8cf','line-width':['case',['boolean',['feature-state','selected'],false],2.2,1.4]}});
+      map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':'#a8bed0','line-width':['case',['>', ['coalesce',['feature-state','emphasis'],0],0],2.2,1.4],'line-dasharray':[1.5,2.2],'line-opacity':['match',['coalesce',['feature-state','emphasis'],0],2,.95,1,.8,.35]}});
+      map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
       runtime.ready = true;
+      updatePlacePresentation(); map.on('move',layoutPlaceLabels); map.on('resize',layoutPlaceLabels); map.on('idle',layoutPlaceLabels);
       const attribution = (assets.assets || []).filter(asset => asset.attribution).map(asset => asset.attribution).join(' · ');
       byId('attribution').replaceChildren(node('span',`${attribution || 'Natural Earth · public domain'} · Cliopatria CC-BY-4.0 · `)); const explanation = node('span',words.en.context); explanation.id = 'attribution-context'; byId('attribution').append(explanation);
       renderControls(); history('replace');
-      map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) selectItem(hits[0].properties.item_id); });
+      map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id); } });
       map.on('mousemove',event => { map.getCanvas().style.cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; });
       map.on('moveend',() => {
         if (restoringCamera) return;
