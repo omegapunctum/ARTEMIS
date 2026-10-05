@@ -154,9 +154,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   async function placeAnchors(reason) {
     await idle('Place anchors '+reason);
     const actual=await evaluate(cdp,`(async()=>{
-      const r=window.__ARTEMIS_EXPLORER,source=await r.map.getSource('workspace-features').getData();
+      const r=window.__ARTEMIS_EXPLORER,source=await r.map.getSource('workspace-features').getData(),mapBounds=r.map.getContainer().getBoundingClientRect();
+      const renderedPlaceIds=new Set(r.map.queryRenderedFeatures({layers:['workspace-points']}).map(f=>f.id));
       return {visible:r.visibleItems.filter(i=>i.layer_id==='leonardo').map(i=>i.item_id),state:r.state,
-        anchors:[...document.querySelectorAll('.workspace-place-marker')].map(n=>({place:n.dataset.placeRef,name:n.querySelector('.place-name')?.textContent,count:n.querySelector('.place-count')?.textContent,aria:n.getAttribute('aria-label'),pressed:n.getAttribute('aria-pressed'),selected:n.classList.contains('is-selected'),current:n.classList.contains('is-current'),labelVisible:getComputedStyle(n.querySelector('.place-label')).visibility!=='hidden'})),
+        anchors:[...document.querySelectorAll('.workspace-place-marker')].map(n=>{
+          const feature=source.features.find(f=>f.id==='place-anchor:'+n.dataset.placeRef),bounds=n.getBoundingClientRect(),style=getComputedStyle(n),pixel=feature&&r.map.project(feature.geometry.coordinates);
+          return {place:n.dataset.placeRef,name:n.querySelector('.place-name')?.textContent,count:n.querySelector('.place-count')?.textContent,aria:n.getAttribute('aria-label'),pressed:n.getAttribute('aria-pressed'),selected:n.classList.contains('is-selected'),current:n.classList.contains('is-current'),labelVisible:getComputedStyle(n.querySelector('.place-label')).visibility!=='hidden',
+            rendered:feature&&renderedPlaceIds.has(feature.id)&&bounds.width>0&&bounds.height>0&&style.visibility!=='hidden'&&style.display!=='none'&&Number(style.opacity)>0,
+            center:{x:bounds.left+bounds.width/2,y:bounds.top+bounds.height/2},projected:pixel?{x:mapBounds.left+pixel.x,y:mapBounds.top+pixel.y}:null};
+        }),
         points:source.features.filter(f=>f.properties.layer_id==='leonardo'&&f.geometry.type==='Point').map(f=>({id:f.id,properties:f.properties,coordinates:f.geometry.coordinates,state:r.map.getFeatureState({source:'workspace-features',id:f.id})})),
         chronology:source.features.filter(f=>f.properties.kind==='chronology').map(f=>({id:f.id,properties:f.properties,coordinates:f.geometry.coordinates,state:r.map.getFeatureState({source:'workspace-features',id:f.id})})),
         chronologyCues:[...document.querySelectorAll('.workspace-chronology-cue')].map(n=>({id:n.dataset.transitionId,emphasis:Number(n.dataset.emphasis),opacity:Number(getComputedStyle(n.firstChild).opacity)})),
@@ -169,6 +175,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     for(const [place,episodes] of groups){
       const anchor=actual.anchors.find(a=>a.place===place),point=actual.points.find(p=>p.properties.place_ref===place);
       check(anchor&&point,reason+' missing existing Place '+place);
+      if(anchor.rendered){check(anchor.projected&&Number.isFinite(anchor.projected.x)&&Number.isFinite(anchor.projected.y)&&Math.hypot(anchor.center.x-anchor.projected.x,anchor.center.y-anchor.projected.y)<=2,reason+' DOM Place anchor displaced from native map coordinate '+place+' '+JSON.stringify({center:anchor.center,projected:anchor.projected}));}
       check(anchor.name===episodes[0].place_label&&anchor.aria?.includes(episodes[0].place_label),reason+' lost Place name/accessibility');
       check(point.id==='place-anchor:'+place&&JSON.stringify(point.coordinates)===JSON.stringify(episodes[0].coordinates),reason+' moved a fixed Place reference');
       check(point.properties.episode_count===episodes.length,reason+' episode count does not match visible Presences');
@@ -176,6 +183,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       if(episodes.length>1)check(anchor.count?.includes(String(episodes.length)),reason+' repeated Place count hidden from label');
       if(episodes.some(p=>p.presence_item_id===actual.state.selectedItemId)){check(anchor.selected&&anchor.pressed==='true'&&anchor.labelVisible&&point.state.selected===true,reason+' selected Place emphasis missing');}
     }
+    check(!groups.size||actual.anchors.some(anchor=>anchor.rendered),reason+' no frontside native Place anchor was checked');
     const policy=expectedBundle.leonardo.lifePath.route_policy;
     check(policy.historical_route_geometry_permitted===false&&policy.chronological_connector_is_route===false,'chronology policy promoted a route');
     check(actual.chronology.every(line=>line.properties.route_geometry===null),'chronology introduced historical route geometry');
