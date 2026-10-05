@@ -13,7 +13,7 @@ Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.10.
+- Версия: 4.11.
 - Дата: 2026-10-05.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
 - Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; bounded Explorer navigation maintenance completed under section 2. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
@@ -53,6 +53,8 @@ Completed owner-directed navigation maintenance — 2026-10-04: [Explorer Exampl
 Owner-directed one-record Atlas research — 2026-10-04: the owner's continuation separately authorized [Architecture Atlas one-record mapping proof v1](work/2026-10-04_ATLAS_ONE_RECORD_MAPPING_PROOF_v1.md). The completed study checks only existing Park Hill identity, temporal/coordinate meanings, source-native locators, rights, epistemic-state mapping and explicit losses. It records a research mapping, not a new World Model package or a corpus/runtime write path. Existing data and public routes remain unchanged; no Atlas adapter/intake, projection switch, geometry/Claim promotion or product-gate transition is authorized by this result. The proposed coordinate check is a next-action candidate only.
 
 Owner-directed coordinate research — 2026-10-05: the later owner continuation separately executes that proposal in [Park Hill coordinate check v1](work/2026-10-05_PARK_HILL_COORDINATE_CHECK_v1.md). One explicit offline approximate grid-to-WGS84 calculation and isolated reproduction checks find about 252.5 m separation from the imported point. The result is a listing-reference anchor candidate and point discrepancy, not accepted historical geometry or proof that either location is wrong. Geometry, source accuracy and historical validity remain unknown; no public-data replacement, runtime intake, architectural layer or product-gate transition follows. The next location-meaning investigation is proposal only.
+
+Owner-directed autonomous Explorer cycle — 2026-10-05: the owner's fresh instruction to work maximally without repeated stops, with subagents as needed, expands the development direction for one complete [Explorer Globe / 2D presentation cycle](work/2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md). Prospective independent Architecture and Product AI reviews accept `BOUNDED_PROJECTION_SWITCH_V1`: public Leonardo and Roman Region gain a native EN/RU Globe/2D choice on the same map and semantic input; default Globe, allowlisted `view=globe|map`, URL/history restoration and navigation carrying only `lang` plus `view`. This explicitly amends the earlier language-only presentation allowlist. Dataset, time, selection, layers, sources, uncertainty and historical status remain shared within each example; target examples start their own semantic defaults. No Atlas intake, new source/geometry, frozen contract change, mixed historical scene or product-gate transition is authorized. Record this decision before runtime edits; implementation is `REVIEW`, independently accepted on its exact final head before merge. Delivery includes relevant CI and separate live publication verification; comparative/formal value remains UNVALIDATED.
 
 Foundation и Core Reset уже завершены как prerequisites. Owner-directed Region proof не должен повторно открывать их.
 

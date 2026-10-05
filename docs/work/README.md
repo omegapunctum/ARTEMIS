@@ -88,6 +88,14 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 
 ## Engineering tooling design
 
+## Autonomous Explorer presentation cycle
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md` | Accepted prospective decision/specification; implementation pending | Fresh owner autonomous direction, two independent prospective AI acceptances; public Leonardo/Region Globe/2D presentation over shared semantic state; no Atlas intake or gate transition |
+
+## Engineering tooling design
+
 | Document | Lifecycle | Limitation |
 |---|---|---|
 | `2026-09-19_DEVELOPMENT_SKILLS_v1_DESIGN.md` | Design candidate; not installed | plugin-eval unavailable; behavioral evaluation blocked; no product successor |
