@@ -1239,3 +1239,12 @@ def test_build_metadata_is_semantically_reproducible(tmp_path: Path) -> None:
 
 def test_browser_cdp_waits_are_bounded():
     subprocess.run(["node", "tests/browser_cdp_transport.cjs"], cwd=ROOT, check=True, timeout=10)
+
+
+def test_browser_native_navigation_waits_for_destination_context() -> None:
+    subprocess.run(
+        ["node", "tests/browser_cdp_navigation.cjs"],
+        cwd=ROOT,
+        check=True,
+        timeout=10,
+    )
