@@ -92,6 +92,12 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 |---|---|---|
 | `2026-10-05_EXPLORER_PROJECTION_SWITCH_v1.md` | Completed bounded implementation artifact; exact-head release acceptance/publication trail in implementation PR | Fresh owner autonomous direction and two independent prospective AI acceptances; public Leonardo/Region Globe/2D over shared semantic state; release evidence required before accepted/published delivery; no Atlas intake, automatic successor or gate transition |
 
+## Owner-directed unified layer workspace
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md` | Prospective decision/specification; unified implementation not started at this recording | Fresh explicit owner correction, independent Architecture/Product scope review, one persistent map/state/calendar with M5, native Roman versions and 31 atemporal Atlas references; exact-head CI/AI and separate publication evidence required; no historical promotion or gate reopening |
+
 ## Engineering tooling design
 
 | Document | Lifecycle | Limitation |

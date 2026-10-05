@@ -85,6 +85,12 @@ Rules:
 
 Renderer architecture/state/projection contracts under issues #339–#345 are accepted, and the current Leonardo Globe executable path uses this boundary. This subsection therefore describes an **active architectural/runtime boundary**, while leaving the Architecture Atlas `data/*` schemas and authority unchanged. The Globe's frozen Leonardo historical input is separate repository World Slice evidence, not an extension of the legacy Airtable export.
 
+### 2.2 Bounded shared-workspace reference adapter — 2026-10-05
+
+The fresh owner instruction and prospectively reviewed [Unified Layer Explorer v1](work/2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md) authorize a deterministic read-only adapter of the existing 31 `data/features.geojson` points and linked `data/sources.json` records into the shared Explorer's **atemporal imported reference context**. The compatibility export remains authoritative for those raw values and `/atlas/`; input bytes, schemas, UUIDs, aliases, coordinates, date lexicals and source statuses remain unchanged. Namespaced technical references preserve original identities and source paths/digests.
+
+This adapter does not normalize construction/associated date ranges into Entity lifetimes, infer historical spatial applicability, promote `validated`/`date_valid`/`reviewed`/`exact`, fabricate Claims/EvidenceLinks/locators, or import media, Relations or influence geometry. Missing historical time, position, precision and evidence stay missing and visible. Raw source pointers identify an imported field, not historical support. The reference layer is excluded from historical time filtering; its BCE dates remain literal metadata without a new query calendar convention. It is a bounded projection into the common source registry/Explorer State, not a new canonical ontology or permission for Airtable/source writes, generic ingestion or historical-data promotion. The existing compatibility release gate and frozen semantic fixtures remain unchanged.
+
 ---
 
 ## 3. Release artifact contract
