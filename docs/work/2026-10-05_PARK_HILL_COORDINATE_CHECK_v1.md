@@ -39,12 +39,12 @@ The two coordinate values differ under the declared operation. This does not est
 
 ## Implementation and verification
 
-Declared scope: this document, evidence JSON, `scripts/check_park_hill_coordinate.py`, its isolated requirements file, `tests/test_park_hill_coordinate.py`, path-restricted research workflow, Product Scope and work registry. No `data/*`, runtime, backend, canonical semantic contract or frozen proof changed. The source-hash guard intentionally requires the research snapshot; future Atlas edits do not invalidate this historical comparison. Reproduce from this PR's revision with its pinned data rather than regenerating old evidence against new data.
+Declared scope: this document, evidence JSON, `scripts/check_park_hill_coordinate.py`, its isolated requirements file, `scripts/research_tests/test_park_hill_coordinate.py`, path-restricted research workflow, Product Scope and work registry. Research tests stay outside the general `tests/` collector so scheduled Atlas export requires neither this dependency nor the frozen snapshot. No `data/*`, runtime, backend, canonical semantic contract or frozen proof changed. The source-hash guard intentionally requires the research snapshot; future Atlas edits do not invalidate this historical comparison. Reproduce from this PR's revision with its pinned data rather than regenerating old evidence against new data.
 
 ```sh
 python -m pip install --only-binary=:all: -r scripts/requirements-coordinate-research.txt
 python scripts/check_park_hill_coordinate.py --check
-python -m unittest discover -s tests -p test_park_hill_coordinate.py -v
+python -m unittest discover -s scripts/research_tests -p test_park_hill_coordinate.py -v
 ```
 
 Local reproduction and six tests PASS: reference resolution/rejection, numeric output/axis order, inverse round trip, source drift failure, engine drift failure, and withheld geometry/promotion. The 98 relevant repository-governance, project-state, R&D lifecycle and Core-boundary checks also PASS. Exact-head independent review/CI are recorded in this PR's durable review/checks before merge under [DOS §6](../DEVELOPMENT_OPERATING_SYSTEM.md). These are technical research checks, not historical acceptance, publication or user-value validation.

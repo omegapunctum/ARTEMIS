@@ -4,7 +4,7 @@ on:
     paths:
       - "scripts/check_park_hill_coordinate.py"
       - "scripts/requirements-coordinate-research.txt"
-      - "tests/test_park_hill_coordinate.py"
+      - "scripts/research_tests/test_park_hill_coordinate.py"
       - "docs/work/2026-10-05_PARK_HILL_COORDINATE_CHECK_v1.md"
       - "docs/work/evidence/2026-10-05_park_hill_coordinate_v1.json"
       - ".github/workflows/park-hill-coordinate-research.yml"
@@ -12,7 +12,7 @@ on:
     paths:
       - "scripts/check_park_hill_coordinate.py"
       - "scripts/requirements-coordinate-research.txt"
-      - "tests/test_park_hill_coordinate.py"
+      - "scripts/research_tests/test_park_hill_coordinate.py"
       - "docs/work/2026-10-05_PARK_HILL_COORDINATE_CHECK_v1.md"
       - "docs/work/evidence/2026-10-05_park_hill_coordinate_v1.json"
       - ".github/workflows/park-hill-coordinate-research.yml"
@@ -26,4 +26,4 @@ jobs:
           python-version: "3.11"
       - run: 'pip install --only-binary=:all: -r scripts/requirements-coordinate-research.txt'
       - run: python scripts/check_park_hill_coordinate.py --check
-      - run: python -m unittest discover -s tests -p test_park_hill_coordinate.py -v
+      - run: python -m unittest discover -s scripts/research_tests -p test_park_hill_coordinate.py -v
