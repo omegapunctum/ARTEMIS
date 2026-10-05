@@ -13,8 +13,8 @@ Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.9.
-- Дата: 2026-10-04.
+- Версия: 4.10.
+- Дата: 2026-10-05.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
 - Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; bounded Explorer navigation maintenance completed under section 2. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
 
@@ -51,6 +51,8 @@ Local/global context, тематические layers, richer Events/States/Proc
 Completed owner-directed navigation maintenance — 2026-10-04: [Explorer Example Navigation v1](work/2026-10-04_EXPLORER_EXAMPLE_NAVIGATION_v1.md#technical-implementation-and-publication-closeout--2026-10-04) records the bounded common native navigation between the existing public Leonardo and Roman Region previews, explicit example/coverage/R&D labels and presentation-only EN/RU continuity. The accepted contract and prospective public-Region source-access amendment are preserved in that task. Existing routes and dataset-specific semantic state remain separate. This completed maintenance opens no successor; root landing, Atlas intake, simultaneous overlays, 2D/Globe switching, source/status promotion and backend/storage work remain outside its scope. Product/gate dispositions are unchanged; comparative/formal value UNVALIDATED.
 
 Owner-directed one-record Atlas research — 2026-10-04: the owner's continuation separately authorized [Architecture Atlas one-record mapping proof v1](work/2026-10-04_ATLAS_ONE_RECORD_MAPPING_PROOF_v1.md). The completed study checks only existing Park Hill identity, temporal/coordinate meanings, source-native locators, rights, epistemic-state mapping and explicit losses. It records a research mapping, not a new World Model package or a corpus/runtime write path. Existing data and public routes remain unchanged; no Atlas adapter/intake, projection switch, geometry/Claim promotion or product-gate transition is authorized by this result. The proposed coordinate check is a next-action candidate only.
+
+Owner-directed coordinate research — 2026-10-05: the later owner continuation separately executes that proposal in [Park Hill coordinate check v1](work/2026-10-05_PARK_HILL_COORDINATE_CHECK_v1.md). One explicit offline approximate grid-to-WGS84 calculation and isolated reproduction checks find about 252.5 m separation from the imported point. The result is a listing-reference anchor candidate and point discrepancy, not accepted historical geometry or proof that either location is wrong. Geometry, source accuracy and historical validity remain unknown; no public-data replacement, runtime intake, architectural layer or product-gate transition follows. The next location-meaning investigation is proposal only.
 
 Foundation и Core Reset уже завершены как prerequisites. Owner-directed Region proof не должен повторно открывать их.
 

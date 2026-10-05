@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_role": "one-record research evidence; not World Model payload or runtime input",
+  "result": "REFERENCE_POINT_DISCREPANCY",
+  "accessed": "2026-10-05",
+  "source_revision": {
+    "repository": "omegapunctum/ARTEMIS",
+    "commit": "a439167641f0a9a1413dfb68418149abf137b17d",
+    "tree": "d992c123e91db405d774aa29a710589fa093aee8"
+  },
+  "prior_research": "docs/work/evidence/2026-10-04_atlas_park_hill_mapping_v1.json",
+  "primary_sources": [
+    {
+      "url": "https://historicengland.org.uk/listing/the-list/list-entry/1246881",
+      "locator": "Official list entry / Location / National Grid Reference; Details / Listing NGR",
+      "native_reference": "SK 36064 87093",
+      "compact_reference": "SK3606487093",
+      "observation": "Both displayed references agree. Source has no verified WGS84 coordinate or definition as centroid/entrance/historical geometry."
+    },
+    {
+      "url": "https://docs.os.uk/more-than-maps/a-guide-to-coordinate-systems-in-great-britain/transverse-mercator-map-projections/the-national-grid-reference-convention",
+      "locator": "100 km grid square and local easting/northing convention"
+    },
+    {
+      "url": "https://www.ordnancesurvey.co.uk/documents/resources/guide-coordinate-systems-great-britain.pdf",
+      "locator": "Guide v3.6, section 7.1, Figure 8, printed page 42",
+      "observation": "Grid diagram visually checked by method reviewer and orchestrator: SK origin E400000,N300000. No diagram copied into repository."
+    },
+    {
+      "url": "https://docs.os.uk/more-than-maps/a-guide-to-coordinate-systems-in-great-britain/from-one-coordinate-system-to-another-geodetic-transformations/national-grid-transformation-ostn15-etrs89-osgb36",
+      "locator": "OSTN15 definitive transformation / Helmert limitation",
+      "observation": "OS guidance about 3 metres for Helmert applications; not this source point total error bound."
+    },
+    {
+      "url": "https://pyproj4.github.io/pyproj/stable/api/transformer.html",
+      "locator": "Transformer.from_pipeline, accuracy, TransformerGroup.best_available/unavailable_operations"
+    },
+    {
+      "url": "https://proj.org/en/stable/operations/transformations/helmert.html",
+      "locator": "Position vector convention and transformation parameters"
+    }
+  ],
+  "calculation": {
+    "pyproj_version": "3.7.2",
+    "proj_version": "9.5.1",
+    "network_enabled": false,
+    "input_crs": "EPSG:27700",
+    "output_crs": "EPSG:4326",
+    "input_axis_order": [
+      "easting",
+      "northing"
+    ],
+    "output_axis_order": [
+      "longitude",
+      "latitude"
+    ],
+    "native_reference": "SK 36064 87093",
+    "easting_m": 436064,
+    "northing_m": 387093,
+    "pipeline": "+proj=pipeline +step +inv +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +step +proj=push +v_3 +step +proj=cart +ellps=airy +step +proj=helmert +x=446.448 +y=-125.157 +z=542.06 +rx=0.15 +ry=0.247 +rz=0.842 +s=-20.489 +convention=position_vector +step +inv +proj=cart +ellps=WGS84 +step +proj=pop +v_3 +step +proj=unitconvert +xy_in=rad +xy_out=deg",
+    "pipeline_sha256": "012e7675b3d114c406d4c85caaa525d3ca94e27dacff8fe27b31751f5abb1b41",
+    "datum_operation": "EPSG:1314 / OSGB36 to WGS 84 (6)",
+    "operation_accuracy_metadata_m": 2.0,
+    "source_file": "data/features.geojson",
+    "source_sha256": "caf734481a3a182e4861af1daef00bac2273c87d54c0d459d172778258c8a9d1",
+    "feature_id": "08c92f35-cc8b-4164-a6ea-1f9c89e777dd",
+    "selected_record_sha256": "c3cb885af0847784d457575f47da5b4beb11fcb1578b37193d580b3c83124f45",
+    "legacy_point_lon_lat": [
+      -1.4582,
+      53.38163
+    ],
+    "reference_candidate_lon_lat": [
+      -1.459329107,
+      53.3794641186
+    ],
+    "ellipsoidal_point_separation_m": 252.487357,
+    "distance_method": "WGS84 ellipsoid inverse geodesic / pyproj.Geod"
+  },
+  "diagnostic_observation": {
+    "role": "Observed environment diagnostic only; not automatic operation selection for the script",
+    "network_enabled": false,
+    "area_of_interest_lon_lat_bounds": [
+      -1.6,
+      53.3,
+      -1.3,
+      53.5
+    ],
+    "allow_ballpark": false,
+    "best_available": false,
+    "missing_operation": "OSGB36 to WGS 84 (9)",
+    "missing_grid": "uk_os_OSTN15_NTv2_OSGBtoETRS.tif",
+    "missing_operation_accuracy_metadata_m": 1.0,
+    "chosen_operation_metadata_m": 2.0,
+    "source": "pyproj 3.7.2 / PROJ 9.5.1 TransformerGroup(27700,4326,always_xy=True) and operation PROJJSON EPSG:1314",
+    "grids_downloaded": false
+  },
+  "limits": {
+    "encoded_grid_resolution_m": 1,
+    "source_location_accuracy": "unknown",
+    "point_geometry_meaning": "listing reference only; footprint, centroid and entrance unverified",
+    "historical_spatial_validity": null,
+    "coordinate_epoch": null,
+    "height": "Temporary zero ellipsoidal height in geog2D computation; not a measured site height",
+    "decimal_places": "Numerical reproducibility only, not spatial precision",
+    "operation_accuracy": "Expected datum-operation metadata, not a guaranteed bound or total source/geometry uncertainty",
+    "missing_grid": "No OSTN15 precision or WGS84 realization/epoch agreement asserted",
+    "separation": "Point-to-point distance under declared approximate operation, not evidence that either point is wrong"
+  },
+  "disposition": {
+    "reference_anchor_candidate": true,
+    "legacy_point_equivalence_verified": false,
+    "legacy_point_replacement_allowed": false,
+    "approved_geometry": null,
+    "historical_promotion_allowed": false,
+    "runtime_intake_allowed": false,
+    "bulk_intake_allowed": false,
+    "media_included": false,
+    "maps_included": false
+  },
+  "rights": "Bibliographic locators and minimal grid-reference facts only; prior text/map/media rights separation preserved. No map/photo reused or CC BY-SA inherited.",
+  "next_step": {
+    "status": "proposal_only",
+    "question": "Explain which parts of the Park Hill complex the two points identify using a primary location description, before choosing any runtime anchor.",
+    "implementation_authorized": false
+  }
+}
