@@ -347,7 +347,7 @@
       "additionalProperties": false,
       "required": ["public_runtime", "globe", "world_slice", "temporal_map"],
       "properties": {
-        "public_runtime": {"const": "core_landing_globe_primary_atlas_compatibility_region_separate_public_r_and_d_preview"},
+        "public_runtime": {"const": "core_landing_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview", "description": "Registered public-build layout; exact deployment and live availability require separate release verification, not this descriptive constant."},
         "globe": {"const": "public_r_and_d_preview"},
         "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]},
         "temporal_map": {"const": "m5_whole_life_runtime_proof_published"}

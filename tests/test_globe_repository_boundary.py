@@ -33,7 +33,9 @@ def test_public_root_landing_routes_globe_primary_and_atlas_compatibility() -> N
     landing = _text(CORE_LANDING)
     assert 'href="./globe/"' in landing
     assert 'href="./atlas/"' in landing
-    assert "Globe — активный продуктовый контур" in landing
+    assert "Мир в одном Explorer" in landing
+    assert "независимые слои одного глобуса" in landing
+    assert "историческая применимость неизвестна" in landing
     assert "исследовательский прототип" in landing
     assert "maplibre" not in landing.lower()
 
@@ -97,8 +99,9 @@ def test_pages_workflow_builds_bounded_public_globe_preview() -> None:
     workflow = _text(PAGES_WORKFLOW)
     assert "scripts/globe_spike/root-index.html pages_artifact/index.html" in workflow
     assert 'pages_artifact/atlas/$file' in workflow
-    assert "python scripts/build_globe_spike.py" in workflow
-    assert "--public-preview" in workflow
+    assert "python scripts/build_unified_explorer.py" in workflow
+    assert "--entry-profile leonardo" in workflow
+    assert "--entry-profile roman" in workflow
     assert "--output pages_artifact/globe" in workflow
     assert 'metadata["public_pages_entrypoint"] is True' in workflow
     assert "actions/upload-pages-artifact@" in workflow
@@ -129,7 +132,8 @@ def test_existing_canonical_structure_prohibits_renderer_semantic_forks() -> Non
     lowered = structure.lower()
     assert "source `index.html`" in lowered
     assert "generated core landing" in lowered
-    assert "primary leonardo globe/temporal map research prototype" in lowered
+    assert "primary shared-layer explorer research prototype" in lowered
+    assert "compatible roman initial-state entry into the same explorer" in lowered
     assert "общий world model / explorer state / projection boundary" in lowered
     assert "renderer-specific historical data forks" in lowered
     assert "current leonardo globe historical input" in lowered

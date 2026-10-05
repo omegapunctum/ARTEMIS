@@ -73,7 +73,7 @@
 | `sw.js` | Architecture Atlas service worker | compatibility |
 | `manifest.json` | Architecture Atlas PWA manifest | compatibility |
 
-Source root retains the Architecture Atlas compatibility implementation. The Pages artifact maps it to `/atlas/`; public `/` is generated from `scripts/globe_spike/root-index.html`, and `/globe/` is generated from the shared semantic path.
+Source root retains the Architecture Atlas compatibility implementation. The Pages artifact maps it to `/atlas/`; public `/` is generated from `scripts/globe_spike/root-index.html`, and `/globe/` plus the compatible `/region/` profile are generated from the same immutable composed input/projection path. `scripts/unified_explorer/` owns its shared renderer and native controls; `scripts/build_globe_spike.py` retains the earlier isolated proof builds as regression evidence.
 
 Дополнение по release/workflow layer:
 - executable behavior is owned by the actual workflow/check files relevant to each contour;
@@ -91,8 +91,8 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 | Слой | Entry point |
 |---|---|
 | Public ARTEMIS Core landing | generated `/` from `scripts/globe_spike/root-index.html` |
-| Primary Leonardo Globe/Temporal Map research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_globe_spike.py --public-preview` |
-| Separate Roman Empire Temporal Region public R&D preview | generated `/region/` via `scripts/build_globe_spike.py --dataset roman_region_proof --public-preview` |
+| Primary shared-layer Explorer research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_unified_explorer.py --entry-profile leonardo` |
+| Compatible Roman initial-state entry into the same Explorer | generated `/region/` via `scripts/build_unified_explorer.py --entry-profile roman`; identical composed bundle |
 | Non-public ATL dating-conflict review proof | `scripts/build_atl_conflict_proof.py`; CI artifact only, excluded from Pages |
 | Architecture Atlas compatibility frontend | source `index.html`, deployed at `/atlas/` |
 | Backend compatibility runtime | `app/main.py` |
@@ -105,7 +105,7 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 | Uncertainty-semantics validation | `scripts/validate_uncertainty_fixtures.py` |
 | Explorer-state fixture validation | `scripts/validate_explorer_state_fixtures.py` |
 | Uncertainty-semantics owner | `docs/UNCERTAINTY_SEMANTICS_CONTRACT.md` |
-| Current public Architecture Atlas 2D map projection | `data/features.geojson` |
+| Architecture Atlas compatibility 2D projection and bounded atemporal-reference input | `data/features.geojson`; unchanged raw records adapted only by the registered unified builder |
 | Agent instructions | `AGENTS.md` |
 | Root documentation entry | `README.md` |
 
@@ -117,7 +117,7 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 - generated Core landing is the default public entrypoint;
 - generated `/globe/` is primary but remains explicitly non-product-validated public R&D;
 - source `index.html` is deployed under `/atlas/` as compatibility-only;
-- `/region/` is a separate public R&D preview, not a validated general Region capability;
+- `/region/` is a compatible initial-state/deep-link entry into the same shared-layer R&D Explorer, not a validated general Region capability;
 - the ATL conflict proof remains non-public and is not copied into Pages;
 - Explorer State validator is a validation entrypoint, not a frontend/backend runtime entrypoint;
 - working Explorer State and Temporal Map records remain registered through `docs/work/README.md`; they do not become competing canonical semantic owners;
