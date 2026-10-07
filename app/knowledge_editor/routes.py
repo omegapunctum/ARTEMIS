@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.auth.service import User, get_current_user, get_db
 from app.moderation.service import is_moderator
 from app.security.rate_limit import rate_limit
-from . import service
+from . import public_export, service
 from .schemas import CorrectionRequest, DraftCreate, DraftReplace, PublishRequest, ReviewRequest, VersionRequest
 
 router = APIRouter(prefix="/knowledge-editor", tags=["knowledge-editor"], dependencies=[
@@ -118,6 +119,24 @@ def published_snapshot(snapshot_id: str, response: Response, db: Session = Depen
 def published_history(entity_id: str, response: Response, db: Session = Depends(get_db)):
     private_response(response)
     return service.public_history(db, entity_id)
+
+
+@router.get("/public/objects/{entity_id}/export")
+def export_public_history(entity_id: str, db: Session = Depends(get_db)):
+    try:
+        data = public_export.public_export(db, entity_id)
+        filename_id = str(UUID(entity_id))
+    except service.KnowledgeEditorError:
+        raise
+    except public_export.PublicExportTooLarge:
+        service.fail("export_too_large", 413)
+    except Exception:
+        # Never send stored content or schema/database diagnostics to readers.
+        service.fail("public_export_unavailable", 500)
+    # Successful schema validation guarantees a system UUID, never a title/path.
+    return Response(content=data, media_type="application/json; charset=utf-8", headers={
+        "Content-Disposition": f'attachment; filename="artemis-editor-{filename_id}-public.json"',
+        "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"})
 
 
 async def knowledge_editor_error_handler(request: Request, exc: service.KnowledgeEditorError):

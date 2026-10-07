@@ -1,0 +1,434 @@
+{
+  "type": "object",
+  "required": [
+    "schema_version",
+    "publication_scope",
+    "entity_id",
+    "target_series_id",
+    "current_snapshot_id",
+    "manifest",
+    "snapshots",
+    "package_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "knowledge-editor-public-export-v1"
+    },
+    "publication_scope": {
+      "const": "editorial_candidate_not_globe_corpus"
+    },
+    "entity_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "target_series_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "current_snapshot_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "manifest": {
+      "type": "object",
+      "required": [
+        "snapshots",
+        "unresolved_predecessor_revision_ids"
+      ],
+      "properties": {
+        "snapshots": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "snapshot_id",
+              "revision_id",
+              "snapshot_digest"
+            ],
+            "properties": {
+              "snapshot_id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "revision_id": {
+                "$ref": "#/$defs/uuid"
+              },
+              "snapshot_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "unresolved_predecessor_revision_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/uuid"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "snapshots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/snapshot"
+      }
+    },
+    "package_digest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:artemis:knowledge-editor-public-export-v1",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "minLength": 36,
+      "maxLength": 36
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "snapshot": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "snapshot_id",
+        "entity_id",
+        "target_series_id",
+        "revision_id",
+        "revision_digest",
+        "predecessor_revision_id",
+        "content_digest",
+        "published_at",
+        "review_mode",
+        "editorial_only",
+        "publication_scope",
+        "entity",
+        "source",
+        "claim",
+        "evidence",
+        "source_value_digest",
+        "source_packet_digest",
+        "public_payload_digest"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "knowledge-editor-v1"
+        },
+        "snapshot_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "target_series_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "predecessor_revision_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "published_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?$"
+        },
+        "review_mode": {
+          "enum": [
+            "owner_self_review",
+            "separate_principal_review"
+          ]
+        },
+        "editorial_only": {
+          "const": true
+        },
+        "publication_scope": {
+          "const": "editorial_candidate_not_globe_corpus"
+        },
+        "entity": {
+          "type": "object",
+          "required": [
+            "id",
+            "type",
+            "name",
+            "description",
+            "position",
+            "world_time"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "type": {
+              "const": "architecture"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 240
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "position": {
+              "const": null
+            },
+            "world_time": {
+              "const": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "author",
+            "source_type",
+            "url",
+            "bibliographic_reference",
+            "publication",
+            "accessed_on",
+            "rights",
+            "review_state"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "author": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source_type": {
+              "enum": [
+                "unknown",
+                "primary",
+                "scholarly",
+                "institutional",
+                "other"
+              ]
+            },
+            "url": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2048
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "bibliographic_reference": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "publication": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "accessed_on": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "rights": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "review_state": {
+              "const": "draft"
+            }
+          },
+          "additionalProperties": false
+        },
+        "claim": {
+          "type": "object",
+          "required": [
+            "id",
+            "subject_id",
+            "statement",
+            "claim_kind",
+            "origin",
+            "confidence",
+            "confidence_basis",
+            "uncertainty",
+            "review_state",
+            "evidence_state"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "subject_id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "statement": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "claim_kind": {
+              "enum": [
+                "factual",
+                "observation",
+                "inference",
+                "interpretation",
+                "hypothesis",
+                "counterfactual"
+              ]
+            },
+            "origin": {
+              "const": "user"
+            },
+            "confidence": {
+              "enum": [
+                "unknown",
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "confidence_basis": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "review_state": {
+              "const": "draft"
+            },
+            "evidence_state": {
+              "const": "missing"
+            }
+          },
+          "additionalProperties": false
+        },
+        "evidence": {
+          "type": "object",
+          "required": [
+            "id",
+            "claim_id",
+            "source_id",
+            "locator",
+            "relation_to_claim",
+            "evidence_strength",
+            "native_precision",
+            "normalized_value",
+            "review_state"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "claim_id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "source_id": {
+              "$ref": "#/$defs/uuid"
+            },
+            "locator": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "relation_to_claim": {
+              "enum": [
+                "supports",
+                "challenges",
+                "contextualizes"
+              ]
+            },
+            "evidence_strength": {
+              "enum": [
+                "direct",
+                "indirect",
+                "background"
+              ]
+            },
+            "native_precision": {
+              "const": "unresolved"
+            },
+            "normalized_value": {
+              "const": null
+            },
+            "review_state": {
+              "const": "draft"
+            }
+          },
+          "additionalProperties": false
+        },
+        "source_value_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_packet_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "public_payload_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
