@@ -269,6 +269,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const range=await membership({leonardo:4,roman:0,architecture:31},'Range1502 Leonardo only');
   const cesena=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id==='presence-cesena-1502-08-10');
   check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  const cesenaEvidence=await evaluate(cdp,"JSON.parse(document.querySelector('#selection-evidence pre').textContent)");
+  const narrowedClaim=cesenaEvidence.claims.find(claim=>claim.id==='claim-cesena-presence-1502-08-10');
+  check(narrowedClaim?.statement==='Leonardo was present in Cesena by 10 August 1502.','Cesena disclosure did not expose the authorized statement narrowing');
+  check(narrowedClaim.review_state==='draft'&&narrowedClaim.confidence==='unknown'&&narrowedClaim.evidence_state==='missing','Cesena correction promoted historical status');
+  const rejectedSurvey=cesenaEvidence.claims.find(claim=>claim.id==='claim-cesena-survey-folios-9r-10r');
+  check(rejectedSurvey?.review_state==='rejected'&&rejectedSurvey.confidence==='low'&&rejectedSurvey.evidence_state==='missing','Separate rejected survey Claim changed');
+  const locator=cesenaEvidence.evidence_links.find(link=>link.id==='evidence-cesena-uniurb-f46v');
+  check(locator?.review_state==='draft'&&locator.reviewer===null,'Cesena EvidenceLink status changed');
+  checks.push({case:'Cesena bounded statement amendment',claim:narrowedClaim.id,statement:narrowedClaim.statement,status:narrowedClaim.review_state,confidence:narrowedClaim.confidence,evidence:narrowedClaim.evidence_state,rejectedSurveyPreserved:true,evidenceLink:locator.id,locator:locator.locator});
   await placeAnchors('Range1502 selectedCesena');const leo=await snapshot();await layer('roman',false);const preserved=await snapshot();
   check(preserved.state.selectedItemId===cesena.presence_item_id&&preserved.card===leo.card&&JSON.stringify(preserved.disclosures)===JSON.stringify(leo.disclosures),'unrelated Roman layer changed Leonardo source disclosure');
   await layer('roman',true);

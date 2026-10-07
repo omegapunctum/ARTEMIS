@@ -305,7 +305,7 @@ and Claim/Evidence lineage remain authoritative. Airtable, database, API and ren
 round-trip without losing operations, predecessor refs, source-native values or valid/record time.
 
 The frozen Leonardo Gate C package is not migrated or re-curated by this contract. Gate D may
-consume it only at its frozen fidelity until a separately authorized revision contour exists.
+consume it only at its frozen fidelity until a separately authorized revision contour exists. The separately authorized [Cesena wording amendment](work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md) creates that contour for one exact Claim statement deletion only: preserve frozen bytes/reviews, guard the base hash and old statement, and distinguish amendment provenance and derived dataset identity. It does not implement a general refinement runtime, editor, migration or status promotion.
 
 ## 12. Executable fixture boundary
 

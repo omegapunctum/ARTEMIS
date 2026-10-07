@@ -22,8 +22,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.build_leonardo_gate_d_inputs import (  # noqa: E402
+    CLAIMS_PATH as LEONARDO_CLAIMS_PATH,
+    CESENA_AMENDMENT_PATH,
     SLICE_ROOT as LEONARDO_SLICE_ROOT,
     build_gate_d_inputs,
+    cesena_amendment_provenance,
 )
 from scripts.build_render_projection_fixtures import build_all  # noqa: E402
 from scripts.build_temporal_region_inputs import (  # noqa: E402
@@ -1515,11 +1518,34 @@ def build_spike(
             shutil.copyfile(audit_path, output / audit_name)
             copied_source_sha256[audit_name] = hashlib.sha256(audit_path.read_bytes()).hexdigest()
 
+    input_amendment = None
+    if dataset == DEFAULT_DATASET:
+        input_amendment = cesena_amendment_provenance()
+        expected_identity_suffix = (
+            f"+{input_amendment['amendment_id']}@{input_amendment['sha256']}"
+        )
+        if not state["dataset_identity"]["value"].endswith(expected_identity_suffix):
+            raise SpikeBuildError("Cesena amendment identity changed during build")
+        for path, name, expected in (
+            (LEONARDO_CLAIMS_PATH, "frozen_claims_manifest.json", input_amendment["base_claims_sha256"]),
+            (CESENA_AMENDMENT_PATH, "cesena_presence_v1.json", input_amendment["sha256"]),
+        ):
+            payload = path.read_bytes()
+            if hashlib.sha256(payload).hexdigest() != expected:
+                raise SpikeBuildError("Cesena input bytes changed during build")
+            destination = output / "input-amendments" / name
+            destination.parent.mkdir(exist_ok=True)
+            destination.write_bytes(payload)
+        input_amendment["artifact_uri"] = "./input-amendments/cesena_presence_v1.json"
+        input_amendment["base_claims_artifact_uri"] = "./input-amendments/frozen_claims_manifest.json"
+
     metadata = {
         "schema_version": "1.0.0",
         "spike_id": SPIKE_ID,
         "build_contract_date": "2026-08-13",
         "semantic_dataset": dataset,
+        "dataset_identity": copy.deepcopy(state["dataset_identity"]),
+        "input_amendment": input_amendment,
         "engine_id": selected_engine["engine_id"],
         "engine_family": selected_engine["engine_family"],
         "world_slice_ref": state["world_slice_ref"],

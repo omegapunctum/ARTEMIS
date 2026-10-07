@@ -88,6 +88,8 @@ Current authorized work:
 - preserve completed Gate D / `ADVANCE_TO_GATE_E` and the #415 protocol as prepared / NOT EXECUTED;
 - record verified publication of the single bounded Region proof under the separate #423 authorization; no new runtime work or capability is authorized by synchronization.
 
+Owner-directed bounded knowledge correction — 2026-10-07: the owner accepted the [one-Claim Cesena correction](work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md), prospectively accepted by distinct Research/Architecture AI agents. Implementation is REVIEW after that DECISION: remove only the unsupported surveying qualification through a guarded, versioned amendment before the common semantic projection; preserve the frozen package and review history, existing identities/statuses/uncertainty/time/geometry and distinguish the derived amendment provenance. Survey candidate context remains unverified. Stop after one accepted, checked and separately publication-verified correction; no broader audit/intake, editable knowledge runtime, backend write, gate reopening or user-value promotion follows.
+
 ## 3. Обязательный current content scope
 
 Текущий M5 validation scaffold содержит:

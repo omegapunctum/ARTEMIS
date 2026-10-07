@@ -98,6 +98,7 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 |---|---|---|
 | `2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md` | Completed #470; exact-head Architecture/Product AI acceptance, main checks and every-file/live-browser publication verification | Fresh explicit owner correction, independent Architecture/Product scope review, one persistent map/state/calendar with M5, native Roman versions and 31 atemporal Atlas references; exact-head CI/AI and separate publication evidence required; no historical promotion or gate reopening |
 | `2026-10-07_EXPLORER_PERFORMANCE_v1.md` | Bounded implementation; exact-head measurements/review pending | Owner-reported loading/interaction stalls; content-pinned preload/cache, batched labels and lazy native JSON; preserve unified semantics and verify separately before claiming release |
+| `2026-10-07_CESENA_CLAIM_CORRECTION_v1.md` | Independently accepted decision; bounded implementation under review | One guarded statement narrowing in common inputs, separately identified amendment with original frozen bytes retained; no historical status promotion; exact-head checks and publication pending |
 
 ## Engineering tooling design
 
