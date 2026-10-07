@@ -9,6 +9,12 @@
   const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
+  // Process the latest event once per frame; events arriving inside a callback
+  // still schedule the next frame rather than being lost.
+  function frameThrottle(callback, requestFrame = requestAnimationFrame) {
+    let pending = false, latest;
+    return (...args) => { latest = args; if (pending) return; pending = true; requestFrame(() => { pending = false; callback(...latest); }); };
+  }
   function defaults(profile = 'globe') { return {mode:'range',startYear:profile === 'region' ? 91 : 1452,endYear:profile === 'region' ? 105 : 1519,cursorYear:profile === 'region' ? 100 : 1519,traceOriginYear:1452,layers:['leonardo','roman'],selectedItemId:null,language:'en',presentationView:'globe',camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}; }
   function query(bundle, state) {
     const overlap = (interval, start, end) => interval && interval.start <= end && interval.end >= start;
@@ -126,7 +132,7 @@
     const emphasis = presentationEmphasis(bundle,items,state);
     return freeze(featuresFor(bundle,items).features.filter(feature => feature.properties.kind === 'chronology').filter(feature => JSON.stringify(feature.geometry.coordinates[0]) !== JSON.stringify(feature.geometry.coordinates[1])).map(feature => ({id:feature.id,coordinates:feature.geometry.coordinates,midpoint:[(feature.geometry.coordinates[0][0]+feature.geometry.coordinates[1][0])/2,(feature.geometry.coordinates[0][1]+feature.geometry.coordinates[1][1])/2],emphasis:emphasis.transitions.find(transition => transition.id === feature.id)?.emphasis || 0,renderer_only:true,route_geometry:null})));
   }
-  const helpers = Object.freeze({defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze});
+  const helpers = Object.freeze({defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
   const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map()};
@@ -134,7 +140,18 @@
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
   let renderedSelection = null, restoringCamera = false, recordSignature = '';
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
-  function inputJson(host,value) { host.append(node('pre',JSON.stringify(value,null,2))); }
+  const pendingJson = new WeakMap(), boundDisclosures = new WeakSet();
+  function inputJson(host,value) {
+    const pre = node('pre',''), disclosure = host.closest('details'); host.append(pre);
+    if (!disclosure || disclosure.open) { pre.textContent = JSON.stringify(value,null,2); return; }
+    // Keep the source value intact; formatting a large native Region input is
+    // needed only when the user opens this disclosure.
+    pre.dataset.jsonPending = 'true'; pendingJson.set(pre,value);
+    if (!boundDisclosures.has(disclosure)) {
+      boundDisclosures.add(disclosure);
+      disclosure.addEventListener('toggle',() => { if (!disclosure.open) return; for (const target of disclosure.querySelectorAll('pre[data-json-pending]')) { target.textContent = JSON.stringify(pendingJson.get(target),null,2); pendingJson.delete(target); delete target.dataset.jsonPending; } });
+    }
+  }
   function safeLink(value) { try { const url = new URL(value,location.href); return ['https:','http:'].includes(url.protocol) ? url.href : null; } catch (_) { return null; } }
   function layout() { const style = document.documentElement.style; style.setProperty('--header-bottom',`${Math.ceil(byId('workspace-header').getBoundingClientRect().bottom)}px`); style.setProperty('--dock-height',`${Math.ceil(byId('time-dock').getBoundingClientRect().height)}px`); style.setProperty('--attribution-height',`${Math.ceil(byId('attribution').getBoundingClientRect().height)}px`); }
   function history(mode = 'push') { window.history[mode === 'replace' ? 'replaceState' : 'pushState']({artemisExplorer:true},'',stateUrl(location.href,runtime.state,runtime.bundle)); }
@@ -244,15 +261,18 @@
     const emphasis = presentationEmphasis(runtime.bundle,runtime.visibleItems,runtime.state), groups = placeGroups(runtime.bundle,runtime.visibleItems), ends = new Set([groups[0]?.place_ref,groups.at(-1)?.place_ref]);
     const priority = place => place === emphasis.selectedPlace ? 0 : place === emphasis.currentPlace ? 1 : ends.has(place) ? 2 : (groups.find(group => group.place_ref === place)?.presences.length || 0) > 1 ? 3 : 4;
     const markers = [...runtime.placeMarkers].sort((a,b) => priority(a[0])-priority(b[0]));
-    const points = markers.map(([place,marker]) => ({place,...runtime.map.project(marker.getLngLat())}));
-    for (const [place,marker] of markers) {
-      const label = marker.getElement().querySelector('.place-label'), point = runtime.map.project(marker.getLngLat()), width = label.offsetWidth, height = label.offsetHeight;
+    // Read every label before writing any position. Interleaved reads/writes
+    // could repeatedly invalidate browser style/layout state.
+    const measurements = markers.map(([place,marker]) => { const label = marker.getElement().querySelector('.place-label'); return {place,label,point:runtime.map.project(marker.getLngLat()),width:label.offsetWidth,height:label.offsetHeight}; });
+    const points = measurements.map(({place,point}) => ({place,...point})), placements = [];
+    for (const {place,label,point,width,height} of measurements) {
       const candidates = [[9,-10],[-width-9,-10],[9,-height-12],[-width-9,12],[9,12],[-width/2,-height-20],[-width/2,20]];
       const fits = ([dx,dy]) => { const rect = {left:point.x+dx,right:point.x+dx+width,top:point.y+dy,bottom:point.y+dy+height}; return rect.left >= 0 && rect.right <= canvas.clientWidth && rect.top >= 0 && rect.bottom <= canvas.clientHeight && !points.some(other => other.place !== place && rect.left < other.x+8 && rect.right > other.x-8 && rect.top < other.y+8 && rect.bottom > other.y-8) && !occupied.some(other => rect.left < other.right+3 && rect.right > other.left-3 && rect.top < other.bottom+3 && rect.bottom > other.top-3); };
       const placement = candidates.find(fits), [dx,dy] = placement || candidates[0];
-      label.classList.toggle('is-suppressed',!placement); label.style.left = `${16+dx}px`; label.style.top = `${16+dy}px`;
+      placements.push({label,suppressed:!placement,left:`${16+dx}px`,top:`${16+dy}px`});
       if (placement) occupied.push({left:point.x+dx,right:point.x+dx+width,top:point.y+dy,bottom:point.y+dy+height});
     }
+    for (const {label,suppressed,left,top} of placements) { if (label.classList.contains('is-suppressed') !== suppressed) label.classList.toggle('is-suppressed',suppressed); if (label.style.left !== left) label.style.left = left; if (label.style.top !== top) label.style.top = top; }
     for (const {marker,coordinates} of runtime.chronologyMarkers.values()) { const from = runtime.map.project(coordinates[0]), to = runtime.map.project(coordinates[1]); marker.getElement().firstChild.style.transform = `rotate(${Math.atan2(to.y-from.y,to.x-from.x)}rad)`; }
   }
   function updatePlacePresentation() {
@@ -311,7 +331,13 @@
     const observer = new ResizeObserver(layout); for (const id of ['workspace-header','time-dock','attribution']) observer.observe(byId(id));
     window.addEventListener('resize',layout);
   }
-  async function load(path) { const response = await fetch(path,{cache:'no-store'}); if (!response.ok) throw Error(`${path}: HTTP ${response.status}`); return response.json(); }
+  async function load(path) {
+    const version = document.documentElement.dataset[path.includes('unified-bundle') ? 'bundleVersion' : 'contextVersion'];
+    const reusable = path.includes('unified-bundle') || path.includes('earth-context');
+    const url = reusable && version ? `${path}?v=${version}` : path;
+    const response = await fetch(url,{cache:reusable ? 'default' : 'no-cache'});
+    if (!response.ok) throw Error(`${path}: HTTP ${response.status}`); return response.json();
+  }
   async function main() {
     const [bundle,context,assets,meta] = await Promise.all(['./unified-bundle.json','./earth-context.geojson','./geospatial-assets.json','./build-meta.json'].map(load));
     runtime.bundle = freeze(bundle); runtime.registry = new Map(bundle.registry.map(item => [item.item_id,item])); runtime.meta = freeze(meta);
@@ -319,7 +345,7 @@
     runtime.query = state => query(runtime.bundle,state || runtime.state);
     bindControls(); renderControls(); renderInspector();
     if (!window.maplibregl) throw Error('Pinned MapLibre engine could not be loaded.');
-    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,canvasContextAttributes:{antialias:true}});
+    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,2),canvasContextAttributes:{antialias:true}});
     runtime.map = map; map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
     map.on('error',event => { console.error('ARTEMIS map error',event.error || event); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
     map.on('load',() => {
@@ -331,12 +357,13 @@
       map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':'#a8bed0','line-width':['case',['>', ['coalesce',['feature-state','emphasis'],0],0],2.2,1.4],'line-dasharray':[1.5,2.2],'line-opacity':['match',['coalesce',['feature-state','emphasis'],0],2,.95,1,.8,.35]}});
       map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
       runtime.ready = true;
-      updatePlacePresentation(); map.on('move',layoutPlaceLabels); map.on('resize',layoutPlaceLabels); map.on('idle',layoutPlaceLabels);
+      const scheduleLabels = frameThrottle(layoutPlaceLabels);
+      updatePlacePresentation(); map.on('move',scheduleLabels); map.on('resize',scheduleLabels); map.on('idle',scheduleLabels);
       const attribution = (assets.assets || []).filter(asset => asset.attribution).map(asset => asset.attribution).join(' · ');
       byId('attribution').replaceChildren(node('span',`${attribution || 'Natural Earth · public domain'} · Cliopatria CC-BY-4.0 · `)); const explanation = node('span',words.en.context); explanation.id = 'attribution-context'; byId('attribution').append(explanation);
       renderControls(); history('replace');
       map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id); } });
-      map.on('mousemove',event => { map.getCanvas().style.cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; });
+      map.on('mousemove',frameThrottle(event => { const cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; if (map.getCanvas().style.cursor !== cursor) map.getCanvas().style.cursor = cursor; }));
       map.on('moveend',() => {
         if (restoringCamera) return;
         const center = map.getCenter(), camera = {center:[center.lng,center.lat],zoom:map.getZoom(),pitch:map.getPitch(),bearing:map.getBearing()};

@@ -1,5 +1,7 @@
 # One persistent Explorer with three layers v1
 
+Status: **completed / independently AI-accepted / publication-verified** in [PR #470](https://github.com/omegapunctum/ARTEMIS/pull/470). The prospective specification and earlier corrective-review findings below are retained as historical evidence; they are not pending work.
+
 ## Prospective decision and authority
 
 On 2026-10-05 the owner explicitly corrected the delivered page-navigation approach: Leonardo, Roman Empire and architectural objects must be layers on the same globe, in the same environment, without refreshing the entire page. The owner also instructed correction of the post-merge browser CI failure and retained fully AI-operated development, delegation and standing merge authority. This is fresh scope authority, not a retrospective interpretation of #468 or the earlier research-only Atlas mapping. Baseline main `feec793e827929298acd9e644833a3d543fb64d2`, tree `3cb169f34d4dc84ec0dabf7909d07901ecd2d046`.
@@ -59,3 +61,13 @@ The Architecture reviewer also required precise state-format terminology. In thi
 The bounded corrective implementation restores the accepted nine fixed Place anchors for 11 distinct Leonardo Presences, compact names/repeated-episode counts, collision priority with hover/focus access, reversible per-Place episode controls, selected/current anchor and transition emphasis, and renderer-only chronology midpoint cues. All coordinates, source records, null historical routes and the 45-item registry remain unchanged. The corrected state boundary preserves native canonical state inputs without introducing a new canonical schema. The affected local verification contour passes 136 tests; actual corrected-head Chromium evidence and independent final acceptance remain required.
 
 The first head's push Core run `37287325339` produced `TECHNICAL_UNIFIED_WORKSPACE_PASS` at both widths (145 document/map/bundle-preserving native actions, 41 native render settlements, 31 reference inspections and 14 captures per width). Artifact `11335445586` ZIP SHA-256 `439c4c8318202223df4bb23a70d2ea44f2b9e2d2b7c6b412c505911fb91e8c8a` binds that earlier head only. It is functional baseline evidence, not acceptance of the subsequently corrected presentation or a publication claim.
+
+## Final implementation and publication closeout — 2026-10-05
+
+The final implementation head `885ee854fb1b9ab01f4f807273a37680273c8208` received distinct Architecture review `5413119608` and Product review `5413159079`, with zero unresolved material findings after code and actual desktop/narrow PNG inspection. Marker positioning and native feature-state identity defects found during review were corrected before acceptance. PR #470 squash-merged as `76404197f5e37192ce8d18c61d3d039af946fac0`, retaining accepted tree `0cb1308dc50d0e7ad9067b4868cfa56191c189ac`.
+
+All five main checks passed: Core `37297318608` (381 tests), Pages `37297318486`, Runtime Spike `37297318450`, Geo Assets `37297318456` and Repository Boundary `37297318405`. Pages verified all 43 files of each Globe/Region entry against the release manifest and source/run metadata. Both live entries served the common bundle SHA-256 `7cd59ee925f5c24245ef049ab4b7dddda537ae6c0ef094f52178be559fe8a069` at this verification.
+
+Actual live Chromium evidence at 1440 and 500 CSS px verified 150 same-document/map/input-preserving actions, 50 native render settlements, all 31 reference inspections and 16 PNG captures per width. Live artifact `11340087159` ZIP SHA-256 `2c5e932359e315f6ec8aa1cf8e619703ae38084bf824288847646f750e0d83a4` and every-file verification artifact `11340701285` ZIP SHA-256 `5f0113d60e1fd248b7c039a8c7247b486dadc04eb280bac14a981e1dab69d4d4` bind that published release. The [durable release receipt](https://github.com/omegapunctum/ARTEMIS/pull/470#issuecomment-5992856787) records the full acceptance and deployment trail.
+
+The bounded workspace task is closed. This establishes technical delivery and public R&D availability, not historical verification, real-device performance, user comprehension or validated product value. No automatic successor or product gate is opened.

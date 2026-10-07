@@ -17,7 +17,7 @@ Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty
 ## Status
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-10-05.
+- Updated: 2026-10-07.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -96,7 +96,8 @@ Current Leonardo source-status presentation: #460, independently AI-accepted, me
 
 | Document | Lifecycle | Scope |
 |---|---|---|
-| `2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md` | Accepted prospective decision/specification; bounded implementation and exact-head release review in progress | Fresh explicit owner correction, independent Architecture/Product scope review, one persistent map/state/calendar with M5, native Roman versions and 31 atemporal Atlas references; exact-head CI/AI and separate publication evidence required; no historical promotion or gate reopening |
+| `2026-10-05_UNIFIED_LAYER_EXPLORER_v1.md` | Completed #470; exact-head Architecture/Product AI acceptance, main checks and every-file/live-browser publication verification | Fresh explicit owner correction, independent Architecture/Product scope review, one persistent map/state/calendar with M5, native Roman versions and 31 atemporal Atlas references; exact-head CI/AI and separate publication evidence required; no historical promotion or gate reopening |
+| `2026-10-07_EXPLORER_PERFORMANCE_v1.md` | Bounded implementation; exact-head measurements/review pending | Owner-reported loading/interaction stalls; content-pinned preload/cache, batched labels and lazy native JSON; preserve unified semantics and verify separately before claiming release |
 
 ## Engineering tooling design
 
