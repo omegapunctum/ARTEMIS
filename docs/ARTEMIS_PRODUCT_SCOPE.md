@@ -13,8 +13,8 @@ Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 ## Статус
 
 - Тип: canonical current product scope.
-- Версия: 4.12.
-- Дата: 2026-10-05.
+- Версия: 4.13.
+- Дата: 2026-10-07.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
 - Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; bounded Explorer navigation maintenance completed under section 2. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
 
@@ -88,7 +88,7 @@ Current authorized work:
 - preserve completed Gate D / `ADVANCE_TO_GATE_E` and the #415 protocol as prepared / NOT EXECUTED;
 - record verified publication of the single bounded Region proof under the separate #423 authorization; no new runtime work or capability is authorized by synchronization.
 
-Owner-directed bounded knowledge correction — 2026-10-07: the owner accepted the [one-Claim Cesena correction](work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md), prospectively accepted by distinct Research/Architecture AI agents. Implementation is REVIEW after that DECISION: remove only the unsupported surveying qualification through a guarded, versioned amendment before the common semantic projection; preserve the frozen package and review history, existing identities/statuses/uncertainty/time/geometry and distinguish the derived amendment provenance. Survey candidate context remains unverified. Stop after one accepted, checked and separately publication-verified correction; no broader audit/intake, editable knowledge runtime, backend write, gate reopening or user-value promotion follows.
+Owner-directed bounded knowledge correction — 2026-10-07: independently accepted implementation merged and publication verified for the [one-Claim Cesena correction](work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md#final-one-claim-acceptance-and-publication-receipt--2026-10-07). The independently accepted DECISION authorized the exact guarded deletion of the survey qualification before the common semantic projection. Final task receipts own the exact reviewed source, CI, merge and separate publication evidence. Frozen package bytes/reviews, identities/statuses/uncertainty/time/geometry are retained; derived amendment provenance is distinct. Survey candidate context remains unverified. This single accepted, checked and publication-verified correction is closed; no automatic successor, broader audit/intake, editable knowledge runtime, backend write, gate reopening or user-value promotion follows.
 
 ## 3. Обязательный current content scope
 

@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0.0",
+  "role": "controlled_performance_evidence_summary_not_device_or_user_value_validation",
+  "date": "2026-10-07",
+  "baseline_source": "76404197f5e37192ce8d18c61d3d039af946fac0",
+  "report_checkout": "f8255388f1ec879994fd0458fe498bd41d1b0a4d",
+  "reviewed_head": "da7c040bf879f217869e77e326d992f8d9e7e291",
+  "exact_equivalent_tree": "cf80a1c9a988e6536980934768e71db277e218c4",
+  "source_attribution": "Report checkout and reviewed head have this exact same Git tree; commit SHAs remain distinct.",
+  "core_pr_run_id": "37572418033",
+  "metrics_artifact_id": "11461986488",
+  "metrics_zip_sha256": "c99a9744854bb0189153783c5237a27eb7459162f9b162f0819a84a8884f7fd7",
+  "report_sha256": "909c27f887c8ebf57bcb78a43a91070e2af3f9a10d7d91bb722df610f4c44880",
+  "high_dpi_report_sha256": "614be2a14827954be79aacb83f55eebda4e975cfad911718cc7709019b36b661",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/134.0.6998.35",
+    "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.0.0 Safari/537.36",
+    "jsVersion": "13.4.114.14"
+  },
+  "unchanged_bundle_sha256": "7cd59ee925f5c24245ef049ab4b7dddda537ae6c0ef094f52178be559fe8a069",
+  "dpr1_three_alternating_pairs": [
+    {
+      "variant": "baseline",
+      "style_recalculation_counts": [
+        322,
+        322,
+        322
+      ],
+      "median_style_duration_seconds": 0.153255,
+      "median_frame_interval_ms": 233.5,
+      "cold_readiness_median_ms": 2807.600000000006,
+      "warm_readiness_median_ms": 2300.4000000000233
+    },
+    {
+      "variant": "current",
+      "style_recalculation_counts": [
+        161,
+        161,
+        161
+      ],
+      "median_style_duration_seconds": 0.089079,
+      "median_frame_interval_ms": 232.60000000000582,
+      "cold_readiness_median_ms": 2438.5999999999767,
+      "warm_readiness_median_ms": 2094.6999999999825
+    }
+  ],
+  "warm_heavy_resource_transfer_bytes": {
+    "baseline": 2219327,
+    "current": 0,
+    "scope": "controlled local max-age=3600 server, not actual Pages cache evidence"
+  },
+  "raw_disclosure": {
+    "characters": 898758,
+    "same_sha256": "77de0ad9bc3937e2e2657222d23fb078671fdbfa15a39cd8ca15bb951c5dd5c8",
+    "formatting_deferred_until_open": true
+  },
+  "dpr3_one_sequence_per_variant_view": [
+    {
+      "variant": "baseline",
+      "view": "globe",
+      "canvas": {
+        "dpr": 3,
+        "pixelRatio": 3,
+        "width": 1500,
+        "height": 2700,
+        "cssWidth": 500,
+        "cssHeight": 900
+      },
+      "median_movement_interval_ms": 961.8,
+      "native_drag": true,
+      "native_selected": true,
+      "document_and_map_preserved": true,
+      "place_alignment_css_pixels": 0.45411045991985705,
+      "picked_item": "rp:region_geometry:region-roman-empire:region-geometry-114-116",
+      "source_sha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+      "screenshot": {
+        "name": "baseline-globe-dpr3.png",
+        "sha256": "d83b4d6fae0f1d3f178200d78680ce386d857c565b46282de573c3d9f627db02"
+      }
+    },
+    {
+      "variant": "baseline",
+      "view": "map",
+      "canvas": {
+        "dpr": 3,
+        "pixelRatio": 3,
+        "width": 1500,
+        "height": 2700,
+        "cssWidth": 500,
+        "cssHeight": 900
+      },
+      "median_movement_interval_ms": 451,
+      "native_drag": true,
+      "native_selected": true,
+      "document_and_map_preserved": true,
+      "place_alignment_css_pixels": 0.42422698250774665,
+      "picked_item": "rp:region_geometry:region-roman-empire:region-geometry-114-116",
+      "source_sha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+      "screenshot": {
+        "name": "baseline-map-dpr3.png",
+        "sha256": "f0077e3d80dcd5e1b07890a37e665251aeb548025a3423409273d61ad8400e3f"
+      }
+    },
+    {
+      "variant": "current",
+      "view": "globe",
+      "canvas": {
+        "dpr": 3,
+        "pixelRatio": 2,
+        "width": 1000,
+        "height": 1800,
+        "cssWidth": 500,
+        "cssHeight": 900
+      },
+      "median_movement_interval_ms": 475.6,
+      "native_drag": true,
+      "native_selected": true,
+      "document_and_map_preserved": true,
+      "place_alignment_css_pixels": 0.45411045991985705,
+      "picked_item": "rp:region_geometry:region-roman-empire:region-geometry-114-116",
+      "source_sha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+      "screenshot": {
+        "name": "current-globe-dpr3.png",
+        "sha256": "454af09562062c124910924b08288ca0f64a0a1f68cbe12118e450cd3263e9b8"
+      }
+    },
+    {
+      "variant": "current",
+      "view": "map",
+      "canvas": {
+        "dpr": 3,
+        "pixelRatio": 2,
+        "width": 1000,
+        "height": 1800,
+        "cssWidth": 500,
+        "cssHeight": 900
+      },
+      "median_movement_interval_ms": 209.1,
+      "native_drag": true,
+      "native_selected": true,
+      "document_and_map_preserved": true,
+      "place_alignment_css_pixels": 0.42422698250774665,
+      "picked_item": "rp:region_geometry:region-roman-empire:region-geometry-114-116",
+      "source_sha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+      "screenshot": {
+        "name": "current-map-dpr3.png",
+        "sha256": "ca79e30977269f65815ac44b9c5ade28c43792bd30be15082219d73bfa0c37e8"
+      }
+    }
+  ],
+  "limitations": [
+    "Software WebGL on CI; not user-device FPS",
+    "Local max-age=3600 server; not actual Pages caching",
+    "Programmatic camera movement measures renderer work, not native gesture usability",
+    "DPR3 emulation is not evidence from a physical phone; CSS500x900, desktop input, software WebGL",
+    "No DPR-1 FPS or consistent startup gain established.",
+    "Reduced canvas sharpness above DPR 2; native DOM density unchanged.",
+    "Owner-device stalls are not declared eliminated."
+  ],
+  "historical_data_changed": false,
+  "formal_or_comparative_user_value": "UNVALIDATED"
+}
