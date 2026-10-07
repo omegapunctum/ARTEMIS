@@ -336,7 +336,7 @@ The canonical scope/acceptance owner is [the owner-bypass decision](work/2026-09
 - active Globe decision: `work/2026-08-09_GLOBE_MVP_PROMOTION_DECISION_v1.md`;
 - current Temporal Map interaction: `work/2026-08-28_TEMPORAL_MAP_LIFE_PATH_V1.md`.
 
-## 14. Fresh owner-directed Knowledge Editor v1 — prospective decision, 2026-10-07
+## 14. Owner-directed Knowledge Editor v1 — accepted decision, 2026-10-07
 
 The owner's explicit approval opens the bounded [Knowledge Editor v1](work/2026-10-07_KNOWLEDGE_EDITOR_v1.md) direction: one new architecture-object proposal with one Source, one atomic Claim and a locator/native expression; save draft, editorial review, separate publication and correction retaining accepted history. `BOUNDED_KNOWLEDGE_EDITOR_V1` requires prospective distinct Architecture/Product scope acceptance before `REVIEW` implementation. This fresh instruction supersedes earlier no-editor/backend restrictions only for this new-record pilot. It does not reopen Gate E, contextual composition, legacy Atlas/Airtable ingestion or frozen historical fixtures.
 

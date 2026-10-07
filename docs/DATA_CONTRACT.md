@@ -399,7 +399,7 @@ A data-contract change is not complete until:
 
 A change to the Leonardo World Slice or current Temporal Map does not require changing this contract unless it also changes the Architecture Atlas ETL/public-data contour or the shared render-projection/data-boundary semantics owned here.
 
-## 13. Bounded Knowledge Editor v1 — prospective decision, 2026-10-07
+## 13. Bounded Knowledge Editor v1 — accepted decision, 2026-10-07
 
 The fresh owner instruction approves the first complete user-entry loop in [Knowledge Editor v1](work/2026-10-07_KNOWLEDGE_EDITOR_v1.md). `BOUNDED_KNOWLEDGE_EDITOR_V1` opens a new, separate curated revision contour only after its prospective independent Architecture/Product decision review is recorded. It permits one new architecture object proposal with one atomic Claim, one Source and one EvidenceLink, private drafts, exact-content review, immutable accepted `initial`/`correct` revisions and separately explicit immutable read-only publication. Source-native expression, locator, uncertainty, canonical independent epistemic dimensions and stable Entity/series identity survive correction; accepted payloads cannot be overwritten. Approval is editorial only: Claim/Source/EvidenceLink review state remains draft and Claim evidence remains missing; confidence is explicit/default unknown with its basis. Server-derived owner-self-review versus separate-principal editorial-review provenance remains visible, and external URL permanence is not assumed. This is not canonical knowledge promotion or a complete frozen World Model/refinement ledger implementation.
 

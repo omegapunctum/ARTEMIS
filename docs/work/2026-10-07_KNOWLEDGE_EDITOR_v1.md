@@ -2,11 +2,11 @@
 
 ## Status and authority
 
-- Type: prospective bounded decision and implementation specification.
+- Type: accepted bounded decision, specification and completed technical evidence.
 - Date: 2026-10-07.
 - Decision: `BOUNDED_KNOWLEDGE_EDITOR_V1`.
-- Lifecycle: prospective decision independently accepted and recorded in the canonical owners; REVIEW implementation is authorized within this specification.
-- Classification: `DECISION`, then `REVIEW` implementation on its exact final head.
+- Lifecycle: completed bounded `BACKEND-AVAILABLE` pilot; no public backend hosting or automatic successor.
+- Classification: accepted `DECISION` and independently accepted `REVIEW` implementation; exact-current-head checks/review remain mandatory before merge.
 - Explicit owner instruction: the owner approved the proposed first complete user-entry scenario on 2026-10-07: one new architecture object, one Source and one atomic Claim; save draft, review, publish, propose a correction retaining accepted history. Earlier standing authorization covers AI development and self-merges under the Development Operating System, not automatic editorial acceptance of knowledge.
 - Canonical owners: `ARTEMIS_PRODUCT_SCOPE.md`, `DATA_CONTRACT.md`, `PLATFORM_ARCHITECTURE_DECISION.md`; semantic dependencies are `EPISTEMIC_CONTRACT.md`, `CONTENT_GOVERNANCE.md` and `PROGRESSIVE_REFINEMENT_CONTRACT.md`.
 - Baseline: remote `main` `e58adbd8a18e716783430b74dfc5988b757d05ec`, tree `a5c9badc662883b23e2f97358fa4541c28a4cb64`.
@@ -101,3 +101,37 @@ Independent review must inspect this prospective specification together with its
 ## Prospective decision acceptance — before implementation
 
 Architecture `/root/editor_scope_review`: `ACCEPT_SCOPE`; Product `/root/editor_product`: `ACCEPT_PRODUCT_DECISION`. Both independently inspected specification SHA-256 `0c7704cfc641d1e63441a15778cd9613658c16c6110f4a63825041346a1247d0` and its five matching owner/current-state files before semantic code. Both reported zero unresolved material findings. This receipt records only the bounded decision; final exact-head code/native-interface/persistence review and availability verification remain required. The user chose direct implementation of the working form in the incumbent ARTEMIS style on 2026-10-07.
+
+## 9. Technical implementation and availability closeout — 2026-10-07
+
+The complete first-record/correction loop is implemented in [PR #474](https://github.com/omegapunctum/ARTEMIS/pull/474). The accepted prospective decision remains addressable at commit `6e3d88ef2d8d99d8d9722a90944dd2719795c6d9`, tree `9550195394b8424625f9011abe3944a3d866cb6b`. Section 8 preserves the original pre-receipt specification hash, not a hash of this later closeout. The checked runtime implementation is `37673537c128e0c9b7d2c70257cf30ee64eaa519`, tree `208d8535f1545de042015b9d2c07d39dded6f657`. A closeout-only descendant adds this receipt without changing runtime bytes; successful checks and distinct review comments must bind the exact then-current head before merge. No future merge SHA or deployment result is invented here.
+
+### Delivered capability
+
+The same-origin `/editor/` form and `/api/knowledge-editor/...` API reuse existing accounts and server-controlled moderator rights. Incomplete private drafts can be saved/resumed, submitted at their exact version/digest, reviewed with an explicit reason, separately published and corrected from the current accepted predecessor. New namespaced Entity/Source/Claim/EvidenceLink/series identities, immutable accepted editorial packets and publications, literal private source expressions/locators and append-only events preserve provenance. Compare-and-swap protects draft, accepted-head and publication-pointer transitions. Old snapshot responses remain immutable; mutable publication history is separate.
+
+Anonymous candidate cards disclose review mode and draft/missing/unknown dimensions, retain publication links, and omit private quotations/account IDs/review notes. Dates/coordinates/geometry/normalized world time remain absent. Existing rows are preserved by additive initialization. Frozen fixtures, `data/*`, Airtable/legacy paths and public Globe assets are byte-unchanged. The legacy blanket route guard now permits exactly the authorized authenticated editor candidate publication endpoint; every other direct publication route remains forbidden. Actual role/digest/predecessor/pointer negatives are tested separately.
+
+### Checked evidence
+
+| Evidence | Result and boundary |
+|---|---|
+| Owned API/delivery/compatibility | Actual CI JUnit: 67 tests, zero failures/errors/skips. Complete API loop, roles/privacy, forged fields/origin, URLs/locator/source expression/confidence basis, stale versions/digests/heads/pointers, SQL concurrency, duplicate transitions, DB failure acknowledgement, immutability, legacy row preservation and no Airtable call. |
+| Governance/state/lifecycle | 96 relevant local checks passed; existing product gates and frozen review bindings were not advanced. |
+| Native Chromium | [Run 37626522206](https://github.com/omegapunctum/ARTEMIS/actions/runs/37626522206), artifact `11483704701`, ZIP SHA-256 `46775328fbdfc672d8af92837a4d60abdcff56c999c1e177d48ef00cc8845d53`. Actual 1440×1000 and 390×844 author/reviewer/anonymous loops: partial save/resume, required-field focus, real stale-write 409 and offline input preservation, separate acceptance/publication/correction, literal HTML, private-data omission, keyboard and no horizontal overflow passed. All records/accounts/URLs are synthetic. |
+| Restart/restore | Four immutable public payloads and raw response hashes remained identical after actual process restart and SQLite backup/restore. Owned persistence tests also reopened/restored full private packets, digests, events and publications. This is an isolated pilot exercise, not production off-device backup/disaster recovery. |
+| Source/capture binding | Browser report binds exact commit/tree, eight runtime file hashes and harness hash. Four original full-page PNGs and two public DOM hashes were independently checked and inspected. |
+
+### Independent review and bounded correction
+
+Architecture `/root/editor_scope_review`: `ACCEPT_ARCHITECTURE_IMPLEMENTATION`, zero unresolved material Architecture/security/provenance findings; [exact-source review](https://github.com/omegapunctum/ARTEMIS/pull/474#pullrequestreview-5442857259).
+
+Product `/root/impeccable_finish_reviewer`, fresh context distinct from the UI author, performed the full five-section review and found one compound mobile entry/save defect. One UI batch collapsed mobile record navigation and added native Save beside the name. The same reviewer scored that finding resolved on actual recaptures: name `640.72–683.97px`, Save `695.97–737.97px` within 844px; native disclosure keyboard checks passed. `ship` covers the scored fix; `ACCEPT_PRODUCT_IMPLEMENTATION` combines unchanged original reviewed areas with that resolution; [durable review](https://github.com/omegapunctum/ARTEMIS/pull/474#pullrequestreview-5442858420). It is not a new broader audit or historical/user-value validation.
+
+Detector ran once with only advisory incumbent Inter warnings retained. The independent documenter compared finished code/capture hashes against incumbent Explorer/Globe styling, preserved existing files and reported pre-existing drift without repair. No global visual-system change was authorized. Mandatory Core CI remains a separate current-head merge condition; these reviews do not certify a still-running check.
+
+### Availability and stop
+
+Result: `BACKEND-AVAILABLE`, locally/native-CI verified, with [reproducible persistent operation and backup/restore](../KNOWLEDGE_EDITOR_RUNBOOK.md). A configured running backend serves the form and anonymous cards. No public backend has been provisioned and no deployed editor write URL is claimed. GitHub Pages cannot execute FastAPI or save these proposals; published editor candidates do not automatically enter the Globe.
+
+SQLite stores pilot accounts, private drafts/source expressions, accepted revisions, events and public snapshots. Full source files, PostgreSQL/PostGIS/S3, production hosting/permissions and automated off-device backups are not delivered. Source accuracy, atomicity, rights and undisclosed AI authorship require real editorial judgment; synthetic/structural checks prove none of them. The first-record/correction loop and run procedure satisfy this bounded stop. Gate E stays closed, E2 NOT COLLECTED / WAIVED, formal/comparative value UNVALIDATED, contextual composition DEFERRED, ATL conflict non-public. No successor or public deployment is opened.
