@@ -329,6 +329,6 @@ When lifecycle changes:
 5. archive only when traceability is preserved;
 6. never let working/audit/archive docs become hidden canonical owners.
 
-## Owner-directed deployment preparation
+## Completed deployment preparation — provisioning deferred
 
-- `2026-10-07_EDITOR_HOSTING_v1.md` — active bounded Render hosting preparation authorized after #474; no resources provisioned or public availability claimed.
+- `2026-10-07_EDITOR_HOSTING_v1.md` — completed bounded Render preparation in PR #475; paid provisioning deferred by the owner's subsequent 2026-10-07 instruction. This is retained preparation evidence, not an active deployment task. Use `PROJECT_TRUTH.md` for availability and the local editor runbook for operation; no replacement hosting task or product successor is opened.
