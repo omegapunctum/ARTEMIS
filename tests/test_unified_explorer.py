@@ -213,6 +213,18 @@ def test_invalid_profile_does_not_remove_existing_output(tmp_path):
     assert sentinel.read_text() == "existing artifact"
 
 
+def test_preload_and_cache_urls_bind_actual_resource_bytes(tmp_path):
+    output = tmp_path / "globe"
+    unified.build_unified_explorer(output)
+    html = (output / "index.html").read_text()
+    assert "{{" not in html
+    for filename in ("unified-bundle.json", "earth-context.geojson", "runtime.js", "style.css"):
+        digest = hashlib.sha256((output / filename).read_bytes()).hexdigest()
+        assert f"./{filename}?v={digest}" in html
+    assert f'data-bundle-version="{hashlib.sha256((output / "unified-bundle.json").read_bytes()).hexdigest()}"' in html
+    assert f'data-context-version="{hashlib.sha256((output / "earth-context.geojson").read_bytes()).hexdigest()}"' in html
+
+
 def test_bad_input_does_not_partially_replace_published_build(tmp_path, monkeypatch):
     output = tmp_path / "already-built"
     output.mkdir()

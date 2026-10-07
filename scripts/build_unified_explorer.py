@@ -256,7 +256,6 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             shutil.rmtree(output)
         output.mkdir(parents=True)
         public_profile = "globe" if entry_profile == "leonardo" else "region"
-        (output / "index.html").write_text(template.replace("{{ENTRY_PROFILE}}", public_profile), encoding="utf-8")
         for name, payload in assets.items():
             (output / name).write_bytes(payload)
         for name in ("geospatial-assets.json", "earth-context.geojson", "engine-evaluation.json", "acceptance-profiles.json"):
@@ -271,6 +270,16 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             shutil.copytree(source_dir, output / "sources")
         _write(output / "unified-bundle.json", bundle)
         bundle_sha = hashlib.sha256((output / "unified-bundle.json").read_bytes()).hexdigest()
+        replacements = {
+            "ENTRY_PROFILE": public_profile,
+            "BUNDLE_SHA": bundle_sha,
+            "CONTEXT_SHA": hashlib.sha256((output / "earth-context.geojson").read_bytes()).hexdigest(),
+            "RUNTIME_SHA": hashlib.sha256(assets["runtime.js"]).hexdigest(),
+            "STYLE_SHA": hashlib.sha256(assets["style.css"]).hexdigest(),
+        }
+        for key, value in replacements.items():
+            template = template.replace("{{" + key + "}}", value)
+        (output / "index.html").write_text(template, encoding="utf-8")
         metadata = {
             "schema_version": "1.0.0", "spike_id": "artemis-unified-layer-explorer-v1",
             "semantic_dataset": "unified_explorer", "entry_profile": entry_profile,

@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en" data-entry-profile="{{ENTRY_PROFILE}}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ARTEMIS · Explorer</title><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css"><link rel="stylesheet" href="./style.css"></head>
+<html lang="en" data-entry-profile="{{ENTRY_PROFILE}}" data-bundle-version="{{BUNDLE_SHA}}" data-context-version="{{CONTEXT_SHA}}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ARTEMIS · Explorer</title><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preload" href="./unified-bundle.json?v={{BUNDLE_SHA}}" as="fetch" crossorigin><link rel="preload" href="./earth-context.geojson?v={{CONTEXT_SHA}}" as="fetch" crossorigin><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css"><link rel="stylesheet" href="./style.css?v={{STYLE_SHA}}"></head>
 <body><main id="app">
   <div id="map" aria-label="ARTEMIS shared spatial explorer"></div>
   <header id="workspace-header">
@@ -30,4 +30,4 @@
     <p id="time-status" role="status" aria-live="polite"></p><p id="route-note" data-i18n="routes">Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.</p>
   </section>
   <div id="fatal-error" role="alert" hidden></div>
-</main><script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script><script src="./runtime.js"></script></body></html>
+</main><script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script><script src="./runtime.js?v={{RUNTIME_SHA}}"></script></body></html>

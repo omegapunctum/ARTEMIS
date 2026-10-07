@@ -7,6 +7,14 @@ if (!process.argv[2]) throw Error('Pass the actual composed source bundle as a f
 const bundle = h.freeze(JSON.parse(fs.readFileSync(process.argv[2],'utf8')));
 const digest = () => crypto.createHash('sha256').update(JSON.stringify(bundle)).digest('hex');
 const before = digest();
+// A burst uses the newest event once; an event from inside the callback is
+// retained for the next frame instead of being dropped.
+const frames = [], events = [];
+const throttled = h.frameThrottle(value => { events.push(value); if (value === 3) throttled(4); },callback => frames.push(callback));
+throttled(1); throttled(2); throttled(3);
+assert.equal(frames.length,1); frames.shift()();
+assert.deepEqual(events,[3]); assert.equal(frames.length,1); frames.shift()();
+assert.deepEqual(events,[3,4]); assert.equal(frames.length,0);
 const ids = result => result.map(item => item.item_id);
 const base = h.defaults('globe');
 assert.equal(bundle.registry.length,45);

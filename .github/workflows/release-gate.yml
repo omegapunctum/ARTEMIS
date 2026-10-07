@@ -97,6 +97,25 @@ jobs:
           python scripts/build_unified_explorer.py --entry-profile roman --output /tmp/artemis-unified-preview/region
           cmp /tmp/artemis-unified-preview/globe/unified-bundle.json /tmp/artemis-unified-preview/region/unified-bundle.json
 
+      - name: Measure paired Explorer performance
+        env:
+          NODE_PATH: /tmp/artemis-browser-tools/node_modules
+        run: |
+          set -euo pipefail
+          BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
+          timeout 300s node scripts/capture_explorer_performance.mjs \
+            --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
+            --baseline-ref 76404197 \
+            --output /tmp/artemis-explorer-performance
+
+      - name: Attach Explorer performance measurements
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: explorer-performance
+          path: /tmp/artemis-explorer-performance/
+          if-no-files-found: warn
+
       - name: Verify native unified layer workspace in Chromium
         env:
           NODE_PATH: /tmp/artemis-browser-tools/node_modules
