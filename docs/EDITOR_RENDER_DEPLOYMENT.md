@@ -2,6 +2,8 @@
 
 This is a prepared owner-first deployment package, not a claim of a live service. The governing scope is [bounded hosting v1](work/2026-10-07_EDITOR_HOSTING_v1.md). Current resource provisioning requires the owner's connected Render account and approval of the actual bill. No real credentials belong in this repository or chat.
 
+The owner's subsequent 2026-10-07 instruction defers paid Render provisioning. Use the [local editor runbook](KNOWLEDGE_EDITOR_RUNBOOK.md) for the current operating path; it requires neither a Render subscription nor managed Redis. Keep this deployment procedure for a future explicitly authorized resumption. Do not apply the Blueprint under the deferred disposition. `PROJECT_TRUTH.md` owns current availability.
+
 ## Resources
 
 `render.yaml` defines one Python web service (`0.5c-512mb`), a 1 GB persistent SQLite disk, and one private Key Value instance (`256mb`, no eviction, persistence enabled). Both services use Frankfurt; region selection is fixed at creation. Expected base resource cost checked 2026-10-07 is about USD 17.25/month before taxes, workspace charges and additional usage. Verify the final dashboard quote before creating anything. Free web instances cannot attach the required disk.

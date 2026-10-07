@@ -1,5 +1,11 @@
 # Knowledge Editor — bounded hosted deployment
 
+## Lifecycle and closeout — 2026-10-07
+
+Hosting preparation completed in PR #475, merged at `c8bd7b629d42056904602ecfe1099d2f1cb7b639` (tree `72abb65b838d1c174067fba59663bdba839e9c0b`). All exact-head CI checks passed, including 17 hosted-editor tests using real Redis. Distinct Architecture and Product AI reviews accepted the prepared implementation; neither review establishes public availability or user value.
+
+After connecting Render, the owner explicitly deferred paid services and instructed continued operation without them. This specification is retained preparation evidence; resource provisioning is deferred rather than awaiting an active approval request. No paid resource was created, and actual provider proxy topology, live HTTPS/editor operation and hosted restart/off-device recovery acceptance remain unperformed. The [local runbook](../KNOWLEDGE_EDITOR_RUNBOOK.md) remains the operating procedure. Resuming paid provisioning requires fresh explicit spending authorization. No alternative public host or successor product task is authorized by this closeout. Current factual availability is owned by `PROJECT_TRUTH.md`.
+
 ## Authorization and scope
 
 On 2026-10-07 the owner explicitly confirmed backend deployment after PR #474 merged at `c65198468a5b2e5ffac9c59cd8463f48626e0ad2`, then selected Render. This opens hosting preparation and verification only; it does not reopen epistemic promotion, source-file intake, Globe ingestion, product gates or deferred research.
