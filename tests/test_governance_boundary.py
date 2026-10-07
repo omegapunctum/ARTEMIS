@@ -8,7 +8,11 @@ def test_runtime_api_has_only_authorized_editor_candidate_publication() -> None:
     assert [route.path for route in publish_routes] == ["/api/knowledge-editor/drafts/{draft_id}/publish"]
     route = publish_routes[0]
     assert route.methods == {"POST"}
-    from app.auth.service import get_current_user
-    assert get_current_user in {dependency.call for dependency in route.dependant.dependencies}
+    # Existing compatibility tests reload auth modules; function object identity
+    # can change while the registered authenticated dependency remains intact.
+    assert ("app.auth.service", "get_current_user") in {
+        (dependency.call.__module__, dependency.call.__name__)
+        for dependency in route.dependant.dependencies
+    }
     # Actual moderator, accepted digest and stale-pointer negatives are exercised
     # by tests/test_knowledge_editor.py, rather than inferred from a route name.
