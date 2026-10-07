@@ -310,6 +310,8 @@ The superseded #323–#325 path and PR #314 remain closed. Passing fixtures, sto
 
 ## 8. Правило честного описания
 
+Completed owner-directed pilot — 2026-10-07: [Knowledge Editor v1](work/2026-10-07_KNOWLEDGE_EDITOR_v1.md#9-technical-implementation-and-availability-closeout--2026-10-07) implements one new architecture-object/Source/atomic-Claim contribution loop: incomplete private draft, exact-content editorial review, separate immutable publication and correction retaining accepted/public history. The same-origin form/API is `BACKEND-AVAILABLE`, locally/native-CI verified, with a [persistent run/backup/restore procedure](KNOWLEDGE_EDITOR_RUNBOOK.md). Additive initialization preserves existing accounts/legacy rows; frozen/Globe/Atlas/Airtable paths remain unchanged. Owner self-review is labeled editorial approval; other-account review does not establish expert independence. Public candidate cards omit private quotations/account IDs and retain draft/missing/unknown dimensions. No public backend is provisioned: the current GitHub Pages site cannot save these proposals or automatically add them to the Globe. Full source files, PostgreSQL/PostGIS/S3, production hosting and automatic off-device backups remain outside the completed pilot. The linked task owns exact implementation, native/persistence and distinct review receipts. Gate E/value/contextual/ATL dispositions stay unchanged; no successor is opened.
+
 README, UI, issues, release notes и публичные материалы обязаны различать:
 
 - `PUBLIC NOW` — работает на опубликованном URL;

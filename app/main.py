@@ -34,6 +34,14 @@ from app.observability import (
     validation_exception_handler,
 )
 from app.uploads.routes import router as uploads_router
+from app.knowledge_editor.routes import (
+    router as knowledge_editor_router,
+    knowledge_editor_error_handler,
+)
+from app.knowledge_editor.service import (
+    init_db as init_knowledge_editor_db,
+    KnowledgeEditorError,
+)
 
 setup_logging()
 
@@ -91,6 +99,7 @@ _run_startup_migration_apply_sequence(
         init_research_slices_db,
         init_stories_db,
         init_courses_db,
+        init_knowledge_editor_db,
     ),
 )
 
@@ -114,6 +123,7 @@ app.add_middleware(
 )
 
 app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(KnowledgeEditorError, knowledge_editor_error_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, unhandled_exception_handler)
 
@@ -125,13 +135,22 @@ async def uploads_static_headers_middleware(request: Request, call_next):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Content-Disposition"] = "inline"
         response.headers["Cache-Control"] = "no-store"
+    if request.url.path.startswith(("/api/knowledge-editor/", "/editor/")):
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "no-referrer"
     return response
 
 
-for router in (auth_router, drafts_router, uploads_router, moderation_router, map_router, research_slices_router, public_research_slices_router, stories_router, courses_router, explain_context_router):
+for router in (auth_router, drafts_router, uploads_router, moderation_router, map_router, research_slices_router, public_research_slices_router, stories_router, courses_router, explain_context_router, knowledge_editor_router):
     app.include_router(router, prefix="/api")
 
 app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
+app.mount(
+    "/editor",
+    StaticFiles(directory=Path(__file__).parent / "knowledge_editor" / "static", html=True),
+    name="knowledge-editor",
+)
 
 
 @app.get("/api/health")

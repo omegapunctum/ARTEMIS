@@ -14,7 +14,17 @@ Historical bounded research closeout — recorded 2026-09-24: [Contextual Snapsh
 
 Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Owner-accepted [evidence package](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and separate owner presentation/interaction acceptance of PR #453 are recorded in the [technical implementation closeout](2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). The merged review artifact is non-public; no comparative/formal value is validated. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
 
+## Completed owner-directed bounded editor pilot — 2026-10-07
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-07_KNOWLEDGE_EDITOR_v1.md` | Completed bounded BACKEND-AVAILABLE evidence; accepted prospective DECISION and independently accepted REVIEW implementation | One new architecture-object editorial record, Source/Claim/EvidenceLink, draft/review/separate immutable publication/correction history; native desktop/narrow and restart/restore verified, transparent owner-self-review; no historical-status promotion, frozen/Airtable/Globe intake, public backend hosting or automatic successor |
+
+The explicit fresh direction superseded earlier no-editor wording only for this completed new-record pilot. The linked task owns technical/review/native/persistence receipts; [the runbook](../KNOWLEDGE_EDITOR_RUNBOOK.md) owns local operation. Backend-available delivery is separate from public hosting and Globe corpus intake. Completed proofs and gate/value dispositions remain preserved. No successor is opened.
+
+
 ## Status
+
 
 - Type: working-layer lifecycle registry.
 - Updated: 2026-10-07.

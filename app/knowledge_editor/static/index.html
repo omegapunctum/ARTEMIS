@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>Редактор знаний · ARTEMIS</title>
+  <link rel="stylesheet" href="./editor.css">
+  <script type="module" src="./editor.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержанию</a>
+  <header class="site-header">
+    <a class="brand" href="/editor/">ARTEMIS</a>
+    <span>Редактор знаний</span>
+    <div id="account" hidden><span id="account-name"></span><button id="logout" type="button">Выйти</button></div>
+  </header>
+  <main id="main">
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <div id="error" class="message error" role="alert" hidden></div>
+    <section id="auth-panel" class="auth-panel">
+      <h1>Добавить знание и его источник</h1>
+      <p>Начните с одного архитектурного объекта и одного утверждения. Незавершённую запись можно сохранить и продолжить позже.</p>
+      <p class="muted">Редактор работает на сервере ARTEMIS. Публичный глобус на GitHub Pages пока не принимает эти записи.</p>
+      <form id="login-form">
+        <label for="email">Электронная почта</label>
+        <input id="email" name="email" type="email" autocomplete="username" required>
+        <label for="password">Пароль</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
+        <div class="actions"><button id="login-submit" class="primary" type="submit">Войти</button><button id="register-submit" type="button">Создать аккаунт</button></div>
+      </form>
+    </section>
+    <div id="workspace" class="workspace" hidden>
+      <details id="record-navigation-disclosure" open>
+        <summary id="record-navigation-summary">Записи и проверка</summary>
+      <aside class="record-navigation" aria-label="Записи редактора">
+        <button id="new-draft" class="primary" type="button">Новый объект</button>
+        <div class="list-heading"><h2>Мои записи</h2><button id="refresh-list" type="button">Обновить</button></div>
+        <label for="record-search">Найти по названию</label>
+        <input id="record-search" type="search" autocomplete="off">
+        <ul id="draft-list" class="record-list"></ul>
+        <p id="draft-empty" class="muted">Начните новую запись. Сохранённые черновики появятся здесь.</p>
+        <section id="review-queue-panel" hidden>
+          <h2>На проверке</h2><ul id="review-queue" class="record-list"></ul><p id="queue-empty" class="muted">Записей для проверки пока нет.</p>
+        </section>
+        <details><summary>Опубликованные записи</summary><ul id="published-list" class="record-list"></ul></details>
+      </aside>
+      </details>
+      <section class="editing-area" aria-label="Редактирование записи">
+        <div class="record-heading"><h1 id="record-title" tabindex="-1">Новый объект</h1><span id="record-state" class="state">Не сохранён</span></div>
+        <p id="record-guidance" class="muted">Заполните то, что известно. Пустые поля не создают точных дат или координат.</p>
+        <div id="conflict-panel" class="message" hidden><p>Запись уже изменилась на сервере. Ваш текст остаётся в форме. Скопируйте нужные изменения перед загрузкой новой версии.</p><button id="reload-record" type="button">Загрузить версию сервера</button></div>
+        <form id="record-form" novalidate>
+          <fieldset id="record-fields">
+            <section class="form-section">
+              <h2>Объект</h2>
+              <label for="entity_name">Название</label><input id="entity_name" name="entity_name" maxlength="240" autocomplete="off" aria-describedby="name-help">
+              <button id="save-draft-top" class="primary quick-save" type="submit">Сохранить черновик</button>
+              <p id="name-help" class="field-help">Архитектурный объект. Перед созданием проверьте список записей.</p>
+              <details><summary>Описание объекта</summary><label for="entity_description">Краткое описание</label><textarea id="entity_description" name="entity_description" rows="3" maxlength="4000"></textarea></details>
+            </section>
+            <section class="form-section">
+              <h2>Источник</h2>
+              <label for="source_title">Название источника</label><input id="source_title" name="source_title" maxlength="500">
+              <div class="field-pair"><div><label for="source_url">Ссылка</label><input id="source_url" name="source_url" type="url" placeholder="https://" maxlength="2000"></div><div><label for="source_reference">Библиографическое описание</label><input id="source_reference" name="source_reference" maxlength="2000"></div></div>
+              <p class="field-help">Для проверки нужна ссылка или библиографическое описание.</p>
+              <div class="field-pair"><div><label for="source_type">Тип источника</label><select id="source_type" name="source_type"></select></div><div><label for="source_author">Автор или организация, если известны</label><input id="source_author" name="source_author" maxlength="500"></div></div>
+              <label for="source_expression">Что именно сообщает источник?</label><textarea id="source_expression" name="source_expression" rows="3" maxlength="10000" aria-describedby="expression-help"></textarea>
+              <p id="expression-help" class="field-help">Сохраните исходную формулировку. Этот фрагмент доступен автору и проверяющему; в публичной карточке он не размещается.</p>
+              <details><summary>Права и сведения о публикации</summary><label for="source_rights">Права или лицензия, если известны</label><input id="source_rights" name="source_rights" maxlength="300"><label for="source_publication">Сведения о публикации, если известны</label><input id="source_publication" name="source_publication" maxlength="1000"></details>
+            </section>
+            <section class="form-section">
+              <h2>Утверждение</h2>
+              <label for="claim_statement">Что известно об объекте?</label><textarea id="claim_statement" name="claim_statement" rows="3" maxlength="4000" aria-describedby="statement-help"></textarea>
+              <p id="statement-help" class="field-help">Одно проверяемое утверждение: например, «Источник датирует завершение здания 1931 годом».</p>
+              <label for="evidence_locator">Где именно это указано?</label><input id="evidence_locator" name="evidence_locator" maxlength="2000" aria-describedby="locator-help"><p id="locator-help" class="field-help">Страница, раздел, архивный шифр или устойчивый фрагмент. Одна ссылка на сайт недостаточна.</p>
+              <div class="field-pair"><div><label for="claim_kind">Характер утверждения</label><select id="claim_kind" name="claim_kind"></select></div><div><label for="evidence_relation">Источник и утверждение</label><select id="evidence_relation" name="evidence_relation"></select></div></div>
+              <label for="claim_uncertainty">Что остаётся неизвестным или спорным?</label><textarea id="claim_uncertainty" name="claim_uncertainty" rows="2" maxlength="3000"></textarea>
+              <details><summary>Основание и оценка уверенности</summary><label for="evidence_strength">Как источник связан с утверждением?</label><select id="evidence_strength" name="evidence_strength"></select><label for="claim_confidence">Ваша оценка уверенности</label><select id="claim_confidence" name="claim_confidence"></select><label for="confidence_basis">Основание оценки</label><textarea id="confidence_basis" name="confidence_basis" rows="2" maxlength="2000"></textarea><p class="field-help">Редакционное одобрение не повышает уверенность и не делает сведения доказанными.</p></details>
+              <label class="check-label"><input id="author_attestation" name="author_attestation" type="checkbox">Я подготовил(а) эту запись самостоятельно. Она не является предложением, созданным AI.</label>
+            </section>
+          </fieldset>
+          <div class="actions form-actions"><button id="save-draft" class="primary" type="submit">Сохранить черновик</button><button id="submit-review" type="button">Отправить на проверку</button></div>
+        </form>
+        <section id="review-panel" class="form-section" hidden><h2>Редакционная проверка</h2><p id="review-mode" class="muted"></p><p id="review-digest" class="digest"></p><label for="review-reason">Основание решения</label><textarea id="review-reason" rows="3" maxlength="4000"></textarea><div class="actions"><button id="review-accept" class="primary" type="button">Принять редакционно</button><button id="review-request-changes" type="button">Запросить исправления</button><button id="review-reject" type="button">Отклонить</button></div></section>
+        <section id="publication-panel" class="form-section" hidden><h2>Публикация</h2><p>Редакционное принятие ещё не публикует запись. Публичная карточка сохранит неопределённость и статус неподтверждённых сведений.</p><button id="publish-record" class="primary" type="button">Опубликовать карточку</button><a id="public-link" hidden>Открыть опубликованную карточку</a></section>
+        <section id="correction-panel" class="form-section" hidden><h2>Предложить исправление</h2><label for="correction-reason">Почему нужна поправка?</label><textarea id="correction-reason" rows="2" maxlength="4000"></textarea><button id="start-correction" type="button">Создать черновик исправления</button><p class="field-help">Принятая версия и её публикация сохранятся до и после проверки поправки.</p></section>
+        <details id="history-panel" hidden><summary>История записи</summary><ol id="history-list" class="history-list"></ol></details>
+      </section>
+    </div>
+    <section id="public-card" class="public-card" hidden></section>
+  </main>
+</body>
+</html>

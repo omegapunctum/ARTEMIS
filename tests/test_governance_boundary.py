@@ -1,7 +1,18 @@
 from app.main import app
 
 
-def test_runtime_api_exposes_no_direct_publish_route() -> None:
-    route_paths = [getattr(route, "path", "") for route in app.routes]
-    publish_routes = [path for path in route_paths if "publish" in path.lower()]
-    assert publish_routes == []
+def test_runtime_api_has_only_authorized_editor_candidate_publication() -> None:
+    # DATA_CONTRACT §13 / PRODUCT_SCOPE §14 authorize this isolated pilot.
+    # Legacy Atlas/Airtable and canonical Globe publication remain unavailable.
+    publish_routes = [route for route in app.routes if "publish" in getattr(route, "path", "").lower()]
+    assert [route.path for route in publish_routes] == ["/api/knowledge-editor/drafts/{draft_id}/publish"]
+    route = publish_routes[0]
+    assert route.methods == {"POST"}
+    # Existing compatibility tests reload auth modules; function object identity
+    # can change while the registered authenticated dependency remains intact.
+    assert ("app.auth.service", "get_current_user") in {
+        (dependency.call.__module__, dependency.call.__name__)
+        for dependency in route.dependant.dependencies
+    }
+    # Actual moderator, accepted digest and stale-pointer negatives are exercised
+    # by tests/test_knowledge_editor.py, rather than inferred from a route name.
