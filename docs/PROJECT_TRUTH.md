@@ -310,6 +310,8 @@ The superseded #323–#325 path and PR #314 remain closed. Passing fixtures, sto
 
 ## 8. Правило честного описания
 
+Fresh owner direction — 2026-10-07: [Knowledge Editor v1](work/2026-10-07_KNOWLEDGE_EDITOR_v1.md) is a proposed bounded decision for one new-record editorial contribution/review/publication/correction loop. Independent prospective scope review precedes implementation. No editor capability or live backend availability is claimed at this decision draft. Existing backend and Globe/Atlas/Airtable corpus remain unchanged; only the explicitly new editor contour can be opened by the reviewed owner appends. Owner self-review is transparent editorial approval, not independent historical validation. Gate E/value/contextual/ATL dispositions stay unchanged. GitHub Pages cannot durably save records without an independently running backend.
+
 README, UI, issues, release notes и публичные материалы обязаны различать:
 
 - `PUBLIC NOW` — работает на опубликованном URL;

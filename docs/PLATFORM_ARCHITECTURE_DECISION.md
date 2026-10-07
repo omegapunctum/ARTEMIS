@@ -292,3 +292,11 @@ Ordinary implementation changes inside the accepted boundaries do not require re
 ## 9. Final rule
 
 ARTEMIS is one spatial-temporal knowledge application with one semantic core. Browser/PWA/future wrappers are delivery choices; 2D/Globe are presentation choices; storage technologies are implementation choices. None of them may fragment the World Model or become a substitute for the product itself.
+
+## 10. Bounded Knowledge Editor v1 storage/delivery — prospective decision, 2026-10-07
+
+Fresh owner authorization approves [Knowledge Editor v1](work/2026-10-07_KNOWLEDGE_EDITOR_v1.md), pending the prospective independent scope review before implementation. The bounded pilot reuses the preserved FastAPI account/session boundary and SQLite single-process persistence, adds separate editor tables and serves a same-origin author/reviewer interface plus immutable read-only publications. Accepted ledger revisions and published snapshots are separate persistent records. Existing Atlas APIs, Airtable ETL and the unified Globe remain untouched; browser/server delivery does not create another World Model or make editor draft content canonical.
+
+PostgreSQL/PostGIS and S3-compatible object storage are the preferred growth direction when spatial querying, volume, source-file intake or concurrent operation justify their cost; this pilot does not require or claim their provisioning/migration. URLs/bibliography and an immutable reviewed source-expression packet suffice for the bounded initial loop; full source files are outside it. Git contains code, schemas, small fixtures and release metadata rather than a new operational corpus. A restart/readback and isolated backup/restore proof are required, but production off-device backups and disaster recovery are not implied.
+
+GitHub Pages remains static and cannot host the write API. Local/backend-available delivery must not be described as a publicly hosted editor. Production hosting/access/operational provisioning is a later concrete deployment decision; no credential or hosting assumption may produce a false success state. The linked specification defines the complete verification and correction-history stop condition.

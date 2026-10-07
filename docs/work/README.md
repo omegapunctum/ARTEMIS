@@ -14,7 +14,17 @@ Historical bounded research closeout — recorded 2026-09-24: [Contextual Snapsh
 
 Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Owner-accepted [evidence package](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and separate owner presentation/interaction acceptance of PR #453 are recorded in the [technical implementation closeout](2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). The merged review artifact is non-public; no comparative/formal value is validated. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
 
+## Fresh owner-directed bounded editor decision — 2026-10-07
+
+| Document | Lifecycle | Scope |
+|---|---|---|
+| `2026-10-07_KNOWLEDGE_EDITOR_v1.md` | Prospective DECISION/specification; independent Architecture/Product scope review required before implementation | One new architecture-object editorial record, Source/Claim/EvidenceLink, draft/review/separate immutable publication/correction history; transparent owner-self-review; no historical-status promotion, frozen/Airtable/Globe intake, production hosting or automatic successor |
+
+This fresh direction supersedes the earlier no-successor/no-editor wording only for the linked new-record pilot. Completed proofs and gate/value dispositions remain preserved. Current technical execution and completion are recorded in that task; a proposed decision is not a delivered editor.
+
+
 ## Status
+
 
 - Type: working-layer lifecycle registry.
 - Updated: 2026-10-07.
