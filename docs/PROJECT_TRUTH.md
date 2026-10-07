@@ -314,6 +314,8 @@ Completed owner-directed pilot — 2026-10-07: [Knowledge Editor v1](work/2026-1
 
 Owner-directed hosting disposition — 2026-10-07: Render preparation merged in PR `#475` at `c8bd7b629d42056904602ecfe1099d2f1cb7b639`; exact-head CI passed, including 17 hosted-editor tests with real Redis. The owner then explicitly deferred paid Render services because a subscription budget is unavailable. Render account connection is available, but no paid resources were created and no public editor is deployed. The supported editor operating path remains the [local runbook](KNOWLEDGE_EDITOR_RUNBOOK.md), with SQLite on the operator's device and in-memory local sessions; no Render subscription or managed Redis is required for that path. Hosting preparation is complete, provisioning is deferred, and public HTTPS/persistence acceptance remains unperformed. The prepared package is retained for an explicitly authorized future deployment; a free persistent public replacement has not been selected or verified. This disposition does not open another product task or change gate/value/domain status.
 
+Owner-confirmed next task — 2026-10-07: [portable public editor export v1](work/2026-10-07_EDITOR_PUBLIC_EXPORT_v1.md) is in prospective specification/review. No downloadable package or offline verifier is implemented by this decision record. The existing local editor remains the available operating path; paid hosting stays deferred. This opens only the bounded read-only export task, not import, Globe intake or a product-gate transition.
+
 README, UI, issues, release notes и публичные материалы обязаны различать:
 
 - `PUBLIC NOW` — работает на опубликованном URL;

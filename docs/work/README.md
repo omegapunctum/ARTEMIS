@@ -332,3 +332,7 @@ When lifecycle changes:
 ## Completed deployment preparation — provisioning deferred
 
 - `2026-10-07_EDITOR_HOSTING_v1.md` — completed bounded Render preparation in PR #475; paid provisioning deferred by the owner's subsequent 2026-10-07 instruction. This is retained preparation evidence, not an active deployment task. Use `PROJECT_TRUTH.md` for availability and the local editor runbook for operation; no replacement hosting task or product successor is opened.
+
+## Active bounded public editor export
+
+- `2026-10-07_EDITOR_PUBLIC_EXPORT_v1.md` — owner-confirmed prospective decision/specification for one read-only public-history JSON attachment, native download and offline integrity verification. Independent scope review precedes implementation. Private transfer/import, Globe intake and paid hosting are outside this task.
