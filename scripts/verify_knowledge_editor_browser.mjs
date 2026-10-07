@@ -163,7 +163,7 @@ try {
     await owner.locator('#entity_name').focus();
     await owner.keyboard.insertText(`Синтетический павильон ${label}`);
     await owner.keyboard.press('Tab');
-    assert.equal(await owner.locator('details > summary').first().evaluate(node => document.activeElement === node), true, 'Keyboard must reach object description disclosure');
+    assert.equal(await owner.locator('#record-fields details > summary').first().evaluate(node => document.activeElement === node), true, 'Keyboard must reach object description disclosure');
     const name = `Синтетический павильон ${label}`;
     let draft = await uiAction(owner, '#save-draft', `${API}/drafts`, 'POST', 201);
     assert.equal(draft.content.source.title, '', 'Incomplete draft must remain incomplete');

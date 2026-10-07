@@ -65,13 +65,24 @@ def test_actual_app_serves_editor_and_preserves_scoped_errors(tmp_path):
     script = '''
 import json
 from fastapi.testclient import TestClient
-from app.main import app
 from app.auth import service as auth
+from app.drafts import service as legacy
 from app.auth.utils import create_access_token
-from app.knowledge_editor import service as editor
+auth.init_db()
+legacy.init_db()
 with auth.SessionLocal() as db:
     db.add(auth.User(id="synthetic-owner", email="owner@example.com", password_hash="unused", is_admin=True))
+    db.add(legacy.Draft(id=1, user_id="synthetic-owner", title="Preserved legacy draft", description="Compatibility fixture", payload={"unchanged": True}))
     db.commit()
+from sqlalchemy import text
+with auth.engine.connect() as db:
+    legacy_before=[tuple(row) for row in db.execute(text("SELECT * FROM drafts"))]
+    users_before=[tuple(row) for row in db.execute(text("SELECT * FROM users"))]
+# Loading the integrated app performs additive initialization on existing data.
+from app.main import app
+with auth.engine.connect() as db:
+    assert [tuple(row) for row in db.execute(text("SELECT * FROM drafts"))] == legacy_before
+    assert [tuple(row) for row in db.execute(text("SELECT * FROM users"))] == users_before
 headers={"Authorization":"Bearer "+create_access_token("synthetic-owner")}
 with TestClient(app) as client:
     page=client.get("/editor/")
@@ -89,7 +100,6 @@ with TestClient(app) as client:
     assert failure.headers["cache-control"] == "no-store"
     assert client.get("/api/knowledge-editor/public/objects").json() == []
     with auth.engine.connect() as db:
-        from sqlalchemy import text
         triggers=db.execute(text("SELECT name FROM sqlite_master WHERE type='trigger'")).scalars().all()
         assert any("knowledge_editor_revisions" in name for name in triggers), triggers
 print(json.dumps({"actual_app_wiring":"PASS"}))
