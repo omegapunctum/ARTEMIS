@@ -1,0 +1,165 @@
+name: Knowledge Editor Pilot
+
+on:
+  push:
+    paths: &editor_paths
+      - "app/knowledge_editor/**"
+      - "app/main.py"
+      - "app/auth/**"
+      - "app/security/**"
+      - "tests/test_knowledge_editor*.py"
+      - "tests/test_editor_operations.py"
+      - "tests/test_governance_boundary.py"
+      - "scripts/*knowledge_editor*"
+      - "requirements.txt"
+      - "docs/KNOWLEDGE_EDITOR_RUNBOOK.md"
+      - "docs/work/2026-10-07_KNOWLEDGE_EDITOR_v1.md"
+      - ".github/workflows/knowledge-editor.yml"
+  pull_request:
+    paths: *editor_paths
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  editor-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_ENV: test
+      AUTH_SESSION_BACKEND: memory
+      AUTH_SECRET_KEY: synthetic-ci-editor-secret-not-a-production-key
+      COOKIE_SECURE: "false"
+      MODERATOR_EMAILS: owner@example.com,reviewer@example.com
+      MIGRATION_STARTUP_ROLE: owner
+      AUTH_DATABASE_URL: sqlite:////tmp/artemis-editor-ci/working.sqlite3
+      KNOWLEDGE_EDITOR_URL: http://127.0.0.1:8000
+      KNOWLEDGE_EDITOR_EVIDENCE_DIR: .impeccable/review
+      ARTEMIS_PLAYWRIGHT_MODULE: /tmp/artemis-editor-browser/node_modules/playwright/index.mjs
+      ARTEMIS_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install backend test dependencies
+        run: pip install -r requirements.txt pytest==9.1.1 httpx==0.28.1
+      - name: Verify API, persistence, delivery and preserved auth/drafts
+        run: |
+          mkdir -m 700 -p /tmp/artemis-editor-ci .impeccable/review
+          python -m pytest tests/test_knowledge_editor.py tests/test_editor_operations.py tests/test_auth_session_store.py tests/test_auth_secret_key_policy.py tests/test_drafts.py tests/test_moderation_integration.py tests/test_startup_migration_owner_gate.py tests/test_governance_boundary.py -q --junitxml=.impeccable/review/editor-tests.xml
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - name: Install native browser
+        run: |
+          npm install --prefix /tmp/artemis-editor-browser --no-package-lock --no-save playwright@1.51.1
+          node /tmp/artemis-editor-browser/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Start isolated real backend
+        run: |
+          umask 077
+          mkdir -p /tmp/artemis-editor-ci/runtime
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          cd /tmp/artemis-editor-ci/runtime
+          python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 > /tmp/artemis-editor-ci/server.log 2>&1 &
+          echo "$!" > /tmp/artemis-editor-ci/server.pid
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  with urlopen("http://127.0.0.1:8000/editor/", timeout=1) as response:
+                      assert response.status == 200
+                  break
+              except OSError:
+                  time.sleep(.5)
+          else:
+              raise SystemExit("Backend did not become ready")
+          PY
+      - name: Verify real native author, reviewer and anonymous cards
+        run: node scripts/verify_knowledge_editor_browser.mjs
+      - name: Verify actual process restart and restored database
+        run: |
+          python scripts/knowledge_editor_backup.py backup --source /tmp/artemis-editor-ci/working.sqlite3 --destination /tmp/artemis-editor-ci/backup.sqlite3
+          kill "$(cat /tmp/artemis-editor-ci/server.pid)"
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  urlopen("http://127.0.0.1:8000/editor/", timeout=1).close()
+              except OSError:
+                  break
+              time.sleep(.5)
+          else:
+              raise SystemExit("Previous backend process did not stop")
+          PY
+          export PYTHONPATH="$GITHUB_WORKSPACE"
+          cd /tmp/artemis-editor-ci/runtime
+          python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 >> /tmp/artemis-editor-ci/server.log 2>&1 &
+          echo "$!" > /tmp/artemis-editor-ci/server.pid
+          cd "$GITHUB_WORKSPACE"
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  urlopen("http://127.0.0.1:8000/editor/", timeout=1).close()
+                  break
+              except OSError:
+                  time.sleep(.5)
+          else:
+              raise SystemExit("Restarted backend did not become ready")
+          PY
+          python scripts/verify_knowledge_editor_persistence.py --browser-report .impeccable/review/browser-report.json --output .impeccable/review/restart-report.json
+          kill "$(cat /tmp/artemis-editor-ci/server.pid)"
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  urlopen("http://127.0.0.1:8000/editor/", timeout=1).close()
+              except OSError:
+                  break
+              time.sleep(.5)
+          else:
+              raise SystemExit("Restarted backend process did not stop")
+          PY
+          python scripts/knowledge_editor_backup.py restore --source /tmp/artemis-editor-ci/backup.sqlite3 --destination /tmp/artemis-editor-ci/restored.sqlite3
+          export AUTH_DATABASE_URL=sqlite:////tmp/artemis-editor-ci/restored.sqlite3
+          cd /tmp/artemis-editor-ci/runtime
+          python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 >> /tmp/artemis-editor-ci/server.log 2>&1 &
+          echo "$!" > /tmp/artemis-editor-ci/server.pid
+          cd "$GITHUB_WORKSPACE"
+          python - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(30):
+              try:
+                  urlopen("http://127.0.0.1:8000/editor/", timeout=1).close()
+                  break
+              except OSError:
+                  time.sleep(.5)
+          else:
+              raise SystemExit("Restored backend did not become ready")
+          PY
+          python scripts/verify_knowledge_editor_persistence.py --browser-report .impeccable/review/browser-report.json --output .impeccable/review/restore-report.json
+      - name: Upload bounded synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: knowledge-editor-browser-evidence
+          path: .impeccable/review/
+          if-no-files-found: error
+      - name: Stop isolated backend
+        if: always()
+        run: |
+          if test -f /tmp/artemis-editor-ci/server.pid; then
+            kill "$(cat /tmp/artemis-editor-ci/server.pid)" 2>/dev/null || true
+          fi
