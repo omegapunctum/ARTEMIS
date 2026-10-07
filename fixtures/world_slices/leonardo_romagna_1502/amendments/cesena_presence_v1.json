@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "cesena-presence-wording-v1",
+  "operation": "authorized_statement_narrowing",
+  "base_claims_path": "fixtures/world_slices/leonardo_romagna_1502/v1/claims_manifest.json",
+  "base_claims_sha256": "3a527e9899874c7e8d0acd07db624ad21b7f20dadaab898288b56d154bedd95d",
+  "claim_id": "claim-cesena-presence-1502-08-10",
+  "target_object_ref": "event-leonardo-cesena-survey",
+  "before_statement": "Leonardo was present in Cesena by 10 August 1502 in the selected survey context.",
+  "after_statement": "Leonardo was present in Cesena by 10 August 1502.",
+  "decision_ref": "docs/work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md",
+  "audit_ref": "docs/work/2026-10-04_CESENA_SOURCE_REPRODUCIBILITY_AUDIT_v1.md",
+  "source_id": "source-uniurb-volpe-chronology",
+  "source_url": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+  "source_citation": "Gianni Volpe, Cronologia vinciana (1502–1503), in Leonardo a Urbino, Urbino University Press, 2023, pp. 7–27; printed p. 16 / PDF page 10; Manuscript L folio 46v.",
+  "reason": "The publication binds presence/date/folio, but does not bind surveying to this dated entry. The original manuscript has not been independently inspected."
+}

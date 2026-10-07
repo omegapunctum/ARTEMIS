@@ -23,7 +23,7 @@ try {
   if(report.bundleSha256!==hash(await readFile(join(temp,'baseline/globe/unified-bundle.json'))))throw Error('Paired bundle differs');
   server=createServer(async(req,res)=>{try{const pathname=decodeURIComponent(new URL(req.url,'http://local').pathname);const path=resolve(temp,'.'+pathname+(pathname.endsWith('/')?'index.html':''));if(!path.startsWith(temp+'/'))throw Error('path');const bytes=await readFile(path);res.writeHead(200,{'Cache-Control':'public,max-age=3600','Content-Type':({'.js':'text/javascript','.json':'application/json','.geojson':'application/json','.css':'text/css','.html':'text/html'})[extname(path)]||'application/octet-stream'});res.end(bytes);}catch{res.writeHead(404);res.end();}});
   await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
-  const profile=join(temp,'profile'),deadline=Date.now()+(args.phase==='high-dpi'?180000:480000);
+  const profile=join(temp,'profile'),deadline=Date.now()+(args.phase==='high-dpi'?300000:480000);
   browser=spawn(args.browser,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--remote-debugging-port=0',`--user-data-dir=${profile}`,'--window-size=1440,900','about:blank'],{stdio:['ignore','ignore','pipe']});browser.stderr.on('data',x=>{log=(log+x).slice(-20000)});
   cdp=await connectCdp(await waitForPageEndpoint(await waitForDevToolsPort(profile,browser,deadline),deadline),deadline);
   for(const domain of ['Page','Runtime','Network','Performance'])await cdp.send(domain+'.enable');

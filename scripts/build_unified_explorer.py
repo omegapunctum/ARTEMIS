@@ -127,6 +127,7 @@ def _input_paths() -> list[Path]:
     return sorted({
         FEATURES_PATH, SOURCES_PATH,
         gate_d.SELECTION_PATH, gate_d.CLAIMS_PATH, gate_d.SOURCES_PATH,
+        gate_d.CESENA_AMENDMENT_PATH,
         gate_d.COVERAGE_PATH, gate_d.DECISION_PATH, gate_d.PLACE_ANCHOR_PATH,
         gate_d.PLACE_ANCHOR_SCHEMA_PATH,
         gate_c_validation.SELECTION_SCHEMA_PATH, gate_c_validation.SOURCE_SCHEMA_PATH,
@@ -246,6 +247,14 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
         incumbent_meta = spike.build_spike(leonardo, public_preview=True)
         spike.build_spike(roman, dataset=spike.REGION_DATASET, public_preview=True)
         bundle = _compose(leonardo, roman)
+        amendment_provenance = {
+            **incumbent_meta["input_amendment"],
+            "artifact_uri": "./inputs/" + gate_d.CESENA_AMENDMENT_PATH.relative_to(ROOT).as_posix(),
+            "base_claims_artifact_uri": "./inputs/" + gate_d.CLAIMS_PATH.relative_to(ROOT).as_posix(),
+        }
+        ledger_by_path = {row["path"]: row for row in bundle["input_ledger"]}
+        if ledger_by_path[amendment_provenance["path"]]["sha256"] != amendment_provenance["sha256"]:
+            raise UnifiedBuildError("Cesena amendment input changed during composition")
         # Finish validating all input/template content before touching the output.
         template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
         assets = {name: (TEMPLATE_DIR / name).read_bytes() for name in ("runtime.js", "style.css")}
@@ -264,6 +273,8 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             destination = output / "inputs" / row["path"]
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / row["path"], destination)
+            if hashlib.sha256(destination.read_bytes()).hexdigest() != row["sha256"]:
+                raise UnifiedBuildError("copied input differs from its pinned ledger: " + row["path"])
         shutil.copyfile(roman / "source_manifest.json", output / "source_manifest.json")
         source_dir = roman / "sources"
         if source_dir.exists():
@@ -288,6 +299,8 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "engine_id": spike.EXPECTED_ENGINE, "engine_family": incumbent_meta["engine_family"],
             "bundle_id": bundle["bundle_id"], "bundle_sha256": bundle_sha,
             "bundle_content_sha256": bundle["content_sha256"],
+            "leonardo_dataset_identity": bundle["leonardo"]["explorerState"]["dataset_identity"],
+            "leonardo_input_amendment": amendment_provenance,
             "semantic_item_count": len(bundle["registry"]), "life_path_available": True,
             "life_path_presence_count": 11, "roman_version_count": 3, "architecture_reference_count": 31,
             "earth_context": incumbent_meta["earth_context"],

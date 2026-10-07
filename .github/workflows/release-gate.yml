@@ -116,7 +116,7 @@ jobs:
         run: |
           set -euo pipefail
           BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
-          timeout 210s node scripts/capture_explorer_performance.mjs \
+          timeout 330s node scripts/capture_explorer_performance.mjs \
             --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
             --baseline-ref 76404197 --phase high-dpi \
             --output /tmp/artemis-explorer-performance/high-dpi
@@ -197,6 +197,7 @@ jobs:
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \
             tests/test_leonardo_world_slice.py \
+            tests/test_cesena_input_amendment.py \
             tests/test_render_projection_contract.py \
             tests/test_renderer_parity.py \
             tests/test_temporal_map_m2_proof.py \

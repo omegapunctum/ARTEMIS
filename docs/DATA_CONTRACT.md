@@ -93,6 +93,10 @@ This adapter does not normalize construction/associated date ranges into Entity 
 
 ---
 
+### Bounded Cesena input amendment — 2026-10-07
+
+The owner-accepted [Cesena Claim correction](work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md), prospectively accepted by distinct Research and Architecture AI reviewers, authorizes one guarded input amendment before the common World Model/projection path. It removes only the unsupported survey-context qualification from `claim-cesena-presence-1502-08-10`; the frozen Gate C v1 bytes and historical review identity remain unchanged. The derived dataset identity and build/input provenance must bind both the frozen base and separate amendment digest. Claim/EvidenceLink status, confidence, uncertainty, locator, dates, geometry, routes, target IDs and all other records remain unchanged. This exception opens no general write/editor, corpus intake, backend/Airtable write or historical acceptance. The original survey event identity/label remains candidate context, not validated by the narrower presence Claim.
+
 ## 3. Release artifact contract
 
 Required Architecture Atlas compatibility release artifacts:

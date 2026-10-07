@@ -10,6 +10,7 @@ the frozen package or claim that candidate content is reviewed historical truth.
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import re
 import sys
@@ -25,6 +26,24 @@ if str(ROOT) not in sys.path:
 SLICE_ROOT = ROOT / "fixtures" / "world_slices" / "leonardo_romagna_1502" / "v1"
 SELECTION_PATH = SLICE_ROOT / "selection_manifest.json"
 CLAIMS_PATH = SLICE_ROOT / "claims_manifest.json"
+CESENA_AMENDMENT_PATH = SLICE_ROOT.parent / "amendments" / "cesena_presence_v1.json"
+CESENA_AMENDMENT = {
+    "schema_version": "1.0.0",
+    "amendment_id": "cesena-presence-wording-v1",
+    "operation": "authorized_statement_narrowing",
+    "base_claims_path": "fixtures/world_slices/leonardo_romagna_1502/v1/claims_manifest.json",
+    "base_claims_sha256": "3a527e9899874c7e8d0acd07db624ad21b7f20dadaab898288b56d154bedd95d",
+    "claim_id": "claim-cesena-presence-1502-08-10",
+    "target_object_ref": "event-leonardo-cesena-survey",
+    "before_statement": "Leonardo was present in Cesena by 10 August 1502 in the selected survey context.",
+    "after_statement": "Leonardo was present in Cesena by 10 August 1502.",
+    "decision_ref": "docs/work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md",
+    "audit_ref": "docs/work/2026-10-04_CESENA_SOURCE_REPRODUCIBILITY_AUDIT_v1.md",
+    "source_id": "source-uniurb-volpe-chronology",
+    "source_url": "https://press.uniurb.it/index.php/urbinoelaprospettiva/catalog/download/34/75/236?inline=1",
+    "source_citation": "Gianni Volpe, Cronologia vinciana (1502–1503), in Leonardo a Urbino, Urbino University Press, 2023, pp. 7–27; printed p. 16 / PDF page 10; Manuscript L folio 46v.",
+    "reason": "The publication binds presence/date/folio, but does not bind surveying to this dated entry. The original manuscript has not been independently inspected.",
+}
 SOURCES_PATH = SLICE_ROOT / "source_registry.json"
 COVERAGE_PATH = SLICE_ROOT / "coverage_manifest.json"
 DECISION_PATH = SLICE_ROOT / "gate_c_decision.json"
@@ -80,6 +99,43 @@ def _load(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise GateDInputError(f"{path} must contain a JSON object")
     return value
+
+
+def _apply_cesena_amendment(
+    claims_package: dict[str, Any], amendment: dict[str, Any], base_bytes: bytes
+) -> dict[str, Any]:
+    """Apply only the accepted statement deletion to a copy of the frozen input."""
+    if amendment != CESENA_AMENDMENT:
+        raise GateDInputError("Cesena amendment must match the exact authorized shape and values")
+    claims = _index(claims_package.get("claims"), "claim_id", "Claims")
+    claim = claims.get(amendment["claim_id"])
+    if claim is None or claim.get("target_object_ref") != amendment["target_object_ref"]:
+        raise GateDInputError("Cesena amendment target Claim/object mismatch")
+    if claim.get("statement") != amendment["before_statement"]:
+        raise GateDInputError("Cesena amendment old statement mismatch")
+    if hashlib.sha256(base_bytes).hexdigest() != amendment["base_claims_sha256"]:
+        raise GateDInputError("Cesena amendment frozen claims byte hash mismatch")
+    if json.loads(base_bytes) != claims_package:
+        raise GateDInputError("Cesena amendment input differs from the frozen claims bytes")
+    result = copy.deepcopy(claims_package)
+    for row in result["claims"]:
+        if row["claim_id"] == amendment["claim_id"]:
+            row["statement"] = amendment["after_statement"]
+    return result
+
+
+def cesena_amendment_provenance() -> dict[str, Any]:
+    """Expose the exact versioned input amendment, separately from frozen review."""
+    amendment = _load(CESENA_AMENDMENT_PATH)
+    if amendment != CESENA_AMENDMENT:
+        raise GateDInputError("Cesena amendment must match the exact authorized shape and values")
+    return {
+        **amendment,
+        "path": str(CESENA_AMENDMENT_PATH.relative_to(ROOT)),
+        "sha256": hashlib.sha256(CESENA_AMENDMENT_PATH.read_bytes()).hexdigest(),
+        "base_reviewed_content_digest": _load(DECISION_PATH)["reviewed_content_digest"],
+        "historical_review_reaccepted": False,
+    }
 
 
 def _load_place_anchor_registry() -> dict[str, Any]:
@@ -494,6 +550,10 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     decision = _load(DECISION_PATH)
     place_anchor_registry = _load_place_anchor_registry()
     _assert_frozen_boundary(selection, claims_package, decision)
+    amendment = cesena_amendment_provenance()
+    claims_package = _apply_cesena_amendment(
+        claims_package, _load(CESENA_AMENDMENT_PATH), CLAIMS_PATH.read_bytes()
+    )
 
     candidates = _index(selection["candidate_objects"], "object_id", "candidate objects")
     claims = _index(claims_package["claims"], "claim_id", "Claims")
@@ -544,8 +604,11 @@ def build_gate_d_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     )
 
     identity = {
-        "kind": "frozen_gate_c_repository_package",
-        "value": f"{selection['slice_id']}@{decision['reviewed_content_digest']}",
+        "kind": "bounded_gate_c_input_amendment",
+        "value": (
+            f"{selection['slice_id']}@{decision['reviewed_content_digest']}"
+            f"+{amendment['amendment_id']}@{amendment['sha256']}"
+        ),
     }
     layer_rows = [
         {
