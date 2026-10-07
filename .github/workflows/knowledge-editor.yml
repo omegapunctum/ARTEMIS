@@ -14,6 +14,7 @@ on:
       - "requirements.txt"
       - "docs/KNOWLEDGE_EDITOR_RUNBOOK.md"
       - "docs/work/2026-10-07_KNOWLEDGE_EDITOR_v1.md"
+      - "docs/work/2026-10-07_EDITOR_PUBLIC_EXPORT_v1.md"
       - ".github/workflows/knowledge-editor.yml"
   pull_request:
     paths: *editor_paths
