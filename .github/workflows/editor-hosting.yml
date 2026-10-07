@@ -1,0 +1,40 @@
+name: Hosted Editor Readiness
+on:
+  push:
+    paths: &hosting_paths
+      - app/knowledge_editor/**
+      - app/auth/**
+      - scripts/run_hosted_editor.py
+      - tests/test_editor_hosting.py
+      - render.yaml
+      - .github/workflows/editor-hosting.yml
+  pull_request:
+    paths: *hosting_paths
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  hosted-editor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s
+          --health-timeout 3s --health-retries 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt pytest==9.1.1 httpx==0.28.1
+      - name: Verify isolated production app against real Redis
+        env:
+          APP_ENV: test
+          AUTH_SESSION_BACKEND: memory
+          AUTH_SECRET_KEY: synthetic-test-only-hosting-policy-secret
+          EDITOR_TEST_REDIS_URL: redis://127.0.0.1:6379/1
+        run: python -m pytest tests/test_editor_hosting.py -q

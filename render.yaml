@@ -1,0 +1,43 @@
+# Creates paid resources only when explicitly applied in a connected account.
+services:
+  - type: web
+    name: artemis-editor
+    runtime: python
+    repo: https://github.com/omegapunctum/ARTEMIS
+    branch: main
+    region: frankfurt
+    plan: 0.5c-512mb
+    numInstances: 1
+    autoDeployTrigger: "off"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scripts/run_hosted_editor.py
+    healthCheckPath: /api/ready
+    disk:
+      name: artemis-editor-data
+      mountPath: /var/data/artemis
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.17
+      - key: ARTEMIS_EDITOR_DATA_DIR
+        value: /var/data/artemis
+      - key: AUTH_SECRET_KEY
+        generateValue: true
+      - key: ARTEMIS_OWNER_EMAIL
+        sync: false
+      - key: ARTEMIS_OWNER_PASSWORD
+        sync: false
+      - key: ARTEMIS_EDITOR_PROXY_CIDRS
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          name: artemis-editor-sessions
+          type: keyvalue
+          property: connectionString
+  - type: keyvalue
+    name: artemis-editor-sessions
+    region: frankfurt
+    plan: 256mb
+    ipAllowList: []
+    maxmemoryPolicy: noeviction
+    persistenceMode: journal-snapshot
