@@ -16,6 +16,8 @@ The launcher validates a canonical HTTPS origin from `RENDER_EXTERNAL_URL` (or e
 
 The stable database is `/var/data/artemis/editor.sqlite3`. Secret settings persist separately in Render. Cookies are Secure, HttpOnly and SameSite=Lax; auth uses the existing Redis rotation policy. There is no cross-origin Pages write API. The editor and its anonymous candidate cards share the backend origin.
 
+Supply `ARTEMIS_EDITOR_PROXY_CIDRS` with the actual private IPs/CIDRs of the deployment's trusted reverse proxies, confirmed from the provider/runtime configuration. No range is guessed or universally trusted; missing, wildcard and public catch-all settings fail startup. ASGI middleware resolves the forwarded chain from the right, and the legacy limiter does not parse it a second time. Before acceptance, verify distinct clients get distinct login limits and forged forwarded prefixes do not change the resolved client. This platform-dependent verification requires the connected account; local synthetic policy tests alone do not establish the actual proxy topology. Use no `*` override to bypass that prerequisite.
+
 ## Acceptance after actual deployment
 
 Do not report availability until the actual assigned HTTPS URL has passed `/api/ready`, `/editor/`, owner login/refresh, private draft save/readback, exact review, explicit anonymous publication and correction/history. Check blocked signup/legacy routes and missing private source expressions in anonymous responses. Record the deployed source commit and test results without credentials or private account data. Native interface evidence from the original pilot is not internet deployment verification.

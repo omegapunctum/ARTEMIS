@@ -8,7 +8,7 @@ services:
     region: frankfurt
     plan: 0.5c-512mb
     numInstances: 1
-    autoDeployTrigger: off
+    autoDeployTrigger: "off"
     buildCommand: pip install -r requirements.txt
     startCommand: python scripts/run_hosted_editor.py
     healthCheckPath: /api/ready
@@ -26,6 +26,8 @@ services:
       - key: ARTEMIS_OWNER_EMAIL
         sync: false
       - key: ARTEMIS_OWNER_PASSWORD
+        sync: false
+      - key: ARTEMIS_EDITOR_PROXY_CIDRS
         sync: false
       - key: REDIS_URL
         fromService:

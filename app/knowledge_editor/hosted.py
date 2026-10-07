@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import os
+from ipaddress import ip_network
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -29,6 +30,13 @@ def configure() -> tuple[str, str]:
     redis_url = os.getenv("REDIS_URL", "")
     if urlsplit(redis_url).scheme not in {"redis", "rediss"}:
         raise RuntimeError("A private Redis connection is required")
+    proxy_ranges = os.getenv("ARTEMIS_EDITOR_PROXY_CIDRS", "").strip().split(",")
+    try:
+        networks = [ip_network(value.strip(), strict=True) for value in proxy_ranges]
+        if not networks or any(not network.is_private or network.prefixlen == 0 for network in networks):
+            raise ValueError
+    except ValueError:
+        raise RuntimeError("Explicit private trusted proxy IPs/CIDRs are required") from None
     raw_directory = os.getenv("ARTEMIS_EDITOR_DATA_DIR", "")
     directory = Path(raw_directory)
     if not raw_directory or not directory.is_absolute() or not directory.is_dir() or directory.is_symlink():
@@ -42,6 +50,8 @@ def configure() -> tuple[str, str]:
         "AUTH_ALGORITHM": "HS256", "MODERATOR_EMAILS": owner,
         "COOKIE_SECURE": "true", "COOKIE_HTTPONLY": "true", "COOKIE_SAMESITE": "lax",
         "COOKIE_PATH": "/", "COOKIE_DOMAIN": "", "MIGRATION_STARTUP_ROLE": "owner",
+        # The hosted ASGI proxy middleware resolves the chain once, from the right.
+        "ARTEMIS_TRUSTED_PROXIES": "", "TRUSTED_PROXY_IPS": "",
     })
     return parsed.hostname, owner
 
@@ -78,9 +88,10 @@ def create_app():
     hostname, owner = configure()
     from fastapi import FastAPI, Depends, Request, HTTPException
     from fastapi.exceptions import RequestValidationError
-    from fastapi.responses import JSONResponse, HTMLResponse
+    from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
     from fastapi.staticfiles import StaticFiles
     from starlette.middleware.trustedhost import TrustedHostMiddleware
+    from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
     from sqlalchemy import text
     from app.auth import service as auth
     from app.auth.routes import router as auth_router
@@ -100,6 +111,8 @@ def create_app():
     app = FastAPI(title="ARTEMIS Knowledge Editor", docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(ObservabilityMiddleware)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=[hostname, "127.0.0.1", "localhost"])
+    app.add_middleware(ProxyHeadersMiddleware,
+        trusted_hosts=[value.strip() for value in os.environ["ARTEMIS_EDITOR_PROXY_CIDRS"].split(",")])
     app.add_exception_handler(HTTPException, http_exception_handler)
     app.add_exception_handler(editor.KnowledgeEditorError, knowledge_editor_error_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)
@@ -134,6 +147,16 @@ def create_app():
 
     @app.middleware("http")
     async def headers(request: Request, call_next):
+        if request.method == "POST" and request.url.path == "/api/auth/login":
+            try:
+                payload = await request.json()
+                password = payload.get("password") if isinstance(payload, dict) else None
+                if isinstance(password, str) and len(password.encode("utf-8")) > 72:
+                    return JSONResponse(status_code=422, content={"error": "invalid_request"},
+                        headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"})
+            except (ValueError, UnicodeError):
+                return JSONResponse(status_code=422, content={"error": "invalid_request"},
+                    headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"})
         response = await call_next(request)
         response.headers.update({"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
             "Referrer-Policy": "no-referrer", "X-Frame-Options": "DENY"})
@@ -147,6 +170,10 @@ def create_app():
         page = (static / "index.html").read_text()
         page = page.replace('id="register-submit"', 'id="register-submit" hidden')
         return HTMLResponse(page)
+
+    @app.get("/editor/index.html", include_in_schema=False)
+    def editor_index():
+        return RedirectResponse("/editor/", status_code=307)
 
     app.mount("/editor", StaticFiles(directory=static, html=True), name="editor")
     return app

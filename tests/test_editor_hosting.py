@@ -15,7 +15,8 @@ def configured(tmp_path, monkeypatch):
     monkeypatch.setattr(os, "environ", os.environ.copy())
     settings = {"ARTEMIS_EDITOR_ORIGIN": "https://editor.example.com",
         "ARTEMIS_OWNER_EMAIL": "owner@example.com", "AUTH_SECRET_KEY": "synthetic-stable-secret-only-1234567890",
-        "REDIS_URL": "redis://127.0.0.1:6379/0", "ARTEMIS_EDITOR_DATA_DIR": str(tmp_path)}
+        "REDIS_URL": "redis://127.0.0.1:6379/0", "ARTEMIS_EDITOR_DATA_DIR": str(tmp_path),
+        "ARTEMIS_EDITOR_PROXY_CIDRS": "10.1.2.0/24"}
     for key, value in settings.items():
         monkeypatch.setenv(key, value)
     original = os.umask(0o077)
@@ -30,6 +31,8 @@ def configured(tmp_path, monkeypatch):
     ("ARTEMIS_EDITOR_ORIGIN", "https://editor.example.com:bad"),
     ("ARTEMIS_OWNER_EMAIL", "invalid"), ("AUTH_SECRET_KEY", "short"),
     ("REDIS_URL", ""), ("ARTEMIS_EDITOR_DATA_DIR", "relative"),
+    ("ARTEMIS_EDITOR_PROXY_CIDRS", ""), ("ARTEMIS_EDITOR_PROXY_CIDRS", "*"),
+    ("ARTEMIS_EDITOR_PROXY_CIDRS", "0.0.0.0/0"),
 ])
 def test_missing_or_unsafe_configuration_fails_before_database(configured, monkeypatch, key, value):
     monkeypatch.setenv(key, value)
@@ -64,6 +67,7 @@ def test_real_redis_owner_only_app_loop_and_restart(tmp_path):
         "ARTEMIS_EDITOR_ORIGIN": "https://editor.example.com",
         "ARTEMIS_EDITOR_DATA_DIR": str(tmp_path), "ARTEMIS_OWNER_EMAIL": "owner@example.com",
         "ARTEMIS_OWNER_PASSWORD": "synthetic-password-for-test", "REDIS_URL": redis_url,
+        "ARTEMIS_EDITOR_PROXY_CIDRS": "10.1.2.0/24",
         "AUTH_SECRET_KEY": "synthetic-stable-hosted-secret-1234567890"}
     script = '''
 import json, os
@@ -82,10 +86,16 @@ with TestClient(app, base_url="https://editor.example.com") as client:
     assert client.get("/api/ready").json()=={"ok":True}
     page=client.get("/editor/")
     assert page.status_code==200 and 'id="register-submit" hidden' in page.text
+    alias=client.get("/editor/index.html",follow_redirects=False)
+    assert alias.status_code==307 and alias.headers["location"]=="/editor/"
+    assert 'id="register-submit" hidden' in client.get("/editor/index.html").text
     for path in ("/api/auth/register", "/api/drafts", "/api/map/feed", "/uploads/", "/docs"):
         assert client.get(path).status_code==404
     assert client.post("/api/auth/register",json={"email":"attacker@example.com","password":"unused"}).status_code==404
     assert client.get("/api/me").status_code==401
+    for long_password in ("x"*73,"Ж"*37):
+        rejected=client.post("/api/auth/login",json={"email":"owner@example.com","password":long_password})
+        assert rejected.status_code==422 and long_password not in rejected.text
     login=client.post("/api/auth/login",json={"email":"owner@example.com","password":"synthetic-password-for-test"})
     assert login.status_code==200,login.text
     assert "Secure" in login.headers["set-cookie"] and "HttpOnly" in login.headers["set-cookie"]
@@ -176,6 +186,7 @@ def test_invalid_bootstrap_password_cannot_create_owner(tmp_path, password):
     env = {**os.environ, "ARTEMIS_EDITOR_ORIGIN": "https://editor.example.com",
         "ARTEMIS_EDITOR_DATA_DIR": str(tmp_path), "ARTEMIS_OWNER_EMAIL": "owner@example.com",
         "ARTEMIS_OWNER_PASSWORD": password, "REDIS_URL": os.environ["EDITOR_TEST_REDIS_URL"],
+        "ARTEMIS_EDITOR_PROXY_CIDRS": "10.1.2.0/24",
         "AUTH_SECRET_KEY": "synthetic-bootstrap-rejection-secret-1234567890"}
     script = '''
 from app.knowledge_editor.hosted import create_app
@@ -192,3 +203,24 @@ with auth.SessionLocal() as db:
     result = subprocess.run([sys.executable, "-c", script], env=env, cwd=Path(__file__).resolve().parents[1],
                             capture_output=True, text=True, timeout=25)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_trusted_proxy_separates_clients_and_ignores_spoofed_prefix():
+    import asyncio
+    from app.security.rate_limit import get_client_ip
+    from starlette.requests import Request
+    from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+
+    async def address(peer, forwarded):
+        values = []
+        async def app(scope, receive, send):
+            values.append(get_client_ip(Request(scope)))
+        middleware = ProxyHeadersMiddleware(app, trusted_hosts=["10.1.2.0/24"])
+        scope={"type":"http","method":"POST","path":"/api/auth/login",
+            "client":(peer,1234),"scheme":"http","headers":[(b"x-forwarded-for",forwarded.encode())]}
+        await middleware(scope,None,None)
+        return values[0]
+    assert asyncio.run(address("10.1.2.3","198.51.100.10"))=="198.51.100.10"
+    assert asyncio.run(address("10.1.2.3","198.51.100.11"))=="198.51.100.11"
+    assert asyncio.run(address("10.1.2.3","192.0.2.99, 198.51.100.10"))=="198.51.100.10"
+    assert asyncio.run(address("198.51.100.20","192.0.2.99"))=="198.51.100.20"
