@@ -328,3 +328,7 @@ When lifecycle changes:
 4. do not silently repurpose old execution docs;
 5. archive only when traceability is preserved;
 6. never let working/audit/archive docs become hidden canonical owners.
+
+## Owner-directed deployment preparation
+
+- `2026-10-07_EDITOR_HOSTING_v1.md` — active bounded Render hosting preparation authorized after #474; no resources provisioned or public availability claimed.
