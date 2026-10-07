@@ -98,18 +98,31 @@ jobs:
           cmp /tmp/artemis-unified-preview/globe/unified-bundle.json /tmp/artemis-unified-preview/region/unified-bundle.json
 
       - name: Measure paired Explorer performance
+        if: github.event_name == 'pull_request'
         env:
           NODE_PATH: /tmp/artemis-browser-tools/node_modules
         run: |
           set -euo pipefail
           BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
-          timeout 300s node scripts/capture_explorer_performance.mjs \
+          timeout 540s node scripts/capture_explorer_performance.mjs \
             --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
             --baseline-ref 76404197 \
             --output /tmp/artemis-explorer-performance
 
+      - name: Verify Explorer high-DPI rendering and input
+        if: github.event_name == 'pull_request'
+        env:
+          NODE_PATH: /tmp/artemis-browser-tools/node_modules
+        run: |
+          set -euo pipefail
+          BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
+          timeout 210s node scripts/capture_explorer_performance.mjs \
+            --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
+            --baseline-ref 76404197 --phase high-dpi \
+            --output /tmp/artemis-explorer-performance/high-dpi
+
       - name: Attach Explorer performance measurements
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: explorer-performance

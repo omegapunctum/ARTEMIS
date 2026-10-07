@@ -262,7 +262,7 @@
     const priority = place => place === emphasis.selectedPlace ? 0 : place === emphasis.currentPlace ? 1 : ends.has(place) ? 2 : (groups.find(group => group.place_ref === place)?.presences.length || 0) > 1 ? 3 : 4;
     const markers = [...runtime.placeMarkers].sort((a,b) => priority(a[0])-priority(b[0]));
     // Read every label before writing any position. Interleaved reads/writes
-    // forced a separate browser layout for each of the nine Place labels.
+    // could repeatedly invalidate browser style/layout state.
     const measurements = markers.map(([place,marker]) => { const label = marker.getElement().querySelector('.place-label'); return {place,label,point:runtime.map.project(marker.getLngLat()),width:label.offsetWidth,height:label.offsetHeight}; });
     const points = measurements.map(({place,point}) => ({place,...point})), placements = [];
     for (const {place,label,point,width,height} of measurements) {
@@ -345,7 +345,7 @@
     runtime.query = state => query(runtime.bundle,state || runtime.state);
     bindControls(); renderControls(); renderInspector();
     if (!window.maplibregl) throw Error('Pinned MapLibre engine could not be loaded.');
-    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,canvasContextAttributes:{antialias:true}});
+    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,2),canvasContextAttributes:{antialias:true}});
     runtime.map = map; map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
     map.on('error',event => { console.error('ARTEMIS map error',event.error || event); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
     map.on('load',() => {
