@@ -84,7 +84,40 @@ async function authenticate(page, email, register = false) {
 }
 
 async function openDraft(page, name, draftId, list = '#draft-list') {
+  const disclosure = page.locator('#record-navigation-disclosure');
+  const summary = disclosure.locator(':scope > summary');
+  if (!await disclosure.evaluate(node => node.open)) {
+    await summary.focus();
+    await summary.press('Enter');
+    assert.equal(await disclosure.evaluate(node => node.open), true, 'Keyboard must open record navigation');
+  }
   await uiAction(page, `${list} button:has-text("${name}")`, `${API}/drafts/${draftId}`, 'GET');
+  if (page.viewportSize().width <= 760 && await disclosure.evaluate(node => node.open)) {
+    await summary.focus();
+    await summary.press('Enter');
+    assert.equal(await disclosure.evaluate(node => node.open), false, 'Keyboard must close record navigation');
+  }
+}
+
+async function firstViewportForm(page, label) {
+  // Inspect the first screen, rather than the scroll position used for the last action.
+  await page.evaluate(() => new Promise(resolve => {
+    window.scrollTo(0, 0);
+    requestAnimationFrame(resolve);
+  }));
+  const controls = page.viewportSize().width <= 760 ? ['entity_name', 'save-draft-top'] : ['entity_name'];
+  const bounds = await page.evaluate(ids => ids.map(id => {
+    const node = document.getElementById(id);
+    const rect = node.getBoundingClientRect();
+    return { id, visible: node.getClientRects().length > 0, top: rect.top, bottom: rect.bottom,
+      left: rect.left, right: rect.right, viewport_height: innerHeight, viewport_width: innerWidth };
+  }), controls);
+  for (const control of bounds) {
+    assert.ok(control.visible && control.top >= 0 && control.bottom <= control.viewport_height
+      && control.left >= 0 && control.right <= control.viewport_width,
+    `${label}: ${control.id} must be fully visible on the first screen`);
+  }
+  return bounds;
 }
 
 async function layout(page, label) {
@@ -160,12 +193,17 @@ try {
       await uiAction(owner, '#logout', '/api/auth/logout');
       ownerToken = await authenticate(owner, 'owner@example.com');
     }
+    scenario.initial_form_viewport = await firstViewportForm(owner, `${label} initial form`);
     await owner.locator('#entity_name').focus();
     await owner.keyboard.insertText(`Синтетический павильон ${label}`);
     await owner.keyboard.press('Tab');
+    if (viewport.width <= 760) {
+      assert.equal(await owner.locator('#save-draft-top').evaluate(node => document.activeElement === node), true, 'Keyboard must reach mobile quick Save');
+      await owner.keyboard.press('Tab');
+    }
     assert.equal(await owner.locator('#record-fields details > summary').first().evaluate(node => document.activeElement === node), true, 'Keyboard must reach object description disclosure');
     const name = `Синтетический павильон ${label}`;
-    let draft = await uiAction(owner, '#save-draft', `${API}/drafts`, 'POST', 201);
+    let draft = await uiAction(owner, viewport.width <= 760 ? '#save-draft-top' : '#save-draft', `${API}/drafts`, 'POST', 201);
     assert.equal(draft.content.source.title, '', 'Incomplete draft must remain incomplete');
     scenario.checks.push('keyboard_navigation', 'incomplete_draft_saved');
     await owner.reload();
@@ -173,6 +211,7 @@ try {
     await owner.locator('#workspace').waitFor({ state: 'visible' });
     await openDraft(owner, name, draft.id);
     assert.equal(await owner.locator('#entity_name').inputValue(), name, 'Draft must resume after browser reload');
+    scenario.resumed_form_viewport = await firstViewportForm(owner, `${label} resumed form`);
     let submitRequests = 0;
     const countSubmits = request => { if (new URL(request.url()).pathname.endsWith('/submit')) submitRequests += 1; };
     owner.on('request', countSubmits);
@@ -225,6 +264,7 @@ try {
     await owner.locator('#claim_statement').fill(originalStatement);
     draft = await uiAction(owner, '#save-draft', `${API}/drafts/${draft.id}`, 'PUT');
     scenario.checks.push('real_offline_failure_preserves_text', 'recovery_save');
+    scenario.saved_form_viewport = await firstViewportForm(owner, `${label} saved form`);
     scenario.editor_layout = await layout(owner, label);
     await screenshot(owner, `${label}.png`, 'complete_saved_draft_before_review');
     draft = await uiAction(owner, '#submit-review', `${API}/drafts/${draft.id}/submit`);

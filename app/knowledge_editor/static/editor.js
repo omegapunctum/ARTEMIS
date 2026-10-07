@@ -1,6 +1,10 @@
 const $ = (id) => document.getElementById(id);
 const API = '/api/knowledge-editor';
 const state = {token:null,user:null,record:null,dirty:false,busy:false,drafts:[],queue:[],published:[]};
+const narrowLayout=window.matchMedia('(max-width:760px)');
+function syncNavigation(){$('record-navigation-disclosure').open=!narrowLayout.matches;}
+function closeMobileNavigation(){if(narrowLayout.matches)$('record-navigation-disclosure').open=false;}
+syncNavigation();narrowLayout.addEventListener('change',syncNavigation);
 const labels = {
   workflow:{draft:'Черновик',submitted:'На проверке',changes_requested:'Нужны исправления',request_changes:'Нужны исправления',accepted:'Принято редакционно',rejected:'Отклонено',published:'Опубликовано'},
   source:{unknown:'Неизвестен',primary:'Первичный',scholarly:'Научная публикация',institutional:'Институциональный',other:'Другой'},
@@ -52,6 +56,7 @@ function renderPermissions(){
   const record=state.record;const can=record?.capabilities||{};const editable=!record||Boolean(can.can_edit);
   $('record-fields').disabled=state.busy||!editable;
   $('save-draft').hidden=!editable;$('save-draft').disabled=state.busy;
+  $('save-draft-top').hidden=!editable;$('save-draft-top').disabled=state.busy;
   $('submit-review').hidden=!editable;$('submit-review').disabled=state.busy||!record;
   $('review-panel').hidden=!can.can_review;
   $('publication-panel').hidden=!can.can_publish&&!record?.published_snapshot_id;
@@ -67,7 +72,7 @@ function renderPermissions(){
   $('public-link').hidden=!record?.published_snapshot_id;if(record?.published_snapshot_id)$('public-link').href=`/editor/?object=${encodeURIComponent(record.entity_id)}`;
 }
 function okayToLeave(){return !state.dirty||window.confirm('В форме есть несохранённый текст. Переключить запись без сохранения?');}
-function resetRecord(){state.record=null;fill(defaults());$('review-reason').value='';$('correction-reason').value='';$('history-list').replaceChildren();$('conflict-panel').hidden=true;renderPermissions();$('entity_name').focus();}
+function resetRecord(){state.record=null;fill(defaults());$('review-reason').value='';$('correction-reason').value='';$('history-list').replaceChildren();$('conflict-panel').hidden=true;renderPermissions();closeMobileNavigation();$('entity_name').focus();}
 function itemTitle(item){return item.content?.entity?.name||item.entity?.name||item.name||'Без названия';}
 function renderList(target,items,open){$(target).replaceChildren();for(const item of items){const li=document.createElement('li');const button=document.createElement('button');button.type='button';button.textContent=itemTitle(item);if(state.record?.id===item.id)button.setAttribute('aria-current','true');const small=document.createElement('small');small.textContent=labels.workflow[item.state]||'Опубликованная карточка';button.append(small);button.addEventListener('click',()=>{if(okayToLeave())act(()=>open(item));});li.append(button);$(target).append(li);}}
 function items(response){return Array.isArray(response)?response:response?.items||response?.drafts||response?.objects||[];}
@@ -75,7 +80,7 @@ function updateLists(){const query=$('record-search').value.trim().toLocaleLower
 async function lists(){state.drafts=items(await request(`${API}/drafts`));const capabilities=await request(`${API}/capabilities`);$('review-queue-panel').hidden=!capabilities.can_review;state.queue=capabilities.can_review?items(await request(`${API}/review-queue`)):[];state.published=items(await request(`${API}/public/objects`,{authenticated:false}));updateLists();}
 function date(value){if(!value)return '';const parsed=new Date(value);return Number.isNaN(parsed.valueOf())?String(value):parsed.toLocaleString('ru-RU');}
 async function history(){const response=await request(`${API}/drafts/${encodeURIComponent(state.record.id)}/history`);const entries=response?.events||[];const actions={created:'Черновик создан',saved:'Черновик сохранён',submitted:'Отправлено на проверку',accepted:'Принято редакционно',request_changes:'Запрошены исправления',rejected:'Отклонено',published:'Опубликовано',correction_created:'Создана поправка'};$('history-list').replaceChildren();for(const entry of entries){const li=document.createElement('li');li.textContent=[actions[entry.action]||entry.action,entry.payload?.reason,date(entry.recorded_at),labels.review[entry.payload?.review_mode]||'',entry.payload?.version?`версия ${entry.payload.version}`:''].filter(Boolean).join(' · ');$('history-list').append(li);}}
-async function loadRecord(id){state.record=await request(`${API}/drafts/${encodeURIComponent(id)}`);fill(state.record.content);$('conflict-panel').hidden=true;$('review-reason').value='';$('public-card').hidden=true;$('workspace').hidden=false;renderPermissions();updateLists();await history();}
+async function loadRecord(id){state.record=await request(`${API}/drafts/${encodeURIComponent(id)}`);fill(state.record.content);$('conflict-panel').hidden=true;$('review-reason').value='';$('public-card').hidden=true;$('workspace').hidden=false;renderPermissions();updateLists();await history();closeMobileNavigation();$('record-title').focus();}
 async function save(){const content=readContent();state.record=state.record?await request(`${API}/drafts/${encodeURIComponent(state.record.id)}`,{method:'PUT',body:{expected_version:state.record.version,content}}):await request(`${API}/drafts`,{method:'POST',body:{content}});fill(state.record.content);renderPermissions();await lists();await history();notice('Черновик сохранён на сервере. Можно продолжить позже.');}
 function readyToSubmit(){const required=['entity_name','source_title','claim_statement','evidence_locator','source_expression'];const missing=required.filter(id=>!$(id).value.trim());if(!$('source_url').value.trim()&&!$('source_reference').value.trim())missing.push('source_url');if(!$('author_attestation').checked)missing.push('author_attestation');if(!missing.length)return true;const control=$(missing[0]);control.focus();$('error').textContent='Для проверки заполните название объекта и источника, ссылку или библиографию, одно утверждение, точное место и исходную формулировку в источнике; подтвердите авторство. Сейчас выделено первое незаполненное поле.';$('error').hidden=false;return false;}
 async function review(decision){const reason=$('review-reason').value.trim();if(!reason){$('review-reason').focus();notice('Укажите основание решения.');return;}state.record=await request(`${API}/drafts/${encodeURIComponent(state.record.id)}/review`,{method:'POST',body:{expected_version:state.record.version,submitted_digest:state.record.submitted_digest,expected_predecessor_revision_id:state.record.predecessor_revision_id??null,decision,reason}});fill(state.record.content);renderPermissions();await lists();await history();notice(decision==='accept'?'Запись принята редакционно. Публикация требует отдельного действия.':'Решение сохранено.');}

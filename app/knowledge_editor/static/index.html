@@ -31,6 +31,8 @@
       </form>
     </section>
     <div id="workspace" class="workspace" hidden>
+      <details id="record-navigation-disclosure" open>
+        <summary id="record-navigation-summary">Записи и проверка</summary>
       <aside class="record-navigation" aria-label="Записи редактора">
         <button id="new-draft" class="primary" type="button">Новый объект</button>
         <div class="list-heading"><h2>Мои записи</h2><button id="refresh-list" type="button">Обновить</button></div>
@@ -43,8 +45,9 @@
         </section>
         <details><summary>Опубликованные записи</summary><ul id="published-list" class="record-list"></ul></details>
       </aside>
+      </details>
       <section class="editing-area" aria-label="Редактирование записи">
-        <div class="record-heading"><h1 id="record-title">Новый объект</h1><span id="record-state" class="state">Не сохранён</span></div>
+        <div class="record-heading"><h1 id="record-title" tabindex="-1">Новый объект</h1><span id="record-state" class="state">Не сохранён</span></div>
         <p id="record-guidance" class="muted">Заполните то, что известно. Пустые поля не создают точных дат или координат.</p>
         <div id="conflict-panel" class="message" hidden><p>Запись уже изменилась на сервере. Ваш текст остаётся в форме. Скопируйте нужные изменения перед загрузкой новой версии.</p><button id="reload-record" type="button">Загрузить версию сервера</button></div>
         <form id="record-form" novalidate>
@@ -52,6 +55,7 @@
             <section class="form-section">
               <h2>Объект</h2>
               <label for="entity_name">Название</label><input id="entity_name" name="entity_name" maxlength="240" autocomplete="off" aria-describedby="name-help">
+              <button id="save-draft-top" class="primary quick-save" type="submit">Сохранить черновик</button>
               <p id="name-help" class="field-help">Архитектурный объект. Перед созданием проверьте список записей.</p>
               <details><summary>Описание объекта</summary><label for="entity_description">Краткое описание</label><textarea id="entity_description" name="entity_description" rows="3" maxlength="4000"></textarea></details>
             </section>
