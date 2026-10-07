@@ -52,7 +52,7 @@ jobs:
       - name: Verify API, persistence, delivery and preserved auth/drafts
         run: |
           mkdir -m 700 -p /tmp/artemis-editor-ci .impeccable/review
-          python -m pytest tests/test_knowledge_editor.py tests/test_editor_operations.py tests/test_auth_session_store.py tests/test_auth_secret_key_policy.py tests/test_drafts.py tests/test_moderation_integration.py tests/test_startup_migration_owner_gate.py tests/test_governance_boundary.py -q --junitxml=.impeccable/review/editor-tests.xml
+          python -m pytest tests/test_knowledge_editor.py tests/test_knowledge_editor_export.py tests/test_editor_operations.py tests/test_auth_session_store.py tests/test_auth_secret_key_policy.py tests/test_drafts.py tests/test_moderation_integration.py tests/test_startup_migration_owner_gate.py tests/test_governance_boundary.py -q --junitxml=.impeccable/review/editor-tests.xml
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:

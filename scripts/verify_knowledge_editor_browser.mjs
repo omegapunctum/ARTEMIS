@@ -21,9 +21,10 @@ const report = {
   schema_version: 1, synthetic_data: true, verification_scope: 'local_backend_native_browser_not_public_deployment',
   source_commit: sourceCommit, source_tree: git(['rev-parse', 'HEAD^{tree}']),
   script_sha256: sha256(await readFile(fileURLToPath(import.meta.url))),
-  source_files: {}, screenshots: [], snapshots: [], scenarios: [], status: 'running',
+  source_files: {}, screenshots: [], snapshots: [], exports: [], scenarios: [], status: 'running',
 };
 for (const path of ['app/main.py', 'app/knowledge_editor/__init__.py', 'app/knowledge_editor/schemas.py', 'app/knowledge_editor/service.py', 'app/knowledge_editor/routes.py',
+  'app/knowledge_editor/public_export.py', 'app/knowledge_editor/public_export.schema.json', 'scripts/verify_knowledge_editor_export.py',
   'app/knowledge_editor/static/index.html', 'app/knowledge_editor/static/editor.css', 'app/knowledge_editor/static/editor.js']) {
   report.source_files[path] = sha256(await readFile(join(root, path)));
 }
@@ -147,6 +148,64 @@ async function snapshot(request, snapshotId) {
   const entry = { snapshot_id: snapshotId, endpoint, payload, response_sha256: sha256(await response.text()) };
   report.snapshots.push(entry);
   return entry;
+}
+
+async function downloadPublic(page, entityId, expectedSnapshots, filename, keyboard = false) {
+  const endpoint = `${API}/public/objects/${entityId}/export`;
+  const button = page.getByRole('button', { name: 'Скачать опубликованную историю (JSON)', exact: true });
+  assert.ok((await page.locator('#public-export-help').innerText()).includes('даже если открыта старая версия'), 'Download must explain object-wide history scope');
+  if (keyboard) {
+    await page.locator('#public-card ol a').last().focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await button.evaluate(node => node === document.activeElement), true, 'Tab order must reach the native download button from publication history');
+  }
+  const [download, response] = await Promise.all([
+    page.waitForEvent('download'),
+    page.waitForResponse(response => new URL(response.url()).pathname === endpoint),
+    keyboard ? page.keyboard.press('Enter') : button.click(),
+  ]);
+  assert.equal(response.status(), 200, 'Public export download must succeed');
+  assert.equal(response.request().headers().authorization, undefined, 'Download must be anonymous');
+  assert.equal(response.headers()['cache-control'], 'no-store');
+  assert.equal(response.headers()['x-content-type-options'], 'nosniff');
+  assert.equal(download.suggestedFilename(), `artemis-editor-${entityId}-public.json`, 'Native download must retain server filename');
+  const path = join(output, filename);
+  await download.saveAs(path);
+  assert.equal(await download.failure(), null, 'Native attachment must actually be saved');
+  const bytes = await readFile(path);
+  assert.deepEqual(bytes, await response.body(), 'Saved JSON must retain authoritative backend bytes');
+  const payload = JSON.parse(bytes.toString('utf8'));
+  publicPrivacy(payload);
+  assert.equal(payload.entity_id, entityId);
+  assert.equal(payload.current_snapshot_id, expectedSnapshots.at(-1).snapshot_id);
+  assert.deepEqual(payload.snapshots, expectedSnapshots.map(entry => entry.payload), 'Download must include every exact public snapshot');
+  const verified = execFileSync(process.env.ARTEMIS_PYTHON || 'python', [join(root, 'scripts/verify_knowledge_editor_export.py'), path], { cwd: root, encoding: 'utf8' }).trim();
+  assert.ok(verified.includes('Public export integrity verified'), 'Actual native download must pass the offline verifier');
+  await button.waitFor({ state: 'visible' });
+  await page.waitForFunction(() => document.getElementById('download-public-history').getAttribute('aria-busy') === 'false');
+  assert.equal(await page.locator('#public-export-error').isVisible(), false, 'Successful download must not display an error');
+  return { entity_id: entityId, endpoint, file: filename, response_sha256: sha256(bytes), package_digest: payload.package_digest,
+    snapshot_ids: payload.snapshots.map(item => item.snapshot_id), offline_verifier: 'PASS', activation: keyboard ? 'keyboard_enter' : 'pointer' };
+}
+
+async function failedPublicDownload(page, context, expectedStatement) {
+  let downloads = 0;
+  const count = () => downloads++;
+  page.on('download', count);
+  await context.setOffline(true);
+  try {
+    await page.locator('#download-public-history').click();
+    await page.locator('#public-export-error').waitFor({ state: 'visible' });
+    await page.waitForFunction(() => document.getElementById('download-public-history').getAttribute('aria-busy') === 'false');
+    assert.equal(downloads, 0, 'Failed export must not trigger a download');
+    assert.equal(await page.locator('#public-card .statement').textContent(), expectedStatement, 'Failed download must retain displayed card');
+    assert.ok((await page.locator('#public-export-error').innerText()).includes('Не удалось скачать'), 'Failure must name download problem and retry');
+    assert.equal(await page.locator('#public-export-error').getAttribute('role'), 'alert');
+    assert.equal(await page.locator('#download-public-history').isEnabled(), true, 'Failure must allow retry');
+  } finally {
+    await context.setOffline(false);
+    page.off('download', count);
+  }
 }
 
 async function verifyPublic(page, entityId, expectedStatement, filename) {
@@ -322,16 +381,24 @@ try {
     await publicPage.setViewportSize(viewport);
     publicPage.on('pageerror', error => errors.push({ viewport: label, message: error.message }));
     scenario.public_layout = await verifyPublic(publicPage, draft.entity_id, correctedStatement, `public-${label}.png`);
+    const exported = await downloadPublic(publicPage, draft.entity_id, [initial, final], `public-${label}.json`);
+    report.exports.push(exported);
     await publicPage.goto(`/editor/?snapshot=${encodeURIComponent(initial.snapshot_id)}`);
     await idle(publicPage);
     assert.equal(await publicPage.locator('#public-card .statement').textContent(), originalStatement, 'Anonymous historical card must show original Claim');
     assert.ok(!(await publicPage.content()).includes('PRIVATE_EDITOR_CI_'), 'Historical public DOM must omit private source wording');
+    await failedPublicDownload(publicPage, anonymous, originalStatement);
+    const historicalExport = await downloadPublic(publicPage, draft.entity_id, [initial, final], `public-${label}-from-old-snapshot.json`, true);
+    assert.equal(historicalExport.response_sha256, exported.response_sha256, 'Old-snapshot keyboard download must return identical current published-history bytes');
+    scenario.export_downloads = [exported, historicalExport];
     const allPublished = await jsonRequest(anonymous.request, `${API}/public/objects`);
     publicPrivacy(allPublished.payload);
     const history = await jsonRequest(anonymous.request, `${API}/public/objects/${draft.entity_id}/history`);
     publicPrivacy(history.payload);
     assert.equal(history.payload.length, 2);
-    scenario.checks.push('anonymous_public_and_historical_cards', 'literal_html_rendering_no_execution', 'private_source_and_account_fields_absent', 'no_horizontal_overflow');
+    scenario.checks.push('anonymous_public_and_historical_cards', 'literal_html_rendering_no_execution', 'private_source_and_account_fields_absent', 'no_horizontal_overflow',
+      'native_download_saved_json_offline_verified', 'server_attachment_bytes_and_filename_preserved', 'old_snapshot_keyboard_download_full_current_history',
+      'repeat_export_bytes_identical', 'offline_export_failure_retains_card_no_download', 'export_retry_after_failure');
     await publicPage.close();
     await ownerContext.close();
     await reviewerContext.close();

@@ -26,6 +26,8 @@ Provide a bounded offline verification command for schema, package/snapshot hash
 
 Use a server-derived ASCII attachment filename based on the system object UUID, never a user-entered title. Send no-store/nosniff headers; use the existing public route rate limit. Schema/serialization/database failures must not produce a partial successful download.
 
+Implementation resource bound: a successful attachment and offline input are limited to 32 MiB. Oversized exports fail explicitly without truncating published history; the verifier reads at most the limit plus one byte. Reject duplicate JSON keys, non-finite numbers, invalid UTF-8 and malformed/unsupported packages rather than silently normalizing ambiguous input. This operational bound does not change record/history semantics.
+
 ## 4. Interface
 
 Add one native, keyboard-accessible download action to the existing anonymous public card. Label it `Скачать опубликованную историю (JSON)` and explain that it includes all published versions of this object and omits private data. The same action on an older immutable snapshot still downloads the object's current published history, not just the displayed version; make that scope explicit. No new panel, theme, visualization or private-editor redesign is needed. Backend-produced bytes are authoritative; do not reconstruct packets in the browser. Failure must not claim a successful download or erase the displayed card. Preserve incumbent desktop/narrow behavior and source/history access.

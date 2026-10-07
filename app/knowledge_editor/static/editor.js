@@ -102,6 +102,25 @@ window.addEventListener('beforeunload',event=>{if(state.dirty){event.preventDefa
 function element(tag,text,className){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;}
 function field(dl,label,value){dl.append(element('dt',label),element('dd',value||'Неизвестно'));}
 function safeLink(url,text){const link=element('a',text);try{const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))return element('span',text);link.href=parsed.href;link.target='_blank';link.rel='noopener noreferrer';}catch{return element('span',text);}return link;}
+function publicExportAction(entityId){
+  const actions=element('div','','actions');const button=element('button','Скачать опубликованную историю (JSON)');button.type='button';button.id='download-public-history';button.setAttribute('aria-describedby','public-export-help');actions.append(button);
+  const help=element('p','Файл включает все опубликованные версии этого объекта на момент скачивания, даже если открыта старая версия. Приватные данные не включены.','muted');help.id='public-export-help';
+  const error=element('p','','message error');error.id='public-export-error';error.setAttribute('role','alert');error.hidden=true;
+  button.addEventListener('click',async()=>{
+    if(button.disabled)return;button.disabled=true;button.setAttribute('aria-busy','true');error.hidden=true;error.textContent='';
+    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
+    try{
+      const response=await fetch(`${API}/public/objects/${encodeURIComponent(entityId)}/export`,{headers:{Accept:'application/json'},credentials:'omit',signal:controller.signal});
+      if(!response.ok){const failure=new Error('Export failed');failure.status=response.status;throw failure;}
+      const filename=response.headers.get('Content-Disposition')?.match(/^attachment; filename="(artemis-editor-[0-9a-f-]{36}-public\.json)"$/)?.[1];
+      if(!filename||!response.headers.get('Content-Type')?.startsWith('application/json'))throw new Error('Invalid export response');
+      const bytes=await response.blob();const url=URL.createObjectURL(bytes);const link=document.createElement('a');link.href=url;link.download=filename;link.hidden=true;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }catch(failure){
+      error.textContent=failure.status===413?'Полная опубликованная история превышает ограничение файла 32 МиБ. Скачать её в этом формате нельзя.':failure.status===429?'Слишком много запросов на скачивание. Повторите немного позже.':failure.status===404?'Опубликованная история сейчас недоступна. Обновите карточку и повторите скачивание.':failure.name==='AbortError'?'Сервер не ответил вовремя. Файл не скачан; повторите действие.':'Не удалось скачать опубликованную историю. Проверьте подключение и повторите действие.';error.hidden=false;
+    }finally{clearTimeout(timeout);button.disabled=false;button.setAttribute('aria-busy','false');}
+  });
+  return [actions,help,error];
+}
 async function showPublic({object,snapshot}){
   const response=await request(snapshot?`${API}/public/snapshots/${encodeURIComponent(snapshot)}`:`${API}/public/objects/${encodeURIComponent(object)}`,{authenticated:false});
   const publishedSnapshots=response.published_snapshots||await request(`${API}/public/objects/${encodeURIComponent(response.entity_id)}/history`,{authenticated:false});
@@ -113,6 +132,7 @@ async function showPublic({object,snapshot}){
   card.append(element('h2','Проверка и версия'));const provenance=element('dl');field(provenance,'Режим редакционной проверки',labels.review[response.review_mode]||response.review_mode);field(provenance,'Опубликовано',date(response.published_at));field(provenance,'Версия',response.revision_id);field(provenance,'SHA-256 принятой версии',response.revision_digest);field(provenance,'SHA-256 исходного значения',response.source_value_digest);field(provenance,'SHA-256 пакета источника',response.source_packet_digest);card.append(provenance);
   card.append(element('p','Проверка другим аккаунтом не гарантирует независимость. Исходный фрагмент источника хранится приватно и не размещается в этой карточке.','muted'));
   const versions=element('ol');for(const version of publishedSnapshots){const li=element('li');const link=element('a',`${date(version.published_at)} · ${version.revision_id}`);link.href=`/editor/?snapshot=${encodeURIComponent(version.snapshot_id)}`;li.append(link);versions.append(li);}card.append(element('h2','История публикаций'),versions);
+  card.append(...publicExportAction(response.entity_id));
   const back=element('a','Вернуться в редактор');back.href='/editor/';card.append(back);
 }
 const params=new URLSearchParams(location.search);
