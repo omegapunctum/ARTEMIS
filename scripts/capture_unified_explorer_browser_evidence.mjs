@@ -31,6 +31,10 @@ function argumentsFor(argv) {
 
 // The shared URL preserves exact native renderer numbers and semantic fields.
 const sameState=(left,right)=>JSON.stringify(left)===JSON.stringify(right);
+// Deliberately unavailable Wikimedia endpoints make this an offline visitor proof.
+const WIKIMEDIA_BLOCKED_URLS=['*://*.wikidata.org/*','*://wikidata.org/*','*://*.wikipedia.org/*','*://wikipedia.org/*','*://*.wikimedia.org/*'];
+const isWikimediaRequest=url=>{try{return /(^|\.)(wikidata|wikipedia|wikimedia)\.org$/.test(new URL(url).hostname);}catch{return false;}};
+
 
 async function localServer(directory) {
   const server=spawn('python',['-u','-m','http.server','0','--bind','127.0.0.1','--directory',directory],{stdio:['ignore','pipe','pipe']});
@@ -68,7 +72,7 @@ async function verifyBytes(options, base, deadline) {
 }
 
 async function runScenario(cdp,options,url,deadline,expectedBundle) {
-  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[];
+  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[],catalogChecks=[],networkDocuments=[];
   let documentOrigin=null,mapObjectId=null,immutableHash=null;
   const bundleHash=sha256(expectedBundle);
   async function settle() {await evaluate(cdp,'new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))',true);}
@@ -97,7 +101,13 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     })()`,true);
     renderSettlements.push({reason,...result});
   }
+  async function networkSnapshot() {
+    const current=await evaluate(cdp,`({url:location.href,attempts:window.__ARTEMIS_BROWSER_REQUESTS||[],resources:performance.getEntriesByType('resource').map(entry=>entry.name)})`);
+    check(!current.attempts.some(isWikimediaRequest)&&!current.resources.some(isWikimediaRequest),'visitor attempted live Wikimedia request');
+    networkDocuments.push(current);
+  }
   async function navigate(destination) {
+    await networkSnapshot();
     const prior=await evaluate(cdp,'performance.timeOrigin');
     await cdp.send('Page.navigate',{url:String(destination)});let arrived=false;
     while(Date.now()<deadline) {
@@ -140,6 +150,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const delta=indices.target-current;for(let step=0;step<Math.abs(delta);step++)await key(delta>0?'ArrowDown':'ArrowUp',delta>0?'ArrowDown':'ArrowUp',delta>0?40:38);
     const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity');await stable('select '+itemId);
   }
+  async function search(value) {
+    await evaluate(cdp,`(() => {const input=document.getElementById('record-search');input.focus({preventScroll:true});if(document.activeElement!==input)throw new Error('Search input cannot receive focus');})()`);
+    await key('a','KeyA',65,2);await key('Backspace','Backspace',8);
+    if(value)await cdp.send('Input.insertText',{text:value});await settle();await stable('search '+value);
+    return evaluate(cdp,`({values:[...document.getElementById('record-select').options].map(option=>option.value).filter(Boolean),status:document.getElementById('search-status').textContent,query:document.getElementById('record-search').value})`);
+  }
   async function disclose(id) {
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
     check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`),'native disclosure failed '+id);
@@ -147,7 +163,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   async function close() {if(!await evaluate(cdp,"document.getElementById('inspector').hidden"))await click('#close-details');}
   async function membership(expected,reason) {
     await idle(reason);const current=await snapshot();
-    const actual=Object.fromEntries(['leonardo','roman','architecture'].map(layer=>[layer,current.visible.filter(i=>i.layer===layer).length]));
+    const actual=Object.fromEntries(['leonardo','roman','architecture',...(Object.hasOwn(expected,'catalog')?['catalog']:[])].map(layer=>[layer,current.visible.filter(i=>i.layer===layer).length]));
     check(JSON.stringify(actual)===JSON.stringify(expected),reason+' membership mismatch '+JSON.stringify(actual));
     checks.push({case:reason,state:current.state,counts:actual,itemIds:current.visible.map(i=>i.itemId),documentTimeOrigin:current.origin});return current;
   }
@@ -224,7 +240,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await idle('capture '+suffix);
     const layout=await evaluate(cdp,`(() => {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
-      for(const id of ['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','time-dock'])if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
+      for(const id of ['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'])if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
       const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();if(h.bottom>t.top)throw new Error('Header overlaps shared time controls');
       const r=window.__ARTEMIS_EXPLORER,s=r.state;
@@ -250,7 +266,84 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(restored,'shared Back/Forward state restoration failed');await idle('history');await stable(direction<0?'Back':'Forward');
   }
 
-  await navigate(url);await membership({leonardo:11,roman:0,architecture:0},'default Leonardo entry');await placeAnchors('default11Presences9Places');
+  await navigate(url);
+  const readyCatalog=await membership({leonardo:11,roman:0,architecture:0,catalog:10},'fresh ready London catalog');
+  check(readyCatalog.state.layers.includes('catalog'),'fresh entry did not enable catalog');
+  const pilotLabel=await evaluate(cdp,"document.getElementById('layer-catalog').parentElement.textContent");
+  check(/10/.test(pilotLabel)&&/London/.test(pilotLabel),'catalog did not disclose bounded pilot count and coverage');
+  await capture('ready-catalog-default-en-globe');
+  const catalog=expectedBundle.catalog.references;
+  check(catalog.length===10&&new Set(catalog.map(row=>row.item_id)).size===10,'catalog cohort missing/duplicated');
+  const first=catalog.find(reference=>reference.labels?.en&&reference.labels?.ru&&Object.values(reference.aliases||{}).flat().length);
+  check(first,'cohort has no source-native RU/EN/alias record for native search proof');
+  const firstRegistry=expectedBundle.registry.find(row=>row.item_id===first.item_id);
+  check(firstRegistry?.kind==='catalog_reference'&&firstRegistry.interval===null,'catalog entered historical intervals');
+  const nativeCatalog=await evaluate(cdp,`(async()=>{const source=await window.__ARTEMIS_EXPLORER.map.getSource('workspace-features').getData();return source.features.filter(feature=>feature.properties.layer_id==='catalog').map(feature=>({item:feature.properties.item_id,geometry:feature.geometry}));})()`,true);
+  check(nativeCatalog.length===10,'native shared map source omitted catalog points');
+  for(const feature of nativeCatalog){const reference=catalog.find(row=>row.item_id===feature.item);check(reference&&sameState(feature.geometry,reference.geometry),'catalog native geometry differs from preserved source point');}
+  await select(first.item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  const catalogSelected=await snapshot(),beforeSearch=catalogSelected;
+  const searchCases=[];
+  const qid=first.item_id.split(':').at(-1);
+  const labels=first.labels||firstRegistry.labels||{},aliases=first.aliases||firstRegistry.aliases||{};
+  const textValue=value=>typeof value==='string'?value:value?.value;
+  const en=textValue(labels.en)||firstRegistry.label,ru=textValue(labels.ru);
+  const originalAliases=Object.values(aliases).flat().map(textValue).filter(value=>typeof value==='string'&&value);
+  const alias=originalAliases.find(value=>value.normalize('NFD')!==value)||originalAliases[0];
+  for(const [kind,query] of [['QID',qid],['English',en],...(ru?[['Russian',ru]]:[]),...(alias?[['alias',alias]]:[])]) {
+    const results=await search(query.toUpperCase().normalize('NFD')),after=await snapshot();
+    check(results.values.includes(first.item_id),'Unicode '+kind+' search lost catalog identity');
+    check(sameState(beforeSearch.state,after.state)&&sameState(beforeSearch.camera,after.camera)&&sameState(beforeSearch.visible,after.visible)&&beforeSearch.card===after.card,'search changed canonical selection/time/camera/map records');
+    searchCases.push({kind,query:query.toUpperCase().normalize('NFD'),matches:results.values});
+  }
+  check(searchCases.some(row=>row.kind==='Russian')&&searchCases.some(row=>row.kind==='alias'),'source-native RU and alias search were not exercised');
+  const empty=await search('ARTEMIS-no-match-\u2603-zzzz'),emptyState=await snapshot();
+  check(empty.values.length===0&&empty.status.trim().length>0&&!emptyState.inspectorHidden&&emptyState.state.selectedItemId===first.item_id,'empty search hid selection or lacked explicit status');
+  await capture('catalog-empty-search-selection-retained-en-globe');
+  await click('#clear-search',true);const cleared=await snapshot();
+  check(await evaluate(cdp,"document.getElementById('record-search').value===''"),'clear action did not clear search');
+  check(cleared.state.selectedItemId===first.item_id&&sameState(cleared.visible,beforeSearch.visible)&&cleared.card===beforeSearch.card,'clear action changed map or source selection');
+  const allChooser=await evaluate(cdp,"[...document.getElementById('record-select').options].map(option=>option.value).filter(Boolean)");
+  check(allChooser.length===21,'clear did not restore all visible chooser records');
+  const sourceDetails=[];
+  for(const reference of catalog) {
+    await select(reference.item_id);await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');
+    const details=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,scope:document.getElementById('selection-scope').textContent,revision:document.getElementById('catalog-revision-link')?.href,context:document.getElementById('catalog-context-link')?.href,input:document.getElementById('selection-input').textContent,evidence:JSON.parse(document.querySelector('#selection-evidence pre').textContent),card:document.getElementById('inspector').textContent})`);
+    check(details.revision&&/^https:\/\/www\.wikidata\.org\//.test(details.revision)&&/oldid=\d+|revision\/\d+/.test(details.revision),'catalog primary revision link is not pinned');
+    check(details.revision===reference.sources[0].url,'catalog revision link differs from pinned source revision');
+    check(details.context===reference.wikipedia_urls.en,'catalog context link differs from literal source sitelink');
+    check(details.context&&/^https:\/\/[a-z-]+\.wikipedia\.org\/wiki\//.test(details.context),'catalog primary Wikipedia context link missing');
+    check(/modern|present-day/i.test(details.scope)&&/historical/i.test(details.scope),'catalog point meaning/unknown applicability absent');
+    check(details.card.includes('CC0')&&details.input.includes('P625'),'catalog native coordinate/provenance not disclosed');
+    const claims=details.evidence.claims;
+    check(sameState(claims,reference.claims)&&sameState(details.evidence.evidence_links,reference.evidence_links),'catalog source-relative Claim/EvidenceLink changed in native disclosure');
+    check(claims.length>0&&claims.every(claim=>claim.review_state==='draft'&&claim.confidence==='unknown'&&claim.evidence_state==='missing'),'catalog technical import promoted epistemic acceptance');
+    const keyboardLinks=await evaluate(cdp,`['catalog-revision-link','catalog-context-link'].map(id=>{const link=document.getElementById(id);link.focus({preventScroll:true});if(document.activeElement!==link||link.tabIndex<0)throw new Error('Source link cannot receive keyboard focus');return {id,href:link.href};})`);
+    sourceDetails.push({item:reference.item_id,title:details.title,revision:details.revision,context:details.context,claimIds:claims.map(claim=>claim.id),keyboardLinks});
+  }
+  await select(first.item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  const unfocused=await snapshot();await click('#focus-selection',true);await idle('explicit catalog focus');const focused=await snapshot();
+  check(!sameState(unfocused.camera,focused.camera),'explicit catalog focus did not move camera');
+  const previous={...unfocused.state},next={...focused.state};delete previous.camera;delete next.camera;
+  check(sameState(previous,next),'catalog focus changed historical semantics');
+  const coordinates=first.geometry.coordinates;
+  check(Math.hypot(focused.camera.center[0]-coordinates[0],focused.camera.center[1]-coordinates[1])<1e-7,'catalog focus uses another coordinate');
+  for(const lang of ['en','ru']) {await click('#language-'+lang);for(const mode of ['globe','map']) {await view(mode);await capture('catalog-selected-source-'+lang+'-'+mode);}}
+  const fallback=catalog.find(reference=>!(reference.labels||{}).ru);
+  if(fallback) {await select(fallback.item_id);check(/\(en\)/.test((await snapshot()).card),'missing RU label did not disclose English fallback');await capture('catalog-language-fallback-ru-map');}
+  await click('#language-en');await select(first.item_id);
+  const catalogHistoryBefore=(await snapshot()).state;await layer('architecture',true);const catalogHistoryMiddle=(await snapshot()).state;
+  await view('globe');const catalogHistoryAfter=(await snapshot()).state;
+  await history(-1,catalogHistoryMiddle);await history(-1,catalogHistoryBefore);await history(1,catalogHistoryMiddle);await history(1,catalogHistoryAfter);
+  await click('#period-all');const allLayers=await membership({leonardo:11,roman:3,architecture:31,catalog:10},'all four layers55records');
+  check(allLayers.visible.length===55,'four layers did not preserve exact legacy45pluscatalog10');
+  await number('time-start',91);await number('time-end',91);check((await snapshot()).visible.filter(row=>row.layer==='catalog').length===10,'catalog excluded by historical time');
+  await layer('catalog',false);check((await snapshot()).state.selectedItemId===null,'hiding selected catalog layer retained selection');await layer('catalog',true);
+  catalogChecks.push({case:'ready catalog search source focus and shared history',cohort:catalog.map(row=>row.item_id),nativeCatalogGeometrySha256:sha256(nativeCatalog),searchCases,emptySearch:{query:empty.query,status:empty.status,selectionRetained:true},clearedChooserCount:allChooser.length,sourceDetails,focus:{before:unfocused.camera,after:focused.camera},fallbackItem:fallback?.item_id||null,fallbackEvidence:fallback?'native source fallback checked':'not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests',allLayersCount:allLayers.visible.length,historicalFilterExcludesCatalog:false,sameMap:true,blockedExternalApis:true});
+  // Existing saved layers remain authoritative and retain the old 45-record proof.
+  const incumbent=new URL('globe/?layers=leonardo,roman',base);await navigate(incumbent);
+  check(!(await snapshot()).state.layers.includes('catalog'),'explicit legacy layers silently added catalog');
+  await membership({leonardo:11,roman:0,architecture:0,catalog:0},'explicit legacy layers entry');await placeAnchors('default11Presences9Places');
   await click('#mode-scrub');await number('cursor-year',100);
   const early=await membership({leonardo:0,roman:1,architecture:0},'Scrub100 Roman only');
   check(early.state.cursorYear===100,'global cursor clamped to Leonardo origin');
@@ -324,7 +417,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const saved=(await snapshot()).url,savedState=(await snapshot()).state;
   // Explicit compatibility entry navigation is outside the persistent-document
   // assertions; all ordinary interactions above retained the actual map handle.
-  await navigate(new URL('region/',base));await membership({leonardo:0,roman:1,architecture:0},'Region compatible entry own native default');await capture('region-entry-en-globe');
+  await navigate(new URL('region/',base));await membership({leonardo:0,roman:1,architecture:0,catalog:10},'Region compatible entry ready catalog default');await capture('region-entry-en-globe');
   await navigate(saved);check(sameState((await snapshot()).state,savedState),'shared saved URL lost workspace/camera state');await stable('shared saved state reopened');
   const legacy=[];
   const leoLegacy=new URL('globe/?mode=scrub&from=1452&at=1502&presence=presence-cesena-1502-08-10&lang=ru&view=map',base);await navigate(leoLegacy);
@@ -332,7 +425,8 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const version=expectedBundle.roman.versions[1];const romanLegacy=new URL('region/',base);romanLegacy.searchParams.set('time',version.preset_id);romanLegacy.searchParams.set('layers','layer-political-territory');romanLegacy.searchParams.set('item',version.item_id);romanLegacy.searchParams.set('lang','en');romanLegacy.searchParams.set('view','map');await navigate(romanLegacy);
   const translatedRoman=await snapshot();check(translatedRoman.state.selectedItemId===version.item_id&&translatedRoman.state.startYear===106&&translatedRoman.state.endYear===113,'legacy Roman saved state translation failed');legacy.push({entry:'roman',url:romanLegacy.href,state:translatedRoman.state});
   await disclose('sources-disclosure');await capture('legacy-roman-source-en-map');
-  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
+  await networkSnapshot();
+  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,catalogChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
     valueValidation:'not_assessed',limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Architecture references retain imported metadata; no historical applicability or source acceptance is inferred.','Shared URL restoration compares exact workspace fields and native renderer camera numbers.','Same engine and cartographic projection comparison, not independent renderer-adapter proof.','Named controls and native input only; not a complete assistive technology audit.']};
 }
 
@@ -349,6 +443,8 @@ async function main() {
     browser=spawn(options.browser,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--force-prefers-reduced-motion=reduce','--remote-debugging-port=0',`--user-data-dir=${profile}`,`--window-size=${options.width},${options.height}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
     browser.stderr.on('data',chunk=>{browserLog=(browserLog+chunk).slice(-20000);});
     const port=await waitForDevToolsPort(profile,browser,deadline),endpoint=await waitForPageEndpoint(port,deadline);cdp=await connectCdp(endpoint,deadline);await cdp.send('Page.enable');await cdp.send('Runtime.enable');
+    await cdp.send('Network.enable');await cdp.send('Network.setBlockedURLs',{urls:WIKIMEDIA_BLOCKED_URLS});
+    await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{const requests=[];Object.defineProperty(window,'__ARTEMIS_BROWSER_REQUESTS',{value:requests});const nativeFetch=window.fetch;window.fetch=function(input,...args){requests.push(typeof input==='string'?new URL(input,location.href).href:input?.url||String(input));return nativeFetch.call(this,input,...args);};const nativeOpen=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(method,url,...args){requests.push(new URL(url,location.href).href);return nativeOpen.call(this,method,url,...args);};})()`});
     const scenario=await runScenario(cdp,options,url,deadline,expectedBundle);
     const report={...scenario,artifactVerification:{scope:'checked metadata and common input bundle at both registered entries; full release files separately checked by verify_public_artifact.py',files:byteVerification},provenance:{evidenceKind:'automated_native_browser_check',checkoutCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),recordedAtUtc:new Date().toISOString(),browser:await cdp.send('Browser.getVersion'),requestedWindow:{width:options.width,height:options.height},runnerSha256:sha256(await readFile(fileURLToPath(import.meta.url))),sharedTransportSha256:sha256(await readFile(new URL('./capture_globe_browser_evidence.mjs',import.meta.url))),bundleSha256:sha256(await readFile(join(options.expectedArtifact,'globe/unified-bundle.json'))),workflowRunUrl:process.env.GITHUB_RUN_ID?`https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`:null,workflowRunAttempt:process.env.GITHUB_RUN_ATTEMPT || null,live:!!options.url}};
     await writeFile(join(options.output,'report.json'),JSON.stringify(report,null,2)+'\n');process.stdout.write(JSON.stringify(report)+'\n');
@@ -362,5 +458,5 @@ async function main() {
   }
 }
 
-export { argumentsFor, verifyBytes, contextReplaced, sameState };
+export { argumentsFor, verifyBytes, contextReplaced, sameState, isWikimediaRequest, WIKIMEDIA_BLOCKED_URLS };
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{process.stderr.write((error?.stack || error)+'\n');process.exitCode=1;});

@@ -108,12 +108,53 @@ def test_all_31_atemporal_references_preserve_coordinates_dates_aliases_and_sour
 
 def test_shared_registry_is_one_stable_collection_and_architecture_never_defines_coverage(bundle):
     registry = bundle["registry"]
-    assert len(registry) == len({r["item_id"] for r in registry}) == 45
-    assert {kind: sum(r["kind"] == kind for r in registry) for kind in ("presence", "region", "reference")} == {"presence": 11, "region": 3, "reference": 31}
+    assert len(registry) == len({r["item_id"] for r in registry}) == 55
+    assert {kind: sum(r["kind"] == kind for r in registry) for kind in ("presence", "region", "reference", "catalog_reference")} == {"presence": 11, "region": 3, "reference": 31, "catalog_reference": 10}
     assert bundle["calendar"] == {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1519, "coverage_complete": False, "architecture_dates_define_coverage": False}
     assert all(r["interval"] is None for r in registry if r["layer_id"] == "architecture")
     assert [r["item_id"] for r in registry if r["layer_id"] == "leonardo"] == [p["presence_item_id"] for p in bundle["leonardo"]["lifePath"]["presences"]]
     assert [r["item_id"] for r in registry if r["layer_id"] == "roman"] == [v["item_id"] for v in bundle["roman"]["versions"]]
+
+
+def test_catalog_points_are_source_bound_and_do_not_create_historical_coverage(bundle):
+    from scripts import import_wikidata_catalog as catalog
+
+    assert bundle["catalog"] == catalog.build_catalog()
+    references = bundle["catalog"]["references"]
+    assert len(references) == 10
+    assert bundle["catalog"]["time_filtering"] == "excluded"
+    assert {row["item_id"] for row in references} == {row["item_id"] for row in bundle["registry"] if row["layer_id"] == "catalog"}
+    assert all(row["interval"] is None for row in bundle["registry"] if row["layer_id"] == "catalog")
+    for row in references:
+        assert row["item_id"] == "catalog:wikidata:" + row["qid"]
+        assert row["historical_position"] is None
+        assert row["temporal_extent"] is None
+        assert row["historical_applicability"] == "unknown"
+        assert row["spatial_precision"] == "unknown_precision"
+        assert row["geometry"]["type"] == "Point"
+        assert {claim["review_state"] for claim in row["claims"]} == {"draft"}
+        assert {claim["confidence"] for claim in row["claims"]} == {"unknown"}
+        assert {claim["evidence_state"] for claim in row["claims"]} == {"missing"}
+    ledger_paths = {row["path"] for row in bundle["input_ledger"]}
+    assert {path.relative_to(unified.ROOT).as_posix() for path in catalog.source_input_paths()} <= ledger_paths
+
+
+def test_catalog_release_drift_fails_before_replacing_existing_output(tmp_path, monkeypatch):
+    from scripts import import_wikidata_catalog as catalog
+
+    output = tmp_path / "already-built"
+    output.mkdir()
+    sentinel = output / "keep.txt"
+    sentinel.write_text("existing artifact")
+    changed = catalog.build_catalog()
+    changed["references"][0]["geometry"]["coordinates"][0] += 1
+    bad = tmp_path / "bad-catalog.json"
+    bad.write_text(json.dumps(changed))
+    monkeypatch.setattr(catalog, "CATALOG_PATH", bad)
+    with pytest.raises(unified.UnifiedBuildError, match="differs from its native source snapshots"):
+        unified.build_unified_explorer(output)
+    assert list(output.iterdir()) == [sentinel]
+    assert sentinel.read_text() == "existing artifact"
 
 
 def test_source_ledger_and_content_digest_bind_exact_checked_in_bytes(bundle):
