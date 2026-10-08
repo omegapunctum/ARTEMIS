@@ -135,10 +135,11 @@ jobs:
         run: |
           set -euo pipefail
           BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
-          for width in 1440 500; do
+          for viewport in 1440x900 500x900 390x844; do
+            width="${viewport%x*}"; height="${viewport#*x}"
             timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
               --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
-              --width "$width" --height 900 --timeout-ms 270000 \
+              --width "$width" --height "$height" --timeout-ms 270000 \
               --output "/tmp/artemis-unified-browser-evidence/$width" \
               2> >(tee "/tmp/artemis-unified-$width.log" >&2)
           done
@@ -195,6 +196,7 @@ jobs:
             tests/test_unified_explorer.py \
             tests/test_wikidata_catalog.py \
             tests/test_unified_explorer_browser.py \
+            tests/test_mobile_explorer.py \
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \
             tests/test_leonardo_world_slice.py \

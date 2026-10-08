@@ -275,7 +275,7 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             raise UnifiedBuildError("Cesena amendment input changed during composition")
         # Finish validating all input/template content before touching the output.
         template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
-        assets = {name: (TEMPLATE_DIR / name).read_bytes() for name in ("runtime.js", "style.css")}
+        assets = {name: (TEMPLATE_DIR / name).read_bytes() for name in ("runtime.js", "mobile.js", "style.css")}
         optional_locale = TEMPLATE_DIR / "localization.js"
         if optional_locale.exists():
             assets["localization.js"] = optional_locale.read_bytes()
@@ -305,6 +305,7 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "CONTEXT_SHA": hashlib.sha256((output / "earth-context.geojson").read_bytes()).hexdigest(),
             "RUNTIME_SHA": hashlib.sha256(assets["runtime.js"]).hexdigest(),
             "STYLE_SHA": hashlib.sha256(assets["style.css"]).hexdigest(),
+            "MOBILE_SHA": hashlib.sha256(assets["mobile.js"]).hexdigest(),
         }
         for key, value in replacements.items():
             template = template.replace("{{" + key + "}}", value)

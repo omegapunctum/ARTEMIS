@@ -6,11 +6,20 @@ const {tmpdir}=require('node:os');
 const {join}=require('node:path');
 const http=require('node:http');
 (async()=>{
-  const {argumentsFor,verifyBytes,sameState,contextReplaced}=await import('../scripts/capture_unified_explorer_browser_evidence.mjs');
+  const {argumentsFor,verifyBytes,sameState,contextReplaced,mobileControlOwner,mobileYearControl,wheelKeys}=await import('../scripts/capture_unified_explorer_browser_evidence.mjs');
   assert.throws(()=>argumentsFor(['node','runner','--browser','chrome','--output','proof','--url','https://example.test/globe/']),/expected-artifact/);
   assert.throws(()=>argumentsFor(['node','runner','--browser','chrome','--output','proof','--url','https://example.test/globe/','--artifact','local']),/either/);
   assert.equal(contextReplaced(new Error('Inspected target navigated or closed')),true);
   assert.equal(contextReplaced(new Error('WebSocket closed')),false);
+  // Hidden incumbent fields must route to the visible accepted mobile calendar.
+  for(const [selector,owner] of [['#view-map','settings'],['#language-ru','settings'],['#layer-catalog','layers'],['#record-select','records'],['#clear-search','records'],['#mode-scrub','calendar'],['#period-all','calendar'],['#dock-toggle',null],['#mobile-settings',null],['#close-details',null]])assert.equal(mobileControlOwner(selector),owner,selector);
+  assert.equal(mobileYearControl('time-start'),'mobile-range-start');assert.equal(mobileYearControl('time-end'),'mobile-range-end');assert.equal(mobileYearControl('cursor-year'),'mobile-cursor-year');assert.equal(mobileYearControl('record-search'),null);
+  for(const [target,min,max] of [[91,91,1519],[100,91,1519],[1502,91,1519],[1519,91,1519],[1502,1502,1519],[1502,91,1502],[807,91,1519]]) {
+    let current=1452;const keys=wheelKeys(target,min,max);
+    for(const key of keys)current=key==='Home'?min:key==='End'?max:Math.max(min,Math.min(max,current+({PageUp:10,PageDown:-10,ArrowUp:1,ArrowDown:-1})[key]));
+    assert.equal(current,target,'native wheel key sequence missed target');assert.ok(keys.length<=80,'year helper adds excessive settled interactions');
+  }
+  assert.throws(()=>wheelKeys(90,91,1519),/outside exposed bounds/);assert.throws(()=>wheelKeys(1502,1503,1519),/outside exposed bounds/);assert.throws(()=>wheelKeys(100.5,91,1519),/outside exposed bounds/);
   const state={mode:'range',startYear:91,endYear:1519,cursorYear:100,layers:['leonardo','roman'],camera:{center:[10.00000001,15],zoom:.800000001,pitch:0,bearing:0}};
   assert.equal(sameState(state,JSON.parse(JSON.stringify(state))),true);
   assert.equal(sameState(state,{...state,camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}),false,'exact native camera must not be silently rounded');

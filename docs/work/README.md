@@ -340,3 +340,7 @@ When lifecycle changes:
 ## Bounded public editor export — implementation verified
 
 - `2026-10-07_EDITOR_PUBLIC_EXPORT_v1.md` — bounded BACKEND-AVAILABLE implementation in PR #477, independently accepted after prospective scope acceptance; native desktop/narrow downloads and actual restart/restore retain exact bytes. The task records checked code/evidence; required current-head CI governs merge. No private transfer/import, Globe intake, paid hosting or automatic successor is opened.
+
+## Bounded mobile composition — owner authorized
+
+- `2026-10-08_MOBILE_EXPLORER_TIMELINE_v1.md` — REVIEW implementation of the owner-selected compact mobile calendar and progressive panel disclosure. Existing semantics and product gates remain unchanged; exact-head review/checks and separate publication evidence govern completion. No successor.
