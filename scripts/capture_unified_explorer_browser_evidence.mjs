@@ -203,6 +203,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     if(value)await cdp.send('Input.insertText',{text:value});await settle();await stable('search '+value);
     return evaluate(cdp,`({values:[...document.getElementById('record-select').options].map(option=>option.value).filter(Boolean),status:document.getElementById('search-status').textContent,query:document.getElementById('record-search').value})`);
   }
+  async function clearSearch() {
+    const visible=await evaluate(cdp,"document.getElementById('clear-search').checkVisibility({checkVisibilityCSS:true})");
+    if(visible)await click('#clear-search',true);
+    else {check(await mobile(),'desktop clear search control hidden');await search('');}
+  }
   async function disclose(id) {
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
     check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`),'native disclosure failed '+id);
@@ -303,6 +308,24 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const png=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});await writeFile(screenshot,Buffer.from(png.data,'base64'));await writeFile(dom,await evaluate(cdp,'document.documentElement.outerHTML'));
     captures.push({case:suffix,...layout,screenshot,dom,screenshotSha256:sha256(await readFile(screenshot)),domSha256:sha256(await readFile(dom))});
   }
+  async function mobileSourceScrollClearance() {
+    if(!await mobile())return;
+    await collapseMobile();const before=await snapshot();
+    const point=await evaluate(cdp,`(() => {const n=document.getElementById('inspector'),b=n.getBoundingClientRect(),x=b.x+b.width/2,y=b.y+Math.min(b.height/2,120),hit=document.elementFromPoint(x,y);if(n.hidden||!n.contains(hit))throw new Error('Native source inspector scroll surface obstructed');return {x,y};})()`);
+    async function scrollToEdge(delta,bottom) {
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});await settle();
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:delta,deltaX:0});
+      const scrollDeadline=Math.min(deadline,Date.now()+2000);let metrics=null;
+      do {metrics=await evaluate(cdp,`(() => {const n=document.getElementById('inspector'),last=document.getElementById('selection-input').lastElementChild,t=document.getElementById('mobile-tools').getBoundingClientRect();return {top:n.scrollTop,maximum:n.scrollHeight-n.clientHeight,lastBottom:last?.getBoundingClientRect().bottom,toolsTop:t.top,toolsBottom:t.bottom};})()`);if(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1)break;await delay(25);}while(Date.now()<scrollDeadline);
+      check(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1,'native inspector wheel did not reach scroll edge '+JSON.stringify({bottom,point,metrics}));return metrics;
+    }
+    const end=await scrollToEdge(100000,true);
+    check(Number.isFinite(end.lastBottom)&&end.lastBottom<=end.toolsTop-4,'mobile tools obscure final source-native text '+JSON.stringify(end));
+    await capture('mobile-source-card-scroll-end',{keepMobileOpen:true});
+    await scrollToEdge(-100000,false);const after=await snapshot();
+    check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'native inspector scrolling changed canonical card or camera');await stable('mobile source card scroll clearance');
+    mobileChecks.push({case:'source-native card scroll-end clearance',nativePointerWheel:true,lastContentBottom:end.lastBottom,toolsTop:end.toolsTop,maximum:end.maximum,scrollEnd:end.top,lastTextUnobstructed:true,canonicalStateUnchanged:true});
+  }
   async function view(mode) {
     const before=await snapshot();await click('#view-'+mode,true);await idle('projection '+mode);const after=await snapshot();
     const previous={...before.state},next={...after.state};delete previous.presentationView;delete next.presentationView;
@@ -388,6 +411,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(initialCard.title===first.labels.en&&initialCard.revision===first.sources[0].url&&initialCard.evidencePresent,'catalog inspector failed to render its native title/source/evidence');
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(initialCard.facts.includes(String(value)),'catalog primary facts lost literal coordinate/precision');
   await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await mobileSourceScrollClearance();
   const catalogSelected=await snapshot(),beforeSearch=catalogSelected;
   const searchCases=[];
   const qid=first.item_id.split(':').at(-1);
@@ -406,7 +430,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const empty=await search('ARTEMIS-no-match-\u2603-zzzz'),emptyState=await snapshot();
   check(empty.values.length===0&&empty.status.trim().length>0&&!emptyState.inspectorHidden&&emptyState.state.selectedItemId===first.item_id,'empty search hid selection or lacked explicit status');
   await capture('catalog-empty-search-selection-retained-en-globe');
-  await click('#clear-search',true);const cleared=await snapshot();
+  await clearSearch();const cleared=await snapshot();
   check(await evaluate(cdp,"document.getElementById('record-search').value===''"),'clear action did not clear search');
   check(cleared.state.selectedItemId===first.item_id&&sameState(cleared.visible,beforeSearch.visible)&&cleared.card===beforeSearch.card,'clear action changed map or source selection');
   const allChooser=await evaluate(cdp,"[...document.getElementById('record-select').options].map(option=>option.value).filter(Boolean)");
