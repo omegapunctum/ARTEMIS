@@ -1,8 +1,8 @@
 # ARTEMIS working documents registry
 
-## Active owner-directed ready architecture catalog — 2026-10-08
+## Owner-directed ready architecture catalog implementation — 2026-10-08
 
-- `2026-10-08_READY_ARCHITECTURE_CATALOG_v1.md` — prospective DECISION for ten London Wikidata source-bound atemporal references, offline deterministic intake, ready fourth layer and search in one existing Explorer. Distinct Architecture/Product scope acceptance precedes REVIEW implementation. No editor rewrite, historical promotion, universal corpus, paid hosting, gate reopening or automatic successor.
+- `2026-10-08_READY_ARCHITECTURE_CATALOG_v1.md` — completed bounded source/runtime implementation after prospective DECISION and distinct Architecture/Product REVIEW acceptance. Ten London references, deterministic offline intake, ready fourth layer and chooser search share the existing map; final 390px native loop passed. PR #478 separately owns current-head CI, merge and public-delivery receipts. No editor rewrite, historical promotion, universal corpus, paid hosting, gate reopening or automatic successor.
 
 First-Use correction: implemented in #439, human-accepted and publication-verified; preserved as completed evidence. The former fresh-E1 handoff is superseded by the [owner closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md).
 

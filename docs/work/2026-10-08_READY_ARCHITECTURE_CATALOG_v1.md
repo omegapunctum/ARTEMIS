@@ -138,3 +138,77 @@ before runtime/source changes; both reported zero material findings:
 
 This receipt records prospective technical scope acceptance only. Implementation
 is now authorized under REVIEW; it is not source-truth or user-value acceptance.
+
+## Technical implementation and verification — 2026-10-08
+
+Accepted implementation source: `14c9e025569e705fe21a83084139ea32633e1b99`, tree
+`d3ce8479f5c5c10b3318a0b21fead855cc4cd1d6`, identical local checkout
+`801fb74d9cbd1556733529e54f66d27a5ca1379e`. [PR #478](https://github.com/omegapunctum/ARTEMIS/pull/478)
+owns final current-head CI, expected-head merge and separate publication receipts.
+Documentation descendants preserve the accepted runtime/source bytes.
+
+Ten source-bound references are ready in the fourth `catalog` layer, with Unicode
+names/aliases/QID chooser search and readable EN/RU cards in the existing map.
+Identity aliases retain the registry list shape; source language maps are preserved
+in `localized_aliases`. Explicit saved layers remain authoritative. Search does not
+change map membership, time, camera or the open record.
+
+The [maintenance runbook](../WIKIDATA_CATALOG_RUNBOOK.md) describes immutable capture,
+offline verification and changed-revision comparison. Eleven original snapshots
+(939,140 bytes) retain exact hashes/revisions; ten eligible points are composed.
+Royal Albert Hall's negative provider precision remains literal and excluded.
+No underlying P625 reference is supplied for Q62408, Q642039 or Q207385; this
+absence is retained. Wikipedia navigation is context, not independent corroboration.
+The normalized catalog content digest is
+`ffd98ba783282416328e31b5043c3f79686cfc5c983a6e5356e39c6012e5b9a2`;
+both final entries' bundle bytes hash to
+`a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538`.
+Native dates and source-relative claims/evidence keep unknown/draft/missing meaning.
+
+Owned local verification: 159 relevant tests passed; the 20 affected unified/harness
+tests passed again after the final compatibility fix. Independent Architecture ran
+51 source/unified tests, then 53 on the render/diagnostic descendant, then 20 on the
+final compatibility descendant. These are separate runs, not unique-test aggregates.
+It also reproduced the genuine incumbent `76404197` consumer against the final
+bundle for null, missing, catalog-ID and default state resolution.
+
+Actual browser inspection found and fixed three faults: a shadowed coordinate
+binding interrupted card rendering; map labels obscured lower search controls at
+390px; multilingual names occupied the identity alias field expected by the
+incumbent benchmark. Native card/language guards, opaque control backing and a
+separate localized-name field close those faults. Performance readiness retains its
+45-second bound; observational diagnostics expose failures without replacing the
+baseline or bypassing checks. Measurements are local diagnostics, not physical-device
+FPS/SLA or an isolated performance claim for this catalog change.
+
+The final serial **390×844** loop reports `TECHNICAL_UNIFIED_WORKSPACE_PASS`:
+221 native actions, 22 captures, all ten source cards, QID/English/Russian/decomposed
+alias search, empty/clear selection retention, 55 four-layer records, explicit
+coordinate focus, Globe/2D/history/shared-map continuity, legacy/Region checks and
+zero Wikimedia requests. Full report SHA-256:
+`14018e20e8464287493207c9dc3baf6c32d87ba918700f48016467b8c8775baf`.
+The [durable native receipt](receipts/2026-10-08_READY_ARCHITECTURE_CATALOG_NATIVE_v1.json)
+binds source, runner, bundle, source-card links and all screenshot/DOM hashes;
+Product independently verified all 22 file pairs. Earlier parallel loops reached
+270-second deadlines and are not counted as full passes.
+
+Local Chromium's ordinary process socket and CDN access were unavailable in the
+test environment. The successful headless-shell loop serves exact pinned MapLibre
+5.24.0 JS/CSS locally; the receipt records engine hashes and the only HTML change
+(engine URLs). Production source is unchanged. Corrected desktop/narrow EN/RU
+visuals were independently inspected once after the fix batch; complete production
+desktop/CDN evidence remains a separate CI/release condition. All actual records
+have RU/EN labels, so missing-language fallback is not applicable to this cohort;
+its mechanism has owned behavior coverage. Physical-device, complete assistive
+technology and user-value acceptance are not asserted.
+
+Distinct exact-source verdicts, zero material findings:
+`/root/catalog_architecture`: **ACCEPT_ARCHITECTURE_IMPLEMENTATION**;
+`/root/catalog_product`: **ACCEPT_PRODUCT_IMPLEMENTATION**. Durable exact-head
+reviews are on PR #478; Product additionally upheld acceptance after checking the
+complete final narrow report. This is technical conformity, not historical acceptance.
+
+Implementation is accepted. Current-head checks and separate Pages every-file
+byte/metadata/live-native verification govern merge and public delivery through
+PR #478. Stop after bounded delivery: no automatic successor, paid infrastructure,
+frozen-contract change or product-gate transition is opened.
