@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 from scripts import build_globe_spike as spike  # noqa: E402
 from scripts import build_leonardo_gate_d_inputs as gate_d  # noqa: E402
 from scripts import validate_leonardo_world_slice as gate_c_validation  # noqa: E402
+from scripts import import_wikidata_catalog as wikidata_catalog  # noqa: E402
 
 TEMPLATE_DIR = ROOT / "scripts" / "unified_explorer"
 FEATURES_PATH = ROOT / "data" / "features.geojson"
@@ -125,7 +126,7 @@ def adapt_architecture(features: Any, sources: Any) -> dict[str, Any]:
 def _input_paths() -> list[Path]:
     """Explicit actual source/contract inputs used by the two incumbent builders."""
     return sorted({
-        FEATURES_PATH, SOURCES_PATH,
+        FEATURES_PATH, SOURCES_PATH, *wikidata_catalog.source_input_paths(),
         gate_d.SELECTION_PATH, gate_d.CLAIMS_PATH, gate_d.SOURCES_PATH,
         gate_d.CESENA_AMENDMENT_PATH,
         gate_d.COVERAGE_PATH, gate_d.DECISION_PATH, gate_d.PLACE_ANCHOR_PATH,
@@ -189,6 +190,14 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
     if [(v["interval"]["start"], v["interval"]["end"]) for v in versions] != [(91, 105), (106, 113), (114, 116)]:
         raise UnifiedBuildError("Roman native intervals drifted")
     architecture = adapt_architecture(_read(FEATURES_PATH), _read(SOURCES_PATH))
+    # Reproduce from native immutable sources before trusting the release package.
+    # No provider request, historical normalization or legacy-input mutation occurs.
+    try:
+        catalog = wikidata_catalog.build_catalog()
+    except (ValueError, OSError) as exc:
+        raise UnifiedBuildError(f"Wikidata catalog input rejected: {exc}") from exc
+    if catalog != _read(wikidata_catalog.CATALOG_PATH):
+        raise UnifiedBuildError("checked-in catalog differs from its native source snapshots")
     registry = []
     for presence in life_path["presences"]:
         registry.append({
@@ -214,10 +223,18 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
         "original_ids": {"original_id": r["original_id"], "aliases": r["aliases"], "source_record_id": r["raw_feature"]["properties"].get("source_record_id")},
         "source_pointer": r["input_pointer"],
     } for r in architecture["references"]]
+    registry += [{
+        "item_id": r["item_id"], "layer_id": "catalog", "kind": "catalog_reference",
+        "label": r["label"], "labels": copy.deepcopy(r["labels"]),
+        "aliases": [], "localized_aliases": copy.deepcopy(r["aliases"]),
+        "qid": r["qid"], "interval": None,
+        "original_ids": {"wikidata_qid": r["qid"]},
+        "source_pointer": f"catalog#/references/{index}",
+    } for index, r in enumerate(catalog["references"])]
     if len({r["item_id"] for r in registry}) != len(registry):
         raise UnifiedBuildError("shared registry contains duplicate item identity")
     bundle = {
-        "schema_version": "1.0.0", "bundle_id": "artemis-unified-layer-explorer-v1",
+        "schema_version": "1.1.0", "bundle_id": "artemis-unified-layer-explorer-v1",
         "role": "read_only_input_and_projection_envelope", "historical_corpus_ready": False,
         "calendar": {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1519, "coverage_complete": False, "architecture_dates_define_coverage": False},
         "input_ledger": _ledger(_input_paths()), "registry": registry,
@@ -225,6 +242,7 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
         "leonardo": {"lifePath": life_path, "knowledge": knowledge, "explorerState": _read(leonardo_dir / "explorer-state.json"), "projection": _read(leonardo_dir / "projection.json"), "globe": _read(leonardo_dir / "globe-projection.json"), "sourcePackage": _read(spike.MAJOR_LIFE_PACKAGE_PATH), "runtimeAnchors": _read(spike.MAJOR_LIFE_RUNTIME_ANCHORS_PATH)},
         "roman": {"versions": versions, "knowledge": roman_knowledge, "sourceManifest": _read(spike.REGION_PACKAGE_ROOT / "source_manifest.json"), "worldInput": roman_world},
         "architecture": architecture,
+        "catalog": catalog,
     }
     bundle["content_sha256"] = _digest(bundle)
     return bundle
@@ -303,6 +321,9 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "leonardo_input_amendment": amendment_provenance,
             "semantic_item_count": len(bundle["registry"]), "life_path_available": True,
             "life_path_presence_count": 11, "roman_version_count": 3, "architecture_reference_count": 31,
+            "catalog_reference_count": len(catalog_refs := bundle["catalog"]["references"]),
+            "catalog_identity": bundle["catalog"]["catalog_id"],
+            "catalog_role": "atemporal_reference_context",
             "earth_context": incumbent_meta["earth_context"],
             "terrain": {"asset_ref": None, "runtime_enabled": False, "live_provider_selected": False, "status": "not_enabled_in_unified_runtime"},
             "input_sha256": {row["path"]: row["sha256"] for row in bundle["input_ledger"]},
@@ -311,7 +332,7 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "source_native_state_role": bundle["source_native_state_role"],
         }
         _write(output / "build-meta.json", metadata)
-        (output / "README.txt").write_text("ARTEMIS one persistent shared-layer Explorer. Public R&D preview; formal user value UNVALIDATED.\nLeonardo: 11 accepted presentation Presences, unknown/null historical routes.\nRoman Empire: three unchanged native interval reconstructions; no geometric union or interpolation.\nArchitecture: 31 atemporal imported reference points; historical applicability/position/precision unknown. Raw dates and legacy export flags are metadata only.\n", encoding="utf-8")
+        (output / "README.txt").write_text("ARTEMIS one persistent shared-layer Explorer. Public R&D preview; formal user value UNVALIDATED.\nLeonardo: 11 accepted presentation Presences, unknown/null historical routes.\nRoman Empire: three unchanged native interval reconstructions; no geometric union or interpolation.\nArchitecture: 31 atemporal imported reference points; historical applicability/position/precision unknown. Raw dates and legacy export flags are metadata only.\n" + f"London pilot catalog: {len(catalog_refs)} source-bound Wikidata reference points. Offline reproducible import; independent factual verification not performed. Source dates never define historical coverage.\n", encoding="utf-8")
         return metadata
 
 

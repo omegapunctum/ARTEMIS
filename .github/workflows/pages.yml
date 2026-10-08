@@ -59,6 +59,7 @@ jobs:
             tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
             tests/test_unified_explorer.py \
+            tests/test_wikidata_catalog.py \
             tests/test_unified_explorer_browser.py \
             tests/test_temporal_region_proof.py \
             tests/test_leonardo_major_life_package.py \

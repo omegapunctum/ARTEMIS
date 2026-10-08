@@ -13,25 +13,56 @@ const output=resolve(args.output), temp=await mkdtemp(join(tmpdir(),'artemis-per
 await mkdir(output,{recursive:true});
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const report={kind:'controlled_local_browser_diagnostic',baselineRef:args['baseline-ref'],checkout:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),limitations:['Software WebGL on CI; not user-device FPS','Local max-age=3600 server; not actual Pages caching','Programmatic camera movement measures renderer work, not native gesture usability'],runs:[]};
-let server,browser,cdp,log='';
+let server,browser,cdp,diagnosticSocket,log='';
+const diagnosticEvents=[],requestUrls=new Map();
+report.diagnostics={events:diagnosticEvents,eventLimit:40,readinessFailure:null};
+const boundedText=value=>String(value??'').slice(0,1000);
+function observeDiagnosticEvent(message) {
+  const params=message.params||{};
+  if(message.method==='Network.requestWillBeSent') {requestUrls.set(params.requestId,boundedText(params.request?.url));if(requestUrls.size>100)requestUrls.delete(requestUrls.keys().next().value);return;}
+  let event=null;
+  if(message.method==='Runtime.exceptionThrown')event={kind:'runtime_exception',text:boundedText(params.exceptionDetails?.exception?.description||params.exceptionDetails?.text),url:boundedText(params.exceptionDetails?.url)};
+  else if(message.method==='Runtime.consoleAPICalled'&&['error','warning'].includes(params.type))event={kind:'console_'+params.type,text:boundedText((params.args||[]).map(arg=>arg.value??arg.description??arg.type).join(' '))};
+  else if(message.method==='Network.loadingFailed')event={kind:'network_loading_failed',url:requestUrls.get(params.requestId)||null,error:boundedText(params.errorText),blockedReason:params.blockedReason||null,type:params.type||null};
+  if(event){if(diagnosticEvents.length>=40)diagnosticEvents.shift();diagnosticEvents.push(event);}
+}
+
 try {
   for(const variant of ['baseline','current'])await cp(resolve(args.artifact),join(temp,variant),{recursive:true});
   for(const file of ['runtime.js','style.css'])await writeFile(join(temp,'baseline/globe',file),execFileSync('git',['show',`${args['baseline-ref']}:scripts/unified_explorer/${file}`]));
   const template=execFileSync('git',['show',`${args['baseline-ref']}:scripts/unified_explorer/index.html.template`],{encoding:'utf8'});
   await writeFile(join(temp,'baseline/globe/index.html'),template.replace('{{ENTRY_PROFILE}}','globe'));
   report.bundleSha256=hash(await readFile(join(temp,'current/globe/unified-bundle.json')));
+  report.expectedRegistryCount=JSON.parse(await readFile(join(temp,'current/globe/unified-bundle.json'),'utf8')).registry.length;
   if(report.bundleSha256!==hash(await readFile(join(temp,'baseline/globe/unified-bundle.json'))))throw Error('Paired bundle differs');
   server=createServer(async(req,res)=>{try{const pathname=decodeURIComponent(new URL(req.url,'http://local').pathname);const path=resolve(temp,'.'+pathname+(pathname.endsWith('/')?'index.html':''));if(!path.startsWith(temp+'/'))throw Error('path');const bytes=await readFile(path);res.writeHead(200,{'Cache-Control':'public,max-age=3600','Content-Type':({'.js':'text/javascript','.json':'application/json','.geojson':'application/json','.css':'text/css','.html':'text/html'})[extname(path)]||'application/octet-stream'});res.end(bytes);}catch{res.writeHead(404);res.end();}});
   await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
   const profile=join(temp,'profile'),deadline=Date.now()+(args.phase==='high-dpi'?300000:480000);
   browser=spawn(args.browser,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--remote-debugging-port=0',`--user-data-dir=${profile}`,'--window-size=1440,900','about:blank'],{stdio:['ignore','ignore','pipe']});browser.stderr.on('data',x=>{log=(log+x).slice(-20000)});
-  cdp=await connectCdp(await waitForPageEndpoint(await waitForDevToolsPort(profile,browser,deadline),deadline),deadline);
+  const endpoint=await waitForPageEndpoint(await waitForDevToolsPort(profile,browser,deadline),deadline);
+  cdp=await connectCdp(endpoint,deadline);
+  // A separate observational CDP connection preserves bounded error events without
+  // replacing application code, bypassing readiness, or changing measured inputs.
+  diagnosticSocket=new WebSocket(endpoint);
+  await new Promise((resolveOpen,reject)=>{const timer=setTimeout(()=>reject(Error('Diagnostic CDP connection timeout')),5000);diagnosticSocket.addEventListener('open',()=>{clearTimeout(timer);resolveOpen();},{once:true});diagnosticSocket.addEventListener('error',()=>{clearTimeout(timer);reject(Error('Diagnostic CDP connection failed'));},{once:true});});
+  diagnosticSocket.addEventListener('message',event=>{try{observeDiagnosticEvent(JSON.parse(String(event.data)));}catch{}});
+  for(const [index,method] of ['Runtime.enable','Network.enable'].entries())diagnosticSocket.send(JSON.stringify({id:index+1,method}));
   for(const domain of ['Page','Runtime','Network','Performance'])await cdp.send(domain+'.enable');
   report.browser=await cdp.send('Browser.getVersion');
   await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:true});
   const metrics=async()=>Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.map(x=>[x.name,x.value]));
   const diff=(a,b)=>Object.fromEntries(['LayoutCount','RecalcStyleCount','LayoutDuration','RecalcStyleDuration','ScriptDuration','TaskDuration'].map(k=>[k,b[k]-a[k]]));
-  async function ready(prior){const until=Date.now()+45000;while(Date.now()<until){if(await evaluate(cdp,`performance.timeOrigin!==${prior} && document.documentElement.dataset.artemisRuntimeReady==='true'`).catch(()=>false))return;await delay(50);}throw Error('Map readiness timeout');}
+  async function ready(prior){
+    const until=Date.now()+45000;let last=null;
+    while(Date.now()<until){
+      try{last=await evaluate(cdp,`(()=>{const fatal=document.getElementById('fatal-error');return {url:location.href,timeOrigin:performance.timeOrigin,runtimeReady:document.documentElement.dataset.artemisRuntimeReady||null,visualReady:document.documentElement.dataset.artemisVisualReady||null,fatal:fatal&&!fatal.hidden?fatal.textContent.slice(0,1000):null};})()`);}
+      catch(error){last={evaluationError:boundedText(error)};}
+      if(last.timeOrigin!==prior&&last.runtimeReady==='true')return;
+      await delay(50);
+    }
+    report.diagnostics.readinessFailure=last;
+    throw Error('Map readiness timeout');
+  }
   async function navigate(url){const prior=await evaluate(cdp,'performance.timeOrigin');await cdp.send('Page.navigate',{url});await ready(prior);return evaluate(cdp,"({readyObservedMs:performance.now(),resources:performance.getEntriesByType('resource').map(x=>({name:x.name,duration:x.duration,transferSize:x.transferSize,encodedBodySize:x.encodedBodySize,decodedBodySize:x.decodedBodySize}))})");}
   for(let repetition=0;repetition<(args.phase==='high-dpi'?0:3);repetition++)for(const variant of repetition%2?['current','baseline']:['baseline','current']){
     await cdp.send('Network.clearBrowserCache');
@@ -72,7 +103,7 @@ try {
         await settle();
         const place=await evaluate(cdp,`(()=>{const r=window.__ARTEMIS_EXPLORER,n=[...document.querySelectorAll('.workspace-place-marker')].find(n=>n.querySelector('.place-name')?.textContent==='Florence')||document.querySelector('.workspace-place-marker');n.focus();return {place:n.dataset.placeRef}})()`);await key();await settle();
         const geometry=await evaluate(cdp,`(async()=>{const r=window.__ARTEMIS_EXPLORER,m=r.map,c=m.getCanvas(),b=c.getBoundingClientRect(),n=document.querySelector('.workspace-place-marker[aria-pressed="true"]');if(!n)throw Error('No selected Place');const f=(await m.getSource('workspace-features').getData()).features.find(f=>f.properties.place_ref===n.dataset.placeRef),p=m.project(f.geometry.coordinates),nb=n.getBoundingClientRect(),hits=m.queryRenderedFeatures(p,{layers:['workspace-points']});return {dpr:devicePixelRatio,pixelRatio:m.getPixelRatio(),width:c.width,height:c.height,cssWidth:b.width,cssHeight:b.height,registry:r.registry.length,selected:r.state.selectedItemId,alignment:Math.hypot(nb.left+nb.width/2-b.left-p.x,nb.top+nb.height/2-b.top-p.y),nativeSelected:hits.some(h=>h.properties.place_ref===n.dataset.placeRef&&h.state.selected),preserved:m===window.__perfMap&&performance.timeOrigin===window.__perfOrigin}})()`,true);
-        if(geometry.pixelRatio!==(variant==='baseline'?3:2)||geometry.registry!==45||Math.abs(geometry.width-geometry.cssWidth*geometry.pixelRatio)>1||Math.abs(geometry.height-geometry.cssHeight*geometry.pixelRatio)>1||!geometry.preserved||geometry.alignment>2||!geometry.nativeSelected)throw Error('High-DPI pixel ratio/Place/identity invariant failed '+JSON.stringify(geometry));
+        if(geometry.pixelRatio!==(variant==='baseline'?3:2)||geometry.registry!==report.expectedRegistryCount||Math.abs(geometry.width-geometry.cssWidth*geometry.pixelRatio)>1||Math.abs(geometry.height-geometry.cssHeight*geometry.pixelRatio)>1||!geometry.preserved||geometry.alignment>2||!geometry.nativeSelected)throw Error('High-DPI pixel ratio/Place/identity invariant failed '+JSON.stringify(geometry));
         const png=Buffer.from((await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false})).data,'base64'),name=`${variant}-${view}-dpr3.png`;await writeFile(join(output,name),png);
         await evaluate(cdp,"document.getElementById('close-details').click();document.getElementById('period-roman').click();window.__perfMap.jumpTo({center:[12,40],zoom:2,bearing:0,pitch:0});void 0");await settle();
         const pick=await evaluate(cdp,`(()=>{const r=window.__ARTEMIS_EXPLORER,c=r.map.getCanvas(),b=c.getBoundingClientRect();for(let y=b.top+10;y<b.bottom-10;y+=10)for(let x=b.left+10;x<b.right-10;x+=10){if(document.elementFromPoint(x,y)!==c)continue;const h=r.map.queryRenderedFeatures([x-b.left,y-b.top],{layers:['workspace-regions']})[0];if(h)return {x,y,item:h.properties.item_id}}throw Error('No unobstructed Region pixel')})()`);await click(pick);await settle();
@@ -91,5 +122,5 @@ try {
   }
 } catch(error){report.error=String(error.stack||error);throw error;} finally {
   await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');await writeFile(join(output,'browser.log'),log);
-  cdp?.close();if(browser&&browser.exitCode===null)browser.kill('SIGTERM');server?.close();await delay(300);await rm(temp,{recursive:true,force:true,maxRetries:5,retryDelay:100});
+  diagnosticSocket?.close();cdp?.close();if(browser&&browser.exitCode===null)browser.kill('SIGTERM');server?.close();await delay(300);await rm(temp,{recursive:true,force:true,maxRetries:5,retryDelay:100});
 }

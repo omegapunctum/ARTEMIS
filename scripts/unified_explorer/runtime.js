@@ -1,11 +1,13 @@
 (() => {
   'use strict';
-  const LAYERS = ['leonardo', 'roman', 'architecture'];
+  const LAYERS = ['leonardo', 'roman', 'architecture', 'catalog'];
   const MIN = 91, MAX = 1519;
   const words = {
     en: {preview:'Public research prototype · user value unvalidated',globe:'Globe',map:'2D map',layers:'Layers',leonardo:'Leonardo',roman:'Roman Empire',architecture:'Architecture references',eleven:'11 selected presences',three:'3 reconstructions',atemporal:'Atemporal · historical applicability unknown',visible:'Visible records',choose:'Choose a record',focus:'Focus map on this record',evidence:'Claims, evidence and uncertainty',raw:'Source-native input and provenance',range:'Range',scrub:'Scrub',from:'From',to:'To',cursor:'Current year CE',routes:'Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.',sources:'Sources',none:'outside dated coverage / no matching record',off:'off',unknown:'Unknown',interval:'Interval collection; records may come from different eras, not simultaneous context.',trace:'Leonardo accumulates from',reference:'Atemporal imported reference. Historical applicability, lifetime and historical position are unknown.',reconstruction:'Approximate scholarly reconstruction; not exact historical borders.',presence:'Source-bounded documented presence; exact historical position and routes unknown.',sourceScope:'Source links do not mean historical claims have been verified. Other historical sources may exist; no reliability score is assigned.',legacy:'Raw export flags are metadata, not historical acceptance or geometry precision.',context:'Present-day reference context; not historical terrain.',error:'Could not complete the view change. The controls show the current view; try again.'},
     ru: {preview:'Публичный исследовательский прототип · пользовательская ценность не подтверждена',globe:'Глобус',map:'Карта 2D',layers:'Слои',leonardo:'Леонардо',roman:'Римская империя',architecture:'Архитектурные объекты',eleven:'11 выбранных присутствий',three:'3 реконструкции',atemporal:'Вне времени · историческая применимость неизвестна',visible:'Видимые записи',choose:'Выберите запись',focus:'Фокусировать карту на записи',evidence:'Утверждения, доказательства и неопределённость',raw:'Исходные данные и происхождение',range:'Интервал',scrub:'Курсор',from:'От',to:'До',cursor:'Текущий год н. э.',routes:'Хронология Леонардо не является маршрутом; точные маршруты и исторические положения неизвестны.',sources:'Источники',none:'вне временного покрытия / нет подходящих записей',off:'выключен',unknown:'Неизвестно',interval:'Коллекция интервала: записи могут относиться к разным эпохам, а не одновременному контексту.',trace:'След Леонардо накапливается с',reference:'Импортированная опорная запись вне времени. Историческая применимость, время существования и историческое положение неизвестны.',reconstruction:'Приблизительная научная реконструкция; не точные исторические границы.',presence:'Документированное присутствие в пределах источников; точное историческое положение и маршруты неизвестны.',sourceScope:'Связь с источником не означает проверенность исторических утверждений. Могут существовать другие источники; рейтинг достоверности не назначается.',legacy:'Флаги исходного экспорта — метаданные, а не историческое принятие или точность геометрии.',error:'Не удалось завершить смену вида. Кнопки показывают текущий вид; попробуйте снова.'}
   };
+  Object.assign(words.en,{catalog:'London architecture catalog',catalogPilot:'Selected pilot · 10 objects · London',catalogReference:'Modern reference point. Historical position and lifetime are unknown.',catalogUnverified:'Imported from Wikidata; independent verification has not been performed.',search:'Search names or QID',clearSearch:'Clear search',searchEmpty:'No matching visible records. Clear search or enable another layer.',searchCount:'Matching visible records',coordinate:'Reported longitude / latitude',precision:'Source numeric precision (degrees)',precisionLimit:'Numeric precision is not measurement accuracy. Site extent and historical applicability are unknown.',revision:'Wikidata source revision',wikipedia:'Wikipedia context',searchHint:'Search filters this chooser only; the map and open record remain unchanged.'});
+  Object.assign(words.ru,{catalog:'Каталог архитектуры Лондона',catalogPilot:'Пилотный каталог · 10 объектов · Лондон',catalogReference:'Современная опорная точка. Историческое положение и период существования не установлены.',catalogUnverified:'Импортировано из Wikidata; независимая проверка не выполнена.',search:'Поиск по названию или QID',clearSearch:'Очистить поиск',searchEmpty:'Нет подходящих видимых записей. Очистите поиск или включите другой слой.',searchCount:'Найдено видимых записей',coordinate:'Указанные долгота / широта',precision:'Численная точность в источнике (градусы)',precisionLimit:'Численная точность не означает точность измерения. Размер объекта и историческая применимость неизвестны.',revision:'Версия источника Wikidata',wikipedia:'Контекст в Wikipedia',searchHint:'Поиск фильтрует только список; карта и открытая запись остаются прежними.'});
   const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
@@ -15,19 +17,19 @@
     let pending = false, latest;
     return (...args) => { latest = args; if (pending) return; pending = true; requestFrame(() => { pending = false; callback(...latest); }); };
   }
-  function defaults(profile = 'globe') { return {mode:'range',startYear:profile === 'region' ? 91 : 1452,endYear:profile === 'region' ? 105 : 1519,cursorYear:profile === 'region' ? 100 : 1519,traceOriginYear:1452,layers:['leonardo','roman'],selectedItemId:null,language:'en',presentationView:'globe',camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}; }
+  function defaults(profile = 'globe') { return {mode:'range',startYear:profile === 'region' ? 91 : 1452,endYear:profile === 'region' ? 105 : 1519,cursorYear:profile === 'region' ? 100 : 1519,traceOriginYear:1452,layers:['leonardo','roman','catalog'],selectedItemId:null,language:'en',presentationView:'globe',camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}; }
   function query(bundle, state) {
     const overlap = (interval, start, end) => interval && interval.start <= end && interval.end >= start;
     return Object.freeze(bundle.registry.filter(item => {
       if (!state.layers.includes(item.layer_id)) return false;
-      if (item.layer_id === 'architecture') return true;
+      if (item.layer_id === 'architecture' || item.layer_id === 'catalog') return true;
       if (state.mode === 'range') return overlap(item.interval, state.startYear, state.endYear);
       if (item.layer_id === 'roman') return overlap(item.interval, state.cursorYear, state.cursorYear);
       return state.cursorYear >= state.traceOriginYear && overlap(item.interval, state.traceOriginYear, state.cursorYear);
     }));
   }
   function resolveSelection(bundle, value) {
-    return bundle.registry.find(item => item.item_id === value || item.presence_id === value || item.event_item_id === value || item.original_id === value || item.aliases?.includes(value))?.item_id || null;
+    return bundle.registry.find(item => item.item_id === value || item.presence_id === value || item.event_item_id === value || item.original_id === value || (Array.isArray(item.aliases) && item.aliases.includes(value)))?.item_id || null;
   }
   function normalizeState(bundle, input, fallback = defaults()) {
     const state = {...clone(fallback),...clone(input)};
@@ -104,8 +106,8 @@
     for (const item of items) {
       if (item.kind === 'presence') {
         continue; // One fixed Place anchor; all Presence identities remain selectable.
-      } else if (item.kind === 'reference') {
-        const reference = bundle.architecture.references.find(value => value.item_id === item.item_id);
+      } else if (item.kind === 'reference' || item.kind === 'catalog_reference') {
+        const reference = (item.kind === 'reference' ? bundle.architecture : bundle.catalog).references.find(value => value.item_id === item.item_id);
         features.push({type:'Feature',id:item.item_id,geometry:reference.geometry,properties:{item_id:item.item_id,layer_id:item.layer_id,kind:item.kind}});
       } else {
         const version = bundle.roman.versions.find(value => value.item_id === item.item_id);
@@ -132,10 +134,26 @@
     const emphasis = presentationEmphasis(bundle,items,state);
     return freeze(featuresFor(bundle,items).features.filter(feature => feature.properties.kind === 'chronology').filter(feature => JSON.stringify(feature.geometry.coordinates[0]) !== JSON.stringify(feature.geometry.coordinates[1])).map(feature => ({id:feature.id,coordinates:feature.geometry.coordinates,midpoint:[(feature.geometry.coordinates[0][0]+feature.geometry.coordinates[1][0])/2,(feature.geometry.coordinates[0][1]+feature.geometry.coordinates[1][1])/2],emphasis:emphasis.transitions.find(transition => transition.id === feature.id)?.emphasis || 0,renderer_only:true,route_geometry:null})));
   }
-  const helpers = Object.freeze({defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle});
+  function recordLabel(item, language) {
+    if (item.kind !== 'catalog_reference') return item.label;
+    const labels = item.labels || {}, preferred = labels[language];
+    if (preferred) return preferred;
+    const fallback = labels.en ? 'en' : Object.keys(labels).sort()[0];
+    return fallback ? `${labels[fallback]} (${fallback})` : item.label;
+  }
+  function searchKey(value) { return String(value ?? '').normalize('NFKC').toLocaleLowerCase('und'); }
+  function chooserItems(bundle, items, search) {
+    const needle = searchKey(search).trim(); if (!needle) return items;
+    return items.filter(item => {
+      const original = item.kind === 'reference' ? bundle.architecture.references.find(value => value.item_id === item.item_id)?.raw_feature.properties : null;
+      const aliases = [...(Array.isArray(item.aliases) ? item.aliases : []),...Object.values(item.localized_aliases || {}).flat()];
+      return [item.label,item.qid,...Object.values(item.labels || {}),...aliases,original?.name_en,original?.name_ru].some(value => searchKey(value).includes(needle));
+    });
+  }
+  const helpers = Object.freeze({recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
-  const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map()};
+  const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
   window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get placeGroups(){return runtime.bundle ? placeGroups(runtime.bundle,runtime.visibleItems) : [];},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
   let renderedSelection = null, restoringCamera = false, recordSignature = '';
@@ -158,6 +176,7 @@
   function sourceRecord(item) {
     const bundle = runtime.bundle;
     if (item.kind === 'reference') return bundle.architecture.references.find(value => value.item_id === item.item_id);
+    if (item.kind === 'catalog_reference') return bundle.catalog.references.find(value => value.item_id === item.item_id);
     if (item.kind === 'region') return {version:bundle.roman.versions.find(value => value.item_id === item.item_id),record:bundle.roman.knowledge.records.find(value => value.item_id === item.item_id)};
     const presence = bundle.leonardo.lifePath.presences.find(value => value.presence_item_id === item.item_id);
     const record = bundle.leonardo.knowledge.records.find(value => value.item_id === presence.event_item_id) || presence;
@@ -188,7 +207,10 @@
     for (const id of ['selection-facts','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
     for (const id of ['sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
     const input = sourceRecord(selected), facts = byId('selection-facts');
-    if (selected.kind === 'reference') {
+    if (selected.kind === 'catalog_reference') {
+      renderCatalogFacts(input);
+      inputJson(byId('selection-evidence'),{claims:input.claims,evidence_links:input.evidence_links,uncertainties:input.uncertainties,historical_position:input.historical_position,historical_applicability:input.historical_applicability});
+    } else if (selected.kind === 'reference') {
       const raw = input.raw_feature.properties;
       const list = node('dl','');
       for (const [key,value] of [['date_start',raw.date_start],['date_construction_end',raw.date_construction_end],['date_end',raw.date_end],['original_id',input.original_id],['historical_applicability','unknown'],['historical_position','unknown'],['historical_precision','unknown']]) { list.append(node('dt',key),node('dd',value == null ? 'null / unknown' : String(value))); }
@@ -212,7 +234,22 @@
     inputJson(byId('selection-input'),{registry:selected,source_native_input:input,input_ledger:runtime.bundle.input_ledger});
     renderInspectorLanguage(selected); renderEpisodeChoices(selected); layout();
   }
-  function renderInspectorLanguage(selected) { const input = sourceRecord(selected); text('selection-title',selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : selected.label); text('selection-scope',t(selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence')); text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`); }
+  function renderCatalogFacts(input) {
+    const facts = byId('selection-facts'); facts.replaceChildren(node('p',t('catalogUnverified')));
+    const coordinateValue = input.coordinate_statement?.mainsnak?.datavalue?.value || {}, list = node('dl','');
+    for (const [key,displayValue] of [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),coordinateValue.precision ?? t('unknown')],['Wikidata',input.qid]]) list.append(node('dt',key),node('dd',String(displayValue)));
+    facts.append(list,node('p',t('precisionLimit')));
+    const source = input.sources[0], link = node('a',`${t('revision')} · ${source.revision}`); link.id = 'catalog-revision-link'; link.href = safeLink(source.url); link.target = '_blank'; link.rel = 'noopener noreferrer';
+    const paragraph = node('p',''); paragraph.append(link); facts.append(paragraph,node('p',source.license));
+    const urls = input.wikipedia_urls || {}, language = urls[runtime.state.language] ? runtime.state.language : urls.en ? 'en' : Object.keys(urls).sort()[0];
+    if (language && safeLink(urls[language])) { const context = node('a',`${t('wikipedia')} (${language})`); context.id = 'catalog-context-link'; context.href = safeLink(urls[language]); context.target = '_blank'; context.rel = 'noopener noreferrer'; const p = node('p',''); p.append(context); facts.append(p); }
+  }
+  function renderInspectorLanguage(selected) {
+    const input = sourceRecord(selected); text('selection-title',selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language));
+    text('selection-scope',t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'));
+    text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
+    if (selected.kind === 'catalog_reference') renderCatalogFacts(input);
+  }
   function renderControls() {
     const state = runtime.state; document.documentElement.lang = state.language;
     for (const element of document.querySelectorAll('[data-i18n]')) element.textContent = t(element.dataset.i18n);
@@ -226,12 +263,16 @@
     for (const id of ['time-start','time-end','range-start-handle','range-end-handle','cursor-year','time-cursor','mode-range','mode-scrub','period-roman','period-leonardo','period-all']) byId(id).disabled = !runtime.ready;
     text('time-status',state.mode === 'range' ? `${state.startYear}–${state.endYear} CE · ${t('interval')}` : `${state.cursorYear} CE · ${t('trace')} ${state.traceOriginYear}; ${state.cursorYear < state.traceOriginYear ? t('none') : `${state.traceOriginYear}–${state.cursorYear}`}`);
     text('layer-status',LAYERS.map(layer => `${t(layer)}: ${!state.layers.includes(layer) ? t('off') : runtime.visibleItems.filter(item => item.layer_id === layer).length || t('none')}`).join(' · '));
-    const select = byId('record-select'), nextSignature = `${state.language}|${runtime.visibleItems.map(item => item.item_id).join('|')}`;
+    const results = chooserItems(runtime.bundle,runtime.visibleItems,runtime.search);
+    const select = byId('record-select'), nextSignature = `${state.language}|${runtime.search}|${results.map(item => item.item_id).join('|')}`;
     if (recordSignature !== nextSignature) {
       recordSignature = nextSignature; select.replaceChildren(node('option',t('choose'))); select.firstChild.value = '';
-      for (const item of runtime.visibleItems) { const option = node('option',`${t(item.layer_id)} · ${item.label}${item.interval ? ` · ${item.interval.start}–${item.interval.end}` : ` · ${t('atemporal')}`}`); option.value = item.item_id; select.append(option); }
+      for (const item of results) { const option = node('option',`${t(item.layer_id)} · ${recordLabel(item,state.language)}${item.interval ? ` · ${item.interval.start}–${item.interval.end}` : ` · ${t('atemporal')}`}`); option.value = item.item_id; select.append(option); }
     }
-    select.value = state.selectedItemId || ''; select.disabled = !runtime.ready;
+    select.value = results.some(item => item.item_id === state.selectedItemId) ? state.selectedItemId : ''; select.disabled = !runtime.ready || !results.length;
+    byId('record-search').disabled = !runtime.ready; byId('clear-search').disabled = !runtime.ready || !runtime.search;
+    text('search-status',results.length ? `${t('searchCount')}: ${results.length}` : t('searchEmpty'));
+    byId('record-search').placeholder = t('search');
     document.documentElement.dataset.artemisLanguage = state.language; document.documentElement.dataset.artemisPresentationView = state.presentationView;
     document.documentElement.dataset.artemisSelectedItem = state.selectedItemId || ''; document.documentElement.dataset.artemisTimeCursor = String(state.cursorYear);
     const attributionContext = byId('attribution-context'); if (attributionContext) attributionContext.textContent = state.language === 'ru' ? 'Современный опорный контекст; не историческая поверхность.' : words.en.context;
@@ -302,7 +343,7 @@
       rendered.marker.getElement().dataset.emphasis = String(cue.emphasis); rendered.marker.getElement().firstChild.style.opacity = cue.emphasis ? '.95' : '.12';
     }
     for (const item of runtime.visibleItems.filter(item => item.kind !== 'presence')) {
-      if (item.kind === 'reference') runtime.map.setFeatureState({source:'workspace-features',id:item.item_id},{selected:item.item_id === runtime.state.selectedItemId});
+      if (item.kind === 'reference' || item.kind === 'catalog_reference') runtime.map.setFeatureState({source:'workspace-features',id:item.item_id},{selected:item.item_id === runtime.state.selectedItemId});
       else for (const primitive of runtime.bundle.roman.versions.find(version => version.item_id === item.item_id).globe.primitives) runtime.map.setFeatureState({source:'workspace-features',id:primitive.primitive_id},{selected:item.item_id === runtime.state.selectedItemId});
     }
     layoutPlaceLabels();
@@ -310,7 +351,7 @@
   function focusSelection() {
     const selected = runtime.registry.get(runtime.state.selectedItemId); if (!selected || !runtime.ready) return;
     const feature = featuresFor(runtime.bundle,[selected]).features.find(item => item.properties.item_id === selected.item_id); if (!feature) return;
-    if (feature.geometry.type === 'Point') runtime.map.flyTo({center:feature.geometry.coordinates,zoom:Math.max(runtime.map.getZoom(),selected.kind === 'reference' ? 10 : 5),duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800});
+    if (feature.geometry.type === 'Point') runtime.map.flyTo({center:feature.geometry.coordinates,zoom:Math.max(runtime.map.getZoom(),['reference','catalog_reference'].includes(selected.kind) ? 10 : 5),duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800});
     else { const positions = []; const collect = value => { if (typeof value[0] === 'number') positions.push(value); else value.forEach(collect); }; collect(feature.geometry.coordinates); const bounds = positions.reduce((box,p) => box.extend(p),new maplibregl.LngLatBounds()); runtime.map.fitBounds(bounds,{padding:60,duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800}); }
   }
   function bindControls() {
@@ -324,6 +365,8 @@
     byId('range-end-handle').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear)}));
     for (const id of ['time-cursor','cursor-year']) byId(id).addEventListener('change',event => applyState({cursorYear:year(event.target.value,runtime.state.cursorYear)}));
     for (const [id,startYear,endYear] of [['period-roman',91,116],['period-leonardo',1452,1519],['period-all',91,1519]]) byId(id).addEventListener('click',() => applyState({mode:'range',startYear,endYear}));
+    byId('record-search').addEventListener('input',event => { runtime.search = event.target.value; renderControls(); });
+    byId('clear-search').addEventListener('click',() => { runtime.search = ''; byId('record-search').value = ''; renderControls(); byId('record-search').focus(); });
     byId('record-select').addEventListener('change',event => selectItem(event.target.value));
     byId('close-details').addEventListener('click',() => selectItem(null)); byId('focus-selection').addEventListener('click',focusSelection);
     document.addEventListener('keydown',event => { if (event.key === 'Escape' && runtime.state.selectedItemId) { selectItem(null); byId('record-select').focus(); } });
@@ -355,12 +398,12 @@
       map.addLayer({id:'workspace-regions',type:'fill',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'fill-color':['match',['get','native_start'],91,'#36ccb9',106,'#73d0ec','#b6a3f1'],'fill-opacity':['case',['boolean',['feature-state','selected'],false],.4,.24]}});
       map.addLayer({id:'workspace-region-outlines',type:'line',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'line-color':'#74d8cf','line-width':['case',['boolean',['feature-state','selected'],false],2.2,1.4]}});
       map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':'#a8bed0','line-width':['case',['>', ['coalesce',['feature-state','emphasis'],0],0],2.2,1.4],'line-dasharray':[1.5,2.2],'line-opacity':['match',['coalesce',['feature-state','emphasis'],0],2,.95,1,.8,.35]}});
-      map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
+      map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,'catalog_reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','catalog_reference','#c6d697','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
       runtime.ready = true;
       const scheduleLabels = frameThrottle(layoutPlaceLabels);
       updatePlacePresentation(); map.on('move',scheduleLabels); map.on('resize',scheduleLabels); map.on('idle',scheduleLabels);
       const attribution = (assets.assets || []).filter(asset => asset.attribution).map(asset => asset.attribution).join(' · ');
-      byId('attribution').replaceChildren(node('span',`${attribution || 'Natural Earth · public domain'} · Cliopatria CC-BY-4.0 · `)); const explanation = node('span',words.en.context); explanation.id = 'attribution-context'; byId('attribution').append(explanation);
+      byId('attribution').replaceChildren(node('span',`${attribution || 'Natural Earth · public domain'} · Cliopatria CC-BY-4.0 · Wikidata CC0-1.0 · `)); const explanation = node('span',words.en.context); explanation.id = 'attribution-context'; byId('attribution').append(explanation);
       renderControls(); history('replace');
       map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id); } });
       map.on('mousemove',frameThrottle(event => { const cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; if (map.getCanvas().style.cursor !== cursor) map.getCanvas().style.cursor = cursor; }));

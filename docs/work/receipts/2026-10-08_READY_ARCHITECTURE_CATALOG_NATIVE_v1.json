@@ -1,0 +1,668 @@
+{
+  "schema_version": "ready-catalog-native-receipt-v1",
+  "source_commit": "14c9e025569e705fe21a83084139ea32633e1b99",
+  "source_tree": "d3ce8479f5c5c10b3318a0b21fead855cc4cd1d6",
+  "local_checkout": "801fb74d9cbd1556733529e54f66d27a5ca1379e",
+  "report_sha256": "14018e20e8464287493207c9dc3baf6c32d87ba918700f48016467b8c8775baf",
+  "outcome": "TECHNICAL_UNIFIED_WORKSPACE_PASS",
+  "provenance": {
+    "evidenceKind": "automated_native_browser_check",
+    "checkoutCommit": "801fb74d9cbd1556733529e54f66d27a5ca1379e",
+    "recordedAtUtc": "2026-10-08T08:24:31.334Z",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "HeadlessChrome/134.0.6998.35",
+      "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+      "jsVersion": "13.4.114.14"
+    },
+    "requestedWindow": {
+      "width": 390,
+      "height": 844
+    },
+    "runnerSha256": "49bcaac553293798cb50cce920079fbb15d2c39a82f1b16a438721244c42a83c",
+    "sharedTransportSha256": "df90962fa4c6c0e92b77f3411c182f0bd0ec6826899d8d64cf5e1a5607953271",
+    "bundleSha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538",
+    "workflowRunUrl": null,
+    "workflowRunAttempt": null,
+    "live": false
+  },
+  "action_count": 221,
+  "capture_count": 22,
+  "catalog_checks": [
+    {
+      "case": "ready catalog search source focus and shared history",
+      "cohort": [
+        "catalog:wikidata:Q83125",
+        "catalog:wikidata:Q62378",
+        "catalog:wikidata:Q5933",
+        "catalog:wikidata:Q62408",
+        "catalog:wikidata:Q173882",
+        "catalog:wikidata:Q42182",
+        "catalog:wikidata:Q642039",
+        "catalog:wikidata:Q205666",
+        "catalog:wikidata:Q207385",
+        "catalog:wikidata:Q607700"
+      ],
+      "nativeCatalogGeometrySha256": "beaf208f9149146cc341ceb33cf646fce94ffc3a6ffc04559d55b3b021f0c8f5",
+      "searchCases": [
+        {
+          "kind": "QID",
+          "query": "Q83125",
+          "matches": [
+            "catalog:wikidata:Q83125"
+          ]
+        },
+        {
+          "kind": "English",
+          "query": "TOWER BRIDGE",
+          "matches": [
+            "catalog:wikidata:Q83125"
+          ]
+        },
+        {
+          "kind": "Russian",
+          "query": "ТАУЭРСКИЙ МОСТ",
+          "matches": [
+            "catalog:wikidata:Q83125"
+          ]
+        },
+        {
+          "kind": "alias",
+          "query": "TOWERBRÜCKE",
+          "matches": [
+            "catalog:wikidata:Q83125"
+          ]
+        }
+      ],
+      "emptySearch": {
+        "query": "ARTEMIS-no-match-☃-zzzz",
+        "status": "No matching visible records. Clear search or enable another layer.",
+        "selectionRetained": true
+      },
+      "clearedChooserCount": 21,
+      "sourceDetails": [
+        {
+          "item": "catalog:wikidata:Q83125",
+          "title": "Tower Bridge",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q83125&oldid=2513533255",
+          "context": "https://en.wikipedia.org/wiki/Tower_Bridge",
+          "claimIds": [
+            "claim:wikidata:Q83125:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q83125&oldid=2513533255"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Tower_Bridge"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q62378",
+          "title": "Tower of London",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q62378&oldid=2546509273",
+          "context": "https://en.wikipedia.org/wiki/Tower_of_London",
+          "claimIds": [
+            "claim:wikidata:Q62378:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q62378&oldid=2546509273"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Tower_of_London"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q5933",
+          "title": "Westminster Abbey",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q5933&oldid=2522250264",
+          "context": "https://en.wikipedia.org/wiki/Westminster_Abbey",
+          "claimIds": [
+            "claim:wikidata:Q5933:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q5933&oldid=2522250264"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Westminster_Abbey"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q62408",
+          "title": "Palace of Westminster",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q62408&oldid=2553801474",
+          "context": "https://en.wikipedia.org/wiki/Palace_of_Westminster",
+          "claimIds": [
+            "claim:wikidata:Q62408:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q62408&oldid=2553801474"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Palace_of_Westminster"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q173882",
+          "title": "St Paul's Cathedral",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q173882&oldid=2532130365",
+          "context": "https://en.wikipedia.org/wiki/St_Paul%27s_Cathedral",
+          "claimIds": [
+            "claim:wikidata:Q173882:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q173882&oldid=2532130365"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/St_Paul%27s_Cathedral"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q42182",
+          "title": "Buckingham Palace",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q42182&oldid=2535771261",
+          "context": "https://en.wikipedia.org/wiki/Buckingham_Palace",
+          "claimIds": [
+            "claim:wikidata:Q42182:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q42182&oldid=2535771261"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Buckingham_Palace"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q642039",
+          "title": "Banqueting House",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q642039&oldid=2550076028",
+          "context": "https://en.wikipedia.org/wiki/Banqueting_House",
+          "claimIds": [
+            "claim:wikidata:Q642039:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q642039&oldid=2550076028"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Banqueting_House"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q205666",
+          "title": "Hampton Court Palace",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q205666&oldid=2534565357",
+          "context": "https://en.wikipedia.org/wiki/Hampton_Court_Palace",
+          "claimIds": [
+            "claim:wikidata:Q205666:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q205666&oldid=2534565357"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Hampton_Court_Palace"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q207385",
+          "title": "Kensington Palace",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q207385&oldid=2534565458",
+          "context": "https://en.wikipedia.org/wiki/Kensington_Palace",
+          "claimIds": [
+            "claim:wikidata:Q207385:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q207385&oldid=2534565458"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Kensington_Palace"
+            }
+          ]
+        },
+        {
+          "item": "catalog:wikidata:Q607700",
+          "title": "Monument to the Great Fire of London",
+          "revision": "https://www.wikidata.org/w/index.php?title=Q607700&oldid=2511458091",
+          "context": "https://en.wikipedia.org/wiki/Monument_to_the_Great_Fire_of_London",
+          "claimIds": [
+            "claim:wikidata:Q607700:coordinate"
+          ],
+          "keyboardLinks": [
+            {
+              "id": "catalog-revision-link",
+              "href": "https://www.wikidata.org/w/index.php?title=Q607700&oldid=2511458091"
+            },
+            {
+              "id": "catalog-context-link",
+              "href": "https://en.wikipedia.org/wiki/Monument_to_the_Great_Fire_of_London"
+            }
+          ]
+        }
+      ],
+      "focus": {
+        "before": {
+          "center": [
+            10,
+            15
+          ],
+          "zoom": 0.8,
+          "pitch": 0,
+          "bearing": 0
+        },
+        "after": {
+          "center": [
+            -0.07527777777772826,
+            51.50555555555555
+          ],
+          "zoom": 10,
+          "pitch": 0,
+          "bearing": 0
+        }
+      },
+      "fallbackItem": null,
+      "fallbackEvidence": "not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests",
+      "allLayersCount": 55,
+      "catalogParticipatesInHistoricalFilter": false,
+      "sameMap": true,
+      "blockedExternalApis": true
+    }
+  ],
+  "network": {
+    "blockedUrls": [
+      "*://*.wikidata.org/*",
+      "*://wikidata.org/*",
+      "*://*.wikipedia.org/*",
+      "*://wikipedia.org/*",
+      "*://*.wikimedia.org/*"
+    ],
+    "document_count": 7,
+    "liveWikimediaRequests": 0
+  },
+  "artifact_verification": {
+    "scope": "checked metadata and common input bundle at both registered entries; full release files separately checked by verify_public_artifact.py",
+    "files": [
+      {
+        "entry": "globe",
+        "path": "build-meta.json",
+        "bytes": 9725,
+        "sha256": "e45c2a4b10815859f9e88ff7afbc27613db5c01f7ff9042fa8d940053392162d"
+      },
+      {
+        "entry": "globe",
+        "path": "unified-bundle.json",
+        "bytes": 1934015,
+        "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538"
+      },
+      {
+        "entry": "region",
+        "path": "build-meta.json",
+        "bytes": 9722,
+        "sha256": "f68870c819151fe62bb62b83ee7ea7f644a873b14aa175a1876a0638116fca0f"
+      },
+      {
+        "entry": "region",
+        "path": "unified-bundle.json",
+        "bytes": 1934015,
+        "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538"
+      }
+    ]
+  },
+  "test_engine_mirror": {
+    "reason": "Test environment browser cannot use external CDN; exact pinned engine bytes served locally. Production source untouched.",
+    "files": [
+      {
+        "url": "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js",
+        "bytes": 1056837,
+        "sha256": "45a9b07a9189ce56054c620a947ccf41e291e58c95e9b61533b740aaa65ee5cb"
+      },
+      {
+        "url": "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css",
+        "bytes": 70024,
+        "sha256": "ab1e70d59ec40465bae7e7030da2f3ccf28133fd502e62bd598eefbadfd7a732"
+      }
+    ],
+    "html": [
+      {
+        "entry": "globe",
+        "original_sha256": "49a86667dfa0a9f69c4053fa41133bc679b30ac5383e6e2b8e60a31719c18a3c",
+        "test_mirror_sha256": "adce12cc1e4ed0057d74cbd4d9a6345f5c5de66ed356ce32a1256a656bf9f2d4",
+        "only_change": "Pinned CDN JS/CSS URLs point to exact local engine bytes"
+      },
+      {
+        "entry": "region",
+        "original_sha256": "005411d2b63afe66b4001b1db873496d125b4125ceea0a546d7f1a0ab3ea10dc",
+        "test_mirror_sha256": "2fff7a24fa3b86000e7547b6c5492c4e1ba21713097da1da3d5f2ea18e0dc8f5",
+        "only_change": "Pinned CDN JS/CSS URLs point to exact local engine bytes"
+      }
+    ]
+  },
+  "captures": [
+    {
+      "case": "ready-catalog-default-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "ready-catalog-default-en-globe.png",
+      "dom": "ready-catalog-default-en-globe.html",
+      "screenshotSha256": "405977ada8e14ac284595a0911a7c42183a7d35ed59fc0b38356624a6ab63794",
+      "domSha256": "e028c4baaa18ba5b836a686b9513216ae873d039d530f40696e186602692a313"
+    },
+    {
+      "case": "catalog-empty-search-selection-retained-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 484,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "catalog-empty-search-selection-retained-en-globe.png",
+      "dom": "catalog-empty-search-selection-retained-en-globe.html",
+      "screenshotSha256": "b13320cd90aa97314afd6db0d00f118fcf920325653e1e34a5c62221a3aafe90",
+      "domSha256": "f827f7776fcc53cb8f0854db5ac7c9ddbe4904a7be2e7a26bc613d7583df59a6"
+    },
+    {
+      "case": "catalog-selected-source-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "catalog-selected-source-en-globe.png",
+      "dom": "catalog-selected-source-en-globe.html",
+      "screenshotSha256": "81b58f18ac45df8e78d50c4509c36e6fe24170d05e6b8267d96a32d7743408ba",
+      "domSha256": "d5c274b73526fe7cc8e94635f9ca562d760841c8f19cf82d6fdd7466a0c4a0c5"
+    },
+    {
+      "case": "catalog-selected-source-en-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "map",
+      "screenshot": "catalog-selected-source-en-map.png",
+      "dom": "catalog-selected-source-en-map.html",
+      "screenshotSha256": "b83d011436aa1c792354a516290f7a1bef5c07fdbd34135b5f031000c32a2c7e",
+      "domSha256": "6293604d989abe41edf28ee97edc6902d9d62d86d23e4a2bcb6ba626071f297a"
+    },
+    {
+      "case": "catalog-selected-source-ru-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 522.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "globe",
+      "screenshot": "catalog-selected-source-ru-globe.png",
+      "dom": "catalog-selected-source-ru-globe.html",
+      "screenshotSha256": "08be2637d67a6095e63084e2de7c767f385f06c9d18ed416a20877b0f394eeac",
+      "domSha256": "92c10050d41c9f3a9039ae97c6424a362b23039b4b6bfc26edd4e8f074f924c6"
+    },
+    {
+      "case": "catalog-selected-source-ru-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 522.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "map",
+      "screenshot": "catalog-selected-source-ru-map.png",
+      "dom": "catalog-selected-source-ru-map.html",
+      "screenshotSha256": "a5c2dd4e522edf8b29bff7095afbabb13510db9e0cb31d2bee8cba1e5c52bd86",
+      "domSha256": "5036e690032e025df4e43b7721a72a138cbdbacf3b85f1d6879d8c308ffdac52"
+    },
+    {
+      "case": "roman100-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 652.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "roman100-en-globe.png",
+      "dom": "roman100-en-globe.html",
+      "screenshotSha256": "d51a856987b563eb9eb0309708a54320359e1e2641d1970092e4a736fe533881",
+      "domSha256": "e34b192adee5ec449cf64849e48a45dee3264b82badfde07082bd14ee4384ced"
+    },
+    {
+      "case": "scrub1502-current-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 666.21875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "scrub1502-current-en-globe.png",
+      "dom": "scrub1502-current-en-globe.html",
+      "screenshotSha256": "702c2fd98f3e68fcb069940d9addb94f6278f103ac575082ab7527e844a73cfa",
+      "domSha256": "cf17c16a1a38f304588537c7225d72bb7e52f921874c082fcf83d2778a7723e5"
+    },
+    {
+      "case": "selected-leonardo-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "selected-leonardo-en-globe.png",
+      "dom": "selected-leonardo-en-globe.html",
+      "screenshotSha256": "8565dd5982e9523a19e429a0ba98d3d67cbacfd3081519fa4a70712faf2ebab2",
+      "domSha256": "667d41f94569b853a067810b8310990588dd489fc4b492890b25948491d32eef"
+    },
+    {
+      "case": "selected-leonardo-en-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "map",
+      "screenshot": "selected-leonardo-en-map.png",
+      "dom": "selected-leonardo-en-map.html",
+      "screenshotSha256": "4e8f73c1e60025b03006585dfadb67a7befe591ee2594fadf64bdc476db73308",
+      "domSha256": "25de2c09a5a52fb58a46e5f65830aae5d9f205200d32743d8ef350f4998de0ff"
+    },
+    {
+      "case": "selected-leonardo-ru-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 522.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "globe",
+      "screenshot": "selected-leonardo-ru-globe.png",
+      "dom": "selected-leonardo-ru-globe.html",
+      "screenshotSha256": "cebcddecf984357c1d2c61c04e68fdadb550cb2f875a56d6c1c1775f7ff682c2",
+      "domSha256": "9df9f3811e409cd05104147ea1bd7ccec6b6da5c177a8bf58f355226ea32dc4c"
+    },
+    {
+      "case": "selected-leonardo-ru-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 522.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "map",
+      "screenshot": "selected-leonardo-ru-map.png",
+      "dom": "selected-leonardo-ru-map.html",
+      "screenshotSha256": "f0a22fd995b405db3780a8a4f65d46a032ade197be42dc84ba1bc44ce3390d40",
+      "domSha256": "47f4ba774a87dcef798816d965e86333054cebe8938ebc7908b6ebfb8adb63fc"
+    },
+    {
+      "case": "atemporal-raw-negative-dates-en-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "map",
+      "screenshot": "atemporal-raw-negative-dates-en-map.png",
+      "dom": "atemporal-raw-negative-dates-en-map.html",
+      "screenshotSha256": "758febf58ea6b72c389b95825f3e2ee12f698cf2ffd9a57cec5c4e92f8db95d9",
+      "domSha256": "943c497f823f6d3344ff32d5eb3fdbd4d892a3a76be7ad996cfaa737bf2da47c"
+    },
+    {
+      "case": "atemporal-raw-negative-dates-ru-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 522.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "map",
+      "screenshot": "atemporal-raw-negative-dates-ru-map.png",
+      "dom": "atemporal-raw-negative-dates-ru-map.html",
+      "screenshotSha256": "5fc05b6f0eb0f0bac693b4b9726fe3fe75a0b02cd5f184ec20f5e318bca04c67",
+      "domSha256": "b47bce1c2e8d3aece50f51892811ea551908db015e64dc48cd94bf8bf1f633db"
+    },
+    {
+      "case": "repeated-florence-source-en-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 459.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "map",
+      "screenshot": "repeated-florence-source-en-map.png",
+      "dom": "repeated-florence-source-en-map.html",
+      "screenshotSha256": "94639d947fc3fbd41ba9ed696ba0f4c7945fd4ad4143c3106e65c20875a59b45",
+      "domSha256": "31a078450fa44ae5fd17086bf0f3f672883eaa49bf0b6f9629070a3c6b7c41a3"
+    },
+    {
+      "case": "wide-range-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 459.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "wide-range-en-globe.png",
+      "dom": "wide-range-en-globe.html",
+      "screenshotSha256": "b6429944f9d9b919dc6dfd18e363ec4b6c42dca6401a8a09667ee50a0b7cf1df",
+      "domSha256": "1a0c0a141690c9d8644892460b8882e7ef74faa0a23b96c2e5ef4dd124c9bc83"
+    },
+    {
+      "case": "wide-range-en-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 459.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "map",
+      "screenshot": "wide-range-en-map.png",
+      "dom": "wide-range-en-map.html",
+      "screenshotSha256": "ccacaab8c42ec156e0d6090a3ce3f01a2956cac255fdeeaa3189d41598a17489",
+      "domSha256": "733d371c60958be626b5a9dcf7d313ef3ae29639d2e773e25d9d83884fc35ec8"
+    },
+    {
+      "case": "wide-range-ru-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 511.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "globe",
+      "screenshot": "wide-range-ru-globe.png",
+      "dom": "wide-range-ru-globe.html",
+      "screenshotSha256": "05d0a8fb29dd93cb3d399abbda28654801377a4a82dc80f2063b8911456f1023",
+      "domSha256": "24e574b3c77aebfedd79554517e097dd3be86d90c9bf43a6e9f719858754d59e"
+    },
+    {
+      "case": "wide-range-ru-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 511.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "map",
+      "screenshot": "wide-range-ru-map.png",
+      "dom": "wide-range-ru-map.html",
+      "screenshotSha256": "9764a70f771eac067312cbcbb2ec5d5fffb577a34c222fecd865eab1752a3e65",
+      "domSha256": "85b972baae1ea51a7a5a6e36abaa9c507bfe1585d03640a2191fb0f28b134a3c"
+    },
+    {
+      "case": "shared-history-restored-ru-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 522.5,
+      "timeTop": 696.71875,
+      "language": "ru",
+      "view": "globe",
+      "screenshot": "shared-history-restored-ru-globe.png",
+      "dom": "shared-history-restored-ru-globe.html",
+      "screenshotSha256": "a0ca9d1c101acb8adf4babc18de00981f439d0da66fc424fddcda6452a43df01",
+      "domSha256": "7a68fdb707a21ea2c0c4d8fc38d890387fd10d7b403d16a3cc80b00a01921bad"
+    },
+    {
+      "case": "region-entry-en-globe",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "globe",
+      "screenshot": "region-entry-en-globe.png",
+      "dom": "region-entry-en-globe.html",
+      "screenshotSha256": "47d60998d4b022413e20aaf7ec0317d0ccaa7f9db02ad0d22f20d4c4c1ce3422",
+      "domSha256": "70b6ec89e990cc6dbb42a80cc2dcdd42a0e4f11fc68dede5d048a121438fdbe5"
+    },
+    {
+      "case": "legacy-roman-source-en-map",
+      "width": 390,
+      "height": 844,
+      "headerBottom": 470.5,
+      "timeTop": 696.71875,
+      "language": "en",
+      "view": "map",
+      "screenshot": "legacy-roman-source-en-map.png",
+      "dom": "legacy-roman-source-en-map.html",
+      "screenshotSha256": "e63973084fc30077b3156b838640ad5d89af8335c945b95abc7040851b37daea",
+      "domSha256": "f689117d4881eff49be83f2b80b5175bca61daafd3f3fd3182c15d96afd1f809"
+    }
+  ],
+  "limits": [
+    "Local exact pinned engine bytes; production CDN availability is a separate CI/live condition.",
+    "Recorded screenshot/DOM files and the full local report are intermediate evidence, not source data.",
+    "All ten source records have RU/EN labels; fallback mechanism has owned behavior coverage only.",
+    "Technical automated conformity does not establish physical-device, full assistive-technology or user-value acceptance."
+  ],
+  "independent_product_review": "/root/catalog_product independently verified the report and all22 screenshot/DOM hashes; ACCEPT_PRODUCT_IMPLEMENTATION upheld with zero material findings."
+}

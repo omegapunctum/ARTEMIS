@@ -10,8 +10,12 @@
       <label><input id="layer-leonardo" type="checkbox" value="leonardo" checked disabled><span data-i18n="leonardo">Leonardo</span><small>1452–1519 · <span data-i18n="eleven">11 selected presences</span></small></label>
       <label><input id="layer-roman" type="checkbox" value="roman" checked disabled><span data-i18n="roman">Roman Empire</span><small>91–116 CE · <span data-i18n="three">3 reconstructions</span></small></label>
       <label><input id="layer-architecture" type="checkbox" value="architecture" disabled><span data-i18n="architecture">Architecture references</span><small data-i18n="atemporal">Atemporal · historical applicability unknown</small></label>
+      <label><input id="layer-catalog" type="checkbox" value="catalog" checked disabled><span data-i18n="catalog">London architecture catalog</span><small data-i18n="catalogPilot">Selected pilot · 10 objects · London</small></label>
     </fieldset>
     <div id="layer-status" role="status" aria-live="polite"></div>
+    <div class="record-search"><label for="record-search" data-i18n="search">Search names or QID</label><input id="record-search" type="search" maxlength="200" disabled aria-describedby="search-hint search-status"><button id="clear-search" type="button" disabled data-i18n="clearSearch">Clear search</button></div>
+    <p id="search-hint" data-i18n="searchHint">Search filters this chooser only; the map and open record remain unchanged.</p>
+    <div id="search-status" role="status" aria-live="polite"></div>
     <div class="record-picker"><label for="record-select" data-i18n="visible">Visible records</label><select id="record-select" disabled><option value="" data-i18n="choose">Choose a record</option></select></div>
     <p id="workspace-error" role="status" hidden></p>
   </header>
