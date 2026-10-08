@@ -177,20 +177,24 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   async function layer(id,enabled) {if(await evaluate(cdp,`document.getElementById('layer-'+${JSON.stringify(id)}).checked`)!==enabled)await click('#layer-'+id,true);}
   async function select(itemId) {
-    await expose('#record-select');
-    const indices=await evaluate(cdp,`(() => {const n=document.getElementById('record-select');if(!n.checkVisibility({checkVisibilityCSS:true}))throw new Error('Native record selector is hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Native record selector cannot receive focus');const target=[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)});if(target<0)throw new Error('Item not available in native selection');return {target,current:n.selectedIndex};})()`);
-    if(await mobile()&&indices.target!==indices.current) {
-      // A closed select commits every ArrowDown. Mobile selection then closes
-      // its owning panel, as a completed native choice should. Open the native
-      // picker first, navigate its pending choice, and commit once with Enter.
-      await key(' ','Space',32);await key('Home','Home',36);
-      for(let step=0;step<indices.target;step++)await key('ArrowDown','ArrowDown',40);
-      await key('Enter','Enter',13);
-    } else {
-      let current=indices.current;if(current<0){await key('Home','Home',36);current=0;}
-      const delta=indices.target-current;for(let step=0;step<Math.abs(delta);step++)await key(delta>0?'ArrowDown':'ArrowUp',delta>0?'ArrowDown':'ArrowUp',delta>0?40:38);
+    async function available() {
+      await expose('#record-select');
+      return evaluate(cdp,`(() => {const n=document.getElementById('record-select');if(!n.checkVisibility({checkVisibilityCSS:true}))throw new Error('Native record selector is hidden');n.scrollIntoView({block:'nearest'});n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Native record selector cannot receive focus');const target=[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)});if(target<0)throw new Error('Item not available in native selection');return {target,current:n.selectedIndex,count:n.options.length};})()`);
     }
-    const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity');await stable('select '+itemId);
+    let indices=await available(),steps=0;
+    // Closed native selects commit each Arrow. The responsive UI closes the
+    // owning panel on a completed selection. Reopen it through its real button
+    // before EVERY subsequent key instead of dispatching into a hidden select.
+    while(indices.current!==indices.target) {
+      check(steps++<indices.count+1,'native record selection exhausted bounded steps');
+      const before=indices.current;
+      if(before<0)await key('Home','Home',36);
+      else {const down=indices.target>before;await key(down?'ArrowDown':'ArrowUp',down?'ArrowDown':'ArrowUp',down?40:38);}
+      const next=await evaluate(cdp,`(() => {const n=document.getElementById('record-select');return {target:[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)}),current:n.selectedIndex,count:n.options.length,value:n.value,selected:window.__ARTEMIS_EXPLORER.state.selectedItemId,panel:document.getElementById('workspace-header').dataset.headerPanel,active:document.activeElement?.id,url:location.href};})()`);
+      check(next.target>=0&&Math.abs(next.target-next.current)<Math.abs(indices.target-before),'native record selector made no progress '+JSON.stringify({expected:itemId,before,...next}));
+      indices=next;if(indices.current!==indices.target)indices=await available();
+    }
+    const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity '+JSON.stringify({expected:itemId,actual:state.state.selectedItemId,inspectorHidden:state.inspectorHidden,indices,url:state.url}));await stable('select '+itemId);
   }
   async function search(value) {
     await expose('#record-search');
