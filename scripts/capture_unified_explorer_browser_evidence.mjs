@@ -335,9 +335,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(await evaluate(cdp,`document.getElementById('${wheel}').getAttribute('aria-valuenow')===document.getElementById('${wheel}').getAttribute('aria-valuemin')`),'mobile lower boundary escaped');
     await draftUncommitted('bounded wheel draft');await capture('mobile-expanded-staged-boundary',{keepMobileOpen:true});await click('#mobile-cancel');
     check(await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`)===initial.state.startYear,'Cancel retained a staged year');
-    await focusWheel();const point=await evaluate(cdp,`(() => {const b=document.querySelector('#${wheel} .wheel-value').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2};})()`);
-    await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:60,deltaX:0});await settle();
-    check(await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`)===initial.state.startYear+1,'native wheel scroll did not stage one year');
+    await focusWheel();const point=await evaluate(cdp,`(() => {const n=document.getElementById('${wheel}');n.scrollIntoView({block:'nearest'});const b=n.querySelector('.wheel-value').getBoundingClientRect(),x=b.x+b.width/2,y=b.y+b.height/2,hit=document.elementFromPoint(x,y);if(!n.contains(hit))throw new Error('Native wheel center obstructed '+JSON.stringify({x,y,hit:hit?.id||hit?.className}));return {x,y};})()`);
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});await settle();
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:60,deltaX:0});
+    // Wheel input travels through the compositor; two animation frames alone
+    // need not mean that the single native event has reached its DOM handler.
+    const wheelDeadline=Math.min(deadline,Date.now()+2000);let staged=null;
+    do {staged=await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`);if(staged===initial.state.startYear+1)break;await delay(25);}while(Date.now()<wheelDeadline);
+    await settle();
+    check(staged===initial.state.startYear+1,'native wheel scroll did not stage one year '+JSON.stringify({point,expected:initial.state.startYear+1,actual:staged}));
     check(await evaluate(cdp,`Number(document.getElementById('range-start-handle').value)`)===initial.state.startYear+1,'staged mobile wheel did not preview timeline handle');await draftUncommitted('native wheel scroll');await capture('mobile-expanded-staged-year',{keepMobileOpen:true});await click('#mobile-apply');
     check((await snapshot()).state.startYear===initial.state.startYear+1,'Apply did not commit selected year');await number('time-start',initial.state.startYear);
     // Native pointer movement inside the year wheel is separate from dock drag.
