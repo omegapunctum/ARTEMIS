@@ -236,8 +236,8 @@
   }
   function renderCatalogFacts(input) {
     const facts = byId('selection-facts'); facts.replaceChildren(node('p',t('catalogUnverified')));
-    const value = input.coordinate_statement?.mainsnak?.datavalue?.value || {}, list = node('dl','');
-    for (const [key,value] of [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),value.precision ?? t('unknown')],['Wikidata',input.qid]]) list.append(node('dt',key),node('dd',String(value)));
+    const coordinateValue = input.coordinate_statement?.mainsnak?.datavalue?.value || {}, list = node('dl','');
+    for (const [key,displayValue] of [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),coordinateValue.precision ?? t('unknown')],['Wikidata',input.qid]]) list.append(node('dt',key),node('dd',String(displayValue)));
     facts.append(list,node('p',t('precisionLimit')));
     const source = input.sources[0], link = node('a',`${t('revision')} · ${source.revision}`); link.id = 'catalog-revision-link'; link.href = safeLink(source.url); link.target = '_blank'; link.rel = 'noopener noreferrer';
     const paragraph = node('p',''); paragraph.append(link); facts.append(paragraph,node('p',source.license));

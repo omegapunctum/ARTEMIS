@@ -281,7 +281,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const nativeCatalog=await evaluate(cdp,`(async()=>{const source=await window.__ARTEMIS_EXPLORER.map.getSource('workspace-features').getData();return source.features.filter(feature=>feature.properties.layer_id==='catalog').map(feature=>({item:feature.properties.item_id,geometry:feature.geometry}));})()`,true);
   check(nativeCatalog.length===10,'native shared map source omitted catalog points');
   for(const feature of nativeCatalog){const reference=catalog.find(row=>row.item_id===feature.item);check(reference&&sameState(feature.geometry,reference.geometry),'catalog native geometry differs from preserved source point');}
-  await select(first.item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await select(first.item_id);
+  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre'))})`);
+  check(initialCard.title===first.labels.en&&initialCard.revision===first.sources[0].url&&initialCard.evidencePresent,'catalog inspector failed to render its native title/source/evidence');
+  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(initialCard.facts.includes(String(value)),'catalog primary facts lost literal coordinate/precision');
+  await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
   const catalogSelected=await snapshot(),beforeSearch=catalogSelected;
   const searchCases=[];
   const qid=first.item_id.split(':').at(-1);
@@ -328,7 +332,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(sameState(previous,next),'catalog focus changed historical semantics');
   const coordinates=first.geometry.coordinates;
   check(Math.hypot(focused.camera.center[0]-coordinates[0],focused.camera.center[1]-coordinates[1])<1e-7,'catalog focus uses another coordinate');
-  for(const lang of ['en','ru']) {await click('#language-'+lang);for(const mode of ['globe','map']) {await view(mode);await capture('catalog-selected-source-'+lang+'-'+mode);}}
+  for(const lang of ['en','ru']) {await click('#language-'+lang);
+    const translatedFacts=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href})`);
+    check(translatedFacts.title===first.labels[lang]&&translatedFacts.revision===first.sources[0].url&&translatedFacts.facts.includes(String(first.geometry.coordinates[0])),'catalog language change lost native primary facts');
+    for(const mode of ['globe','map']) {await view(mode);await capture('catalog-selected-source-'+lang+'-'+mode);}}
+
   const fallback=catalog.find(reference=>!(reference.labels||{}).ru);
   if(fallback) {await select(fallback.item_id);check(/\(en\)/.test((await snapshot()).card),'missing RU label did not disclose English fallback');await capture('catalog-language-fallback-ru-map');}
   await click('#language-en');await select(first.item_id);
@@ -339,7 +347,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(allLayers.visible.length===55,'four layers did not preserve exact legacy45pluscatalog10');
   await number('time-start',91);await number('time-end',91);check((await snapshot()).visible.filter(row=>row.layer==='catalog').length===10,'catalog excluded by historical time');
   await layer('catalog',false);check((await snapshot()).state.selectedItemId===null,'hiding selected catalog layer retained selection');await layer('catalog',true);
-  catalogChecks.push({case:'ready catalog search source focus and shared history',cohort:catalog.map(row=>row.item_id),nativeCatalogGeometrySha256:sha256(nativeCatalog),searchCases,emptySearch:{query:empty.query,status:empty.status,selectionRetained:true},clearedChooserCount:allChooser.length,sourceDetails,focus:{before:unfocused.camera,after:focused.camera},fallbackItem:fallback?.item_id||null,fallbackEvidence:fallback?'native source fallback checked':'not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests',allLayersCount:allLayers.visible.length,historicalFilterExcludesCatalog:false,sameMap:true,blockedExternalApis:true});
+  catalogChecks.push({case:'ready catalog search source focus and shared history',cohort:catalog.map(row=>row.item_id),nativeCatalogGeometrySha256:sha256(nativeCatalog),searchCases,emptySearch:{query:empty.query,status:empty.status,selectionRetained:true},clearedChooserCount:allChooser.length,sourceDetails,focus:{before:unfocused.camera,after:focused.camera},fallbackItem:fallback?.item_id||null,fallbackEvidence:fallback?'native source fallback checked':'not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests',allLayersCount:allLayers.visible.length,catalogParticipatesInHistoricalFilter:false,sameMap:true,blockedExternalApis:true});
   // Existing saved layers remain authoritative and retain the old 45-record proof.
   const incumbent=new URL('globe/?layers=leonardo,roman',base);await navigate(incumbent);
   check(!(await snapshot()).state.layers.includes('catalog'),'explicit legacy layers silently added catalog');
