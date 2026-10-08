@@ -146,7 +146,7 @@
     const needle = searchKey(search).trim(); if (!needle) return items;
     return items.filter(item => {
       const original = item.kind === 'reference' ? bundle.architecture.references.find(value => value.item_id === item.item_id)?.raw_feature.properties : null;
-      const aliases = Array.isArray(item.aliases) ? item.aliases : Object.values(item.aliases || {}).flat();
+      const aliases = [...(Array.isArray(item.aliases) ? item.aliases : []),...Object.values(item.localized_aliases || {}).flat()];
       return [item.label,item.qid,...Object.values(item.labels || {}),...aliases,original?.name_en,original?.name_ru].some(value => searchKey(value).includes(needle));
     });
   }

@@ -125,7 +125,13 @@ def test_catalog_points_are_source_bound_and_do_not_create_historical_coverage(b
     assert bundle["catalog"]["time_filtering"] == "excluded"
     assert {row["item_id"] for row in references} == {row["item_id"] for row in bundle["registry"] if row["layer_id"] == "catalog"}
     assert all(row["interval"] is None for row in bundle["registry"] if row["layer_id"] == "catalog")
+    # Registry aliases are identity strings; multilingual source names have their
+    # own field and must remain compatible with the incumbent registry consumer.
+    assert all(isinstance(row.get("aliases", []), list) for row in bundle["registry"])
     for row in references:
+        registry_row = next(item for item in bundle["registry"] if item["item_id"] == row["item_id"])
+        assert registry_row["aliases"] == []
+        assert registry_row["localized_aliases"] == row["aliases"]
         assert row["item_id"] == "catalog:wikidata:" + row["qid"]
         assert row["historical_position"] is None
         assert row["temporal_extent"] is None

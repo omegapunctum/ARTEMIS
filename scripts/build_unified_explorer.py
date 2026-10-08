@@ -226,7 +226,8 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
     registry += [{
         "item_id": r["item_id"], "layer_id": "catalog", "kind": "catalog_reference",
         "label": r["label"], "labels": copy.deepcopy(r["labels"]),
-        "aliases": copy.deepcopy(r["aliases"]), "qid": r["qid"], "interval": None,
+        "aliases": [], "localized_aliases": copy.deepcopy(r["aliases"]),
+        "qid": r["qid"], "interval": None,
         "original_ids": {"wikidata_qid": r["qid"]},
         "source_pointer": f"catalog#/references/{index}",
     } for index, r in enumerate(catalog["references"])]
