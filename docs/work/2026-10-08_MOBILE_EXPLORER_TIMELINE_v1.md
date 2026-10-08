@@ -28,4 +28,10 @@ Distinct AI review must inspect the exact implementation head and relevant scree
 
 ## Implementation evidence
 
-Pending: this document records the prospective authorized boundary; implementation and publication receipts are separate.
+Implemented in [PR #479](https://github.com/omegapunctum/ARTEMIS/pull/479): a bounded mobile presentation adapter is mounted in the existing shared runtime and shipped/hashed by the builder at both compatible entries. The input bundle remains byte-identical (`a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538`, 55 registry identities). Desktop state/source semantics and the incumbent renderer are retained.
+
+Relevant local verification: 116 tests pass. Native Chromium evidence at `1381565c8f9430d08af0594bcebbfd466950d872` passes complete 1440 × 900, 500 × 900 and 390 × 844 scenarios. The 844 × 390 run verifies compact years, trusted wheel input, panels, source-card scroll-end clearance and search, reaching final map input before the helper attempted to pick through its still-open View panel. The final helper closes panels through genuine visible controls before map input and asserts unchanged state, camera, membership, card and map. Its syntax, Node and two owned pytest checks passed before the workspace connection interruption. No forced DOM input or weaker semantic assertion was substituted for native evidence.
+
+Independent visual QA passes the actual narrow portrait, landscape and desktop composition. The one P2 inspector/tool overlap is closed by rendered post-fix raw-card tail captures and native clearance assertions; year wheels remain 44 px and the calendar has no fixed empty region. The project-root `design-qa.md` records the visual target, normalized comparison, required fidelity surfaces and verification limits.
+
+Final exact-head Architecture/Product technical acceptance, complete native/CI outcomes, merge identity and separately verified public deployment are durable receipts in PR #479. This document records implementation evidence and does not infer public availability or validated value from preview checks. The task stops at that bounded delivery; no automatic successor or semantic/gate transition follows.

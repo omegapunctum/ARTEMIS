@@ -343,4 +343,4 @@ When lifecycle changes:
 
 ## Bounded mobile composition — owner authorized
 
-- `2026-10-08_MOBILE_EXPLORER_TIMELINE_v1.md` — REVIEW implementation of the owner-selected compact mobile calendar and progressive panel disclosure. Existing semantics and product gates remain unchanged; exact-head review/checks and separate publication evidence govern completion. No successor.
+- `2026-10-08_MOBILE_EXPLORER_TIMELINE_v1.md` — owner-selected compact mobile calendar and progressive panel disclosure implemented in #479; the specification links visual QA and preview evidence. Exact-head technical acceptance and separate publication receipts live in that PR. Existing semantics and product gates remain unchanged. No successor.

@@ -153,6 +153,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     if(await evaluate(cdp,"Boolean(document.getElementById('workspace-header').dataset.headerPanel)"))await click('#header-close');
     if(await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');
   }
+  async function prepareNativeMapSurface() {
+    if(!await mobile())return;
+    const before=await snapshot();await collapseMobile();const after=await snapshot();
+    check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&sameState(before.visible,after.visible)&&before.card===after.card,'closing mobile panels for native map input changed workspace state');
+    await stable('close mobile panels for native map input');
+  }
   async function click(selector,keyboard=false) {
     await expose(selector);
     const point=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});if(!n)throw new Error('Missing control '+${JSON.stringify(selector)});n.scrollIntoView({block:'nearest'});n.focus({preventScroll:true});const b=n.getBoundingClientRect(),x=b.x+b.width/2,y=b.y+b.height/2;if(n.disabled||!b.width||!b.height||!n.contains(document.elementFromPoint(x,y)))throw new Error('Obstructed control '+${JSON.stringify(selector)});if(document.activeElement!==n)throw new Error('Control focus failed');return {x,y};})()`);
@@ -527,6 +533,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const selectedReference=(await snapshot()).state.selectedItemId;await layer('architecture',false);check((await snapshot()).state.selectedItemId===null,'hiding selected reference layer did not clear selection');await layer('architecture',true);await close();
   await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
   const repeated=expectedBundle.leonardo.lifePath.presences.filter(p=>p.place_ref==='place-florence');check(repeated.length===2,'accepted repeated Florence episodes missing');
+  await prepareNativeMapSurface();
   await evaluate(cdp,`(() => {const n=document.querySelector('.workspace-place-marker[data-place-ref="place-florence"]');if(!n?.checkVisibility({checkVisibilityCSS:true}))throw new Error('Florence Place anchor hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Florence anchor cannot receive focus');})()`);
   await key(' ','Space',32);await stable('native Florence anchor keyboard selection');await placeAnchors('native Florence grouped anchor');
   for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
@@ -537,11 +544,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   for(const record of nativeRoman){const version=expectedBundle.roman.versions.find(v=>v.item_id===record.item);check(version,'Roman version identity changed');const geometry=version.geometry_version.spatial_extent.geometry;check(record.geometry.type===geometry.type&&JSON.stringify(record.geometry.coordinates)===JSON.stringify(geometry.coordinates),'Roman native geometry changed/unioned');}
   check(/collection|коллекц/i.test(await evaluate(cdp,"document.getElementById('time-status').textContent")),'wide Range not labelled interval collection');
   for(const lang of ['en','ru']){await click('#language-'+lang);for(const mode of ['globe','map']){await view(mode);await capture('wide-range-'+lang+'-'+mode);}}
-  await click('#language-en');await view('map');await close();
+  await click('#language-en');await view('map');await close();await prepareNativeMapSurface();
   const point=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_EXPLORER,b=r.map.getCanvas().getBoundingClientRect();for(let y=b.top+8;y<b.bottom-8;y+=10)for(let x=b.left+8;x<b.right-8;x+=10){if(document.elementFromPoint(x,y)!==r.map.getCanvas())continue;const hit=r.map.queryRenderedFeatures([x-b.left,y-b.top],{layers:['workspace-points','workspace-regions']}).find(f=>f.properties.item_id);if(hit)return {x,y,item:hit.properties.item_id};}throw new Error('No unobstructed native workspace feature pixel');})()`);
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:point.x,y:point.y});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:point.x,y:point.y});await settle();
   check((await snapshot()).state.selectedItemId===point.item,'native unified map picking failed');await stable('native canvas picking');await close();
   // Native drag is renderer-local camera input, independently of semantic time.
+  await prepareNativeMapSurface();
   const drag=await evaluate(cdp,`(() => {const c=window.__ARTEMIS_EXPLORER.map.getCanvas(),b=c.getBoundingClientRect();for(let y=b.top+40;y<b.bottom-40;y+=20)for(let x=b.left+60;x<b.right-60;x+=20)if(document.elementFromPoint(x,y)===c&&document.elementFromPoint(x+40,y)===c)return {x,y};throw new Error('No unobstructed map drag area');})()`);
   const beforeDrag=await snapshot();await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...drag});await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',button:'left',buttons:1,x:drag.x+40,y:drag.y});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:drag.x+40,y:drag.y});await idle('native camera drag');await stable('native camera drag');
   const cameraState=await snapshot();check(JSON.stringify(cameraState.camera)!==JSON.stringify(beforeDrag.camera),'native camera drag did not move camera');
