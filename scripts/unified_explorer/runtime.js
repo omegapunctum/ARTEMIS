@@ -156,7 +156,7 @@
   const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
   window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get placeGroups(){return runtime.bundle ? placeGroups(runtime.bundle,runtime.visibleItems) : [];},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
-  let renderedSelection = null, restoringCamera = false, recordSignature = '';
+  let renderedSelection = null, restoringCamera = false, recordSignature = '', mobile = null;
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
   const pendingJson = new WeakMap(), boundDisclosures = new WeakSet();
   function inputJson(host,value) {
@@ -198,6 +198,7 @@
   }
   function renderInspector() {
     const selected = runtime.registry.get(runtime.state.selectedItemId), inspector = byId('inspector');
+    mobile?.selectionChanged(selected?.item_id || null);
     if (!selected) { inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
     inspector.hidden = false;
     // Layer/time/projection changes that retain this item preserve native disclosures.
@@ -276,7 +277,7 @@
     document.documentElement.dataset.artemisLanguage = state.language; document.documentElement.dataset.artemisPresentationView = state.presentationView;
     document.documentElement.dataset.artemisSelectedItem = state.selectedItemId || ''; document.documentElement.dataset.artemisTimeCursor = String(state.cursorYear);
     const attributionContext = byId('attribution-context'); if (attributionContext) attributionContext.textContent = state.language === 'ru' ? 'Современный опорный контекст; не историческая поверхность.' : words.en.context;
-    layout();
+    mobile?.render(); layout();
   }
   function applyState(input, options = {}) {
     const previous = runtime.state, next = normalizeState(runtime.bundle,{...previous,...input},previous);
@@ -355,6 +356,7 @@
     else { const positions = []; const collect = value => { if (typeof value[0] === 'number') positions.push(value); else value.forEach(collect); }; collect(feature.geometry.coordinates); const bounds = positions.reduce((box,p) => box.extend(p),new maplibregl.LngLatBounds()); runtime.map.fitBounds(bounds,{padding:60,duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800}); }
   }
   function bindControls() {
+    mobile = window.ARTEMIS_MOBILE?.mount({runtime,applyState,layout,t}) || null;
     for (const layer of LAYERS) byId(`layer-${layer}`).addEventListener('change',() => applyState({layers:LAYERS.filter(value => byId(`layer-${value}`).checked)}));
     for (const language of ['en','ru']) byId(`language-${language}`).addEventListener('click',() => applyState({language}));
     for (const presentationView of ['globe','map']) byId(`view-${presentationView}`).addEventListener('click',() => { if (presentationView !== runtime.state.presentationView) applyState({presentationView}); });

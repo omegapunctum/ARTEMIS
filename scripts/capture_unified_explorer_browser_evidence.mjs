@@ -31,6 +31,15 @@ function argumentsFor(argv) {
 
 // The shared URL preserves exact native renderer numbers and semantic fields.
 const sameState=(left,right)=>JSON.stringify(left)===JSON.stringify(right);
+// Ownership routing describes visible mobile UI only; helpers still dispatch
+// native input and never make hidden controls visible or mutate canonical state.
+const mobileControlOwner = selector => /^#(?:view-|language-)/.test(selector) ? 'settings' : /^#layer-/.test(selector) ? 'layers' : /^#(?:record-|clear-search|search-)/.test(selector) ? 'records' : /^#(?:mode-|period-)/.test(selector) ? 'calendar' : null;
+const mobileYearControl = id => ({'time-start':'mobile-range-start','time-end':'mobile-range-end','cursor-year':'mobile-cursor-year'})[id] || null;
+function wheelKeys(value,min,max) {
+  check(Number.isInteger(value)&&Number.isInteger(min)&&Number.isInteger(max)&&value>=min&&value<=max,'native wheel target outside exposed bounds');
+  const lower=value-min<=max-value,delta=lower?value-min:max-value;
+  return [lower?'Home':'End',...Array(Math.floor(delta/10)).fill(lower?'PageUp':'PageDown'),...Array(delta%10).fill(lower?'ArrowUp':'ArrowDown')];
+}
 // Deliberately unavailable Wikimedia endpoints make this an offline visitor proof.
 const WIKIMEDIA_BLOCKED_URLS=['*://*.wikidata.org/*','*://wikidata.org/*','*://*.wikipedia.org/*','*://wikipedia.org/*','*://*.wikimedia.org/*'];
 const isWikimediaRequest=url=>{try{return /(^|\.)(wikidata|wikipedia|wikimedia)\.org$/.test(new URL(url).hostname);}catch{return false;}};
@@ -72,7 +81,7 @@ async function verifyBytes(options, base, deadline) {
 }
 
 async function runScenario(cdp,options,url,deadline,expectedBundle) {
-  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[],catalogChecks=[],networkDocuments=[];
+  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[],catalogChecks=[],mobileChecks=[],networkDocuments=[];
   let documentOrigin=null,mapObjectId=null,immutableHash=null;
   const bundleHash=sha256(expectedBundle);
   async function settle() {await evaluate(cdp,'new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))',true);}
@@ -132,29 +141,78 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const current=sha256(await evaluate(cdp,'window.__ARTEMIS_EXPLORER.bundle'));check(current===immutableHash,reason+' mutated source bundle');
     actions.push({action:reason,documentTimeOrigin:origin,sameMap:true,bundleSha256:current});
   }
+  async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches");}
+  async function expose(selector) {
+    if(!await mobile())return;
+    const owner=mobileControlOwner(selector);
+    if(owner==='calendar') {if(!await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');}
+    else if(owner&&await evaluate(cdp,'document.getElementById(\"workspace-header\").dataset.headerPanel')!==owner)await click('#mobile-'+owner);
+  }
+  async function collapseMobile() {
+    if(!await mobile())return;
+    if(await evaluate(cdp,"Boolean(document.getElementById('workspace-header').dataset.headerPanel)"))await click('#header-close');
+    if(await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');
+  }
+  async function prepareNativeMapSurface() {
+    if(!await mobile())return;
+    const before=await snapshot();await collapseMobile();const after=await snapshot();
+    check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&sameState(before.visible,after.visible)&&before.card===after.card,'closing mobile panels for native map input changed workspace state');
+    await stable('close mobile panels for native map input');
+  }
   async function click(selector,keyboard=false) {
+    await expose(selector);
     const point=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});if(!n)throw new Error('Missing control '+${JSON.stringify(selector)});n.scrollIntoView({block:'nearest'});n.focus({preventScroll:true});const b=n.getBoundingClientRect(),x=b.x+b.width/2,y=b.y+b.height/2;if(n.disabled||!b.width||!b.height||!n.contains(document.elementFromPoint(x,y)))throw new Error('Obstructed control '+${JSON.stringify(selector)});if(document.activeElement!==n)throw new Error('Control focus failed');return {x,y};})()`);
     if(keyboard)await key(' ','Space',32);
     else{await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await settle();}
     await stable(selector);return point;
   }
   async function number(id,value) {
-    await evaluate(cdp,`(() => {const n=document.getElementById(${JSON.stringify(id)});if(!n||n.hidden||n.disabled)throw new Error('Unavailable native year input');n.focus();if(document.activeElement!==n)throw new Error('Year input focus failed');})()`);
-    await key('a','KeyA',65,2);await cdp.send('Input.insertText',{text:String(value)});await key('Tab','Tab',9);
+    const wheel=mobileYearControl(id);
+    if(await mobile()&&wheel) {
+      const bounds=await evaluate(cdp,`(() => {const n=document.getElementById(${JSON.stringify(wheel)});if(!n?.checkVisibility({checkVisibilityCSS:true})||n.getAttribute('aria-disabled')==='true')throw new Error('Unavailable visible mobile year wheel');n.focus({preventScroll:true});return {min:Number(n.getAttribute('aria-valuemin')),max:Number(n.getAttribute('aria-valuemax'))};})()`);
+      const codes={Home:36,End:35,PageUp:33,PageDown:34,ArrowUp:38,ArrowDown:40};
+      for(const name of wheelKeys(value,bounds.min,bounds.max))await key(name,name,codes[name],0,true);
+      await settle();
+      check(await evaluate(cdp,`Number(document.getElementById(${JSON.stringify(wheel)}).getAttribute('aria-valuenow'))`)===value,'mobile native wheel did not reach requested year');
+      if(!await evaluate(cdp,"document.getElementById('mobile-apply').disabled"))await click('#mobile-apply');
+    } else {
+      await evaluate(cdp,`(() => {const n=document.getElementById(${JSON.stringify(id)});if(!n?.checkVisibility({checkVisibilityCSS:true})||n.disabled)throw new Error('Unavailable native year input');n.focus();if(document.activeElement!==n)throw new Error('Year input focus failed');})()`);
+      await key('a','KeyA',65,2);await cdp.send('Input.insertText',{text:String(value)});await key('Tab','Tab',9);
+    }
     await stable(id+'='+value);
   }
   async function layer(id,enabled) {if(await evaluate(cdp,`document.getElementById('layer-'+${JSON.stringify(id)}).checked`)!==enabled)await click('#layer-'+id,true);}
   async function select(itemId) {
-    const indices=await evaluate(cdp,`(() => {const n=document.getElementById('record-select');n.focus();const target=[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)});if(target<0)throw new Error('Item not available in native selection');return {target,current:n.selectedIndex};})()`);
-    let current=indices.current;if(current<0){await key('Home','Home',36);current=0;}
-    const delta=indices.target-current;for(let step=0;step<Math.abs(delta);step++)await key(delta>0?'ArrowDown':'ArrowUp',delta>0?'ArrowDown':'ArrowUp',delta>0?40:38);
-    const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity');await stable('select '+itemId);
+    async function available() {
+      await expose('#record-select');
+      return evaluate(cdp,`(() => {const n=document.getElementById('record-select');if(!n.checkVisibility({checkVisibilityCSS:true}))throw new Error('Native record selector is hidden');n.scrollIntoView({block:'nearest'});n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Native record selector cannot receive focus');const target=[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)});if(target<0)throw new Error('Item not available in native selection');return {target,current:n.selectedIndex,count:n.options.length};})()`);
+    }
+    let indices=await available(),steps=0;
+    // Closed native selects commit each Arrow. The responsive UI closes the
+    // owning panel on a completed selection. Reopen it through its real button
+    // before EVERY subsequent key instead of dispatching into a hidden select.
+    while(indices.current!==indices.target) {
+      check(steps++<indices.count+1,'native record selection exhausted bounded steps');
+      const before=indices.current;
+      if(before<0)await key('Home','Home',36);
+      else {const down=indices.target>before;await key(down?'ArrowDown':'ArrowUp',down?'ArrowDown':'ArrowUp',down?40:38);}
+      const next=await evaluate(cdp,`(() => {const n=document.getElementById('record-select');return {target:[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)}),current:n.selectedIndex,count:n.options.length,value:n.value,selected:window.__ARTEMIS_EXPLORER.state.selectedItemId,panel:document.getElementById('workspace-header').dataset.headerPanel,active:document.activeElement?.id,url:location.href};})()`);
+      check(next.target>=0&&Math.abs(next.target-next.current)<Math.abs(indices.target-before),'native record selector made no progress '+JSON.stringify({expected:itemId,before,...next}));
+      indices=next;if(indices.current!==indices.target)indices=await available();
+    }
+    const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity '+JSON.stringify({expected:itemId,actual:state.state.selectedItemId,inspectorHidden:state.inspectorHidden,indices,url:state.url}));await stable('select '+itemId);
   }
   async function search(value) {
+    await expose('#record-search');
     await evaluate(cdp,`(() => {const input=document.getElementById('record-search');input.focus({preventScroll:true});if(document.activeElement!==input)throw new Error('Search input cannot receive focus');})()`);
     await key('a','KeyA',65,2);await key('Backspace','Backspace',8);
     if(value)await cdp.send('Input.insertText',{text:value});await settle();await stable('search '+value);
     return evaluate(cdp,`({values:[...document.getElementById('record-select').options].map(option=>option.value).filter(Boolean),status:document.getElementById('search-status').textContent,query:document.getElementById('record-search').value})`);
+  }
+  async function clearSearch() {
+    const visible=await evaluate(cdp,"document.getElementById('clear-search').checkVisibility({checkVisibilityCSS:true})");
+    if(visible)await click('#clear-search',true);
+    else {check(await mobile(),'desktop clear search control hidden');await search('');}
   }
   async function disclose(id) {
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
@@ -236,21 +294,43 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     }
     placeAnchorChecks.push({case:reason,presenceCount:actual.visible.length,placeCount:groups.size,anchors:actual.anchors,pointStates:actual.points.map(p=>({place:p.properties.place_ref,state:p.state})),pointCoordinatesSha256:sha256(actual.points.map(p=>({place:p.properties.place_ref,coordinates:p.coordinates}))),sourceRenderKeys:actual.sourceRenderKeys,chronology:actual.chronology,nativeChronology:actual.nativeChronology,chronologyCues:actual.chronologyCues,paint:{markers:actual.markerPaint,chronology:actual.chronologyPaint}});
   }
-  async function capture(suffix) {
+  async function capture(suffix,{keepMobileOpen=false}={}) {
+    if(!keepMobileOpen)await collapseMobile();
     await idle('capture '+suffix);
     const layout=await evaluate(cdp,`(() => {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
-      for(const id of ['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'])if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
+      const mobile=matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches;
+      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'];
+      for(const id of ids)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
+      if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
       const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();if(h.bottom>t.top)throw new Error('Header overlaps shared time controls');
       const r=window.__ARTEMIS_EXPLORER,s=r.state;
       if(document.getElementById('view-'+s.presentationView).getAttribute('aria-pressed')!=='true'||document.getElementById('language-'+s.language).getAttribute('aria-pressed')!=='true')throw new Error('Projection/language aria state differs');
       if(r.map.getProjection().type!==(s.presentationView==='map'?'mercator':'globe'))throw new Error('Native projection mismatch');
-      return {width:innerWidth,height:innerHeight,headerBottom:h.bottom,timeTop:t.top,language:s.language,view:s.presentationView};
+      return {width:innerWidth,height:innerHeight,headerBottom:h.bottom,timeTop:t.top,mapGap:t.top-h.bottom,mobile,headerPanel:document.getElementById('workspace-header').dataset.headerPanel||null,dockExpanded:document.getElementById('time-dock').dataset.expanded==='true',language:s.language,view:s.presentationView};
     })()`);
     const screenshot=join(options.output,suffix+'.png'),dom=join(options.output,suffix+'.html');
     const png=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});await writeFile(screenshot,Buffer.from(png.data,'base64'));await writeFile(dom,await evaluate(cdp,'document.documentElement.outerHTML'));
     captures.push({case:suffix,...layout,screenshot,dom,screenshotSha256:sha256(await readFile(screenshot)),domSha256:sha256(await readFile(dom))});
+  }
+  async function mobileSourceScrollClearance() {
+    if(!await mobile())return;
+    await collapseMobile();const before=await snapshot();
+    const point=await evaluate(cdp,`(() => {const n=document.getElementById('inspector'),b=n.getBoundingClientRect(),x=b.x+b.width/2,y=b.y+Math.min(b.height/2,120),hit=document.elementFromPoint(x,y);if(n.hidden||!n.contains(hit))throw new Error('Native source inspector scroll surface obstructed');return {x,y};})()`);
+    async function scrollToEdge(delta,bottom) {
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});await settle();
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:delta,deltaX:0});
+      const scrollDeadline=Math.min(deadline,Date.now()+2000);let metrics=null;
+      do {metrics=await evaluate(cdp,`(() => {const n=document.getElementById('inspector'),last=document.getElementById('selection-input').lastElementChild,t=document.getElementById('mobile-tools').getBoundingClientRect();return {top:n.scrollTop,maximum:n.scrollHeight-n.clientHeight,lastBottom:last?.getBoundingClientRect().bottom,toolsTop:t.top,toolsBottom:t.bottom};})()`);if(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1)break;await delay(25);}while(Date.now()<scrollDeadline);
+      check(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1,'native inspector wheel did not reach scroll edge '+JSON.stringify({bottom,point,metrics}));return metrics;
+    }
+    const end=await scrollToEdge(100000,true);
+    check(Number.isFinite(end.lastBottom)&&end.lastBottom<=end.toolsTop-4,'mobile tools obscure final source-native text '+JSON.stringify(end));
+    await capture('mobile-source-card-scroll-end',{keepMobileOpen:true});
+    await scrollToEdge(-100000,false);const after=await snapshot();
+    check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'native inspector scrolling changed canonical card or camera');await stable('mobile source card scroll clearance');
+    mobileChecks.push({case:'source-native card scroll-end clearance',nativePointerWheel:true,lastContentBottom:end.lastBottom,toolsTop:end.toolsTop,maximum:end.maximum,scrollEnd:end.top,lastTextUnobstructed:true,canonicalStateUnchanged:true});
   }
   async function view(mode) {
     const before=await snapshot();await click('#view-'+mode,true);await idle('projection '+mode);const after=await snapshot();
@@ -266,7 +346,58 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(restored,'shared Back/Forward state restoration failed');await idle('history');await stable(direction<0?'Back':'Forward');
   }
 
+  async function mobileRegression() {
+    if(!await mobile())return;
+    await collapseMobile();const initial=await snapshot();
+    const layout=await evaluate(cdp,`(() => {const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();return {width:innerWidth,height:innerHeight,header:h.height,dock:t.height,mapGap:t.top-h.bottom,overflow:document.documentElement.scrollWidth>innerWidth+1};})()`);
+    check(!layout.overflow&&layout.mapGap>=layout.height*.4,'collapsed mobile UI did not leave usable map clearance');
+    for(const panel of ['layers','records','settings']) {
+      await click('#mobile-'+panel);if(panel==='layers')await capture('mobile-layers-panel',{keepMobileOpen:true});check(await evaluate(cdp,"document.getElementById('workspace-header').dataset.headerPanel")===panel,'mobile panel did not open '+panel);
+      await click('#header-close');const after=await snapshot();check(sameState(initial.state,after.state)&&sameState(initial.camera,after.camera),'mobile panel toggle changed canonical state or camera');
+    }
+    const wheel='mobile-range-start';
+    async function focusWheel(id=wheel) {await evaluate(cdp,`(() => {const n=document.getElementById(${JSON.stringify(id)});if(!n.checkVisibility({checkVisibilityCSS:true})||n.getAttribute('role')!=='spinbutton'||n.tagName==='INPUT'||n.isContentEditable)throw new Error('Mobile year editor opens a text input');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Mobile wheel focus failed');})()`);}
+    async function draftUncommitted(reason) {const after=await snapshot();check(after.url===initial.url&&sameState(initial.state,after.state)&&sameState(initial.camera,after.camera)&&sameState(initial.visible,after.visible),reason+' changed canonical state before Apply');}
+    await focusWheel();await key('End','End',35);await key('ArrowUp','ArrowUp',38);
+    check(await evaluate(cdp,`document.getElementById('${wheel}').getAttribute('aria-valuenow')===document.getElementById('${wheel}').getAttribute('aria-valuemax')`),'mobile upper boundary escaped');
+    await key('Home','Home',36);await key('ArrowDown','ArrowDown',40);
+    check(await evaluate(cdp,`document.getElementById('${wheel}').getAttribute('aria-valuenow')===document.getElementById('${wheel}').getAttribute('aria-valuemin')`),'mobile lower boundary escaped');
+    await draftUncommitted('bounded wheel draft');await capture('mobile-expanded-staged-boundary',{keepMobileOpen:true});await click('#mobile-cancel');
+    check(await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`)===initial.state.startYear,'Cancel retained a staged year');
+    await focusWheel();const point=await evaluate(cdp,`(() => {const n=document.getElementById('${wheel}');n.scrollIntoView({block:'nearest'});const b=n.querySelector('.wheel-value').getBoundingClientRect(),x=b.x+b.width/2,y=b.y+b.height/2,hit=document.elementFromPoint(x,y);if(!n.contains(hit))throw new Error('Native wheel center obstructed '+JSON.stringify({x,y,hit:hit?.id||hit?.className}));return {x,y};})()`);
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});await settle();
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:60,deltaX:0});
+    // Wheel input travels through the compositor; two animation frames alone
+    // need not mean that the single native event has reached its DOM handler.
+    const wheelDeadline=Math.min(deadline,Date.now()+2000);let staged=null;
+    do {staged=await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`);if(staged===initial.state.startYear+1)break;await delay(25);}while(Date.now()<wheelDeadline);
+    await settle();
+    const observedWheelEvents=await evaluate(cdp,'window.__ARTEMIS_BROWSER_WHEEL_EVENTS||[]');
+    check(staged===initial.state.startYear+1,'native wheel scroll did not stage one year '+JSON.stringify({point,expected:initial.state.startYear+1,actual:staged,observedWheelEvents}));
+    check(observedWheelEvents.some(event=>event.trusted&&event.wheel===wheel&&event.deltaY===60),'native wheel proof lacks a trusted event delivered to the visible spinbutton');
+    check(await evaluate(cdp,`Number(document.getElementById('range-start-handle').value)`)===initial.state.startYear+1,'staged mobile wheel did not preview timeline handle');await draftUncommitted('native wheel scroll');await capture('mobile-expanded-staged-year',{keepMobileOpen:true});await click('#mobile-apply');
+    check((await snapshot()).state.startYear===initial.state.startYear+1,'Apply did not commit selected year');await number('time-start',initial.state.startYear);
+    // Native pointer movement inside the year wheel is separate from dock drag.
+    await focusWheel();const yearPoint=await evaluate(cdp,`(() => {const b=document.querySelector('#${wheel} .wheel-value').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2};})()`);
+    await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...yearPoint});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',button:'left',buttons:1,x:yearPoint.x,y:yearPoint.y-36});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:yearPoint.x,y:yearPoint.y-36});await settle();
+    check(await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`)===initial.state.startYear+2,'native vertical wheel drag did not stage two years');await click('#mobile-cancel');
+    const handle=await evaluate(cdp,`(() => {const b=document.getElementById('dock-toggle').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2};})()`);
+    await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...handle});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',button:'left',buttons:1,x:handle.x,y:handle.y+40});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:handle.x,y:handle.y+40});await settle();
+    check(await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='false'"),'native downward handle drag did not collapse calendar');await stable('mobile wheel and dock native gestures');
+    await click('#mode-scrub');await evaluate(cdp,"document.getElementById('time-cursor').focus({preventScroll:true})");await key('ArrowLeft','ArrowLeft',37);
+    check((await snapshot()).state.cursorYear===initial.state.cursorYear-1,'native mobile scrub slider did not commit one year');await number('cursor-year',initial.state.cursorYear);await click('#mode-range');
+    await evaluate(cdp,"document.getElementById('range-start-handle').focus({preventScroll:true})");await key('ArrowRight','ArrowRight',39);
+    check((await snapshot()).state.startYear===initial.state.startYear+1,'native mobile interval slider did not commit one year');await number('time-start',initial.state.startYear);await collapseMobile();
+    const after=await snapshot();check(sameState(initial.state,after.state)&&sameState(initial.camera,after.camera),'mobile regression did not restore initial semantic and camera state');
+    mobileChecks.push({case:'compact calendar native interaction',layout,panels:['layers','records','settings'],draftChangesCanonicalState:false,draftChangesUrl:false,keyboardInputRequired:false,nativeWheelScroll:true,observedWheelEvents,nativeWheelDrag:true,yearBoundaries:true,cancel:true,apply:true,nativeDockDragCollapse:true,nativeScrub:true,nativeRange:true,sameMap:true});
+  }
+
   await navigate(url);
+  await mobileRegression();
   const readyCatalog=await membership({leonardo:11,roman:0,architecture:0,catalog:10},'fresh ready London catalog');
   check(readyCatalog.state.layers.includes('catalog'),'fresh entry did not enable catalog');
   const pilotLabel=await evaluate(cdp,"document.getElementById('layer-catalog').parentElement.textContent");
@@ -286,6 +417,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(initialCard.title===first.labels.en&&initialCard.revision===first.sources[0].url&&initialCard.evidencePresent,'catalog inspector failed to render its native title/source/evidence');
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(initialCard.facts.includes(String(value)),'catalog primary facts lost literal coordinate/precision');
   await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await mobileSourceScrollClearance();
   const catalogSelected=await snapshot(),beforeSearch=catalogSelected;
   const searchCases=[];
   const qid=first.item_id.split(':').at(-1);
@@ -304,7 +436,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const empty=await search('ARTEMIS-no-match-\u2603-zzzz'),emptyState=await snapshot();
   check(empty.values.length===0&&empty.status.trim().length>0&&!emptyState.inspectorHidden&&emptyState.state.selectedItemId===first.item_id,'empty search hid selection or lacked explicit status');
   await capture('catalog-empty-search-selection-retained-en-globe');
-  await click('#clear-search',true);const cleared=await snapshot();
+  await clearSearch();const cleared=await snapshot();
   check(await evaluate(cdp,"document.getElementById('record-search').value===''"),'clear action did not clear search');
   check(cleared.state.selectedItemId===first.item_id&&sameState(cleared.visible,beforeSearch.visible)&&cleared.card===beforeSearch.card,'clear action changed map or source selection');
   const allChooser=await evaluate(cdp,"[...document.getElementById('record-select').options].map(option=>option.value).filter(Boolean)");
@@ -401,6 +533,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const selectedReference=(await snapshot()).state.selectedItemId;await layer('architecture',false);check((await snapshot()).state.selectedItemId===null,'hiding selected reference layer did not clear selection');await layer('architecture',true);await close();
   await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
   const repeated=expectedBundle.leonardo.lifePath.presences.filter(p=>p.place_ref==='place-florence');check(repeated.length===2,'accepted repeated Florence episodes missing');
+  await prepareNativeMapSurface();
   await evaluate(cdp,`(() => {const n=document.querySelector('.workspace-place-marker[data-place-ref="place-florence"]');if(!n?.checkVisibility({checkVisibilityCSS:true}))throw new Error('Florence Place anchor hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Florence anchor cannot receive focus');})()`);
   await key(' ','Space',32);await stable('native Florence anchor keyboard selection');await placeAnchors('native Florence grouped anchor');
   for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
@@ -411,11 +544,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   for(const record of nativeRoman){const version=expectedBundle.roman.versions.find(v=>v.item_id===record.item);check(version,'Roman version identity changed');const geometry=version.geometry_version.spatial_extent.geometry;check(record.geometry.type===geometry.type&&JSON.stringify(record.geometry.coordinates)===JSON.stringify(geometry.coordinates),'Roman native geometry changed/unioned');}
   check(/collection|коллекц/i.test(await evaluate(cdp,"document.getElementById('time-status').textContent")),'wide Range not labelled interval collection');
   for(const lang of ['en','ru']){await click('#language-'+lang);for(const mode of ['globe','map']){await view(mode);await capture('wide-range-'+lang+'-'+mode);}}
-  await click('#language-en');await view('map');await close();
+  await click('#language-en');await view('map');await close();await prepareNativeMapSurface();
   const point=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_EXPLORER,b=r.map.getCanvas().getBoundingClientRect();for(let y=b.top+8;y<b.bottom-8;y+=10)for(let x=b.left+8;x<b.right-8;x+=10){if(document.elementFromPoint(x,y)!==r.map.getCanvas())continue;const hit=r.map.queryRenderedFeatures([x-b.left,y-b.top],{layers:['workspace-points','workspace-regions']}).find(f=>f.properties.item_id);if(hit)return {x,y,item:hit.properties.item_id};}throw new Error('No unobstructed native workspace feature pixel');})()`);
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:point.x,y:point.y});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:point.x,y:point.y});await settle();
   check((await snapshot()).state.selectedItemId===point.item,'native unified map picking failed');await stable('native canvas picking');await close();
   // Native drag is renderer-local camera input, independently of semantic time.
+  await prepareNativeMapSurface();
   const drag=await evaluate(cdp,`(() => {const c=window.__ARTEMIS_EXPLORER.map.getCanvas(),b=c.getBoundingClientRect();for(let y=b.top+40;y<b.bottom-40;y+=20)for(let x=b.left+60;x<b.right-60;x+=20)if(document.elementFromPoint(x,y)===c&&document.elementFromPoint(x+40,y)===c)return {x,y};throw new Error('No unobstructed map drag area');})()`);
   const beforeDrag=await snapshot();await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...drag});await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',button:'left',buttons:1,x:drag.x+40,y:drag.y});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:drag.x+40,y:drag.y});await idle('native camera drag');await stable('native camera drag');
   const cameraState=await snapshot();check(JSON.stringify(cameraState.camera)!==JSON.stringify(beforeDrag.camera),'native camera drag did not move camera');
@@ -434,7 +568,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const translatedRoman=await snapshot();check(translatedRoman.state.selectedItemId===version.item_id&&translatedRoman.state.startYear===106&&translatedRoman.state.endYear===113,'legacy Roman saved state translation failed');legacy.push({entry:'roman',url:romanLegacy.href,state:translatedRoman.state});
   await disclose('sources-disclosure');await capture('legacy-roman-source-en-map');
   await networkSnapshot();
-  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,catalogChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
+  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,catalogChecks,mobileChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
     valueValidation:'not_assessed',limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Architecture references retain imported metadata; no historical applicability or source acceptance is inferred.','Shared URL restoration compares exact workspace fields and native renderer camera numbers.','Same engine and cartographic projection comparison, not independent renderer-adapter proof.','Named controls and native input only; not a complete assistive technology audit.']};
 }
 
@@ -443,18 +577,27 @@ async function main() {
   const deadline=Date.now()+options.timeoutMs;
   let server=null,browser=null,cdp=null,browserLog='';
   const profile=await mkdtemp(join(tmpdir(),'artemis-unified-chrome-'));
+  const hostWindow={width:Math.max(options.width,960),height:Math.max(options.height+256,1100)};
+  let hostViewport=null;
   try {
     if(options.artifact)server=await localServer(options.expectedArtifact);
     const url=options.url || server.url,base=new URL('../',url);
     const byteVerification=await verifyBytes(options,base,deadline);
     const expectedBundle=JSON.parse(await readFile(join(options.expectedArtifact,'globe/unified-bundle.json'),'utf8'));
-    browser=spawn(options.browser,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--force-prefers-reduced-motion=reduce','--remote-debugging-port=0',`--user-data-dir=${profile}`,`--window-size=${options.width},${options.height}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
+    browser=spawn(options.browser,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--force-prefers-reduced-motion=reduce','--remote-debugging-port=0',`--user-data-dir=${profile}`,`--window-size=${hostWindow.width},${hostWindow.height}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
     browser.stderr.on('data',chunk=>{browserLog=(browserLog+chunk).slice(-20000);});
     const port=await waitForDevToolsPort(profile,browser,deadline),endpoint=await waitForPageEndpoint(port,deadline);cdp=await connectCdp(endpoint,deadline);await cdp.send('Page.enable');await cdp.send('Runtime.enable');
+    // Chromium compositor wheel hit testing also depends on its host widget.
+    // Keep that widget larger than the intended responsive CSS viewport.
+    hostViewport=await evaluate(cdp,'({width:innerWidth,height:innerHeight,devicePixelRatio})');
+    check(hostViewport.width>=options.width&&hostViewport.height>=options.height,'native host widget is smaller than requested CSS viewport '+JSON.stringify({hostWindow,hostViewport,requestedCss:{width:options.width,height:options.height}}));
+    // --window-size includes headless window chrome; bind the actual CSS viewport.
+    await cdp.send('Emulation.setDeviceMetricsOverride',{width:options.width,height:options.height,deviceScaleFactor:1,mobile:false});
+    check(await evaluate(cdp,`innerWidth===${options.width}&&innerHeight===${options.height}`),'native CSS viewport differs from requested dimensions');
     await cdp.send('Network.enable');await cdp.send('Network.setBlockedURLs',{urls:WIKIMEDIA_BLOCKED_URLS});
-    await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{const requests=[];Object.defineProperty(window,'__ARTEMIS_BROWSER_REQUESTS',{value:requests});const nativeFetch=window.fetch;window.fetch=function(input,...args){requests.push(typeof input==='string'?new URL(input,location.href).href:input?.url||String(input));return nativeFetch.call(this,input,...args);};const nativeOpen=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(method,url,...args){requests.push(new URL(url,location.href).href);return nativeOpen.call(this,method,url,...args);};})()`});
+    await cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{const requests=[];Object.defineProperty(window,'__ARTEMIS_BROWSER_REQUESTS',{value:requests});const wheelEvents=[];Object.defineProperty(window,'__ARTEMIS_BROWSER_WHEEL_EVENTS',{value:wheelEvents});document.addEventListener('wheel',event=>wheelEvents.push({trusted:event.isTrusted,target:event.target?.id||event.target?.className||event.target?.tagName,wheel:event.target?.closest?.('[role=spinbutton]')?.id||null,x:event.clientX,y:event.clientY,deltaX:event.deltaX,deltaY:event.deltaY,timeStamp:event.timeStamp}),{capture:true,passive:true});const nativeFetch=window.fetch;window.fetch=function(input,...args){requests.push(typeof input==='string'?new URL(input,location.href).href:input?.url||String(input));return nativeFetch.call(this,input,...args);};const nativeOpen=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(method,url,...args){requests.push(new URL(url,location.href).href);return nativeOpen.call(this,method,url,...args);};})()`});
     const scenario=await runScenario(cdp,options,url,deadline,expectedBundle);
-    const report={...scenario,artifactVerification:{scope:'checked metadata and common input bundle at both registered entries; full release files separately checked by verify_public_artifact.py',files:byteVerification},provenance:{evidenceKind:'automated_native_browser_check',checkoutCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),recordedAtUtc:new Date().toISOString(),browser:await cdp.send('Browser.getVersion'),requestedWindow:{width:options.width,height:options.height},runnerSha256:sha256(await readFile(fileURLToPath(import.meta.url))),sharedTransportSha256:sha256(await readFile(new URL('./capture_globe_browser_evidence.mjs',import.meta.url))),bundleSha256:sha256(await readFile(join(options.expectedArtifact,'globe/unified-bundle.json'))),workflowRunUrl:process.env.GITHUB_RUN_ID?`https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`:null,workflowRunAttempt:process.env.GITHUB_RUN_ATTEMPT || null,live:!!options.url}};
+    const report={...scenario,artifactVerification:{scope:'checked metadata and common input bundle at both registered entries; full release files separately checked by verify_public_artifact.py',files:byteVerification},provenance:{evidenceKind:'automated_native_browser_check',checkoutCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),recordedAtUtc:new Date().toISOString(),browser:await cdp.send('Browser.getVersion'),launchWindow:hostWindow,hostViewportBeforeOverride:hostViewport,requestedCssViewport:{width:options.width,height:options.height},cssViewport:await evaluate(cdp,'({width:innerWidth,height:innerHeight,devicePixelRatio})'),viewportEmulation:'CSS dimensions fixed through CDP; DPR1, desktop input, not physical iPhone/touch/safe-area verification',runnerSha256:sha256(await readFile(fileURLToPath(import.meta.url))),sharedTransportSha256:sha256(await readFile(new URL('./capture_globe_browser_evidence.mjs',import.meta.url))),bundleSha256:sha256(await readFile(join(options.expectedArtifact,'globe/unified-bundle.json'))),workflowRunUrl:process.env.GITHUB_RUN_ID?`https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`:null,workflowRunAttempt:process.env.GITHUB_RUN_ATTEMPT || null,live:!!options.url}};
     await writeFile(join(options.output,'report.json'),JSON.stringify(report,null,2)+'\n');process.stdout.write(JSON.stringify(report)+'\n');
   } catch(error) {
     if(cdp)await Promise.race([Promise.allSettled([evaluate(cdp,'document.documentElement.outerHTML').then(dom=>writeFile(join(options.output,'failure.html'),dom)),cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}).then(image=>writeFile(join(options.output,'failure.png'),Buffer.from(image.data,'base64')))]),delay(3000)]);
@@ -466,5 +609,5 @@ async function main() {
   }
 }
 
-export { argumentsFor, verifyBytes, contextReplaced, sameState, isWikimediaRequest, WIKIMEDIA_BLOCKED_URLS };
+export { argumentsFor, verifyBytes, contextReplaced, sameState, mobileControlOwner, mobileYearControl, wheelKeys, isWikimediaRequest, WIKIMEDIA_BLOCKED_URLS };
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{process.stderr.write((error?.stack || error)+'\n');process.exitCode=1;});
