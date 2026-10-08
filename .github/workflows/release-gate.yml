@@ -135,7 +135,7 @@ jobs:
         run: |
           set -euo pipefail
           BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
-          for viewport in 1440x900 500x900 390x844; do
+          for viewport in 1440x900 500x900 390x844 844x390; do
             width="${viewport%x*}"; height="${viewport#*x}"
             timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
               --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \

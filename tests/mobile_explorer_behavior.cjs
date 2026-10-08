@@ -13,6 +13,7 @@ assert.deepEqual(initial,{mode:'range',startYear:1452,endYear:1519,cursorYear:15
 assert.deepEqual(helpers.commitDraft(initial),{startYear:1452,endYear:1519});
 assert.deepEqual(helpers.commitDraft({...initial,mode:'scrub'}),{cursorYear:1519});
 assert.deepEqual(helpers.stepDraft(initial,'traceOriginYear',10),initial);
+assert.equal(helpers.MOBILE_QUERY,'(max-width:640px), (max-width:960px) and (max-height:500px)');
 
 class Element {
   constructor() { this.dataset = {}; this.attrs = {}; this.events = {}; this.children = {}; this.disabled = false; this.textContent = ''; this.focused = false; this.capture = null; }
@@ -32,7 +33,7 @@ let narrow = true, commits = [], layouts = 0;
 const mediaListeners = [];
 const media = {get matches(){return narrow;},addEventListener:(_,fn) => mediaListeners.push(fn)};
 const runtime = {state:{...initial,language:'ru',traceOriginYear:1452,layers:['catalog'],camera:{center:[10,15]}},ready:true};
-const context = vm.createContext({document,window:{matchMedia:() => media},module:{exports:{}},setTimeout});
+const context = vm.createContext({document,window:{matchMedia:query => { assert.equal(query,helpers.MOBILE_QUERY); return media; }},module:{exports:{}},setTimeout});
 vm.runInContext(fs.readFileSync('scripts/unified_explorer/mobile.js','utf8'),context);
 let adapter;
 adapter = context.window.ARTEMIS_MOBILE.mount({runtime,layout:() => layouts++,applyState:patch => { commits.push({...patch}); runtime.state = {...runtime.state,...patch}; adapter.render(); }});
@@ -41,12 +42,15 @@ assert.equal(el('time-dock').dataset.expanded,'false');
 assert.equal(el('mobile-range-start').attrs['aria-valuenow'],'1452');
 assert.equal(el('mobile-range-start').attrs['aria-label'],'Начальный год интервала, н. э.');
 assert.equal(el('mobile-apply').disabled,true);
+assert.equal(el('header-close').textContent,'Закрыть панель');
 
 // Wheel edits cannot mutate canonical years, camera, layers or URL adapter.
 const canonical = JSON.stringify(runtime.state);
 el('mobile-range-start').emit('keydown',{key:'ArrowUp'});
 assert.equal(JSON.stringify(runtime.state),canonical); assert.equal(commits.length,0);
 assert.equal(el('mobile-range-start').attrs['aria-valuenow'],'1453');
+assert.equal(el('range-start-handle').value,1453);
+assert.equal(el('range-end-handle').value,1519);
 assert.equal(el('mobile-apply').disabled,false);
 el('mobile-apply').emit('click');
 assert.deepEqual(commits,[{startYear:1453,endYear:1519}]);
@@ -58,10 +62,12 @@ el('mobile-range-end').emit('keydown',{key:'Home'});
 assert.equal(el('mobile-range-end').attrs['aria-valuenow'],'1453');
 el('mobile-cancel').emit('click');
 assert.equal(el('mobile-range-end').attrs['aria-valuenow'],'1519');
+assert.equal(el('range-end-handle').value,1519);
 el('mobile-range-start').emit('keydown',{key:'PageUp'});
 runtime.state = {...runtime.state,language:'en'}; adapter.render();
 assert.equal(el('mobile-range-start').attrs['aria-valuenow'],'1463');
 assert.equal(el('mobile-range-start').attrs['aria-label'],'Interval start year CE');
+assert.equal(el('header-close').textContent,'Close panel');
 document.emit('keydown',{key:'Escape'});
 assert.equal(el('mobile-range-start').attrs['aria-valuenow'],'1453');
 assert.equal(el('mobile-apply').disabled,true);
@@ -103,6 +109,7 @@ assert.equal(commits.length,1);
 // Scrub commits only cursor, retaining trace origin and remembered range.
 runtime.state = {...runtime.state,mode:'scrub',cursorYear:1519}; adapter.render();
 el('mobile-cursor-year').emit('keydown',{key:'PageDown'});
+assert.equal(runtime.state.cursorYear,1519); assert.equal(el('time-cursor').value,1509);
 el('mobile-cursor-year').emit('keydown',{key:'Enter'});
 assert.deepEqual(commits[1],{cursorYear:1509});
 assert.equal(runtime.state.startYear,91); assert.equal(runtime.state.endYear,116); assert.equal(runtime.state.traceOriginYear,1452);
@@ -116,6 +123,9 @@ assert.equal(el('workspace-header').dataset.headerPanel,'');
 assert.equal(el('time-dock').dataset.expanded,'false');
 assert.equal(el('app').dataset.attributionOpen,'false');
 assert.equal(commits.length,2);
+assert.equal(el('time-cursor').value,1509);
+el('mobile-cursor-year').emit('keydown',{key:'ArrowDown'});
+assert.equal(el('mobile-cursor-year').attrs['aria-valuenow'],'1509');
 runtime.ready = false; adapter.render();
 el('mobile-cursor-year').emit('keydown',{key:'ArrowDown'});
 assert.equal(el('mobile-cursor-year').attrs['aria-valuenow'],'1509');

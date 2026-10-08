@@ -141,7 +141,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const current=sha256(await evaluate(cdp,'window.__ARTEMIS_EXPLORER.bundle'));check(current===immutableHash,reason+' mutated source bundle');
     actions.push({action:reason,documentTimeOrigin:origin,sameMap:true,bundleSha256:current});
   }
-  async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px)').matches");}
+  async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches");}
   async function expose(selector) {
     if(!await mobile())return;
     const owner=mobileControlOwner(selector);
@@ -270,15 +270,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     }
     placeAnchorChecks.push({case:reason,presenceCount:actual.visible.length,placeCount:groups.size,anchors:actual.anchors,pointStates:actual.points.map(p=>({place:p.properties.place_ref,state:p.state})),pointCoordinatesSha256:sha256(actual.points.map(p=>({place:p.properties.place_ref,coordinates:p.coordinates}))),sourceRenderKeys:actual.sourceRenderKeys,chronology:actual.chronology,nativeChronology:actual.nativeChronology,chronologyCues:actual.chronologyCues,paint:{markers:actual.markerPaint,chronology:actual.chronologyPaint}});
   }
-  async function capture(suffix) {
-    await collapseMobile();
+  async function capture(suffix,{keepMobileOpen=false}={}) {
+    if(!keepMobileOpen)await collapseMobile();
     await idle('capture '+suffix);
     const layout=await evaluate(cdp,`(() => {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
-      const mobile=matchMedia('(max-width:640px)').matches;
+      const mobile=matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches;
       const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'];
       for(const id of ids)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
-      if(mobile)for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
+      if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
       const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();if(h.bottom>t.top)throw new Error('Header overlaps shared time controls');
       const r=window.__ARTEMIS_EXPLORER,s=r.state;
@@ -310,7 +310,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const layout=await evaluate(cdp,`(() => {const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();return {width:innerWidth,height:innerHeight,header:h.height,dock:t.height,mapGap:t.top-h.bottom,overflow:document.documentElement.scrollWidth>innerWidth+1};})()`);
     check(!layout.overflow&&layout.mapGap>=layout.height*.4,'collapsed mobile UI did not leave usable map clearance');
     for(const panel of ['layers','records','settings']) {
-      await click('#mobile-'+panel);check(await evaluate(cdp,"document.getElementById('workspace-header').dataset.headerPanel")===panel,'mobile panel did not open '+panel);
+      await click('#mobile-'+panel);if(panel==='layers')await capture('mobile-layers-panel',{keepMobileOpen:true});check(await evaluate(cdp,"document.getElementById('workspace-header').dataset.headerPanel")===panel,'mobile panel did not open '+panel);
       await click('#header-close');const after=await snapshot();check(sameState(initial.state,after.state)&&sameState(initial.camera,after.camera),'mobile panel toggle changed canonical state or camera');
     }
     const wheel='mobile-range-start';
@@ -320,12 +320,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(await evaluate(cdp,`document.getElementById('${wheel}').getAttribute('aria-valuenow')===document.getElementById('${wheel}').getAttribute('aria-valuemax')`),'mobile upper boundary escaped');
     await key('Home','Home',36);await key('ArrowDown','ArrowDown',40);
     check(await evaluate(cdp,`document.getElementById('${wheel}').getAttribute('aria-valuenow')===document.getElementById('${wheel}').getAttribute('aria-valuemin')`),'mobile lower boundary escaped');
-    await draftUncommitted('bounded wheel draft');await click('#mobile-cancel');
+    await draftUncommitted('bounded wheel draft');await capture('mobile-expanded-staged-boundary',{keepMobileOpen:true});await click('#mobile-cancel');
     check(await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`)===initial.state.startYear,'Cancel retained a staged year');
     await focusWheel();const point=await evaluate(cdp,`(() => {const b=document.querySelector('#${wheel} .wheel-value').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2};})()`);
     await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:60,deltaX:0});await settle();
     check(await evaluate(cdp,`Number(document.getElementById('${wheel}').getAttribute('aria-valuenow'))`)===initial.state.startYear+1,'native wheel scroll did not stage one year');
-    await draftUncommitted('native wheel scroll');await click('#mobile-apply');
+    check(await evaluate(cdp,`Number(document.getElementById('range-start-handle').value)`)===initial.state.startYear+1,'staged mobile wheel did not preview timeline handle');await draftUncommitted('native wheel scroll');await capture('mobile-expanded-staged-year',{keepMobileOpen:true});await click('#mobile-apply');
     check((await snapshot()).state.startYear===initial.state.startYear+1,'Apply did not commit selected year');await number('time-start',initial.state.startYear);
     // Native pointer movement inside the year wheel is separate from dock drag.
     await focusWheel();const yearPoint=await evaluate(cdp,`(() => {const b=document.querySelector('#${wheel} .wheel-value').getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2};})()`);

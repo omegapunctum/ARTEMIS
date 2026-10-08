@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const MIN = 91, MAX = 1519;
+  const MOBILE_QUERY = '(max-width:640px), (max-width:960px) and (max-height:500px)';
   const bounds = value => Math.max(MIN, Math.min(MAX, Math.round(value)));
   function temporal(state) { return {mode:state.mode,startYear:state.startYear,endYear:state.endYear,cursorYear:state.cursorYear}; }
   function stepDraft(draft, field, delta) {
@@ -18,7 +19,7 @@
   };
   function mount({runtime,applyState,layout}) {
     const byId = id => document.getElementById(id), header = byId('workspace-header'), dock = byId('time-dock');
-    const mobile = () => window.matchMedia('(max-width: 640px)').matches;
+    const mobile = () => window.matchMedia(MOBILE_QUERY).matches;
     let draft = temporal(runtime.state), canonical = signature(runtime.state), dirty = false, selected = null;
     let headerReturn = null, expanded = false;
     const wheels = [['mobile-range-start','startYear','start'],['mobile-range-end','endYear','end'],['mobile-cursor-year','cursorYear','cursor']];
@@ -39,7 +40,7 @@
     }
     function cancel() { draft = temporal(runtime.state); dirty = false; render(); }
     function stage(field, delta) {
-      if (!runtime.ready) return;
+      if (!runtime.ready || !mobile()) return;
       draft = stepDraft(draft,field,delta); dirty = signature(draft) !== canonical;
       setExpanded(true); render();
     }
@@ -55,7 +56,7 @@
       if (nextSignature !== canonical) { canonical = nextSignature; draft = temporal(runtime.state); dirty = false; }
       for (const key of ['layers','records','settings']) byId(`mobile-${key}`).textContent = w(key);
       if (byId('header-panel-title')) byId('header-panel-title').textContent = header.dataset.headerPanel ? w(header.dataset.headerPanel) : '';
-      byId('header-close').setAttribute('aria-label',w('close'));
+      byId('header-close').setAttribute('aria-label',w('close')); byId('header-close').textContent = w('close');
       byId('attribution-toggle').textContent = w('sources');
       byId('mobile-apply').textContent = w('apply'); byId('mobile-cancel').textContent = w('cancel');
       byId('mobile-apply').disabled = !runtime.ready || !dirty; byId('mobile-cancel').disabled = !dirty;
@@ -73,6 +74,12 @@
       }
       const dates = draft.mode === 'scrub' ? String(draft.cursorYear) : `${draft.startYear}–${draft.endYear}`;
       byId('mobile-time-summary').textContent = `${dates} ${w('ce')}${dirty ? ` · ${w('pending')}` : ''}`;
+      // The timeline previews the same staged dates as its adjacent wheels.
+      // Only Apply (or an incumbent slider change) can update canonical state.
+      if (mobile() || !dirty) {
+        byId('range-start-handle').value = draft.startYear; byId('range-end-handle').value = draft.endYear;
+        byId('time-cursor').value = draft.cursorYear;
+      }
       setExpanded(expanded);
     }
     for (const key of ['layers','records','settings']) {
@@ -125,7 +132,7 @@
       else return;
       event.preventDefault(); event.stopImmediatePropagation();
     },true);
-    window.matchMedia('(max-width: 640px)').addEventListener?.('change',event => {
+    window.matchMedia(MOBILE_QUERY).addEventListener?.('change',event => {
       if (event.matches) return;
       cancel(); headerPanel(null); setExpanded(false);
       byId('app').dataset.attributionOpen = 'false'; byId('attribution-toggle').setAttribute('aria-expanded','false');
@@ -133,7 +140,7 @@
     function selectionChanged(id) { if (id && id !== selected && mobile()) headerPanel(null); selected = id; }
     return {render,selectionChanged};
   }
-  const api = Object.freeze({MIN,MAX,temporal,stepDraft,commitDraft,mount});
+  const api = Object.freeze({MIN,MAX,MOBILE_QUERY,temporal,stepDraft,commitDraft,mount});
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (typeof window !== 'undefined') window.ARTEMIS_MOBILE = api;
 })();

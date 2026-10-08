@@ -6,12 +6,12 @@ Class: REVIEW. Direct owner instruction on 2026-10-08 authorizes applying the se
 
 Visual direction: the owner-selected free map plus collapsible calendar, amended to small year controls alongside the timeline. The existing Natural Earth renderer is retained. Generated design imagery is layout guidance only and never data, a source, geography promotion or publication evidence.
 
-For viewports at or below 640 CSS px:
+For viewports at or below 640 CSS px, and short landscape viewports at or below 960 × 500 CSS px:
 
 - keep the existing single map, compact brand/search and a permanently reachable shared calendar;
 - disclose layers, chooser, presentation/language settings separately, preserving current controls and search semantics;
 - default the calendar to a compact row, expand/collapse with an explicit accessible button or a vertical gesture on its handle;
-- show compact start/end year spinbuttons around the range instrument, or one year spinbutton for Scrub; retain accessible localized CE names when visible labels are absent;
+- show 44 CSS px high start/end year spinbuttons around the range instrument, or one year spinbutton for Scrub; panel height follows content without an empty fixed-height region; retain accessible localized CE names when visible labels are absent;
 - year-wheel touch, mouse-wheel and keyboard navigation creates a bounded local draft, committed through Apply or discarded through Cancel; no automatic keyboard or canonical/URL changes during wheel scrolling;
 - retain incumbent slider release behavior, Range overlap, Scrub accumulation and trace origin, supported CE years 91–1519, presets, shared URL/history and selection;
 - preserve all source/uncertainty disclosures and actual map attribution; compact mobile source access must open the full existing rights/context text;
