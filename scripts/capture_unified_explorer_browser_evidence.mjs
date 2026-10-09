@@ -470,6 +470,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     sourceDetails.push({item:reference.item_id,title:details.title,revision:details.revision,context:details.context,claimIds:claims.map(claim=>claim.id),keyboardLinks});
   }
   await select(first.item_id);await disclose('record-disclosure');await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await collapseMobile();
   const unfocused=await snapshot();await click('#focus-selection',true);await idle('explicit catalog focus');const focused=await snapshot();
   check(!sameState(unfocused.camera,focused.camera),'explicit catalog focus did not move camera');
   const previous={...unfocused.state},next={...focused.state};delete previous.camera;delete next.camera;
@@ -515,6 +516,9 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const range=await membership({leonardo:4,roman:0,architecture:31},'Range1502 Leonardo only');
   const cesena=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id==='presence-cesena-1502-08-10');
   check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await capture('hierarchy-presence-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  const readablePresence=await evaluate(cdp,"({facts:document.getElementById('selection-facts').textContent,sources:document.getElementById('selection-sources').textContent,technicalOpen:[...document.querySelectorAll('#selection-sources details')].some(d=>d.open)})");
+  check(!readablePresence.facts.includes('not_established_')&&/do not establish the duration/.test(readablePresence.facts),'Cesena primary card retained a technical duration status');
+  check(!readablePresence.technicalOpen&&readablePresence.sources.includes('License: Unknown')&&readablePresence.sources.includes('Citations and factual claims only')&&readablePresence.sources.includes('Prohibited without permission'),'readable Leonardo source rights disappeared into JSON');
   const cesenaEvidence=await evaluate(cdp,"JSON.parse(document.querySelector('#selection-evidence pre').textContent)");
   const narrowedClaim=cesenaEvidence.claims.find(claim=>claim.id==='claim-cesena-presence-1502-08-10');
   check(narrowedClaim?.statement==='Leonardo was present in Cesena by 10 August 1502.','Cesena disclosure did not expose the authorized statement narrowing');

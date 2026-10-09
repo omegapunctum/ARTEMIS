@@ -10,6 +10,8 @@
   Object.assign(words.ru,{catalog:'Каталог архитектуры Лондона',catalogPilot:'Пилотный каталог · 10 объектов · Лондон',catalogReference:'Современная опорная точка. Историческое положение и период существования не установлены.',catalogUnverified:'Импортировано из Wikidata; независимая проверка не выполнена.',search:'Поиск по названию или QID',clearSearch:'Очистить поиск',searchEmpty:'Нет подходящих видимых записей. Очистите поиск или включите другой слой.',searchCount:'Найдено видимых записей',coordinate:'Указанные долгота / широта',precision:'Численная точность в источнике (градусы)',precisionLimit:'Численная точность не означает точность измерения. Размер объекта и историческая применимость неизвестны.',revision:'Версия источника Wikidata',wikipedia:'Контекст в Wikipedia',searchHint:'Поиск фильтрует только список; карта и открытая запись остаются прежними.'});
   Object.assign(words.en,{recordDetails:'Record details',sourceRecord:'Technical source record',openSource:'Open source',sourceManifest:'Source manifest · provenance and license',importedStart:'Imported start date',importedConstructionEnd:'Imported construction end',importedEnd:'Imported end date',recordId:'Original record ID',geometryVersion:'Geometry version',durationUnknown:'Duration beyond this documented date is not established.'});
   Object.assign(words.ru,{recordDetails:'Сведения о записи',sourceRecord:'Техническая запись источника',openSource:'Открыть источник',sourceManifest:'Данные источника · происхождение и лицензия',importedStart:'Начальная дата в импорте',importedConstructionEnd:'Окончание строительства в импорте',importedEnd:'Конечная дата в импорте',recordId:'Исходный ID записи',geometryVersion:'Версия геометрии',durationUnknown:'Длительность пребывания за пределами указанной даты не установлена.'});
+  Object.assign(words.en,{durationCorpus:'The available sources do not establish the duration of this stay.',durationRange:'Residence interval; continuous day-by-day presence is not established.',license:'License',textUse:'Text / data use',mediaUse:'Media reuse',geometryUse:'Derived geometry use',citationOnly:'Citations and factual claims only',attributedData:'Structured data with attribution',permitted:'Permitted',permissionRequired:'Prohibited without permission',notApplicable:'Not applicable',prohibited:'Prohibited',unresolved:'Unresolved'});
+  Object.assign(words.ru,{durationCorpus:'Длительность пребывания не установлена по имеющимся источникам.',durationRange:'Период проживания; непрерывное ежедневное присутствие не установлено.',license:'Лицензия',textUse:'Использование текста / данных',mediaUse:'Повторное использование медиа',geometryUse:'Производная геометрия',citationOnly:'Только ссылки и фактические утверждения',attributedData:'Структурированные данные с атрибуцией',permitted:'Разрешено',permissionRequired:'Запрещено без разрешения',notApplicable:'Неприменимо',prohibited:'Запрещено',unresolved:'Не установлено'});
   const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
@@ -217,8 +219,9 @@
       const raw = input.raw_feature.properties;
       inputJson(byId('selection-evidence'),{claim_refs:input.claim_refs,evidence_link_refs:input.evidence_link_refs,historical_applicability:input.historical_applicability,legacy_export_flags:{validated:raw.validated,date_valid:raw.date_valid,coordinates_confidence:raw.coordinates_confidence,coordinates_source:raw.coordinates_source}});
     } else if (selected.kind === 'presence') {
-      const duration = node('p',input.presence.duration_status === 'not_established_beyond_source_anchor' ? t('durationUnknown') : input.presence.duration_status);
-      if (input.presence.duration_status === 'not_established_beyond_source_anchor') duration.dataset.i18n = 'durationUnknown';
+      const durationKey = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
+      const duration = node('p',durationKey ? t(durationKey) : input.presence.duration_status);
+      if (durationKey) duration.dataset.i18n = durationKey;
       facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`),node('p',input.presence.short_description || ''),duration);
       inputJson(byId('selection-evidence'),{claims:input.record.claims || [],evidence_links:input.record.evidence_links || [],uncertainties:input.record.uncertainties || [],route_geometry:null,spatial_precision:input.presence.spatial_precision});
     } else {
@@ -230,7 +233,7 @@
       const entry = node('article','', 'source-entry'); entry.append(node('strong',selected.kind === 'catalog_reference' ? 'Wikidata' : source.title || source.source_id || source.id));
       const locator = source.url || source.source_url || source.uri || source.artifact_uri, href = safeLink(locator);
       if (href) { const link = node('a',t('openSource')); link.dataset.i18n = 'openSource'; link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; if (selected.kind === 'catalog_reference') link.id = 'catalog-revision-link'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
-      if (source.license) entry.append(node('p',source.license));
+      renderSourceRights(entry,source);
       technicalJson(entry,source,`source-record-${index}`); sourceHost.append(entry);
     }
     if (selected.kind === 'catalog_reference') { const p = node('p',''), context = node('a',''); context.id = 'catalog-context-link'; context.target = '_blank'; context.rel = 'noopener noreferrer'; p.append(context); sourceHost.append(p); }
@@ -245,6 +248,19 @@
     const disclosure = node('details',''), summary = node('summary',t('sourceRecord')); summary.dataset.i18n = 'sourceRecord';
     disclosure.id = id;
     disclosure.append(summary); host.append(disclosure); inputJson(disclosure,value);
+  }
+  function renderSourceRights(host,source) {
+    const rights = source.rights || {}, license = source.license || rights.license;
+    const licenseLine = node('p',''), label = node('span',t('license')); label.dataset.i18n = 'license';
+    const value = node('span',license || t('unknown')); if (!license) value.dataset.i18n = 'unknown';
+    licenseLine.append(label,document.createTextNode(': '),value); host.append(licenseLine);
+    const valueKeys = {citation_and_factual_claims_only:'citationOnly',attributed_structured_data:'attributedData',permitted:'permitted',prohibited_without_permission:'permissionRequired',not_applicable:'notApplicable',prohibited:'prohibited',unresolved:'unresolved'};
+    for (const [field,key] of [['data_or_text_use','textUse'],['media_reuse','mediaUse'],['derived_geometry_use','geometryUse']]) {
+      if (rights[field] == null) continue;
+      const line = node('p',''), name = node('span',t(key)), valueKey = valueKeys[rights[field]], content = node('span',valueKey ? t(valueKey) : rights[field]);
+      name.dataset.i18n = key; if (valueKey) content.dataset.i18n = valueKey;
+      line.append(name,document.createTextNode(': '),content); host.append(line);
+    }
   }
   function renderRecordDetails(selected,input) {
     const host = byId('selection-details'), list = node('dl',''); host.replaceChildren();
