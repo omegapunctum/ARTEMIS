@@ -3,6 +3,7 @@
 ## Owner-directed information hierarchy — 2026-10-09
 
 - `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — authorized REVIEW correction of existing inspector disclosure order, preserving exact metadata, material uncertainty, source links and the shared map. Scope review precedes implementation; technical acceptance and publication are separate. Historical-boundary comparison is research only, without corpus/runtime expansion or automatic successor.
+- `2026-10-09_HISTORICAL_BOUNDARY_SOURCES_v1.md` — completed primary-source comparison of Cliopatria, CShapes and OpenHistoricalMap. Cliopatria is the preferred broad candidate; completeness/exactness are unverified, CShapes has NC/SA restrictions, and OHM rights vary by feature. An Italy/1502 subset is proposal only, not intake/runtime authority.
 
 ## Owner-directed ready architecture catalog implementation — 2026-10-08
 

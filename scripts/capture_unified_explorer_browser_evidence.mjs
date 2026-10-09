@@ -413,9 +413,17 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(nativeCatalog.length===10,'native shared map source omitted catalog points');
   for(const feature of nativeCatalog){const reference=catalog.find(row=>row.item_id===feature.item);check(reference&&sameState(feature.geometry,reference.geometry),'catalog native geometry differs from preserved source point');}
   await select(first.item_id);
-  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre'))})`);
+  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre')),detailsOpen:document.getElementById('record-disclosure').open,sourcesOpen:document.getElementById('sources-disclosure').open,metadataRendered:document.querySelector('#selection-details dl').getClientRects().length>0})`);
   check(initialCard.title===first.labels.en&&initialCard.revision===first.sources[0].url&&initialCard.evidencePresent,'catalog inspector failed to render its native title/source/evidence');
-  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(initialCard.facts.includes(String(value)),'catalog primary facts lost literal coordinate/precision');
+  check(!initialCard.detailsOpen&&!initialCard.sourcesOpen&&!initialCard.metadataRendered,'catalog metadata was rendered before disclosure');
+  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(!initialCard.facts.includes(String(value)),'catalog technical number leaked into primary facts');
+  await capture('hierarchy-catalog-first-view-en');
+  const beforeDetails=await snapshot();await disclose('record-disclosure');
+  const literalDetails=await evaluate(cdp,"document.getElementById('selection-details').textContent"),afterDetails=await snapshot();
+  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision,first.qid])check(literalDetails.includes(String(value)),'catalog details lost literal coordinate/precision/identity');
+  check(/not measurement accuracy/i.test(literalDetails),'source numeric precision was presented as accuracy');
+  check(sameState(beforeDetails.state,afterDetails.state)&&sameState(beforeDetails.camera,afterDetails.camera)&&beforeDetails.url===afterDetails.url,'metadata disclosure changed canonical state/camera/URL');
+  await click('#record-disclosure > summary',true);
   await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
   await mobileSourceScrollClearance();
   const catalogSelected=await snapshot(),beforeSearch=catalogSelected;
@@ -444,6 +452,10 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const sourceDetails=[];
   for(const reference of catalog) {
     await select(reference.item_id);await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');
+    check(!await evaluate(cdp,"document.getElementById('source-record-0').open"),'source JSON expanded with readable sources');
+    await disclose('source-record-0');
+    const nativeSource=await evaluate(cdp,"JSON.parse(document.querySelector('#source-record-0 pre').textContent)");
+    check(sameState(nativeSource,reference.sources[0]),'technical source record lost exact provenance');
     const details=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,scope:document.getElementById('selection-scope').textContent,revision:document.getElementById('catalog-revision-link')?.href,context:document.getElementById('catalog-context-link')?.href,input:document.getElementById('selection-input').textContent,evidence:JSON.parse(document.querySelector('#selection-evidence pre').textContent),card:document.getElementById('inspector').textContent})`);
     check(details.revision&&/^https:\/\/www\.wikidata\.org\//.test(details.revision)&&/oldid=\d+|revision\/\d+/.test(details.revision),'catalog primary revision link is not pinned');
     check(details.revision===reference.sources[0].url,'catalog revision link differs from pinned source revision');
@@ -457,7 +469,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const keyboardLinks=await evaluate(cdp,`['catalog-revision-link','catalog-context-link'].map(id=>{const link=document.getElementById(id);link.focus({preventScroll:true});if(document.activeElement!==link||link.tabIndex<0)throw new Error('Source link cannot receive keyboard focus');return {id,href:link.href};})`);
     sourceDetails.push({item:reference.item_id,title:details.title,revision:details.revision,context:details.context,claimIds:claims.map(claim=>claim.id),keyboardLinks});
   }
-  await select(first.item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await select(first.item_id);await disclose('record-disclosure');await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
   const unfocused=await snapshot();await click('#focus-selection',true);await idle('explicit catalog focus');const focused=await snapshot();
   check(!sameState(unfocused.camera,focused.camera),'explicit catalog focus did not move camera');
   const previous={...unfocused.state},next={...focused.state};delete previous.camera;delete next.camera;
@@ -465,8 +477,9 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const coordinates=first.geometry.coordinates;
   check(Math.hypot(focused.camera.center[0]-coordinates[0],focused.camera.center[1]-coordinates[1])<1e-7,'catalog focus uses another coordinate');
   for(const lang of ['en','ru']) {await click('#language-'+lang);
-    const translatedFacts=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href})`);
-    check(translatedFacts.title===first.labels[lang]&&translatedFacts.revision===first.sources[0].url&&translatedFacts.facts.includes(String(first.geometry.coordinates[0])),'catalog language change lost native primary facts');
+    const translatedFacts=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-details').textContent,revision:document.getElementById('catalog-revision-link')?.href,detailsOpen:document.getElementById('record-disclosure').open,summary:document.querySelector('#record-disclosure > summary').textContent})`);
+    check(translatedFacts.title===first.labels[lang]&&translatedFacts.revision===first.sources[0].url&&translatedFacts.facts.includes(String(first.geometry.coordinates[0]))&&translatedFacts.detailsOpen,'catalog language change lost exact details or disclosure state');
+    check(translatedFacts.summary===(lang==='ru'?'Сведения о записи':'Record details'),'record details label did not change language');
     for(const mode of ['globe','map']) {await view(mode);await capture('catalog-selected-source-'+lang+'-'+mode);}}
 
   const fallback=catalog.find(reference=>!(reference.labels||{}).ru);
@@ -521,7 +534,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await select(reference.item_id);await disclose('sources-disclosure');await disclose('input-disclosure');
     const details=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_EXPLORER;return {selected:r.state.selectedItemId,scope:document.getElementById('selection-scope').textContent,input:document.getElementById('selection-input').textContent,sources:document.getElementById('selection-sources').textContent};})()`);
     check(/atemporal|historical applicability unknown/i.test(details.scope),'reference lacked atemporal/unknown applicability warning');
-    for(const source of reference.sources){check(details.sources.includes(source.id)&&details.sources.includes(source.title),'existing reference source identity/title not disclosed');}
+    for(const [index,source] of reference.sources.entries()){await disclose('source-record-'+index);const exact=await evaluate(cdp,`JSON.parse(document.querySelector('#source-record-${index} pre').textContent)`);check(sameState(exact,source),'existing reference source record changed');check(details.sources.includes(source.title),'existing reference source title not disclosed');}
     const properties=reference.raw_feature.properties;
     const rawDates=Object.fromEntries(Object.entries(properties).filter(([name,value])=>/date|year|construction/.test(name)&&value!==null&&typeof value!=='object'));
     for(const value of Object.values(rawDates))check(details.input.includes(String(value)),'raw reference date lost '+reference.original_id+' '+value);
@@ -529,7 +542,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   check(referenceChecks.length===31,'not all imported references inspected');
   const bce=referenceChecks.filter(r=>Object.values(r.rawDates).some(v=>/^-\d|BCE/.test(String(v))));check(bce.length>0,'raw BCE references not exercised');
-  const bceExample=bce[0];await select(bceExample.item);await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');await capture('atemporal-raw-negative-dates-en-map');await click('#language-ru');await capture('atemporal-raw-negative-dates-ru-map');await click('#language-en');
+  const bceExample=bce[0];await select(bceExample.item);await disclose('record-disclosure');await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');await capture('atemporal-raw-negative-dates-en-map');await click('#language-ru');await capture('atemporal-raw-negative-dates-ru-map');await click('#language-en');
   const selectedReference=(await snapshot()).state.selectedItemId;await layer('architecture',false);check((await snapshot()).state.selectedItemId===null,'hiding selected reference layer did not clear selection');await layer('architecture',true);await close();
   await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
   const repeated=expectedBundle.leonardo.lifePath.presences.filter(p=>p.place_ref==='place-florence');check(repeated.length===2,'accepted repeated Florence episodes missing');

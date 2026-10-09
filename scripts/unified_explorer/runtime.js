@@ -8,6 +8,8 @@
   };
   Object.assign(words.en,{catalog:'London architecture catalog',catalogPilot:'Selected pilot · 10 objects · London',catalogReference:'Modern reference point. Historical position and lifetime are unknown.',catalogUnverified:'Imported from Wikidata; independent verification has not been performed.',search:'Search names or QID',clearSearch:'Clear search',searchEmpty:'No matching visible records. Clear search or enable another layer.',searchCount:'Matching visible records',coordinate:'Reported longitude / latitude',precision:'Source numeric precision (degrees)',precisionLimit:'Numeric precision is not measurement accuracy. Site extent and historical applicability are unknown.',revision:'Wikidata source revision',wikipedia:'Wikipedia context',searchHint:'Search filters this chooser only; the map and open record remain unchanged.'});
   Object.assign(words.ru,{catalog:'Каталог архитектуры Лондона',catalogPilot:'Пилотный каталог · 10 объектов · Лондон',catalogReference:'Современная опорная точка. Историческое положение и период существования не установлены.',catalogUnverified:'Импортировано из Wikidata; независимая проверка не выполнена.',search:'Поиск по названию или QID',clearSearch:'Очистить поиск',searchEmpty:'Нет подходящих видимых записей. Очистите поиск или включите другой слой.',searchCount:'Найдено видимых записей',coordinate:'Указанные долгота / широта',precision:'Численная точность в источнике (градусы)',precisionLimit:'Численная точность не означает точность измерения. Размер объекта и историческая применимость неизвестны.',revision:'Версия источника Wikidata',wikipedia:'Контекст в Wikipedia',searchHint:'Поиск фильтрует только список; карта и открытая запись остаются прежними.'});
+  Object.assign(words.en,{recordDetails:'Record details',sourceRecord:'Technical source record',openSource:'Open source',sourceManifest:'Source manifest · provenance and license',importedStart:'Imported start date',importedConstructionEnd:'Imported construction end',importedEnd:'Imported end date',recordId:'Original record ID',geometryVersion:'Geometry version',durationUnknown:'Duration beyond this documented date is not established.'});
+  Object.assign(words.ru,{recordDetails:'Сведения о записи',sourceRecord:'Техническая запись источника',openSource:'Открыть источник',sourceManifest:'Данные источника · происхождение и лицензия',importedStart:'Начальная дата в импорте',importedConstructionEnd:'Окончание строительства в импорте',importedEnd:'Конечная дата в импорте',recordId:'Исходный ID записи',geometryVersion:'Версия геометрии',durationUnknown:'Длительность пребывания за пределами указанной даты не установлена.'});
   const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
@@ -205,51 +207,72 @@
     if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); renderEpisodeChoices(selected); return; }
     renderedSelection = selected.item_id; inspector.scrollTop = 0;
     inspector.dataset.itemId = selected.item_id;
-    for (const id of ['selection-facts','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
-    for (const id of ['sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
+    for (const id of ['selection-facts','selection-details','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
+    for (const id of ['record-disclosure','sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
     const input = sourceRecord(selected), facts = byId('selection-facts');
     if (selected.kind === 'catalog_reference') {
       renderCatalogFacts(input);
       inputJson(byId('selection-evidence'),{claims:input.claims,evidence_links:input.evidence_links,uncertainties:input.uncertainties,historical_position:input.historical_position,historical_applicability:input.historical_applicability});
     } else if (selected.kind === 'reference') {
       const raw = input.raw_feature.properties;
-      const list = node('dl','');
-      for (const [key,value] of [['date_start',raw.date_start],['date_construction_end',raw.date_construction_end],['date_end',raw.date_end],['original_id',input.original_id],['historical_applicability','unknown'],['historical_position','unknown'],['historical_precision','unknown']]) { list.append(node('dt',key),node('dd',value == null ? 'null / unknown' : String(value))); }
-      const legacy = node('p',t('legacy')); legacy.dataset.i18n = 'legacy'; facts.append(list,legacy);
       inputJson(byId('selection-evidence'),{claim_refs:input.claim_refs,evidence_link_refs:input.evidence_link_refs,historical_applicability:input.historical_applicability,legacy_export_flags:{validated:raw.validated,date_valid:raw.date_valid,coordinates_confidence:raw.coordinates_confidence,coordinates_source:raw.coordinates_source}});
     } else if (selected.kind === 'presence') {
-      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`),node('p',input.presence.short_description || ''),node('p',input.presence.duration_status));
+      const duration = node('p',input.presence.duration_status === 'not_established_beyond_source_anchor' ? t('durationUnknown') : input.presence.duration_status);
+      if (input.presence.duration_status === 'not_established_beyond_source_anchor') duration.dataset.i18n = 'durationUnknown';
+      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`),node('p',input.presence.short_description || ''),duration);
       inputJson(byId('selection-evidence'),{claims:input.record.claims || [],evidence_links:input.record.evidence_links || [],uncertainties:input.record.uncertainties || [],route_geometry:null,spatial_precision:input.presence.spatial_precision});
     } else {
-      facts.append(node('p',`${selected.interval.start}–${selected.interval.end} CE`),node('p',selected.geometry_version_ref));
+      facts.append(node('p',`${selected.interval.start}–${selected.interval.end} CE`));
       inputJson(byId('selection-evidence'),{claims:input.record?.claims || [],evidence_links:input.record?.evidence_links || [],uncertainties:input.record?.uncertainties || [],native_temporal_extent:input.version.geometry_version.temporal_extent});
     }
     const sourceHost = byId('selection-sources'), sourceScope = node('p',t('sourceScope')); sourceScope.dataset.i18n = 'sourceScope'; sourceHost.append(sourceScope);
-    for (const source of sourcesFor(input)) {
-      const entry = node('article','', 'source-entry'); entry.append(node('strong',source.title || source.source_id || source.id));
+    for (const [index,source] of sourcesFor(input).entries()) {
+      const entry = node('article','', 'source-entry'); entry.append(node('strong',selected.kind === 'catalog_reference' ? 'Wikidata' : source.title || source.source_id || source.id));
       const locator = source.url || source.source_url || source.uri || source.artifact_uri, href = safeLink(locator);
-      if (href) { const link = node('a',locator); link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
-      inputJson(entry,source); sourceHost.append(entry);
+      if (href) { const link = node('a',t('openSource')); link.dataset.i18n = 'openSource'; link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; if (selected.kind === 'catalog_reference') link.id = 'catalog-revision-link'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
+      if (source.license) entry.append(node('p',source.license));
+      technicalJson(entry,source,`source-record-${index}`); sourceHost.append(entry);
     }
-    if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a','Source manifest · provenance & license'); link.href = './source_manifest.json'; sourceHost.append(link); inputJson(sourceHost,runtime.bundle.roman.sourceManifest); }
+    if (selected.kind === 'catalog_reference') { const p = node('p',''), context = node('a',''); context.id = 'catalog-context-link'; context.target = '_blank'; context.rel = 'noopener noreferrer'; p.append(context); sourceHost.append(p); }
+    if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a',t('sourceManifest')); link.dataset.i18n = 'sourceManifest'; link.href = './source_manifest.json'; sourceHost.append(link); technicalJson(sourceHost,runtime.bundle.roman.sourceManifest,'source-manifest-record'); }
     inputJson(byId('selection-input'),{registry:selected,source_native_input:input,input_ledger:runtime.bundle.input_ledger});
     renderInspectorLanguage(selected); renderEpisodeChoices(selected); layout();
   }
   function renderCatalogFacts(input) {
     const facts = byId('selection-facts'); facts.replaceChildren(node('p',t('catalogUnverified')));
-    const coordinateValue = input.coordinate_statement?.mainsnak?.datavalue?.value || {}, list = node('dl','');
-    for (const [key,displayValue] of [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),coordinateValue.precision ?? t('unknown')],['Wikidata',input.qid]]) list.append(node('dt',key),node('dd',String(displayValue)));
-    facts.append(list,node('p',t('precisionLimit')));
-    const source = input.sources[0], link = node('a',`${t('revision')} · ${source.revision}`); link.id = 'catalog-revision-link'; link.href = safeLink(source.url); link.target = '_blank'; link.rel = 'noopener noreferrer';
-    const paragraph = node('p',''); paragraph.append(link); facts.append(paragraph,node('p',source.license));
+  }
+  function technicalJson(host,value,id) {
+    const disclosure = node('details',''), summary = node('summary',t('sourceRecord')); summary.dataset.i18n = 'sourceRecord';
+    disclosure.id = id;
+    disclosure.append(summary); host.append(disclosure); inputJson(disclosure,value);
+  }
+  function renderRecordDetails(selected,input) {
+    const host = byId('selection-details'), list = node('dl',''); host.replaceChildren();
+    byId('record-disclosure').hidden = selected.kind === 'presence';
+    let fields = [];
+    if (selected.kind === 'catalog_reference') {
+      const coordinateValue = input.coordinate_statement?.mainsnak?.datavalue?.value || {};
+      fields = [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),coordinateValue.precision ?? t('unknown')],['Wikidata',input.qid]];
+    } else if (selected.kind === 'reference') {
+      const raw = input.raw_feature.properties;
+      fields = [[t('coordinate'),input.geometry.coordinates.join(' / ')],[t('importedStart'),raw.date_start],[t('importedConstructionEnd'),raw.date_construction_end],[t('importedEnd'),raw.date_end],[t('recordId'),input.original_id]];
+    } else if (selected.kind === 'region') fields = [[t('geometryVersion'),selected.geometry_version_ref]];
+    for (const [key,value] of fields) list.append(node('dt',key),node('dd',value == null ? t('unknown') : String(value)));
+    host.append(list);
+    if (selected.kind === 'catalog_reference') host.append(node('p',t('precisionLimit')));
+    if (selected.kind === 'reference') host.append(node('p',t('legacy')));
+  }
+  function renderCatalogContext(input) {
     const urls = input.wikipedia_urls || {}, language = urls[runtime.state.language] ? runtime.state.language : urls.en ? 'en' : Object.keys(urls).sort()[0];
-    if (language && safeLink(urls[language])) { const context = node('a',`${t('wikipedia')} (${language})`); context.id = 'catalog-context-link'; context.href = safeLink(urls[language]); context.target = '_blank'; context.rel = 'noopener noreferrer'; const p = node('p',''); p.append(context); facts.append(p); }
+    const context = byId('catalog-context-link'), href = language && safeLink(urls[language]); context.hidden = !href;
+    if (href) { context.textContent = `${t('wikipedia')} (${language})`; context.href = href; }
   }
   function renderInspectorLanguage(selected) {
     const input = sourceRecord(selected); text('selection-title',selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language));
     text('selection-scope',t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'));
     text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
-    if (selected.kind === 'catalog_reference') renderCatalogFacts(input);
+    renderRecordDetails(selected,input);
+    if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
   }
   function renderControls() {
     const state = runtime.state; document.documentElement.lang = state.language;
