@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Owner-directed information hierarchy — 2026-10-09
+
+- `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — authorized REVIEW correction of existing inspector disclosure order, preserving exact metadata, material uncertainty, source links and the shared map. Scope review precedes implementation; technical acceptance and publication are separate. Historical-boundary comparison is research only, without corpus/runtime expansion or automatic successor.
+
 ## Owner-directed ready architecture catalog implementation — 2026-10-08
 
 - `2026-10-08_READY_ARCHITECTURE_CATALOG_v1.md` — completed bounded source/runtime implementation after prospective DECISION and distinct Architecture/Product REVIEW acceptance. Ten London references, deterministic offline intake, ready fourth layer and chooser search share the existing map; final 390px native loop passed. PR #478 separately owns current-head CI, merge and public-delivery receipts. No editor rewrite, historical promotion, universal corpus, paid hosting, gate reopening or automatic successor.
