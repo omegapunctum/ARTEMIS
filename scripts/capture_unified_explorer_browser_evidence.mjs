@@ -521,7 +521,16 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await click('#mode-range');await number('time-start',1502);await number('time-end',1502);
   const range=await membership({leonardo:4,roman:0,architecture:31},'Range1502 Leonardo only');
   const cesena=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id==='presence-cesena-1502-08-10');
-  check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await capture('hierarchy-presence-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);
+  for (const language of ['en','ru','en']) {
+    await click('#language-'+language);
+    const firstView = await evaluate(cdp,`(() => { const facts=document.getElementById('selection-facts'), notice=facts.querySelector('[data-i18n="cesenaCandidateContext"]'); return {text:notice?.textContent,visible:notice?.checkVisibility(),insideDisclosure:!!notice?.closest('details'),description:notice?.nextElementSibling?.textContent,open:[...document.querySelectorAll('#inspector details')].some(d=>d.open)}; })()`);
+    check(firstView.visible && !firstView.insideDisclosure && !firstView.open,'Cesena qualification must be visible before opening disclosures');
+    check(firstView.description===cesena.short_description,'Cesena candidate description was replaced or detached from its qualification');
+    check(firstView.text===(language==='ru'?'Ниже — неподтверждённый контекст-кандидат. Утверждение о присутствии не подтверждает проведение изысканий.':'Unverified candidate context follows. The presence claim does not establish surveying.'),'Cesena qualification did not follow the selected language');
+    if(language==='ru')await capture('cesena-candidate-context-first-view-ru');
+  }
+  await capture('hierarchy-presence-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
   const readablePresence=await evaluate(cdp,"({facts:document.getElementById('selection-facts').textContent,sources:document.getElementById('selection-sources').textContent,technicalOpen:[...document.querySelectorAll('#selection-sources details')].some(d=>d.open)})");
   check(!readablePresence.facts.includes('not_established_')&&/do not establish the duration/.test(readablePresence.facts),'Cesena primary card retained a technical duration status');
   check(!readablePresence.technicalOpen&&readablePresence.sources.includes('License: Unknown')&&readablePresence.sources.includes('Citations and factual claims only')&&readablePresence.sources.includes('Prohibited without permission'),'readable Leonardo source rights disappeared into JSON');
@@ -557,6 +566,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
   const residence=expectedBundle.leonardo.lifePath.presences.find(p=>p.duration_status==='range_not_continuous_position');
   check(residence,'existing residence interval missing');await select(residence.presence_item_id);
+  check(await evaluate(cdp,"!document.querySelector('#selection-facts [data-i18n=cesenaCandidateContext]')"),'Cesena-specific qualification leaked into another presence');
   const residenceFacts=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
   check(/continuous day-by-day presence is not established/.test(residenceFacts)&&!residenceFacts.includes('range_not_continuous_position'),'residence interval retained technical status or inferred continuous presence');
   await click('#language-ru');check(await evaluate(cdp,"document.getElementById('selection-facts').textContent.includes('непрерывное ежедневное присутствие не установлено')"),'RU residence limitation missing');await capture('hierarchy-residence-first-view-ru');await click('#language-en');

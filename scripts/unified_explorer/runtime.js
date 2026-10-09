@@ -13,6 +13,8 @@
   Object.assign(words.en,{durationCorpus:'The available sources do not establish the duration of this stay.',durationRange:'Residence interval; continuous day-by-day presence is not established.',license:'License',textUse:'Text / data use',mediaUse:'Media reuse',geometryUse:'Derived geometry use',citationOnly:'Citations and factual claims only',attributedData:'Structured data with attribution',permitted:'Permitted',permissionRequired:'Prohibited without permission',notApplicable:'Not applicable',prohibited:'Prohibited',unresolved:'Unresolved'});
   Object.assign(words.ru,{durationCorpus:'Длительность пребывания не установлена по имеющимся источникам.',durationRange:'Период проживания; непрерывное ежедневное присутствие не установлено.',license:'Лицензия',textUse:'Использование текста / данных',mediaUse:'Повторное использование медиа',geometryUse:'Производная геометрия',citationOnly:'Только ссылки и фактические утверждения',attributedData:'Структурированные данные с атрибуцией',permitted:'Разрешено',permissionRequired:'Запрещено без разрешения',notApplicable:'Неприменимо',prohibited:'Запрещено',unresolved:'Не установлено'});
   const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
+  Object.assign(words.en,{cesenaCandidateContext:'Unverified candidate context follows. The presence claim does not establish surveying.'});
+  Object.assign(words.ru,{cesenaCandidateContext:'Ниже — неподтверждённый контекст-кандидат. Утверждение о присутствии не подтверждает проведение изысканий.'});
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
   // Process the latest event once per frame; events arriving inside a callback
@@ -222,7 +224,15 @@
       const durationKey = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
       const duration = node('p',durationKey ? t(durationKey) : input.presence.duration_status);
       if (durationKey) duration.dataset.i18n = durationKey;
-      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`),node('p',input.presence.short_description || ''),duration);
+      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`));
+      // Retain the literal candidate label without presenting its survey context
+      // as established by the separately amended, still-draft presence Claim.
+      if (input.presence.event_ref === 'event-leonardo-cesena-survey') {
+        const notice = node('p',t('cesenaCandidateContext'));
+        notice.dataset.i18n = 'cesenaCandidateContext';
+        facts.append(notice);
+      }
+      facts.append(node('p',input.presence.short_description || ''),duration);
       inputJson(byId('selection-evidence'),{claims:input.record.claims || [],evidence_links:input.record.evidence_links || [],uncertainties:input.record.uncertainties || [],route_geometry:null,spatial_precision:input.presence.spatial_precision});
     } else {
       facts.append(node('p',`${selected.interval.start}–${selected.interval.end} CE`));

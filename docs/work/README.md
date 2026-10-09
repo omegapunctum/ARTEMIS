@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Pre-merge audit continuation — 2026-10-09
+
+- `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — bounded REVIEW correction of the Cesena card: unchanged original context explicitly qualified as unverified in EN/RU. Local implementation and verification are in progress; native new-revision evidence and distinct final review remain pending. The owner has paused merge. Broader audit findings are recommendations, not an automatic implementation sequence.
+
 ## Owner-directed information hierarchy — 2026-10-09
 
 - `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — completed local REVIEW correction of inspector disclosure order, preserving exact metadata, material uncertainty, source links and the shared map. Owner manually opened PR #480 on the accepted package; push Core passed four native viewports and 434 tests. A separate PR high-DPI gate exposed an obsolete presentation-text comparison; its exact-source-payload proof correction is independently accepted locally, with 29 tests and four DPR3 cases. Correction upload/new-head CI, merge and live delivery remain pending. Machine-readable receipts distinguish each snapshot. Historical-boundary comparison is research only, without corpus/runtime expansion or automatic successor.
