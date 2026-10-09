@@ -227,6 +227,7 @@ def test_entry_profiles_are_only_initial_presentation_and_share_bundle_bytes(tmp
     templates.mkdir()
     (templates / "index.html.template").write_text('<body data-entry-profile="{{ENTRY_PROFILE}}"></body>')
     (templates / "runtime.js").write_text("// Runtime is owned and tested separately.\n")
+    (templates / "desktop.js").write_text("// Desktop composition.\n")
     (templates / "mobile.js").write_text("// Mobile composition is owned and tested separately.\n")
     (templates / "style.css").write_text("body { color: white; }\n")
     monkeypatch.setattr(unified, "TEMPLATE_DIR", templates)

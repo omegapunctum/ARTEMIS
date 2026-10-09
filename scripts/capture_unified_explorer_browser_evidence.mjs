@@ -143,7 +143,13 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches");}
   async function expose(selector) {
-    if(!await mobile())return;
+    if(!await mobile()) {
+      const owner=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});return {records:!!n?.closest('#desktop-records-body'),layers:!!n?.closest('#desktop-layer-body'),inspector:!!n?.closest('#inspector')&&!n?.closest('.drawer-header')};})()`);
+      if(owner.records&&await evaluate(cdp,"document.getElementById('desktop-records-body').hidden"))await click('#records-toggle');
+      if(owner.layers&&!await evaluate(cdp,"document.getElementById('desktop-layers').open"))await click('#desktop-layers summary');
+      if(owner.inspector&&await evaluate(cdp,"document.getElementById('inspector').dataset.desktopCollapsed==='true'"))await click('#inspector-toggle');
+      return;
+    }
     const owner=mobileControlOwner(selector);
     if(owner==='calendar') {if(!await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');}
     else if(owner&&await evaluate(cdp,'document.getElementById(\"workspace-header\").dataset.headerPanel')!==owner)await click('#mobile-'+owner);
@@ -306,7 +312,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const layout=await evaluate(cdp,`(() => {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
       const mobile=matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches;
-      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'];
+      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','records-toggle','view-globe','view-map','language-en','language-ru','time-dock',...(!document.getElementById('desktop-records-body').hidden?['record-search','clear-search','record-select',...(document.getElementById('desktop-layers').open?['layer-controls']:[])]:[])];
       for(const id of ids)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
       if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
@@ -424,6 +430,19 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(!initialCard.detailsOpen&&!initialCard.sourcesOpen&&!initialCard.metadataRendered,'catalog metadata was rendered before disclosure');
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(!initialCard.facts.includes(String(value)),'catalog technical number leaked into primary facts');
   await capture('hierarchy-catalog-first-view-en');
+  if(!await mobile()) {
+    const before=await snapshot();
+    for(const [toggle,target] of [['records-toggle','desktop-records-body'],['inspector-toggle','selection-facts']]) {
+      await click('#'+toggle);
+      check(!await evaluate(cdp,`document.getElementById(${JSON.stringify(target)}).checkVisibility({checkVisibilityCSS:true})`),'collapsed desktop panel still visible '+target);
+      check(await evaluate(cdp,'document.activeElement.id')===toggle,'desktop collapse lost focus');
+      const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&sameState(before.visible,after.visible)&&sameState(before.disclosures,after.disclosures)&&before.url===after.url,'desktop collapse changed canonical state');
+      await capture('desktop-collapsed-'+toggle);
+      await click('#'+toggle);
+      check(await evaluate(cdp,`document.getElementById(${JSON.stringify(target)}).checkVisibility({checkVisibilityCSS:true})`),'desktop panel did not reopen '+target);
+    }
+  }
   const beforeDetails=await snapshot();await disclose('record-disclosure');
   const literalDetails=await evaluate(cdp,"document.getElementById('selection-details').textContent"),afterDetails=await snapshot();
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision,first.qid])check(literalDetails.includes(String(value)),'catalog details lost literal coordinate/precision/identity');

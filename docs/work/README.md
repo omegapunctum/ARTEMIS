@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Owner-directed desktop workspace — 2026-10-09
+
+- `2026-10-09_DESKTOP_WORKSPACE_v1.md` — active implementation on `feat/desktop-workspace-20261009`: compact collapsible record/layer and inspector panels with a shared full-width timeline. Owned local checks pass; native/visual acceptance is blocked by disabled WebGL in the available browser. See root `design-qa.md`. No merge or publication acceptance is implied.
+
 ## Pre-merge audit continuation — 2026-10-09
 
 - `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — bounded REVIEW correction of the Cesena card: unchanged original context explicitly qualified as unverified in EN/RU. Local implementation passes 35 owned tests and preserves the exact public bundle. Independent code conformity accepted on `fe79bea`; native new-revision evidence, remote CI and delivery remain pending. The owner has paused merge. Broader audit findings are recommendations, not an automatic implementation sequence.
