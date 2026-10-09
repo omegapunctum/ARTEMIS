@@ -9,7 +9,8 @@
     "merged": false,
     "live_verified": false,
     "blocked_action": "git push -u origin fix/explorer-information-hierarchy-20261009",
-    "reason": "Automatic approval review rejected public publication because continuing work was not explicit authorization to disclose the new documentation. No alternate write route attempted."
+    "reason": "Automatic approval review rejected public publication because continuing work was not explicit authorization to disclose the new documentation. No alternate write route attempted.",
+    "snapshot": "Original local closeout; superseded for current delivery status by manual_publication_and_ci_correction below."
   },
   "tests": {
     "command": "python -m pytest -q tests/test_unified_explorer.py tests/test_mobile_explorer.py tests/test_unified_explorer_browser.py tests/test_repository_governance_contract.py tests/test_governance_boundary.py",
@@ -277,5 +278,187 @@
     "Test-only local browser wrapper uses network proxy and ignores certificate errors; latest Playwright CDN download was unavailable.",
     "No complete assistive technology audit, validated comprehension or user-value claim.",
     "Research provider descriptions/licenses checked; full dataset completeness, current bytes and historical correctness unverified; no corpus intake."
-  ]
+  ],
+  "manual_publication_and_ci_correction": {
+    "pr": "https://github.com/omegapunctum/ARTEMIS/pull/480",
+    "owner_uploaded_head": "23835f1902333323de6ecc382f24143430fc03e0",
+    "remote_exact_head_review": "ACCEPT_EXACT_HEAD_REVIEW by /root/hierarchy_review; durable in PR body",
+    "push_core": {
+      "run_url": "https://github.com/omegapunctum/ARTEMIS/actions/runs/37912147190",
+      "conclusion": "success",
+      "native_css_viewports": [
+        "1440x900",
+        "500x900",
+        "390x844",
+        "844x390"
+      ],
+      "regression_tests_passed": 434,
+      "test_seconds": 78.19
+    },
+    "pr_core": {
+      "run_url": "https://github.com/omegapunctum/ARTEMIS/actions/runs/37912423381",
+      "conclusion": "failure",
+      "failed_step": "Verify Explorer high-DPI rendering and input",
+      "observed_error": "High-DPI source/native identity changed",
+      "reason": "Obsolete Sources presentation-text hash comparison; readable text intentionally changes. A successful push run does not override this failed relevant PR gate."
+    },
+    "proof_correction": {
+      "head": "115e0b17965d67d377980bf450ea33757336b2ed",
+      "file": "scripts/capture_explorer_performance.mjs",
+      "review": "ACCEPT_PROOF_CORRECTION by /root/hierarchy_review; zero unresolved critical/material findings",
+      "runtime_or_source_changes": false,
+      "tests": {
+        "passed": 29,
+        "seconds": 19.15,
+        "command": "python -m pytest -q tests/test_unified_explorer.py tests/test_mobile_explorer.py tests/test_unified_explorer_browser.py tests/test_repository_governance_contract.py tests/test_governance_boundary.py"
+      },
+      "native_high_dpi": {
+        "outcome": "process_exit_0; no report.error; all four asserted cases completed",
+        "report_sha256": "c8c6b76a326300a3a0abd3b8e093a7c5d6e47b3787cf5655d1d96a565cf1d057",
+        "browser": {
+          "protocolVersion": "1.3",
+          "product": "HeadlessChrome/134.0.6998.35",
+          "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+          "jsVersion": "13.4.114.14"
+        },
+        "bundle_sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538",
+        "registry_count": 55,
+        "baseline_ref": "76404197",
+        "cases": [
+          {
+            "variant": "baseline",
+            "view": "globe",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 3,
+              "width": 1500,
+              "height": 2700,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.45411045991985705,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 190,
+              "y": 340,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "baseline-globe-dpr3.png",
+              "sha256": "803f37be7c502d9887069553498e7b9cd39362b6dbf8819aacbbe5889198d6eb"
+            }
+          },
+          {
+            "variant": "baseline",
+            "view": "map",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 3,
+              "width": 1500,
+              "height": 2700,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.42422698250774665,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 170,
+              "y": 330,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "baseline-map-dpr3.png",
+              "sha256": "198c138a6cbbcaf5c9f96c36a8822583cafce0780e5656d3c862f65fd1d0f59a"
+            }
+          },
+          {
+            "variant": "current",
+            "view": "globe",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 2,
+              "width": 1000,
+              "height": 1800,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.45411045991985705,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 190,
+              "y": 340,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "978009aca731ff1c70b3e6f3926e08b54994d383613e47a16b65213a45933673",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "current-globe-dpr3.png",
+              "sha256": "cf6fa7988c09d56d560bf464479bde249addfc77e1221778db223d22413ee43b"
+            }
+          },
+          {
+            "variant": "current",
+            "view": "map",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 2,
+              "width": 1000,
+              "height": 1800,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.42422698250774665,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 170,
+              "y": 330,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "978009aca731ff1c70b3e6f3926e08b54994d383613e47a16b65213a45933673",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "current-map-dpr3.png",
+              "sha256": "02a0c11aac4831272228f4f89c0defd50943040776cdff3460316e556fd1abbf"
+            }
+          }
+        ],
+        "limits": [
+          "Software WebGL on CI; not user-device FPS",
+          "Local max-age=3600 server; not actual Pages caching",
+          "Programmatic camera movement measures renderer work, not native gesture usability",
+          "DPR3 emulation is not evidence from a physical phone; CSS500x900, desktop input, software WebGL"
+        ]
+      }
+    },
+    "delivery_state": "Correction awaits owner manual push and new-head GitHub CI. No merge or live delivery verified."
+  }
 }

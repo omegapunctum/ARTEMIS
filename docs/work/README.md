@@ -2,7 +2,7 @@
 
 ## Owner-directed information hierarchy — 2026-10-09
 
-- `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — completed local REVIEW correction of inspector disclosure order, preserving exact metadata, material uncertainty, source links and the shared map; independently accepted exact-code-head implementation, 29 tests and native desktop/narrow evidence. Machine-readable receipts accompany the task. Public push is blocked by automatic approval review; no PR/CI/merge/live delivery claimed. Historical-boundary comparison is research only, without corpus/runtime expansion or automatic successor.
+- `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — completed local REVIEW correction of inspector disclosure order, preserving exact metadata, material uncertainty, source links and the shared map. Owner manually opened PR #480 on the accepted package; push Core passed four native viewports and 434 tests. A separate PR high-DPI gate exposed an obsolete presentation-text comparison; its exact-source-payload proof correction is independently accepted locally, with 29 tests and four DPR3 cases. Correction upload/new-head CI, merge and live delivery remain pending. Machine-readable receipts distinguish each snapshot. Historical-boundary comparison is research only, without corpus/runtime expansion or automatic successor.
 - `2026-10-09_HISTORICAL_BOUNDARY_SOURCES_v1.md` — completed primary-source comparison of Cliopatria, CShapes and OpenHistoricalMap. Cliopatria is the preferred broad candidate; completeness/exactness are unverified, CShapes has NC/SA restrictions, and OHM rights vary by feature. An Italy/1502 subset is proposal only, not intake/runtime authority.
 
 ## Owner-directed ready architecture catalog implementation — 2026-10-08
