@@ -215,6 +215,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     else {check(await mobile(),'desktop clear search control hidden');await search('');}
   }
   async function disclose(id) {
+    // Selecting the already-selected record keeps its Records panel open.
+    // Close that actual overlay before reading the inspector; never bypass hit testing.
+    if(await mobile()&&await evaluate(cdp,"Boolean(document.getElementById('workspace-header').dataset.headerPanel)")) {
+      const before=await snapshot();await click('#header-close');const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'closing record chooser changed the selected evidence');
+    }
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
     check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`),'native disclosure failed '+id);
   }
