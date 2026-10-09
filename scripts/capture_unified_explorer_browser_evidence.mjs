@@ -413,7 +413,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(nativeCatalog.length===10,'native shared map source omitted catalog points');
   for(const feature of nativeCatalog){const reference=catalog.find(row=>row.item_id===feature.item);check(reference&&sameState(feature.geometry,reference.geometry),'catalog native geometry differs from preserved source point');}
   await select(first.item_id);
-  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre')),detailsOpen:document.getElementById('record-disclosure').open,sourcesOpen:document.getElementById('sources-disclosure').open,metadataRendered:document.querySelector('#selection-details dl').getClientRects().length>0})`);
+  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre')),detailsOpen:document.getElementById('record-disclosure').open,sourcesOpen:document.getElementById('sources-disclosure').open,metadataRendered:document.querySelector('#selection-details dl').checkVisibility({checkVisibilityCSS:true})})`);
   check(initialCard.title===first.labels.en&&initialCard.revision===first.sources[0].url&&initialCard.evidencePresent,'catalog inspector failed to render its native title/source/evidence');
   check(!initialCard.detailsOpen&&!initialCard.sourcesOpen&&!initialCard.metadataRendered,'catalog metadata was rendered before disclosure');
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(!initialCard.facts.includes(String(value)),'catalog technical number leaked into primary facts');
@@ -500,7 +500,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await click('#mode-scrub');await number('cursor-year',100);
   const early=await membership({leonardo:0,roman:1,architecture:0},'Scrub100 Roman only');
   check(early.state.cursorYear===100,'global cursor clamped to Leonardo origin');
-  const roman100=early.visible.find(i=>i.layer==='roman');await select(roman100.itemId);await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  const roman100=early.visible.find(i=>i.layer==='roman');await select(roman100.itemId);await capture('hierarchy-roman-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
   const romanDetails=await snapshot();
   check(romanDetails.card.includes('Cliopatria')&&romanDetails.card.includes('CC-BY-4.0'),'Roman source/license missing');
   check(romanDetails.card.includes('91')&&romanDetails.card.includes('105'),'Roman native interval missing');
@@ -514,7 +514,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await click('#mode-range');await number('time-start',1502);await number('time-end',1502);
   const range=await membership({leonardo:4,roman:0,architecture:31},'Range1502 Leonardo only');
   const cesena=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id==='presence-cesena-1502-08-10');
-  check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await capture('hierarchy-presence-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
   const cesenaEvidence=await evaluate(cdp,"JSON.parse(document.querySelector('#selection-evidence pre').textContent)");
   const narrowedClaim=cesenaEvidence.claims.find(claim=>claim.id==='claim-cesena-presence-1502-08-10');
   check(narrowedClaim?.statement==='Leonardo was present in Cesena by 10 August 1502.','Cesena disclosure did not expose the authorized statement narrowing');
@@ -531,7 +531,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await close();await click('#language-en');
   const referenceChecks=[];
   for(const reference of expectedBundle.architecture.references) {
-    await select(reference.item_id);await disclose('sources-disclosure');await disclose('input-disclosure');
+    await select(reference.item_id);if(reference===expectedBundle.architecture.references[0])await capture('hierarchy-reference-first-view-en');await disclose('sources-disclosure');await disclose('input-disclosure');
     const details=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_EXPLORER;return {selected:r.state.selectedItemId,scope:document.getElementById('selection-scope').textContent,input:document.getElementById('selection-input').textContent,sources:document.getElementById('selection-sources').textContent};})()`);
     check(/atemporal|historical applicability unknown/i.test(details.scope),'reference lacked atemporal/unknown applicability warning');
     for(const [index,source] of reference.sources.entries()){await disclose('source-record-'+index);const exact=await evaluate(cdp,`JSON.parse(document.querySelector('#source-record-${index} pre').textContent)`);check(sameState(exact,source),'existing reference source record changed');check(details.sources.includes(source.title),'existing reference source title not disclosed');}
