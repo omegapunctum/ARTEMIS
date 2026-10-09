@@ -110,13 +110,23 @@ try {
         if(!await evaluate(cdp,`window.__ARTEMIS_EXPLORER.state.selectedItemId===${JSON.stringify(pick.item)}`))throw Error('High-DPI native Region pick failed');
         await evaluate(cdp,"document.querySelector('#sources-disclosure summary').focus()");await key();
         const sources=await evaluate(cdp,"({open:document.getElementById('sources-disclosure').open,text:document.getElementById('selection-sources').textContent})");if(!sources.open||!sources.text.length)throw Error('High-DPI keyboard sources failed');
+        // Readable labels may change; the actually disclosed native records must not.
+        // The baseline has inline JSON; current technical records require native disclosure.
+        const sourceDetails=await evaluate(cdp,"[...document.querySelectorAll('#selection-sources details')].map(n=>n.id)");
+        for(const id of sourceDetails) {
+          await evaluate(cdp,`(()=>{const n=document.getElementById(${JSON.stringify(id)}),s=n?.querySelector('summary');if(!s?.checkVisibility({checkVisibilityCSS:true}))throw Error('High-DPI technical source summary hidden');s.focus();if(document.activeElement!==s)throw Error('High-DPI technical source focus failed');})()`);await key();
+          if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))throw Error('High-DPI keyboard technical source failed');
+        }
+        const sourceProof=await evaluate(cdp,`(()=>{const r=window.__ARTEMIS_EXPLORER,record=r.bundle.roman.knowledge.records.find(n=>n.item_id===r.state.selectedItemId),expected=[...(record?.sources||[]),r.bundle.roman.sourceManifest],actual=[...document.querySelectorAll('#selection-sources pre')].map(n=>JSON.parse(n.textContent));if(JSON.stringify(actual)!==JSON.stringify(expected))throw Error('High-DPI disclosed source records differ from native input');return {records:actual,text:document.getElementById('selection-sources').textContent};})()`);
         await evaluate(cdp,"document.getElementById('close-details').click()");
         const drag=await evaluate(cdp,`(()=>{const c=window.__perfMap.getCanvas(),b=c.getBoundingClientRect();for(let y=b.top+20;y<b.bottom-20;y+=20)for(let x=b.left+20;x<b.right-70;x+=20)if(document.elementFromPoint(x,y)===c&&document.elementFromPoint(x+50,y)===c)return {x,y,center:window.__perfMap.getCenter().toArray()};throw Error('No drag area')})()`);
         await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:drag.x,y:drag.y});await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',buttons:1,clickCount:1,x:drag.x,y:drag.y});for(let i=1;i<=5;i++)await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',button:'left',buttons:1,x:drag.x+i*10,y:drag.y});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',buttons:0,clickCount:1,x:drag.x+50,y:drag.y});await settle();
         if(!await evaluate(cdp,`JSON.stringify(window.__perfMap.getCenter().toArray())!==${JSON.stringify(JSON.stringify(drag.center))}&&window.__perfMap===window.__ARTEMIS_EXPLORER.map&&performance.timeOrigin===window.__perfOrigin`))throw Error('High-DPI native drag/identity failed');
-        const sourceSha256=hash(sources.text), prior=report.highDpi.find(x=>x.view===view);if(prior&&(prior.sourceSha256!==sourceSha256||prior.pick.item!==pick.item))throw Error('High-DPI source/native identity changed');
+        const sourceSha256=hash(JSON.stringify(sourceProof.records)),sourceTextSha256=hash(sourceProof.text),prior=report.highDpi.find(x=>x.view===view);
+        if(prior&&prior.sourceSha256!==sourceSha256)throw Error('High-DPI disclosed source identity changed');
+        if(prior&&prior.pick.item!==pick.item)throw Error('High-DPI native Region identity changed');
         const ordered=[...movement].sort((a,b)=>a-b),movementSummary={medianMs:ordered[20],p95Ms:ordered[38],maxMs:ordered[39]};
-        report.highDpi.push({variant,view,geometry,movement,movementSummary,pick,sourceSha256,screenshot:{name,sha256:hash(png)},nativeDrag:true,keyboardSources:true});await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');
+        report.highDpi.push({variant,view,geometry,movement,movementSummary,pick,sourceSha256,sourceTextSha256,sourceRecordCount:sourceProof.records.length,screenshot:{name,sha256:hash(png)},nativeDrag:true,keyboardSources:true});await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');
       }
     }
   }
