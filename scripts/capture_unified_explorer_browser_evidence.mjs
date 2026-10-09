@@ -549,6 +549,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const bceExample=bce[0];await select(bceExample.item);await disclose('record-disclosure');await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');await capture('atemporal-raw-negative-dates-en-map');await click('#language-ru');await capture('atemporal-raw-negative-dates-ru-map');await click('#language-en');
   const selectedReference=(await snapshot()).state.selectedItemId;await layer('architecture',false);check((await snapshot()).state.selectedItemId===null,'hiding selected reference layer did not clear selection');await layer('architecture',true);await close();
   await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
+  const residence=expectedBundle.leonardo.lifePath.presences.find(p=>p.duration_status==='range_not_continuous_position');
+  check(residence,'existing residence interval missing');await select(residence.presence_item_id);
+  const residenceFacts=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+  check(/continuous day-by-day presence is not established/.test(residenceFacts)&&!residenceFacts.includes('range_not_continuous_position'),'residence interval retained technical status or inferred continuous presence');
+  await click('#language-ru');check(await evaluate(cdp,"document.getElementById('selection-facts').textContent.includes('непрерывное ежедневное присутствие не установлено')"),'RU residence limitation missing');await capture('hierarchy-residence-first-view-ru');await click('#language-en');
   const repeated=expectedBundle.leonardo.lifePath.presences.filter(p=>p.place_ref==='place-florence');check(repeated.length===2,'accepted repeated Florence episodes missing');
   await prepareNativeMapSurface();
   await evaluate(cdp,`(() => {const n=document.querySelector('.workspace-place-marker[data-place-ref="place-florence"]');if(!n?.checkVisibility({checkVisibilityCSS:true}))throw new Error('Florence Place anchor hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Florence anchor cannot receive focus');})()`);
