@@ -33,7 +33,7 @@ function argumentsFor(argv) {
 const sameState=(left,right)=>JSON.stringify(left)===JSON.stringify(right);
 // Ownership routing describes visible mobile UI only; helpers still dispatch
 // native input and never make hidden controls visible or mutate canonical state.
-const mobileControlOwner = selector => /^#(?:view-|language-)/.test(selector) ? 'settings' : /^#layer-/.test(selector) ? 'layers' : /^#(?:record-|clear-search|search-)/.test(selector) ? 'records' : /^#(?:mode-|period-)/.test(selector) ? 'calendar' : null;
+const mobileControlOwner = selector => /^#(?:view-|language-)/.test(selector) ? 'settings' : /^#layer-/.test(selector) ? 'layers' : /^#(?:record-select|record-search|clear-search|search-hint|search-status)(?:$|[ >:])/.test(selector) ? 'records' : /^#(?:mode-|period-)/.test(selector) ? 'calendar' : null;
 const mobileYearControl = id => ({'time-start':'mobile-range-start','time-end':'mobile-range-end','cursor-year':'mobile-cursor-year'})[id] || null;
 function wheelKeys(value,min,max) {
   check(Number.isInteger(value)&&Number.isInteger(min)&&Number.isInteger(max)&&value>=min&&value<=max,'native wheel target outside exposed bounds');
