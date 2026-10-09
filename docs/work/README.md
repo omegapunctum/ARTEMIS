@@ -2,7 +2,7 @@
 
 ## Pre-merge audit continuation — 2026-10-09
 
-- `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — bounded REVIEW correction of the Cesena card: unchanged original context explicitly qualified as unverified in EN/RU. Local implementation and verification are in progress; native new-revision evidence and distinct final review remain pending. The owner has paused merge. Broader audit findings are recommendations, not an automatic implementation sequence.
+- `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — bounded REVIEW correction of the Cesena card: unchanged original context explicitly qualified as unverified in EN/RU. Local implementation passes 35 owned tests and preserves the exact public bundle. Independent code conformity accepted on `fe79bea`; native new-revision evidence, remote CI and delivery remain pending. The owner has paused merge. Broader audit findings are recommendations, not an automatic implementation sequence.
 
 ## Owner-directed information hierarchy — 2026-10-09
 
