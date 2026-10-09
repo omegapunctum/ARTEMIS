@@ -31,3 +31,5 @@ This is the minimum useful follow-up to evaluate whether contextual boundaries h
 ## Verification limits
 
 Verified: provider descriptions and stated licenses; comparison with existing repository source audit and shared runtime calendar. Not verified: full dataset bytes/current release hash, complete polity coverage, date/geometry correctness, feature-level OHM licenses or historical acceptance. No live source queries or imported geometry were added to visitor sessions.
+
+Independent verdict: `ACCEPT_RESEARCH_COMPARISON` by `/root/hierarchy_review`, after checking the cited primary-provider descriptions and licenses directly. This accepts the bounded comparison, not source intake or historical truth.
