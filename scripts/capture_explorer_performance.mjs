@@ -68,8 +68,9 @@ try {
     if(await evaluate(cdp,"!!document.getElementById('open-details')")) {
       const before=await evaluate(cdp,"JSON.stringify({state:window.__ARTEMIS_EXPLORER.state,url:location.href})");
       await evaluate(cdp,"(()=>{const n=document.getElementById('open-details');if(!n.checkVisibility({checkVisibilityCSS:true}))throw Error('Compact details trigger hidden');n.focus();if(document.activeElement!==n)throw Error('Compact details focus failed');})()");
-      await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+      await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,text:'\r',unmodifiedText:'\r'});
       await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+      if(!await evaluate(cdp,"!document.getElementById('inspector').hidden && document.getElementById('selection-title').checkVisibility({checkVisibilityCSS:true})"))throw Error('Native Enter did not open compact Details');
       if(before!==await evaluate(cdp,"JSON.stringify({state:window.__ARTEMIS_EXPLORER.state,url:location.href})"))throw Error('Details transition changed canonical state');
     }
   }
