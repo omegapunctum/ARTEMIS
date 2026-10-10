@@ -131,7 +131,7 @@ def cesena_amendment_provenance() -> dict[str, Any]:
         raise GateDInputError("Cesena amendment must match the exact authorized shape and values")
     return {
         **amendment,
-        "path": str(CESENA_AMENDMENT_PATH.relative_to(ROOT)),
+        "path": CESENA_AMENDMENT_PATH.relative_to(ROOT).as_posix(),
         "sha256": hashlib.sha256(CESENA_AMENDMENT_PATH.read_bytes()).hexdigest(),
         "base_reviewed_content_digest": _load(DECISION_PATH)["reviewed_content_digest"],
         "historical_review_reaccepted": False,

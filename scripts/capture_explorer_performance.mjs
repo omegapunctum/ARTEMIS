@@ -64,6 +64,15 @@ try {
     throw Error('Map readiness timeout');
   }
   async function navigate(url){const prior=await evaluate(cdp,'performance.timeOrigin');await cdp.send('Page.navigate',{url});await ready(prior);return evaluate(cdp,"({readyObservedMs:performance.now(),resources:performance.getEntriesByType('resource').map(x=>({name:x.name,duration:x.duration,transferSize:x.transferSize,encodedBodySize:x.encodedBodySize,decodedBodySize:x.decodedBodySize}))})");}
+  async function openCompactDetails() {
+    if(await evaluate(cdp,"!!document.getElementById('open-details')")) {
+      const before=await evaluate(cdp,"JSON.stringify({state:window.__ARTEMIS_EXPLORER.state,url:location.href})");
+      await evaluate(cdp,"(()=>{const n=document.getElementById('open-details');if(!n.checkVisibility({checkVisibilityCSS:true}))throw Error('Compact details trigger hidden');n.focus();if(document.activeElement!==n)throw Error('Compact details focus failed');})()");
+      await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+      await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+      if(before!==await evaluate(cdp,"JSON.stringify({state:window.__ARTEMIS_EXPLORER.state,url:location.href})"))throw Error('Details transition changed canonical state');
+    }
+  }
   for(let repetition=0;repetition<(args.phase==='high-dpi'?0:3);repetition++)for(const variant of repetition%2?['current','baseline']:['baseline','current']){
     await cdp.send('Network.clearBrowserCache');
     const url=`${base}/${variant}/globe/`,cold=await navigate(url),warm=await navigate(url);
@@ -76,6 +85,7 @@ try {
     const selectionBefore=await metrics();
     const selection=await evaluate(cdp,`(()=>{const s=document.getElementById('record-select'),r=window.__ARTEMIS_EXPLORER.visibleItems.find(x=>x.kind==='region');if(!r)throw Error('Region missing');const t=performance.now();s.value=r.item_id;s.dispatchEvent(new Event('change',{bubbles:true}));return {handlerMs:performance.now()-t,rawTextChars:document.getElementById('selection-input').textContent.length,collapsed:!document.getElementById('input-disclosure').open}})()`);
     const selectionMetrics=diff(selectionBefore,await metrics());
+    await openCompactDetails();
     await evaluate(cdp,"document.querySelector('#input-disclosure summary').focus()");
     await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:' ',code:'Space',windowsVirtualKeyCode:32});
     await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:' ',code:'Space',windowsVirtualKeyCode:32});
@@ -103,11 +113,12 @@ try {
         await settle();
         const place=await evaluate(cdp,`(()=>{const r=window.__ARTEMIS_EXPLORER,n=[...document.querySelectorAll('.workspace-place-marker')].find(n=>n.querySelector('.place-name')?.textContent==='Florence')||document.querySelector('.workspace-place-marker');n.focus();return {place:n.dataset.placeRef}})()`);await key();await settle();
         const geometry=await evaluate(cdp,`(async()=>{const r=window.__ARTEMIS_EXPLORER,m=r.map,c=m.getCanvas(),b=c.getBoundingClientRect(),n=document.querySelector('.workspace-place-marker[aria-pressed="true"]');if(!n)throw Error('No selected Place');const f=(await m.getSource('workspace-features').getData()).features.find(f=>f.properties.place_ref===n.dataset.placeRef),p=m.project(f.geometry.coordinates),nb=n.getBoundingClientRect(),hits=m.queryRenderedFeatures(p,{layers:['workspace-points']});return {dpr:devicePixelRatio,pixelRatio:m.getPixelRatio(),width:c.width,height:c.height,cssWidth:b.width,cssHeight:b.height,registry:r.registry.length,selected:r.state.selectedItemId,alignment:Math.hypot(nb.left+nb.width/2-b.left-p.x,nb.top+nb.height/2-b.top-p.y),nativeSelected:hits.some(h=>h.properties.place_ref===n.dataset.placeRef&&h.state.selected),preserved:m===window.__perfMap&&performance.timeOrigin===window.__perfOrigin}})()`,true);
-        if(geometry.pixelRatio!==(variant==='baseline'?3:2)||geometry.registry!==report.expectedRegistryCount||Math.abs(geometry.width-geometry.cssWidth*geometry.pixelRatio)>1||Math.abs(geometry.height-geometry.cssHeight*geometry.pixelRatio)>1||!geometry.preserved||geometry.alignment>2||!geometry.nativeSelected)throw Error('High-DPI pixel ratio/Place/identity invariant failed '+JSON.stringify(geometry));
+        if(geometry.pixelRatio!==(variant==='baseline'?3:1.5)||geometry.registry!==report.expectedRegistryCount||Math.abs(geometry.width-geometry.cssWidth*geometry.pixelRatio)>1||Math.abs(geometry.height-geometry.cssHeight*geometry.pixelRatio)>1||!geometry.preserved||geometry.alignment>2||!geometry.nativeSelected)throw Error('High-DPI pixel ratio/Place/identity invariant failed '+JSON.stringify(geometry));
         const png=Buffer.from((await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false})).data,'base64'),name=`${variant}-${view}-dpr3.png`;await writeFile(join(output,name),png);
         await evaluate(cdp,"document.getElementById('close-details').click();document.getElementById('period-roman').click();window.__perfMap.jumpTo({center:[12,40],zoom:2,bearing:0,pitch:0});void 0");await settle();
         const pick=await evaluate(cdp,`(()=>{const r=window.__ARTEMIS_EXPLORER,c=r.map.getCanvas(),b=c.getBoundingClientRect();for(let y=b.top+10;y<b.bottom-10;y+=10)for(let x=b.left+10;x<b.right-10;x+=10){if(document.elementFromPoint(x,y)!==c)continue;const h=r.map.queryRenderedFeatures([x-b.left,y-b.top],{layers:['workspace-regions']})[0];if(h)return {x,y,item:h.properties.item_id}}throw Error('No unobstructed Region pixel')})()`);await click(pick);await settle();
         if(!await evaluate(cdp,`window.__ARTEMIS_EXPLORER.state.selectedItemId===${JSON.stringify(pick.item)}`))throw Error('High-DPI native Region pick failed');
+    await openCompactDetails();
         await evaluate(cdp,"document.querySelector('#sources-disclosure summary').focus()");await key();
         const sources=await evaluate(cdp,"({open:document.getElementById('sources-disclosure').open,text:document.getElementById('selection-sources').textContent})");if(!sources.open||!sources.text.length)throw Error('High-DPI keyboard sources failed');
         // Readable labels may change; the actually disclosed native records must not.

@@ -2,7 +2,9 @@
 import copy
 import hashlib
 import json
+import shutil
 import subprocess
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
@@ -15,6 +17,31 @@ def test_shared_query_url_history_and_native_ui_behavior(bundle, tmp_path):
     bundle_path = tmp_path / "bundle.json"
     bundle_path.write_bytes(unified._bytes(bundle))
     subprocess.run(["node", "tests/unified_explorer_behavior.cjs", str(bundle_path)], cwd=unified.ROOT, check=True)
+    subprocess.run(["node", "tests/compact_selection_behavior.cjs", str(bundle_path)], cwd=unified.ROOT, check=True)
+
+
+def test_full_startup_reaches_map_and_reports_failures(bundle, tmp_path):
+    class TreeParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.root = {"tag": "document", "attrs": {}, "children": []}
+            self.stack = [self.root]
+
+        def handle_starttag(self, tag, attrs):
+            node = {"tag": tag, "attrs": dict(attrs), "children": []}
+            self.stack[-1]["children"].append(node)
+            if tag not in {"meta", "link", "input", "br", "img"}:
+                self.stack.append(node)
+
+        def handle_endtag(self, tag):
+            if self.stack[-1]["tag"] == tag:
+                self.stack.pop()
+
+    parser = TreeParser()
+    parser.feed((unified.TEMPLATE_DIR / "index.html.template").read_text())
+    fixture = tmp_path / "startup.json"
+    fixture.write_text(json.dumps({"tree": parser.root, "bundle": bundle}))
+    subprocess.run(["node", "tests/explorer_startup_behavior.cjs", str(fixture)], cwd=unified.ROOT, check=True)
 
 
 @pytest.fixture(scope="module")
@@ -227,7 +254,9 @@ def test_entry_profiles_are_only_initial_presentation_and_share_bundle_bytes(tmp
     templates.mkdir()
     (templates / "index.html.template").write_text('<body data-entry-profile="{{ENTRY_PROFILE}}"></body>')
     (templates / "runtime.js").write_text("// Runtime is owned and tested separately.\n")
+    (templates / "desktop.js").write_text("// Desktop composition.\n")
     (templates / "mobile.js").write_text("// Mobile composition is owned and tested separately.\n")
+    (templates / "startup.js").write_text("// Startup status.\n")
     (templates / "style.css").write_text("body { color: white; }\n")
     monkeypatch.setattr(unified, "TEMPLATE_DIR", templates)
     metadata = [unified.build_unified_explorer(tmp_path / profile, entry_profile=profile) for profile in ("leonardo", "roman")]
@@ -271,6 +300,24 @@ def test_preload_and_cache_urls_bind_actual_resource_bytes(tmp_path):
         assert f"./{filename}?v={digest}" in html
     assert f'data-bundle-version="{hashlib.sha256((output / "unified-bundle.json").read_bytes()).hexdigest()}"' in html
     assert f'data-context-version="{hashlib.sha256((output / "earth-context.geojson").read_bytes()).hexdigest()}"' in html
+    assert 'https://unpkg.com' not in html
+    for filename in ("startup.js", "engine/maplibre-gl.js", "engine/maplibre-gl.css"):
+        digest = hashlib.sha256((output / filename).read_bytes()).hexdigest()
+        assert f"./{filename}?v={digest}" in html
+    assert (output / "engine/LICENSE.txt").read_bytes() == (unified.ENGINE_DIR / "LICENSE.txt").read_bytes()
+
+
+def test_corrupt_engine_does_not_replace_existing_build(tmp_path, monkeypatch):
+    engine = tmp_path / "engine"
+    shutil.copytree(unified.ENGINE_DIR, engine)
+    (engine / "maplibre-gl.js").write_bytes(b"corrupt distribution")
+    monkeypatch.setattr(unified, "ENGINE_DIR", engine)
+    output = tmp_path / "published"
+    output.mkdir()
+    (output / "keep.txt").write_text("existing build")
+    with pytest.raises(unified.UnifiedBuildError, match="local engine bytes differ"):
+        unified.build_unified_explorer(output)
+    assert list(output.iterdir()) == [output / "keep.txt"]
 
 
 def test_bad_input_does_not_partially_replace_published_build(tmp_path, monkeypatch):

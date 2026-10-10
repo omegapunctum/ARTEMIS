@@ -1,5 +1,13 @@
 # ARTEMIS working documents registry
 
+## Owner-directed compact selection — 2026-10-10
+
+- `2026-10-10_COMPACT_SELECTION_v1.md` — bounded REVIEW correction: compact selection card → explicit details, denser desktop calendar/panels, single range track and bounded rendering workload changes. Owner accepted the standalone preview on 2026-10-10 with a rendered globe/compact-panel/range screenshot; remaining native interaction/mobile checks, cutoff diagnosis and measured performance remain unverified. The owner authorized merge, lifting the task-specific hold; independent code conformity is accepted pending required CI. External delivery is blocked by automatic approval review of documentation disclosure even after image removal. No PR head update or merge; see the task document and prepared text/code-only package.
+
+## Owner-directed desktop workspace — 2026-10-09
+
+- `2026-10-09_DESKTOP_WORKSPACE_v1.md` — desktop implementation baseline on `feat/desktop-workspace-20261009`: compact collapsible record/layer and inspector panels with a shared full-width timeline. Owned local checks pass; the cloud-browser attempt was blocked by disabled WebGL. Current owner-rendered preview acceptance and remaining checks are owned by the 2026-10-10 compact-selection task and root `design-qa.md`. No merge or publication acceptance is implied.
+
 ## Pre-merge audit continuation — 2026-10-09
 
 - `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — bounded REVIEW correction of the Cesena card: unchanged original context explicitly qualified as unverified in EN/RU. Local implementation passes 35 owned tests and preserves the exact public bundle. Independent code conformity accepted on `fe79bea`; native new-revision evidence, remote CI and delivery remain pending. The owner has paused merge. Broader audit findings are recommendations, not an automatic implementation sequence.

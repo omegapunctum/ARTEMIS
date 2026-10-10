@@ -23,6 +23,22 @@
     let pending = false, latest;
     return (...args) => { latest = args; if (pending) return; pending = true; requestFrame(() => { pending = false; callback(...latest); }); };
   }
+  // Selection presentation is local; it never enters canonical WorkspaceState.
+  function selectionPresentation() {
+    let itemId = null, details = false;
+    return {
+      sync(id) { if (id !== itemId) { itemId = id; details = false; } return {itemId,details}; },
+      open() { if (itemId) details = true; },
+      summary() { details = false; }
+    };
+  }
+  function summaryAnchor(bundle,item) {
+    if (item.kind === 'presence') return placeGroups(bundle,[item])[0]?.coordinates || null;
+    if (item.kind === 'reference' || item.kind === 'catalog_reference') {
+      return (item.kind === 'reference' ? bundle.architecture : bundle.catalog).references.find(row => row.item_id === item.item_id)?.geometry.coordinates || null;
+    }
+    return null; // A region has no invented representative historical point.
+  }
   function defaults(profile = 'globe') { return {mode:'range',startYear:profile === 'region' ? 91 : 1452,endYear:profile === 'region' ? 105 : 1519,cursorYear:profile === 'region' ? 100 : 1519,traceOriginYear:1452,layers:['leonardo','roman','catalog'],selectedItemId:null,language:'en',presentationView:'globe',camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}; }
   function query(bundle, state) {
     const overlap = (interval, start, end) => interval && interval.start <= end && interval.end >= start;
@@ -156,13 +172,15 @@
       return [item.label,item.qid,...Object.values(item.labels || {}),...aliases,original?.name_en,original?.name_ru].some(value => searchKey(value).includes(needle));
     });
   }
-  const helpers = Object.freeze({recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle});
+  const helpers = Object.freeze({recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
   const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
   window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get placeGroups(){return runtime.bundle ? placeGroups(runtime.bundle,runtime.visibleItems) : [];},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
-  let renderedSelection = null, restoringCamera = false, recordSignature = '', mobile = null;
+  let renderedSelection = null, restoringCamera = false, recordSignature = '', mobile = null, desktop = null;
+  const selectionUI = selectionPresentation();
+  let selectionPopup = null, summarySignature = '', clickAnchor = null;
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
   const pendingJson = new WeakMap(), boundDisclosures = new WeakSet();
   function inputJson(host,value) {
@@ -177,7 +195,12 @@
     }
   }
   function safeLink(value) { try { const url = new URL(value,location.href); return ['https:','http:'].includes(url.protocol) ? url.href : null; } catch (_) { return null; } }
-  function layout() { const style = document.documentElement.style; style.setProperty('--header-bottom',`${Math.ceil(byId('workspace-header').getBoundingClientRect().bottom)}px`); style.setProperty('--dock-height',`${Math.ceil(byId('time-dock').getBoundingClientRect().height)}px`); style.setProperty('--attribution-height',`${Math.ceil(byId('attribution').getBoundingClientRect().height)}px`); }
+  function layout() {
+    paintRange();
+    const style = document.documentElement.style;
+    const values = {'--header-bottom':Math.ceil(byId('workspace-header').getBoundingClientRect().bottom),'--dock-height':Math.ceil(byId('time-dock').getBoundingClientRect().height),'--attribution-height':Math.ceil(byId('attribution').getBoundingClientRect().height)};
+    for (const [key,value] of Object.entries(values)) if (style.getPropertyValue(key) !== `${value}px`) style.setProperty(key,`${value}px`);
+  }
   function history(mode = 'push') { window.history[mode === 'replace' ? 'replaceState' : 'pushState']({artemisExplorer:true},'',stateUrl(location.href,runtime.state,runtime.bundle)); }
   function sourceRecord(item) {
     const bundle = runtime.bundle;
@@ -202,11 +225,78 @@
       button.addEventListener('click',() => selectItem(presence.presence_item_id)); host.append(button);
     }
   }
+  function clearSummary() {
+    selectionPopup?.remove(); selectionPopup = null; summarySignature = '';
+    byId('selection-summary').replaceChildren(); byId('selection-summary').hidden = true;
+  }
+  function selectionTitle(selected,input) { return selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language); }
+  function selectionScope(selected) { return t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'); }
+  function renderSummary(selected) {
+    if (!runtime.ready || !selected) { clearSummary(); return; }
+    const point = summaryAnchor(runtime.bundle,selected) || (clickAnchor?.itemId === selected.item_id ? clickAnchor.coordinates : null);
+    const projected = point ? runtime.map.project(point) : null, canvas = runtime.map.getCanvas();
+    const headerBottom = byId('workspace-header').getBoundingClientRect().bottom, dockTop = byId('time-dock').getBoundingClientRect().top;
+    const center = runtime.map.getCenter(), radians = value => value*Math.PI/180;
+    const facing = !point || runtime.state.presentationView !== 'globe' || Math.sin(radians(center.lat))*Math.sin(radians(point[1])) + Math.cos(radians(center.lat))*Math.cos(radians(point[1]))*Math.cos(radians(center.lng-point[0])) > 0;
+    const room = projected ? Math.max(projected.y-headerBottom-30,dockTop-projected.y-30) : 0;
+    const anchored = projected && room >= 160 && facing && projected.x >= 12 && projected.x <= canvas.clientWidth-12 && projected.y >= headerBottom+20 && projected.y <= dockTop-20;
+    const signature = `${selected.item_id}|${runtime.state.language}|${JSON.stringify(clickAnchor)}|${Boolean(anchored)}|${Math.round(projected?.x || 0)}|${Math.round(projected?.y || 0)}|${canvas.clientWidth}|${canvas.clientHeight}`;
+    if (summarySignature === signature) return;
+    const focusId = document.activeElement?.closest('.selection-card') ? document.activeElement.id : null;
+    clearSummary(); summarySignature = signature;
+    const ru = runtime.state.language === 'ru', input = sourceRecord(selected), card = node('article','','selection-card');
+    card.id = 'selection-card'; card.setAttribute('aria-label',ru ? 'Выбранная запись' : 'Selected record');
+    const heading = node('div','','selection-card-heading'), title = node('h2',selectionTitle(selected,input)), close = node('button','×');
+    title.id = 'summary-title'; close.id = 'close-summary'; close.type = 'button'; close.setAttribute('aria-label',ru ? 'Снять выбор' : 'Clear selection');
+    close.addEventListener('click',() => { selectItem(null); focusSelectionOrigin(); }); heading.append(title,close); card.append(heading);
+    card.append(node('p',`${t(selected.layer_id)} · ${selected.kind === 'presence' ? input.presence.temporal.source_native || (input.presence.temporal.start === input.presence.temporal.end ? input.presence.temporal.start : `${input.presence.temporal.start}–${input.presence.temporal.end}`) : selected.interval ? `${selected.interval.start}–${selected.interval.end} ${ru ? 'н. э.' : 'CE'}` : t('atemporal')}`,'summary-meta'));
+    card.append(node('p',selectionScope(selected),'summary-scope'));
+    if (selected.kind === 'catalog_reference') card.append(node('p',t('catalogUnverified'),'summary-scope'));
+    if (selected.kind === 'presence') {
+      const key = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
+      card.append(node('p',key ? t(key) : input.presence.duration_status,'summary-scope'));
+      if (input.presence.event_ref === 'event-leonardo-cesena-survey') { card.append(node('p',t('cesenaCandidateContext'),'summary-scope')); card.append(node('p',input.presence.short_description || '')); }
+    }
+    const details = node('button',ru ? 'Подробнее' : 'Details'); details.id = 'open-details'; details.type = 'button'; details.setAttribute('aria-controls','inspector');
+    details.addEventListener('click',() => { selectionUI.open(); renderInspector(); byId('selection-title').focus({preventScroll:true}); }); card.append(details);
+    if (anchored) {
+      // Keep the compact card below the header / above the calendar. Side
+      // anchors keep edge points usable without panning the user's camera.
+      const vertical = projected.y-headerBottom < 340 && dockTop-projected.y > projected.y-headerBottom ? 'top' : 'bottom';
+      card.style.maxHeight = `${Math.min(340,room)}px`;
+      const side = projected.x < 170 ? '-left' : projected.x > canvas.clientWidth-170 ? '-right' : '';
+      selectionPopup = new maplibregl.Popup({anchor:vertical+side,closeButton:false,closeOnClick:false,focusAfterOpen:false,offset:18,maxWidth:'300px',className:'workspace-selection-popup',locationOccludedOpacity:0});
+      selectionPopup.setLngLat(point).setDOMContent(card).addTo(runtime.map);
+      const popup = selectionPopup;
+      requestAnimationFrame(() => {
+        if (selectionPopup !== popup || runtime.map.isMoving()) return;
+        const element = popup.getElement(), box = element.getBoundingClientRect();
+        // Native globe occlusion is more accurate than the quick hemisphere
+        // hint above. A hidden/clipped popup must still offer usable Details.
+        if (getComputedStyle(element).opacity === '0' || box.top < headerBottom+4 || box.bottom > dockTop-4 || box.left < 4 || box.right > canvas.clientWidth-4) {
+          const focused = card.contains(document.activeElement) ? document.activeElement : null;
+          popup.remove(); selectionPopup = null;
+          byId('selection-summary').append(card); byId('selection-summary').hidden = false;
+          focused?.focus({preventScroll:true});
+        }
+      });
+    } else { byId('selection-summary').append(card); byId('selection-summary').hidden = false; }
+    if (focusId) document.getElementById(focusId)?.focus({preventScroll:true});
+  }
+  function focusSelectionOrigin() {
+    // The chooser may be hidden by the responsive panel; never focus hidden UI.
+    for (const id of ['record-select','records-toggle','mobile-records']) {
+      const target = byId(id); if (!target.disabled && target.checkVisibility({checkVisibilityCSS:true})) { target.focus({preventScroll:true}); return; }
+    }
+  }
   function renderInspector() {
     const selected = runtime.registry.get(runtime.state.selectedItemId), inspector = byId('inspector');
     mobile?.selectionChanged(selected?.item_id || null);
-    if (!selected) { inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
-    inspector.hidden = false;
+    desktop?.selectionChanged(selected?.item_id || null);
+    const presentation = selectionUI.sync(selected?.item_id || null);
+    if (!selected) { clearSummary(); inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
+    if (!presentation.details) { inspector.hidden = true; renderSummary(selected); return; }
+    clearSummary(); inspector.hidden = false;
     // Layer/time/projection changes that retain this item preserve native disclosures.
     if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); renderEpisodeChoices(selected); return; }
     renderedSelection = selected.item_id; inspector.scrollTop = 0;
@@ -294,11 +384,19 @@
     if (href) { context.textContent = `${t('wikipedia')} (${language})`; context.href = href; }
   }
   function renderInspectorLanguage(selected) {
-    const input = sourceRecord(selected); text('selection-title',selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language));
-    text('selection-scope',t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'));
+    const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
+    text('selection-scope',selectionScope(selected));
+    text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
     text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
     renderRecordDetails(selected,input);
     if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
+  }
+  function paintRange() {
+    const start = Number(byId('range-start-handle').value), end = Number(byId('range-end-handle').value), track = byId('range-start-handle').parentElement;
+    track.style.setProperty('--range-start',`${(Math.min(start,end)-MIN)/(MAX-MIN)*100}%`);
+    track.style.setProperty('--range-end',`${(Math.max(start,end)-MIN)/(MAX-MIN)*100}%`);
+    track.dataset.overlap = String(start === end);
+    track.dataset.rangeReady = 'true';
   }
   function renderControls() {
     const state = runtime.state; document.documentElement.lang = state.language;
@@ -326,7 +424,7 @@
     document.documentElement.dataset.artemisLanguage = state.language; document.documentElement.dataset.artemisPresentationView = state.presentationView;
     document.documentElement.dataset.artemisSelectedItem = state.selectedItemId || ''; document.documentElement.dataset.artemisTimeCursor = String(state.cursorYear);
     const attributionContext = byId('attribution-context'); if (attributionContext) attributionContext.textContent = state.language === 'ru' ? 'Современный опорный контекст; не историческая поверхность.' : words.en.context;
-    mobile?.render(); layout();
+    mobile?.render(); desktop?.render(); paintRange(); layout();
   }
   function applyState(input, options = {}) {
     const previous = runtime.state, next = normalizeState(runtime.bundle,{...previous,...input},previous);
@@ -345,7 +443,10 @@
     renderControls(); renderInspector(); if (options.history !== false) history(options.history || 'push');
     return runtime.state;
   }
-  function selectItem(itemId) { return applyState({selectedItemId:itemId}); }
+  function selectItem(itemId, coordinates = null) {
+    clickAnchor = coordinates && itemId ? {itemId,coordinates} : null;
+    selectionUI.summary(); return applyState({selectedItemId:itemId});
+  }
   function layoutPlaceLabels() {
     if (!runtime.ready) return;
     const canvas = runtime.map.getCanvas(), occupied = [];
@@ -364,7 +465,7 @@
       if (placement) occupied.push({left:point.x+dx,right:point.x+dx+width,top:point.y+dy,bottom:point.y+dy+height});
     }
     for (const {label,suppressed,left,top} of placements) { if (label.classList.contains('is-suppressed') !== suppressed) label.classList.toggle('is-suppressed',suppressed); if (label.style.left !== left) label.style.left = left; if (label.style.top !== top) label.style.top = top; }
-    for (const {marker,coordinates} of runtime.chronologyMarkers.values()) { const from = runtime.map.project(coordinates[0]), to = runtime.map.project(coordinates[1]); marker.getElement().firstChild.style.transform = `rotate(${Math.atan2(to.y-from.y,to.x-from.x)}rad)`; }
+    for (const {marker,coordinates} of runtime.chronologyMarkers.values()) { const from = runtime.map.project(coordinates[0]), to = runtime.map.project(coordinates[1]); const glyph = marker.getElement().firstChild, rotation = `rotate(${Math.atan2(to.y-from.y,to.x-from.x)}rad)`; if (glyph.style.transform !== rotation) glyph.style.transform = rotation; }
   }
   function updatePlacePresentation() {
     const groups = placeGroups(runtime.bundle,runtime.visibleItems), emphasis = presentationEmphasis(runtime.bundle,runtime.visibleItems,runtime.state), visiblePlaces = new Set(groups.map(group => group.place_ref));
@@ -406,10 +507,12 @@
   }
   function bindControls() {
     mobile = window.ARTEMIS_MOBILE?.mount({runtime,applyState,layout,t}) || null;
+    desktop = window.ARTEMIS_DESKTOP?.mount({runtime,layout}) || null;
     for (const layer of LAYERS) byId(`layer-${layer}`).addEventListener('change',() => applyState({layers:LAYERS.filter(value => byId(`layer-${value}`).checked)}));
     for (const language of ['en','ru']) byId(`language-${language}`).addEventListener('click',() => applyState({language}));
     for (const presentationView of ['globe','map']) byId(`view-${presentationView}`).addEventListener('click',() => { if (presentationView !== runtime.state.presentationView) applyState({presentationView}); });
     for (const mode of ['range','scrub']) byId(`mode-${mode}`).addEventListener('click',() => applyState({mode}));
+    for (const id of ['range-start-handle','range-end-handle']) byId(id).addEventListener('input',paintRange);
     byId('time-start').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear)}));
     byId('time-end').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear)}));
     byId('range-start-handle').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear)}));
@@ -419,29 +522,45 @@
     byId('record-search').addEventListener('input',event => { runtime.search = event.target.value; renderControls(); });
     byId('clear-search').addEventListener('click',() => { runtime.search = ''; byId('record-search').value = ''; renderControls(); byId('record-search').focus(); });
     byId('record-select').addEventListener('change',event => selectItem(event.target.value));
-    byId('close-details').addEventListener('click',() => selectItem(null)); byId('focus-selection').addEventListener('click',focusSelection);
-    document.addEventListener('keydown',event => { if (event.key === 'Escape' && runtime.state.selectedItemId) { selectItem(null); byId('record-select').focus(); } });
+    byId('back-to-summary').addEventListener('click',() => { selectionUI.summary(); renderInspector(); byId('open-details')?.focus({preventScroll:true}); });
+    byId('close-details').addEventListener('click',() => { selectItem(null); focusSelectionOrigin(); }); byId('focus-selection').addEventListener('click',focusSelection);
+    document.addEventListener('keydown',event => { if (event.key === 'Escape' && runtime.state.selectedItemId) { selectItem(null); focusSelectionOrigin(); } });
     window.addEventListener('popstate',() => applyState(parseUrl(runtime.bundle,location.href,document.documentElement.dataset.entryProfile),{history:false}));
     const observer = new ResizeObserver(layout); for (const id of ['workspace-header','time-dock','attribution']) observer.observe(byId(id));
     window.addEventListener('resize',layout);
   }
   async function load(path) {
+    const embedded = byId(`embedded-${path.slice(2)}`);
+    if (embedded) {
+      const bytes = Uint8Array.from(atob(embedded.textContent.trim()),character => character.charCodeAt(0));
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
     const version = document.documentElement.dataset[path.includes('unified-bundle') ? 'bundleVersion' : 'contextVersion'];
     const reusable = path.includes('unified-bundle') || path.includes('earth-context');
     const url = reusable && version ? `${path}?v=${version}` : path;
-    const response = await fetch(url,{cache:reusable ? 'default' : 'no-cache'});
-    if (!response.ok) throw Error(`${path}: HTTP ${response.status}`); return response.json();
+    const controller = new AbortController(), timer = setTimeout(() => controller.abort(),15000);
+    try {
+      const response = await fetch(url,{cache:reusable ? 'default' : 'no-cache',signal:controller.signal});
+      if (!response.ok) throw Error(`${path}: HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      if (controller.signal.aborted) throw Error(`${path}: local data request timed out`);
+      throw error;
+    } finally {clearTimeout(timer);}
   }
   async function main() {
+    window.ARTEMIS_STARTUP?.phase('data');
     const [bundle,context,assets,meta] = await Promise.all(['./unified-bundle.json','./earth-context.geojson','./geospatial-assets.json','./build-meta.json'].map(load));
     runtime.bundle = freeze(bundle); runtime.registry = new Map(bundle.registry.map(item => [item.item_id,item])); runtime.meta = freeze(meta);
     runtime.state = freeze(parseUrl(bundle,location.href,document.documentElement.dataset.entryProfile)); runtime.visibleItems = query(bundle,runtime.state);
     runtime.query = state => query(runtime.bundle,state || runtime.state);
+    if (!window.ARTEMIS_MOBILE || !window.ARTEMIS_DESKTOP) throw Error('Required workspace controls could not be loaded (mobile.js / desktop.js).');
     bindControls(); renderControls(); renderInspector();
     if (!window.maplibregl) throw Error('Pinned MapLibre engine could not be loaded.');
-    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,2),canvasContextAttributes:{antialias:true}});
+    window.ARTEMIS_STARTUP?.phase('map');
+    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,1.5),canvasContextAttributes:{antialias:true}});
     runtime.map = map; map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
-    map.on('error',event => { console.error('ARTEMIS map error',event.error || event); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
+    map.on('error',event => { console.error('ARTEMIS map error',event.error || event); window.ARTEMIS_STARTUP?.fail(event.error?.message || String(event.error || event)); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
     map.on('load',() => {
       map.addSource('earth-context',{type:'geojson',data:context});
       map.addLayer({id:'earth-land',type:'fill',source:'earth-context',filter:['==',['get','semantic_role'],'present_day_context'],paint:{'fill-color':'#17334a','fill-outline-color':'#68a8c4'}});
@@ -452,19 +571,21 @@
       map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,'catalog_reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','catalog_reference','#c6d697','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
       runtime.ready = true;
       const scheduleLabels = frameThrottle(layoutPlaceLabels);
-      updatePlacePresentation(); map.on('move',scheduleLabels); map.on('resize',scheduleLabels); map.on('idle',scheduleLabels);
+      updatePlacePresentation(); map.on('movestart',() => byId('map').classList.add('is-moving'));
+      map.on('moveend',() => { byId('map').classList.remove('is-moving'); scheduleLabels(); const view = selectionUI.sync(runtime.state.selectedItemId); if (!view.details) renderSummary(runtime.registry.get(view.itemId)); });
+      map.on('resize',() => { scheduleLabels(); const view = selectionUI.sync(runtime.state.selectedItemId); if (!view.details) renderSummary(runtime.registry.get(view.itemId)); });
       const attribution = (assets.assets || []).filter(asset => asset.attribution).map(asset => asset.attribution).join(' · ');
       byId('attribution').replaceChildren(node('span',`${attribution || 'Natural Earth · public domain'} · Cliopatria CC-BY-4.0 · Wikidata CC0-1.0 · `)); const explanation = node('span',words.en.context); explanation.id = 'attribution-context'; byId('attribution').append(explanation);
-      renderControls(); history('replace');
-      map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id); } });
-      map.on('mousemove',frameThrottle(event => { const cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; if (map.getCanvas().style.cursor !== cursor) map.getCanvas().style.cursor = cursor; }));
+      renderControls(); renderInspector(); history('replace');
+      map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id,[event.lngLat.lng,event.lngLat.lat]); } });
+      map.on('mousemove',frameThrottle(event => { if (map.isMoving()) return; const cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; if (map.getCanvas().style.cursor !== cursor) map.getCanvas().style.cursor = cursor; }));
       map.on('moveend',() => {
         if (restoringCamera) return;
         const center = map.getCenter(), camera = {center:[center.lng,center.lat],zoom:map.getZoom(),pitch:map.getPitch(),bearing:map.getBearing()};
         if (JSON.stringify(camera) !== JSON.stringify(runtime.state.camera)) { runtime.state = freeze(normalizeState(bundle,{...runtime.state,camera},runtime.state)); history('push'); }
       });
-      map.once('idle',() => { document.documentElement.dataset.artemisRuntimeReady = 'true'; document.documentElement.dataset.artemisVisualReady = String(map.queryRenderedFeatures({layers:['earth-land']}).length > 0); layout(); });
+      map.once('idle',() => { document.documentElement.dataset.artemisRuntimeReady = 'true'; document.documentElement.dataset.artemisVisualReady = String(map.queryRenderedFeatures({layers:['earth-land']}).length > 0); layout(); window.ARTEMIS_STARTUP?.ready(); });
     });
   }
-  main().catch(error => { const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS Explorer could not start: ${error.message}`; console.error(error); });
+  main().catch(error => { window.ARTEMIS_STARTUP?.fail(error.message); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS Explorer could not start: ${error.message}`; console.error(error); });
 })();

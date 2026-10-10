@@ -189,3 +189,22 @@ assert.equal(reversed.startYear,100); assert.equal(reversed.endYear,1519);
 assert.equal(digest(),before); // Query, URL, selection and renderer construction never mutate input.
 assert(Object.isFrozen(bundle.architecture.references[0].raw_feature));
 console.log('Unified Explorer actual-bundle query, geometry, selection, URL/history and negative cases PASS');
+
+// Summary/details visibility is local and preserves canonical identity, URL and data.
+const presentation = h.selectionPresentation();
+const chosen = bundle.registry.find(row => row.kind === 'catalog_reference');
+assert.deepEqual(presentation.sync(chosen.item_id),{itemId:chosen.item_id,details:false});
+presentation.open(); assert.equal(presentation.sync(chosen.item_id).details,true);
+presentation.summary(); assert.equal(presentation.sync(chosen.item_id).details,false);
+presentation.open(); assert.equal(presentation.sync('another-item').details,false);
+assert.deepEqual(presentation.sync(null),{itemId:null,details:false});
+presentation.open(); assert.equal(presentation.sync(null).details,false);
+for (const item of bundle.registry) {
+  const anchor = h.summaryAnchor(bundle,item);
+  if (item.kind === 'region') assert.equal(anchor,null);
+  else {
+    const point = h.featuresFor(bundle,[item]).features.find(row => row.geometry.type === 'Point');
+    assert.deepEqual(anchor,point.geometry.coordinates);
+  }
+}
+assert.equal(digest(),before);

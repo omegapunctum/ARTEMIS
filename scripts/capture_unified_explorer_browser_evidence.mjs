@@ -143,7 +143,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches");}
   async function expose(selector) {
-    if(!await mobile())return;
+    const inInspector=await evaluate(cdp,`!!document.querySelector(${JSON.stringify(selector)})?.closest('#inspector')`);
+    if(inInspector&&await evaluate(cdp,"document.getElementById('inspector').hidden && !!document.getElementById('open-details')"))await click('#open-details');
+    if(!await mobile()) {
+      const owner=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});return {records:!!n?.closest('#desktop-records-body'),layers:!!n?.closest('#desktop-layer-body'),inspector:!!n?.closest('#inspector')&&!n?.closest('.drawer-header')};})()`);
+      if(owner.records&&await evaluate(cdp,"document.getElementById('desktop-records-body').hidden"))await click('#records-toggle');
+      if(owner.layers&&!await evaluate(cdp,"document.getElementById('desktop-layers').open"))await click('#desktop-layers summary');
+      if(owner.inspector&&await evaluate(cdp,"document.getElementById('inspector').dataset.desktopCollapsed==='true'"))await click('#inspector-toggle');
+      return;
+    }
     const owner=mobileControlOwner(selector);
     if(owner==='calendar') {if(!await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');}
     else if(owner&&await evaluate(cdp,'document.getElementById(\"workspace-header\").dataset.headerPanel')!==owner)await click('#mobile-'+owner);
@@ -182,6 +190,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await stable(id+'='+value);
   }
   async function layer(id,enabled) {if(await evaluate(cdp,`document.getElementById('layer-'+${JSON.stringify(id)}).checked`)!==enabled)await click('#layer-'+id,true);}
+  let compactFlowChecked=false;
   async function select(itemId) {
     async function available() {
       await expose('#record-select');
@@ -199,6 +208,23 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       const next=await evaluate(cdp,`(() => {const n=document.getElementById('record-select');return {target:[...n.options].findIndex(o=>o.value===${JSON.stringify(itemId)}),current:n.selectedIndex,count:n.options.length,value:n.value,selected:window.__ARTEMIS_EXPLORER.state.selectedItemId,panel:document.getElementById('workspace-header').dataset.headerPanel,active:document.activeElement?.id,url:location.href};})()`);
       check(next.target>=0&&Math.abs(next.target-next.current)<Math.abs(indices.target-before),'native record selector made no progress '+JSON.stringify({expected:itemId,before,...next}));
       indices=next;if(indices.current!==indices.target)indices=await available();
+    }
+    if(await evaluate(cdp,"document.getElementById('inspector').hidden")) {
+      const before=await snapshot();
+      check(await evaluate(cdp,"!!document.getElementById('open-details')"),'selection did not expose compact summary');
+      if(!compactFlowChecked)await capture('compact-record-first-click');
+      await click('#open-details');
+      const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.url===after.url,'opening details changed selection/camera/history');
+      check(!await evaluate(cdp,"!!document.getElementById('selection-card')"),'details left popup visible');
+      if(!compactFlowChecked) {
+        await click('#back-to-summary');
+        const back=await snapshot();
+        check(back.inspectorHidden&&sameState(after.state,back.state)&&sameState(after.camera,back.camera)&&after.url===back.url,'Back to card changed canonical state or kept inspector open');
+        const box=await evaluate(cdp,"(()=>{const n=document.getElementById('open-details');n.scrollIntoView({block:'nearest'});const b=n.getBoundingClientRect();return {visible:n.checkVisibility({checkVisibilityCSS:true}),hit:n.contains(document.elementFromPoint(b.x+b.width/2,b.y+b.height/2))};})()");
+        check(box.visible&&box.hit,'compact Details is obscured');
+        await click('#open-details');compactFlowChecked=true;
+      }
     }
     const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity '+JSON.stringify({expected:itemId,actual:state.state.selectedItemId,inspectorHidden:state.inspectorHidden,indices,url:state.url}));await stable('select '+itemId);
   }
@@ -224,7 +250,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
     check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`),'native disclosure failed '+id);
   }
-  async function close() {if(!await evaluate(cdp,"document.getElementById('inspector').hidden"))await click('#close-details');}
+  async function close() {if(!await evaluate(cdp,"document.getElementById('inspector').hidden"))await click('#close-details');else if(await evaluate(cdp,"!!document.getElementById('close-summary')"))await click('#close-summary');}
   async function membership(expected,reason) {
     await idle(reason);const current=await snapshot();
     const actual=Object.fromEntries(['leonardo','roman','architecture',...(Object.hasOwn(expected,'catalog')?['catalog']:[])].map(layer=>[layer,current.visible.filter(i=>i.layer===layer).length]));
@@ -306,7 +332,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const layout=await evaluate(cdp,`(() => {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
       const mobile=matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches;
-      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'];
+      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','records-toggle','view-globe','view-map','language-en','language-ru','time-dock',...(!document.getElementById('desktop-records-body').hidden?['record-search','clear-search','record-select',...(document.getElementById('desktop-layers').open?['layer-controls']:[])]:[])];
       for(const id of ids)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
       if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
@@ -424,6 +450,19 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(!initialCard.detailsOpen&&!initialCard.sourcesOpen&&!initialCard.metadataRendered,'catalog metadata was rendered before disclosure');
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(!initialCard.facts.includes(String(value)),'catalog technical number leaked into primary facts');
   await capture('hierarchy-catalog-first-view-en');
+  if(!await mobile()) {
+    const before=await snapshot();
+    for(const [toggle,target] of [['records-toggle','desktop-records-body'],['inspector-toggle','selection-facts']]) {
+      await click('#'+toggle);
+      check(!await evaluate(cdp,`document.getElementById(${JSON.stringify(target)}).checkVisibility({checkVisibilityCSS:true})`),'collapsed desktop panel still visible '+target);
+      check(await evaluate(cdp,'document.activeElement.id')===toggle,'desktop collapse lost focus');
+      const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&sameState(before.visible,after.visible)&&sameState(before.disclosures,after.disclosures)&&before.url===after.url,'desktop collapse changed canonical state');
+      await capture('desktop-collapsed-'+toggle);
+      await click('#'+toggle);
+      check(await evaluate(cdp,`document.getElementById(${JSON.stringify(target)}).checkVisibility({checkVisibilityCSS:true})`),'desktop panel did not reopen '+target);
+    }
+  }
   const beforeDetails=await snapshot();await disclose('record-disclosure');
   const literalDetails=await evaluate(cdp,"document.getElementById('selection-details').textContent"),afterDetails=await snapshot();
   for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision,first.qid])check(literalDetails.includes(String(value)),'catalog details lost literal coordinate/precision/identity');

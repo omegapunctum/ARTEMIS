@@ -2,7 +2,7 @@
 import copy
 import hashlib
 import json
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 import pytest
 
@@ -139,3 +139,19 @@ def test_real_builds_share_derived_identity_and_expose_original_and_amendment_by
         assert row["sha256"] == unified_meta["input_sha256"][relative] == hashlib.sha256(path.read_bytes()).hexdigest()
         assert (unified_output / "inputs" / relative).read_bytes() == path.read_bytes()
     assert unified_meta["leonardo_input_amendment"]["sha256"] == provenance["sha256"]
+
+
+def test_amendment_provenance_uses_ledger_paths_on_windows(monkeypatch):
+    original = gate_d.CESENA_AMENDMENT_PATH
+    relative = original.relative_to(gate_d.ROOT).as_posix()
+    class WindowsAmendmentPath:
+        def relative_to(self, root):
+            return PureWindowsPath(relative)
+        def read_bytes(self):
+            return original.read_bytes()
+        def read_text(self, **kwargs):
+            return original.read_text(**kwargs)
+    monkeypatch.setattr(gate_d, "CESENA_AMENDMENT_PATH", WindowsAmendmentPath())
+    provenance = gate_d.cesena_amendment_provenance()
+    assert provenance["path"] == relative
+    assert provenance["sha256"] == hashlib.sha256(original.read_bytes()).hexdigest()
