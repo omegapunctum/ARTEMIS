@@ -86,14 +86,23 @@ try {
     const selection=await evaluate(cdp,`(()=>{const s=document.getElementById('record-select'),r=window.__ARTEMIS_EXPLORER.visibleItems.find(x=>x.kind==='region');if(!r)throw Error('Region missing');const t=performance.now();s.value=r.item_id;s.dispatchEvent(new Event('change',{bubbles:true}));return {handlerMs:performance.now()-t,rawTextChars:document.getElementById('selection-input').textContent.length,collapsed:!document.getElementById('input-disclosure').open}})()`);
     const selectionMetrics=diff(selectionBefore,await metrics());
     await openCompactDetails();
-    await evaluate(cdp,"document.querySelector('#input-disclosure summary').focus()");
+    await evaluate(cdp,"(()=>{const n=document.querySelector('#input-disclosure summary');n.scrollIntoView({block:'center'});n.focus();if(document.activeElement!==n||!n.checkVisibility({checkVisibilityCSS:true}))throw Error('Native input summary is not focused/visible');})()");
     await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:' ',code:'Space',windowsVirtualKeyCode:32});
     await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:' ',code:'Space',windowsVirtualKeyCode:32});
-    await delay(100);
-    const disclosure=await evaluate(cdp,"({open:document.getElementById('input-disclosure').open,rawTextChars:document.getElementById('selection-input').textContent.length})");
+    // Lazy JSON is populated by the asynchronous native toggle event. Wait for
+    // its observable completion, without opening the disclosure programmatically.
+    let disclosure;
+    const disclosureDeadline=Date.now()+5000;
+    do {
+      disclosure=await evaluate(cdp,"({open:document.getElementById('input-disclosure').open,rawTextChars:document.getElementById('selection-input').textContent.length,pending:document.querySelectorAll('#selection-input pre[data-json-pending]').length,item:window.__ARTEMIS_EXPLORER.state.selectedItemId,inspectorHidden:document.getElementById('inspector').hidden,focused:document.activeElement?.outerHTML?.slice(0,300)})");
+      if(disclosure.open&&!disclosure.pending&&disclosure.rawTextChars>=1000)break;
+      await delay(50);
+    } while(Date.now()<disclosureDeadline);
+    report.pendingDisclosure={variant,repetition,...disclosure};
+    if(!disclosure.open||disclosure.pending||disclosure.rawTextChars<1000)throw Error('Native disclosure did not expose raw input '+JSON.stringify(disclosure));
     disclosure.rawSha256=hash(await evaluate(cdp,"document.getElementById('selection-input').textContent"));
-    if(report.runs.length && disclosure.rawSha256!==report.runs[0].disclosure.rawSha256)throw Error('Disclosed native input differs');
-    if(!disclosure.open||disclosure.rawTextChars<1000)throw Error('Native disclosure did not expose raw input');
+    if(report.runs.length && disclosure.rawSha256!==report.runs[0].disclosure.rawSha256)throw Error('Disclosed native input differs '+JSON.stringify(disclosure));
+    delete report.pendingDisclosure;
     const sorted=[...movement.samples].sort((a,b)=>a-b);movement.summary={medianMs:sorted[80],p95Ms:sorted[152],maxMs:sorted[159]};
     report.runs.push({variant,repetition,cold,warm,movement,movementMetrics,selection,selectionMetrics,disclosure});
     await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');
