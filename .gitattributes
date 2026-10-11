@@ -1,0 +1,2 @@
+# Preserve exact upstream distribution bytes for the checked engine pin.
+scripts/unified_explorer/engine/* -text

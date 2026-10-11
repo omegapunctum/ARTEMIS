@@ -8,7 +8,13 @@
   };
   Object.assign(words.en,{catalog:'London architecture catalog',catalogPilot:'Selected pilot · 10 objects · London',catalogReference:'Modern reference point. Historical position and lifetime are unknown.',catalogUnverified:'Imported from Wikidata; independent verification has not been performed.',search:'Search names or QID',clearSearch:'Clear search',searchEmpty:'No matching visible records. Clear search or enable another layer.',searchCount:'Matching visible records',coordinate:'Reported longitude / latitude',precision:'Source numeric precision (degrees)',precisionLimit:'Numeric precision is not measurement accuracy. Site extent and historical applicability are unknown.',revision:'Wikidata source revision',wikipedia:'Wikipedia context',searchHint:'Search filters this chooser only; the map and open record remain unchanged.'});
   Object.assign(words.ru,{catalog:'Каталог архитектуры Лондона',catalogPilot:'Пилотный каталог · 10 объектов · Лондон',catalogReference:'Современная опорная точка. Историческое положение и период существования не установлены.',catalogUnverified:'Импортировано из Wikidata; независимая проверка не выполнена.',search:'Поиск по названию или QID',clearSearch:'Очистить поиск',searchEmpty:'Нет подходящих видимых записей. Очистите поиск или включите другой слой.',searchCount:'Найдено видимых записей',coordinate:'Указанные долгота / широта',precision:'Численная точность в источнике (градусы)',precisionLimit:'Численная точность не означает точность измерения. Размер объекта и историческая применимость неизвестны.',revision:'Версия источника Wikidata',wikipedia:'Контекст в Wikipedia',searchHint:'Поиск фильтрует только список; карта и открытая запись остаются прежними.'});
+  Object.assign(words.en,{recordDetails:'Record details',sourceRecord:'Technical source record',openSource:'Open source',sourceManifest:'Source manifest · provenance and license',importedStart:'Imported start date',importedConstructionEnd:'Imported construction end',importedEnd:'Imported end date',recordId:'Original record ID',geometryVersion:'Geometry version',durationUnknown:'Duration beyond this documented date is not established.'});
+  Object.assign(words.ru,{recordDetails:'Сведения о записи',sourceRecord:'Техническая запись источника',openSource:'Открыть источник',sourceManifest:'Данные источника · происхождение и лицензия',importedStart:'Начальная дата в импорте',importedConstructionEnd:'Окончание строительства в импорте',importedEnd:'Конечная дата в импорте',recordId:'Исходный ID записи',geometryVersion:'Версия геометрии',durationUnknown:'Длительность пребывания за пределами указанной даты не установлена.'});
+  Object.assign(words.en,{durationCorpus:'The available sources do not establish the duration of this stay.',durationRange:'Residence interval; continuous day-by-day presence is not established.',license:'License',textUse:'Text / data use',mediaUse:'Media reuse',geometryUse:'Derived geometry use',citationOnly:'Citations and factual claims only',attributedData:'Structured data with attribution',permitted:'Permitted',permissionRequired:'Prohibited without permission',notApplicable:'Not applicable',prohibited:'Prohibited',unresolved:'Unresolved'});
+  Object.assign(words.ru,{durationCorpus:'Длительность пребывания не установлена по имеющимся источникам.',durationRange:'Период проживания; непрерывное ежедневное присутствие не установлено.',license:'Лицензия',textUse:'Использование текста / данных',mediaUse:'Повторное использование медиа',geometryUse:'Производная геометрия',citationOnly:'Только ссылки и фактические утверждения',attributedData:'Структурированные данные с атрибуцией',permitted:'Разрешено',permissionRequired:'Запрещено без разрешения',notApplicable:'Неприменимо',prohibited:'Запрещено',unresolved:'Не установлено'});
   const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
+  Object.assign(words.en,{cesenaCandidateContext:'Unverified candidate context follows. The presence claim does not establish surveying.'});
+  Object.assign(words.ru,{cesenaCandidateContext:'Ниже — неподтверждённый контекст-кандидат. Утверждение о присутствии не подтверждает проведение изысканий.'});
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
   // Process the latest event once per frame; events arriving inside a callback
@@ -16,6 +22,22 @@
   function frameThrottle(callback, requestFrame = requestAnimationFrame) {
     let pending = false, latest;
     return (...args) => { latest = args; if (pending) return; pending = true; requestFrame(() => { pending = false; callback(...latest); }); };
+  }
+  // Selection presentation is local; it never enters canonical WorkspaceState.
+  function selectionPresentation() {
+    let itemId = null, details = false;
+    return {
+      sync(id) { if (id !== itemId) { itemId = id; details = false; } return {itemId,details}; },
+      open() { if (itemId) details = true; },
+      summary() { details = false; }
+    };
+  }
+  function summaryAnchor(bundle,item) {
+    if (item.kind === 'presence') return placeGroups(bundle,[item])[0]?.coordinates || null;
+    if (item.kind === 'reference' || item.kind === 'catalog_reference') {
+      return (item.kind === 'reference' ? bundle.architecture : bundle.catalog).references.find(row => row.item_id === item.item_id)?.geometry.coordinates || null;
+    }
+    return null; // A region has no invented representative historical point.
   }
   function defaults(profile = 'globe') { return {mode:'range',startYear:profile === 'region' ? 91 : 1452,endYear:profile === 'region' ? 105 : 1519,cursorYear:profile === 'region' ? 100 : 1519,traceOriginYear:1452,layers:['leonardo','roman','catalog'],selectedItemId:null,language:'en',presentationView:'globe',camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}; }
   function query(bundle, state) {
@@ -150,13 +172,15 @@
       return [item.label,item.qid,...Object.values(item.labels || {}),...aliases,original?.name_en,original?.name_ru].some(value => searchKey(value).includes(needle));
     });
   }
-  const helpers = Object.freeze({recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle});
+  const helpers = Object.freeze({recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
   const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
   window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get placeGroups(){return runtime.bundle ? placeGroups(runtime.bundle,runtime.visibleItems) : [];},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
-  let renderedSelection = null, restoringCamera = false, recordSignature = '', mobile = null;
+  let renderedSelection = null, restoringCamera = false, recordSignature = '', mobile = null, desktop = null;
+  const selectionUI = selectionPresentation();
+  let selectionPopup = null, summarySignature = '', clickAnchor = null;
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
   const pendingJson = new WeakMap(), boundDisclosures = new WeakSet();
   function inputJson(host,value) {
@@ -171,7 +195,12 @@
     }
   }
   function safeLink(value) { try { const url = new URL(value,location.href); return ['https:','http:'].includes(url.protocol) ? url.href : null; } catch (_) { return null; } }
-  function layout() { const style = document.documentElement.style; style.setProperty('--header-bottom',`${Math.ceil(byId('workspace-header').getBoundingClientRect().bottom)}px`); style.setProperty('--dock-height',`${Math.ceil(byId('time-dock').getBoundingClientRect().height)}px`); style.setProperty('--attribution-height',`${Math.ceil(byId('attribution').getBoundingClientRect().height)}px`); }
+  function layout() {
+    paintRange();
+    const style = document.documentElement.style;
+    const values = {'--header-bottom':Math.ceil(byId('workspace-header').getBoundingClientRect().bottom),'--dock-height':Math.ceil(byId('time-dock').getBoundingClientRect().height),'--attribution-height':Math.ceil(byId('attribution').getBoundingClientRect().height)};
+    for (const [key,value] of Object.entries(values)) if (style.getPropertyValue(key) !== `${value}px`) style.setProperty(key,`${value}px`);
+  }
   function history(mode = 'push') { window.history[mode === 'replace' ? 'replaceState' : 'pushState']({artemisExplorer:true},'',stateUrl(location.href,runtime.state,runtime.bundle)); }
   function sourceRecord(item) {
     const bundle = runtime.bundle;
@@ -196,60 +225,178 @@
       button.addEventListener('click',() => selectItem(presence.presence_item_id)); host.append(button);
     }
   }
+  function clearSummary() {
+    selectionPopup?.remove(); selectionPopup = null; summarySignature = '';
+    byId('selection-summary').replaceChildren(); byId('selection-summary').hidden = true;
+  }
+  function selectionTitle(selected,input) { return selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language); }
+  function selectionScope(selected) { return t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'); }
+  function renderSummary(selected) {
+    if (!runtime.ready || !selected) { clearSummary(); return; }
+    const point = summaryAnchor(runtime.bundle,selected) || (clickAnchor?.itemId === selected.item_id ? clickAnchor.coordinates : null);
+    const projected = point ? runtime.map.project(point) : null, canvas = runtime.map.getCanvas();
+    const headerBottom = byId('workspace-header').getBoundingClientRect().bottom, dockTop = byId('time-dock').getBoundingClientRect().top;
+    const center = runtime.map.getCenter(), radians = value => value*Math.PI/180;
+    const facing = !point || runtime.state.presentationView !== 'globe' || Math.sin(radians(center.lat))*Math.sin(radians(point[1])) + Math.cos(radians(center.lat))*Math.cos(radians(point[1]))*Math.cos(radians(center.lng-point[0])) > 0;
+    const room = projected ? Math.max(projected.y-headerBottom-30,dockTop-projected.y-30) : 0;
+    const anchored = projected && room >= 160 && facing && projected.x >= 12 && projected.x <= canvas.clientWidth-12 && projected.y >= headerBottom+20 && projected.y <= dockTop-20;
+    const signature = `${selected.item_id}|${runtime.state.language}|${JSON.stringify(clickAnchor)}|${Boolean(anchored)}|${Math.round(projected?.x || 0)}|${Math.round(projected?.y || 0)}|${canvas.clientWidth}|${canvas.clientHeight}`;
+    if (summarySignature === signature) return;
+    const focusId = document.activeElement?.closest('.selection-card') ? document.activeElement.id : null;
+    clearSummary(); summarySignature = signature;
+    const ru = runtime.state.language === 'ru', input = sourceRecord(selected), card = node('article','','selection-card');
+    card.id = 'selection-card'; card.setAttribute('aria-label',ru ? 'Выбранная запись' : 'Selected record');
+    const heading = node('div','','selection-card-heading'), title = node('h2',selectionTitle(selected,input)), close = node('button','×');
+    title.id = 'summary-title'; close.id = 'close-summary'; close.type = 'button'; close.setAttribute('aria-label',ru ? 'Снять выбор' : 'Clear selection');
+    close.addEventListener('click',() => { selectItem(null); focusSelectionOrigin(); }); heading.append(title,close); card.append(heading);
+    card.append(node('p',`${t(selected.layer_id)} · ${selected.kind === 'presence' ? input.presence.temporal.source_native || (input.presence.temporal.start === input.presence.temporal.end ? input.presence.temporal.start : `${input.presence.temporal.start}–${input.presence.temporal.end}`) : selected.interval ? `${selected.interval.start}–${selected.interval.end} ${ru ? 'н. э.' : 'CE'}` : t('atemporal')}`,'summary-meta'));
+    card.append(node('p',selectionScope(selected),'summary-scope'));
+    if (selected.kind === 'catalog_reference') card.append(node('p',t('catalogUnverified'),'summary-scope'));
+    if (selected.kind === 'presence') {
+      const key = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
+      card.append(node('p',key ? t(key) : input.presence.duration_status,'summary-scope'));
+      if (input.presence.event_ref === 'event-leonardo-cesena-survey') { card.append(node('p',t('cesenaCandidateContext'),'summary-scope')); card.append(node('p',input.presence.short_description || '')); }
+    }
+    const details = node('button',ru ? 'Подробнее' : 'Details'); details.id = 'open-details'; details.type = 'button'; details.setAttribute('aria-controls','inspector');
+    details.addEventListener('click',() => { selectionUI.open(); renderInspector(); byId('selection-title').focus({preventScroll:true}); }); card.append(details);
+    if (anchored) {
+      // Keep the compact card below the header / above the calendar. Side
+      // anchors keep edge points usable without panning the user's camera.
+      const vertical = projected.y-headerBottom < 340 && dockTop-projected.y > projected.y-headerBottom ? 'top' : 'bottom';
+      card.style.maxHeight = `${Math.min(340,room)}px`;
+      const side = projected.x < 170 ? '-left' : projected.x > canvas.clientWidth-170 ? '-right' : '';
+      selectionPopup = new maplibregl.Popup({anchor:vertical+side,closeButton:false,closeOnClick:false,focusAfterOpen:false,offset:18,maxWidth:'300px',className:'workspace-selection-popup',locationOccludedOpacity:0});
+      selectionPopup.setLngLat(point).setDOMContent(card).addTo(runtime.map);
+      const popup = selectionPopup;
+      requestAnimationFrame(() => {
+        if (selectionPopup !== popup || runtime.map.isMoving()) return;
+        const element = popup.getElement(), box = element.getBoundingClientRect();
+        // Native globe occlusion is more accurate than the quick hemisphere
+        // hint above. A hidden/clipped popup must still offer usable Details.
+        if (getComputedStyle(element).opacity === '0' || box.top < headerBottom+4 || box.bottom > dockTop-4 || box.left < 4 || box.right > canvas.clientWidth-4) {
+          const focused = card.contains(document.activeElement) ? document.activeElement : null;
+          popup.remove(); selectionPopup = null;
+          byId('selection-summary').append(card); byId('selection-summary').hidden = false;
+          focused?.focus({preventScroll:true});
+        }
+      });
+    } else { byId('selection-summary').append(card); byId('selection-summary').hidden = false; }
+    if (focusId) document.getElementById(focusId)?.focus({preventScroll:true});
+  }
+  function focusSelectionOrigin() {
+    // The chooser may be hidden by the responsive panel; never focus hidden UI.
+    for (const id of ['record-select','records-toggle','mobile-records']) {
+      const target = byId(id); if (!target.disabled && target.checkVisibility({checkVisibilityCSS:true})) { target.focus({preventScroll:true}); return; }
+    }
+  }
   function renderInspector() {
     const selected = runtime.registry.get(runtime.state.selectedItemId), inspector = byId('inspector');
     mobile?.selectionChanged(selected?.item_id || null);
-    if (!selected) { inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
-    inspector.hidden = false;
+    desktop?.selectionChanged(selected?.item_id || null);
+    const presentation = selectionUI.sync(selected?.item_id || null);
+    if (!selected) { clearSummary(); inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
+    if (!presentation.details) { inspector.hidden = true; renderSummary(selected); return; }
+    clearSummary(); inspector.hidden = false;
     // Layer/time/projection changes that retain this item preserve native disclosures.
     if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); renderEpisodeChoices(selected); return; }
     renderedSelection = selected.item_id; inspector.scrollTop = 0;
     inspector.dataset.itemId = selected.item_id;
-    for (const id of ['selection-facts','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
-    for (const id of ['sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
+    for (const id of ['selection-facts','selection-details','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
+    for (const id of ['record-disclosure','sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
     const input = sourceRecord(selected), facts = byId('selection-facts');
     if (selected.kind === 'catalog_reference') {
       renderCatalogFacts(input);
       inputJson(byId('selection-evidence'),{claims:input.claims,evidence_links:input.evidence_links,uncertainties:input.uncertainties,historical_position:input.historical_position,historical_applicability:input.historical_applicability});
     } else if (selected.kind === 'reference') {
       const raw = input.raw_feature.properties;
-      const list = node('dl','');
-      for (const [key,value] of [['date_start',raw.date_start],['date_construction_end',raw.date_construction_end],['date_end',raw.date_end],['original_id',input.original_id],['historical_applicability','unknown'],['historical_position','unknown'],['historical_precision','unknown']]) { list.append(node('dt',key),node('dd',value == null ? 'null / unknown' : String(value))); }
-      const legacy = node('p',t('legacy')); legacy.dataset.i18n = 'legacy'; facts.append(list,legacy);
       inputJson(byId('selection-evidence'),{claim_refs:input.claim_refs,evidence_link_refs:input.evidence_link_refs,historical_applicability:input.historical_applicability,legacy_export_flags:{validated:raw.validated,date_valid:raw.date_valid,coordinates_confidence:raw.coordinates_confidence,coordinates_source:raw.coordinates_source}});
     } else if (selected.kind === 'presence') {
-      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`),node('p',input.presence.short_description || ''),node('p',input.presence.duration_status));
+      const durationKey = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
+      const duration = node('p',durationKey ? t(durationKey) : input.presence.duration_status);
+      if (durationKey) duration.dataset.i18n = durationKey;
+      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`));
+      // Retain the literal candidate label without presenting its survey context
+      // as established by the separately amended, still-draft presence Claim.
+      if (input.presence.event_ref === 'event-leonardo-cesena-survey') {
+        const notice = node('p',t('cesenaCandidateContext'));
+        notice.dataset.i18n = 'cesenaCandidateContext';
+        facts.append(notice);
+      }
+      facts.append(node('p',input.presence.short_description || ''),duration);
       inputJson(byId('selection-evidence'),{claims:input.record.claims || [],evidence_links:input.record.evidence_links || [],uncertainties:input.record.uncertainties || [],route_geometry:null,spatial_precision:input.presence.spatial_precision});
     } else {
-      facts.append(node('p',`${selected.interval.start}–${selected.interval.end} CE`),node('p',selected.geometry_version_ref));
+      facts.append(node('p',`${selected.interval.start}–${selected.interval.end} CE`));
       inputJson(byId('selection-evidence'),{claims:input.record?.claims || [],evidence_links:input.record?.evidence_links || [],uncertainties:input.record?.uncertainties || [],native_temporal_extent:input.version.geometry_version.temporal_extent});
     }
     const sourceHost = byId('selection-sources'), sourceScope = node('p',t('sourceScope')); sourceScope.dataset.i18n = 'sourceScope'; sourceHost.append(sourceScope);
-    for (const source of sourcesFor(input)) {
-      const entry = node('article','', 'source-entry'); entry.append(node('strong',source.title || source.source_id || source.id));
+    for (const [index,source] of sourcesFor(input).entries()) {
+      const entry = node('article','', 'source-entry'); entry.append(node('strong',selected.kind === 'catalog_reference' ? 'Wikidata' : source.title || source.source_id || source.id));
       const locator = source.url || source.source_url || source.uri || source.artifact_uri, href = safeLink(locator);
-      if (href) { const link = node('a',locator); link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
-      inputJson(entry,source); sourceHost.append(entry);
+      if (href) { const link = node('a',t('openSource')); link.dataset.i18n = 'openSource'; link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; if (selected.kind === 'catalog_reference') link.id = 'catalog-revision-link'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
+      renderSourceRights(entry,source);
+      technicalJson(entry,source,`source-record-${index}`); sourceHost.append(entry);
     }
-    if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a','Source manifest · provenance & license'); link.href = './source_manifest.json'; sourceHost.append(link); inputJson(sourceHost,runtime.bundle.roman.sourceManifest); }
+    if (selected.kind === 'catalog_reference') { const p = node('p',''), context = node('a',''); context.id = 'catalog-context-link'; context.target = '_blank'; context.rel = 'noopener noreferrer'; p.append(context); sourceHost.append(p); }
+    if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a',t('sourceManifest')); link.dataset.i18n = 'sourceManifest'; link.href = './source_manifest.json'; sourceHost.append(link); technicalJson(sourceHost,runtime.bundle.roman.sourceManifest,'source-manifest-record'); }
     inputJson(byId('selection-input'),{registry:selected,source_native_input:input,input_ledger:runtime.bundle.input_ledger});
     renderInspectorLanguage(selected); renderEpisodeChoices(selected); layout();
   }
   function renderCatalogFacts(input) {
     const facts = byId('selection-facts'); facts.replaceChildren(node('p',t('catalogUnverified')));
-    const coordinateValue = input.coordinate_statement?.mainsnak?.datavalue?.value || {}, list = node('dl','');
-    for (const [key,displayValue] of [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),coordinateValue.precision ?? t('unknown')],['Wikidata',input.qid]]) list.append(node('dt',key),node('dd',String(displayValue)));
-    facts.append(list,node('p',t('precisionLimit')));
-    const source = input.sources[0], link = node('a',`${t('revision')} · ${source.revision}`); link.id = 'catalog-revision-link'; link.href = safeLink(source.url); link.target = '_blank'; link.rel = 'noopener noreferrer';
-    const paragraph = node('p',''); paragraph.append(link); facts.append(paragraph,node('p',source.license));
+  }
+  function technicalJson(host,value,id) {
+    const disclosure = node('details',''), summary = node('summary',t('sourceRecord')); summary.dataset.i18n = 'sourceRecord';
+    disclosure.id = id;
+    disclosure.append(summary); host.append(disclosure); inputJson(disclosure,value);
+  }
+  function renderSourceRights(host,source) {
+    const rights = source.rights || {}, license = source.license || rights.license;
+    const licenseLine = node('p',''), label = node('span',t('license')); label.dataset.i18n = 'license';
+    const value = node('span',license || t('unknown')); if (!license) value.dataset.i18n = 'unknown';
+    licenseLine.append(label,document.createTextNode(': '),value); host.append(licenseLine);
+    const valueKeys = {citation_and_factual_claims_only:'citationOnly',attributed_structured_data:'attributedData',permitted:'permitted',prohibited_without_permission:'permissionRequired',not_applicable:'notApplicable',prohibited:'prohibited',unresolved:'unresolved'};
+    for (const [field,key] of [['data_or_text_use','textUse'],['media_reuse','mediaUse'],['derived_geometry_use','geometryUse']]) {
+      if (rights[field] == null) continue;
+      const line = node('p',''), name = node('span',t(key)), valueKey = valueKeys[rights[field]], content = node('span',valueKey ? t(valueKey) : rights[field]);
+      name.dataset.i18n = key; if (valueKey) content.dataset.i18n = valueKey;
+      line.append(name,document.createTextNode(': '),content); host.append(line);
+    }
+  }
+  function renderRecordDetails(selected,input) {
+    const host = byId('selection-details'), list = node('dl',''); host.replaceChildren();
+    byId('record-disclosure').hidden = selected.kind === 'presence';
+    let fields = [];
+    if (selected.kind === 'catalog_reference') {
+      const coordinateValue = input.coordinate_statement?.mainsnak?.datavalue?.value || {};
+      fields = [[t('coordinate'),`${input.geometry.coordinates[0]} / ${input.geometry.coordinates[1]}`],[t('precision'),coordinateValue.precision ?? t('unknown')],['Wikidata',input.qid]];
+    } else if (selected.kind === 'reference') {
+      const raw = input.raw_feature.properties;
+      fields = [[t('coordinate'),input.geometry.coordinates.join(' / ')],[t('importedStart'),raw.date_start],[t('importedConstructionEnd'),raw.date_construction_end],[t('importedEnd'),raw.date_end],[t('recordId'),input.original_id]];
+    } else if (selected.kind === 'region') fields = [[t('geometryVersion'),selected.geometry_version_ref]];
+    for (const [key,value] of fields) list.append(node('dt',key),node('dd',value == null ? t('unknown') : String(value)));
+    host.append(list);
+    if (selected.kind === 'catalog_reference') host.append(node('p',t('precisionLimit')));
+    if (selected.kind === 'reference') host.append(node('p',t('legacy')));
+  }
+  function renderCatalogContext(input) {
     const urls = input.wikipedia_urls || {}, language = urls[runtime.state.language] ? runtime.state.language : urls.en ? 'en' : Object.keys(urls).sort()[0];
-    if (language && safeLink(urls[language])) { const context = node('a',`${t('wikipedia')} (${language})`); context.id = 'catalog-context-link'; context.href = safeLink(urls[language]); context.target = '_blank'; context.rel = 'noopener noreferrer'; const p = node('p',''); p.append(context); facts.append(p); }
+    const context = byId('catalog-context-link'), href = language && safeLink(urls[language]); context.hidden = !href;
+    if (href) { context.textContent = `${t('wikipedia')} (${language})`; context.href = href; }
   }
   function renderInspectorLanguage(selected) {
-    const input = sourceRecord(selected); text('selection-title',selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language));
-    text('selection-scope',t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'));
+    const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
+    text('selection-scope',selectionScope(selected));
+    text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
     text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
-    if (selected.kind === 'catalog_reference') renderCatalogFacts(input);
+    renderRecordDetails(selected,input);
+    if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
+  }
+  function paintRange() {
+    const start = Number(byId('range-start-handle').value), end = Number(byId('range-end-handle').value), track = byId('range-start-handle').parentElement;
+    track.style.setProperty('--range-start',`${(Math.min(start,end)-MIN)/(MAX-MIN)*100}%`);
+    track.style.setProperty('--range-end',`${(Math.max(start,end)-MIN)/(MAX-MIN)*100}%`);
+    track.dataset.overlap = String(start === end);
+    track.dataset.rangeReady = 'true';
   }
   function renderControls() {
     const state = runtime.state; document.documentElement.lang = state.language;
@@ -277,7 +424,7 @@
     document.documentElement.dataset.artemisLanguage = state.language; document.documentElement.dataset.artemisPresentationView = state.presentationView;
     document.documentElement.dataset.artemisSelectedItem = state.selectedItemId || ''; document.documentElement.dataset.artemisTimeCursor = String(state.cursorYear);
     const attributionContext = byId('attribution-context'); if (attributionContext) attributionContext.textContent = state.language === 'ru' ? 'Современный опорный контекст; не историческая поверхность.' : words.en.context;
-    mobile?.render(); layout();
+    mobile?.render(); desktop?.render(); paintRange(); layout();
   }
   function applyState(input, options = {}) {
     const previous = runtime.state, next = normalizeState(runtime.bundle,{...previous,...input},previous);
@@ -296,7 +443,10 @@
     renderControls(); renderInspector(); if (options.history !== false) history(options.history || 'push');
     return runtime.state;
   }
-  function selectItem(itemId) { return applyState({selectedItemId:itemId}); }
+  function selectItem(itemId, coordinates = null) {
+    clickAnchor = coordinates && itemId ? {itemId,coordinates} : null;
+    selectionUI.summary(); return applyState({selectedItemId:itemId});
+  }
   function layoutPlaceLabels() {
     if (!runtime.ready) return;
     const canvas = runtime.map.getCanvas(), occupied = [];
@@ -315,7 +465,7 @@
       if (placement) occupied.push({left:point.x+dx,right:point.x+dx+width,top:point.y+dy,bottom:point.y+dy+height});
     }
     for (const {label,suppressed,left,top} of placements) { if (label.classList.contains('is-suppressed') !== suppressed) label.classList.toggle('is-suppressed',suppressed); if (label.style.left !== left) label.style.left = left; if (label.style.top !== top) label.style.top = top; }
-    for (const {marker,coordinates} of runtime.chronologyMarkers.values()) { const from = runtime.map.project(coordinates[0]), to = runtime.map.project(coordinates[1]); marker.getElement().firstChild.style.transform = `rotate(${Math.atan2(to.y-from.y,to.x-from.x)}rad)`; }
+    for (const {marker,coordinates} of runtime.chronologyMarkers.values()) { const from = runtime.map.project(coordinates[0]), to = runtime.map.project(coordinates[1]); const glyph = marker.getElement().firstChild, rotation = `rotate(${Math.atan2(to.y-from.y,to.x-from.x)}rad)`; if (glyph.style.transform !== rotation) glyph.style.transform = rotation; }
   }
   function updatePlacePresentation() {
     const groups = placeGroups(runtime.bundle,runtime.visibleItems), emphasis = presentationEmphasis(runtime.bundle,runtime.visibleItems,runtime.state), visiblePlaces = new Set(groups.map(group => group.place_ref));
@@ -357,10 +507,12 @@
   }
   function bindControls() {
     mobile = window.ARTEMIS_MOBILE?.mount({runtime,applyState,layout,t}) || null;
+    desktop = window.ARTEMIS_DESKTOP?.mount({runtime,layout}) || null;
     for (const layer of LAYERS) byId(`layer-${layer}`).addEventListener('change',() => applyState({layers:LAYERS.filter(value => byId(`layer-${value}`).checked)}));
     for (const language of ['en','ru']) byId(`language-${language}`).addEventListener('click',() => applyState({language}));
     for (const presentationView of ['globe','map']) byId(`view-${presentationView}`).addEventListener('click',() => { if (presentationView !== runtime.state.presentationView) applyState({presentationView}); });
     for (const mode of ['range','scrub']) byId(`mode-${mode}`).addEventListener('click',() => applyState({mode}));
+    for (const id of ['range-start-handle','range-end-handle']) byId(id).addEventListener('input',paintRange);
     byId('time-start').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear)}));
     byId('time-end').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear)}));
     byId('range-start-handle').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear)}));
@@ -370,29 +522,45 @@
     byId('record-search').addEventListener('input',event => { runtime.search = event.target.value; renderControls(); });
     byId('clear-search').addEventListener('click',() => { runtime.search = ''; byId('record-search').value = ''; renderControls(); byId('record-search').focus(); });
     byId('record-select').addEventListener('change',event => selectItem(event.target.value));
-    byId('close-details').addEventListener('click',() => selectItem(null)); byId('focus-selection').addEventListener('click',focusSelection);
-    document.addEventListener('keydown',event => { if (event.key === 'Escape' && runtime.state.selectedItemId) { selectItem(null); byId('record-select').focus(); } });
+    byId('back-to-summary').addEventListener('click',() => { selectionUI.summary(); renderInspector(); byId('open-details')?.focus({preventScroll:true}); });
+    byId('close-details').addEventListener('click',() => { selectItem(null); focusSelectionOrigin(); }); byId('focus-selection').addEventListener('click',focusSelection);
+    document.addEventListener('keydown',event => { if (event.key === 'Escape' && runtime.state.selectedItemId) { selectItem(null); focusSelectionOrigin(); } });
     window.addEventListener('popstate',() => applyState(parseUrl(runtime.bundle,location.href,document.documentElement.dataset.entryProfile),{history:false}));
     const observer = new ResizeObserver(layout); for (const id of ['workspace-header','time-dock','attribution']) observer.observe(byId(id));
     window.addEventListener('resize',layout);
   }
   async function load(path) {
+    const embedded = byId(`embedded-${path.slice(2)}`);
+    if (embedded) {
+      const bytes = Uint8Array.from(atob(embedded.textContent.trim()),character => character.charCodeAt(0));
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
     const version = document.documentElement.dataset[path.includes('unified-bundle') ? 'bundleVersion' : 'contextVersion'];
     const reusable = path.includes('unified-bundle') || path.includes('earth-context');
     const url = reusable && version ? `${path}?v=${version}` : path;
-    const response = await fetch(url,{cache:reusable ? 'default' : 'no-cache'});
-    if (!response.ok) throw Error(`${path}: HTTP ${response.status}`); return response.json();
+    const controller = new AbortController(), timer = setTimeout(() => controller.abort(),15000);
+    try {
+      const response = await fetch(url,{cache:reusable ? 'default' : 'no-cache',signal:controller.signal});
+      if (!response.ok) throw Error(`${path}: HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      if (controller.signal.aborted) throw Error(`${path}: local data request timed out`);
+      throw error;
+    } finally {clearTimeout(timer);}
   }
   async function main() {
+    window.ARTEMIS_STARTUP?.phase('data');
     const [bundle,context,assets,meta] = await Promise.all(['./unified-bundle.json','./earth-context.geojson','./geospatial-assets.json','./build-meta.json'].map(load));
     runtime.bundle = freeze(bundle); runtime.registry = new Map(bundle.registry.map(item => [item.item_id,item])); runtime.meta = freeze(meta);
     runtime.state = freeze(parseUrl(bundle,location.href,document.documentElement.dataset.entryProfile)); runtime.visibleItems = query(bundle,runtime.state);
     runtime.query = state => query(runtime.bundle,state || runtime.state);
+    if (!window.ARTEMIS_MOBILE || !window.ARTEMIS_DESKTOP) throw Error('Required workspace controls could not be loaded (mobile.js / desktop.js).');
     bindControls(); renderControls(); renderInspector();
     if (!window.maplibregl) throw Error('Pinned MapLibre engine could not be loaded.');
-    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,2),canvasContextAttributes:{antialias:true}});
+    window.ARTEMIS_STARTUP?.phase('map');
+    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,1.5),canvasContextAttributes:{antialias:true}});
     runtime.map = map; map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
-    map.on('error',event => { console.error('ARTEMIS map error',event.error || event); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
+    map.on('error',event => { console.error('ARTEMIS map error',event.error || event); window.ARTEMIS_STARTUP?.fail(event.error?.message || String(event.error || event)); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
     map.on('load',() => {
       map.addSource('earth-context',{type:'geojson',data:context});
       map.addLayer({id:'earth-land',type:'fill',source:'earth-context',filter:['==',['get','semantic_role'],'present_day_context'],paint:{'fill-color':'#17334a','fill-outline-color':'#68a8c4'}});
@@ -403,19 +571,21 @@
       map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,'catalog_reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','catalog_reference','#c6d697','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
       runtime.ready = true;
       const scheduleLabels = frameThrottle(layoutPlaceLabels);
-      updatePlacePresentation(); map.on('move',scheduleLabels); map.on('resize',scheduleLabels); map.on('idle',scheduleLabels);
+      updatePlacePresentation(); map.on('movestart',() => byId('map').classList.add('is-moving'));
+      map.on('moveend',() => { byId('map').classList.remove('is-moving'); scheduleLabels(); const view = selectionUI.sync(runtime.state.selectedItemId); if (!view.details) renderSummary(runtime.registry.get(view.itemId)); });
+      map.on('resize',() => { scheduleLabels(); const view = selectionUI.sync(runtime.state.selectedItemId); if (!view.details) renderSummary(runtime.registry.get(view.itemId)); });
       const attribution = (assets.assets || []).filter(asset => asset.attribution).map(asset => asset.attribution).join(' · ');
       byId('attribution').replaceChildren(node('span',`${attribution || 'Natural Earth · public domain'} · Cliopatria CC-BY-4.0 · Wikidata CC0-1.0 · `)); const explanation = node('span',words.en.context); explanation.id = 'attribution-context'; byId('attribution').append(explanation);
-      renderControls(); history('replace');
-      map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id); } });
-      map.on('mousemove',frameThrottle(event => { const cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; if (map.getCanvas().style.cursor !== cursor) map.getCanvas().style.cursor = cursor; }));
+      renderControls(); renderInspector(); history('replace');
+      map.on('click',event => { const hits = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}); if (hits.length) { const hit = hits[0], group = hit.properties.place_ref ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.place_ref === hit.properties.place_ref) : null; selectItem(group ? placeChoice(group,runtime.state).presence_item_id : hit.properties.item_id,[event.lngLat.lng,event.lngLat.lat]); } });
+      map.on('mousemove',frameThrottle(event => { if (map.isMoving()) return; const cursor = map.queryRenderedFeatures(event.point,{layers:['workspace-points','workspace-regions']}).length ? 'pointer' : ''; if (map.getCanvas().style.cursor !== cursor) map.getCanvas().style.cursor = cursor; }));
       map.on('moveend',() => {
         if (restoringCamera) return;
         const center = map.getCenter(), camera = {center:[center.lng,center.lat],zoom:map.getZoom(),pitch:map.getPitch(),bearing:map.getBearing()};
         if (JSON.stringify(camera) !== JSON.stringify(runtime.state.camera)) { runtime.state = freeze(normalizeState(bundle,{...runtime.state,camera},runtime.state)); history('push'); }
       });
-      map.once('idle',() => { document.documentElement.dataset.artemisRuntimeReady = 'true'; document.documentElement.dataset.artemisVisualReady = String(map.queryRenderedFeatures({layers:['earth-land']}).length > 0); layout(); });
+      map.once('idle',() => { document.documentElement.dataset.artemisRuntimeReady = 'true'; document.documentElement.dataset.artemisVisualReady = String(map.queryRenderedFeatures({layers:['earth-land']}).length > 0); layout(); window.ARTEMIS_STARTUP?.ready(); });
     });
   }
-  main().catch(error => { const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS Explorer could not start: ${error.message}`; console.error(error); });
+  main().catch(error => { window.ARTEMIS_STARTUP?.fail(error.message); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS Explorer could not start: ${error.message}`; console.error(error); });
 })();

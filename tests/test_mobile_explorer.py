@@ -13,3 +13,7 @@ def test_mobile_behavior():
         pytest.skip("Node is required for shipped mobile adapter behavior")
     result = subprocess.run(["node", "tests/mobile_explorer_behavior.cjs"], cwd=ROOT, check=True, text=True, capture_output=True)
     assert "MOBILE_EXPLORER_BEHAVIOR_PASS" in result.stdout
+
+
+def test_desktop_roundtrip_preserves_mobile_controls_and_canonical_state():
+    subprocess.run(["node", "tests/desktop_explorer_behavior.cjs"], cwd=ROOT, check=True)

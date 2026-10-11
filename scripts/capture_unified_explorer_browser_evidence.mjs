@@ -33,7 +33,7 @@ function argumentsFor(argv) {
 const sameState=(left,right)=>JSON.stringify(left)===JSON.stringify(right);
 // Ownership routing describes visible mobile UI only; helpers still dispatch
 // native input and never make hidden controls visible or mutate canonical state.
-const mobileControlOwner = selector => /^#(?:view-|language-)/.test(selector) ? 'settings' : /^#layer-/.test(selector) ? 'layers' : /^#(?:record-|clear-search|search-)/.test(selector) ? 'records' : /^#(?:mode-|period-)/.test(selector) ? 'calendar' : null;
+const mobileControlOwner = selector => /^#(?:view-|language-)/.test(selector) ? 'settings' : /^#layer-/.test(selector) ? 'layers' : /^#(?:record-select|record-search|clear-search|search-hint|search-status)(?:$|[ >:])/.test(selector) ? 'records' : /^#(?:mode-|period-)/.test(selector) ? 'calendar' : null;
 const mobileYearControl = id => ({'time-start':'mobile-range-start','time-end':'mobile-range-end','cursor-year':'mobile-cursor-year'})[id] || null;
 function wheelKeys(value,min,max) {
   check(Number.isInteger(value)&&Number.isInteger(min)&&Number.isInteger(max)&&value>=min&&value<=max,'native wheel target outside exposed bounds');
@@ -143,7 +143,18 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches");}
   async function expose(selector) {
-    if(!await mobile())return;
+    // Episode buttons are created only after Details is opened; use their
+    // stable container to resolve ownership even before a button exists.
+    const ownerSelector=selector.startsWith('#place-episodes ') ? '#place-episodes' : selector;
+    const inInspector=await evaluate(cdp,`!!document.querySelector(${JSON.stringify(ownerSelector)})?.closest('#inspector')`);
+    if(inInspector&&await evaluate(cdp,"document.getElementById('inspector').hidden && !!document.getElementById('open-details')"))await click('#open-details');
+    if(!await mobile()) {
+      const owner=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});return {records:!!n?.closest('#desktop-records-body'),layers:!!n?.closest('#desktop-layer-body'),inspector:!!n?.closest('#inspector')&&!n?.closest('.drawer-header')};})()`);
+      if(owner.records&&await evaluate(cdp,"document.getElementById('desktop-records-body').hidden"))await click('#records-toggle');
+      if(owner.layers&&!await evaluate(cdp,"document.getElementById('desktop-layers').open"))await click('#desktop-layers summary');
+      if(owner.inspector&&await evaluate(cdp,"document.getElementById('inspector').dataset.desktopCollapsed==='true'"))await click('#inspector-toggle');
+      return;
+    }
     const owner=mobileControlOwner(selector);
     if(owner==='calendar') {if(!await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');}
     else if(owner&&await evaluate(cdp,'document.getElementById(\"workspace-header\").dataset.headerPanel')!==owner)await click('#mobile-'+owner);
@@ -182,6 +193,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await stable(id+'='+value);
   }
   async function layer(id,enabled) {if(await evaluate(cdp,`document.getElementById('layer-'+${JSON.stringify(id)}).checked`)!==enabled)await click('#layer-'+id,true);}
+  let compactFlowChecked=false;
   async function select(itemId) {
     async function available() {
       await expose('#record-select');
@@ -200,6 +212,23 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       check(next.target>=0&&Math.abs(next.target-next.current)<Math.abs(indices.target-before),'native record selector made no progress '+JSON.stringify({expected:itemId,before,...next}));
       indices=next;if(indices.current!==indices.target)indices=await available();
     }
+    if(await evaluate(cdp,"document.getElementById('inspector').hidden")) {
+      const before=await snapshot();
+      check(await evaluate(cdp,"!!document.getElementById('open-details')"),'selection did not expose compact summary');
+      if(!compactFlowChecked)await capture('compact-record-first-click');
+      await click('#open-details');
+      const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.url===after.url,'opening details changed selection/camera/history');
+      check(!await evaluate(cdp,"!!document.getElementById('selection-card')"),'details left popup visible');
+      if(!compactFlowChecked) {
+        await click('#back-to-summary');
+        const back=await snapshot();
+        check(back.inspectorHidden&&sameState(after.state,back.state)&&sameState(after.camera,back.camera)&&after.url===back.url,'Back to card changed canonical state or kept inspector open');
+        const box=await evaluate(cdp,"(()=>{const n=document.getElementById('open-details');n.scrollIntoView({block:'nearest'});const b=n.getBoundingClientRect();return {visible:n.checkVisibility({checkVisibilityCSS:true}),hit:n.contains(document.elementFromPoint(b.x+b.width/2,b.y+b.height/2))};})()");
+        check(box.visible&&box.hit,'compact Details is obscured');
+        await click('#open-details');compactFlowChecked=true;
+      }
+    }
     const state=await snapshot();check(state.state.selectedItemId===itemId&&!state.inspectorHidden,'native record selector lost identity '+JSON.stringify({expected:itemId,actual:state.state.selectedItemId,inspectorHidden:state.inspectorHidden,indices,url:state.url}));await stable('select '+itemId);
   }
   async function search(value) {
@@ -215,10 +244,16 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     else {check(await mobile(),'desktop clear search control hidden');await search('');}
   }
   async function disclose(id) {
+    // Selecting the already-selected record keeps its Records panel open.
+    // Close that actual overlay before reading the inspector; never bypass hit testing.
+    if(await mobile()&&await evaluate(cdp,"Boolean(document.getElementById('workspace-header').dataset.headerPanel)")) {
+      const before=await snapshot();await click('#header-close');const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'closing record chooser changed the selected evidence');
+    }
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
     check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`),'native disclosure failed '+id);
   }
-  async function close() {if(!await evaluate(cdp,"document.getElementById('inspector').hidden"))await click('#close-details');}
+  async function close() {if(!await evaluate(cdp,"document.getElementById('inspector').hidden"))await click('#close-details');else if(await evaluate(cdp,"!!document.getElementById('close-summary')"))await click('#close-summary');}
   async function membership(expected,reason) {
     await idle(reason);const current=await snapshot();
     const actual=Object.fromEntries(['leonardo','roman','architecture',...(Object.hasOwn(expected,'catalog')?['catalog']:[])].map(layer=>[layer,current.visible.filter(i=>i.layer===layer).length]));
@@ -300,7 +335,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const layout=await evaluate(cdp,`(() => {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
       const mobile=matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches;
-      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','layer-controls','view-globe','view-map','language-en','language-ru','record-search','clear-search','record-select','time-dock'];
+      const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','records-toggle','view-globe','view-map','language-en','language-ru','time-dock',...(!document.getElementById('desktop-records-body').hidden?['record-search','clear-search','record-select',...(document.getElementById('desktop-layers').open?['layer-controls']:[])]:[])];
       for(const id of ids)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
       if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
@@ -413,9 +448,30 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   check(nativeCatalog.length===10,'native shared map source omitted catalog points');
   for(const feature of nativeCatalog){const reference=catalog.find(row=>row.item_id===feature.item);check(reference&&sameState(feature.geometry,reference.geometry),'catalog native geometry differs from preserved source point');}
   await select(first.item_id);
-  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre'))})`);
+  const initialCard=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href,evidencePresent:Boolean(document.querySelector('#selection-evidence pre')),detailsOpen:document.getElementById('record-disclosure').open,sourcesOpen:document.getElementById('sources-disclosure').open,metadataRendered:document.querySelector('#selection-details dl').checkVisibility({checkVisibilityCSS:true})})`);
   check(initialCard.title===first.labels.en&&initialCard.revision===first.sources[0].url&&initialCard.evidencePresent,'catalog inspector failed to render its native title/source/evidence');
-  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(initialCard.facts.includes(String(value)),'catalog primary facts lost literal coordinate/precision');
+  check(!initialCard.detailsOpen&&!initialCard.sourcesOpen&&!initialCard.metadataRendered,'catalog metadata was rendered before disclosure');
+  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision])check(!initialCard.facts.includes(String(value)),'catalog technical number leaked into primary facts');
+  await capture('hierarchy-catalog-first-view-en');
+  if(!await mobile()) {
+    const before=await snapshot();
+    for(const [toggle,target] of [['records-toggle','desktop-records-body'],['inspector-toggle','selection-facts']]) {
+      await click('#'+toggle);
+      check(!await evaluate(cdp,`document.getElementById(${JSON.stringify(target)}).checkVisibility({checkVisibilityCSS:true})`),'collapsed desktop panel still visible '+target);
+      check(await evaluate(cdp,'document.activeElement.id')===toggle,'desktop collapse lost focus');
+      const after=await snapshot();
+      check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&sameState(before.visible,after.visible)&&sameState(before.disclosures,after.disclosures)&&before.url===after.url,'desktop collapse changed canonical state');
+      await capture('desktop-collapsed-'+toggle);
+      await click('#'+toggle);
+      check(await evaluate(cdp,`document.getElementById(${JSON.stringify(target)}).checkVisibility({checkVisibilityCSS:true})`),'desktop panel did not reopen '+target);
+    }
+  }
+  const beforeDetails=await snapshot();await disclose('record-disclosure');
+  const literalDetails=await evaluate(cdp,"document.getElementById('selection-details').textContent"),afterDetails=await snapshot();
+  for(const value of [...first.geometry.coordinates,first.coordinate_statement.mainsnak.datavalue.value.precision,first.qid])check(literalDetails.includes(String(value)),'catalog details lost literal coordinate/precision/identity');
+  check(/not measurement accuracy/i.test(literalDetails),'source numeric precision was presented as accuracy');
+  check(sameState(beforeDetails.state,afterDetails.state)&&sameState(beforeDetails.camera,afterDetails.camera)&&beforeDetails.url===afterDetails.url,'metadata disclosure changed canonical state/camera/URL');
+  await click('#record-disclosure > summary',true);
   await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
   await mobileSourceScrollClearance();
   const catalogSelected=await snapshot(),beforeSearch=catalogSelected;
@@ -444,6 +500,10 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const sourceDetails=[];
   for(const reference of catalog) {
     await select(reference.item_id);await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');
+    check(!await evaluate(cdp,"document.getElementById('source-record-0').open"),'source JSON expanded with readable sources');
+    await disclose('source-record-0');
+    const nativeSource=await evaluate(cdp,"JSON.parse(document.querySelector('#source-record-0 pre').textContent)");
+    check(sameState(nativeSource,reference.sources[0]),'technical source record lost exact provenance');
     const details=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,scope:document.getElementById('selection-scope').textContent,revision:document.getElementById('catalog-revision-link')?.href,context:document.getElementById('catalog-context-link')?.href,input:document.getElementById('selection-input').textContent,evidence:JSON.parse(document.querySelector('#selection-evidence pre').textContent),card:document.getElementById('inspector').textContent})`);
     check(details.revision&&/^https:\/\/www\.wikidata\.org\//.test(details.revision)&&/oldid=\d+|revision\/\d+/.test(details.revision),'catalog primary revision link is not pinned');
     check(details.revision===reference.sources[0].url,'catalog revision link differs from pinned source revision');
@@ -457,7 +517,8 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     const keyboardLinks=await evaluate(cdp,`['catalog-revision-link','catalog-context-link'].map(id=>{const link=document.getElementById(id);link.focus({preventScroll:true});if(document.activeElement!==link||link.tabIndex<0)throw new Error('Source link cannot receive keyboard focus');return {id,href:link.href};})`);
     sourceDetails.push({item:reference.item_id,title:details.title,revision:details.revision,context:details.context,claimIds:claims.map(claim=>claim.id),keyboardLinks});
   }
-  await select(first.item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await select(first.item_id);await disclose('record-disclosure');await disclose('sources-disclosure');await disclose('evidence-disclosure');await disclose('input-disclosure');
+  await collapseMobile();
   const unfocused=await snapshot();await click('#focus-selection',true);await idle('explicit catalog focus');const focused=await snapshot();
   check(!sameState(unfocused.camera,focused.camera),'explicit catalog focus did not move camera');
   const previous={...unfocused.state},next={...focused.state};delete previous.camera;delete next.camera;
@@ -465,8 +526,9 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const coordinates=first.geometry.coordinates;
   check(Math.hypot(focused.camera.center[0]-coordinates[0],focused.camera.center[1]-coordinates[1])<1e-7,'catalog focus uses another coordinate');
   for(const lang of ['en','ru']) {await click('#language-'+lang);
-    const translatedFacts=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-facts').textContent,revision:document.getElementById('catalog-revision-link')?.href})`);
-    check(translatedFacts.title===first.labels[lang]&&translatedFacts.revision===first.sources[0].url&&translatedFacts.facts.includes(String(first.geometry.coordinates[0])),'catalog language change lost native primary facts');
+    const translatedFacts=await evaluate(cdp,`({title:document.getElementById('selection-title').textContent,facts:document.getElementById('selection-details').textContent,revision:document.getElementById('catalog-revision-link')?.href,detailsOpen:document.getElementById('record-disclosure').open,summary:document.querySelector('#record-disclosure > summary').textContent})`);
+    check(translatedFacts.title===first.labels[lang]&&translatedFacts.revision===first.sources[0].url&&translatedFacts.facts.includes(String(first.geometry.coordinates[0]))&&translatedFacts.detailsOpen,'catalog language change lost exact details or disclosure state');
+    check(translatedFacts.summary===(lang==='ru'?'Сведения о записи':'Record details'),'record details label did not change language');
     for(const mode of ['globe','map']) {await view(mode);await capture('catalog-selected-source-'+lang+'-'+mode);}}
 
   const fallback=catalog.find(reference=>!(reference.labels||{}).ru);
@@ -487,7 +549,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await click('#mode-scrub');await number('cursor-year',100);
   const early=await membership({leonardo:0,roman:1,architecture:0},'Scrub100 Roman only');
   check(early.state.cursorYear===100,'global cursor clamped to Leonardo origin');
-  const roman100=early.visible.find(i=>i.layer==='roman');await select(roman100.itemId);await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  const roman100=early.visible.find(i=>i.layer==='roman');await select(roman100.itemId);await capture('hierarchy-roman-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
   const romanDetails=await snapshot();
   check(romanDetails.card.includes('Cliopatria')&&romanDetails.card.includes('CC-BY-4.0'),'Roman source/license missing');
   check(romanDetails.card.includes('91')&&romanDetails.card.includes('105'),'Roman native interval missing');
@@ -501,7 +563,19 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await click('#mode-range');await number('time-start',1502);await number('time-end',1502);
   const range=await membership({leonardo:4,roman:0,architecture:31},'Range1502 Leonardo only');
   const cesena=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id==='presence-cesena-1502-08-10');
-  check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  check(cesena,'expected existing Cesena identity missing');await select(cesena.presence_item_id);
+  for (const language of ['en','ru','en']) {
+    await click('#language-'+language);
+    const firstView = await evaluate(cdp,`(() => { const facts=document.getElementById('selection-facts'), notice=facts.querySelector('[data-i18n="cesenaCandidateContext"]'); return {text:notice?.textContent,visible:notice?.checkVisibility(),insideDisclosure:!!notice?.closest('details'),description:notice?.nextElementSibling?.textContent,open:[...document.querySelectorAll('#inspector details')].some(d=>d.open)}; })()`);
+    check(firstView.visible && !firstView.insideDisclosure && !firstView.open,'Cesena qualification must be visible before opening disclosures');
+    check(firstView.description===cesena.short_description,'Cesena candidate description was replaced or detached from its qualification');
+    check(firstView.text===(language==='ru'?'Ниже — неподтверждённый контекст-кандидат. Утверждение о присутствии не подтверждает проведение изысканий.':'Unverified candidate context follows. The presence claim does not establish surveying.'),'Cesena qualification did not follow the selected language');
+    if(language==='ru')await capture('cesena-candidate-context-first-view-ru');
+  }
+  await capture('hierarchy-presence-first-view-en');await disclose('sources-disclosure');await disclose('evidence-disclosure');
+  const readablePresence=await evaluate(cdp,"({facts:document.getElementById('selection-facts').textContent,sources:document.getElementById('selection-sources').textContent,technicalOpen:[...document.querySelectorAll('#selection-sources details')].some(d=>d.open)})");
+  check(!readablePresence.facts.includes('not_established_')&&/do not establish the duration/.test(readablePresence.facts),'Cesena primary card retained a technical duration status');
+  check(!readablePresence.technicalOpen&&readablePresence.sources.includes('License: Unknown')&&readablePresence.sources.includes('Citations and factual claims only')&&readablePresence.sources.includes('Prohibited without permission'),'readable Leonardo source rights disappeared into JSON');
   const cesenaEvidence=await evaluate(cdp,"JSON.parse(document.querySelector('#selection-evidence pre').textContent)");
   const narrowedClaim=cesenaEvidence.claims.find(claim=>claim.id==='claim-cesena-presence-1502-08-10');
   check(narrowedClaim?.statement==='Leonardo was present in Cesena by 10 August 1502.','Cesena disclosure did not expose the authorized statement narrowing');
@@ -518,10 +592,10 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await close();await click('#language-en');
   const referenceChecks=[];
   for(const reference of expectedBundle.architecture.references) {
-    await select(reference.item_id);await disclose('sources-disclosure');await disclose('input-disclosure');
+    await select(reference.item_id);if(reference===expectedBundle.architecture.references[0])await capture('hierarchy-reference-first-view-en');await disclose('sources-disclosure');await disclose('input-disclosure');
     const details=await evaluate(cdp,`(() => {const r=window.__ARTEMIS_EXPLORER;return {selected:r.state.selectedItemId,scope:document.getElementById('selection-scope').textContent,input:document.getElementById('selection-input').textContent,sources:document.getElementById('selection-sources').textContent};})()`);
     check(/atemporal|historical applicability unknown/i.test(details.scope),'reference lacked atemporal/unknown applicability warning');
-    for(const source of reference.sources){check(details.sources.includes(source.id)&&details.sources.includes(source.title),'existing reference source identity/title not disclosed');}
+    for(const [index,source] of reference.sources.entries()){await disclose('source-record-'+index);const exact=await evaluate(cdp,`JSON.parse(document.querySelector('#source-record-${index} pre').textContent)`);check(sameState(exact,source),'existing reference source record changed');check(details.sources.includes(source.title),'existing reference source title not disclosed');}
     const properties=reference.raw_feature.properties;
     const rawDates=Object.fromEntries(Object.entries(properties).filter(([name,value])=>/date|year|construction/.test(name)&&value!==null&&typeof value!=='object'));
     for(const value of Object.values(rawDates))check(details.input.includes(String(value)),'raw reference date lost '+reference.original_id+' '+value);
@@ -529,14 +603,20 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   check(referenceChecks.length===31,'not all imported references inspected');
   const bce=referenceChecks.filter(r=>Object.values(r.rawDates).some(v=>/^-\d|BCE/.test(String(v))));check(bce.length>0,'raw BCE references not exercised');
-  const bceExample=bce[0];await select(bceExample.item);await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');await capture('atemporal-raw-negative-dates-en-map');await click('#language-ru');await capture('atemporal-raw-negative-dates-ru-map');await click('#language-en');
+  const bceExample=bce[0];await select(bceExample.item);await disclose('record-disclosure');await disclose('sources-disclosure');await disclose('input-disclosure');await disclose('evidence-disclosure');await capture('atemporal-raw-negative-dates-en-map');await click('#language-ru');await capture('atemporal-raw-negative-dates-ru-map');await click('#language-en');
   const selectedReference=(await snapshot()).state.selectedItemId;await layer('architecture',false);check((await snapshot()).state.selectedItemId===null,'hiding selected reference layer did not clear selection');await layer('architecture',true);await close();
   await click('#period-all');const wide=await membership({leonardo:11,roman:3,architecture:31},'wide Range interval collection');await placeAnchors('wide11Presences9Places');
+  const residence=expectedBundle.leonardo.lifePath.presences.find(p=>p.duration_status==='range_not_continuous_position');
+  check(residence,'existing residence interval missing');await select(residence.presence_item_id);
+  check(await evaluate(cdp,"!document.querySelector('#selection-facts [data-i18n=cesenaCandidateContext]')"),'Cesena-specific qualification leaked into another presence');
+  const residenceFacts=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+  check(/continuous day-by-day presence is not established/.test(residenceFacts)&&!residenceFacts.includes('range_not_continuous_position'),'residence interval retained technical status or inferred continuous presence');
+  await click('#language-ru');check(await evaluate(cdp,"document.getElementById('selection-facts').textContent.includes('непрерывное ежедневное присутствие не установлено')"),'RU residence limitation missing');await capture('hierarchy-residence-first-view-ru');await click('#language-en');
   const repeated=expectedBundle.leonardo.lifePath.presences.filter(p=>p.place_ref==='place-florence');check(repeated.length===2,'accepted repeated Florence episodes missing');
   await prepareNativeMapSurface();
   await evaluate(cdp,`(() => {const n=document.querySelector('.workspace-place-marker[data-place-ref="place-florence"]');if(!n?.checkVisibility({checkVisibilityCSS:true}))throw new Error('Florence Place anchor hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Florence anchor cannot receive focus');})()`);
   await key(' ','Space',32);await stable('native Florence anchor keyboard selection');await placeAnchors('native Florence grouped anchor');
-  for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
+  for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');await expose('#place-episodes');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
   await disclose('sources-disclosure');await capture('repeated-florence-source-en-map');await close();
   const nativeRoman=await evaluate(cdp,`(async()=>{const r=window.__ARTEMIS_EXPLORER,features=(await r.map.getSource('workspace-features').getData()).features;return features.filter(f=>f.properties.layer_id==='roman').map(f=>({item:f.properties.item_id,geometry:f.geometry}));})()`,true);
   check(nativeRoman.length===3&&new Set(nativeRoman.map(r=>r.item)).size===3,'eligible Roman versions were merged/dropped');

@@ -1,0 +1,464 @@
+{
+  "date": "2026-10-09",
+  "scope": "Bounded inspector information hierarchy; historical-boundary comparison is research only",
+  "implementation_head": "18441ae7adc83ba3b9a7cac0f369e7648a7c0cdd",
+  "remote_main_at_check": "2cb27d5228acacdd30fe1436b85d6aa6b82a2655",
+  "publication": {
+    "pushed": false,
+    "pull_request": null,
+    "merged": false,
+    "live_verified": false,
+    "blocked_action": "git push -u origin fix/explorer-information-hierarchy-20261009",
+    "reason": "Automatic approval review rejected public publication because continuing work was not explicit authorization to disclose the new documentation. No alternate write route attempted.",
+    "snapshot": "Original local closeout; superseded for current delivery status by manual_publication_and_ci_correction below."
+  },
+  "tests": {
+    "command": "python -m pytest -q tests/test_unified_explorer.py tests/test_mobile_explorer.py tests/test_unified_explorer_browser.py tests/test_repository_governance_contract.py tests/test_governance_boundary.py",
+    "head": "18441ae7adc83ba3b9a7cac0f369e7648a7c0cdd",
+    "passed": 29,
+    "seconds": 14.26,
+    "required_github_ci": "not_run"
+  },
+  "native_evidence": [
+    {
+      "case": "desktop",
+      "outcome": "TECHNICAL_UNIFIED_WORKSPACE_PASS",
+      "source_head": "dc1b80f178139f620dc1fe670d94a07c2cc55288",
+      "report_sha256": "dee17b0c71286e0c7a1e9392b0d7b5bc4f9e676cc3fdd9c51815be5f1d3d0ecd",
+      "provenance": {
+        "evidenceKind": "automated_native_browser_check",
+        "checkoutCommit": "dc1b80f178139f620dc1fe670d94a07c2cc55288",
+        "recordedAtUtc": "2026-10-09T06:41:05.694Z",
+        "browser": {
+          "protocolVersion": "1.3",
+          "product": "HeadlessChrome/134.0.6998.35",
+          "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+          "jsVersion": "13.4.114.14"
+        },
+        "launchWindow": {
+          "width": 1440,
+          "height": 1156
+        },
+        "hostViewportBeforeOverride": {
+          "width": 1440,
+          "height": 1156,
+          "devicePixelRatio": 1
+        },
+        "requestedCssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "cssViewport": {
+          "width": 1440,
+          "height": 900,
+          "devicePixelRatio": 1
+        },
+        "viewportEmulation": "CSS dimensions fixed through CDP; DPR1, desktop input, not physical iPhone/touch/safe-area verification",
+        "runnerSha256": "8645890bd88f607999382866944dfc854fdd0636d18f1ee147b1d7340bc5ec73",
+        "sharedTransportSha256": "df90962fa4c6c0e92b77f3411c182f0bd0ec6826899d8d64cf5e1a5607953271",
+        "bundleSha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538",
+        "workflowRunUrl": null,
+        "workflowRunAttempt": null,
+        "live": false
+      },
+      "action_count": 269,
+      "capture_count": 27,
+      "reference_count": 31,
+      "live_wikimedia_requests": 0,
+      "artifact_files": [
+        {
+          "entry": "globe",
+          "path": "build-meta.json",
+          "bytes": 9725,
+          "sha256": "e45c2a4b10815859f9e88ff7afbc27613db5c01f7ff9042fa8d940053392162d"
+        },
+        {
+          "entry": "globe",
+          "path": "unified-bundle.json",
+          "bytes": 1934015,
+          "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538"
+        },
+        {
+          "entry": "region",
+          "path": "build-meta.json",
+          "bytes": 9722,
+          "sha256": "f68870c819151fe62bb62b83ee7ea7f644a873b14aa175a1876a0638116fca0f"
+        },
+        {
+          "entry": "region",
+          "path": "unified-bundle.json",
+          "bytes": 1934015,
+          "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538"
+        }
+      ],
+      "selected_captures": [
+        {
+          "case": "hierarchy-catalog-first-view-en",
+          "width": 1440,
+          "height": 900,
+          "screenshotSha256": "45c84c36d864f0a8347afb7683fd0e6be78917ca9f99981cb5d90a3ad241b50c",
+          "domSha256": "30e725fcf391c44c9a847fcc6f0d33ae087e984b2f6012181bbad63a0e2a3573"
+        },
+        {
+          "case": "hierarchy-roman-first-view-en",
+          "width": 1440,
+          "height": 900,
+          "screenshotSha256": "8148464172658c5a72cfda54d1d6c757f770beb3515ef1683b71fce5115bc034",
+          "domSha256": "5f442b6bd3fc063df84e665bedaa7e78888e4707a6d6e5615b5facfeba1e3a43"
+        },
+        {
+          "case": "hierarchy-presence-first-view-en",
+          "width": 1440,
+          "height": 900,
+          "screenshotSha256": "403dd6a8a73d62502e71b40940df8b47083f2abea58ddad08836928eb3809f77",
+          "domSha256": "f466e4d487754d570e9323368af9f8727bbc96fda8a7751d41b3175ad1c35d04"
+        },
+        {
+          "case": "hierarchy-reference-first-view-en",
+          "width": 1440,
+          "height": 900,
+          "screenshotSha256": "ef6089a1d2a628c1f75f3f78e858570f401dbd2a5b046875fb745ec7addb69ce",
+          "domSha256": "3e68353f38241c9120ce8ea1bf8ed58fa09a5bf2268d3f85842456a745672611"
+        },
+        {
+          "case": "atemporal-raw-negative-dates-ru-map",
+          "width": 1440,
+          "height": 900,
+          "screenshotSha256": "e7e56efac3aad9c3a1fe4a1396e181cc0733af9fd258e8c0ccdc680fb20c5542",
+          "domSha256": "5102a566016d0cefe23a9ab784a841bf670bdbf2803ee2e9b65c2b23c560314c"
+        },
+        {
+          "case": "hierarchy-residence-first-view-ru",
+          "width": 1440,
+          "height": 900,
+          "screenshotSha256": "483fb1c96f843d3dbd2443897d0f4e0da4cc43f1d5a076f35e9d58303ffc9675",
+          "domSha256": "8627f56be2f0fe9fa7d58f91d12b43c1cd57ed952be0eaa7ab5f793341e709cd"
+        }
+      ],
+      "rebind": {
+        "target_head": "18441ae7adc83ba3b9a7cac0f369e7648a7c0cdd",
+        "reason": "Only harness ownership/panel preparation changed after the desktop run; every report-verified product artifact byte equals the final build. Not represented as a fresh desktop run at target head."
+      }
+    },
+    {
+      "case": "narrow",
+      "outcome": "TECHNICAL_UNIFIED_WORKSPACE_PASS",
+      "source_head": "18441ae7adc83ba3b9a7cac0f369e7648a7c0cdd",
+      "report_sha256": "efac29bd108e4654ab9e3de3af90d919257816bcef886b7cbc558c22fe33128a",
+      "provenance": {
+        "evidenceKind": "automated_native_browser_check",
+        "checkoutCommit": "18441ae7adc83ba3b9a7cac0f369e7648a7c0cdd",
+        "recordedAtUtc": "2026-10-09T06:49:18.877Z",
+        "browser": {
+          "protocolVersion": "1.3",
+          "product": "HeadlessChrome/134.0.6998.35",
+          "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+          "jsVersion": "13.4.114.14"
+        },
+        "launchWindow": {
+          "width": 960,
+          "height": 1100
+        },
+        "hostViewportBeforeOverride": {
+          "width": 960,
+          "height": 1100,
+          "devicePixelRatio": 1
+        },
+        "requestedCssViewport": {
+          "width": 390,
+          "height": 844
+        },
+        "cssViewport": {
+          "width": 390,
+          "height": 844,
+          "devicePixelRatio": 1
+        },
+        "viewportEmulation": "CSS dimensions fixed through CDP; DPR1, desktop input, not physical iPhone/touch/safe-area verification",
+        "runnerSha256": "4c755d5346606682c1a49bb844c60deeb1adc79e80337cb18cb0799cf44520e3",
+        "sharedTransportSha256": "df90962fa4c6c0e92b77f3411c182f0bd0ec6826899d8d64cf5e1a5607953271",
+        "bundleSha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538",
+        "workflowRunUrl": null,
+        "workflowRunAttempt": null,
+        "live": false
+      },
+      "action_count": 465,
+      "capture_count": 31,
+      "reference_count": 31,
+      "live_wikimedia_requests": 0,
+      "artifact_files": [
+        {
+          "entry": "globe",
+          "path": "build-meta.json",
+          "bytes": 9725,
+          "sha256": "e45c2a4b10815859f9e88ff7afbc27613db5c01f7ff9042fa8d940053392162d"
+        },
+        {
+          "entry": "globe",
+          "path": "unified-bundle.json",
+          "bytes": 1934015,
+          "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538"
+        },
+        {
+          "entry": "region",
+          "path": "build-meta.json",
+          "bytes": 9722,
+          "sha256": "f68870c819151fe62bb62b83ee7ea7f644a873b14aa175a1876a0638116fca0f"
+        },
+        {
+          "entry": "region",
+          "path": "unified-bundle.json",
+          "bytes": 1934015,
+          "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538"
+        }
+      ],
+      "selected_captures": [
+        {
+          "case": "hierarchy-catalog-first-view-en",
+          "width": 390,
+          "height": 844,
+          "screenshotSha256": "c05d49d67f03e71568b318c055c64706c5ec0a05081ea4a666f5118db06d840c",
+          "domSha256": "9583e955d5f9a620a5ca71d568bcd7b690033f18ef87db32f915b630028754cb"
+        },
+        {
+          "case": "hierarchy-roman-first-view-en",
+          "width": 390,
+          "height": 844,
+          "screenshotSha256": "a5acbbc41b6473d9ae4bcd9f6535891513617ca608e0b3e5d8d8d3ce07d6a8cc",
+          "domSha256": "4e82c9aeef4fd779826c3aaa0bb0f46f773d7f3e24275ec45150c6e44a69d928"
+        },
+        {
+          "case": "hierarchy-presence-first-view-en",
+          "width": 390,
+          "height": 844,
+          "screenshotSha256": "06c952958a857f81ee63987d9ebb336ffe8f5ac6977f4c8b239a8f15251b67b9",
+          "domSha256": "61b01b9298785af12eec18a6503b6ee4f94197ea908d45d40ae864ebd65f885e"
+        },
+        {
+          "case": "hierarchy-reference-first-view-en",
+          "width": 390,
+          "height": 844,
+          "screenshotSha256": "5ec192486c292c062d8b3113ccf659ed48a963e40a5c2e1b0b42c3ac41abb05d",
+          "domSha256": "ae3ddc161f224070a2b5c831d381bb2b6135f864d95cd70d3267e084dc81c707"
+        },
+        {
+          "case": "atemporal-raw-negative-dates-ru-map",
+          "width": 390,
+          "height": 844,
+          "screenshotSha256": "d4c020a73f18a876edd6fbb6cac3a1f9aaf3ea244add29dfa317fd6b81ebcd23",
+          "domSha256": "75211ac4484c7281252fd11265371baa509593b7f6afc38e2a299501b0b47a11"
+        },
+        {
+          "case": "hierarchy-residence-first-view-ru",
+          "width": 390,
+          "height": 844,
+          "screenshotSha256": "954abec0a7299ea7c1cb135ab1a797fba6da5b9392a1ca4ad2df97c2cddce715",
+          "domSha256": "027c86fd98ad62822ec489f2627acb80a2400eaee899e008857058b7f66151db"
+        }
+      ]
+    }
+  ],
+  "immutable_bundle": {
+    "sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538",
+    "same_as_baseline": true,
+    "registry_records": 55
+  },
+  "review": {
+    "agent": "/root/hierarchy_review",
+    "code_head": "18441ae7adc83ba3b9a7cac0f369e7648a7c0cdd",
+    "verdict": "ACCEPT_IMPLEMENTATION_TECHNICAL",
+    "research_verdict": "ACCEPT_RESEARCH_COMPARISON",
+    "unresolved_critical_material_findings": 0,
+    "low_severity_observation": "Narrow Roman first-view screenshot clips two leading title letters with horizontal inspector scroll; full identity remains in DOM/chooser; not a bounded hierarchy blocker."
+  },
+  "limits": [
+    "Local technical evidence only; no public delivery or required GitHub CI claimed.",
+    "Headless Chromium 134.0.6998.35, software WebGL, fixed CSS viewport/DPR1 and desktop pointer/keyboard input; no physical iPhone Safari/touch/safe-area proof.",
+    "Test-only local browser wrapper uses network proxy and ignores certificate errors; latest Playwright CDN download was unavailable.",
+    "No complete assistive technology audit, validated comprehension or user-value claim.",
+    "Research provider descriptions/licenses checked; full dataset completeness, current bytes and historical correctness unverified; no corpus intake."
+  ],
+  "manual_publication_and_ci_correction": {
+    "pr": "https://github.com/omegapunctum/ARTEMIS/pull/480",
+    "owner_uploaded_head": "23835f1902333323de6ecc382f24143430fc03e0",
+    "remote_exact_head_review": "ACCEPT_EXACT_HEAD_REVIEW by /root/hierarchy_review; durable in PR body",
+    "push_core": {
+      "run_url": "https://github.com/omegapunctum/ARTEMIS/actions/runs/37912147190",
+      "conclusion": "success",
+      "native_css_viewports": [
+        "1440x900",
+        "500x900",
+        "390x844",
+        "844x390"
+      ],
+      "regression_tests_passed": 434,
+      "test_seconds": 78.19
+    },
+    "pr_core": {
+      "run_url": "https://github.com/omegapunctum/ARTEMIS/actions/runs/37912423381",
+      "conclusion": "failure",
+      "failed_step": "Verify Explorer high-DPI rendering and input",
+      "observed_error": "High-DPI source/native identity changed",
+      "reason": "Obsolete Sources presentation-text hash comparison; readable text intentionally changes. A successful push run does not override this failed relevant PR gate."
+    },
+    "proof_correction": {
+      "head": "115e0b17965d67d377980bf450ea33757336b2ed",
+      "file": "scripts/capture_explorer_performance.mjs",
+      "review": "ACCEPT_PROOF_CORRECTION by /root/hierarchy_review; zero unresolved critical/material findings",
+      "runtime_or_source_changes": false,
+      "tests": {
+        "passed": 29,
+        "seconds": 19.15,
+        "command": "python -m pytest -q tests/test_unified_explorer.py tests/test_mobile_explorer.py tests/test_unified_explorer_browser.py tests/test_repository_governance_contract.py tests/test_governance_boundary.py"
+      },
+      "native_high_dpi": {
+        "outcome": "process_exit_0; no report.error; all four asserted cases completed",
+        "report_sha256": "c8c6b76a326300a3a0abd3b8e093a7c5d6e47b3787cf5655d1d96a565cf1d057",
+        "browser": {
+          "protocolVersion": "1.3",
+          "product": "HeadlessChrome/134.0.6998.35",
+          "revision": "@ea6ef4c2ac15ae95d2cfd65682da62c093415099",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+          "jsVersion": "13.4.114.14"
+        },
+        "bundle_sha256": "a0c2046ea0862683167aef3b6d5f4b496a36fcabb0b2dcaa595c4534f91d5538",
+        "registry_count": 55,
+        "baseline_ref": "76404197",
+        "cases": [
+          {
+            "variant": "baseline",
+            "view": "globe",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 3,
+              "width": 1500,
+              "height": 2700,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.45411045991985705,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 190,
+              "y": 340,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "baseline-globe-dpr3.png",
+              "sha256": "803f37be7c502d9887069553498e7b9cd39362b6dbf8819aacbbe5889198d6eb"
+            }
+          },
+          {
+            "variant": "baseline",
+            "view": "map",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 3,
+              "width": 1500,
+              "height": 2700,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.42422698250774665,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 170,
+              "y": 330,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "b612f4fbe98bed5d29cea06bf2e655cbe52751f13f76b9fb48cbc3d9376b8d6f",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "baseline-map-dpr3.png",
+              "sha256": "198c138a6cbbcaf5c9f96c36a8822583cafce0780e5656d3c862f65fd1d0f59a"
+            }
+          },
+          {
+            "variant": "current",
+            "view": "globe",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 2,
+              "width": 1000,
+              "height": 1800,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.45411045991985705,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 190,
+              "y": 340,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "978009aca731ff1c70b3e6f3926e08b54994d383613e47a16b65213a45933673",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "current-globe-dpr3.png",
+              "sha256": "cf6fa7988c09d56d560bf464479bde249addfc77e1221778db223d22413ee43b"
+            }
+          },
+          {
+            "variant": "current",
+            "view": "map",
+            "geometry": {
+              "dpr": 3,
+              "pixelRatio": 2,
+              "width": 1000,
+              "height": 1800,
+              "cssWidth": 500,
+              "cssHeight": 900,
+              "registry": 55,
+              "selected": "m5:presence:presence-leonardo-florence-st-luke-1472",
+              "alignment": 0.42422698250774665,
+              "nativeSelected": true,
+              "preserved": true
+            },
+            "pick": {
+              "x": 170,
+              "y": 330,
+              "item": "rp:region_geometry:region-roman-empire:region-geometry-114-116"
+            },
+            "sourceSha256": "9b4018a8e894f82d44503fa0e24ae61527e56da0c86157a4ec7f7ab53a42a506",
+            "sourceTextSha256": "978009aca731ff1c70b3e6f3926e08b54994d383613e47a16b65213a45933673",
+            "sourceRecordCount": 2,
+            "nativeDrag": true,
+            "keyboardSources": true,
+            "screenshot": {
+              "name": "current-map-dpr3.png",
+              "sha256": "02a0c11aac4831272228f4f89c0defd50943040776cdff3460316e556fd1abbf"
+            }
+          }
+        ],
+        "limits": [
+          "Software WebGL on CI; not user-device FPS",
+          "Local max-age=3600 server; not actual Pages caching",
+          "Programmatic camera movement measures renderer work, not native gesture usability",
+          "DPR3 emulation is not evidence from a physical phone; CSS500x900, desktop input, software WebGL"
+        ]
+      }
+    },
+    "delivery_state": "Correction awaits owner manual push and new-head GitHub CI. No merge or live delivery verified."
+  }
+}

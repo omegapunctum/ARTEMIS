@@ -12,7 +12,7 @@ const http=require('node:http');
   assert.equal(contextReplaced(new Error('Inspected target navigated or closed')),true);
   assert.equal(contextReplaced(new Error('WebSocket closed')),false);
   // Hidden incumbent fields must route to the visible accepted mobile calendar.
-  for(const [selector,owner] of [['#view-map','settings'],['#language-ru','settings'],['#layer-catalog','layers'],['#record-select','records'],['#clear-search','records'],['#mode-scrub','calendar'],['#period-all','calendar'],['#dock-toggle',null],['#mobile-settings',null],['#close-details',null]])assert.equal(mobileControlOwner(selector),owner,selector);
+  for(const [selector,owner] of [['#view-map','settings'],['#language-ru','settings'],['#layer-catalog','layers'],['#record-select','records'],['#record-search','records'],['#clear-search','records'],['#record-disclosure > summary',null],['#source-record-0 > summary',null],['#mode-scrub','calendar'],['#period-all','calendar'],['#dock-toggle',null],['#mobile-settings',null],['#close-details',null]])assert.equal(mobileControlOwner(selector),owner,selector);
   assert.equal(mobileYearControl('time-start'),'mobile-range-start');assert.equal(mobileYearControl('time-end'),'mobile-range-end');assert.equal(mobileYearControl('cursor-year'),'mobile-cursor-year');assert.equal(mobileYearControl('record-search'),null);
   for(const [target,min,max] of [[91,91,1519],[100,91,1519],[1502,91,1519],[1519,91,1519],[1502,1502,1519],[1502,91,1502],[807,91,1519]]) {
     let current=1452;const keys=wheelKeys(target,min,max);

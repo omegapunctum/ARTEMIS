@@ -27,6 +27,7 @@ from scripts import validate_leonardo_world_slice as gate_c_validation  # noqa: 
 from scripts import import_wikidata_catalog as wikidata_catalog  # noqa: E402
 
 TEMPLATE_DIR = ROOT / "scripts" / "unified_explorer"
+ENGINE_DIR = TEMPLATE_DIR / "engine"
 FEATURES_PATH = ROOT / "data" / "features.geojson"
 SOURCES_PATH = ROOT / "data" / "sources.json"
 ENTRY_PROFILES = {"leonardo", "roman"}
@@ -275,7 +276,16 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             raise UnifiedBuildError("Cesena amendment input changed during composition")
         # Finish validating all input/template content before touching the output.
         template = (TEMPLATE_DIR / "index.html.template").read_text(encoding="utf-8")
-        assets = {name: (TEMPLATE_DIR / name).read_bytes() for name in ("runtime.js", "mobile.js", "style.css")}
+        assets = {name: (TEMPLATE_DIR / name).read_bytes() for name in ("runtime.js", "mobile.js", "desktop.js", "startup.js", "style.css")}
+        engine_manifest = _read(ENGINE_DIR / "manifest.json")
+        if engine_manifest["engine_id"] != spike.EXPECTED_ENGINE:
+            raise UnifiedBuildError("local engine differs from the pinned engine")
+        for name in ("maplibre-gl.js", "maplibre-gl.css", "LICENSE.txt"):
+            payload = (ENGINE_DIR / name).read_bytes()
+            if hashlib.sha256(payload).hexdigest() != engine_manifest["sha256"][name]:
+                raise UnifiedBuildError("local engine bytes differ from the pin: " + name)
+            assets["engine/" + name] = payload
+        assets["engine/manifest.json"] = (ENGINE_DIR / "manifest.json").read_bytes()
         optional_locale = TEMPLATE_DIR / "localization.js"
         if optional_locale.exists():
             assets["localization.js"] = optional_locale.read_bytes()
@@ -284,7 +294,9 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
         output.mkdir(parents=True)
         public_profile = "globe" if entry_profile == "leonardo" else "region"
         for name, payload in assets.items():
-            (output / name).write_bytes(payload)
+            destination = output / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(payload)
         for name in ("geospatial-assets.json", "earth-context.geojson", "engine-evaluation.json", "acceptance-profiles.json"):
             shutil.copyfile(leonardo / name, output / name)
         for row in bundle["input_ledger"]:
@@ -306,6 +318,10 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "RUNTIME_SHA": hashlib.sha256(assets["runtime.js"]).hexdigest(),
             "STYLE_SHA": hashlib.sha256(assets["style.css"]).hexdigest(),
             "MOBILE_SHA": hashlib.sha256(assets["mobile.js"]).hexdigest(),
+            "DESKTOP_SHA": hashlib.sha256(assets["desktop.js"]).hexdigest(),
+            "STARTUP_SHA": hashlib.sha256(assets["startup.js"]).hexdigest(),
+            "ENGINE_JS_SHA": engine_manifest["sha256"]["maplibre-gl.js"],
+            "ENGINE_CSS_SHA": engine_manifest["sha256"]["maplibre-gl.css"],
         }
         for key, value in replacements.items():
             template = template.replace("{{" + key + "}}", value)
@@ -316,6 +332,7 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
             "deployment_mode": "public_r_and_d_preview", "public_pages_entrypoint": True,
             "backend_required": False, "historical_corpus_ready": False,
             "engine_id": spike.EXPECTED_ENGINE, "engine_family": incumbent_meta["engine_family"],
+            "engine_delivery": {"mode": "local_pinned_assets", "manifest_uri": "./engine/manifest.json", "sha256": engine_manifest["sha256"]},
             "bundle_id": bundle["bundle_id"], "bundle_sha256": bundle_sha,
             "bundle_content_sha256": bundle["content_sha256"],
             "leonardo_dataset_identity": bundle["leonardo"]["explorerState"]["dataset_identity"],
