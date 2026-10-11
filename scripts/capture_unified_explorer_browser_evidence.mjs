@@ -143,7 +143,10 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   async function mobile() {return evaluate(cdp,"matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches");}
   async function expose(selector) {
-    const inInspector=await evaluate(cdp,`!!document.querySelector(${JSON.stringify(selector)})?.closest('#inspector')`);
+    // Episode buttons are created only after Details is opened; use their
+    // stable container to resolve ownership even before a button exists.
+    const ownerSelector=selector.startsWith('#place-episodes ') ? '#place-episodes' : selector;
+    const inInspector=await evaluate(cdp,`!!document.querySelector(${JSON.stringify(ownerSelector)})?.closest('#inspector')`);
     if(inInspector&&await evaluate(cdp,"document.getElementById('inspector').hidden && !!document.getElementById('open-details')"))await click('#open-details');
     if(!await mobile()) {
       const owner=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});return {records:!!n?.closest('#desktop-records-body'),layers:!!n?.closest('#desktop-layer-body'),inspector:!!n?.closest('#inspector')&&!n?.closest('.drawer-header')};})()`);
@@ -613,7 +616,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await prepareNativeMapSurface();
   await evaluate(cdp,`(() => {const n=document.querySelector('.workspace-place-marker[data-place-ref="place-florence"]');if(!n?.checkVisibility({checkVisibilityCSS:true}))throw new Error('Florence Place anchor hidden');n.focus({preventScroll:true});if(document.activeElement!==n)throw new Error('Florence anchor cannot receive focus');})()`);
   await key(' ','Space',32);await stable('native Florence anchor keyboard selection');await placeAnchors('native Florence grouped anchor');
-  for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
+  for(const episode of repeated){await click('#place-episodes button[data-presence-item-id="'+episode.presence_item_id+'"]',true);check((await snapshot()).state.selectedItemId===episode.presence_item_id,'repeated Place episode selection collapsed');await expose('#place-episodes');check(await evaluate(cdp,`document.querySelector('#place-episodes button[data-presence-item-id=\\\"'+${JSON.stringify(episode.presence_item_id)}+'\\\"]').getAttribute('aria-pressed')==='true'`),'repeated Place episode active state missing');await placeAnchors('Florence '+episode.presence_id);}
   await disclose('sources-disclosure');await capture('repeated-florence-source-en-map');await close();
   const nativeRoman=await evaluate(cdp,`(async()=>{const r=window.__ARTEMIS_EXPLORER,features=(await r.map.getSource('workspace-features').getData()).features;return features.filter(f=>f.properties.layer_id==='roman').map(f=>({item:f.properties.item_id,geometry:f.geometry}));})()`,true);
   check(nativeRoman.length===3&&new Set(nativeRoman.map(r=>r.item)).size===3,'eligible Roman versions were merged/dropped');
