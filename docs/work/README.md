@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Owner-directed zoom performance — 2026-10-11
+
+- `2026-10-11_EXPLORER_ZOOM_PERFORMANCE_v1.md` — active bounded REVIEW diagnosis of slowdown when zooming toward existing architecture objects. Baseline is merged PR #480; preserve existing data/temporal semantics. Measured correction and independent verification required; architecture existence/construction modeling remains separate.
+
 ## Owner-directed compact selection — 2026-10-10
 
 - `2026-10-10_COMPACT_SELECTION_v1.md` — bounded REVIEW correction: compact selection card → explicit details, denser desktop calendar/panels, single range track and bounded rendering workload changes. Owner accepted the standalone preview on 2026-10-10 with a rendered globe/compact-panel/range screenshot; remaining native interaction/mobile checks, cutoff diagnosis and measured performance remain unverified. The owner authorized merge, lifting the task-specific hold; independent code conformity is accepted pending required CI. External delivery is blocked by automatic approval review of documentation disclosure even after image removal. No PR head update or merge; see the task document and prepared text/code-only package.
