@@ -1,6 +1,6 @@
 # Explorer zoom performance — 2026-10-11
 
-Status: active bounded diagnosis; no improvement or owner-device resolution claimed.
+Status: laboratory diagnosis complete; delivery subject to exact-head review/CI. Owner-device slowdown remains unresolved. No production optimization is included.
 
 Authority: owner reports severe slowdown when approaching objects and explicitly accepts the bounded autonomous cycle “smooth map exploration while approaching objects”. Class REVIEW under `DEVELOPMENT_OPERATING_SYSTEM.md` §6.2. Baseline: merged main `ea96a3d56cf1b05a3be7fbff63570b914757c34b` (PR #480). Its green CI does not establish owner-device performance.
 
@@ -17,3 +17,42 @@ Accept a correction only with a measured reduction of its targeted unnecessary w
 ## Baseline receipt
 
 PR #480 merged as `ea96a3d`; implementation/source tree matches its final accepted head. PR Core 38109571535, push Core 38109569161, boundary 38109571545 and geospatial 38109571539 succeeded; push reports 438 tests and all four native viewport scenarios. These supersede prior delivery-blocked/old-head statements in the compact-selection receipt, but do not resolve the new zoom report or prove live publication.
+
+## Diagnostic implementation and interpretation
+
+`scripts/capture_explorer_zoom.mjs` uses native CDP wheel input over Tower Bridge, zoom 3 → approximately 14 → approximately 3, in the existing Globe or 2D presentation. It records actual wheel counts/endpoints/trajectory, frame intervals by moving zoom band, long tasks, CDP script/layout counters, source events, input hashes, registry/visible identities, persistent map/document and non-camera state. `--selected true` selects the target by native click before measuring with its compact card open. Optional screenshots and CPU profiling add overhead and are explicitly recorded.
+
+Example (build first; ARTEMIS_BROWSER points to an installed Chromium executable):
+
+```sh
+python -m scripts.build_unified_explorer --output /tmp/artemis-zoom/globe
+node scripts/capture_explorer_zoom.mjs --browser "$ARTEMIS_BROWSER" --artifact /tmp/artemis-zoom --output /tmp/artemis-zoom-results --view globe --repetitions 2
+```
+
+Repeat with `--view map`, or `--selected true`. `--hide-context true` is diagnostic-only: it hides the Earth fill; it is not a product proposal or proof isolating all source processing. Default product rendering is unchanged. This is a manually invoked diagnostic, not a new required CI performance threshold.
+
+Frame intervals cover the interaction including input pacing/settlement, not GPU-only time. Moving-band classification uses the zoom and moving state at the end of each frame interval. Adaptive input can overshoot endpoints; elapsed totals are not fixed-path benchmarks. Reloaded repetitions do not prove a warm tile-cache case. `success` means scenario and preservation assertions completed; browser diagnostics must also be inspected. Headless Chromium 134 with SwiftShader, 1440×900/DPR 1, is a laboratory comparison only. Owner-device performance, pinch gestures, other GPUs/browsers and high DPI remain unvalidated.
+
+## Bounded decisions
+
+- Old performance evidence moves camera center/bearing at nearly constant zoom; it cannot establish responsiveness when approaching objects. Keep that evidence as historical, with this limitation.
+- Do not ship `earth-context maxzoom:6`. A scratch-only experiment reduced source event count, but did not establish an improvement in total time/script work and changes displayed coordinate precision when overzoomed. Same input bytes are insufficient visual equivalence. No source maxzoom, geometry, quality, density or runtime implementation change is included.
+- Attempts to detach markers through unexposed runtime/private properties failed during diagnostic setup; these are not performance evidence. The unsupported intervention was removed from the delivered runner.
+- Deliver the reproducible zoom diagnostic and evidence. A close-zoom-specific owner regression must not be declared fixed from these software-rendered results. No automatic temporal-architecture successor is authorized by this receipt.
+
+## Evidence and result
+
+Raw reports and frame samples: [evidence/2026-10-11_zoom](evidence/2026-10-11_zoom); `summary.json` indexes the runs. Runtime/source hashes identify the exact PR #480 artifact; only `z6.json` uses the disclosed scratch runtime intervention. The exploratory first/hidden/z6 reports precede final runner refinements and must not be treated as identical-instrumentation benchmark pairs. Final map/selected runs use the delivered runner; final Globe no-selection runs use the same default measurement before selected-mode metadata was added. Baseline reports that used registry array indices are exploratory only; final reports record all actual item IDs.
+
+| Scenario | Repeats | Moving frame p95, zoom 3–6 | Moving frame p95, zoom 10–15 |
+| --- | ---: | ---: | ---: |
+| Globe, no card | 2 | 667–700 ms | 100–117 ms |
+| 2D, no card | 2 | 83–100 ms | 67 ms |
+| Globe, compact card | 1 | 500 ms | 83 ms |
+| 2D, compact card | 1 | 100 ms | 67 ms |
+
+These are rounded descriptive laboratory samples, not device FPS or a statistically established causal effect. The Globe card run enabled screenshots; its elapsed total is not directly comparable. All final scenarios completed with 22 inward and 22 outward wheel events, reached approximately 14.07 and 3, preserved state/map/document and recorded no browser errors. Both selected runs selected Tower Bridge through native picking and retained its exact identity. The high-zoom compact-card screenshot was inspected: card, Details button and selected point are visible; no historical lifetime is inferred.
+
+The measured penalty concentrates at lower zoom in Globe on this software renderer; the owner's specific close-zoom slowdown is not established or resolved. 2D is a useful comparison for reproduction, not an automatic product-mode replacement. Next action: obtain the owner's affected device/browser, view mode, target and gesture, then reproduce/profile that exact case. This closes the bounded laboratory exploration without opening speculative runtime work or temporal-model implementation.
+
+Verification: builder PASS (55 records, unchanged digest); runner syntax PASS; repository governance tests 7 passed; six final native zoom repetitions passed. An additionally invoked legacy concept-lock suite produced 6 passes/1 failure because it expects an obsolete Gate D string in `VALIDATION_DECISION.md`; that test and its two input documents are byte-identical to baseline `ea96a3d`, and it is outside the required Core suite. No unrelated lifecycle text was altered to satisfy that stale assertion. Independent exact-head review and required CI are delivery gates, recorded on the PR separately.

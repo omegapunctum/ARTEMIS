@@ -2,7 +2,7 @@
 
 ## Owner-directed zoom performance — 2026-10-11
 
-- `2026-10-11_EXPLORER_ZOOM_PERFORMANCE_v1.md` — active bounded REVIEW diagnosis of slowdown when zooming toward existing architecture objects. Baseline is merged PR #480; preserve existing data/temporal semantics. Measured correction and independent verification required; architecture existence/construction modeling remains separate.
+- `2026-10-11_EXPLORER_ZOOM_PERFORMANCE_v1.md` — bounded REVIEW laboratory diagnosis complete: native zoom runner and six Globe/2D/card repetitions; no production optimization or owner-device resolution claimed. Exact-head review/CI control delivery. Next action is affected-device reproduction; architecture existence/construction modeling remains separate.
 
 ## Owner-directed compact selection — 2026-10-10
 

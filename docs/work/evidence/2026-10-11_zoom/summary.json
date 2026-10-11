@@ -1,0 +1,314 @@
+[
+  {
+    "report": "first",
+    "repetition": 0,
+    "elapsedMs": 23329,
+    "frameSummary": {
+      "count": 243,
+      "medianMs": 66.69999999999891,
+      "p95Ms": 266.59999999999854,
+      "maxMs": 866.7000000000007
+    },
+    "movingZoomBands": null,
+    "scriptSeconds": 1.236218,
+    "endpoints": [
+      14.06967848281418,
+      2.9999999999966365
+    ],
+    "preserved": true
+  },
+  {
+    "report": "hidden",
+    "repetition": 0,
+    "elapsedMs": 20138,
+    "frameSummary": {
+      "count": 306,
+      "medianMs": 33.400000000001455,
+      "p95Ms": 150,
+      "maxMs": 1466.6000000000022
+    },
+    "movingZoomBands": null,
+    "scriptSeconds": 1.099026,
+    "endpoints": [
+      14.069678482815352,
+      2.9999999999958313
+    ],
+    "preserved": true
+  },
+  {
+    "report": "z6",
+    "repetition": 0,
+    "elapsedMs": 27002,
+    "frameSummary": {
+      "count": 380,
+      "medianMs": 33.39999999999782,
+      "p95Ms": 183.39999999999964,
+      "maxMs": 1699.8999999999996
+    },
+    "movingZoomBands": null,
+    "scriptSeconds": 1.251064,
+    "endpoints": [
+      14.069678482815188,
+      2.999999999998337
+    ],
+    "preserved": true
+  },
+  {
+    "report": "final-globe",
+    "repetition": 0,
+    "elapsedMs": 23374,
+    "frameSummary": {
+      "count": 241,
+      "medianMs": 66.70000000000073,
+      "p95Ms": 233.29999999999927,
+      "maxMs": 1333.3000000000002
+    },
+    "movingZoomBands": [
+      {
+        "minZoom": 3,
+        "maxZoom": 6,
+        "maxInclusive": false,
+        "count": 47,
+        "p50Ms": 116.69999999999982,
+        "p95Ms": 700
+      },
+      {
+        "minZoom": 6,
+        "maxZoom": 10,
+        "maxInclusive": false,
+        "count": 73,
+        "p50Ms": 66.79999999999927,
+        "p95Ms": 133.39999999999964
+      },
+      {
+        "minZoom": 10,
+        "maxZoom": 15,
+        "maxInclusive": true,
+        "count": 95,
+        "p50Ms": 66.60000000000036,
+        "p95Ms": 100
+      }
+    ],
+    "scriptSeconds": 1.1260109999999999,
+    "endpoints": [
+      14.069678482814538,
+      2.9999999999953237
+    ],
+    "preserved": true
+  },
+  {
+    "report": "final-globe",
+    "repetition": 1,
+    "elapsedMs": 22829,
+    "frameSummary": {
+      "count": 255,
+      "medianMs": 66.60000000000036,
+      "p95Ms": 233.39999999999964,
+      "maxMs": 1266.5
+    },
+    "movingZoomBands": [
+      {
+        "minZoom": 3,
+        "maxZoom": 6,
+        "maxInclusive": false,
+        "count": 59,
+        "p50Ms": 16.799999999999272,
+        "p95Ms": 666.6000000000022
+      },
+      {
+        "minZoom": 6,
+        "maxZoom": 10,
+        "maxInclusive": false,
+        "count": 70,
+        "p50Ms": 66.70000000000073,
+        "p95Ms": 133.39999999999964
+      },
+      {
+        "minZoom": 10,
+        "maxZoom": 15,
+        "maxInclusive": true,
+        "count": 97,
+        "p50Ms": 50.10000000000218,
+        "p95Ms": 116.60000000000036
+      }
+    ],
+    "scriptSeconds": 1.159226,
+    "endpoints": [
+      14.069678482814313,
+      3.0000000000025837
+    ],
+    "preserved": true
+  },
+  {
+    "report": "final-map",
+    "repetition": 0,
+    "elapsedMs": 15284,
+    "frameSummary": {
+      "count": 280,
+      "medianMs": 50,
+      "p95Ms": 83.29999999999927,
+      "maxMs": 216.60000000000036
+    },
+    "movingZoomBands": [
+      {
+        "minZoom": 3,
+        "maxZoom": 6,
+        "maxInclusive": false,
+        "count": 75,
+        "p50Ms": 50,
+        "p95Ms": 83.39999999999782
+      },
+      {
+        "minZoom": 6,
+        "maxZoom": 10,
+        "maxInclusive": false,
+        "count": 92,
+        "p50Ms": 50,
+        "p95Ms": 83.29999999999927
+      },
+      {
+        "minZoom": 10,
+        "maxZoom": 15,
+        "maxInclusive": true,
+        "count": 102,
+        "p50Ms": 50,
+        "p95Ms": 66.70000000000073
+      }
+    ],
+    "scriptSeconds": 0.524719,
+    "endpoints": [
+      14.069678482815155,
+      3.0000000000000138
+    ],
+    "preserved": true
+  },
+  {
+    "report": "final-map",
+    "repetition": 1,
+    "elapsedMs": 15211,
+    "frameSummary": {
+      "count": 273,
+      "medianMs": 50.099999999998545,
+      "p95Ms": 66.80000000000018,
+      "maxMs": 250
+    },
+    "movingZoomBands": [
+      {
+        "minZoom": 3,
+        "maxZoom": 6,
+        "maxInclusive": false,
+        "count": 76,
+        "p50Ms": 50,
+        "p95Ms": 100
+      },
+      {
+        "minZoom": 6,
+        "maxZoom": 10,
+        "maxInclusive": false,
+        "count": 91,
+        "p50Ms": 50.100000000000364,
+        "p95Ms": 66.79999999999927
+      },
+      {
+        "minZoom": 10,
+        "maxZoom": 15,
+        "maxInclusive": true,
+        "count": 99,
+        "p50Ms": 50.099999999998545,
+        "p95Ms": 66.70000000000073
+      }
+    ],
+    "scriptSeconds": 0.5006340000000002,
+    "endpoints": [
+      14.069678482815155,
+      3.0000000000000138
+    ],
+    "preserved": true
+  },
+  {
+    "report": "final-selected",
+    "repetition": 0,
+    "elapsedMs": 27257,
+    "frameSummary": {
+      "count": 394,
+      "medianMs": 49.899999999999636,
+      "p95Ms": 166.60000000000036,
+      "maxMs": 1399.999999999999
+    },
+    "movingZoomBands": [
+      {
+        "minZoom": 3,
+        "maxZoom": 6,
+        "maxInclusive": false,
+        "count": 64,
+        "p50Ms": 50,
+        "p95Ms": 500
+      },
+      {
+        "minZoom": 6,
+        "maxZoom": 10,
+        "maxInclusive": false,
+        "count": 78,
+        "p50Ms": 83.29999999999927,
+        "p95Ms": 150
+      },
+      {
+        "minZoom": 10,
+        "maxZoom": 15,
+        "maxInclusive": true,
+        "count": 109,
+        "p50Ms": 50.10000000000218,
+        "p95Ms": 83.30000000000291
+      }
+    ],
+    "scriptSeconds": 0.8848529999999999,
+    "endpoints": [
+      14.069678482813297,
+      3.000000000002679
+    ],
+    "preserved": true
+  },
+  {
+    "report": "final-selected-map",
+    "repetition": 0,
+    "elapsedMs": 15418,
+    "frameSummary": {
+      "count": 280,
+      "medianMs": 50,
+      "p95Ms": 83.39999999999964,
+      "maxMs": 133.40000000000055
+    },
+    "movingZoomBands": [
+      {
+        "minZoom": 3,
+        "maxZoom": 6,
+        "maxInclusive": false,
+        "count": 74,
+        "p50Ms": 50,
+        "p95Ms": 100
+      },
+      {
+        "minZoom": 6,
+        "maxZoom": 10,
+        "maxInclusive": false,
+        "count": 90,
+        "p50Ms": 66.60000000000036,
+        "p95Ms": 83.29999999999927
+      },
+      {
+        "minZoom": 10,
+        "maxZoom": 15,
+        "maxInclusive": true,
+        "count": 105,
+        "p50Ms": 50,
+        "p95Ms": 66.70000000000073
+      }
+    ],
+    "scriptSeconds": 0.577367,
+    "endpoints": [
+      14.069678482815155,
+      3.0000000000000138
+    ],
+    "preserved": true
+  }
+]
