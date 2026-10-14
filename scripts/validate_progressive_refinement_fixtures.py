@@ -362,6 +362,17 @@ def normalized_review_bytes(raw_path: str, content: bytes) -> bytes:
             newline = lines[index][len(raw_line):]
             lines[index] = replacement + newline
         text = "".join(lines)
+        # PR #472 authorized this exact additive Cesena contour after the v1
+        # review. Compare the original semantics to the frozen digest; do not
+        # exempt the contract or any other amendment from integrity checks.
+        original = "consume it only at its frozen fidelity until a separately authorized revision contour exists."
+        amendment = (
+            " The separately authorized [Cesena wording amendment]"
+            "(work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md) creates that contour for one exact Claim statement deletion only: "
+            "preserve frozen bytes/reviews, guard the base hash and old statement, and distinguish amendment provenance and derived dataset identity. "
+            "It does not implement a general refinement runtime, editor, migration or status promotion."
+        )
+        text = text.replace(original + amendment, original, 1)
         return text.encode("utf-8")
     return content
 

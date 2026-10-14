@@ -65,8 +65,16 @@ def validate() -> dict[str, Any]:
     completed_gates = project_state.get("completed_gates", [])
     gate_c = next((item for item in completed_gates if item.get("id") == "C"), {})
     _require(gate_c.get("status") == "completed" and gate_c.get("decision") == "FREEZE", "Gate C history drift")
-    _require(gate.get("id") == "D" and gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
-    _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
+    _require(gate.get("id") == "D", "current project gate must be D")
+    if gate.get("status") == "completed":
+        _require(gate.get("decision") == "ADVANCE_TO_GATE_E", "Gate D exit decision drift")
+        _require(
+            gate.get("evidence_ref") == "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md",
+            "Gate D exit must retain its separate decision authority",
+        )
+    else:
+        _require(gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
+        _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
 
     plan = builder.build_plan()
     digest = builder._digest(plan)

@@ -271,6 +271,26 @@ def test_review_digest_rejects_semantic_text_appended_to_lifecycle_header() -> N
         reviewed_content_sha256(request, loader)
 
 
+def test_exact_cesena_extension_preserves_frozen_contract_digest() -> None:
+    registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
+    raw_path = "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+    frozen = subprocess.check_output(["git", "show", f"{registry['frozen_commit']}:{raw_path}"], cwd=ROOT)
+    current = (ROOT / raw_path).read_bytes()
+    assert refinement_validator.normalized_review_bytes(raw_path, current) == refinement_validator.normalized_review_bytes(raw_path, frozen)
+
+
+@pytest.mark.parametrize("before,after", [
+    (b"one exact Claim statement deletion only", b"all Claim statement deletions"),
+    (b"It does not implement a general refinement runtime", b"It implements a general refinement runtime"),
+    (b"consume it only at its frozen fidelity", b"consume it at any fidelity"),
+])
+def test_cesena_extension_does_not_normalize_other_semantic_changes(before: bytes, after: bytes) -> None:
+    raw_path = "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+    current = (ROOT / raw_path).read_bytes()
+    assert before in current
+    assert refinement_validator.normalized_review_bytes(raw_path, current.replace(before, after, 1)) != refinement_validator.normalized_review_bytes(raw_path, current)
+
+
 def test_source_locator_reproduces_raw_value_and_claim(tmp_path: Path) -> None:
     package = load_package()
     revision(package, "revision-leo-time-refined")["source_value"]["raw"] = "9 August 1502"
@@ -754,7 +774,7 @@ def test_candidate_is_routed_by_lifecycle_not_capability() -> None:
     contract = (ROOT / "docs" / "PROGRESSIVE_REFINEMENT_CONTRACT.md").read_text(encoding="utf-8")
     foundation = (ROOT / "docs" / "FOUNDATION_INDEX.md").read_text(encoding="utf-8")
     truth = (ROOT / "docs" / "PROJECT_TRUTH.md").read_text(encoding="utf-8")
-    agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    work_registry = (ROOT / "docs" / "work" / "README.md").read_text(encoding="utf-8")
     decision = (
         ROOT / "docs" / "work" / "2026-08-12_PROGRESSIVE_REFINEMENT_DECISION_v1.md"
     ).read_text(encoding="utf-8")
@@ -762,7 +782,7 @@ def test_candidate_is_routed_by_lifecycle_not_capability() -> None:
     assert f"Status: `{registry['status']}` under issue `#377`" in contract
     assert "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md" in foundation
     assert "Issue #377 is foundation maintenance whose exact lifecycle is owned" in truth
-    assert "#377 as accepted historical foundation evidence" in agents
+    assert "Issue #377 is accepted historical foundation evidence" in work_registry
     assert "Public capability impact: none" in decision
 
 

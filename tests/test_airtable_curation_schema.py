@@ -43,8 +43,8 @@ def test_shadow_schema_is_non_authoritative_and_did_not_open_gate_d() -> None:
     assert gate_c["status"] == "completed"
     assert gate_c["decision"] == "FREEZE"
     assert state["gate"]["id"] == "D"
-    assert state["gate"]["status"] == "in_progress"
-    assert state["next_transition"]["gate"] == "D"
+    assert state["gate"]["status"] == "completed"
+    assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert 331 in state["github"]["deferred_issues"]
 
 
@@ -97,3 +97,16 @@ def test_reused_legacy_tables_keep_narrow_roles() -> None:
         for field in table["fields"]
     }
     assert knowledge_fields["layers"]["linked_table"] == "Layers"
+
+
+def test_gate_d_completion_requires_separate_exit_authority() -> None:
+    import pytest
+    module = _load_validator()
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    state = json.loads(PROJECT_STATE.read_text(encoding="utf-8"))
+    state["gate"]["evidence_ref"] = "shadow-import"
+    with pytest.raises(module.SchemaError, match="separate decision authority"):
+        module._validate_gate_boundary(contract, state)
+    state["gate"]["decision"] = "IMPORT_ALLOWED"
+    with pytest.raises(module.SchemaError, match="exit decision drift"):
+        module._validate_gate_boundary(contract, state)
