@@ -2,8 +2,9 @@
 
 ## Status and authority
 
-Status: accepted prospective DECISION; REVIEW implementation is authorized.
-Implementation and publication are not claimed.
+Status: accepted prospective DECISION; bounded REVIEW implementation completed
+locally and under final delivery verification. Publication is not claimed by this
+decision record; separate current-head delivery receipts are tracked in PR #483.
 On 2026-10-11 the owner accepted a bounded temporal architecture cycle, then
 instructed work to begin after reviewing Airtable's role. The 2026-10-12 continuation
 executes that direction. Performance diagnosis remains paused and separate.
@@ -258,3 +259,18 @@ initial attempt lacked uvicorn on PATH; the corrected runtime run passed. The
 correction passed 22 mobile/unified tests, Node desktop behavior and both native
 harness tests. Current-head remote CI, native captures and final review remain
 pending; the external user explicitly authorized GitHub sending on 2026-10-14.
+
+### Native implementation acceptance — 2026-10-14
+
+Distinct `/root/remote_acceptance_review` accepted actual native implementation
+evidence on remote source `2e0ffbc2b515c0499fdc947c7a6b104c6dc3cae6`: all eight
+workspace/architecture-time reports passed across four viewports. It verified
+316 screenshot/DOM artifact hashes and inspected nine desktop/narrow Globe/2D
+images; dated chooser labels, source-native dates, phase overlap, inference and
+modern-position/coverage limits are visible. Zero material native/visual findings
+remain. Final combined local export tests passed: 1228 passed, 3 skipped.
+
+This is technical implementation evidence, not publication or validated user value.
+The mutable status header is synchronized with the implementation checkpoint;
+original prospective scope/evidence records remain preserved. Final current-head
+checks, merge and separate live delivery receipts are owned by PR #483.
