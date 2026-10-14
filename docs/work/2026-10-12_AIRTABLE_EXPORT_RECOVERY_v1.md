@@ -101,7 +101,7 @@ not installed locally. Installing only the original workflow requirements and
 pytest reproduced both collection failures. Adding the pinned client resolves
 that dependency with FastAPI `0.136.1`, Starlette `1.8.0`, pytest `9.1.1`,
 httpx2/httpcore2 `2.13.1` and no plain `httpx` installed. Frozen history validation
-resolves all 20 commits; all seven release lanes pass with the existing memory
+resolves all 20 commits; all reported release lanes pass with the existing memory
 session single-node warning. The full unchanged non-Redis pytest contour passes:
 1228 passed, 3 skipped in 221.75 seconds (Python 3.12.14); `pip check` also passes.
 Exact-head independent review and CI control delivery. A subsequent Python 3.11
