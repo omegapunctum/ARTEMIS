@@ -47,8 +47,8 @@ def test_project_state_retains_gate_c_freeze_and_opens_gate_d_separately() -> No
     assert gate_c["status"] == "completed"
     assert gate_c["decision"] == "FREEZE"
     assert state["gate"]["id"] == "D"
-    assert state["gate"]["status"] == "in_progress"
-    assert state["next_transition"]["gate"] == "D"
+    assert state["gate"]["status"] == "completed"
+    assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["capability"]["globe"] == "public_r_and_d_preview"
     assert 331 in state["github"]["deferred_issues"]
 

@@ -330,6 +330,15 @@ def package_semantic_payload(package: dict[str, Any]) -> dict[str, Any]:
     return {key: package[key] for key in PACKAGE_LOCK_COLLECTIONS}
 
 
+CESENA_BASE_SENTENCE = "consume it only at its frozen fidelity until a separately authorized revision contour exists."
+CESENA_AUTHORIZED_AMENDMENT = (
+    " The separately authorized [Cesena wording amendment]"
+    "(work/2026-10-07_CESENA_CLAIM_CORRECTION_v1.md) creates that contour for one exact Claim statement deletion only: "
+    "preserve frozen bytes/reviews, guard the base hash and old statement, and distinguish amendment provenance and derived dataset identity. "
+    "It does not implement a general refinement runtime, editor, migration or status promotion."
+)
+
+
 def normalized_review_bytes(raw_path: str, content: bytes) -> bytes:
     if raw_path == "fixtures/world_model/refinement/v1/package.json":
         package = json.loads(content.decode("utf-8"), object_pairs_hook=_reject_duplicate_pairs)
@@ -362,6 +371,10 @@ def normalized_review_bytes(raw_path: str, content: bytes) -> bytes:
             newline = lines[index][len(raw_line):]
             lines[index] = replacement + newline
         text = "".join(lines)
+        # PR #472 authorized this exact additive Cesena contour after the v1
+        # review. Compare the original semantics to the frozen digest; do not
+        # exempt the contract or any other amendment from integrity checks.
+        text = text.replace(CESENA_BASE_SENTENCE + CESENA_AUTHORIZED_AMENDMENT, CESENA_BASE_SENTENCE, 1)
         return text.encode("utf-8")
     return content
 
@@ -654,6 +667,14 @@ def validate_review_envelope(*, require_clean_checkout: bool = False) -> dict[st
     validate_schema(decision, read_json(ACCEPTANCE_DECISION_SCHEMA_PATH))
     validate_capability_prohibitions(decision)
     tracks = request["required_tracks"]
+    # The current descendant must retain the separately accepted amendment.
+    # Frozen review content predates it and is normalized only for digest parity.
+    current_contract = (ROOT / "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md").read_text(encoding="utf-8")
+    if (
+        current_contract.count(CESENA_BASE_SENTENCE + CESENA_AUTHORIZED_AMENDMENT) != 1
+        or current_contract.count(CESENA_AUTHORIZED_AMENDMENT) != 1
+    ):
+        fail("current refinement contract must contain exactly one accepted Cesena amendment")
 
     status = registry.get("status")
     frozen_commit = registry.get("frozen_commit")

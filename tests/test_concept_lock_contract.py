@@ -102,7 +102,7 @@ def test_foundation_v3_validation_is_same_content_and_relation_safe() -> None:
     assert "same-content baseline" in validation
     assert "two evaluators" in validation
     assert "co-presence or similarity stated as documented encounter/influence/causality" in validation
-    assert "GATE D COMPLETED / ADVANCE_TO_GATE_E / M5 UX CORRECTION COMPLETED / PROCEED_TO_GATE_D_REVIEW / FORMAL USER VALUE UNVALIDATED" in decision
+    assert "GATE D COMPLETED / ADVANCE_TO_GATE_E / GATE E CLOSED / E1 OWNER-REPORTED PASS / E2 NOT COLLECTED / WAIVED / FORMAL USER VALUE UNVALIDATED" in decision
     assert "| Completed correction | `Temporal Map M5 bounded UX correction v1` / `PROCEED_TO_GATE_D_REVIEW` |" in decision
 
 

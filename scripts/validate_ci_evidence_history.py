@@ -13,6 +13,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "fixtures"
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
+# An upstream source revision is not a commit in ARTEMIS history. Keep this
+# exception bounded to the existing, source-qualified fixture contract.
+EXTERNAL_MANIFEST = Path("world_slices/roman_empire_region/v1/source_manifest.json")
+EXTERNAL_REPOSITORY = "https://github.com/Seshat-Global-History-Databank/cliopatria"
+EXTERNAL_COMMIT = "ad28a691b7c07c1fca89d0e0636d324667d2a258"
 
 
 class EvidenceHistoryError(RuntimeError):
@@ -34,10 +39,24 @@ def collect_commit_refs(value: Any) -> set[str]:
     return refs
 
 
+def fixture_document_refs(relative_path: Path, value: Any) -> set[str]:
+    if relative_path != EXTERNAL_MANIFEST:
+        return collect_commit_refs(value)
+    if not isinstance(value, dict) or (
+        value.get("repository") != EXTERNAL_REPOSITORY
+        or value.get("commit") != EXTERNAL_COMMIT
+    ):
+        raise EvidenceHistoryError("external source repository/commit binding mismatch")
+    # Validate all fields first, then exclude only this exact top-level binding.
+    # Nested frozen_commit fields still require local history resolution.
+    collect_commit_refs(value)
+    return collect_commit_refs({key: item for key, item in value.items() if key != "commit"})
+
+
 def fixture_commit_refs() -> set[str]:
     refs: set[str] = set()
     for path in sorted(FIXTURES.rglob("*.json")):
-        refs.update(collect_commit_refs(json.loads(path.read_text(encoding="utf-8"))))
+        refs.update(fixture_document_refs(path.relative_to(FIXTURES), json.loads(path.read_text(encoding="utf-8"))))
     if not refs:
         raise EvidenceHistoryError("no commit-bound fixture evidence found")
     return refs
