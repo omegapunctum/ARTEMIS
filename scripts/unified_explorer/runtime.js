@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const LAYERS = ['leonardo', 'roman', 'architecture', 'catalog'];
-  const MIN = 91, MAX = 1519;
+  const calendarBounds = bundle => ({min:bundle.calendar.min_year, max:bundle.calendar.max_year});
   const words = {
     en: {preview:'Public research prototype · user value unvalidated',globe:'Globe',map:'2D map',layers:'Layers',leonardo:'Leonardo',roman:'Roman Empire',architecture:'Architecture references',eleven:'11 selected presences',three:'3 reconstructions',atemporal:'Atemporal · historical applicability unknown',visible:'Visible records',choose:'Choose a record',focus:'Focus map on this record',evidence:'Claims, evidence and uncertainty',raw:'Source-native input and provenance',range:'Range',scrub:'Scrub',from:'From',to:'To',cursor:'Current year CE',routes:'Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.',sources:'Sources',none:'outside dated coverage / no matching record',off:'off',unknown:'Unknown',interval:'Interval collection; records may come from different eras, not simultaneous context.',trace:'Leonardo accumulates from',reference:'Atemporal imported reference. Historical applicability, lifetime and historical position are unknown.',reconstruction:'Approximate scholarly reconstruction; not exact historical borders.',presence:'Source-bounded documented presence; exact historical position and routes unknown.',sourceScope:'Source links do not mean historical claims have been verified. Other historical sources may exist; no reliability score is assigned.',legacy:'Raw export flags are metadata, not historical acceptance or geometry precision.',context:'Present-day reference context; not historical terrain.',error:'Could not complete the view change. The controls show the current view; try again.'},
     ru: {preview:'Публичный исследовательский прототип · пользовательская ценность не подтверждена',globe:'Глобус',map:'Карта 2D',layers:'Слои',leonardo:'Леонардо',roman:'Римская империя',architecture:'Архитектурные объекты',eleven:'11 выбранных присутствий',three:'3 реконструкции',atemporal:'Вне времени · историческая применимость неизвестна',visible:'Видимые записи',choose:'Выберите запись',focus:'Фокусировать карту на записи',evidence:'Утверждения, доказательства и неопределённость',raw:'Исходные данные и происхождение',range:'Интервал',scrub:'Курсор',from:'От',to:'До',cursor:'Текущий год н. э.',routes:'Хронология Леонардо не является маршрутом; точные маршруты и исторические положения неизвестны.',sources:'Источники',none:'вне временного покрытия / нет подходящих записей',off:'выключен',unknown:'Неизвестно',interval:'Коллекция интервала: записи могут относиться к разным эпохам, а не одновременному контексту.',trace:'След Леонардо накапливается с',reference:'Импортированная опорная запись вне времени. Историческая применимость, время существования и историческое положение неизвестны.',reconstruction:'Приблизительная научная реконструкция; не точные исторические границы.',presence:'Документированное присутствие в пределах источников; точное историческое положение и маршруты неизвестны.',sourceScope:'Связь с источником не означает проверенность исторических утверждений. Могут существовать другие источники; рейтинг достоверности не назначается.',legacy:'Флаги исходного экспорта — метаданные, а не историческое принятие или точность геометрии.',error:'Не удалось завершить смену вида. Кнопки показывают текущий вид; попробуйте снова.'}
@@ -12,9 +12,11 @@
   Object.assign(words.ru,{recordDetails:'Сведения о записи',sourceRecord:'Техническая запись источника',openSource:'Открыть источник',sourceManifest:'Данные источника · происхождение и лицензия',importedStart:'Начальная дата в импорте',importedConstructionEnd:'Окончание строительства в импорте',importedEnd:'Конечная дата в импорте',recordId:'Исходный ID записи',geometryVersion:'Версия геометрии',durationUnknown:'Длительность пребывания за пределами указанной даты не установлена.'});
   Object.assign(words.en,{durationCorpus:'The available sources do not establish the duration of this stay.',durationRange:'Residence interval; continuous day-by-day presence is not established.',license:'License',textUse:'Text / data use',mediaUse:'Media reuse',geometryUse:'Derived geometry use',citationOnly:'Citations and factual claims only',attributedData:'Structured data with attribution',permitted:'Permitted',permissionRequired:'Prohibited without permission',notApplicable:'Not applicable',prohibited:'Prohibited',unresolved:'Unresolved'});
   Object.assign(words.ru,{durationCorpus:'Длительность пребывания не установлена по имеющимся источникам.',durationRange:'Период проживания; непрерывное ежедневное присутствие не установлено.',license:'Лицензия',textUse:'Использование текста / данных',mediaUse:'Повторное использование медиа',geometryUse:'Производная геометрия',citationOnly:'Только ссылки и фактические утверждения',attributedData:'Структурированные данные с атрибуцией',permitted:'Разрешено',permissionRequired:'Запрещено без разрешения',notApplicable:'Неприменимо',prohibited:'Запрещено',unresolved:'Не установлено'});
-  const year = (value, fallback) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= MIN && Number(value) <= MAX ? Number(value) : fallback;
+  const year = (value, fallback, bundle) => /^\d{1,4}$/.test(String(value ?? '')) && Number(value) >= calendarBounds(bundle).min && Number(value) <= calendarBounds(bundle).max ? Number(value) : fallback;
   Object.assign(words.en,{cesenaCandidateContext:'Unverified candidate context follows. The presence claim does not establish surveying.'});
   Object.assign(words.ru,{cesenaCandidateContext:'Ниже — неподтверждённый контекст-кандидат. Утверждение о присутствии не подтверждает проведение изысканий.'});
+  Object.assign(words.en,{datedMatches:'Dated matches',unknownContext:'Atemporal reference context',construction:'Construction',completed:'Completed structure',inferredPhase:'Inferred continuity',sourcePhase:'Source-reported',modernAnchor:'Modern reference point; historical position and footprint remain unknown.',temporalEvidence:'Separate temporal evidence',sourceNativeTime:'Source-native time',phaseLimits:'Coverage ends in 1894, not the structure’s existence. Exclusion does not establish historical absence.',transitionYear:'Transition year: both phases may apply within this year.',temporalScope:'Temporal assertions are separately reviewed; the imported Wikidata coordinate claim remains unverified.'});
+  Object.assign(words.ru,{datedMatches:'Датированные совпадения',unknownContext:'Опорный контекст вне времени',construction:'Строительство',completed:'Завершённый объект',inferredPhase:'Вывод о непрерывном существовании',sourcePhase:'Сообщается источником',modernAnchor:'Современная опорная точка; историческое положение и контур неизвестны.',temporalEvidence:'Отдельные временные свидетельства',sourceNativeTime:'Датировка в источнике',phaseLimits:'1894 — граница покрытия, а не конец существования объекта. Исключение не доказывает историческое отсутствие.',transitionYear:'Переходный год: в течение года возможны обе фазы.',temporalScope:'Временные утверждения проверяются отдельно; импортированное утверждение Wikidata о координатах не проверено.'});
   const clone = value => JSON.parse(JSON.stringify(value));
   function freeze(value) { if (value && typeof value === 'object' && !Object.isFrozen(value)) { Object.freeze(value); for (const item of Object.values(value)) freeze(item); } return value; }
   // Process the latest event once per frame; events arriving inside a callback
@@ -40,11 +42,17 @@
     return null; // A region has no invented representative historical point.
   }
   function defaults(profile = 'globe') { return {mode:'range',startYear:profile === 'region' ? 91 : 1452,endYear:profile === 'region' ? 105 : 1519,cursorYear:profile === 'region' ? 100 : 1519,traceOriginYear:1452,layers:['leonardo','roman','catalog'],selectedItemId:null,language:'en',presentationView:'globe',camera:{center:[10,15],zoom:.8,pitch:0,bearing:0}}; }
+  function architectureTimeRecord(bundle,item) { return bundle.architectureTime?.objects.find(row => row.existing_item_id === item.item_id) || null; }
+  function isDatedArchitecture(bundle,item) { return Boolean(architectureTimeRecord(bundle,item)?.phases.length); }
+  function matchingPhases(bundle,item,state) {
+    const start = state.mode === 'scrub' ? state.cursorYear : state.startYear, end = state.mode === 'scrub' ? state.cursorYear : state.endYear;
+    return (architectureTimeRecord(bundle,item)?.phases || []).filter(phase => phase.interval[0] <= end && phase.interval[1] >= start);
+  }
   function query(bundle, state) {
     const overlap = (interval, start, end) => interval && interval.start <= end && interval.end >= start;
     return Object.freeze(bundle.registry.filter(item => {
       if (!state.layers.includes(item.layer_id)) return false;
-      if (item.layer_id === 'architecture' || item.layer_id === 'catalog') return true;
+      if (item.layer_id === 'architecture' || item.layer_id === 'catalog') return !isDatedArchitecture(bundle,item) || matchingPhases(bundle,item,state).length > 0;
       if (state.mode === 'range') return overlap(item.interval, state.startYear, state.endYear);
       if (item.layer_id === 'roman') return overlap(item.interval, state.cursorYear, state.cursorYear);
       return state.cursorYear >= state.traceOriginYear && overlap(item.interval, state.traceOriginYear, state.cursorYear);
@@ -56,10 +64,10 @@
   function normalizeState(bundle, input, fallback = defaults()) {
     const state = {...clone(fallback),...clone(input)};
     state.mode = state.mode === 'scrub' ? 'scrub' : 'range';
-    state.startYear = year(state.startYear, fallback.startYear); state.endYear = year(state.endYear, fallback.endYear);
+    state.startYear = year(state.startYear, fallback.startYear,bundle); state.endYear = year(state.endYear, fallback.endYear,bundle);
     if (state.startYear > state.endYear) [state.startYear,state.endYear] = [state.endYear,state.startYear];
-    state.cursorYear = year(state.cursorYear, fallback.cursorYear);
-    state.traceOriginYear = year(state.traceOriginYear,1452); if (state.traceOriginYear < 1452) state.traceOriginYear = 1452;
+    state.cursorYear = year(state.cursorYear, fallback.cursorYear,bundle);
+    state.traceOriginYear = year(state.traceOriginYear,1452,bundle); if (state.traceOriginYear < 1452) state.traceOriginYear = 1452;
     state.layers = Array.isArray(state.layers) ? LAYERS.filter(layer => state.layers.includes(layer)) : [...fallback.layers];
     state.language = state.language === 'ru' ? 'ru' : 'en'; state.presentationView = state.presentationView === 'map' ? 'map' : 'globe';
     const camera = state.camera || {}, finite = (value,min,max,other) => typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max ? value : other;
@@ -71,8 +79,8 @@
   function parseUrl(bundle, href, profile = 'globe') {
     const params = new URL(href).searchParams, base = defaults(profile), requested = {};
     requested.mode = params.get('mode') || 'range';
-    requested.startYear = year(params.get('start'),base.startYear); requested.endYear = year(params.get('end'),base.endYear);
-    requested.cursorYear = year(params.get('at'),base.cursorYear); requested.traceOriginYear = year(params.get('from'),1452);
+    requested.startYear = year(params.get('start'),base.startYear,bundle); requested.endYear = year(params.get('end'),base.endYear,bundle);
+    requested.cursorYear = year(params.get('at'),base.cursorYear,bundle); requested.traceOriginYear = year(params.get('from'),1452,bundle);
     if (params.has('layers')) {
       const layers = params.get('layers').split(',');
       // Existing isolated semantic layer IDs are translated by their entry profile.
@@ -172,7 +180,7 @@
       return [item.label,item.qid,...Object.values(item.labels || {}),...aliases,original?.name_en,original?.name_ru].some(value => searchKey(value).includes(needle));
     });
   }
-  const helpers = Object.freeze({recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
+  const helpers = Object.freeze({calendarBounds,architectureTimeRecord,isDatedArchitecture,matchingPhases,recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
   const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
@@ -230,7 +238,58 @@
     byId('selection-summary').replaceChildren(); byId('selection-summary').hidden = true;
   }
   function selectionTitle(selected,input) { return selected.kind === 'reference' ? input.raw_feature.properties[`name_${runtime.state.language}`] || selected.label : recordLabel(selected,runtime.state.language); }
-  function selectionScope(selected) { return t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'); }
+  function phaseSummary(selected) {
+    const phases = matchingPhases(runtime.bundle,selected,runtime.state);
+    if (!phases.length) return t('unknownContext');
+    return phases.map(phase => `${t(phase.kind)} · ${phase.interval.join('–')} · ${t(phase.support === 'inferred' ? 'inferredPhase' : 'sourcePhase')}`).join(' / ');
+  }
+  function temporalSourceSummary(selected) {
+    // Presentation labels only: dates remain the accepted source expressions,
+    // never the year-level query bounds or an inferred lifetime.
+    const labels = {
+      'c:tower-start':['Construction start','Начало строительства'],
+      'c:tower-final-works':['Finishing work complete','Завершение отделочных работ'],
+      'c:tower-opening':['Opening','Открытие'],
+      'c:monument-start':['Construction start','Начало строительства'],
+      'c:monument-complete':['Completion','Завершение строительства'],
+      'c:monument-opening':['Opening','Открытие'],
+      'c:banquet-build':['Construction (London Museum)','Строительство (London Museum)'],
+      'c:banquet-complete':['Completion (HRP)','Завершение (HRP)'],
+      'c:banquet-alternative':['Construction (Historic England)','Строительство (Historic England)']
+    };
+    return runtime.bundle.architectureTime.claims.filter(claim => claim.subject_id === selected.item_id && labels[claim.id]).map(claim => `${labels[claim.id][runtime.state.language === 'ru' ? 1 : 0]}: ${claim.source_native_expression || claim.time.value}`).join(' · ');
+  }
+  function temporalFacts(selected,host) {
+    const packet = runtime.bundle.architectureTime, record = architectureTimeRecord(runtime.bundle,selected);
+    if (!record) return;
+    host.append(node('p',phaseSummary(selected)),node('p',t('temporalScope')),node('p',t('phaseLimits')));
+    const phases = matchingPhases(runtime.bundle,selected,runtime.state);
+    if (runtime.state.mode === 'scrub' && phases.length > 1) host.append(node('p',t('transitionYear')));
+    for (const conflict of packet.conflicts.filter(row => row.subject_id === selected.item_id)) {
+      host.append(node('p',`${t('unresolved')}: ${conflict.reason}`));
+    }
+  }
+  function temporalDetails(selected,host) {
+    const packet = runtime.bundle.architectureTime, record = architectureTimeRecord(runtime.bundle,selected);
+    if (!record) return;
+    host.append(node('h3',t('temporalEvidence')),node('p',record.subject_scope));
+    for (const claim of packet.claims.filter(row => row.subject_id === selected.item_id)) {
+      const entry = node('article','','source-entry'); entry.append(node('p',claim.statement));
+      if (claim.time) entry.append(node('p',`${t('sourceNativeTime')}: ${claim.source_native_expression || claim.time.value || `${claim.time.start}–${claim.time.end}`} · ${claim.time.precision}`));
+      for (const eid of claim.evidence_link_ids) {
+        const evidence = packet.evidence_links.find(row => row.id === eid), source = packet.sources.find(row => row.id === evidence.source_id), link = node('a',`${source.publisher} · ${source.title}`);
+        const href = safeLink(source.url); if (href) { link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; entry.append(link); }
+        entry.append(node('p',evidence.locator),node('p',source.rights.reuse));
+      }
+      host.append(entry);
+    }
+    for (const inference of packet.inferences.filter(row => row.subject_id === selected.item_id && row.admission !== 'withheld_conflict')) {
+      host.append(node('h4',t('inferredPhase')),node('p',inference.statement),node('p',inference.rule));
+      for (const limit of inference.limitations) host.append(node('p',limit));
+    }
+    technicalJson(host,{record,claims:packet.claims.filter(row => row.subject_id === selected.item_id),inferences:packet.inferences.filter(row => row.subject_id === selected.item_id),conflicts:packet.conflicts.filter(row => row.subject_id === selected.item_id)},'temporal-record');
+  }
+  function selectionScope(selected) { if (architectureTimeRecord(runtime.bundle,selected)) return t('modernAnchor'); return t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'); }
   function renderSummary(selected) {
     if (!runtime.ready || !selected) { clearSummary(); return; }
     const point = summaryAnchor(runtime.bundle,selected) || (clickAnchor?.itemId === selected.item_id ? clickAnchor.coordinates : null);
@@ -240,7 +299,7 @@
     const facing = !point || runtime.state.presentationView !== 'globe' || Math.sin(radians(center.lat))*Math.sin(radians(point[1])) + Math.cos(radians(center.lat))*Math.cos(radians(point[1]))*Math.cos(radians(center.lng-point[0])) > 0;
     const room = projected ? Math.max(projected.y-headerBottom-30,dockTop-projected.y-30) : 0;
     const anchored = projected && room >= 160 && facing && projected.x >= 12 && projected.x <= canvas.clientWidth-12 && projected.y >= headerBottom+20 && projected.y <= dockTop-20;
-    const signature = `${selected.item_id}|${runtime.state.language}|${JSON.stringify(clickAnchor)}|${Boolean(anchored)}|${Math.round(projected?.x || 0)}|${Math.round(projected?.y || 0)}|${canvas.clientWidth}|${canvas.clientHeight}`;
+    const signature = `${selected.item_id}|${runtime.state.language}|${runtime.state.mode}|${runtime.state.startYear}|${runtime.state.endYear}|${runtime.state.cursorYear}|${JSON.stringify(clickAnchor)}|${Boolean(anchored)}|${Math.round(projected?.x || 0)}|${Math.round(projected?.y || 0)}|${canvas.clientWidth}|${canvas.clientHeight}`;
     if (summarySignature === signature) return;
     const focusId = document.activeElement?.closest('.selection-card') ? document.activeElement.id : null;
     clearSummary(); summarySignature = signature;
@@ -249,9 +308,12 @@
     const heading = node('div','','selection-card-heading'), title = node('h2',selectionTitle(selected,input)), close = node('button','×');
     title.id = 'summary-title'; close.id = 'close-summary'; close.type = 'button'; close.setAttribute('aria-label',ru ? 'Снять выбор' : 'Clear selection');
     close.addEventListener('click',() => { selectItem(null); focusSelectionOrigin(); }); heading.append(title,close); card.append(heading);
-    card.append(node('p',`${t(selected.layer_id)} · ${selected.kind === 'presence' ? input.presence.temporal.source_native || (input.presence.temporal.start === input.presence.temporal.end ? input.presence.temporal.start : `${input.presence.temporal.start}–${input.presence.temporal.end}`) : selected.interval ? `${selected.interval.start}–${selected.interval.end} ${ru ? 'н. э.' : 'CE'}` : t('atemporal')}`,'summary-meta'));
+    card.append(node('p',`${t(selected.layer_id)} · ${selected.kind === 'presence' ? input.presence.temporal.source_native || (input.presence.temporal.start === input.presence.temporal.end ? input.presence.temporal.start : `${input.presence.temporal.start}–${input.presence.temporal.end}`) : selected.interval ? `${selected.interval.start}–${selected.interval.end} ${ru ? 'н. э.' : 'CE'}` : architectureTimeRecord(runtime.bundle,selected) ? phaseSummary(selected) : t('atemporal')}`,'summary-meta'));
     card.append(node('p',selectionScope(selected),'summary-scope'));
-    if (selected.kind === 'catalog_reference') card.append(node('p',t('catalogUnverified'),'summary-scope'));
+    if (architectureTimeRecord(runtime.bundle,selected)?.conflict_ids.length) card.append(node('p',runtime.state.language === 'ru' ? 'Даты источников расходятся; временные фазы не установлены.' : 'Source dates conflict; temporal phases are withheld.','summary-scope'));
+    if (architectureTimeRecord(runtime.bundle,selected)) card.append(node('p',`${t('sourceNativeTime')}: ${temporalSourceSummary(selected)}`,'summary-scope'),node('p',t('phaseLimits'),'summary-scope'));
+    if (runtime.state.mode === 'scrub' && matchingPhases(runtime.bundle,selected,runtime.state).length > 1) card.append(node('p',t('transitionYear'),'summary-scope'));
+    if (selected.kind === 'catalog_reference' && !architectureTimeRecord(runtime.bundle,selected)) card.append(node('p',t('catalogUnverified'),'summary-scope'));
     if (selected.kind === 'presence') {
       const key = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
       card.append(node('p',key ? t(key) : input.presence.duration_status,'summary-scope'));
@@ -343,6 +405,7 @@
   }
   function renderCatalogFacts(input) {
     const facts = byId('selection-facts'); facts.replaceChildren(node('p',t('catalogUnverified')));
+    const selected = runtime.registry.get(runtime.state.selectedItemId); if (selected) temporalFacts(selected,facts);
   }
   function technicalJson(host,value,id) {
     const disclosure = node('details',''), summary = node('summary',t('sourceRecord')); summary.dataset.i18n = 'sourceRecord';
@@ -375,7 +438,7 @@
     } else if (selected.kind === 'region') fields = [[t('geometryVersion'),selected.geometry_version_ref]];
     for (const [key,value] of fields) list.append(node('dt',key),node('dd',value == null ? t('unknown') : String(value)));
     host.append(list);
-    if (selected.kind === 'catalog_reference') host.append(node('p',t('precisionLimit')));
+    if (selected.kind === 'catalog_reference') { host.append(node('p',t('precisionLimit'))); temporalDetails(selected,host); }
     if (selected.kind === 'reference') host.append(node('p',t('legacy')));
   }
   function renderCatalogContext(input) {
@@ -392,6 +455,7 @@
     if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
   }
   function paintRange() {
+    const {min:MIN,max:MAX} = calendarBounds(runtime.bundle);
     const start = Number(byId('range-start-handle').value), end = Number(byId('range-end-handle').value), track = byId('range-start-handle').parentElement;
     track.style.setProperty('--range-start',`${(Math.min(start,end)-MIN)/(MAX-MIN)*100}%`);
     track.style.setProperty('--range-end',`${(Math.max(start,end)-MIN)/(MAX-MIN)*100}%`);
@@ -400,6 +464,9 @@
   }
   function renderControls() {
     const state = runtime.state; document.documentElement.lang = state.language;
+    const bounds = calendarBounds(runtime.bundle);
+    for (const id of ['time-start','time-end','range-start-handle','range-end-handle','cursor-year','time-cursor']) { byId(id).min = bounds.min; byId(id).max = bounds.max; }
+    text('period-all',`${bounds.min}–${bounds.max}`);
     for (const element of document.querySelectorAll('[data-i18n]')) element.textContent = t(element.dataset.i18n);
     for (const value of ['globe','map']) { byId(`view-${value}`).disabled = !runtime.ready; byId(`view-${value}`).setAttribute('aria-pressed',String(state.presentationView === value)); }
     for (const value of ['en','ru']) byId(`language-${value}`).setAttribute('aria-pressed',String(state.language === value));
@@ -410,12 +477,16 @@
     byId('range-start-handle').value = state.startYear; byId('range-end-handle').value = state.endYear;
     for (const id of ['time-start','time-end','range-start-handle','range-end-handle','cursor-year','time-cursor','mode-range','mode-scrub','period-roman','period-leonardo','period-all']) byId(id).disabled = !runtime.ready;
     text('time-status',state.mode === 'range' ? `${state.startYear}–${state.endYear} CE · ${t('interval')}` : `${state.cursorYear} CE · ${t('trace')} ${state.traceOriginYear}; ${state.cursorYear < state.traceOriginYear ? t('none') : `${state.traceOriginYear}–${state.cursorYear}`}`);
-    text('layer-status',LAYERS.map(layer => `${t(layer)}: ${!state.layers.includes(layer) ? t('off') : runtime.visibleItems.filter(item => item.layer_id === layer).length || t('none')}`).join(' · '));
+    text('layer-status',LAYERS.map(layer => {
+      const rows = runtime.visibleItems.filter(item => item.layer_id === layer), dated = rows.filter(item => isDatedArchitecture(runtime.bundle,item)).length;
+      const count = ['architecture','catalog'].includes(layer) ? `${t('datedMatches')}: ${dated}; ${t('unknownContext')}: ${rows.length-dated}` : rows.length || t('none');
+      return `${t(layer)}: ${!state.layers.includes(layer) ? t('off') : count}`;
+    }).join(' · '));
     const results = chooserItems(runtime.bundle,runtime.visibleItems,runtime.search);
-    const select = byId('record-select'), nextSignature = `${state.language}|${runtime.search}|${results.map(item => item.item_id).join('|')}`;
+    const select = byId('record-select'), nextSignature = `${state.language}|${state.mode}|${state.startYear}|${state.endYear}|${state.cursorYear}|${runtime.search}|${results.map(item => item.item_id).join('|')}`;
     if (recordSignature !== nextSignature) {
       recordSignature = nextSignature; select.replaceChildren(node('option',t('choose'))); select.firstChild.value = '';
-      for (const item of results) { const option = node('option',`${t(item.layer_id)} · ${recordLabel(item,state.language)}${item.interval ? ` · ${item.interval.start}–${item.interval.end}` : ` · ${t('atemporal')}`}`); option.value = item.item_id; select.append(option); }
+      for (const item of results) { const option = node('option',`${t(item.layer_id)} · ${recordLabel(item,state.language)}${item.interval ? ` · ${item.interval.start}–${item.interval.end}` : isDatedArchitecture(runtime.bundle,item) ? ` · ${t('datedMatches')} · ${phaseSummary(item)}` : ` · ${t('unknownContext')}`}`); option.value = item.item_id; select.append(option); }
     }
     select.value = results.some(item => item.item_id === state.selectedItemId) ? state.selectedItemId : ''; select.disabled = !runtime.ready || !results.length;
     byId('record-search').disabled = !runtime.ready; byId('clear-search').disabled = !runtime.ready || !runtime.search;
@@ -513,12 +584,12 @@
     for (const presentationView of ['globe','map']) byId(`view-${presentationView}`).addEventListener('click',() => { if (presentationView !== runtime.state.presentationView) applyState({presentationView}); });
     for (const mode of ['range','scrub']) byId(`mode-${mode}`).addEventListener('click',() => applyState({mode}));
     for (const id of ['range-start-handle','range-end-handle']) byId(id).addEventListener('input',paintRange);
-    byId('time-start').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear)}));
-    byId('time-end').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear)}));
-    byId('range-start-handle').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear)}));
-    byId('range-end-handle').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear)}));
-    for (const id of ['time-cursor','cursor-year']) byId(id).addEventListener('change',event => applyState({cursorYear:year(event.target.value,runtime.state.cursorYear)}));
-    for (const [id,startYear,endYear] of [['period-roman',91,116],['period-leonardo',1452,1519],['period-all',91,1519]]) byId(id).addEventListener('click',() => applyState({mode:'range',startYear,endYear}));
+    byId('time-start').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear,runtime.bundle)}));
+    byId('time-end').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear,runtime.bundle)}));
+    byId('range-start-handle').addEventListener('change',event => applyState({startYear:year(event.target.value,runtime.state.startYear,runtime.bundle)}));
+    byId('range-end-handle').addEventListener('change',event => applyState({endYear:year(event.target.value,runtime.state.endYear,runtime.bundle)}));
+    for (const id of ['time-cursor','cursor-year']) byId(id).addEventListener('change',event => applyState({cursorYear:year(event.target.value,runtime.state.cursorYear,runtime.bundle)}));
+    for (const [id,startYear,endYear] of [['period-roman',91,116],['period-leonardo',1452,1519],['period-all',runtime.bundle.calendar.min_year,runtime.bundle.calendar.max_year]]) byId(id).addEventListener('click',() => applyState({mode:'range',startYear,endYear}));
     byId('record-search').addEventListener('input',event => { runtime.search = event.target.value; renderControls(); });
     byId('clear-search').addEventListener('click',() => { runtime.search = ''; byId('record-search').value = ''; renderControls(); byId('record-search').focus(); });
     byId('record-select').addEventListener('change',event => selectItem(event.target.value));

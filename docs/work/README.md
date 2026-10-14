@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Owner-directed architecture time pilot — 2026-10-12
+
+- `2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md` — active accepted DECISION with REVIEW implementation under verification: source-bound temporal phases for Tower Bridge and Monument, unresolved Banqueting House context, and finite CE calendar through 1894. Prospective scope and evidence reviews are accepted. Native inputs/55 identities and unknown context are preserved; final implementation review, CI and public delivery remain pending. No Airtable intake or automatic successor is opened.
+
 ## Owner-directed zoom performance — 2026-10-11
 
 - `2026-10-11_EXPLORER_ZOOM_PERFORMANCE_v1.md` — bounded REVIEW laboratory diagnosis complete: native zoom runner and six Globe/2D/card repetitions; no production optimization or owner-device resolution claimed. Exact-head review/CI control delivery. Next action is affected-device reproduction; architecture existence/construction modeling remains separate.

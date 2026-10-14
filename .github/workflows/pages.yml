@@ -59,6 +59,7 @@ jobs:
             tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
             tests/test_unified_explorer.py \
+            tests/test_architecture_time_pilot.py \
             tests/test_wikidata_catalog.py \
             tests/test_unified_explorer_browser.py \
             tests/test_mobile_explorer.py \

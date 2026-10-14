@@ -25,6 +25,7 @@ from scripts import build_globe_spike as spike  # noqa: E402
 from scripts import build_leonardo_gate_d_inputs as gate_d  # noqa: E402
 from scripts import validate_leonardo_world_slice as gate_c_validation  # noqa: E402
 from scripts import import_wikidata_catalog as wikidata_catalog  # noqa: E402
+from scripts import validate_architecture_time_pilot as architecture_time  # noqa: E402
 
 TEMPLATE_DIR = ROOT / "scripts" / "unified_explorer"
 ENGINE_DIR = TEMPLATE_DIR / "engine"
@@ -128,6 +129,7 @@ def _input_paths() -> list[Path]:
     """Explicit actual source/contract inputs used by the two incumbent builders."""
     return sorted({
         FEATURES_PATH, SOURCES_PATH, *wikidata_catalog.source_input_paths(),
+        architecture_time.PACKET_PATH, architecture_time.ACCEPTANCE_PATH,
         gate_d.SELECTION_PATH, gate_d.CLAIMS_PATH, gate_d.SOURCES_PATH,
         gate_d.CESENA_AMENDMENT_PATH,
         gate_d.COVERAGE_PATH, gate_d.DECISION_PATH, gate_d.PLACE_ANCHOR_PATH,
@@ -234,16 +236,21 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
     } for index, r in enumerate(catalog["references"])]
     if len({r["item_id"] for r in registry}) != len(registry):
         raise UnifiedBuildError("shared registry contains duplicate item identity")
+    try:
+        temporal_packet = architecture_time.load_accepted_packet({r["item_id"] for r in registry})
+    except (ValueError, OSError) as exc:
+        raise UnifiedBuildError(f"architecture time input rejected: {exc}") from exc
     bundle = {
         "schema_version": "1.1.0", "bundle_id": "artemis-unified-layer-explorer-v1",
         "role": "read_only_input_and_projection_envelope", "historical_corpus_ready": False,
-        "calendar": {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1519, "coverage_complete": False, "architecture_dates_define_coverage": False},
+        "calendar": {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1894, "coverage_complete": False, "architecture_dates_define_coverage": False},
         "input_ledger": _ledger(_input_paths()), "registry": registry,
         "source_native_state_role": "preserved_canonical_inputs_orchestrated_by_application_workspace_state_not_a_canonical_state_migration",
         "leonardo": {"lifePath": life_path, "knowledge": knowledge, "explorerState": _read(leonardo_dir / "explorer-state.json"), "projection": _read(leonardo_dir / "projection.json"), "globe": _read(leonardo_dir / "globe-projection.json"), "sourcePackage": _read(spike.MAJOR_LIFE_PACKAGE_PATH), "runtimeAnchors": _read(spike.MAJOR_LIFE_RUNTIME_ANCHORS_PATH)},
         "roman": {"versions": versions, "knowledge": roman_knowledge, "sourceManifest": _read(spike.REGION_PACKAGE_ROOT / "source_manifest.json"), "worldInput": roman_world},
         "architecture": architecture,
         "catalog": catalog,
+        "architectureTime": temporal_packet,
     }
     bundle["content_sha256"] = _digest(bundle)
     return bundle
@@ -313,6 +320,8 @@ def build_unified_explorer(output: Path, *, entry_profile: str = "leonardo") -> 
         bundle_sha = hashlib.sha256((output / "unified-bundle.json").read_bytes()).hexdigest()
         replacements = {
             "ENTRY_PROFILE": public_profile,
+            "CALENDAR_MIN": str(bundle["calendar"]["min_year"]),
+            "CALENDAR_MAX": str(bundle["calendar"]["max_year"]),
             "BUNDLE_SHA": bundle_sha,
             "CONTEXT_SHA": hashlib.sha256((output / "earth-context.geojson").read_bytes()).hexdigest(),
             "RUNTIME_SHA": hashlib.sha256(assets["runtime.js"]).hexdigest(),

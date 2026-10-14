@@ -68,10 +68,10 @@ async function scenario(kind) {
     assert.equal(constructed,1); assert(state); assert.equal(byId('record-search').parentElement.parentElement.id,'desktop-search');
     assert.equal(byId('layer-controls').parentElement.id,'desktop-layer-body'); assert.equal(byId('record-select').getAttribute('size'),'7');
     const track=byId('range-start-handle').parentElement;
-    assert.equal(track.dataset.rangeReady,'true'); assert(Number.parseFloat(track.properties['--range-start'])>95);
-    assert.equal(track.properties['--range-end'],'100%'); assert.equal(track.dataset.overlap,'false');
+    assert.equal(track.dataset.rangeReady,'true'); assert(Number.parseFloat(track.properties['--range-start'])>75);
+    assert.equal(Number.parseFloat(track.properties['--range-end']),(1519-91)/(1894-91)*100); assert.equal(track.dataset.overlap,'false');
     byId('range-start-handle').value='1519';byId('range-start-handle').events.input[0]();
-    assert.equal(track.dataset.overlap,'true'); assert.equal(track.properties['--range-start'],'100%');
+    assert.equal(track.dataset.overlap,'true'); assert.equal(Number.parseFloat(track.properties['--range-start']),(1519-91)/(1894-91)*100);
     assert.equal(document.documentElement.dataset.artemisBoot,'loading');
     timers.get([...timers.keys()][0]).fn(); assert.match(byId('startup-status').textContent,/Starting the globe/);
     window.ARTEMIS_STARTUP.ready(); assert.equal(byId('startup-status').hidden,true); assert.equal(timers.size,0);

@@ -81,7 +81,7 @@ async function verifyBytes(options, base, deadline) {
 }
 
 async function runScenario(cdp,options,url,deadline,expectedBundle) {
-  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[],catalogChecks=[],mobileChecks=[],networkDocuments=[];
+  const base=new URL('../',url),captures=[],actions=[],checks=[],renderSettlements=[],placeAnchorChecks=[],catalogChecks=[],temporalChecks=[],mobileChecks=[],networkDocuments=[];
   let documentOrigin=null,mapObjectId=null,immutableHash=null;
   const bundleHash=sha256(expectedBundle);
   async function settle() {await evaluate(cdp,'new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))',true);}
@@ -433,11 +433,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
 
   await navigate(url);
   await mobileRegression();
-  const readyCatalog=await membership({leonardo:11,roman:0,architecture:0,catalog:10},'fresh ready London catalog');
+  const readyCatalog=await membership({leonardo:11,roman:0,architecture:0,catalog:8},'fresh London catalog with two temporal objects outside coverage');
   check(readyCatalog.state.layers.includes('catalog'),'fresh entry did not enable catalog');
   const pilotLabel=await evaluate(cdp,"document.getElementById('layer-catalog').parentElement.textContent");
   check(/10/.test(pilotLabel)&&/London/.test(pilotLabel),'catalog did not disclose bounded pilot count and coverage');
   await capture('ready-catalog-default-en-globe');
+  // The default Leonardo interval excludes the two admitted later buildings.
+  // Extend the interval before auditing all ten preserved native catalog records.
+  await number('time-end',expectedBundle.calendar.max_year);
+  await membership({leonardo:11,roman:0,architecture:0,catalog:10},'catalog across finite temporal coverage');
   const catalog=expectedBundle.catalog.references;
   check(catalog.length===10&&new Set(catalog.map(row=>row.item_id)).size===10,'catalog cohort missing/duplicated');
   const first=catalog.find(reference=>reference.labels?.en&&reference.labels?.ru&&Object.values(reference.aliases||{}).flat().length);
@@ -539,10 +543,70 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await history(-1,catalogHistoryMiddle);await history(-1,catalogHistoryBefore);await history(1,catalogHistoryMiddle);await history(1,catalogHistoryAfter);
   await click('#period-all');const allLayers=await membership({leonardo:11,roman:3,architecture:31,catalog:10},'all four layers55records');
   check(allLayers.visible.length===55,'four layers did not preserve exact legacy45pluscatalog10');
-  await number('time-start',91);await number('time-end',91);check((await snapshot()).visible.filter(row=>row.layer==='catalog').length===10,'catalog excluded by historical time');
+  await number('time-start',91);await number('time-end',91);check((await snapshot()).visible.filter(row=>row.layer==='catalog').length===8,'dated catalog objects failed temporal exclusion');
   await layer('catalog',false);check((await snapshot()).state.selectedItemId===null,'hiding selected catalog layer retained selection');await layer('catalog',true);
-  catalogChecks.push({case:'ready catalog search source focus and shared history',cohort:catalog.map(row=>row.item_id),nativeCatalogGeometrySha256:sha256(nativeCatalog),searchCases,emptySearch:{query:empty.query,status:empty.status,selectionRetained:true},clearedChooserCount:allChooser.length,sourceDetails,focus:{before:unfocused.camera,after:focused.camera},fallbackItem:fallback?.item_id||null,fallbackEvidence:fallback?'native source fallback checked':'not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests',allLayersCount:allLayers.visible.length,catalogParticipatesInHistoricalFilter:false,sameMap:true,blockedExternalApis:true});
+  catalogChecks.push({case:'ready catalog search source focus and shared history',cohort:catalog.map(row=>row.item_id),nativeCatalogGeometrySha256:sha256(nativeCatalog),searchCases,emptySearch:{query:empty.query,status:empty.status,selectionRetained:true},clearedChooserCount:allChooser.length,sourceDetails,focus:{before:unfocused.camera,after:focused.camera},fallbackItem:fallback?.item_id||null,fallbackEvidence:fallback?'native source fallback checked':'not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests',allLayersCount:allLayers.visible.length,catalogParticipatesInHistoricalFilter:true,datedCatalogObjects:2,unknownContextObjects:8,sameMap:true,blockedExternalApis:true});
   // Existing saved layers remain authoritative and retain the old 45-record proof.
+  // Native calendar-to-source proof of the admitted Monument transition.
+  // All mutations use visible controls; direct runtime reads only assert evidence.
+  await close();await click('#language-en');await click('#mode-scrub');
+  const monumentId='catalog:wikidata:Q607700';
+  for(const projection of ['globe','map']) {
+    await view(projection);await number('cursor-year',1676);await select(monumentId);
+    const construction=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+    check(construction.includes('Construction')&&!construction.includes('Completed structure'),'Monument pre-transition phase incorrect');
+    await close();await number('cursor-year',1677);await select(monumentId);
+    const transition=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+    check(transition.includes('Construction')&&transition.includes('Completed structure')&&transition.includes('Transition year'),'year precision transition missing');
+    await disclose('record-disclosure');
+    const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href),scope:document.getElementById('selection-scope').textContent})`);
+    const packet=expectedBundle.architectureTime;
+    const claimIds=packet.claims.filter(row=>row.subject_id===monumentId).flatMap(row=>row.evidence_link_ids);
+    for(const eid of claimIds) {
+      const evidence=packet.evidence_links.find(row=>row.id===eid),source=packet.sources.find(row=>row.id===evidence.source_id);
+      check(details.links.includes(source.url)&&details.text.includes(evidence.locator),'temporal source locator not disclosed');
+    }
+    check(details.text.includes('Inferred continuity')&&details.scope.includes('Modern reference point'),'inference or modern geometry limit missing');
+    await collapseMobile();await capture('architecture-time-transition-details-en-'+projection);
+    await close();await number('cursor-year',1678);await select(monumentId);
+    const completed=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+    check(completed.includes('Completed structure')&&completed.includes('Inferred continuity')&&!completed.includes('Construction'),'post-transition phase incorrect');
+    await number('cursor-year',1670);
+    const excluded=await snapshot();
+    check(excluded.state.selectedItemId===null&&!excluded.visible.some(row=>row.itemId===monumentId),'unsupported year retained dated selection/geometry');
+    temporalChecks.push({projection,itemId:monumentId,constructionYear:1676,construction,transitionYear:1677,transition,details,completedYear:1678,completed,excludedYear:1670,selectionCleared:true,sameMap:true});
+  }
+  // Keep source-native day/month precision visible before details, while the
+  // selected year remains a deliberately coarser navigation projection.
+  const towerId='catalog:wikidata:Q83125';
+  for(const projection of ['globe','map']) {
+    await view(projection);await number('cursor-year',1894);await select(towerId);
+    await click('#back-to-summary');
+    const compact=await evaluate(cdp,`(() => {const card=document.getElementById('selection-card');return {text:card?.textContent,visible:card?.checkVisibility({checkVisibilityCSS:true}),inspectorHidden:document.getElementById('inspector').hidden};})()`);
+    check(compact.visible&&compact.inspectorHidden,'Tower compact card missing before details');
+    for(const expression of ['Construction start: 22 April 1886','Finishing work complete: June 1894','Opening: 30 June 1894'])check(compact.text.includes(expression),'Tower compact card lost labelled source-native expression '+expression);
+    check(compact.text.includes('Transition year')&&compact.text.includes('Modern reference point')&&compact.text.includes('Coverage ends in 1894'),'Tower compact card lost transition, geometry or coverage limit');
+    await capture('architecture-time-tower-compact-native-dates-en-'+projection);
+    await click('#open-details');await disclose('record-disclosure');
+    const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href)})`);
+    const packet=expectedBundle.architectureTime;
+    for(const claim of packet.claims.filter(row=>row.subject_id===towerId)) {
+      if(claim.time)check(details.text.includes(claim.source_native_expression||claim.time.value)&&details.text.includes(claim.time.precision),'Tower details lost source time or precision');
+      for(const eid of claim.evidence_link_ids) {
+        const evidence=packet.evidence_links.find(row=>row.id===eid),source=packet.sources.find(row=>row.id===evidence.source_id);
+        check(details.links.includes(source.url)&&details.text.includes(evidence.locator),'Tower source locator not disclosed');
+      }
+    }
+    await capture('architecture-time-tower-native-details-en-'+projection);
+    temporalChecks.push({projection,itemId:towerId,year:1894,compact,details,sourceNativeDatesVisibleBeforeDetails:true,sameMap:true});
+    await close();
+  }
+  await number('cursor-year',1670);
+  await select('catalog:wikidata:Q642039');await disclose('record-disclosure');
+  const conflict=await evaluate(cdp,"document.getElementById('selection-details').textContent");
+  check(conflict.includes('1622')&&conflict.includes('1625'),'conflicting Banqueting dates omitted');
+  temporalChecks.push({itemId:'catalog:wikidata:Q642039',unknownContext:true,competingDatesPreserved:true});
+  await close();
   const incumbent=new URL('globe/?layers=leonardo,roman',base);await navigate(incumbent);
   check(!(await snapshot()).state.layers.includes('catalog'),'explicit legacy layers silently added catalog');
   await membership({leonardo:11,roman:0,architecture:0,catalog:0},'explicit legacy layers entry');await placeAnchors('default11Presences9Places');
@@ -639,7 +703,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const saved=(await snapshot()).url,savedState=(await snapshot()).state;
   // Explicit compatibility entry navigation is outside the persistent-document
   // assertions; all ordinary interactions above retained the actual map handle.
-  await navigate(new URL('region/',base));await membership({leonardo:0,roman:1,architecture:0,catalog:10},'Region compatible entry ready catalog default');await capture('region-entry-en-globe');
+  await navigate(new URL('region/',base));await membership({leonardo:0,roman:1,architecture:0,catalog:8},'Region compatible entry with unknown catalog context');await capture('region-entry-en-globe');
   await navigate(saved);check(sameState((await snapshot()).state,savedState),'shared saved URL lost workspace/camera state');await stable('shared saved state reopened');
   const legacy=[];
   const leoLegacy=new URL('globe/?mode=scrub&from=1452&at=1502&presence=presence-cesena-1502-08-10&lang=ru&view=map',base);await navigate(leoLegacy);
@@ -648,8 +712,8 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const translatedRoman=await snapshot();check(translatedRoman.state.selectedItemId===version.item_id&&translatedRoman.state.startYear===106&&translatedRoman.state.endYear===113,'legacy Roman saved state translation failed');legacy.push({entry:'roman',url:romanLegacy.href,state:translatedRoman.state});
   await disclose('sources-disclosure');await capture('legacy-roman-source-en-map');
   await networkSnapshot();
-  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,catalogChecks,mobileChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
-    valueValidation:'not_assessed',limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Architecture references retain imported metadata; no historical applicability or source acceptance is inferred.','Shared URL restoration compares exact workspace fields and native renderer camera numbers.','Same engine and cartographic projection comparison, not independent renderer-adapter proof.','Named controls and native input only; not a complete assistive technology audit.']};
+  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,catalogChecks,temporalChecks,mobileChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
+    valueValidation:'not_assessed',limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Imported architecture metadata and coordinate claims retain their original status. Only two separately reviewed pilot objects admit finite temporal phases; Banqueting House retains unresolved conflict context. Temporal support does not establish historical geometry or complete coverage.','Shared URL restoration compares exact workspace fields and native renderer camera numbers.','Same engine and cartographic projection comparison, not independent renderer-adapter proof.','Named controls and native input only; not a complete assistive technology audit.']};
 }
 
 async function main() {
