@@ -51,7 +51,7 @@ def test_ai_can_change_future_view_state_but_not_canonical_knowledge() -> None:
     assert "action must be inspectable and reversible" in policy
     assert "action must not mutate underlying Claims, Sources, EvidenceLinks, Uncertainty" in policy
     assert "AI generation/runtime: gated" in _read("docs/work/2026-08-09_ARTEMIS_ATTRACTOR_REFINEMENT_DECISION_v1.md")
-    assert "AI-controlled view/query runtime until a separate command/state contract is approved" in master
+    assert "AI view/query actions, if implemented, must be visible, reversible and separate from canonical knowledge mutation" in master
     assert "Do not implement AI behavior merely because it appears in the long-term attractor" in master
 
 
@@ -66,15 +66,15 @@ def test_attractor_refinement_does_not_advance_product_gate_or_capability() -> N
     assert gate_c["status"] == "completed"
     assert gate_c["decision"] == "FREEZE"
     assert state["gate"]["id"] == "D"
-    assert state["gate"]["status"] == "in_progress"
-    assert state["next_transition"]["gate"] == "D"
+    assert state["gate"]["status"] == "completed"
+    assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
     assert state["capability"]["globe"] == "public_r_and_d_preview"
     assert state["github"]["active_issues"] == [355]
 
-    assert "Issue `#363` / PR `#364`: Foundation v3.1 Attractor refinement — **COMPLETED**" in foundation
-    assert "Gate D remains **OPEN / IN PROGRESS** under #355" in master
+    assert "Foundation v3.1 attractor refinement accepted in PR `#364`" in foundation
+    assert "Gate D is **COMPLETED / ADVANCE_TO_GATE_E** under #355" in master
     assert "Foundation v3.1 / #363 / PR #364 is completed" in truth
-    assert "Gate D is separately open/in progress under #355" in truth
+    assert "Gate D is completed with ADVANCE_TO_GATE_E under #355" in truth
 
 
 def test_personal_knowledge_remains_future_and_does_not_change_entity_model() -> None:

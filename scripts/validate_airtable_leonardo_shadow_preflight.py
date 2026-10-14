@@ -96,8 +96,15 @@ def _validate_project_boundary(project_state: dict[str, Any], extension: dict[st
     _require(gate_c.get("status") == "completed", "Gate C history must remain completed")
     _require(gate_c.get("decision") == "FREEZE", "Gate C history must retain FREEZE")
     _require(gate.get("id") == "D", "current project gate must be D")
-    _require(gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
-    _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
+    if gate.get("status") == "completed":
+        _require(gate.get("decision") == "ADVANCE_TO_GATE_E", "Gate D exit decision drift")
+        _require(
+            gate.get("evidence_ref") == "docs/work/2026-09-06_GATE_D_EXIT_DECISION_v1.md",
+            "Gate D exit must retain its separate decision authority",
+        )
+    else:
+        _require(gate.get("status") in {"in_progress", "blocked"}, "Gate D lifecycle drift")
+        _require(next_transition.get("gate") == "D", "Gate E must remain unopened")
     _require(331 in github.get("deferred_issues", []), "Relation issue #331 must remain deferred")
     _require(
         capability.get("globe") == "public_r_and_d_preview",
