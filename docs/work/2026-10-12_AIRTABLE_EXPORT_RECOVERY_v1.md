@@ -56,10 +56,25 @@ frozen bytes, recorded hashes, reviews or acceptance identity are regenerated.
 
 ## Delivery boundary
 
-Remote delivery remains blocked. Automatic approval review rejected branch push
+Historical local delivery receipt: automatic approval review rejected branch push
 to `omegapunctum/ARTEMIS`, stating that transmitting repository contents lacked
 end-user authorization naming that repository and disclosure. No retry or
 alternate upload was attempted. The latest observed live export, run
 `38502419048` on unchanged `main` `3089b09`, failed at frozen evidence history;
 Airtable export was skipped. Local implementation success is not a live-export
 receipt. No Airtable writes or fixture/data modifications were performed.
+
+## Authorized remote delivery and follow-up — 2026-10-14
+
+The owner explicitly approved public transmission to `omegapunctum/ARTEMIS`,
+resolving the earlier disclosure hold. PR #482 published an exact tree-equivalent
+copy of accepted local `78aff2c`; independent remote acceptance binds its initial
+head `3f6db277` to tree `29be98eae7d2312038b2ddbd702175f20d375ecd`.
+
+PR review found that deleting the entire accepted Cesena amendment could still
+produce the original frozen digest. The current review envelope now requires
+exactly one unchanged amendment at its accepted location; historical frozen
+content still uses the original normalization path. Deletion and duplication
+are rejected by executable negative envelope tests. The expanded refinement
+contour passes 82 tests and the frozen reviewed digest remains unchanged.
+Current-head CI and merge are separate from live Airtable export verification.
