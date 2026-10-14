@@ -137,7 +137,7 @@ def test_shared_registry_is_one_stable_collection_and_architecture_never_defines
     registry = bundle["registry"]
     assert len(registry) == len({r["item_id"] for r in registry}) == 55
     assert {kind: sum(r["kind"] == kind for r in registry) for kind in ("presence", "region", "reference", "catalog_reference")} == {"presence": 11, "region": 3, "reference": 31, "catalog_reference": 10}
-    assert bundle["calendar"] == {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1519, "coverage_complete": False, "architecture_dates_define_coverage": False}
+    assert bundle["calendar"] == {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1894, "coverage_complete": False, "architecture_dates_define_coverage": False}
     assert all(r["interval"] is None for r in registry if r["layer_id"] == "architecture")
     assert [r["item_id"] for r in registry if r["layer_id"] == "leonardo"] == [p["presence_item_id"] for p in bundle["leonardo"]["lifePath"]["presences"]]
     assert [r["item_id"] for r in registry if r["layer_id"] == "roman"] == [v["item_id"] for v in bundle["roman"]["versions"]]

@@ -18,8 +18,8 @@ assert.deepEqual(events,[3,4]); assert.equal(frames.length,0);
 const ids = result => result.map(item => item.item_id);
 const base = h.defaults('globe');
 assert.equal(bundle.registry.length,55);
-assert.equal(h.query(bundle,base).length,21);
-assert.equal(h.query(bundle,h.defaults('region')).length,11);
+assert.equal(h.query(bundle,base).length,19);
+assert.equal(h.query(bundle,h.defaults('region')).length,9);
 // Catalog extends the same frozen registry; its point is source-relative and
 // explicitly atemporal, never an assertion of historical existence.
 assert.deepEqual(base.layers,['leonardo','roman','catalog']);
@@ -28,7 +28,8 @@ assert.equal(catalog.length,10);
 const catalogEarly = h.query(bundle,h.normalizeState(bundle,{...base,mode:'scrub',cursorYear:100,layers:['catalog']}));
 const catalogLate = h.query(bundle,h.normalizeState(bundle,{...base,mode:'scrub',cursorYear:1519,layers:['catalog']}));
 assert.deepEqual(ids(catalogEarly),ids(catalogLate));
-assert.equal(catalogEarly.length,10);
+assert.equal(catalogEarly.length,8);
+const catalogAll = h.query(bundle,{...base,startYear:91,endYear:1894,layers:['catalog']});
 for (const reference of catalog) {
   assert.equal(reference.temporal_extent,null);
   assert.equal(reference.historical_position,null);
@@ -39,18 +40,18 @@ for (const reference of catalog) {
   assert.deepEqual(feature.geometry,reference.geometry);
   assert.equal(feature.properties.kind,'catalog_reference');
   assert.equal(feature.id,`catalog:wikidata:${reference.qid}`);
-  const selectedCatalog = h.normalizeState(bundle,{...base,selectedItemId:item.item_id});
+  const selectedCatalog = h.normalizeState(bundle,{...base,endYear:1894,selectedItemId:item.item_id});
   assert.equal(selectedCatalog.selectedItemId,item.item_id);
   assert.equal(h.normalizeState(bundle,{...selectedCatalog,layers:['leonardo','roman']},selectedCatalog).selectedItemId,null);
   assert.equal(h.parseUrl(bundle,h.stateUrl('https://example.test/globe/',selectedCatalog,bundle)).selectedItemId,item.item_id);
-  assert(h.chooserItems(bundle,catalogEarly,reference.qid.toLowerCase()).some(result => result.item_id === item.item_id));
-  for (const label of Object.values(reference.labels)) assert(h.chooserItems(bundle,catalogEarly,label.normalize('NFD')).some(result => result.item_id === item.item_id));
-  for (const alias of Object.values(reference.aliases).flat()) assert(h.chooserItems(bundle,catalogEarly,alias).some(result => result.item_id === item.item_id));
+  assert(h.chooserItems(bundle,catalogAll,reference.qid.toLowerCase()).some(result => result.item_id === item.item_id));
+  for (const label of Object.values(reference.labels)) assert(h.chooserItems(bundle,catalogAll,label.normalize('NFD')).some(result => result.item_id === item.item_id));
+  for (const alias of Object.values(reference.aliases).flat()) assert(h.chooserItems(bundle,catalogAll,alias).some(result => result.item_id === item.item_id));
 }
 assert.deepEqual(h.parseUrl(bundle,'https://example.test/globe/?layers=leonardo,roman').layers,['leonardo','roman']);
 assert.deepEqual(h.parseUrl(bundle,'https://example.test/region/?layers=catalog','region').layers,['catalog']);
-assert.deepEqual(h.chooserItems(bundle,catalogEarly,'   '),catalogEarly);
-assert.deepEqual(h.chooserItems(bundle,catalogEarly,'no-such-record-xyz'),[]);
+assert.deepEqual(h.chooserItems(bundle,catalogAll,'   '),catalogAll);
+assert.deepEqual(h.chooserItems(bundle,catalogAll,'no-such-record-xyz'),[]);
 const beforeSearchState = {...base,selectedItemId:catalog[0].item_id};
 h.chooserItems(bundle,h.query(bundle,beforeSearchState),'no-such-record-xyz');
 assert.equal(beforeSearchState.selectedItemId,catalog[0].item_id);
@@ -208,3 +209,37 @@ for (const item of bundle.registry) {
   }
 }
 assert.equal(digest(),before);
+
+// Calendar pilot: yearly intersection is distinct from native source precision;
+// withheld conflict remains unknown context, never a supported dated match.
+const tower = bundle.registry.find(row => row.item_id === 'catalog:wikidata:Q83125');
+const monument = bundle.registry.find(row => row.item_id === 'catalog:wikidata:Q607700');
+const banquet = bundle.registry.find(row => row.item_id === 'catalog:wikidata:Q642039');
+const at = year => ({...base,mode:'scrub',cursorYear:year,layers:['catalog']});
+const phases = (item,year) => h.matchingPhases(bundle,item,at(year)).map(row => row.kind);
+assert.deepEqual(phases(tower,1885),[]);
+assert.deepEqual(phases(tower,1886),['construction']);
+assert.deepEqual(phases(tower,1893),['construction']);
+assert.deepEqual(phases(tower,1894),['construction','completed']);
+assert.deepEqual(phases(tower,1895),[]);
+assert.deepEqual(phases(monument,1670),[]);
+assert.deepEqual(phases(monument,1671),['construction']);
+assert.deepEqual(phases(monument,1677),['construction','completed']);
+assert.deepEqual(phases(monument,1800),['completed']);
+assert.deepEqual(phases(monument,1895),[]);
+for (const year of [100,1619,1622,1625,1677,1894]) {
+  assert(h.query(bundle,at(year)).some(row => row.item_id === banquet.item_id));
+  assert.deepEqual(phases(banquet,year),[]);
+}
+assert.equal(h.isDatedArchitecture(bundle,banquet),false);
+assert.deepEqual(h.matchingPhases(bundle,monument,{...base,startYear:1670,endYear:1700}).map(row => row.kind),['construction','completed']);
+assert.equal(h.query(bundle,at(1800)).filter(row => h.isDatedArchitecture(bundle,row)).length,1);
+assert.equal(h.query(bundle,at(1800)).filter(row => !h.isDatedArchitecture(bundle,row)).length,8);
+assert.equal(h.normalizeState(bundle,{...at(1886),selectedItemId:tower.item_id}).selectedItemId,tower.item_id);
+assert.equal(h.normalizeState(bundle,{...at(1885),selectedItemId:tower.item_id}).selectedItemId,null);
+const temporalSaved = h.normalizeState(bundle,{...at(1894),selectedItemId:tower.item_id,language:'ru'});
+assert.deepEqual(h.parseUrl(bundle,h.stateUrl(origin,temporalSaved,bundle)),temporalSaved);
+assert.equal(h.defaults().endYear,1519);
+assert.equal(bundle.architectureTime.claims.find(row=>row.id==='c:tower-opening').time.precision,'day');
+assert.equal(digest(),before);
+console.log('ARCHITECTURE_TEMPORAL_QUERY_PASS');

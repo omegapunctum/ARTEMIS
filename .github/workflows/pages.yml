@@ -59,6 +59,7 @@ jobs:
             tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
             tests/test_unified_explorer.py \
+            tests/test_architecture_time_pilot.py \
             tests/test_wikidata_catalog.py \
             tests/test_unified_explorer_browser.py \
             tests/test_mobile_explorer.py \
@@ -214,11 +215,13 @@ jobs:
           BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
           for viewport in 1440x900 500x900 390x844 844x390; do
             width="${viewport%x*}"; height="${viewport#*x}"
-            timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
-              --browser "$BROWSER" --url "${PAGES_URL%/}/globe/" \
-              --expected-artifact pages_artifact --width "$width" --height "$height" \
-              --timeout-ms 270000 --output "/tmp/artemis-unified-live-evidence/$width" \
-              2> >(tee "/tmp/artemis-unified-live-$width.log" >&2)
+            for phase in workspace architecture-time; do
+              timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
+                --phase "$phase" --browser "$BROWSER" --url "${PAGES_URL%/}/globe/" \
+                --expected-artifact pages_artifact --width "$width" --height "$height" \
+                --timeout-ms 270000 --output "/tmp/artemis-unified-live-evidence/$phase/$width" \
+                2> >(tee "/tmp/artemis-unified-live-$phase-$width.log" >&2)
+            done
           done
 
       - name: Upload published persistent workspace evidence

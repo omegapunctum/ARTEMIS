@@ -32,7 +32,7 @@ const document = new Element(); document.getElementById = el;
 let narrow = true, commits = [], layouts = 0;
 const mediaListeners = [];
 const media = {get matches(){return narrow;},addEventListener:(_,fn) => mediaListeners.push(fn)};
-const runtime = {state:{...initial,language:'ru',traceOriginYear:1452,layers:['catalog'],camera:{center:[10,15]}},ready:true};
+const runtime = {bundle:{calendar:{min_year:91,max_year:1519}},state:{...initial,language:'ru',traceOriginYear:1452,layers:['catalog'],camera:{center:[10,15]}},ready:true};
 const context = vm.createContext({document,window:{matchMedia:query => { assert.equal(query,helpers.MOBILE_QUERY); return media; }},module:{exports:{}},setTimeout});
 vm.runInContext(fs.readFileSync('scripts/unified_explorer/mobile.js','utf8'),context);
 let adapter;
@@ -132,3 +132,5 @@ assert.equal(el('mobile-cursor-year').attrs['aria-valuenow'],'1509');
 assert.equal(el('mobile-cursor-year').attrs['aria-disabled'],'true');
 assert.ok(layouts > 0);
 console.log('MOBILE_EXPLORER_BEHAVIOR_PASS');
+
+assert.equal(helpers.stepDraft(initial,'cursorYear',9999,{min:91,max:1894}).cursorYear,1894);

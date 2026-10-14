@@ -37,9 +37,9 @@ class Popup {
   getElement(){return this.element;}
   remove(){this.element.remove();}
 }
-const runtime={bundle,registry:new Map(bundle.registry.map(i=>[i.item_id,i])),visibleItems:bundle.registry,state:{language:'en',presentationView:'map',selectedItemId:null},ready:true,map:{project:()=>projected,getCanvas:()=>({clientWidth:1440,clientHeight:900}),getCenter:()=>({lng:12,lat:44}),isMoving:()=>false}};
+const runtime={bundle,registry:new Map(bundle.registry.map(i=>[i.item_id,i])),visibleItems:bundle.registry,state:{...h.defaults(),language:'en',presentationView:'map',selectedItemId:null},ready:true,map:{project:()=>projected,getCanvas:()=>({clientWidth:1440,clientHeight:900}),getCenter:()=>({lng:12,lat:44}),isMoving:()=>false}};
 const frames=[];
-const context=vm.createContext({document,runtime,node,byId,t:key=>key,recordLabel:h.recordLabel,summaryAnchor:h.summaryAnchor,placeGroups:h.placeGroups,
+const context=vm.createContext({document,runtime,node,byId,t:key=>key,recordLabel:h.recordLabel,architectureTimeRecord:h.architectureTimeRecord,matchingPhases:h.matchingPhases,summaryAnchor:h.summaryAnchor,placeGroups:h.placeGroups,
   selectionUI:h.selectionPresentation(),selectionPopup:null,summarySignature:'',clickAnchor:null,renderedSelection:null,mobile:null,desktop:null,
   maplibregl:{Popup},requestAnimationFrame:fn=>frames.push(fn),getComputedStyle:e=>e.style,
   renderCatalogFacts(){},renderCatalogContext(){},renderInspectorLanguage(){},renderSourceRights(){},technicalJson(){},safeLink:()=>null,inputJson(host,value){host.value=value;},layout(){}});
@@ -48,7 +48,7 @@ vm.runInContext(functions,context);
 context.selectItem=id=>{runtime.state={...runtime.state,selectedItemId:id};context.selectionUI.summary();context.renderInspector();};
 const drain=()=>{while(frames.length)frames.shift()();};
 const text=n=>[n.textContent,...n.children.map(text)].join(' ');
-const first=bundle.registry.find(i=>i.kind==='catalog_reference');
+const first=bundle.registry.find(i=>i.kind==='catalog_reference' && !h.architectureTimeRecord(bundle,i));
 context.selectItem(first.item_id);drain();
 assert.equal(byId('inspector').hidden,true);assert(byId('open-details'));assert.equal(popupCount,1);
 assert(text(byId('selection-card')).includes('catalogUnverified'));
@@ -79,3 +79,39 @@ assert.equal(document.activeElement,byId('record-select'));
 const region=bundle.registry.find(i=>i.kind==='region');context.selectItem(region.item_id);drain();
 assert.equal(byId('selection-summary').hidden,false);assert(text(byId('selection-card')).includes('reconstruction'));
 console.log('COMPACT_SELECTION_DOM_BEHAVIOR_PASS');
+
+// Execute the temporal card and readable evidence functions against actual packet.
+runtime.state={...h.defaults(),mode:'scrub',cursorYear:1894,presentationView:'map'};
+const tower=bundle.registry.find(row=>row.item_id==='catalog:wikidata:Q83125');
+context.selectItem(tower.item_id);drain();
+assert(text(byId('selection-card')).includes('construction'));
+assert(text(byId('selection-card')).includes('completed'));
+assert(text(byId('selection-card')).includes('transitionYear'));
+assert(text(byId('selection-card')).includes('modernAnchor'));
+assert(text(byId('selection-card')).includes('phaseLimits'));
+assert(text(byId('selection-card')).includes('Construction start: 22 April 1886'));
+assert(text(byId('selection-card')).includes('Finishing work complete: June 1894'));
+assert(text(byId('selection-card')).includes('Opening: 30 June 1894'));
+const temporalHost=node('div');context.temporalDetails(tower,temporalHost);
+assert(text(temporalHost).includes('30 June 1894'));
+assert(text(temporalHost).includes('day'));
+assert(text(temporalHost).includes(bundle.architectureTime.evidence_links[0].locator));
+const monument=bundle.registry.find(row=>row.item_id==='catalog:wikidata:Q607700');
+runtime.state={...runtime.state,cursorYear:1800};context.selectItem(monument.item_id);drain();
+assert(text(byId('selection-card')).includes('inferredPhase'));
+assert(text(byId('selection-card')).includes('Completion: 1677'));
+assert(text(byId('selection-card')).includes('Opening: 1677'));
+const monumentHost=node('div');context.temporalDetails(monument,monumentHost);
+assert(text(monumentHost).includes('Not a direct statement of existence in every intervening year.'));
+const banquet=bundle.registry.find(row=>row.item_id==='catalog:wikidata:Q642039');
+context.selectItem(banquet.item_id);drain();
+assert(text(byId('selection-card')).includes('Source dates conflict'));
+assert(text(byId('selection-card')).includes('unknownContext'));
+assert(text(byId('selection-card')).includes('Construction (London Museum): 1619-1622'));
+assert(text(byId('selection-card')).includes('Construction (Historic England): 1619-25'));
+runtime.state={...runtime.state,language:'ru'};context.selectItem(tower.item_id);drain();
+assert(text(byId('selection-card')).includes('Открытие: 30 June 1894'));
+assert(text(byId('selection-card')).includes('Завершение отделочных работ: June 1894'));
+const conflictHost=node('div');context.temporalFacts(banquet,conflictHost);
+assert(text(conflictHost).includes(bundle.architectureTime.conflicts[0].reason));
+console.log('TEMPORAL_CARD_AND_DETAILS_PASS');

@@ -27,7 +27,7 @@
         const item = runtime.registry.get(option.value);
         if (!media.matches && item) {
           option.title = originalLabels.get(option);
-          const date = item.interval ? (item.interval.start === item.interval.end ? `${item.interval.start}` : `${item.interval.start}–${item.interval.end}`) : ru() ? 'время неизвестно' : 'time unknown';
+          const date = option.dataset.temporalLabel ?? (item.interval ? (item.interval.start === item.interval.end ? `${item.interval.start}` : `${item.interval.start}–${item.interval.end}`) : ru() ? 'время неизвестно' : 'time unknown');
           const label = `${item.labels?.[runtime.state.language] || item.label} · ${date}`;
           if (option.textContent !== label) option.textContent = label;
         } else { option.textContent = originalLabels.get(option); option.removeAttribute('title'); }

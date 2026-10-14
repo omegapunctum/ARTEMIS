@@ -1,0 +1,23 @@
+{
+  "status": "accepted",
+  "scope": "architecture-time-pilot-v1",
+  "packet_sha256": "891cca33ad6db050839bbadb136910e577f7866344f9e32dac739c6822e64873",
+  "reviewer": "/root/temporal_evidence_review",
+  "reviewed_at": "2026-10-12",
+  "decision_scope": "source_relative_claims_and_explicit_inferences_not_historical_certainty",
+  "admitted_phase_ids": [
+    "catalog:wikidata:Q83125:construction",
+    "catalog:wikidata:Q83125:completed",
+    "catalog:wikidata:Q607700:construction",
+    "catalog:wikidata:Q607700:completed"
+  ],
+  "withheld_object_ids": [
+    "catalog:wikidata:Q642039"
+  ],
+  "material_findings": 0,
+  "limits": [
+    "Banqueting completion conflict remains unresolved and all its phases withheld.",
+    "Monument continued existence through 1894 is explicit finite inference.",
+    "1894 is coverage cut, not destruction date; all points remain modern reference anchors."
+  ]
+}

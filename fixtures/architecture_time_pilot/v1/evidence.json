@@ -1,0 +1,703 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "architecture_time_pilot_v1",
+  "status": "proposed",
+  "review_state": "pending_review",
+  "recorded_at": "2026-10-12",
+  "authority_ref": "docs/work/2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md",
+  "calendar": {
+    "era": "CE",
+    "selection_calendar": "proleptic_gregorian",
+    "selection_precision": "year",
+    "min": 91,
+    "max": 1894,
+    "source_calendar_conversion_performed": false
+  },
+  "coverage": {
+    "end_year": 1894,
+    "end_semantics": "coverage_cut_not_demolition",
+    "complete": false
+  },
+  "sources": [
+    {
+      "id": "s:tower",
+      "title": "Timeline: The construction of Tower Bridge",
+      "publisher": "Tower Bridge / City Bridge Foundation",
+      "url": "https://www.towerbridge.org.uk/stories/timeline-the-construction-of-tower-bridge",
+      "source_type": "official_keeper_history",
+      "retrieved_at": "2026-10-12",
+      "review_state": "pending_review",
+      "rights": {
+        "license": "not_asserted",
+        "reuse": "Bibliographic metadata, concise factual paraphrases and short date expressions only; no source HTML or images."
+      }
+    },
+    {
+      "id": "s:banquet-museum",
+      "title": "Banqueting House - Whitehall",
+      "publisher": "London Museum",
+      "url": "https://www.londonmuseum.org.uk/collections/v/object-438741/banqueting-house-whitehall/",
+      "source_type": "museum_collection_catalogue",
+      "retrieved_at": "2026-10-12",
+      "review_state": "pending_review",
+      "rights": {
+        "license": "not_asserted",
+        "reuse": "Bibliographic metadata, concise factual paraphrases and short date expressions only; no source HTML or images."
+      }
+    },
+    {
+      "id": "s:banquet-hrp",
+      "title": "The story of Banqueting House",
+      "publisher": "Historic Royal Palaces",
+      "url": "https://www.hrp.org.uk/banqueting-house/history-and-stories/the-story-of-banqueting-house/",
+      "source_type": "official_keeper_history",
+      "retrieved_at": "2026-10-12",
+      "review_state": "pending_review",
+      "rights": {
+        "license": "not_asserted",
+        "reuse": "Bibliographic metadata, concise factual paraphrases and short date expressions only; no source HTML or images."
+      }
+    },
+    {
+      "id": "s:banquet-he",
+      "title": "Banqueting House, Whitehall, Westminster, Greater London",
+      "publisher": "Historic England",
+      "url": "https://historicengland.org.uk/education/schools-resources/educational-images/banqueting-house-whitehall-westminster-greater-london-ioe01-05495-16",
+      "source_type": "official_educational_image_description",
+      "retrieved_at": "2026-10-12",
+      "review_state": "pending_review",
+      "rights": {
+        "license": "not_asserted",
+        "reuse": "Bibliographic metadata, concise factual paraphrases and short date expressions only; no source HTML or images."
+      }
+    },
+    {
+      "id": "s:monument",
+      "title": "History",
+      "publisher": "The Monument / City of London",
+      "url": "https://www.themonument.org.uk/history",
+      "source_type": "official_keeper_history",
+      "retrieved_at": "2026-10-12",
+      "review_state": "pending_review",
+      "rights": {
+        "license": "not_asserted",
+        "reuse": "Bibliographic metadata, concise factual paraphrases and short date expressions only; no source HTML or images."
+      }
+    },
+    {
+      "id": "s:monument-restoration",
+      "title": "Restoration of The Monument",
+      "publisher": "The Monument / City of London",
+      "url": "https://www.themonument.org.uk/history/restoration",
+      "source_type": "official_keeper_history",
+      "retrieved_at": "2026-10-12",
+      "review_state": "pending_review",
+      "rights": {
+        "license": "not_asserted",
+        "reuse": "Bibliographic metadata, concise factual paraphrases and short date expressions only; no source HTML or images."
+      }
+    }
+  ],
+  "claims": [
+    {
+      "id": "c:tower-start",
+      "subject_id": "catalog:wikidata:Q83125",
+      "statement": "The keeper dates the start of bridge construction to 22 April 1886.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:tower-start"
+      ],
+      "time": {
+        "value": "1886-04-22",
+        "precision": "day",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "22 April 1886"
+    },
+    {
+      "id": "c:tower-final-works",
+      "subject_id": "catalog:wikidata:Q83125",
+      "statement": "The keeper dates completion of flooring, paving, painting and high-level walkway work to June 1894.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:tower-final-works"
+      ],
+      "time": {
+        "value": "1894-06",
+        "precision": "month",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "June 1894"
+    },
+    {
+      "id": "c:tower-opening",
+      "subject_id": "catalog:wikidata:Q83125",
+      "statement": "The keeper reports the royal opening on 30 June 1894, separately from the June finishing work.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:tower-opening"
+      ],
+      "time": {
+        "value": "1894-06-30",
+        "precision": "day",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "30 June 1894"
+    },
+    {
+      "id": "c:tower-use",
+      "subject_id": "catalog:wikidata:Q83125",
+      "statement": "The keeper describes daily public crossings from July 1894.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:tower-use"
+      ],
+      "time": {
+        "value": "1894-07",
+        "precision": "month",
+        "calendar": "source_native_CE",
+        "conversion": null
+      }
+    },
+    {
+      "id": "c:banquet-build",
+      "subject_id": "catalog:wikidata:Q642039",
+      "statement": "London Museum dates construction of the present Inigo Jones building to 1619–1622.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [
+        "Construction endpoint conflicts with Historic England educational description."
+      ],
+      "evidence_link_ids": [
+        "e:c:banquet-build"
+      ],
+      "time": {
+        "start": 1619,
+        "end": 1622,
+        "precision": "year",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "1619-1622"
+    },
+    {
+      "id": "c:banquet-complete",
+      "subject_id": "catalog:wikidata:Q642039",
+      "statement": "Historic Royal Palaces dates completion of the third Banqueting House to 1622.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [
+        "Construction endpoint conflicts with Historic England educational description."
+      ],
+      "evidence_link_ids": [
+        "e:c:banquet-complete"
+      ],
+      "time": {
+        "value": 1622,
+        "precision": "year",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "1622"
+    },
+    {
+      "id": "c:banquet-narrative",
+      "subject_id": "catalog:wikidata:Q642039",
+      "statement": "The keeper distinguishes two predecessors and narrates the present building through ceiling installation in 1636, refacing in 1774 and from 1829, and use in 1890.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:banquet-narrative"
+      ]
+    },
+    {
+      "id": "c:banquet-alternative",
+      "subject_id": "catalog:wikidata:Q642039",
+      "statement": "Historic England describes building work in 1619–1625 while separately reporting opening in 1622.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [
+        "Unresolved whether the later endpoint refers to the same completion boundary or additional work."
+      ],
+      "evidence_link_ids": [
+        "e:c:banquet-alternative"
+      ],
+      "time": {
+        "start": 1619,
+        "end": 1625,
+        "precision": "year",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "1619-25"
+    },
+    {
+      "id": "c:monument-start",
+      "subject_id": "catalog:wikidata:Q607700",
+      "statement": "The keeper dates commencement of construction to 1671.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:monument-start"
+      ],
+      "time": {
+        "value": 1671,
+        "precision": "year",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "1671"
+    },
+    {
+      "id": "c:monument-complete",
+      "subject_id": "catalog:wikidata:Q607700",
+      "statement": "The keeper reports completion in 1677.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:monument-complete"
+      ],
+      "time": {
+        "value": 1677,
+        "precision": "year",
+        "calendar": "source_native_CE",
+        "conversion": null
+      },
+      "source_native_expression": "1677"
+    },
+    {
+      "id": "c:monument-opening",
+      "subject_id": "catalog:wikidata:Q607700",
+      "statement": "The keeper separately reports opening in 1677.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [],
+      "evidence_link_ids": [
+        "e:c:monument-opening"
+      ],
+      "time": {
+        "value": 1677,
+        "precision": "year",
+        "calendar": "source_native_CE",
+        "conversion": null
+      }
+    },
+    {
+      "id": "c:monument-narrative",
+      "subject_id": "catalog:wikidata:Q607700",
+      "statement": "The keeper identifies the maintained monument with Wren and Hooke’s creation and describes repair around 1888 and in 2007–2009.",
+      "claim_kind": "source_relative_assertion",
+      "origin": "ai_assisted_source_transcription",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "uncertainty": [
+        "Around 1888 remains approximate; no numerical uncertainty envelope is asserted."
+      ],
+      "evidence_link_ids": [
+        "e:c:monument-narrative"
+      ]
+    }
+  ],
+  "evidence_links": [
+    {
+      "id": "e:c:tower-start",
+      "claim_id": "c:tower-start",
+      "source_id": "s:tower",
+      "locator": "1886: Construction begins / 22 April 1886; first paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:tower-final-works",
+      "claim_id": "c:tower-final-works",
+      "source_id": "s:tower",
+      "locator": "1894: An auspicious year / June 1894; first and third paragraphs",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:tower-opening",
+      "claim_id": "c:tower-opening",
+      "source_id": "s:tower",
+      "locator": "1894: An auspicious year / A Royal opening; first sentence",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:tower-use",
+      "claim_id": "c:tower-use",
+      "source_id": "s:tower",
+      "locator": "1894: An auspicious year / 29 July 1894; paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:banquet-build",
+      "claim_id": "c:banquet-build",
+      "source_id": "s:banquet-museum",
+      "locator": "Object IN1761 / Description; construction sentence",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:banquet-complete",
+      "claim_id": "c:banquet-complete",
+      "source_id": "s:banquet-hrp",
+      "locator": "Inigo Jones's Banqueting House; final paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:banquet-narrative",
+      "claim_id": "c:banquet-narrative",
+      "source_id": "s:banquet-hrp",
+      "locator": "Early banqueting houses; Perfectly proportioned; The Banqueting House exterior; The Royal Maundy / Did you know",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:banquet-alternative",
+      "claim_id": "c:banquet-alternative",
+      "source_id": "s:banquet-he",
+      "locator": "Archive ref IOE01/05495/16; first descriptive paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:monument-start",
+      "claim_id": "c:monument-start",
+      "source_id": "s:monument",
+      "locator": "1677: The Monument; first paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:monument-complete",
+      "claim_id": "c:monument-complete",
+      "source_id": "s:monument",
+      "locator": "1677: The Monument; final paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:monument-opening",
+      "claim_id": "c:monument-opening",
+      "source_id": "s:monument",
+      "locator": "1677: The Monument; final paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    },
+    {
+      "id": "e:c:monument-narrative",
+      "claim_id": "c:monument-narrative",
+      "source_id": "s:monument-restoration",
+      "locator": "Restoring The Monument; first two paragraphs; The Plaza / final paragraph",
+      "relation_to_claim": "supports",
+      "evidence_strength": "direct_for_source_relative_statement",
+      "reviewer": null,
+      "review_state": "pending_review"
+    }
+  ],
+  "inferences": [
+    {
+      "id": "i:banquet-continuity",
+      "subject_id": "catalog:wikidata:Q642039",
+      "claim_kind": "inference",
+      "origin": "ai_assisted_research",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "basis_claim_ids": [
+        "c:banquet-complete",
+        "c:banquet-narrative"
+      ],
+      "statement": "The keeper’s connected history supports a proposed same-building continuity inference through the finite year 1894, but its disputed initial boundary prevents phase admission.",
+      "rule": "Finite continuity inferred from an explicit keeper narrative of the same structure and its maintenance; not interpolation between isolated observations.",
+      "coverage_end": 1894,
+      "admission": "withheld_conflict",
+      "limitations": [
+        "Not a direct statement of existence in every intervening year.",
+        "No unchanged appearance, fabric, function or daily public access is inferred.",
+        "No assertion beyond the finite coverage cut."
+      ]
+    },
+    {
+      "id": "i:monument-continuity",
+      "subject_id": "catalog:wikidata:Q607700",
+      "claim_kind": "inference",
+      "origin": "ai_assisted_research",
+      "review_state": "pending_review",
+      "confidence": null,
+      "evidence_state": "located_pending_review",
+      "basis_claim_ids": [
+        "c:monument-complete",
+        "c:monument-narrative"
+      ],
+      "statement": "The keeper’s connected creation-and-maintenance account supports same-monument persistence after completion through the finite year 1894.",
+      "rule": "Finite continuity inferred from an explicit keeper narrative of the same structure and its maintenance; not interpolation between isolated observations.",
+      "coverage_end": 1894,
+      "admission": "pending_review",
+      "limitations": [
+        "Not a direct statement of existence in every intervening year.",
+        "No unchanged appearance, fabric, function or daily public access is inferred.",
+        "No assertion beyond the finite coverage cut."
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "conflict:banquet-completion",
+      "subject_id": "catalog:wikidata:Q642039",
+      "claim_ids": [
+        "c:banquet-build",
+        "c:banquet-complete",
+        "c:banquet-alternative"
+      ],
+      "status": "unresolved",
+      "reason": "Construction endpoint 1622 versus 1625; scope difference not established. Opening in 1622 does not resolve completion.",
+      "resolution": null,
+      "effect": "withhold_all_phase_admission; retain source-relative alternatives as unknown context"
+    }
+  ],
+  "objects": [
+    {
+      "existing_item_id": "catalog:wikidata:Q83125",
+      "label": "Tower Bridge",
+      "subject_scope": "The named bridge, excluding claims of unchanged fabric or appearance.",
+      "review_state": "pending_review",
+      "temporal_classification": "proposed_dated",
+      "modern_point_only": true,
+      "historical_geometry": null,
+      "loss_date": null,
+      "conflict_ids": [],
+      "phases": [
+        {
+          "id": "catalog:wikidata:Q83125:construction",
+          "kind": "construction",
+          "interval": [
+            1886,
+            1894
+          ],
+          "precision": "year",
+          "boundary_rule": "inclusive_year_overlap_not_full_year_presence",
+          "end_semantics": "completion_year",
+          "basis_claim_ids": [
+            "c:tower-start",
+            "c:tower-final-works"
+          ],
+          "inference_ids": [],
+          "support": "source_reported",
+          "review_state": "pending_review",
+          "admission": "pending_review"
+        },
+        {
+          "id": "catalog:wikidata:Q83125:completed",
+          "kind": "completed",
+          "interval": [
+            1894,
+            1894
+          ],
+          "precision": "year",
+          "boundary_rule": "inclusive_year_overlap_not_full_year_presence",
+          "end_semantics": "coverage_cut_not_demolition",
+          "basis_claim_ids": [
+            "c:tower-final-works",
+            "c:tower-opening",
+            "c:tower-use"
+          ],
+          "inference_ids": [],
+          "support": "source_reported",
+          "review_state": "pending_review",
+          "admission": "pending_review"
+        }
+      ]
+    },
+    {
+      "existing_item_id": "catalog:wikidata:Q642039",
+      "label": "Banqueting House",
+      "subject_scope": "The present third building by Inigo Jones; excludes earlier halls and the wider Whitehall Palace.",
+      "review_state": "pending_review",
+      "temporal_classification": "unknown_context_conflict",
+      "modern_point_only": true,
+      "historical_geometry": null,
+      "loss_date": null,
+      "conflict_ids": [
+        "conflict:banquet-completion"
+      ],
+      "phases": [],
+      "withheld_phases": [
+        {
+          "id": "catalog:wikidata:Q642039:construction",
+          "kind": "construction",
+          "interval": [
+            1619,
+            1622
+          ],
+          "precision": "year",
+          "boundary_rule": "inclusive_year_overlap_not_full_year_presence",
+          "end_semantics": "completion_year",
+          "basis_claim_ids": [
+            "c:banquet-build",
+            "c:banquet-complete"
+          ],
+          "inference_ids": [],
+          "support": "source_reported",
+          "review_state": "pending_review",
+          "admission": "withheld_conflict"
+        },
+        {
+          "id": "catalog:wikidata:Q642039:completed",
+          "kind": "completed",
+          "interval": [
+            1622,
+            1894
+          ],
+          "precision": "year",
+          "boundary_rule": "inclusive_year_overlap_not_full_year_presence",
+          "end_semantics": "coverage_cut_not_demolition",
+          "basis_claim_ids": [
+            "c:banquet-complete",
+            "c:banquet-narrative"
+          ],
+          "inference_ids": [
+            "i:banquet-continuity"
+          ],
+          "support": "inferred",
+          "review_state": "pending_review",
+          "admission": "withheld_conflict"
+        }
+      ]
+    },
+    {
+      "existing_item_id": "catalog:wikidata:Q607700",
+      "label": "The Monument",
+      "subject_scope": "The named Wren/Hooke monument; excludes earlier structures at its site.",
+      "review_state": "pending_review",
+      "temporal_classification": "proposed_dated",
+      "modern_point_only": true,
+      "historical_geometry": null,
+      "loss_date": null,
+      "conflict_ids": [],
+      "phases": [
+        {
+          "id": "catalog:wikidata:Q607700:construction",
+          "kind": "construction",
+          "interval": [
+            1671,
+            1677
+          ],
+          "precision": "year",
+          "boundary_rule": "inclusive_year_overlap_not_full_year_presence",
+          "end_semantics": "completion_year",
+          "basis_claim_ids": [
+            "c:monument-start",
+            "c:monument-complete"
+          ],
+          "inference_ids": [],
+          "support": "source_reported",
+          "review_state": "pending_review",
+          "admission": "pending_review"
+        },
+        {
+          "id": "catalog:wikidata:Q607700:completed",
+          "kind": "completed",
+          "interval": [
+            1677,
+            1894
+          ],
+          "precision": "year",
+          "boundary_rule": "inclusive_year_overlap_not_full_year_presence",
+          "end_semantics": "coverage_cut_not_demolition",
+          "basis_claim_ids": [
+            "c:monument-complete",
+            "c:monument-narrative"
+          ],
+          "inference_ids": [
+            "i:monument-continuity"
+          ],
+          "support": "inferred",
+          "review_state": "pending_review",
+          "admission": "pending_review"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Proposed evidence requires distinct independent review before phase admission.",
+    "Source-relative assertions are not independently established historical truth.",
+    "All original coordinates remain modern reference anchors; historical geometry and footprint are unknown.",
+    "Year matching means intersection with a year, not presence throughout every day.",
+    "1894 is a finite navigation and assertion coverage cut, never a loss or demolition date.",
+    "No whole source pages or images are reproduced; live URLs can change."
+  ]
+}

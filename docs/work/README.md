@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Owner-directed architecture time pilot — 2026-10-12
+
+- `2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md` — active accepted DECISION with REVIEW implementation under verification: source-bound temporal phases for Tower Bridge and Monument, unresolved Banqueting House context, and finite CE calendar through 1894. Prospective scope and evidence reviews are accepted. Native inputs/55 identities and unknown context are preserved; final implementation review, CI and public delivery remain pending. No Airtable intake or automatic successor is opened.
+
 ## Owner-directed Airtable export recovery — 2026-10-12
 
 - `2026-10-12_AIRTABLE_EXPORT_RECOVERY_v1.md` — bounded AUTO repair of external-source commit classification and stale lifecycle checks in the existing export gate. Frozen evidence and historical-write restrictions remain intact. Local verification and exact-head review/CI control delivery; live export success requires a separate receipt.

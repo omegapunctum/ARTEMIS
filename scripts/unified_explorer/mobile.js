@@ -2,11 +2,11 @@
   'use strict';
   const MIN = 91, MAX = 1519;
   const MOBILE_QUERY = '(max-width:640px), (max-width:960px) and (max-height:500px)';
-  const bounds = value => Math.max(MIN, Math.min(MAX, Math.round(value)));
+  const bounds = (value, calendar) => Math.max(calendar.min, Math.min(calendar.max, Math.round(value)));
   function temporal(state) { return {mode:state.mode,startYear:state.startYear,endYear:state.endYear,cursorYear:state.cursorYear}; }
-  function stepDraft(draft, field, delta) {
+  function stepDraft(draft, field, delta, calendar = {min:MIN,max:MAX}) {
     if (!['startYear','endYear','cursorYear'].includes(field) || !Number.isFinite(delta)) return {...draft};
-    const next = {...draft,[field]:bounds(draft[field] + delta)};
+    const next = {...draft,[field]:bounds(draft[field] + delta,calendar)};
     if (field === 'startYear') next.startYear = Math.min(next.startYear,next.endYear);
     if (field === 'endYear') next.endYear = Math.max(next.endYear,next.startYear);
     return next;
@@ -19,6 +19,8 @@
   };
   function mount({runtime,applyState,layout}) {
     const byId = id => document.getElementById(id), header = byId('workspace-header'), dock = byId('time-dock');
+    const {min_year:MIN,max_year:MAX} = runtime.bundle.calendar;
+    const calendar = {min:MIN,max:MAX};
     const mobile = () => window.matchMedia(MOBILE_QUERY).matches;
     let draft = temporal(runtime.state), canonical = signature(runtime.state), dirty = false, selected = null;
     let headerReturn = null, expanded = false;
@@ -41,7 +43,7 @@
     function cancel() { draft = temporal(runtime.state); dirty = false; render(); }
     function stage(field, delta) {
       if (!runtime.ready || !mobile()) return;
-      draft = stepDraft(draft,field,delta); dirty = signature(draft) !== canonical;
+      draft = stepDraft(draft,field,delta,calendar); dirty = signature(draft) !== canonical;
       setExpanded(true); render();
     }
     function apply() {
@@ -108,7 +110,7 @@
       wheel.addEventListener('pointermove',event => {
         if (!drag || drag.pointer !== event.pointerId) return;
         event.preventDefault(); event.stopPropagation();
-        draft = stepDraft(drag.draft,field,Math.trunc((drag.y-event.clientY)/18)); dirty = signature(draft) !== canonical; render();
+        draft = stepDraft(drag.draft,field,Math.trunc((drag.y-event.clientY)/18),calendar); dirty = signature(draft) !== canonical; render();
       });
       wheel.addEventListener('pointerup',event => { if (drag?.pointer === event.pointerId) { drag = null; if (wheel.hasPointerCapture(event.pointerId)) wheel.releasePointerCapture(event.pointerId); } });
       wheel.addEventListener('pointercancel',event => { if (drag?.pointer === event.pointerId) { draft = drag.draft; dirty = drag.dirty; drag = null; render(); } });
