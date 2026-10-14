@@ -25,7 +25,8 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pytest
+        # Starlette's TestClient needs its optional HTTP client in this fresh CI environment.
+        run: pip install -r requirements.txt pytest httpx2==2.13.1
 
       - name: Verify frozen evidence history
         run: python scripts/validate_ci_evidence_history.py
