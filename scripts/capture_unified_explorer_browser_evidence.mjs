@@ -23,6 +23,8 @@ function argumentsFor(argv) {
   if (values.url) check(values['expected-artifact'],'live proof requires --expected-artifact');
   values.width=Number(values.width || 1440);values.height=Number(values.height || 900);
   values.timeoutMs=Number(values['timeout-ms'] || 270000);
+  values.phase=values.phase || 'workspace';
+  check(['workspace','architecture-time'].includes(values.phase),'unknown native proof phase');
   check([values.width,values.height,values.timeoutMs].every(v=>Number.isFinite(v)&&v>0),'invalid dimensions or timeout');
   values.expectedArtifact=resolve(values.artifact || values['expected-artifact']);
   values.output=resolve(values.output);
@@ -431,7 +433,91 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     mobileChecks.push({case:'compact calendar native interaction',layout,panels:['layers','records','settings'],draftChangesCanonicalState:false,draftChangesUrl:false,keyboardInputRequired:false,nativeWheelScroll:true,observedWheelEvents,nativeWheelDrag:true,yearBoundaries:true,cancel:true,apply:true,nativeDockDragCollapse:true,nativeScrub:true,nativeRange:true,sameMap:true});
   }
 
+  async function architectureTimeScenario() {
+    // Inspect the final native option text after responsive desktop presentation,
+    // which must preserve the temporal classification supplied by the runtime.
+    async function chooserLabel(itemId,dated) {
+      const option=await evaluate(cdp,`(() => {const chooser=document.getElementById('record-select');return {value:chooser.value,text:chooser.selectedOptions[0]?.textContent};})()`);
+      check(option.value===itemId&&typeof option.text==='string','temporal chooser lost selected identity');
+      if(dated)check(option.text.includes('Dated matches')&&option.text.includes('Construction')&&!option.text.includes('time unknown'),'dated temporal chooser mislabeled as unknown context '+JSON.stringify(option));
+      else check(!option.text.includes('Dated matches')&&(option.text.includes('time unknown')||option.text.includes('Atemporal reference context')),'unresolved temporal chooser promoted dated applicability '+JSON.stringify(option));
+      return option;
+    }
+    // Native calendar-to-source proof of the admitted Monument transition.
+    // All mutations use visible controls; direct runtime reads only assert evidence.
+    await close();await click('#language-en');await click('#mode-scrub');
+    const monumentId='catalog:wikidata:Q607700';
+    for(const projection of ['globe','map']) {
+      await view(projection);await number('cursor-year',1676);await select(monumentId);
+      const constructionChooser=await chooserLabel(monumentId,true);
+      const construction=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+      check(construction.includes('Construction')&&!construction.includes('Completed structure'),'Monument pre-transition phase incorrect');
+      await close();await number('cursor-year',1677);await select(monumentId);
+      const transition=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+      check(transition.includes('Construction')&&transition.includes('Completed structure')&&transition.includes('Transition year'),'year precision transition missing');
+      await disclose('record-disclosure');
+      const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href),scope:document.getElementById('selection-scope').textContent})`);
+      const packet=expectedBundle.architectureTime;
+      const claimIds=packet.claims.filter(row=>row.subject_id===monumentId).flatMap(row=>row.evidence_link_ids);
+      for(const eid of claimIds) {
+        const evidence=packet.evidence_links.find(row=>row.id===eid),source=packet.sources.find(row=>row.id===evidence.source_id);
+        check(details.links.includes(source.url)&&details.text.includes(evidence.locator),'temporal source locator not disclosed');
+      }
+      check(details.text.includes('Inferred continuity')&&details.scope.includes('Modern reference point'),'inference or modern geometry limit missing');
+      await collapseMobile();await capture('architecture-time-transition-details-en-'+projection);
+      await close();await number('cursor-year',1678);await select(monumentId);
+      const completed=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
+      check(completed.includes('Completed structure')&&completed.includes('Inferred continuity')&&!completed.includes('Construction'),'post-transition phase incorrect');
+      await number('cursor-year',1670);
+      const excluded=await snapshot();
+      check(excluded.state.selectedItemId===null&&!excluded.visible.some(row=>row.itemId===monumentId),'unsupported year retained dated selection/geometry');
+      temporalChecks.push({projection,itemId:monumentId,constructionYear:1676,construction,constructionChooser,transitionYear:1677,transition,details,completedYear:1678,completed,excludedYear:1670,selectionCleared:true,sameMap:true});
+    }
+    // Keep source-native day/month precision visible before details, while the
+    // selected year remains a deliberately coarser navigation projection.
+    const towerId='catalog:wikidata:Q83125';
+    for(const projection of ['globe','map']) {
+      await view(projection);await number('cursor-year',1894);await select(towerId);
+      const transitionChooser=await chooserLabel(towerId,true);
+      await click('#back-to-summary');
+      const compact=await evaluate(cdp,`(() => {const card=document.getElementById('selection-card');return {text:card?.textContent,visible:card?.checkVisibility({checkVisibilityCSS:true}),inspectorHidden:document.getElementById('inspector').hidden};})()`);
+      check(compact.visible&&compact.inspectorHidden,'Tower compact card missing before details');
+      for(const expression of ['Construction start: 22 April 1886','Finishing work complete: June 1894','Opening: 30 June 1894'])check(compact.text.includes(expression),'Tower compact card lost labelled source-native expression '+expression);
+      check(compact.text.includes('Transition year')&&compact.text.includes('Modern reference point')&&compact.text.includes('Coverage ends in 1894'),'Tower compact card lost transition, geometry or coverage limit');
+      await capture('architecture-time-tower-compact-native-dates-en-'+projection);
+      await click('#open-details');await disclose('record-disclosure');
+      const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href)})`);
+      const packet=expectedBundle.architectureTime;
+      for(const claim of packet.claims.filter(row=>row.subject_id===towerId)) {
+        if(claim.time)check(details.text.includes(claim.source_native_expression||claim.time.value)&&details.text.includes(claim.time.precision),'Tower details lost source time or precision');
+        for(const eid of claim.evidence_link_ids) {
+          const evidence=packet.evidence_links.find(row=>row.id===eid),source=packet.sources.find(row=>row.id===evidence.source_id);
+          check(details.links.includes(source.url)&&details.text.includes(evidence.locator),'Tower source locator not disclosed');
+        }
+      }
+      await capture('architecture-time-tower-native-details-en-'+projection);
+      temporalChecks.push({projection,itemId:towerId,year:1894,compact,details,transitionChooser,sourceNativeDatesVisibleBeforeDetails:true,sameMap:true});
+      await close();
+    }
+    await number('cursor-year',1670);
+    await select('catalog:wikidata:Q642039');await disclose('record-disclosure');
+    const conflictChooser=await chooserLabel('catalog:wikidata:Q642039',false);
+    const conflict=await evaluate(cdp,"document.getElementById('selection-details').textContent");
+    check(conflict.includes('1622')&&conflict.includes('1625'),'conflicting Banqueting dates omitted');
+    temporalChecks.push({itemId:'catalog:wikidata:Q642039',unknownContext:true,competingDatesPreserved:true,conflictChooser});
+    await close();
+  }
+
   await navigate(url);
+  if(options.phase==='architecture-time') {
+    const initial=await membership({leonardo:11,roman:0,architecture:0,catalog:8},'architecture-time fresh catalog entry');
+    check(initial.state.layers.includes('catalog'),'architecture-time fresh entry did not enable catalog');
+    await architectureTimeScenario();
+    await stable('architecture-time phase complete');await networkSnapshot();
+    return {outcome:'TECHNICAL_ARCHITECTURE_TIME_PASS',phase:options.phase,actions,checks,temporalChecks,mobileChecks,captures,renderSettlements,
+      network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},valueValidation:'not_assessed',
+      limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Two reviewed pilot objects admit finite temporal phases; Banqueting House retains unresolved conflict context. Temporal support does not establish historical geometry or complete coverage.','CSS viewport emulation and desktop native input do not establish physical mobile-device behavior.']};
+  }
   await mobileRegression();
   const readyCatalog=await membership({leonardo:11,roman:0,architecture:0,catalog:8},'fresh London catalog with two temporal objects outside coverage');
   check(readyCatalog.state.layers.includes('catalog'),'fresh entry did not enable catalog');
@@ -547,66 +633,6 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   await layer('catalog',false);check((await snapshot()).state.selectedItemId===null,'hiding selected catalog layer retained selection');await layer('catalog',true);
   catalogChecks.push({case:'ready catalog search source focus and shared history',cohort:catalog.map(row=>row.item_id),nativeCatalogGeometrySha256:sha256(nativeCatalog),searchCases,emptySearch:{query:empty.query,status:empty.status,selectionRetained:true},clearedChooserCount:allChooser.length,sourceDetails,focus:{before:unfocused.camera,after:focused.camera},fallbackItem:fallback?.item_id||null,fallbackEvidence:fallback?'native source fallback checked':'not applicable: all ten source records contain RU and EN labels; fallback mechanism covered in owned behavior tests',allLayersCount:allLayers.visible.length,catalogParticipatesInHistoricalFilter:true,datedCatalogObjects:2,unknownContextObjects:8,sameMap:true,blockedExternalApis:true});
   // Existing saved layers remain authoritative and retain the old 45-record proof.
-  // Native calendar-to-source proof of the admitted Monument transition.
-  // All mutations use visible controls; direct runtime reads only assert evidence.
-  await close();await click('#language-en');await click('#mode-scrub');
-  const monumentId='catalog:wikidata:Q607700';
-  for(const projection of ['globe','map']) {
-    await view(projection);await number('cursor-year',1676);await select(monumentId);
-    const construction=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
-    check(construction.includes('Construction')&&!construction.includes('Completed structure'),'Monument pre-transition phase incorrect');
-    await close();await number('cursor-year',1677);await select(monumentId);
-    const transition=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
-    check(transition.includes('Construction')&&transition.includes('Completed structure')&&transition.includes('Transition year'),'year precision transition missing');
-    await disclose('record-disclosure');
-    const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href),scope:document.getElementById('selection-scope').textContent})`);
-    const packet=expectedBundle.architectureTime;
-    const claimIds=packet.claims.filter(row=>row.subject_id===monumentId).flatMap(row=>row.evidence_link_ids);
-    for(const eid of claimIds) {
-      const evidence=packet.evidence_links.find(row=>row.id===eid),source=packet.sources.find(row=>row.id===evidence.source_id);
-      check(details.links.includes(source.url)&&details.text.includes(evidence.locator),'temporal source locator not disclosed');
-    }
-    check(details.text.includes('Inferred continuity')&&details.scope.includes('Modern reference point'),'inference or modern geometry limit missing');
-    await collapseMobile();await capture('architecture-time-transition-details-en-'+projection);
-    await close();await number('cursor-year',1678);await select(monumentId);
-    const completed=await evaluate(cdp,"document.getElementById('selection-facts').textContent");
-    check(completed.includes('Completed structure')&&completed.includes('Inferred continuity')&&!completed.includes('Construction'),'post-transition phase incorrect');
-    await number('cursor-year',1670);
-    const excluded=await snapshot();
-    check(excluded.state.selectedItemId===null&&!excluded.visible.some(row=>row.itemId===monumentId),'unsupported year retained dated selection/geometry');
-    temporalChecks.push({projection,itemId:monumentId,constructionYear:1676,construction,transitionYear:1677,transition,details,completedYear:1678,completed,excludedYear:1670,selectionCleared:true,sameMap:true});
-  }
-  // Keep source-native day/month precision visible before details, while the
-  // selected year remains a deliberately coarser navigation projection.
-  const towerId='catalog:wikidata:Q83125';
-  for(const projection of ['globe','map']) {
-    await view(projection);await number('cursor-year',1894);await select(towerId);
-    await click('#back-to-summary');
-    const compact=await evaluate(cdp,`(() => {const card=document.getElementById('selection-card');return {text:card?.textContent,visible:card?.checkVisibility({checkVisibilityCSS:true}),inspectorHidden:document.getElementById('inspector').hidden};})()`);
-    check(compact.visible&&compact.inspectorHidden,'Tower compact card missing before details');
-    for(const expression of ['Construction start: 22 April 1886','Finishing work complete: June 1894','Opening: 30 June 1894'])check(compact.text.includes(expression),'Tower compact card lost labelled source-native expression '+expression);
-    check(compact.text.includes('Transition year')&&compact.text.includes('Modern reference point')&&compact.text.includes('Coverage ends in 1894'),'Tower compact card lost transition, geometry or coverage limit');
-    await capture('architecture-time-tower-compact-native-dates-en-'+projection);
-    await click('#open-details');await disclose('record-disclosure');
-    const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href)})`);
-    const packet=expectedBundle.architectureTime;
-    for(const claim of packet.claims.filter(row=>row.subject_id===towerId)) {
-      if(claim.time)check(details.text.includes(claim.source_native_expression||claim.time.value)&&details.text.includes(claim.time.precision),'Tower details lost source time or precision');
-      for(const eid of claim.evidence_link_ids) {
-        const evidence=packet.evidence_links.find(row=>row.id===eid),source=packet.sources.find(row=>row.id===evidence.source_id);
-        check(details.links.includes(source.url)&&details.text.includes(evidence.locator),'Tower source locator not disclosed');
-      }
-    }
-    await capture('architecture-time-tower-native-details-en-'+projection);
-    temporalChecks.push({projection,itemId:towerId,year:1894,compact,details,sourceNativeDatesVisibleBeforeDetails:true,sameMap:true});
-    await close();
-  }
-  await number('cursor-year',1670);
-  await select('catalog:wikidata:Q642039');await disclose('record-disclosure');
-  const conflict=await evaluate(cdp,"document.getElementById('selection-details').textContent");
-  check(conflict.includes('1622')&&conflict.includes('1625'),'conflicting Banqueting dates omitted');
-  temporalChecks.push({itemId:'catalog:wikidata:Q642039',unknownContext:true,competingDatesPreserved:true});
-  await close();
   const incumbent=new URL('globe/?layers=leonardo,roman',base);await navigate(incumbent);
   check(!(await snapshot()).state.layers.includes('catalog'),'explicit legacy layers silently added catalog');
   await membership({leonardo:11,roman:0,architecture:0,catalog:0},'explicit legacy layers entry');await placeAnchors('default11Presences9Places');
@@ -712,7 +738,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   const translatedRoman=await snapshot();check(translatedRoman.state.selectedItemId===version.item_id&&translatedRoman.state.startYear===106&&translatedRoman.state.endYear===113,'legacy Roman saved state translation failed');legacy.push({entry:'roman',url:romanLegacy.href,state:translatedRoman.state});
   await disclose('sources-disclosure');await capture('legacy-roman-source-en-map');
   await networkSnapshot();
-  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',actions,checks,placeAnchorChecks,catalogChecks,temporalChecks,mobileChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
+  return {outcome:'TECHNICAL_UNIFIED_WORKSPACE_PASS',phase:options.phase,actions,checks,placeAnchorChecks,catalogChecks,temporalChecks,mobileChecks,network:{blockedUrls:WIKIMEDIA_BLOCKED_URLS,documents:networkDocuments,liveWikimediaRequests:0},referenceChecks,rawNegativeDateReferenceCount:bce.length,rawDatePolicy:'Literal imported strings including negative BCE-style values; no calendar/lifetime normalization',nativeRomanGeometries:nativeGeometries,nativePicking:point,camera:{before:beforeDrag.camera,after:cameraState.camera},history:{back:true,forward:true,savedUrlRestored:true,state:savedState},legacy,captures,renderSettlements,
     valueValidation:'not_assessed',limitations:['Automated native interaction evidence does not establish user comprehension or user value.','Imported architecture metadata and coordinate claims retain their original status. Only two separately reviewed pilot objects admit finite temporal phases; Banqueting House retains unresolved conflict context. Temporal support does not establish historical geometry or complete coverage.','Shared URL restoration compares exact workspace fields and native renderer camera numbers.','Same engine and cartographic projection comparison, not independent renderer-adapter proof.','Named controls and native input only; not a complete assistive technology audit.']};
 }
 

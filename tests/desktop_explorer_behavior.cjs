@@ -24,6 +24,22 @@ runtime.registry=new Map([['cesena',{label:'Cesena',interval:{start:1502,end:150
 const option=new Element('option'); option.value='cesena'; option.textContent='Leonardo · Cesena · 1502–1502'; el('record-select').options=[option];
 const initial=JSON.stringify(runtime.state);const adapter=mount({runtime,layout(){}});
 assert.equal(option.textContent,'Cesena · 1502');
+// Compact presentation retains the query-owned phase label even though the
+// original catalog identity has no lifetime interval of its own.
+const dated = new Element('dated'); dated.value='tower'; dated.textContent='London architecture catalog · Tower Bridge · Dated matches · Construction · 1886–1894';
+dated.dataset.temporalLabel='Dated matches · Construction · 1886–1894';
+const unknown = new Element('unknown'); unknown.value='banquet'; unknown.textContent='London architecture catalog · Banqueting House · Atemporal reference context';
+runtime.registry.set('tower',{label:'Tower Bridge',interval:null});
+runtime.registry.set('banquet',{label:'Banqueting House',interval:null});
+el('record-select').options.push(dated,unknown);adapter.render();
+assert.equal(dated.textContent,'Tower Bridge · Dated matches · Construction · 1886–1894');
+assert.equal(unknown.textContent,'Banqueting House · time unknown');
+assert.equal(dated.title,'London architecture catalog · Tower Bridge · Dated matches · Construction · 1886–1894');
+dated.dataset.temporalLabel='Датированные совпадения · Завершённый объект · 1894–1894';
+runtime.state.language='ru';adapter.render();
+assert.equal(dated.textContent,'Tower Bridge · Датированные совпадения · Завершённый объект · 1894–1894');
+runtime.state.language='en';adapter.render();
+el('record-select').options=[option];
 assert.equal(el('record-search').parent,el('desktop-search'));
 assert.equal(el('record-select').getAttribute('size'),'7');
 el('records-toggle').events.click();assert.equal(el('desktop-records-body').hidden,true);assert.equal(el('records-toggle').focused,true);

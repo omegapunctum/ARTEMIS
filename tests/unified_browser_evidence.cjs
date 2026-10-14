@@ -9,6 +9,11 @@ const http=require('node:http');
   const {argumentsFor,verifyBytes,sameState,contextReplaced,mobileControlOwner,mobileYearControl,wheelKeys}=await import('../scripts/capture_unified_explorer_browser_evidence.mjs');
   assert.throws(()=>argumentsFor(['node','runner','--browser','chrome','--output','proof','--url','https://example.test/globe/']),/expected-artifact/);
   assert.throws(()=>argumentsFor(['node','runner','--browser','chrome','--output','proof','--url','https://example.test/globe/','--artifact','local']),/either/);
+  const localArgs=['node','runner','--browser','chrome','--output','proof','--artifact','local'];
+  assert.equal(argumentsFor(localArgs).phase,'workspace','default must retain incumbent workspace proof');
+  assert.equal(argumentsFor([...localArgs,'--phase','architecture-time']).phase,'architecture-time');
+  assert.equal(argumentsFor(localArgs).timeoutMs,270000,'phase splitting must retain bounded process deadline');
+  assert.throws(()=>argumentsFor([...localArgs,'--phase','skip-all']),/unknown native proof phase/);
   assert.equal(contextReplaced(new Error('Inspected target navigated or closed')),true);
   assert.equal(contextReplaced(new Error('WebSocket closed')),false);
   // Hidden incumbent fields must route to the visible accepted mobile calendar.

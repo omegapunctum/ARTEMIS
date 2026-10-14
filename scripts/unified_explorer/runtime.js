@@ -486,7 +486,12 @@
     const select = byId('record-select'), nextSignature = `${state.language}|${state.mode}|${state.startYear}|${state.endYear}|${state.cursorYear}|${runtime.search}|${results.map(item => item.item_id).join('|')}`;
     if (recordSignature !== nextSignature) {
       recordSignature = nextSignature; select.replaceChildren(node('option',t('choose'))); select.firstChild.value = '';
-      for (const item of results) { const option = node('option',`${t(item.layer_id)} · ${recordLabel(item,state.language)}${item.interval ? ` · ${item.interval.start}–${item.interval.end}` : isDatedArchitecture(runtime.bundle,item) ? ` · ${t('datedMatches')} · ${phaseSummary(item)}` : ` · ${t('unknownContext')}`}`); option.value = item.item_id; select.append(option); }
+      for (const item of results) {
+        const temporalLabel = isDatedArchitecture(runtime.bundle,item) ? `${t('datedMatches')} · ${phaseSummary(item)}` : null;
+        const option = node('option',`${t(item.layer_id)} · ${recordLabel(item,state.language)}${item.interval ? ` · ${item.interval.start}–${item.interval.end}` : temporalLabel ? ` · ${temporalLabel}` : ` · ${t('unknownContext')}`}`);
+        if (temporalLabel) option.dataset.temporalLabel = temporalLabel;
+        option.value = item.item_id; select.append(option);
+      }
     }
     select.value = results.some(item => item.item_id === state.selectedItemId) ? state.selectedItemId : ''; select.disabled = !runtime.ready || !results.length;
     byId('record-search').disabled = !runtime.ready; byId('clear-search').disabled = !runtime.ready || !runtime.search;

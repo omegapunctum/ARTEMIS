@@ -234,3 +234,27 @@ and independently checked admission, Node syntax and both artifact/offline guard
 Saved 41/92/459 passing logs were inspected. This receipt accepts the local code
 only. Final delivery/merge acceptance remains pending native desktop/narrow execution
 and screenshot inspection plus required remote checks on the current branch head.
+
+### Native CI findings and bounded correction — 2026-10-14
+
+The initial remote native run on `473c81d` produced desktop Monument/Tower
+transition/source/compact-date captures, then expired at the original 270-second
+global deadline during the subsequent incumbent Roman scenario. Artifact timestamps
+show the added temporal scenario consumed roughly three minutes. These partial
+captures are observation only, not a complete native pass. The runner now exposes
+separate `workspace` and `architecture-time` phases; both Core and Pages workflows
+run both phases at all four existing viewports, each retaining 270000 ms / 300 s
+limits. Existing workspace, identity, source, network and temporal assertions remain.
+
+Distinct reviewer `/root/remote_acceptance_review` found the desktop chooser
+rewrote dated catalog labels to 'time unknown' despite correct cards. The runtime
+now supplies its query-owned temporal label to the desktop adapter; the adapter
+retains it without deriving a catalog lifetime. EN/RU desktop behavior and native
+Monument/Tower/unknown-Banqueting chooser assertions guard this presentation path.
+
+The combined accepted pilot plus Airtable repair passed the full local export
+contour: 1226 passed, 3 skipped before these presentation/runner corrections. An
+initial attempt lacked uvicorn on PATH; the corrected runtime run passed. The
+correction passed 22 mobile/unified tests, Node desktop behavior and both native
+harness tests. Current-head remote CI, native captures and final review remain
+pending; the external user explicitly authorized GitHub sending on 2026-10-14.

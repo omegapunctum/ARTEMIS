@@ -271,6 +271,27 @@ def test_review_digest_rejects_semantic_text_appended_to_lifecycle_header() -> N
         reviewed_content_sha256(request, loader)
 
 
+@pytest.mark.parametrize("copies", [0, 2])
+def test_review_envelope_rejects_deleted_or_duplicated_cesena_amendment(
+    copies: int, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    contract_path = ROOT / "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
+    current = contract_path.read_text(encoding="utf-8")
+    amendment = refinement_validator.CESENA_AUTHORIZED_AMENDMENT
+    assert current.count(amendment) == 1
+    corrupted = current.replace(amendment, amendment * copies, 1)
+    original_read_text = Path.read_text
+
+    def load_text(path: Path, *args, **kwargs):
+        if path == contract_path:
+            return corrupted
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", load_text)
+    with pytest.raises(RefinementValidationError, match="exactly one accepted Cesena amendment"):
+        refinement_validator.validate_review_envelope()
+
+
 def test_exact_cesena_extension_preserves_frozen_contract_digest() -> None:
     registry = json.loads(REVIEW_REGISTRY_PATH.read_text(encoding="utf-8"))
     raw_path = "docs/PROGRESSIVE_REFINEMENT_CONTRACT.md"
