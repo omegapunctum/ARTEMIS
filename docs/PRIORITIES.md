@@ -1,7 +1,9 @@
 # ARTEMIS — PRIORITIES v7.13
 
-Current execution priority — 2026-10-17: complete the explicitly owner-confirmed
-[factual closeout and direct Explorer entry](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md), then STOP / Command Center.
+Current execution boundary — 2026-10-17: the explicitly owner-confirmed
+[factual closeout and direct Explorer entry](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md)
+are implemented in PR #485, which owns final review/CI/merge and separate release
+receipts. Product next transition remains STOP / Command Center.
 Completed #478–#484 are evidence, not pending implementation. Affected-device
 Globe/Edge reproduction remains an unresolved separate diagnostic contour; no
 speculative optimization, bulk date promotion or historical-boundary intake is

@@ -93,4 +93,10 @@ references. The first browser installation returned truncated ZIPs; the CI-match
 script-disabled accessible link/no overflow. Destination was an isolated route
 sentinel, not a new Explorer rendering run. Both fallback captures were inspected.
 Native report SHA-256: `1aa6d5dd605ea363ec267c0310598ce49e6a982780642eab3cd72bac31d8930d`. Exact-head review/CI remain delivery gates.
-Publication of the root correction: not claimed. Existing public release evidence above belongs to the baseline only.
+
+Final delivery owner: [PR #485](https://github.com/omegapunctum/ARTEMIS/pull/485).
+Its durable receipts bind the actual remote source, independent review, required
+CI, expected-head merge and separate live root/byte/native verification. The
+implementation is complete; final delivery is established only by those receipts.
+The earlier public-release evidence above belongs to the baseline only and must
+not be reused as proof of the changed root.

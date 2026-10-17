@@ -2,10 +2,11 @@
 
 ## Owner-confirmed current-state closeout and direct entry — 2026-10-17
 
-- `2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md` — active bounded AUTO closeout
-  plus REVIEW root-entry correction, with independent prospective scope acceptance.
-  Existing #478–#484 delivery is verified; fixed relative root → Explorer entry is
-  locally implemented, pending exact-head CI/review and separate release verification.
+- `2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md` — completed bounded implementation:
+  AUTO factual closeout plus REVIEW direct root entry, tracked in [PR #485](https://github.com/omegapunctum/ARTEMIS/pull/485).
+  Existing #478–#484 delivery is verified. The PR owns exact-source final review/CI,
+  merge and separate public root/live-delivery receipts; implementation completion
+  alone is not publication acceptance.
   Product next transition is STOP / Command Center. No new corpus or temporal rules.
 
 The following dated checkpoints retain their original history; the current

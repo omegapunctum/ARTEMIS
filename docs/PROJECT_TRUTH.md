@@ -8,8 +8,10 @@ Pages 39002948277 verified baseline a60aeb1: 67 files at each entry and all eigh
 live native reports PASS. Export 38993680269 actually exported/committed; 1228 tests
 passed, 3 skipped. These receipts supersede older pending-delivery wording only;
 formal/comparative value remains UNVALIDATED and owner-device zoom is unresolved.
-Root direct-entry correction is locally implemented under REVIEW; its own final
-CI/merge/publication are separate and pending. No new product successor: STOP.
+Root direct-entry correction and factual synchronization are implemented in
+[PR #485](https://github.com/omegapunctum/ARTEMIS/pull/485). Its exact-source
+review/CI, merge and separate public root/live receipts are owned by that PR;
+the baseline evidence above is preserved separately. No new product successor: STOP.
 
 First-Use correction: implemented in #439, human-accepted and publication-verified; preserved as completed evidence. The former fresh-E1 handoff is superseded by the [owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md).
 
