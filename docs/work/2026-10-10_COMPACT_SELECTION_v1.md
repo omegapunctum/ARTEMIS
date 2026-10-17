@@ -1,5 +1,10 @@
 # Compact selection and workspace correction — 2026-10-10
 
+Current lifecycle synchronization — 2026-10-17: completed delivery and remaining
+limits are recorded in [the factual closeout](2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md).
+This supersedes older pending-CI/upload/merge/publication wording below; dated
+observations, failures and acceptance boundaries remain historical evidence.
+
 Class REVIEW, explicitly requested after owner Windows screenshots. Scope: compact first-click popup, explicit Details panel, denser closed disclosures/header and desktop calendar, single visual range track, bounded renderer workload corrections. No new domain data or historical precision.
 
 Observed evidence: owner screenshots image(20261010-042308).png and image(20261010-042440).png show oversized closed-disclosure gaps, two native range tracks, sparse timeline rows and an upper horizontal globe cutoff. Owner reports stuttering; screenshots do not measure its cause.

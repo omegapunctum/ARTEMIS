@@ -1,5 +1,10 @@
 # Explorer information hierarchy v1
 
+Current lifecycle synchronization — 2026-10-17: completed delivery and remaining
+limits are recorded in [the factual closeout](2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md).
+This supersedes older pending-CI/upload/merge/publication wording below; dated
+observations, failures and acceptance boundaries remain historical evidence.
+
 ## Owner direction and boundary
 
 Date: 2026-10-09. The owner accepted leaving the mobile composition in place and requested work on excessive coordinates, numbers and wording in cards, followed by research into historical state-boundary sources. The fresh instruction to continue authorizes this bounded presentation correction; it does not authorize a universal historical corpus.

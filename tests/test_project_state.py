@@ -332,7 +332,7 @@ def test_owner_closeout_preserved_with_one_technically_completed_proof() -> None
     assert state["gate_e"]["formal_user_value"] == "unvalidated"
     assert state["gate_e"]["comparative_user_value"] == "unvalidated"
     assert state["gate_e"]["successor_opened"] is False
-    assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
+    assert state["next_transition"]["target"] == "STOP"
     contextual = state["contextual_composition"]
     assert contextual["status"] == "deferred"
     assert contextual["research_authorization"] == "contextual_snapshot_candidate_search_v1"
@@ -369,11 +369,11 @@ def test_owner_closeout_preserved_with_one_technically_completed_proof() -> None
     assert proof["implementation_merge_commit"] == "5c421648378d91166c35cc453af1b60e0c39659a"
     assert proof["implementation_review_comment_id"] == 5812445343
     assert proof["additional_successor_opened"] is False
-    assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
-    for target in ("E", "TEMPORAL_REGION_PROOF", "D", "STOP"):
+    assert state["next_transition"]["decision_ref"] == "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md"
+    for target in ("E", "TEMPORAL_REGION_PROOF", "D", "EPISTEMIC_CONFLICT_PROOF"):
         changed = copy.deepcopy(state)
         changed["next_transition"]["target"] = target
-        with pytest.raises(ProjectStateError, match="only the owner-authorized bounded conflict proof"):
+        with pytest.raises(ProjectStateError, match="completed conflict proof permits only STOP"):
             validate_project_state(changed)
 
 
@@ -433,7 +433,7 @@ def test_contextual_closeout_cannot_claim_more_evidence_or_authority(field, valu
 def test_contextual_closeout_remains_registered_without_being_current_transition():
     state = _state()
     state["next_transition"]["decision_ref"] = state["gate_e"]["decision_ref"]
-    with pytest.raises(ProjectStateError, match="bounded conflict proof must cite"):
+    with pytest.raises(ProjectStateError, match="STOP requires the registered factual closeout"):
         validate_project_state(state)
     state = _state()
     state["canonical_refs"].remove(state["contextual_composition"]["closeout_ref"])
@@ -519,4 +519,18 @@ def test_region_closeout_requires_registered_evidence():
     state = _state()
     state["canonical_refs"].remove(state["region_closeout"]["evidence_ref"])
     with pytest.raises(ProjectStateError, match="Region closeout requires registered evidence"):
+        validate_project_state(state)
+
+
+def test_stop_closeout_cannot_drop_its_registered_authority():
+    state = _state()
+    state["canonical_refs"].remove(state["next_transition"]["decision_ref"])
+    with pytest.raises(ProjectStateError, match="STOP requires the registered factual closeout"):
+        validate_project_state(state)
+
+
+def test_stop_closeout_cannot_reuse_the_old_proof_as_new_execution_authority():
+    state = _state()
+    state["next_transition"]["decision_ref"] = state["epistemic_conflict_proof"]["decision_ref"]
+    with pytest.raises(ProjectStateError, match="STOP requires the registered factual closeout"):
         validate_project_state(state)

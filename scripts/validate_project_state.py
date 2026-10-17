@@ -374,8 +374,8 @@ def validate_project_state(state: dict | None = None) -> dict:
     if gate_e["status"] == "closed":
         if decision_ref != "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md":
             raise ProjectStateError("Gate E closeout requires its explicit owner decision")
-        if payload["next_transition"]["target"] != "EPISTEMIC_CONFLICT_PROOF":
-            raise ProjectStateError("closed Gate E permits only the owner-authorized bounded conflict proof")
+        if payload["next_transition"]["target"] != "STOP":
+            raise ProjectStateError("completed conflict proof permits only STOP; no product successor is opened")
         contextual_ref = "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md"
         contextual = payload.get("contextual_composition")
         if not contextual or contextual["closeout_ref"] != contextual_ref or contextual_ref not in payload["canonical_refs"]:
@@ -395,8 +395,11 @@ def validate_project_state(state: dict | None = None) -> dict:
             ["git", "hash-object", str(package_path)], cwd=ROOT, text=True
         ).strip() != proof["evidence_package_blob"]:
             raise ProjectStateError("accepted conflict evidence package must match reviewed blob")
-        if payload["next_transition"]["decision_ref"] != proof_ref:
-            raise ProjectStateError("bounded conflict proof must cite its registered authority")
+        closeout_ref = "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md"
+        if (payload["next_transition"]["decision_ref"] != closeout_ref
+                or closeout_ref not in payload["canonical_refs"]
+                or not (ROOT / closeout_ref).is_file()):
+            raise ProjectStateError("STOP requires the registered factual closeout; proof authority stays separate")
         if (proof["evidence_state"] != "accepted" or proof["implementation_started"] is not True
                 or proof["implementation_presentation_review"] != "accepted"
                 or proof["implementation_completion"] != "completed_non_public_review_proof"):

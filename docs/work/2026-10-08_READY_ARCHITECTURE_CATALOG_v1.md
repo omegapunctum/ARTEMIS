@@ -1,5 +1,10 @@
 # Ready architecture catalog v1 — prospective decision and specification
 
+Current lifecycle synchronization — 2026-10-17: completed delivery and remaining
+limits are recorded in [the factual closeout](2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md).
+This supersedes older pending-CI/upload/merge/publication wording below; dated
+observations, failures and acceptance boundaries remain historical evidence.
+
 ## Decision
 
 Autonomy: DECISION before runtime/source edits, then REVIEW implementation.

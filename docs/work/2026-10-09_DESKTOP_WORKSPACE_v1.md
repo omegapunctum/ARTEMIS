@@ -1,5 +1,10 @@
 # Desktop workspace v1
 
+Current lifecycle synchronization — 2026-10-17: completed delivery and remaining
+limits are recorded in [the factual closeout](2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md).
+This supersedes older pending-CI/upload/merge/publication wording below; dated
+observations, failures and acceptance boundaries remain historical evidence.
+
 Owner explicitly confirmed implementation of the refined second concept on 2026-10-09. Class REVIEW. Product Scope owns this bounded change.
 
 Reference: ARTEMIS_Web_2026-10-09_02_Refined_Compact_Panels.png, Google Drive file 1ld-kcesAHc9zINl0_EOtTQu2aD89hz5P. Layout only: compact floating records left, inspector right, full-width calendar, existing simple Natural Earth globe. No generated geography, historical facts, decorative glow or new logo copied from the image.

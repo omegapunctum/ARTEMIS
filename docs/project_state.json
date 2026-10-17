@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.12.0",
+  "schema_version": "1.13.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-10-17",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -128,7 +128,7 @@
     ]
   },
   "capability": {
-    "public_runtime": "core_landing_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview",
+    "public_runtime": "direct_root_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview",
     "globe": "public_r_and_d_preview",
     "world_slice": "gate_c_frozen_non_public",
     "temporal_map": "m5_whole_life_runtime_proof_published"
@@ -173,14 +173,15 @@
     "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md",
     "docs/work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md",
     "docs/work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md",
-    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md"
+    "docs/work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md",
+    "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md"
   ],
   "blockers": [],
   "next_transition": {
-    "target": "EPISTEMIC_CONFLICT_PROOF",
+    "target": "STOP",
     "authority": "explicit_owner_instruction",
-    "decision_ref": "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md",
-    "condition": "NARROW_EPISTEMIC_CONFLICT_PROOF_V1 / SPEC_AMENDMENT_READY: evidence package accepted at PR #451; non-public technical proof implemented and presentation review owner-accepted at PR #453 head 71ea23a223334ec676ff8e1d9fe778785542eacb, merged 5c421648378d91166c35cc453af1b60e0c39659a. This bounded proof's implementation is complete; no automatic comparative novice evaluation or additional successor is authorized by this closeout. One artifact and two unresolved catalogue-mediated dating attributions only; no numerical query envelopes or case-specific Range/Scrub. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected, comparative/formal value UNVALIDATED; contextual composition DEFERRED. Further product transition belongs to Command Center."
+    "decision_ref": "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md",
+    "condition": "Completed historical product proof: non-public technical proof implemented and separately presentation-accepted; exact evidence, source and implementation identities remain in epistemic_conflict_proof. No product successor is opened. Current bounded root-entry maintenance and factual delivery closeout are owned by the registered 2026-10-17 task. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected, comparative/formal value UNVALIDATED; contextual composition DEFERRED. Further product transition belongs to Command Center."
   },
   "architecture_checkpoint": {
     "id": "M4",

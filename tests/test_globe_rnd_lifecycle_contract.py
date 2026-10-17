@@ -35,7 +35,7 @@ def test_355_records_m4_adopt_and_current_m5_checkpoint() -> None:
     assert "M4 Architecture decision [completed]" in phases
     assert "M5 Whole-Life Runtime Proof [completed]" in phases
 
-    assert "Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`" in scope
+    assert "Current increment: bounded factual closeout and direct Explorer entry" in scope
     assert state["active_vertical"]["issue"] == 355
     assert state["phase"]["id"] == "5.1"
     assert state["gate"]["id"] == "D"
@@ -94,7 +94,7 @@ def test_public_surfaces_have_one_primary_product_and_one_compatibility_path() -
 
     assert "Leonardo Globe as the primary product-development/research surface" in priorities
     assert "Architecture Atlas at `/atlas/` as a compatibility baseline" in priorities
-    assert "public `/` is generated from" in structure
+    assert "public `/` is a direct Explorer redirect generated from" in structure
     assert "public research prototype" in truth
 
 
@@ -135,7 +135,7 @@ def test_m4_adopt_preserves_semantic_direction_during_m5() -> None:
     assert "Closeout adds no implementation" in priorities
     assert "single bounded pre-E1 product correction" in priorities
     assert state["ux_correction_checkpoint"]["status"] == "completed"
-    assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
+    assert state["next_transition"]["target"] == "STOP"
     assert "non-public technical proof implemented" in state["next_transition"]["condition"]
     assert "contextual composition DEFERRED" in state["next_transition"]["condition"]
     assert state["gate"]["decision"] == "ADVANCE_TO_GATE_E"
@@ -221,7 +221,7 @@ def test_public_runtime_includes_unified_layers_and_region_entry_without_promoti
 
     state = _json("docs/project_state.json")
     schema = _json("docs/project_state.schema.json")
-    expected = "core_landing_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview"
+    expected = "direct_root_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview"
     assert state["capability"]["public_runtime"] == expected
     jsonschema.validate(state, schema)
     stale = copy.deepcopy(state)
@@ -276,8 +276,8 @@ def test_current_owners_close_gate_e_without_comparative_value_or_successor():
     assert proof["implementation_pr_head"] in implementation_closeout
     assert proof["implementation_merge_commit"] in implementation_closeout
     assert "UNVALIDATED" in implementation_closeout
-    assert state["next_transition"]["decision_ref"] == proof["decision_ref"]
-    assert state["next_transition"]["target"] == "EPISTEMIC_CONFLICT_PROOF"
+    assert state["next_transition"]["decision_ref"] == "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md"
+    assert state["next_transition"]["target"] == "STOP"
     for path in (
         "docs/PROJECT_TRUTH.md", "docs/work/README.md", "docs/PRIORITIES.md",
         "docs/PROJECT_PHASES.md", "docs/VALIDATION_DECISION.md",

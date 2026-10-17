@@ -1,5 +1,10 @@
 # Cesena first-view clarification — 2026-10-09
 
+Current lifecycle synchronization — 2026-10-17: completed delivery and remaining
+limits are recorded in [the factual closeout](2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md).
+This supersedes older pending-CI/upload/merge/publication wording below; dated
+observations, failures and acceptance boundaries remain historical evidence.
+
 Class: REVIEW. Owner: Product Scope, information hierarchy appendix. The owner continued after the independent audit recommended resolving Cesena's ambiguous first-view wording. Merge remains paused.
 
 Question: how to preserve the literal candidate description without implying that the narrowed presence Claim establishes surveying? Replacing frozen text would exceed scope; leaving it unqualified preserves the ambiguity. Preferred action: an adjacent EN/RU first-view notice before the unchanged original description, scoped to `event-leonardo-cesena-survey`.

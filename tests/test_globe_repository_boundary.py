@@ -29,15 +29,40 @@ def test_architecture_atlas_source_stays_on_maplibre_4_and_links_preview() -> No
     assert "build/globe-spike" not in index
 
 
-def test_public_root_landing_routes_globe_primary_and_atlas_compatibility() -> None:
+def test_public_root_directly_enters_explorer_with_accessible_fallback() -> None:
+    import json
+    import re
+    import subprocess
+
     landing = _text(CORE_LANDING)
     assert 'href="./globe/"' in landing
-    assert 'href="./atlas/"' in landing
-    assert "Мир в одном Explorer" in landing
-    assert "независимые слои одного глобуса" in landing
-    assert "историческая применимость неизвестна" in landing
-    assert "исследовательский прототип" in landing
+    assert '<noscript>' in landing
+    assert 'id="explorer-link"' in landing
+    assert '<h1>' not in landing
     assert "maplibre" not in landing.lower()
+    script = re.search(r"<script>(.*?)</script>", landing, re.S).group(1)
+    # Execute the shipped redirect, including deployment prefix, URL state and
+    # adversarial redirect-looking parameters. Replace must retain one history slot.
+    harness = r"""
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+for (const href of [
+  'https://example.test/ARTEMIS/',
+  'https://example.test/ARTEMIS/?lang=ru&view=map&start=1676&end=1678#selection',
+  'https://example.test/ARTEMIS/?next=https://evil.test/&redirect=//evil.test/#https://evil.test/',
+  'https://example.test/ARTEMIS/index.html?item=catalog%3Awikidata%3AQ83125',
+  'https://example.test/?lang=en'
+]) {
+  const source = new URL(href), link = {}, history = ['https://example.test/before',href];
+  const location = {href,search:source.search,hash:source.hash,replace(value) {history[history.length-1]=value;}};
+  vm.runInNewContext(SCRIPT, {URL,window:{location},document:{getElementById(id) {assert.equal(id,'explorer-link');return link;}}});
+  const expected = new URL('./globe/',href); expected.search=source.search; expected.hash=source.hash;
+  assert.equal(history.length,2); assert.equal(history[1],expected.href);
+  assert.equal(history[0],'https://example.test/before'); assert.equal(link.href,expected.href);
+  assert.equal(expected.origin,source.origin);
+}
+""".replace('SCRIPT', json.dumps(script))
+    subprocess.run(['node','-e',harness],check=True,capture_output=True,text=True)
 
 
 def test_globe_engine_version_is_isolated_to_experimental_template() -> None:

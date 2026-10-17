@@ -1,5 +1,18 @@
 # ARTEMIS — PROJECT TRUTH
 
+Current factual delivery — 2026-10-17: [bounded closeout and direct-entry task](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md)
+records completed #478–#484: ready London catalog, mobile/desktop compact workspace,
+Cesena clarification, merged zoom diagnostics, two admitted finite architecture
+phase projections plus one unresolved case, and restored scheduled Airtable export.
+Pages 39002948277 verified baseline a60aeb1: 67 files at each entry and all eight
+live native reports PASS. Export 38993680269 actually exported/committed; 1228 tests
+passed, 3 skipped. These receipts supersede older pending-delivery wording only;
+formal/comparative value remains UNVALIDATED and owner-device zoom is unresolved.
+Root direct-entry correction and factual synchronization are implemented in
+[PR #485](https://github.com/omegapunctum/ARTEMIS/pull/485). Its exact-source
+review/CI, merge and separate public root/live receipts are owned by that PR;
+the baseline evidence above is preserved separately. No new product successor: STOP.
+
 First-Use correction: implemented in #439, human-accepted and publication-verified; preserved as completed evidence. The former fresh-E1 handoff is superseded by the [owner closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md).
 
 Gate E recovery was authorized on 2026-09-19 and is now closed by the [owner decision](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md); its participant sequence is no longer current execution authority.
@@ -12,7 +25,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23
 
 Historical bounded research closeout — recorded 2026-09-24: the owner authorized [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) as research only, then reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED.** These outcomes have owner-report provenance; candidate inventory and source-level rejection evidence were not supplied with this closeout. No Product Specification or implementation is authorized. `next_transition` was **STOP / Command Center** at that closeout; the later conflict-proof authorization supersedes that transition.
 
-Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md) and the accepted [evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md). The non-public technical implementation merged in PR #453 (`5c421648378d91166c35cc453af1b60e0c39659a`); separate owner presentation/interaction acceptance is recorded in the [implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). One artifact, two unresolved catalogue-mediated dating attributions, no numerical envelopes or case-specific Range/Scrub. No public capability, historical winner or comparative result is claimed. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected, comparative/formal value UNVALIDATED, contextual composition DEFERRED. No additional successor is opened; further product transition belongs to Command Center.
+Completed bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md) and the accepted [evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md). The non-public technical implementation merged in PR #453 (`5c421648378d91166c35cc453af1b60e0c39659a`); separate owner presentation/interaction acceptance is recorded in the [implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). One artifact, two unresolved catalogue-mediated dating attributions, no numerical envelopes or case-specific Range/Scrub. No public capability, historical winner or comparative result is claimed. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected, comparative/formal value UNVALIDATED, contextual composition DEFERRED. No additional successor is opened; further product transition belongs to Command Center.
 
 ## Статус
 
@@ -35,7 +48,7 @@ The owner reports NO FINDINGS for the published #418 review and accepted #419. T
 Historical M5 closeout: #412 is merged/published and owner-accepted on 2026-09-06. M5 bounded UX correction is completed with `PROCEED_TO_GATE_D_REVIEW`; #409/#411/#412 are completed evidence. The [work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md](work/2026-09-06_M5_UX_CLOSEOUT_AND_GATE_D_REVIEW_v1.md) records a bounded Gate D review recommending `ADVANCE_TO_GATE_E`, accepted in merged #413; the separate Gate D exit now records `ADVANCE_TO_GATE_E`, without claiming formal user-value validation. #410 scheduled Export Airtable repair is confirmed green (run 34005145312).
 
 - Тип: canonical current-state document.
-- Дата фиксации: 2026-10-05.
+- Дата фиксации: 2026-10-17.
 - Владелец смысла: фактическая доступность продукта и граница между public, backend, R&D и future scope.
 - Обновляется только при изменении фактической доступности runtime, данных, пользовательского сценария или когда active R&D/data-governance status иначе создаёт прямое противоречие с capability wording.
 
@@ -50,7 +63,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 Важно:
 
 - Foundation documentation не реализует world model runtime;
-- root public runtime является малой ARTEMIS Core landing page;
+- registered root entry directly routes to the shared Explorer, with separate release receipt required; the former small Core landing page is historical;
 - `/globe/` — primary public research prototype; текущая зарегистрированная сборка добавляет independent layers, без product-validated historical capability;
 - `/atlas/` сохраняет прежний Architecture Atlas как compatibility-only surface;
 - зарегистрированная сборка `/region/` — совместимый начальный профиль того же shared-layer Explorer для ограниченного Roman Empire / Temporal Region proof; не новый validated product;
@@ -84,7 +97,7 @@ Foundation v3 / PR `#328` restored ARTEMIS as a source-aware spatial-temporal Wo
 
 Earlier verified live releases are identified above. The current checked-in Pages publication build registers these static routes; availability of this tree requires the separate release evidence described below:
 
-- root Core landing без runtime dependencies;
+- historical root Core landing; registered root directly enters Explorer without an extra click; release receipt remains separate;
 - `/globe/` как primary shared-layer Explorer research prototype;
 - `/atlas/` как frozen compatibility map с checked-in `data/*` и PWA behavior;
 - `/region/` как совместимый Roman initial-state/deep-link entry в тот же Explorer и тот же состав данных;
@@ -100,7 +113,7 @@ The bounded input is all 11 accepted M5 Presences plus the frozen Gate C source 
 
 Owner-directed ready reference catalog — 2026-10-08: [bounded implementation](work/2026-10-08_READY_ARCHITECTURE_CATALOG_v1.md#technical-implementation-and-verification--2026-10-08), source `14c9e025569e705fe21a83084139ea32633e1b99`, adds ten selected London Wikidata architectural points as a fourth layer in this same workspace. Visitors receive the pilot without editor/link entry; Unicode name/alias/QID search filters only the chooser. Revision-bound original JSON, literal native coordinates/precision, source dates and multilingual names are retained; builds and visitor sessions make no live Wikimedia API requests. The original catalog references are atemporal, with unknown historical applicability/position and source-relative draft/unknown/missing claims; the separate temporal overlay below does not promote these original claims. The original 31 references, 11 Presences, three Roman versions and dated coverage remain unchanged; all four layers contain 55 identities. Distinct Architecture/Product implementation acceptance, 159 owned local tests and a complete 390px native loop are recorded in the task; PR #478 separately owns final current-head CI, merge and live-delivery receipts. This small reproducible intake does not implement a universal corpus, relationships, automatic moderation, paid hosting or a product-gate transition.
 
-Current bounded architecture-time implementation — 2026-10-13: the [accepted pilot](work/2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md) adds a separately reviewed source-relative evidence overlay for three existing London identities. Tower Bridge and Monument have admitted construction/completed phases; Monument continuity to the finite 1894 coverage cut is explicitly inferred. Banqueting House retains conflicting source dates and has no admitted phase. Scrub matches the cursor year; Range collects intersecting phases without asserting simultaneous existence. The CE navigation envelope is 91–1894, retaining Leonardo defaults. The other 38 architecture references and the unresolved Banqueting House remain separately labelled atemporal context. All 55 identities, original imported claims and geometries are preserved; these remain modern reference points, not historical footprints. Local implementation is under verification; final independent acceptance, exact-head CI, merge and public delivery are pending. No Airtable historical write path, gate transition or validated user value follows.
+Current bounded architecture-time implementation — 2026-10-13: the [accepted pilot](work/2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md) adds a separately reviewed source-relative evidence overlay for three existing London identities. Tower Bridge and Monument have admitted construction/completed phases; Monument continuity to the finite 1894 coverage cut is explicitly inferred. Banqueting House retains conflicting source dates and has no admitted phase. Scrub matches the cursor year; Range collects intersecting phases without asserting simultaneous existence. The CE navigation envelope is 91–1894, retaining Leonardo defaults. The other 38 architecture references and the unresolved Banqueting House remain separately labelled atemporal context. All 55 identities, original imported claims and geometries are preserved; these remain modern reference points, not historical footprints. Implementation merged in #483; exact-head independent acceptance and separate live publication are complete. The current baseline release is verified in Pages 39002948277; the 2026-10-17 closeout records receipts and limits. No Airtable historical write path, gate transition or validated user value follows.
 
 This checked-in capability description does not assert publication of the current tree: exact-head CI/independent AI acceptance, expected-head merge and separate Pages every-file byte/metadata/live-native-browser verification are required by the delivery record. Historical live evidence above proves its named earlier releases. Formal/comparative user value remains UNVALIDATED.
 
@@ -259,7 +272,7 @@ Public dataset остаётся Architecture Atlas pilot, Gate C package — non
 
 ARTEMIS находится в состоянии **Gate C frozen / Core Reset completed / M1 completed with ITERATE / M2 completed with PROCEED_TO_M3 / M3 completed with PROCEED_TO_M4 / M4 completed with ADOPT / M5 whole-life runtime proof completed with ITERATE / M5 bounded UX correction completed with PROCEED_TO_GATE_D_REVIEW; Gate D completed with ADVANCE_TO_GATE_E; Gate E closed by owner decision, E1 owner-reported PASS, E2 NOT COLLECTED / WAIVED / bounded Region proof merged in #421 / Region live publication verified (owner-supplied evidence) / formal user value not yet validated**.
 
-Root is a small Core landing. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a compatible initial-state entry into the same shared-layer Explorer. The Globe remains non-product-validated and consumes draft/rejected historical Claims. The current Leonardo/Globe scaffold does not establish full Life in Context. Foundation contracts remain ahead of comparative user-value evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
+The registered root build directly enters the shared Explorer; the former small Core landing is historical. `/globe/` is the primary research surface; `/atlas/` retains the Architecture Atlas compatibility runtime; `/region/` is a compatible initial-state entry into the same shared-layer Explorer. The Globe remains non-product-validated and consumes draft/rejected historical Claims. The current Leonardo/Globe scaffold does not establish full Life in Context. Foundation contracts remain ahead of comparative user-value evidence. The backend, legacy ETL and nine empty Airtable World Model shadow tables are preserved but frozen outside the Core critical path.
 
 Reviewed/accepted foundation and implementation evidence includes:
 
