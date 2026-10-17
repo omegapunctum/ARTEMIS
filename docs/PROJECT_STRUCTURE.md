@@ -73,7 +73,7 @@
 | `sw.js` | Architecture Atlas service worker | compatibility |
 | `manifest.json` | Architecture Atlas PWA manifest | compatibility |
 
-Source root retains the Architecture Atlas compatibility implementation. The Pages artifact maps it to `/atlas/`; public `/` is generated from `scripts/globe_spike/root-index.html`, and `/globe/` plus the compatible `/region/` profile are generated from the same immutable composed input/projection path. `scripts/unified_explorer/` owns its shared renderer and native controls; `scripts/build_globe_spike.py` retains the earlier isolated proof builds as regression evidence.
+Source root retains the Architecture Atlas compatibility implementation. The Pages artifact maps it to `/atlas/`; public `/` is a direct Explorer redirect generated from `scripts/globe_spike/root-index.html`, and `/globe/` plus the compatible `/region/` profile are generated from the same immutable composed input/projection path. `scripts/unified_explorer/` owns its shared renderer and native controls; `scripts/build_globe_spike.py` retains the earlier isolated proof builds as regression evidence.
 
 Дополнение по release/workflow layer:
 - executable behavior is owned by the actual workflow/check files relevant to each contour;
@@ -90,7 +90,7 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 
 | Слой | Entry point |
 |---|---|
-| Public ARTEMIS Core landing | generated `/` from `scripts/globe_spike/root-index.html` |
+| Public direct Explorer entry | generated `/` from `scripts/globe_spike/root-index.html` |
 | Primary shared-layer Explorer research prototype | generated `/globe/` via `.github/workflows/pages.yml` and `scripts/build_unified_explorer.py --entry-profile leonardo` |
 | Compatible Roman initial-state entry into the same Explorer | generated `/region/` via `scripts/build_unified_explorer.py --entry-profile roman`; identical composed bundle |
 | Non-public ATL dating-conflict review proof | `scripts/build_atl_conflict_proof.py`; CI artifact only, excluded from Pages |
@@ -114,7 +114,7 @@ Source root retains the Architecture Atlas compatibility implementation. The Pag
 - backend, ETL, compatibility release-check and documentation registries do not receive competing semantic authority;
 - presentation runtimes являются отдельным классом: несколько renderer entrypoints допустимы только после явной регистрации и при общей domain/state/projection семантике;
 - наличие второго renderer не разрешает второй World Model, второй historical source of truth или второй backend;
-- generated Core landing is the default public entrypoint;
+- generated Core landing is historical; the default public entrypoint now replaces itself with relative `./globe/`;
 - generated `/globe/` is primary but remains explicitly non-product-validated public R&D;
 - source `index.html` is deployed under `/atlas/` as compatibility-only;
 - `/region/` is a compatible initial-state/deep-link entry into the same shared-layer R&D Explorer, not a validated general Region capability;

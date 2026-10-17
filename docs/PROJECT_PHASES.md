@@ -1,22 +1,28 @@
 # ARTEMIS — PROJECT PHASES v7.13
 
+Current maintenance — 2026-10-17: [current-state/direct-entry task](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md)
+synchronizes delivered #478–#484 and removes the mandatory root introduction.
+This is bounded maintenance, not a new product phase. M5 and Gate C/D/E remain
+historical checkpoints with unchanged decisions; completed conflict proof stays
+non-public and accepted. Product next transition is STOP / Command Center.
+
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without opening a successor.
 
 Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
 Historical bounded research closeout — 2026-09-24: accepted [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) ended with owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. Contextual composition is **DEFERRED**. No Product Specification, implementation or successor is authorized; `next_transition` was **STOP / Command Center** at that closeout.
 
-Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) remains the one authorized contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
+Completed bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is preserved as the completed contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
 
 ## Status
 
 - Type: canonical operational phases document.
-- Date: 2026-09-24.
+- Date: 2026-10-17.
 - Current phase: **5.1 — Gate E closed; bounded conflict proof technically implemented and owner presentation-reviewed; comparative/formal value unvalidated**.
 - Active issue: **#355**.
 - Gate C: **completed / FREEZE**.
 - Gate D: **COMPLETED / ADVANCE_TO_GATE_E**.
-- Public surfaces: Core landing at `/`, Leonardo Globe at `/globe/`, separate Region public R&D preview at `/region/`, frozen Architecture Atlas compatibility surface at `/atlas/`.
+- Public surfaces: direct Explorer entry at `/`, shared Globe at `/globe/`, compatible Region initial profile at `/region/`, frozen Architecture Atlas compatibility surface at `/atlas/`.
 
 ## Phase 0 — Preserved history
 
@@ -50,7 +56,7 @@ Completed by PR `#393`.
 
 The resulting boundary is:
 
-- the root is a small ARTEMIS Core landing;
+- the historical Core Reset root was a small ARTEMIS Core landing; the current root directly enters Explorer;
 - Leonardo Globe at `/globe/` is the primary product-development/research surface;
 - Architecture Atlas is isolated at `/atlas/` as compatibility-only;
 - the required Core path does not depend on backend, Redis, moderation, Airtable or mutable review-routing documents;

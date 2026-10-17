@@ -69,7 +69,7 @@ The following are preserved constraints/evidence, not a mutable current-work sna
 - Vanilla JavaScript + MapLibre remains the current implementation baseline unless an explicit architecture decision changes it.
 - FastAPI/SQLite remain compatibility runtime/storage baselines outside the static Core path.
 - `data/features.geojson` is the Architecture Atlas 2D projection/source, not the universal Foundation representation or Leonardo historical authority.
-- the root Core landing, `/globe/` research prototype and `/atlas/` compatibility-only surfaces must remain semantically distinct.
+- the historical root Core landing (current root directly enters Explorer), `/globe/` research prototype and `/atlas/` compatibility-only surfaces must remain semantically distinct.
 - Active product vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
 - Preserve completed #344 / PR #351 semantic parity as a green renderer foundation.
 - Issue #331 is `DEFERRED`; documented Relation predicates must not enter the real corpus/runtime until explicitly reopened and accepted.

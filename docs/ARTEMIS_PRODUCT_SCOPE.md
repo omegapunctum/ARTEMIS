@@ -1,5 +1,17 @@
 # ARTEMIS — PRODUCT SCOPE
 
+Current bounded maintenance — 2026-10-17: the owner confirmed factual lifecycle
+closeout and explicitly removed the introductory root screen. The accepted
+[direct-entry task](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md) authorizes
+only fixed relative `/` → `./globe/` replacement with query/hash preservation and
+an accessible fallback. Existing Explorer disclosures and direct routes remain.
+Implementation is REVIEW; exact-head checks/review and separate publication are
+required. Completed #478–#484 delivery is synchronized without changing historical
+gates, temporal/source semantics or value dispositions. The product successor is
+STOP / Command Center; no date promotion or historical-boundary intake follows
+from the owner's analysis questions. This fresh root instruction supersedes the
+former mandatory Core landing step only for this entry route.
+
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without a comparative value outcome.
 
 Publication verification — 2026-09-13: **live publication verified** from owner-supplied evidence for `/ARTEMIS/region/` and `/ARTEMIS/region/build-meta.json`, checked against the separate publication contract. This is public R&D availability only. Leonardo stays at `/ARTEMIS/globe/`; interactive owner review completed; human retest PASS recorded 2026-09-19, at that recording date E1/E2 were NOT COLLECTED and formal user value UNVALIDATED. See [verification record](work/2026-09-11_TEMPORAL_REGION_SOURCE_AUDIT_v1.md#live-publication-verification--2026-09-13).
@@ -8,7 +20,7 @@ Owner-directed bounded correction after #417: one fixed spatial anchor per canon
 
 Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
-Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) remains the one authorized contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
+Completed bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) is preserved as the completed contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
 
 ## Статус
 
@@ -16,7 +28,7 @@ Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1
 - Версия: 4.13.
 - Дата: 2026-10-07.
 - Active vertical: `Life in Context / Leonardo Temporal Map` / issue `#355`.
-- Current increment: `Epistemic Conflict / Uncertainty Proof v1 non-public technical implementation completed — evidence and presentation accepted`; bounded Explorer navigation maintenance completed under section 2. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
+- Current increment: bounded factual closeout and direct Explorer entry under the 2026-10-17 task; the non-public conflict proof and #478–#484 are completed evidence. Gate E closed, Region remains completed technical evidence, comparative user value unvalidated.
 
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
@@ -72,9 +84,9 @@ Completed prerequisites:
 - first manual feedback result `ITERATE`;
 - feedback correction / PR `#396`.
 
-Current authorized work:
+Current authorized work: the 2026-10-17 bounded closeout/direct-entry task. The following unified-workspace obligations are preserved completed scope:
 
-- execute the explicitly owner-directed Unified Layer Explorer v1 cycle above; preserve completed navigation/projection evidence as earlier bounded stages, not an automatic successor authority;
+- preserve the completed explicitly owner-directed Unified Layer Explorer v1 cycle above; preserve completed navigation/projection evidence as earlier bounded stages, not an automatic successor authority;
 
 - preserve the published #419 Leonardo interaction and distinct Presence semantics;
 - preserve the recorded post-#396 `ITERATE` and its evidence limitations;
@@ -273,7 +285,7 @@ Capability labels:
 - `CONCEPT TARGET`;
 - `FUTURE`.
 
-The public root is the ARTEMIS Core landing. It routes `/globe/` as the primary Leonardo research prototype and `/atlas/` as compatibility-only.
+The registered direct-entry build replaces the former introductory Core landing with fixed root → `/globe/` navigation. `/atlas/` remains compatibility-only; exact release availability is owned by the 2026-10-17 task and its PR receipts.
 
 The #355 decision, public deployment and #396 implementation do not make:
 
@@ -356,19 +368,19 @@ The owner directly authorizes the bounded responsive correction specified in [Mo
 
 ## Owner-authorized information hierarchy — 2026-10-09
 
-Audit continuation: the owner's continuation after the independent pre-merge assessment authorizes the bounded Cesena first-view clarification in [the audit correction](work/2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md). Preserve the original candidate description and all frozen/current knowledge bytes. Label the survey context as unverified immediately before that description in EN/RU; the still-draft presence Claim does not establish surveying. This is REVIEW presentation work, not new historical acceptance, a Claim substitution or rejection of all possible surveying. Merge remains paused by the owner pending assessment of the result.
+Audit continuation: the owner's continuation after the independent pre-merge assessment authorizes the bounded Cesena first-view clarification in [the audit correction](work/2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md). Preserve the original candidate description and all frozen/current knowledge bytes. Label the survey context as unverified immediately before that description in EN/RU; the still-draft presence Claim does not establish surveying. This is REVIEW presentation work, not new historical acceptance, a Claim substitution or rejection of all possible surveying. The former owner merge pause was lifted; this correction is completed in merged #480, with final receipts in the 2026-10-17 closeout.
 
 The owner's fresh continuation opens the bounded [Explorer information hierarchy v1](work/2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md): selected records show identity, applicable source-native time/context and material limitations first; exact coordinates, numeric precision, IDs and imported date fields move to collapsed readable details, and source-native JSON remains available through technical disclosures. Source titles, pinned links, rights and evidence/uncertainty access are retained. This supersedes prior no-successor presentation wording only for the existing inspector, not a project-wide information architecture. Class REVIEW requires distinct scope and exact-head implementation review. The accompanying historical-boundary comparison is research only; no corpus/intake/provider/geometry, historical promotion, canonical state/storage or gate/value transition is opened.
 
 ## Owner-approved desktop workspace — 2026-10-09
 
-The owner selected and confirmed the refined map-first concept: a full-canvas simplified globe, full-width shared calendar, compact collapsible records and inspector panels. REVIEW implementation preserves actual source-bound content, all query/time/selection semantics, existing mobile behavior and one map instance. The generated concept is a layout reference, never geographical or historical evidence. No new corpus, imagery provider, domain feature or gate transition is authorized. Independent review and native visual/interaction verification precede release; merge remains paused. See work/2026-10-09_DESKTOP_WORKSPACE_v1.md.
+The owner selected and confirmed the refined map-first concept: a full-canvas simplified globe, full-width shared calendar, compact collapsible records and inspector panels. REVIEW implementation preserves actual source-bound content, all query/time/selection semantics, existing mobile behavior and one map instance. The generated concept is a layout reference, never geographical or historical evidence. No new corpus, imagery provider, domain feature or gate transition is authorized. Independent review and native visual/interaction verification were completed for merged #480; the former merge pause is superseded by its final delivery receipt. See work/2026-10-09_DESKTOP_WORKSPACE_v1.md.
 
 
 ## Owner-directed compact selection flow — 2026-10-10
 
-The owner explicitly requests compact map-anchored first-click cards with an optional detailed right inspector, denser desktop disclosures/calendar and investigation of globe stuttering and a top rendering band. This reopens selection presentation for the shared explorer only. Preserve canonical selection, source/uncertainty facts, coordinates, temporal queries and URL/history. Popup/inspector switching is local presentation; no camera jump on selection. Performance changes must not replace geometry or assert measured improvement without native evidence. REVIEW; merge remains paused. See `work/2026-10-10_COMPACT_SELECTION_v1.md`.
+The owner explicitly requests compact map-anchored first-click cards with an optional detailed right inspector, denser desktop disclosures/calendar and investigation of globe stuttering and a top rendering band. This reopens selection presentation for the shared explorer only. Preserve canonical selection, source/uncertainty facts, coordinates, temporal queries and URL/history. Popup/inspector switching is local presentation; no camera jump on selection. Performance changes must not replace geometry or assert measured improvement without native evidence. REVIEW implementation is completed in #480; the former merge pause is superseded. The separate owner-device zoom/cutoff findings remain unresolved. See `work/2026-10-10_COMPACT_SELECTION_v1.md`.
 
 ## Owner-directed architecture time pilot — 2026-10-12
 
-Fresh owner acceptance and instruction opens [Architecture time pilot v1](work/2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md), pending prospective independent Architecture/Product acceptance before REVIEW implementation. Exactly three existing catalog objects (Tower Bridge Q83125, present Banqueting House Q642039, Monument Q607700) may receive a separate source-bound temporal assertion/phase overlay. This supersedes the §2/§16 atemporal-only restriction only for this cohort and accepted evidence, with finite CE calendar navigation through 1894, explicit construction/completion and source-bound persistence inference where justified. Unknowns remain visible; other records remain labelled atemporal context. All 55 existing registry identities, native source bytes and modern reference coordinates are preserved. This is authorization/specification, not an implemented or published capability. No Airtable/editor intake, frozen contract mutation, historical geometry, automatic confidence promotion, BCE, construction special styling, gate/value transition or successor is opened. The linked owner defines evidence admission, compatibility, verification and stopping rules.
+Fresh owner acceptance and instruction opens [Architecture time pilot v1](work/2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md), after accepted prospective independent Architecture/Product review and completed REVIEW implementation in #483. Exactly three existing catalog objects (Tower Bridge Q83125, present Banqueting House Q642039, Monument Q607700) may receive a separate source-bound temporal assertion/phase overlay. This supersedes the §2/§16 atemporal-only restriction only for this cohort and accepted evidence, with finite CE calendar navigation through 1894, explicit construction/completion and source-bound persistence inference where justified. Unknowns remain visible; other records remain labelled atemporal context. All 55 existing registry identities, native source bytes and modern reference coordinates are preserved. This bounded implementation is merged and independently live accepted in #483; current publication receipts are synchronized in the 2026-10-17 closeout. No Airtable/editor intake, frozen contract mutation, historical geometry, automatic confidence promotion, BCE, construction special styling, gate/value transition or successor is opened. The linked owner defines evidence admission, compatibility, verification and stopping rules.

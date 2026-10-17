@@ -1,37 +1,48 @@
 # ARTEMIS working documents registry
 
+## Owner-confirmed current-state closeout and direct entry — 2026-10-17
+
+- `2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md` — active bounded AUTO closeout
+  plus REVIEW root-entry correction, with independent prospective scope acceptance.
+  Existing #478–#484 delivery is verified; fixed relative root → Explorer entry is
+  locally implemented, pending exact-head CI/review and separate release verification.
+  Product next transition is STOP / Command Center. No new corpus or temporal rules.
+
+The following dated checkpoints retain their original history; the current
+summaries below and final receipts in the 2026-10-17 task supersede their old holds.
+
 ## Owner-directed architecture time pilot — 2026-10-12
 
-- `2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md` — active accepted DECISION with REVIEW implementation under verification: source-bound temporal phases for Tower Bridge and Monument, unresolved Banqueting House context, and finite CE calendar through 1894. Prospective scope and evidence reviews are accepted. Native inputs/55 identities and unknown context are preserved; final implementation review, CI and public delivery remain pending. No Airtable intake or automatic successor is opened.
+- `2026-10-12_ARCHITECTURE_TIME_PILOT_v1.md` — Completed #483, merged and independently live accepted; two admitted dated objects and one unresolved case, finite coverage through 1894. Current release: Pages 39002948277. No intake or successor.
 
 ## Owner-directed Airtable export recovery — 2026-10-12
 
-- `2026-10-12_AIRTABLE_EXPORT_RECOVERY_v1.md` — bounded AUTO repair of external-source commit classification and stale lifecycle checks in the existing export gate. Frozen evidence and historical-write restrictions remain intact. Local verification and exact-head review/CI control delivery; live export success requires a separate receipt.
+- `2026-10-12_AIRTABLE_EXPORT_RECOVERY_v1.md` — Completed #482/#484; scheduled export 38993680269 SUCCESS with actual export/commit, 1228 passed/3 skipped. Frozen history and historical-write limits retained.
 
 ## Owner-directed zoom performance — 2026-10-11
 
-- `2026-10-11_EXPLORER_ZOOM_PERFORMANCE_v1.md` — bounded REVIEW laboratory diagnosis complete: native zoom runner and six Globe/2D/card repetitions; no production optimization or owner-device resolution claimed. Exact-head review/CI control delivery. Next action is affected-device reproduction; architecture existence/construction modeling remains separate.
+- `2026-10-11_EXPLORER_ZOOM_PERFORMANCE_v1.md` — Completed merged #481 laboratory diagnosis. Owner-reported desktop Edge Globe-only zoom slowdown remains unresolved; 2D/phone unaffected by owner report. Affected-device reproduction, no production optimization.
 
 ## Owner-directed compact selection — 2026-10-10
 
-- `2026-10-10_COMPACT_SELECTION_v1.md` — bounded REVIEW correction: compact selection card → explicit details, denser desktop calendar/panels, single range track and bounded rendering workload changes. Owner accepted the standalone preview on 2026-10-10 with a rendered globe/compact-panel/range screenshot; remaining native interaction/mobile checks, cutoff diagnosis and measured performance remain unverified. The owner authorized merge, lifting the task-specific hold; independent code conformity is accepted pending required CI. External delivery is blocked by automatic approval review of documentation disclosure even after image removal. No PR head update or merge; see the task document and prepared text/code-only package.
+- `2026-10-10_COMPACT_SELECTION_v1.md` — Completed in merged #480 with exact-head CI/independent acceptance; prior upload/merge holds superseded. Current baseline public delivery is verified in Pages 39002948277. Physical-device slowdown/cutoff resolution is not claimed.
 
 ## Owner-directed desktop workspace — 2026-10-09
 
-- `2026-10-09_DESKTOP_WORKSPACE_v1.md` — desktop implementation baseline on `feat/desktop-workspace-20261009`: compact collapsible record/layer and inspector panels with a shared full-width timeline. Owned local checks pass; the cloud-browser attempt was blocked by disabled WebGL. Current owner-rendered preview acceptance and remaining checks are owned by the 2026-10-10 compact-selection task and root `design-qa.md`. No merge or publication acceptance is implied.
+- `2026-10-09_DESKTOP_WORKSPACE_v1.md` — Completed in #480; current native viewport/publication receipts supersede local blocked/old-head descriptions. Unresolved owner-device performance remains separate.
 
 ## Pre-merge audit continuation — 2026-10-09
 
-- `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — bounded REVIEW correction of the Cesena card: unchanged original context explicitly qualified as unverified in EN/RU. Local implementation passes 35 owned tests and preserves the exact public bundle. Independent code conformity accepted on `fe79bea`; native new-revision evidence, remote CI and delivery remain pending. The owner has paused merge. Broader audit findings are recommendations, not an automatic implementation sequence.
+- `2026-10-09_CESENA_FIRST_VIEW_CLARIFICATION_v1.md` — Completed in #480; unverified survey context disclosed without knowledge-byte/status promotion. Earlier task-specific merge pause superseded by later authorization and merge.
 
 ## Owner-directed information hierarchy — 2026-10-09
 
-- `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — completed local REVIEW correction of inspector disclosure order, preserving exact metadata, material uncertainty, source links and the shared map. Owner manually opened PR #480 on the accepted package; push Core passed four native viewports and 434 tests. A separate PR high-DPI gate exposed an obsolete presentation-text comparison; its exact-source-payload proof correction is independently accepted locally, with 29 tests and four DPR3 cases. Correction upload/new-head CI, merge and live delivery remain pending. Machine-readable receipts distinguish each snapshot. Historical-boundary comparison is research only, without corpus/runtime expansion or automatic successor.
+- `2026-10-09_EXPLORER_INFORMATION_HIERARCHY_v1.md` — Completed #480, merged/current baseline publication verified. Inspector/source hierarchy and viewport checks are preserved; prior correction-upload/CI pending language is historical.
 - `2026-10-09_HISTORICAL_BOUNDARY_SOURCES_v1.md` — completed primary-source comparison of Cliopatria, CShapes and OpenHistoricalMap. Cliopatria is the preferred broad candidate; completeness/exactness are unverified, CShapes has NC/SA restrictions, and OHM rights vary by feature. An Italy/1502 subset is proposal only, not intake/runtime authority.
 
 ## Owner-directed ready architecture catalog implementation — 2026-10-08
 
-- `2026-10-08_READY_ARCHITECTURE_CATALOG_v1.md` — completed bounded source/runtime implementation after prospective DECISION and distinct Architecture/Product REVIEW acceptance. Ten London references, deterministic offline intake, ready fourth layer and chooser search share the existing map; final 390px native loop passed. PR #478 separately owns current-head CI, merge and public-delivery receipts. No editor rewrite, historical promotion, universal corpus, paid hosting, gate reopening or automatic successor.
+- `2026-10-08_READY_ARCHITECTURE_CATALOG_v1.md` — Completed #478, included in verified current publication. Ten source-bound London references and ready fourth layer; later #483 adds only its independently reviewed temporal overlay.
 
 First-Use correction: implemented in #439, human-accepted and publication-verified; preserved as completed evidence. The former fresh-E1 handoff is superseded by the [owner closeout](2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md).
 
@@ -45,7 +56,7 @@ Gate E decision — 2026-09-23: [Gate E owner-directed closeout](2026-09-23_GATE
 
 Historical bounded research closeout — recorded 2026-09-24: [Contextual Snapshot Candidate Search v1](2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized for research only; owner-reported outcomes are `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT`. **Contextual composition = DEFERRED**; Product Specification and implementation are not authorized. That closeout returned to **STOP / Command Center**; the later conflict-proof authorization supersedes that transition. Source-level search detail was not supplied with this closeout.
 
-Current bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Owner-accepted [evidence package](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and separate owner presentation/interaction acceptance of PR #453 are recorded in the [technical implementation closeout](2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). The merged review artifact is non-public; no comparative/formal value is validated. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
+Completed bounded proof — recorded 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` under [specification v1.1](2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). Owner-accepted [evidence package](2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and separate owner presentation/interaction acceptance of PR #453 are recorded in the [technical implementation closeout](2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md). The merged review artifact is non-public; no comparative/formal value is validated. Numerical query envelopes and case-specific Range/Scrub remain outside v1. Gate E and contextual composition dispositions remain unchanged. No further successor is opened.
 
 ## Completed owner-directed bounded editor pilot — 2026-10-07
 
@@ -60,7 +71,7 @@ The explicit fresh direction superseded earlier no-editor wording only for this 
 
 
 - Type: working-layer lifecycle registry.
-- Updated: 2026-10-07.
+- Updated: 2026-10-17.
 - Authority: this file decides whether a document under `docs/work/` is active, gated, completed evidence or historical context.
 - Canonical rules remain in owner documents registered by `docs/FOUNDATION_INDEX.md`.
 
@@ -208,7 +219,7 @@ was a research candidate; the bounded search is now closed with no qualifying sn
 Core Reset is **completed**, not active work:
 
 - PR `#393` isolated ARTEMIS Core delivery;
-- root is the Core landing;
+- registered root entry directly enters Explorer; release availability is recorded separately in the 2026-10-17 task/PR;
 - `/globe/` is the primary research prototype; the owner-directed 2026-10-05 implementation composes Leonardo, Roman versions and atemporal architecture references in one persistent Explorer;
 - `/atlas/` is compatibility-only;
 - ARTEMIS Core Check is the required product signal.
@@ -266,7 +277,7 @@ No real Gate C historical row import is active. PR #372 merged the schema/mappin
 - Gate C is completed/FREEZE in #332/#360 / PR #362 and is preserved as non-public source/semantic input;
 - Gate D is completed with ADVANCE_TO_GATE_E under #355; implementation completion does not itself close the gate;
 - the Globe consumes merged Explorer State + Render Projection rather than `data/features.geojson` as its historical source;
-- `/globe/` is the primary research prototype; the root is a Core landing and Architecture Atlas is compatibility-only at `/atlas/`;
+- `/globe/` is the primary research prototype; the registered root directly enters Explorer and Architecture Atlas is compatibility-only at `/atlas/`;
 - 2D Map and Globe are renderer choices over one semantic core; timeline is shared Explorer temporal state, not a separate truth model;
 - the reviewed unknown Trajectory gaps remain unresolved; any visible connecting line must remain explicitly presentation-only chronology unless source-bound route geometry exists;
 - the current Earth context is pinned Natural Earth physical geography as `present_day_context`, not historical geography;

@@ -1,5 +1,10 @@
 # Explorer zoom performance — 2026-10-11
 
+Current lifecycle synchronization — 2026-10-17: completed delivery and remaining
+limits are recorded in [the factual closeout](2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md).
+This supersedes older pending-CI/upload/merge/publication wording below; dated
+observations, failures and acceptance boundaries remain historical evidence.
+
 Status: laboratory diagnosis complete; delivery subject to exact-head review/CI. Owner-device slowdown remains unresolved. No production optimization is included.
 
 Authority: owner reports severe slowdown when approaching objects and explicitly accepts the bounded autonomous cycle “smooth map exploration while approaching objects”. Class REVIEW under `DEVELOPMENT_OPERATING_SYSTEM.md` §6.2. Baseline: merged main `ea96a3d56cf1b05a3be7fbff63570b914757c34b` (PR #480). Its green CI does not establish owner-device performance.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.12.json",
-  "title": "ARTEMIS machine-readable operational state v1.12",
+  "$id": "https://artemis.example/schemas/project-state-v1.13.json",
+  "title": "ARTEMIS machine-readable operational state v1.13",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.12.0"},
+    "schema_version": {"const": "1.13.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -347,7 +347,7 @@
       "additionalProperties": false,
       "required": ["public_runtime", "globe", "world_slice", "temporal_map"],
       "properties": {
-        "public_runtime": {"const": "core_landing_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview", "description": "Registered public-build layout; exact deployment and live availability require separate release verification, not this descriptive constant."},
+        "public_runtime": {"const": "direct_root_unified_globe_layers_region_entry_atlas_compatibility_public_r_and_d_preview", "description": "Registered public-build layout; exact deployment and live availability require separate release verification, not this descriptive constant."},
         "globe": {"const": "public_r_and_d_preview"},
         "world_slice": {"enum": ["scope_curation", "gate_c_frozen_non_public", "gate_c_rejected_non_public", "projected_non_public"]},
         "temporal_map": {"const": "m5_whole_life_runtime_proof_published"}
@@ -367,7 +367,7 @@
       "properties": {
         "target": {"enum": ["D", "E", "STOP", "TEMPORAL_REGION_PROOF", "EPISTEMIC_CONFLICT_PROOF"]},
         "authority": {"const": "explicit_owner_instruction"},
-        "decision_ref": {"enum": ["docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md", "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md", "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md", "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md"]},
+        "decision_ref": {"enum": ["docs/work/2026-09-19_GATE_E_EVIDENCE_RECOVERY_SPEC_v1.md", "docs/work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md", "docs/work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md", "docs/work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md", "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md"]},
         "condition": {"type": "string", "minLength": 1}
       }
     }

@@ -1,24 +1,31 @@
 # ARTEMIS — PRIORITIES v7.13
 
+Current execution priority — 2026-10-17: complete the explicitly owner-confirmed
+[factual closeout and direct Explorer entry](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md), then STOP / Command Center.
+Completed #478–#484 are evidence, not pending implementation. Affected-device
+Globe/Edge reproduction remains an unresolved separate diagnostic contour; no
+speculative optimization, bulk date promotion or historical-boundary intake is
+opened. The dated product/gate history below remains preserved.
+
 Owner review closeout — recorded 2026-09-19: [human Region retest PASS](work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md). Both failed-task findings are resolved; GENERALIZES remains technical only. Gate E is now closed without opening a successor.
 
 Gate E decision — 2026-09-23: [Gate E owner-directed closeout](work/2026-09-23_GATE_E_OWNER_DIRECTED_CLOSEOUT_v1.md). **Gate E closed** by owner decision, not `VALUE_SIGNAL`. E1 is owner-reported PASS with evidence limits recorded in the closeout; **E2 NOT COLLECTED / WAIVED**. Comparative user value remains UNVALIDATED; formal user value remains UNVALIDATED. At this decision date, no successor product branch was opened. Return to Command Center; contextual composition was a candidate at this decision date and is now deferred by the 2026-09-24 research closeout. R2, agents, MCP, memory and simulation remain deferred.
 
 Historical bounded research closeout — 2026-09-24: [Contextual Snapshot Candidate Search v1](work/2026-09-24_CONTEXTUAL_SNAPSHOT_CANDIDATE_SEARCH_CLOSEOUT_v1.md) was authorized as research; owner-reported `STOP_PROOF_A` and `NO_QUALIFYING_SNAPSHOT` close this search. Contextual composition is **DEFERRED**; no Product Specification/implementation authorization or successor. That decision returned to **STOP / Command Center**; the later conflict-proof authorization supersedes that transition. Candidate/source detail is not present in the supplied record.
 
-Current bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) remains the one authorized contour under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
+Completed bounded proof — 2026-09-24: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md) retains historical authorization under `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` and [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md). The [accepted evidence package](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) and owner-accepted presentation review are recorded in the [non-public technical implementation closeout](work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md); PR #453 merged at `5c421648378d91166c35cc453af1b60e0c39659a`. One artifact, two unresolved attributions; no numerical envelopes or case-specific Range/Scrub. No comparative/formal value validation, public capability or successor follows. Gate E and contextual composition dispositions remain unchanged.
 
 ## Status
 
 - Type: canonical active priorities.
-- Date: 2026-09-24.
-- Active cycle: `bounded conflict proof technical implementation completed — evidence and presentation accepted`; non-public proof only, no comparative or formal value validation.
+- Date: 2026-10-17.
+- Active cycle: bounded current-state closeout and direct Explorer entry; completed conflict proof is preserved non-public evidence, not the next execution step.
 - Active primary issue: GitHub issue `#355`.
 - Gate C: completed / `FREEZE`.
 - Gate D: `COMPLETED / ADVANCE_TO_GATE_E`.
-- Public entrypoint: ARTEMIS Core landing; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
+- Public entrypoint: direct root entry into Explorer; Leonardo Globe is primary at `/globe/`, Architecture Atlas is compatibility-only at `/atlas/`.
 
-## P0 — Bounded conflict proof implementation after accepted evidence
+## Historical P0 — completed bounded conflict proof after accepted evidence
 
 The owner authorized one successor after the contextual search closeout: [Epistemic Conflict / Uncertainty Proof v1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_AUTHORIZATION_v1.md). The accepted `NARROW_EPISTEMIC_CONFLICT_PROOF_V1` / `SPEC_AMENDMENT_READY` [specification v1.1](work/2026-09-24_EPISTEMIC_CONFLICT_PROOF_PRODUCT_SPECIFICATION_v1_1.md) requires one exact common Claim subject, reproducible Museo Galileo locators, honest direct-vs-mediated provenance, two reviewed dating-attribution Claims and EvidenceLinks, correct existing epistemic classification/source-conflict uncertainty, source-native `circa` and reviewed two-period-use qualifier provenance. Numerical query envelopes and case-specific Range/Scrub behavior are not v1 prerequisites. That obsolete Research stop was not a case-evidence failure. The owner accepted [package v1](work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md) at PR #451 head `5e0c86e7dcc985e4ecd38789772c02e55a5021c3`; [closeout](work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md) clears the evidence gate. Implementation under existing v1.1 authority merged in PR #453 as a non-public review proof; no public deployment or comparative value claim follows.
 
