@@ -37,7 +37,7 @@ jobs:
         run: pip install jsonschema==4.25.1 pytest
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
 
