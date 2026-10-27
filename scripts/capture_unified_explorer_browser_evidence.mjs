@@ -516,10 +516,12 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await evaluate(cdp,"document.getElementById('amboise-context').scrollIntoView({block:'start'})");
     const contextLinks = await evaluate(cdp,"Array.from(document.querySelectorAll('#amboise-context a')).map(a=>a.href)");
     check(JSON.stringify(contextLinks)===JSON.stringify(expectedBundle.amboiseContext.sources.slice(0,2).map(s=>s.url)),'context source links differ from packet');
+    check(await evaluate(cdp,"(()=>{const n=document.getElementById('amboise-context');const b=n.getBoundingClientRect();return n.checkVisibility({checkVisibilityCSS:true})&&b.width>0&&b.height>0&&b.top<innerHeight&&b.bottom>0;})()"),'context not visibly rendered');
     await capture('amboise-context-en');
     await click('#language-ru');
     check((await evaluate(cdp,"document.getElementById('amboise-context').textContent")).includes('не доказывает'),'Russian attendance limitation missing');
     await evaluate(cdp,"document.getElementById('amboise-context').scrollIntoView({block:'start'})");
+    check(await evaluate(cdp,"document.getElementById('amboise-context').checkVisibility({checkVisibilityCSS:true})"),'Russian context hidden');
     await capture('amboise-context-ru');
     for(const year of [1517,1519]) {
       await number('cursor-year',year);

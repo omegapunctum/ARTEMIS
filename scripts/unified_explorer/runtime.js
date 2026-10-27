@@ -462,7 +462,7 @@
     section.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении. Подлинники не просмотрены; независимость пересказов не установлена.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism. Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
     for (const source of packet.sources.slice(0,2)) { const line=node('p',''),link=node('a',source.title); link.href=source.url; link.target='_blank'; link.rel='noopener noreferrer'; line.append(link,node('span',' · '+source.locator));section.append(line); }
     technicalJson(section,packet,'amboise-context-provenance');section.querySelector('details').open=open;
-    byId('selection-details').append(section);
+    byId('selection-facts').append(section);
   }
   function renderInspectorLanguage(selected) {
     const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
