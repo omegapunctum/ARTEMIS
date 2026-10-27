@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.13.0",
+  "schema_version": "1.14.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-10-17",
+  "updated_at": "2026-10-26",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -174,14 +174,16 @@
     "docs/work/2026-09-24_ATL_1466_1_CONFLICT_EVIDENCE_PACKAGE_v1.md",
     "docs/work/2026-09-24_EPISTEMIC_CONFLICT_EVIDENCE_ACCEPTANCE_CLOSEOUT_v1.md",
     "docs/work/2026-09-24_EPISTEMIC_CONFLICT_IMPLEMENTATION_CLOSEOUT_v1.md",
-    "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md"
+    "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md",
+    "docs/work/2026-10-24_AMBOISE_CONTEXT_v1.md",
+    "docs/audits/2026-10-24_AMBOISE_CALENDAR_REVIEW.md"
   ],
   "blockers": [],
   "next_transition": {
     "target": "STOP",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md",
-    "condition": "Completed historical product proof: non-public technical proof implemented and separately presentation-accepted; exact evidence, source and implementation identities remain in epistemic_conflict_proof. No product successor is opened. Current bounded root-entry maintenance and factual delivery closeout are owned by the registered 2026-10-17 task. Gate E remains closed without VALUE_SIGNAL; E2 waived/not collected, comparative/formal value UNVALIDATED; contextual composition DEFERRED. Further product transition belongs to Command Center."
+    "condition": "Completed historical non-public technical proof implemented and separately presentation-accepted; the separately authorized Amboise context task is current bounded work; after its delivery return to STOP / Command Center. No automatic product successor. September contextual composition DEFERRED remains the historical search disposition; Gate E/value outcomes remain historical facts; no gate reopening or value validation is inferred."
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -286,5 +288,13 @@
     "generality": "technical_only",
     "successor_opened": false,
     "evidence_ref": "docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md"
+  },
+  "amboise_context": {
+    "status": "implementation_authorized",
+    "decision_ref": "docs/work/2026-10-24_AMBOISE_CONTEXT_v1.md",
+    "calendar_review_ref": "docs/audits/2026-10-24_AMBOISE_CALENDAR_REVIEW.md",
+    "publication": "not_verified",
+    "user_value": "unvalidated",
+    "successor_opened": false
   }
 }

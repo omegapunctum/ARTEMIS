@@ -24,7 +24,7 @@ function argumentsFor(argv) {
   values.width=Number(values.width || 1440);values.height=Number(values.height || 900);
   values.timeoutMs=Number(values['timeout-ms'] || 270000);
   values.phase=values.phase || 'workspace';
-  check(['workspace','architecture-time'].includes(values.phase),'unknown native proof phase');
+  check(['workspace','architecture-time','amboise-context'].includes(values.phase),'unknown native proof phase');
   check([values.width,values.height,values.timeoutMs].every(v=>Number.isFinite(v)&&v>0),'invalid dimensions or timeout');
   values.expectedArtifact=resolve(values.artifact || values['expected-artifact']);
   values.output=resolve(values.output);
@@ -509,6 +509,31 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
 
   await navigate(url);
+  if(options.phase==='amboise-context') {
+    const id=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id===expectedBundle.amboiseContext.residence_ref).presence_item_id;
+    await click('#mode-scrub');await number('cursor-year',1518);await select(id);
+    check(await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'context missing at 1518');
+    await evaluate(cdp,"document.getElementById('amboise-context').scrollIntoView({block:'start'})");
+    const contextLinks = await evaluate(cdp,"Array.from(document.querySelectorAll('#amboise-context a')).map(a=>a.href)");
+    check(JSON.stringify(contextLinks)===JSON.stringify(expectedBundle.amboiseContext.sources.slice(0,2).map(s=>s.url)),'context source links differ from packet');
+    check(await evaluate(cdp,"(()=>{const n=document.getElementById('amboise-context');const b=n.getBoundingClientRect();return n.checkVisibility({checkVisibilityCSS:true})&&b.width>0&&b.height>0&&b.top<innerHeight&&b.bottom>0;})()"),'context not visibly rendered');
+    await capture('amboise-context-en');
+    await click('#language-ru');
+    check((await evaluate(cdp,"document.getElementById('amboise-context').textContent")).includes('не доказывает'),'Russian attendance limitation missing');
+    await evaluate(cdp,"document.getElementById('amboise-context').scrollIntoView({block:'start'})");
+    check(await evaluate(cdp,"document.getElementById('amboise-context').checkVisibility({checkVisibilityCSS:true})"),'Russian context hidden');
+    await capture('amboise-context-ru');
+    for(const year of [1517,1519]) {
+      await number('cursor-year',year);
+      check(!await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'stale context outside event year');
+    }
+    await click('#mode-range');await number('time-start',1518);await number('time-end',1518);await select(id);
+    check(await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'range context missing');
+    await number('time-end',1519);await number('time-start',1519);
+    check(!await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'stale range context outside event year');
+    await stable('Amboise complete');await networkSnapshot();
+    return {outcome:'TECHNICAL_AMBOISE_CONTEXT_PASS',phase:options.phase,actions,checks,captures,renderSettlements,valueValidation:'not_assessed'};
+  }
   if(options.phase==='architecture-time') {
     const initial=await membership({leonardo:11,roman:0,architecture:0,catalog:8},'architecture-time fresh catalog entry');
     check(initial.state.layers.includes('catalog'),'architecture-time fresh entry did not enable catalog');

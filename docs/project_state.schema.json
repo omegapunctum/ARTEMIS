@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://artemis.example/schemas/project-state-v1.13.json",
-  "title": "ARTEMIS machine-readable operational state v1.13",
+  "$id": "https://artemis.example/schemas/project-state-v1.14.json",
+  "title": "ARTEMIS machine-readable operational state v1.14",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -55,7 +55,7 @@
     }
   },
   "properties": {
-    "schema_version": {"const": "1.13.0"},
+    "schema_version": {"const": "1.14.0"},
     "project": {"const": "ARTEMIS"},
     "updated_at": {"type": "string", "format": "date"},
     "north_star_ref": {"const": "docs/ARTEMIS_CONCEPT.md"},
@@ -360,6 +360,7 @@
       "items": {"type": "string", "pattern": "^docs/"}
     },
     "blockers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "amboise_context": {"type": "object", "additionalProperties": false, "required": ["status", "decision_ref", "calendar_review_ref", "publication", "user_value", "successor_opened"], "properties": {"status": {"enum": ["implementation_authorized", "implementation_completed"]}, "decision_ref": {"const": "docs/work/2026-10-24_AMBOISE_CONTEXT_v1.md"}, "calendar_review_ref": {"const": "docs/audits/2026-10-24_AMBOISE_CALENDAR_REVIEW.md"}, "publication": {"enum": ["not_verified", "verified"]}, "user_value": {"const": "unvalidated"}, "successor_opened": {"const": false}}},
     "next_transition": {
       "type": "object",
       "additionalProperties": false,

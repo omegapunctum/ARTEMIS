@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Current bounded Amboise context — 2026-10-26 (restored 2026-10-24 authorization)
+
+- `2026-10-24_AMBOISE_CONTEXT_v1.md` — accepted specification; implementation authorized after independent bounded calendar review. One context section for the existing Clos Lucé residence, year-resolution only, no attendance/geometry claim. Implementation and publication acceptance remain pending. No further successor. Earlier September contextual-search DEFERRED is preserved as its historical disposition, not authority blocking this new owner-directed case.
+
 ## Owner-confirmed current-state closeout and direct entry — 2026-10-17
 
 - `2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md` — completed bounded implementation:
