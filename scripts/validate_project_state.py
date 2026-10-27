@@ -360,6 +360,13 @@ def validate_project_state(state: dict | None = None) -> dict:
         raise ProjectStateError("M5 governance history must not invent a pre-start decision record")
     if gate["status"] == "blocked" and not payload["blockers"]:
         raise ProjectStateError("a blocked Gate D must name at least one blocker")
+    amboise = payload.get("amboise_context")
+    if amboise:
+        for key in ("decision_ref", "calendar_review_ref"):
+            if amboise[key] not in payload["canonical_refs"] or not (ROOT / amboise[key]).is_file():
+                raise ProjectStateError("Amboise context requires registered decision and calendar review")
+        if amboise["publication"] == "verified" and amboise["status"] != "implementation_completed":
+            raise ProjectStateError("Amboise publication requires completed implementation")
     region_closed = "region_closeout" in payload
     if region_closed and payload["region_closeout"]["evidence_ref"] not in payload["canonical_refs"]:
         raise ProjectStateError("Region closeout requires registered evidence")

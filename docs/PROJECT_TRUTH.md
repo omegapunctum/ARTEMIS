@@ -1,5 +1,7 @@
 # ARTEMIS — PROJECT TRUTH
 
+Current bounded work — 2026-10-26 (restored 2026-10-24 authorization): [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md) has accepted prospective calendar/specification review and implementation authorization. It is not yet verified implementation or public capability. Its exact-day uncertainty, source-relative evidence and no-attendance limits remain mandatory. Existing published capability and formal/comparative value dispositions below are unchanged.
+
 Current factual delivery — 2026-10-17: [bounded closeout and direct-entry task](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md)
 records completed #478–#484: ready London catalog, mobile/desktop compact workspace,
 Cesena clarification, merged zoom diagnostics, two admitted finite architecture

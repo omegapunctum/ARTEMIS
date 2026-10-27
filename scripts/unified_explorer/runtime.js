@@ -180,7 +180,13 @@
       return [item.label,item.qid,...Object.values(item.labels || {}),...aliases,original?.name_en,original?.name_ru].some(value => searchKey(value).includes(needle));
     });
   }
-  const helpers = Object.freeze({calendarBounds,architectureTimeRecord,isDatedArchitecture,matchingPhases,recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
+  function contextualEvent(bundle,selected,state) {
+    const packet = bundle.amboiseContext;
+    if (!packet || selected?.presence_id !== packet.residence_ref) return null;
+    if (state.queryResolution && state.queryResolution !== 'year') throw new Error('Amboise only supports year queries');
+    return (state.mode === 'scrub' ? state.cursorYear === 1518 : state.startYear <= 1518 && state.endYear >= 1518) ? packet : null;
+  }
+  const helpers = Object.freeze({contextualEvent,calendarBounds,architectureTimeRecord,isDatedArchitecture,matchingPhases,recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
   const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
@@ -446,12 +452,26 @@
     const context = byId('catalog-context-link'), href = language && safeLink(urls[language]); context.hidden = !href;
     if (href) { context.textContent = `${t('wikipedia')} (${language})`; context.href = href; }
   }
+  function renderAmboiseContext(selected) {
+    const open = byId('amboise-context-provenance')?.open || false;
+    byId('amboise-context')?.remove();
+    const packet = contextualEvent(runtime.bundle,selected,runtime.state); if (!packet) return;
+    const ru = runtime.state.language === 'ru', section = node('section',''); section.id = 'amboise-context';
+    section.append(node('h3',ru ? 'Контекст Амбуаза · 1518' : 'Amboise context · 1518'));
+    section.append(node('p',ru ? 'Крещение дофина Франциска в Амбуазе. Каталог BnF: 25 апреля 1518 (n. st.).' : 'Baptism of dauphin François at Amboise. BnF catalogue: 25 April 1518 (n. st.).'));
+    section.append(node('p',ru ? 'Календарь не установлен: возможны 25 апреля или 5 мая по григорианскому календарю. Общий год — 1518; точный день и длительность неизвестны. Это не событие длиной в год.' : 'Calendar unresolved: 25 April or 5 May in the Gregorian calendar. Both share 1518; exact day and duration remain unknown. This is not a year-long event.'));
+    section.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении. Подлинники не просмотрены; независимость пересказов не установлена.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism. Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
+    for (const source of packet.sources.slice(0,2)) { const line=node('p',''),link=node('a',source.title); link.href=source.url; link.target='_blank'; link.rel='noopener noreferrer'; line.append(link,node('span',' · '+source.locator));section.append(line); }
+    technicalJson(section,packet,'amboise-context-provenance');section.querySelector('details').open=open;
+    byId('selection-details').append(section);
+  }
   function renderInspectorLanguage(selected) {
     const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
     text('selection-scope',selectionScope(selected));
     text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
     text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
     renderRecordDetails(selected,input);
+    renderAmboiseContext(selected);
     if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
   }
   function paintRange() {

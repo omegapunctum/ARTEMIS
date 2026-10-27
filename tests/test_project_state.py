@@ -534,3 +534,28 @@ def test_stop_closeout_cannot_reuse_the_old_proof_as_new_execution_authority():
     state["next_transition"]["decision_ref"] = state["epistemic_conflict_proof"]["decision_ref"]
     with pytest.raises(ProjectStateError, match="STOP requires the registered factual closeout"):
         validate_project_state(state)
+
+
+def test_amboise_authorization_preserves_historical_search_and_value():
+    state = _state()
+    assert state["amboise_context"]["status"] in {"implementation_authorized", "implementation_completed"}
+    assert state["amboise_context"]["successor_opened"] is False
+    assert state["contextual_composition"]["status"] == "deferred"
+    assert state["gate_e"]["formal_user_value"] == "unvalidated"
+    assert state["next_transition"]["target"] == "STOP"
+    validate_project_state()
+
+
+@pytest.mark.parametrize("key", ["decision_ref", "calendar_review_ref"])
+def test_amboise_rejects_unregistered_authority(key):
+    state = _state()
+    state["canonical_refs"].remove(state["amboise_context"][key])
+    with pytest.raises(ProjectStateError, match="Amboise context requires registered"):
+        validate_project_state(state)
+
+
+def test_amboise_rejects_publication_before_implementation():
+    state = _state()
+    state["amboise_context"].update(status="implementation_authorized", publication="verified")
+    with pytest.raises(ProjectStateError, match="Amboise publication requires completed"):
+        validate_project_state(state)

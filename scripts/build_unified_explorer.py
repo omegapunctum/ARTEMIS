@@ -25,6 +25,7 @@ from scripts import build_globe_spike as spike  # noqa: E402
 from scripts import build_leonardo_gate_d_inputs as gate_d  # noqa: E402
 from scripts import validate_leonardo_world_slice as gate_c_validation  # noqa: E402
 from scripts import import_wikidata_catalog as wikidata_catalog  # noqa: E402
+from scripts import validate_amboise_context as amboise
 from scripts import validate_architecture_time_pilot as architecture_time  # noqa: E402
 
 TEMPLATE_DIR = ROOT / "scripts" / "unified_explorer"
@@ -130,6 +131,7 @@ def _input_paths() -> list[Path]:
     return sorted({
         FEATURES_PATH, SOURCES_PATH, *wikidata_catalog.source_input_paths(),
         architecture_time.PACKET_PATH, architecture_time.ACCEPTANCE_PATH,
+        amboise.PACKET_PATH, amboise.DIGEST_PATH,
         gate_d.SELECTION_PATH, gate_d.CLAIMS_PATH, gate_d.SOURCES_PATH,
         gate_d.CESENA_AMENDMENT_PATH,
         gate_d.COVERAGE_PATH, gate_d.DECISION_PATH, gate_d.PLACE_ANCHOR_PATH,
@@ -246,6 +248,7 @@ def _compose(leonardo_dir: Path, roman_dir: Path) -> dict[str, Any]:
         "calendar": {"calendar": "proleptic_gregorian", "era": "CE", "min_year": 91, "max_year": 1894, "coverage_complete": False, "architecture_dates_define_coverage": False},
         "input_ledger": _ledger(_input_paths()), "registry": registry,
         "source_native_state_role": "preserved_canonical_inputs_orchestrated_by_application_workspace_state_not_a_canonical_state_migration",
+        "amboiseContext": amboise.load_packet(),
         "leonardo": {"lifePath": life_path, "knowledge": knowledge, "explorerState": _read(leonardo_dir / "explorer-state.json"), "projection": _read(leonardo_dir / "projection.json"), "globe": _read(leonardo_dir / "globe-projection.json"), "sourcePackage": _read(spike.MAJOR_LIFE_PACKAGE_PATH), "runtimeAnchors": _read(spike.MAJOR_LIFE_RUNTIME_ANCHORS_PATH)},
         "roman": {"versions": versions, "knowledge": roman_knowledge, "sourceManifest": _read(spike.REGION_PACKAGE_ROOT / "source_manifest.json"), "worldInput": roman_world},
         "architecture": architecture,

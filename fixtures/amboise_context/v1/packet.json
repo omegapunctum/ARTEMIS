@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "event_id": "event-amboise-dauphin-baptism-1518",
+  "residence_ref": "presence-leonardo-amboise-clos-luce-1516-1519",
+  "association": "curated_context_not_historical_relation",
+  "review_state": "source_relative_prototype",
+  "source_native_date": "25 April 1518 (n. st.)",
+  "place": "Amboise",
+  "geometry": null,
+  "duration": null,
+  "canonical_exact_day": null,
+  "normalization": {
+    "policy_id": "amboise-baptism-1518-calendar-year-v1",
+    "resolution": "year",
+    "year": 1518,
+    "source_ids": [
+      "bnf-calendar-manual",
+      "observatory-calendar"
+    ],
+    "alternatives": [
+      {
+        "interpretation": "Julian",
+        "gregorian_date": "1518-05-05"
+      },
+      {
+        "interpretation": "already Gregorian",
+        "gregorian_date": "1518-04-25"
+      }
+    ],
+    "explanation": "Source calendar is unresolved. Both interpretations share 1518. Year membership does not imply year-long duration."
+  },
+  "sources": [
+    {
+      "source_id": "bnf-bp16",
+      "title": "BnF BP16_103413",
+      "url": "https://bp16.bnf.fr/ark:/12148/cb41876426p/",
+      "locator": "Conventional title; Notes; Localizations: RES-LB30-237"
+    },
+    {
+      "source_id": "tours-gaugain",
+      "title": "Lucie Gaugain, Amboise en fête au printemps 1518",
+      "url": "https://marignan2015.univ-tours.fr/reconstitution-et-fete-de-1518/amboise-en-fete-au-printemps-1518/",
+      "locator": "Opening paragraphs and note 11: AN KK 289, ff. 508r–v"
+    },
+    {
+      "source_id": "bnf-calendar-manual",
+      "title": "BnF manuscript cataloguing manual",
+      "url": "https://kitcat.bnf.fr/manuel-format/manuel-de-catalogage-des-manuscrits-medievaux",
+      "locator": "Section 6, example 16; nouveau style with calendar=julian; not BP16-specific encoding proof"
+    },
+    {
+      "source_id": "observatory-calendar",
+      "title": "Observatoire de Paris: Gregorian calendar",
+      "url": "https://media4.obspm.fr/public/ressources_lu/pages_calendriers/mctc-calendrier-gregorien.html",
+      "locator": "Gregorian leap-year and calendar reform rules"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "amboise-event",
+      "text": "The cited accounts describe the baptism of dauphin François at Amboise.",
+      "source_ids": [
+        "bnf-bp16",
+        "tours-gaugain"
+      ]
+    },
+    {
+      "claim_id": "amboise-date",
+      "text": "The BnF catalogue gives 25 April 1518 with qualifier (n. st.).",
+      "source_ids": [
+        "bnf-bp16"
+      ]
+    },
+    {
+      "claim_id": "amboise-date-agreement",
+      "text": "Tours scholarship gives the unqualified date 25 April 1518.",
+      "source_ids": [
+        "tours-gaugain"
+      ]
+    }
+  ],
+  "limitations": [
+    "Original documents not inspected; accounts are mediated; upstream independence unestablished.",
+    "Residence does not establish attendance, involvement, encounter, influence or causality."
+  ],
+  "rights": "Links, locators and original paraphrases only; no media reuse."
+}

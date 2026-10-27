@@ -58,6 +58,7 @@ jobs:
             tests/test_project_state.py \
             tests/test_public_artifact_provenance.py \
             tests/test_globe_runtime_spike.py \
+            tests/test_amboise_context.py \
             tests/test_unified_explorer.py \
             tests/test_architecture_time_pilot.py \
             tests/test_wikidata_catalog.py \
@@ -215,7 +216,7 @@ jobs:
           BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
           for viewport in 1440x900 500x900 390x844 844x390; do
             width="${viewport%x*}"; height="${viewport#*x}"
-            for phase in workspace architecture-time; do
+            for phase in workspace architecture-time amboise-context; do
               timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
                 --phase "$phase" --browser "$BROWSER" --url "${PAGES_URL%/}/globe/" \
                 --expected-artifact pages_artifact --width "$width" --height "$height" \
