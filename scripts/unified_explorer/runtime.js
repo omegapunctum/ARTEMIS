@@ -452,8 +452,7 @@
     const context = byId('catalog-context-link'), href = language && safeLink(urls[language]); context.hidden = !href;
     if (href) { context.textContent = `${t('wikipedia')} (${language})`; context.href = href; }
   }
-  function renderAmboiseContext(selected) {
-    const open = byId('amboise-context-provenance')?.open || false;
+  function renderAmboiseContext(selected, open = false) {
     byId('amboise-context')?.remove();
     const packet = contextualEvent(runtime.bundle,selected,runtime.state); if (!packet) return;
     const ru = runtime.state.language === 'ru', section = node('section',''); section.id = 'amboise-context';
@@ -470,8 +469,9 @@
     text('selection-scope',selectionScope(selected));
     text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
     text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
+    const contextDisclosureOpen = byId('amboise-context-provenance')?.open || false;
     renderRecordDetails(selected,input);
-    renderAmboiseContext(selected);
+    renderAmboiseContext(selected,contextDisclosureOpen);
     if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
   }
   function paintRange() {

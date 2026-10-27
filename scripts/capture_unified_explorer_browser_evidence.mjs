@@ -514,6 +514,8 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await click('#mode-scrub');await number('cursor-year',1518);await select(id);
     check(await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'context missing at 1518');
     await evaluate(cdp,"document.getElementById('amboise-context').scrollIntoView({block:'start'})");
+    const contextLinks = await evaluate(cdp,"Array.from(document.querySelectorAll('#amboise-context a')).map(a=>a.href)");
+    check(JSON.stringify(contextLinks)===JSON.stringify(expectedBundle.amboiseContext.sources.slice(0,2).map(s=>s.url)),'context source links differ from packet');
     await capture('amboise-context-en');
     await click('#language-ru');
     check((await evaluate(cdp,"document.getElementById('amboise-context').textContent")).includes('не доказывает'),'Russian attendance limitation missing');
@@ -525,6 +527,8 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     }
     await click('#mode-range');await number('time-start',1518);await number('time-end',1518);await select(id);
     check(await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'range context missing');
+    await number('time-end',1519);await number('time-start',1519);
+    check(!await evaluate(cdp,"Boolean(document.getElementById('amboise-context'))"),'stale range context outside event year');
     await stable('Amboise complete');await networkSnapshot();
     return {outcome:'TECHNICAL_AMBOISE_CONTEXT_PASS',phase:options.phase,actions,checks,captures,renderSettlements,valueValidation:'not_assessed'};
   }
