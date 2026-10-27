@@ -1,6 +1,6 @@
 # ARTEMIS — PRIORITIES v7.13
 
-Current priority — 2026-10-26 (restored 2026-10-24 authorization): complete [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md) under its accepted calendar/specification review, then verify and return to STOP. One source-bound context section, not another corpus or product gate. Earlier dated priorities below are historical where superseded by this explicit bounded authorization.
+Current disposition — 2026-10-27: [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md) completed in merged PR #486, independently accepted and live verified in Pages `40465572963`. Return to STOP / Command Center; no automatic next implementation branch. Preserve the source-relative calendar and no-attendance limits and unvalidated user value. Earlier dated priorities below remain historical where superseded.
 
 Current execution boundary — 2026-10-17: the explicitly owner-confirmed
 [factual closeout and direct Explorer entry](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md)

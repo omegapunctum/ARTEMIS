@@ -1,6 +1,6 @@
 # ARTEMIS — PRODUCT SCOPE
 
-Current authorized increment — 2026-10-26 (restored 2026-10-24 authorization): [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md), independently reviewed under the case-specific calendar policy, permits one bilingual context section in existing residence details. Range containing 1518 and Scrub at 1518 show the source-relative baptism event; canonical exact day remains unresolved between explicit calendar interpretations. No marker, layer, attendance/involvement claim or broader contextual corpus is opened. This fresh owner direction supersedes the older STOP restriction only for this bounded task; historical search and Gate E/value dispositions remain unchanged.
+Completed bounded increment — 2026-10-27: [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md) delivered one bilingual context section in existing residence details, merged in PR #486 and live verified in Pages `40465572963`. Range containing 1518 / Scrub at 1518 expose the source-relative baptism event; exact canonical day remains unresolved. No marker, layer, attendance/involvement claim, broader contextual corpus or product-gate transition. This owner-directed case is completed; no successor is opened. Historical search and Gate E/value dispositions remain unchanged.
 
 Current bounded maintenance — 2026-10-17: the owner confirmed factual lifecycle
 closeout and explicitly removed the introductory root screen. The accepted

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.14.0",
   "project": "ARTEMIS",
-  "updated_at": "2026-10-26",
+  "updated_at": "2026-10-27",
   "north_star_ref": "docs/ARTEMIS_CONCEPT.md",
   "active_vertical": {
     "id": "life-in-context-globe-mvp",
@@ -183,7 +183,7 @@
     "target": "STOP",
     "authority": "explicit_owner_instruction",
     "decision_ref": "docs/work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md",
-    "condition": "Completed historical non-public technical proof implemented and separately presentation-accepted; the separately authorized Amboise context task is current bounded work; after its delivery return to STOP / Command Center. No automatic product successor. September contextual composition DEFERRED remains the historical search disposition; Gate E/value outcomes remain historical facts; no gate reopening or value validation is inferred."
+    "condition": "Completed historical non-public technical proof implemented and separately presentation-accepted; the separately owner-authorized Amboise context is implemented, accepted and live verified in Pages 40465572963. Return to STOP / Command Center; no automatic successor. September contextual composition DEFERRED remains the historical search disposition; Gate E/value outcomes remain unchanged and user value UNVALIDATED."
   },
   "architecture_checkpoint": {
     "id": "M4",
@@ -290,10 +290,10 @@
     "evidence_ref": "docs/work/2026-09-19_REGION_OWNER_RETEST_CLOSEOUT_v1.md"
   },
   "amboise_context": {
-    "status": "implementation_authorized",
+    "status": "implementation_completed",
     "decision_ref": "docs/work/2026-10-24_AMBOISE_CONTEXT_v1.md",
     "calendar_review_ref": "docs/audits/2026-10-24_AMBOISE_CALENDAR_REVIEW.md",
-    "publication": "not_verified",
+    "publication": "verified",
     "user_value": "unvalidated",
     "successor_opened": false
   }

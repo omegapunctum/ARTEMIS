@@ -1,6 +1,6 @@
 # ARTEMIS — PROJECT TRUTH
 
-Current bounded work — 2026-10-26 (restored 2026-10-24 authorization): [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md) has accepted prospective calendar/specification review and implementation authorization. It is not yet verified implementation or public capability. Its exact-day uncertainty, source-relative evidence and no-attendance limits remain mandatory. Existing published capability and formal/comparative value dispositions below are unchanged.
+Current delivery — 2026-10-27: [Amboise context v1](work/2026-10-24_AMBOISE_CONTEXT_v1.md) is implemented, independently accepted and publicly verified. PR #486 merged as `429b25efc9b81d833d217de3f2115cea7aaf91aa`; Pages `40465572963` passed both-entry live file verification and all live native scenarios. One bilingual context section appears in the existing Clos Lucé residence details for Range containing 1518 / Scrub at 1518. Source-native day, unresolved calendar alternatives, unknown duration and no-attendance limits remain explicit. No new marker/layer or general Event capability; comparative/formal user value remains UNVALIDATED. The linked completed task owns receipts; no successor is opened.
 
 Current factual delivery — 2026-10-17: [bounded closeout and direct-entry task](work/2026-10-17_CURRENT_STATE_AND_DIRECT_ENTRY_v1.md)
 records completed #478–#484: ready London catalog, mobile/desktop compact workspace,
