@@ -456,10 +456,12 @@
     byId('amboise-context')?.remove();
     const packet = contextualEvent(runtime.bundle,selected,runtime.state); if (!packet) return;
     const ru = runtime.state.language === 'ru', section = node('section',''); section.id = 'amboise-context';
-    section.append(node('h3',ru ? 'Контекст Амбуаза · 1518' : 'Amboise context · 1518'));
-    section.append(node('p',ru ? 'Крещение дофина Франциска в Амбуазе. Каталог BnF: 25 апреля 1518 (n. st.).' : 'Baptism of dauphin François at Amboise. BnF catalogue: 25 April 1518 (n. st.).'));
+    section.append(node('p',ru ? 'Контекст Амбуаза · 1518' : 'Amboise context · 1518','context-kicker'));
+    section.append(node('h2',ru ? 'Крещение дофина Франциска' : 'Baptism of dauphin François'));
+    section.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism.','context-limit'));
+    section.append(node('p',ru ? 'Каталог BnF: 25 апреля 1518 (n. st.).' : 'BnF catalogue: 25 April 1518 (n. st.).'));
     section.append(node('p',ru ? 'Календарь не установлен: возможны 25 апреля или 5 мая по григорианскому календарю. Общий год — 1518; точный день и длительность неизвестны. Это не событие длиной в год.' : 'Calendar unresolved: 25 April or 5 May in the Gregorian calendar. Both share 1518; exact day and duration remain unknown. This is not a year-long event.'));
-    section.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении. Подлинники не просмотрены; независимость пересказов не установлена.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism. Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
+    section.append(node('p',ru ? 'Подлинники не просмотрены; независимость пересказов не установлена.' : 'Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
     for (const source of packet.sources.slice(0,2)) { const line=node('p',''),link=node('a',source.title); link.href=source.url; link.target='_blank'; link.rel='noopener noreferrer'; line.append(link,node('span',' · '+source.locator));section.append(line); }
     technicalJson(section,packet,'amboise-context-provenance');section.querySelector('details').open=open;
     byId('selection-facts').append(section);

@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Owner-directed Explorer presentation — 2026-11-15
+
+- [Explorer presentation refinement v1](2026-11-15_EXPLORER_PRESENTATION_v1.md) — bounded REVIEW for desktop hierarchy and existing Amboise context presentation. The globe, data and product gate remain unchanged.
+
 ## Completed analysis and research preparation — 2026-11-01
 
 - `2026-11-01_ARTEMIS_OUTCOME_AND_ROADMAP_v1.md` — owner-requested state analysis, derived goal and conditional roadmap; supporting `amboise_comprehension_v1/` contains participant prompts, moderator reference/rubric and empty observation template. Preparation only: NOT RUN / NOT COLLECTED; comparison NOT READY. No participant recruitment, product/gate transition, new implementation or change to `project_state.json`; STOP / Command Center and UNVALIDATED value remain. This is a working analysis, not a second canonical owner.
