@@ -8,7 +8,8 @@ on:
 jobs:
   artemis-core:
     name: Leonardo World Slice + Globe runtime
-    runs-on: ubuntu-latest
+    # Playwright 1.51.1 does not support Chromium on Ubuntu 26.04.
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
