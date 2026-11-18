@@ -26,13 +26,16 @@
   <aside id="desktop-records" class="desktop-only" aria-label="Records"><button id="records-toggle" type="button" aria-expanded="true" aria-controls="desktop-records-body">Records</button><div id="desktop-records-body"><div id="desktop-search"></div><div id="desktop-chooser"></div><details id="desktop-layers"><summary data-i18n="layers">Layers</summary><div id="desktop-layer-body"></div></details></div></aside>
   <div id="selection-summary" hidden></div>
   <aside id="inspector" aria-label="Selected record details" hidden>
-    <header class="drawer-header"><h1 id="selection-title" tabindex="-1"></h1><button id="inspector-toggle" class="desktop-only" type="button" aria-expanded="true" aria-controls="selection-scope selection-facts place-episodes focus-selection record-disclosure sources-disclosure evidence-disclosure input-disclosure">Collapse</button><button id="close-details" type="button" aria-label="Close record details">×</button></header>
+    <header class="drawer-header"><h1 id="selection-title" tabindex="-1"></h1><button id="inspector-toggle" class="desktop-only" type="button" aria-expanded="true" aria-controls="selection-scope selection-facts place-episodes episode-neighbors focus-selection technical-disclosure sources-disclosure back-to-summary">Collapse</button><button id="close-details" type="button" aria-label="Close record details">×</button></header>
     <button id="back-to-summary" type="button">Back to card</button>
     <p id="selection-scope"></p><div id="selection-facts"></div><div id="place-episodes" hidden></div><button id="focus-selection" type="button" data-i18n="focus">Focus map on this record</button>
-    <details id="record-disclosure"><summary data-i18n="recordDetails">Record details</summary><div id="selection-details"></div></details>
+    <nav id="episode-neighbors" hidden></nav>
     <details id="sources-disclosure"><summary id="sources-summary"></summary><div id="selection-sources"></div></details>
-    <details id="evidence-disclosure"><summary data-i18n="evidence">Claims, evidence and uncertainty</summary><div id="selection-evidence"></div></details>
-    <details id="input-disclosure"><summary data-i18n="raw">Source-native input and provenance</summary><div id="selection-input"></div></details>
+    <details id="technical-disclosure"><summary data-i18n="technicalDetails">Research details</summary>
+      <details id="record-disclosure"><summary data-i18n="recordDetails">Record details</summary><div id="selection-details"></div></details>
+      <details id="evidence-disclosure"><summary data-i18n="evidence">Claims, evidence and uncertainty</summary><div id="selection-evidence"></div></details>
+      <details id="input-disclosure"><summary data-i18n="raw">Source-native input and provenance</summary><div id="selection-input"></div></details>
+    </details>
   </aside>
   <button id="attribution-toggle" class="mobile-only" type="button" aria-controls="attribution" aria-expanded="false">Map sources</button>
   <div id="attribution" class="map-note"></div>

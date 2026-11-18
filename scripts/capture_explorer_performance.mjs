@@ -87,6 +87,11 @@ try {
     const selection=await evaluate(cdp,`(()=>{const s=document.getElementById('record-select'),r=window.__ARTEMIS_EXPLORER.visibleItems.find(x=>x.kind==='region');if(!r)throw Error('Region missing');const t=performance.now();s.value=r.item_id;s.dispatchEvent(new Event('change',{bubbles:true}));return {handlerMs:performance.now()-t,rawTextChars:document.getElementById('selection-input').textContent.length,collapsed:!document.getElementById('input-disclosure').open}})()`);
     const selectionMetrics=diff(selectionBefore,await metrics());
     await openCompactDetails();
+    if (await evaluate(cdp,"Boolean(document.getElementById('technical-disclosure'))")) {
+      await evaluate(cdp,"document.querySelector('#technical-disclosure > summary').focus()");
+      await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:' ',code:'Space',windowsVirtualKeyCode:32});
+      await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:' ',code:'Space',windowsVirtualKeyCode:32});
+    }
     await evaluate(cdp,"(()=>{const n=document.querySelector('#input-disclosure summary');n.scrollIntoView({block:'center'});n.focus();if(document.activeElement!==n||!n.checkVisibility({checkVisibilityCSS:true}))throw Error('Native input summary is not focused/visible');})()");
     await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:' ',code:'Space',windowsVirtualKeyCode:32});
     await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:' ',code:'Space',windowsVirtualKeyCode:32});
