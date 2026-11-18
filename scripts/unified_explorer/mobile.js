@@ -18,6 +18,7 @@
     ru:{layers:'Слои',records:'Поиск',settings:'Вид',close:'Закрыть панель',expand:'Развернуть календарь',collapse:'Свернуть календарь',apply:'Применить',cancel:'Отменить',sources:'Источники карты',start:'Начальный год интервала, н. э.',end:'Конечный год интервала, н. э.',cursor:'Текущий год, н. э.',previous:'Предыдущий год',next:'Следующий год',pending:'Даты не применены',ce:'н. э.'}
   };
   function mount({runtime,applyState,layout}) {
+    const canRead = () => runtime.ready || runtime.readerOnly;
     const byId = id => document.getElementById(id), header = byId('workspace-header'), dock = byId('time-dock');
     const {min_year:MIN,max_year:MAX} = runtime.bundle.calendar;
     const calendar = {min:MIN,max:MAX};
@@ -42,12 +43,12 @@
     }
     function cancel() { draft = temporal(runtime.state); dirty = false; render(); }
     function stage(field, delta) {
-      if (!runtime.ready || !mobile()) return;
+      if (!canRead() || !mobile()) return;
       draft = stepDraft(draft,field,delta,calendar); dirty = signature(draft) !== canonical;
       setExpanded(true); render();
     }
     function apply() {
-      if (!runtime.ready || !dirty) return;
+      if (!canRead() || !dirty) return;
       const patch = commitDraft(draft); dirty = false; applyState(patch);
       draft = temporal(runtime.state); canonical = signature(runtime.state); render();
     }
@@ -61,13 +62,13 @@
       byId('header-close').setAttribute('aria-label',w('close')); byId('header-close').textContent = w('close');
       byId('attribution-toggle').textContent = w('sources');
       byId('mobile-apply').textContent = w('apply'); byId('mobile-cancel').textContent = w('cancel');
-      byId('mobile-apply').disabled = !runtime.ready || !dirty; byId('mobile-cancel').disabled = !dirty;
+      byId('mobile-apply').disabled = !canRead() || !dirty; byId('mobile-cancel').disabled = !dirty;
       dock.dataset.draft = String(dirty);
       for (const [id,field,label] of wheels) {
         const wheel = byId(id), value = draft[field];
         const min = field === 'endYear' ? draft.startYear : MIN, max = field === 'startYear' ? draft.endYear : MAX;
         wheel.setAttribute('aria-label',w(label)); wheel.setAttribute('aria-valuemin',String(min)); wheel.setAttribute('aria-valuemax',String(max)); wheel.setAttribute('aria-valuenow',String(value));
-        wheel.setAttribute('aria-valuetext',`${value} ${w('ce')}`); wheel.setAttribute('aria-disabled',String(!runtime.ready)); wheel.tabIndex = runtime.ready ? 0 : -1;
+        wheel.setAttribute('aria-valuetext',`${value} ${w('ce')}`); wheel.setAttribute('aria-disabled',String(!canRead())); wheel.tabIndex = canRead() ? 0 : -1;
         wheel.querySelector('.wheel-value').textContent = String(value);
         for (const [selector,delta] of [['.wheel-prev',-1],['.wheel-next',1]]) {
           const neighbor = wheel.querySelector(selector); neighbor.textContent = value + delta >= min && value + delta <= max ? String(value + delta) : '—';
@@ -94,16 +95,16 @@
     byId('mobile-apply').addEventListener('click',apply); byId('mobile-cancel').addEventListener('click',cancel);
     for (const [id,field] of wheels) {
       const wheel = byId(id);
-      wheel.addEventListener('click',() => { if (runtime.ready) setExpanded(true); });
+      wheel.addEventListener('click',() => { if (canRead()) setExpanded(true); });
       wheel.addEventListener('keydown',event => {
         const keys = {ArrowUp:1,ArrowDown:-1,PageUp:10,PageDown:-10,Home:MIN-draft[field],End:MAX-draft[field]};
         if (Object.hasOwn(keys,event.key)) { event.preventDefault(); event.stopPropagation(); stage(field,keys[event.key]); }
         else if (event.key === 'Enter') { event.preventDefault(); apply(); }
       });
-      wheel.addEventListener('wheel',event => { if (!mobile() || !runtime.ready || !event.deltaY) return; event.preventDefault(); event.stopPropagation(); stage(field,event.deltaY > 0 ? 1 : -1); },{passive:false});
+      wheel.addEventListener('wheel',event => { if (!mobile() || !canRead() || !event.deltaY) return; event.preventDefault(); event.stopPropagation(); stage(field,event.deltaY > 0 ? 1 : -1); },{passive:false});
       let drag = null;
       wheel.addEventListener('pointerdown',event => {
-        if (!mobile() || !runtime.ready || event.button !== 0 || event.target.closest('button')) return;
+        if (!mobile() || !canRead() || event.button !== 0 || event.target.closest('button')) return;
         event.preventDefault(); event.stopPropagation(); wheel.focus(); setExpanded(true);
         drag = {pointer:event.pointerId,y:event.clientY,draft:{...draft},dirty}; wheel.setPointerCapture(event.pointerId);
       });

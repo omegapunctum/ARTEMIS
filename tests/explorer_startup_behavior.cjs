@@ -35,7 +35,7 @@ async function scenario(kind) {
   const document=tree(fixture.tree);
   document.documentElement=document.querySelector('html'); document.documentElement.dataset.entryProfile='globe';
   document.body=document.querySelector('body'); document.activeElement=document.body;
-  document.getElementById=id=>document.querySelector('#'+id); document.createElement=tag=>new Element(tag); document.createComment=()=>new Element('comment');
+  document.getElementById=id=>document.querySelector('#'+id); document.createElement=tag=>new Element(tag); document.createComment=()=>new Element('comment'); document.createTextNode=value=>Object.assign(new Element('text'),{textContent:value});
   if(kind==='embedded') for(const name of ['unified-bundle.json','earth-context.geojson','geospatial-assets.json','build-meta.json']) {
     const script=new Element('script',{id:'embedded-'+name});
     script.textContent=Buffer.from(JSON.stringify(name==='unified-bundle.json'?fixture.bundle:{}),'utf8').toString('base64');
@@ -75,6 +75,18 @@ async function scenario(kind) {
     assert.equal(document.documentElement.dataset.artemisBoot,'loading');
     timers.get([...timers.keys()][0]).fn(); assert.match(byId('startup-status').textContent,/Starting the globe/);
     window.ARTEMIS_STARTUP.ready(); assert.equal(byId('startup-status').hidden,true); assert.equal(timers.size,0);
+  } else if (kind==='webgl') {
+    assert.equal(document.documentElement.dataset.artemisBoot,'ready');
+    assert.equal(byId('record-search').disabled,false);
+    const chooser=byId('record-select');
+    assert.equal(chooser.disabled,false);
+    chooser.value=chooser.options[1].value;
+    chooser.events.change[0]({target:chooser});
+    assert.equal(byId('inspector').hidden,false);
+    assert(byId('selection-title').textContent);
+    assert(byId('selection-sources').children.length);
+    assert.equal(byId('focus-selection').hidden,true);
+    assert.equal(byId('view-map').disabled,true);
   } else {
     assert.equal(document.documentElement.dataset.artemisBoot,'failed');assert.equal(timers.size,0);
     const diagnostic=kind.endsWith('.js')?byId('startup-status'):byId('fatal-error');
