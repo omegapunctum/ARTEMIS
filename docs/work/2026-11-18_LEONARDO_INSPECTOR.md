@@ -18,3 +18,11 @@ citations. Historical limits remain beside the claims. Raw JSON and technical
 disclosures are reserved for the explicit inspectData=1 diagnostic view.
 Browser verification covers the ordinary reader first and exercises the
 diagnostic view separately. This revision changes presentation only.
+
+## Reader access when WebGL cannot start
+
+After the registry loads, a WebGL context creation failure opens the existing
+reader controls. Selection and shared links open the inspector directly. Search,
+calendar, layers, language, citations and chronology continue using the shared
+state. Map-only actions are unavailable. Verification exercises an actual
+Chromium launch with WebGL disabled on desktop and narrow viewports.

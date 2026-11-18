@@ -189,7 +189,7 @@
   const helpers = Object.freeze({contextualEvent,calendarBounds,architectureTimeRecord,isDatedArchitecture,matchingPhases,recordLabel,searchKey,chooserItems,defaults,query,resolveSelection,normalizeState,parseUrl,stateUrl,featuresFor,placeGroups,placeChoice,presentationEmphasis,chronologyCues,freeze,frameThrottle,selectionPresentation,summaryAnchor});
   if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
   if (typeof document === 'undefined') return;
-  const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
+  const runtime = {bundle:null,state:null,registry:null,visibleItems:[],map:null,readerOnly:false,ready:false,meta:null,placeMarkers:new Map(),chronologyMarkers:new Map(),search:''};
   window.__ARTEMIS_EXPLORER = Object.freeze({get bundle(){return runtime.bundle;},get state(){return runtime.state;},get registry(){return runtime.bundle?.registry;},get visibleItems(){return runtime.visibleItems;},get placeGroups(){return runtime.bundle ? placeGroups(runtime.bundle,runtime.visibleItems) : [];},get map(){return runtime.map;},get ready(){return runtime.ready;},get meta(){return runtime.meta;},query:state => query(runtime.bundle,state || runtime.state)});
   const byId = id => document.getElementById(id), text = (id,value) => { byId(id).textContent = value; }, t = key => words[runtime.state?.language || 'en'][key] || key;
   let renderedSelection = null, restoringCamera = false, recordSignature = '', mobile = null, desktop = null;
@@ -254,7 +254,7 @@
         if (!earlier && transition.from_presence_ref !== selected.presence_id) continue;
         const ref = earlier ? transition.from_presence_ref : transition.to_presence_ref;
         const item = runtime.visibleItems.find(record => record.presence_id === ref);
-        if (item) neighbors.push({item, earlier, highlighted:transition.transition_id === highlighted});
+        if (item) neighbors.push({item, earlier, highlighted:!runtime.readerOnly && transition.transition_id === highlighted});
       }
     }
     const signature = JSON.stringify([selected.item_id, ru, neighbors.map(({item, highlighted}) => [item.item_id, highlighted])]);
@@ -411,7 +411,7 @@
     desktop?.selectionChanged(selected?.item_id || null);
     const presentation = selectionUI.sync(selected?.item_id || null);
     if (!selected) { clearSummary(); inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
-    if (!presentation.details) { inspector.hidden = true; renderSummary(selected); return; }
+    if (!presentation.details && !runtime.readerOnly) { inspector.hidden = true; renderSummary(selected); return; }
     clearSummary(); inspector.hidden = false;
     // Layer/time/projection changes that retain this item preserve native disclosures.
     if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); renderEpisodeChoices(selected); return; }
@@ -539,6 +539,13 @@
     track.dataset.rangeReady = 'true';
   }
   function renderControls() {
+    const canRead = runtime.ready || runtime.readerOnly;
+    if (runtime.readerOnly) {
+      text('workspace-error',runtime.state.language === 'ru'
+        ? 'Карта недоступна. Записи доступны через поиск.'
+        : 'Map unavailable. Use search to read records.');
+      byId('workspace-error').hidden = false;
+    }
     const state = runtime.state; document.documentElement.lang = state.language;
     const bounds = calendarBounds(runtime.bundle);
     for (const id of ['time-start','time-end','range-start-handle','range-end-handle','cursor-year','time-cursor']) { byId(id).min = bounds.min; byId(id).max = bounds.max; }
@@ -546,12 +553,12 @@
     for (const element of document.querySelectorAll('[data-i18n]')) element.textContent = t(element.dataset.i18n);
     for (const value of ['globe','map']) { byId(`view-${value}`).disabled = !runtime.ready; byId(`view-${value}`).setAttribute('aria-pressed',String(state.presentationView === value)); }
     for (const value of ['en','ru']) byId(`language-${value}`).setAttribute('aria-pressed',String(state.language === value));
-    for (const layer of LAYERS) { byId(`layer-${layer}`).checked = state.layers.includes(layer); byId(`layer-${layer}`).disabled = !runtime.ready; }
+    for (const layer of LAYERS) { byId(`layer-${layer}`).checked = state.layers.includes(layer); byId(`layer-${layer}`).disabled = !canRead; }
     for (const value of ['range','scrub']) byId(`mode-${value}`).setAttribute('aria-pressed',String(state.mode === value));
     byId('range-controls').hidden = state.mode !== 'range'; byId('scrub-controls').hidden = state.mode !== 'scrub';
     byId('time-start').value = state.startYear; byId('time-end').value = state.endYear; byId('cursor-year').value = state.cursorYear; byId('time-cursor').value = state.cursorYear;
     byId('range-start-handle').value = state.startYear; byId('range-end-handle').value = state.endYear;
-    for (const id of ['time-start','time-end','range-start-handle','range-end-handle','cursor-year','time-cursor','mode-range','mode-scrub','period-roman','period-leonardo','period-all']) byId(id).disabled = !runtime.ready;
+    for (const id of ['time-start','time-end','range-start-handle','range-end-handle','cursor-year','time-cursor','mode-range','mode-scrub','period-roman','period-leonardo','period-all']) byId(id).disabled = !canRead;
     text('time-status',state.mode === 'range' ? `${state.startYear}–${state.endYear} CE · ${t('interval')}` : `${state.cursorYear} CE · ${t('trace')} ${state.traceOriginYear}; ${state.cursorYear < state.traceOriginYear ? t('none') : `${state.traceOriginYear}–${state.cursorYear}`}`);
     text('layer-status',LAYERS.map(layer => {
       const rows = runtime.visibleItems.filter(item => item.layer_id === layer), dated = rows.filter(item => isDatedArchitecture(runtime.bundle,item)).length;
@@ -569,8 +576,8 @@
         option.value = item.item_id; select.append(option);
       }
     }
-    select.value = results.some(item => item.item_id === state.selectedItemId) ? state.selectedItemId : ''; select.disabled = !runtime.ready || !results.length;
-    byId('record-search').disabled = !runtime.ready; byId('clear-search').disabled = !runtime.ready || !runtime.search;
+    select.value = results.some(item => item.item_id === state.selectedItemId) ? state.selectedItemId : ''; select.disabled = !canRead || !results.length;
+    byId('record-search').disabled = !canRead; byId('clear-search').disabled = !canRead || !runtime.search;
     text('search-status',results.length ? `${t('searchCount')}: ${results.length}` : t('searchEmpty'));
     byId('record-search').placeholder = t('search');
     document.documentElement.dataset.artemisLanguage = state.language; document.documentElement.dataset.artemisPresentationView = state.presentationView;
@@ -711,7 +718,20 @@
     bindControls(); renderControls(); renderInspector();
     if (!window.maplibregl) throw Error('Pinned MapLibre engine could not be loaded.');
     window.ARTEMIS_STARTUP?.phase('map');
-    const map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,1.5),canvasContextAttributes:{antialias:true}});
+    let map;
+    try {
+      map = new maplibregl.Map({container:'map',style:{version:8,projection:{type:runtime.state.presentationView === 'map' ? 'mercator' : 'globe'},sources:{},layers:[{id:'space',type:'background',paint:{'background-color':'#02050b'}}],sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,4,.8,7,0]}},...runtime.state.camera,attributionControl:false,pixelRatio:Math.min(window.devicePixelRatio || 1,1.5),canvasContextAttributes:{antialias:true}});
+    } catch (error) {
+      if (!/webgl|gl context/i.test(String(error?.message || error))) throw error;
+      runtime.readerOnly = true;
+      const notice = byId('workspace-error');
+      byId('workspace-header').append(notice);
+      notice.className = 'reader-notice';
+      for (const id of ['map','focus-selection','back-to-summary','route-note','attribution-toggle']) byId(id).hidden = true;
+      renderControls(); renderInspector(); history('replace');
+      window.ARTEMIS_STARTUP?.ready();
+      return;
+    }
     runtime.map = map; map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
     map.on('error',event => { console.error('ARTEMIS map error',event.error || event); window.ARTEMIS_STARTUP?.fail(event.error?.message || String(event.error || event)); const host = byId('fatal-error'); host.hidden = false; host.textContent = `ARTEMIS map rendering failed: ${event.error?.message || String(event.error || event)}`; });
     map.on('load',() => {
