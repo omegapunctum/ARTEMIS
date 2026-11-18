@@ -529,7 +529,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await navigate(readerUrl,false);
     await select('catalog:wikidata:Q83125');
     await disclose('sources-disclosure');
-    check(await evaluate(cdp,"!!document.querySelector('#historical-citations a[href]') && !document.querySelector('#inspector pre') && !/\\\\d/.test(document.getElementById('sources-summary').textContent)"),'reader historical citations missing or heading misleading');
+    check(await evaluate(cdp,"!!document.querySelector('#historical-citations a[href]') && !document.querySelector('#inspector pre') && !/[0-9]/.test(document.getElementById('sources-summary').textContent)"),'reader historical citations missing or heading misleading');
   }
   await navigate(url);
   if(options.phase==='amboise-context') {
