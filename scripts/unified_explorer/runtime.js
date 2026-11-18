@@ -197,7 +197,9 @@
   let selectionPopup = null, summarySignature = '', clickAnchor = null;
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
   const pendingJson = new WeakMap(), boundDisclosures = new WeakSet();
+  const inspectData = new URL(location.href).searchParams.get('inspectData') === '1';
   function inputJson(host,value) {
+    if (!inspectData) return;
     const pre = node('pre',''), disclosure = host.closest('details'); host.append(pre);
     if (!disclosure || disclosure.open) { pre.textContent = JSON.stringify(value,null,2); return; }
     // Keep the source value intact; formatting a large native Region input is
@@ -447,12 +449,12 @@
     for (const [index,source] of sourcesFor(input).entries()) {
       const entry = node('article','', 'source-entry'); entry.append(node('strong',selected.kind === 'catalog_reference' ? 'Wikidata' : source.title || source.source_id || source.id));
       const locator = source.url || source.source_url || source.uri || source.artifact_uri, href = safeLink(locator);
-      if (href) { const link = node('a',t('openSource')); link.dataset.i18n = 'openSource'; link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; if (selected.kind === 'catalog_reference') link.id = 'catalog-revision-link'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
+      if (href && (inspectData || !/\.geo?json(?:$|[?#])|\.json(?:$|[?#])/i.test(href))) { const link = node('a',t('openSource')); link.dataset.i18n = 'openSource'; link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer'; if (selected.kind === 'catalog_reference') link.id = 'catalog-revision-link'; const paragraph = node('p',''); paragraph.append(link); entry.append(paragraph); }
       renderSourceRights(entry,source);
       technicalJson(entry,source,`source-record-${index}`); sourceHost.append(entry);
     }
     if (selected.kind === 'catalog_reference') { const p = node('p',''), context = node('a',''); context.id = 'catalog-context-link'; context.target = '_blank'; context.rel = 'noopener noreferrer'; p.append(context); sourceHost.append(p); }
-    if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a',t('sourceManifest')); link.dataset.i18n = 'sourceManifest'; link.href = './source_manifest.json'; sourceHost.append(link); technicalJson(sourceHost,runtime.bundle.roman.sourceManifest,'source-manifest-record'); }
+    if (selected.kind === 'region') { sourceHost.append(node('p','Cliopatria · CC-BY-4.0')); const link = node('a',t('sourceManifest')); link.dataset.i18n = 'sourceManifest'; link.href = './source_manifest.json'; if (inspectData) sourceHost.append(link); technicalJson(sourceHost,runtime.bundle.roman.sourceManifest,'source-manifest-record'); }
     inputJson(byId('selection-input'),{registry:selected,source_native_input:input,input_ledger:runtime.bundle.input_ledger});
     renderInspectorLanguage(selected); renderEpisodeChoices(selected); layout();
   }
@@ -461,6 +463,7 @@
     const selected = runtime.registry.get(runtime.state.selectedItemId); if (selected) temporalFacts(selected,facts);
   }
   function technicalJson(host,value,id) {
+    if (!inspectData) return;
     const disclosure = node('details',''), summary = node('summary',t('sourceRecord')); summary.dataset.i18n = 'sourceRecord';
     disclosure.id = id;
     disclosure.append(summary); host.append(disclosure); inputJson(disclosure,value);
@@ -508,17 +511,22 @@
     section.append(node('p',ru ? 'Календарь не установлен: возможны 25 апреля или 5 мая по григорианскому календарю. Общий год — 1518; точный день и длительность неизвестны. Это не событие длиной в год.' : 'Calendar unresolved: 25 April or 5 May in the Gregorian calendar. Both share 1518; exact day and duration remain unknown. This is not a year-long event.'));
     section.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении. Подлинники не просмотрены; независимость пересказов не установлена.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism. Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
     for (const source of packet.sources.slice(0,2)) { const line=node('p',''),link=node('a',source.title); link.href=source.url; link.target='_blank'; link.rel='noopener noreferrer'; line.append(link,node('span',' · '+source.locator));section.append(line); }
-    technicalJson(section,packet,'amboise-context-provenance');section.querySelector('details').open=open;
+    if (inspectData) { technicalJson(section,packet,'amboise-context-provenance'); section.querySelector('details').open=open; }
     byId('selection-facts').append(section);
   }
   function renderInspectorLanguage(selected) {
     const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
     text('selection-scope',selectionScope(selected));
     text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
-    text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
+    text('sources-summary',inspectData ? `${t('sources')} · ${sourcesFor(input).length}` : t('sources'));
     const contextDisclosureOpen = byId('amboise-context-provenance')?.open || false;
     renderEpisodeNeighbors(selected);
-    renderRecordDetails(selected,input);
+    if (inspectData) renderRecordDetails(selected,input);
+    else {
+      const citations = byId('historical-citations');
+      citations.replaceChildren();
+      temporalDetails(selected,citations);
+    }
     renderAmboiseContext(selected,contextDisclosureOpen);
     if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
   }
@@ -650,6 +658,7 @@
     else { const positions = []; const collect = value => { if (typeof value[0] === 'number') positions.push(value); else value.forEach(collect); }; collect(feature.geometry.coordinates); const bounds = positions.reduce((box,p) => box.extend(p),new maplibregl.LngLatBounds()); runtime.map.fitBounds(bounds,{padding:60,duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800}); }
   }
   function bindControls() {
+    byId('technical-disclosure').hidden = !inspectData;
     mobile = window.ARTEMIS_MOBILE?.mount({runtime,applyState,layout,t}) || null;
     desktop = window.ARTEMIS_DESKTOP?.mount({runtime,layout}) || null;
     for (const layer of LAYERS) byId(`layer-${layer}`).addEventListener('change',() => applyState({layers:LAYERS.filter(value => byId(`layer-${value}`).checked)}));

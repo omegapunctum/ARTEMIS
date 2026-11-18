@@ -30,8 +30,8 @@
     <button id="back-to-summary" type="button">Back to card</button>
     <p id="selection-scope"></p><div id="selection-facts"></div><div id="place-episodes" hidden></div><button id="focus-selection" type="button" data-i18n="focus">Focus map on this record</button>
     <nav id="episode-neighbors" hidden></nav>
-    <details id="sources-disclosure"><summary id="sources-summary"></summary><div id="selection-sources"></div></details>
-    <details id="technical-disclosure"><summary data-i18n="technicalDetails">Research details</summary>
+    <details id="sources-disclosure"><summary id="sources-summary"></summary><div id="selection-sources"></div><div id="historical-citations"></div></details>
+    <details id="technical-disclosure" hidden><summary data-i18n="technicalDetails">Research details</summary>
       <details id="record-disclosure"><summary data-i18n="recordDetails">Record details</summary><div id="selection-details"></div></details>
       <details id="evidence-disclosure"><summary data-i18n="evidence">Claims, evidence and uncertainty</summary><div id="selection-evidence"></div></details>
       <details id="input-disclosure"><summary data-i18n="raw">Source-native input and provenance</summary><div id="selection-input"></div></details>

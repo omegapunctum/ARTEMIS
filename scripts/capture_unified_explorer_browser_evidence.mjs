@@ -117,7 +117,9 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     check(!current.attempts.some(isWikimediaRequest)&&!current.resources.some(isWikimediaRequest),'visitor attempted live Wikimedia request');
     networkDocuments.push(current);
   }
-  async function navigate(destination) {
+  async function navigate(destination, inspectData = true) {
+    destination = new URL(destination);
+    if (inspectData) destination.searchParams.set('inspectData','1');
     await networkSnapshot();
     const prior=await evaluate(cdp,'performance.timeOrigin');
     await cdp.send('Page.navigate',{url:String(destination)});let arrived=false;
@@ -509,6 +511,26 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await close();
   }
 
+  if (options.phase === 'workspace') {
+    await navigate(url,false);
+    const item = (await snapshot()).visible.find(record => record.layer === 'leonardo');
+    if (item) {
+      await select(item.itemId);
+      await disclose('sources-disclosure');
+      check(await evaluate(cdp,"document.getElementById('technical-disclosure').hidden && !document.querySelector('#inspector pre, #selection-sources details')"),'reader encountered technical data');
+    }
+  }
+  if (options.phase === 'architecture-time') {
+    const readerUrl = new URL(url);
+    readerUrl.searchParams.set('layers','catalog');
+    readerUrl.searchParams.set('mode','range');
+    readerUrl.searchParams.set('start','1894');
+    readerUrl.searchParams.set('end','1894');
+    await navigate(readerUrl,false);
+    await select('catalog:wikidata:Q83125');
+    await disclose('sources-disclosure');
+    check(await evaluate(cdp,"!!document.querySelector('#historical-citations a[href]') && !document.querySelector('#inspector pre') && !/[0-9]/.test(document.getElementById('sources-summary').textContent)"),'reader historical citations missing or heading misleading');
+  }
   await navigate(url);
   if(options.phase==='amboise-context') {
     const id=expectedBundle.leonardo.lifePath.presences.find(p=>p.presence_id===expectedBundle.amboiseContext.residence_ref).presence_item_id;

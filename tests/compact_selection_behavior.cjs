@@ -39,7 +39,7 @@ class Popup {
 }
 const runtime={bundle,registry:new Map(bundle.registry.map(i=>[i.item_id,i])),visibleItems:bundle.registry,state:{...h.defaults(),language:'en',presentationView:'map',selectedItemId:null},ready:true,map:{project:()=>projected,getCanvas:()=>({clientWidth:1440,clientHeight:900}),getCenter:()=>({lng:12,lat:44}),isMoving:()=>false}};
 const frames=[];
-const context=vm.createContext({document,runtime,node,byId,t:key=>key,recordLabel:h.recordLabel,architectureTimeRecord:h.architectureTimeRecord,matchingPhases:h.matchingPhases,summaryAnchor:h.summaryAnchor,placeGroups:h.placeGroups,presentationEmphasis:h.presentationEmphasis,
+const context=vm.createContext({inspectData:false,document,runtime,node,byId,t:key=>key,recordLabel:h.recordLabel,architectureTimeRecord:h.architectureTimeRecord,matchingPhases:h.matchingPhases,summaryAnchor:h.summaryAnchor,placeGroups:h.placeGroups,presentationEmphasis:h.presentationEmphasis,
   selectionUI:h.selectionPresentation(),selectionPopup:null,summarySignature:'',clickAnchor:null,renderedSelection:null,mobile:null,desktop:null,
   maplibregl:{Popup},requestAnimationFrame:fn=>frames.push(fn),getComputedStyle:e=>e.style,
   renderCatalogFacts(){},renderCatalogContext(){},renderInspectorLanguage(){},renderSourceRights(){},technicalJson(){},safeLink:()=>null,inputJson(host,value){host.value=value;},layout(){}});
