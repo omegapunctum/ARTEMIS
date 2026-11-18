@@ -542,8 +542,8 @@
     const canRead = runtime.ready || runtime.readerOnly;
     if (runtime.readerOnly) {
       text('workspace-error',runtime.state.language === 'ru'
-        ? 'Карта недоступна. Выберите запись в списке.'
-        : 'Map unavailable. Choose a record from the list.');
+        ? 'Карта недоступна. Записи доступны через поиск.'
+        : 'Map unavailable. Use search to read records.');
       byId('workspace-error').hidden = false;
     }
     const state = runtime.state; document.documentElement.lang = state.language;
@@ -724,6 +724,9 @@
     } catch (error) {
       if (!/webgl|gl context/i.test(String(error?.message || error))) throw error;
       runtime.readerOnly = true;
+      const notice = byId('workspace-error');
+      byId('workspace-header').append(notice);
+      notice.className = 'reader-notice';
       for (const id of ['map','focus-selection','back-to-summary','route-note','attribution-toggle']) byId(id).hidden = true;
       renderControls(); renderInspector(); history('replace');
       window.ARTEMIS_STARTUP?.ready();
