@@ -3,8 +3,8 @@
   const LAYERS = ['leonardo', 'roman', 'architecture', 'catalog'];
   const calendarBounds = bundle => ({min:bundle.calendar.min_year, max:bundle.calendar.max_year});
   const words = {
-    en: {preview:'Public research prototype · user value unvalidated',globe:'Globe',map:'2D map',layers:'Layers',leonardo:'Leonardo',roman:'Roman Empire',architecture:'Architecture references',eleven:'11 selected presences',three:'3 reconstructions',atemporal:'Atemporal · historical applicability unknown',visible:'Visible records',choose:'Choose a record',focus:'Focus map on this record',evidence:'Claims, evidence and uncertainty',raw:'Source-native input and provenance',range:'Range',scrub:'Scrub',from:'From',to:'To',cursor:'Current year CE',routes:'Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.',sources:'Sources',none:'outside dated coverage / no matching record',off:'off',unknown:'Unknown',interval:'Interval collection; records may come from different eras, not simultaneous context.',trace:'Leonardo accumulates from',reference:'Atemporal imported reference. Historical applicability, lifetime and historical position are unknown.',reconstruction:'Approximate scholarly reconstruction; not exact historical borders.',presence:'Source-bounded documented presence; exact historical position and routes unknown.',sourceScope:'Source links do not mean historical claims have been verified. Other historical sources may exist; no reliability score is assigned.',legacy:'Raw export flags are metadata, not historical acceptance or geometry precision.',context:'Present-day reference context; not historical terrain.',error:'Could not complete the view change. The controls show the current view; try again.'},
-    ru: {preview:'Публичный исследовательский прототип · пользовательская ценность не подтверждена',globe:'Глобус',map:'Карта 2D',layers:'Слои',leonardo:'Леонардо',roman:'Римская империя',architecture:'Архитектурные объекты',eleven:'11 выбранных присутствий',three:'3 реконструкции',atemporal:'Вне времени · историческая применимость неизвестна',visible:'Видимые записи',choose:'Выберите запись',focus:'Фокусировать карту на записи',evidence:'Утверждения, доказательства и неопределённость',raw:'Исходные данные и происхождение',range:'Интервал',scrub:'Курсор',from:'От',to:'До',cursor:'Текущий год н. э.',routes:'Хронология Леонардо не является маршрутом; точные маршруты и исторические положения неизвестны.',sources:'Источники',none:'вне временного покрытия / нет подходящих записей',off:'выключен',unknown:'Неизвестно',interval:'Коллекция интервала: записи могут относиться к разным эпохам, а не одновременному контексту.',trace:'След Леонардо накапливается с',reference:'Импортированная опорная запись вне времени. Историческая применимость, время существования и историческое положение неизвестны.',reconstruction:'Приблизительная научная реконструкция; не точные исторические границы.',presence:'Документированное присутствие в пределах источников; точное историческое положение и маршруты неизвестны.',sourceScope:'Связь с источником не означает проверенность исторических утверждений. Могут существовать другие источники; рейтинг достоверности не назначается.',legacy:'Флаги исходного экспорта — метаданные, а не историческое принятие или точность геометрии.',error:'Не удалось завершить смену вида. Кнопки показывают текущий вид; попробуйте снова.'}
+    en: {technicalDetails:'Research details',preview:'Public research prototype · user value unvalidated',globe:'Globe',map:'2D map',layers:'Layers',leonardo:'Leonardo',roman:'Roman Empire',architecture:'Architecture references',eleven:'11 selected presences',three:'3 reconstructions',atemporal:'Atemporal · historical applicability unknown',visible:'Visible records',choose:'Choose a record',focus:'Focus map on this record',evidence:'Claims, evidence and uncertainty',raw:'Source-native input and provenance',range:'Range',scrub:'Scrub',from:'From',to:'To',cursor:'Current year CE',routes:'Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.',sources:'Sources',none:'outside dated coverage / no matching record',off:'off',unknown:'Unknown',interval:'Interval collection; records may come from different eras, not simultaneous context.',trace:'Leonardo accumulates from',reference:'Atemporal imported reference. Historical applicability, lifetime and historical position are unknown.',reconstruction:'Approximate scholarly reconstruction; not exact historical borders.',presence:'Source-bounded documented presence; exact historical position and routes unknown.',sourceScope:'Source links do not mean historical claims have been verified. Other historical sources may exist; no reliability score is assigned.',legacy:'Raw export flags are metadata, not historical acceptance or geometry precision.',context:'Present-day reference context; not historical terrain.',error:'Could not complete the view change. The controls show the current view; try again.'},
+    ru: {technicalDetails:'Данные для проверки',preview:'Публичный исследовательский прототип · пользовательская ценность не подтверждена',globe:'Глобус',map:'Карта 2D',layers:'Слои',leonardo:'Леонардо',roman:'Римская империя',architecture:'Архитектурные объекты',eleven:'11 выбранных присутствий',three:'3 реконструкции',atemporal:'Вне времени · историческая применимость неизвестна',visible:'Видимые записи',choose:'Выберите запись',focus:'Фокусировать карту на записи',evidence:'Утверждения, доказательства и неопределённость',raw:'Исходные данные и происхождение',range:'Интервал',scrub:'Курсор',from:'От',to:'До',cursor:'Текущий год н. э.',routes:'Хронология Леонардо не является маршрутом; точные маршруты и исторические положения неизвестны.',sources:'Источники',none:'вне временного покрытия / нет подходящих записей',off:'выключен',unknown:'Неизвестно',interval:'Коллекция интервала: записи могут относиться к разным эпохам, а не одновременному контексту.',trace:'След Леонардо накапливается с',reference:'Импортированная опорная запись вне времени. Историческая применимость, время существования и историческое положение неизвестны.',reconstruction:'Приблизительная научная реконструкция; не точные исторические границы.',presence:'Документированное присутствие в пределах источников; точное историческое положение и маршруты неизвестны.',sourceScope:'Связь с источником не означает проверенность исторических утверждений. Могут существовать другие источники; рейтинг достоверности не назначается.',legacy:'Флаги исходного экспорта — метаданные, а не историческое принятие или точность геометрии.',error:'Не удалось завершить смену вида. Кнопки показывают текущий вид; попробуйте снова.'}
   };
   Object.assign(words.en,{catalog:'London architecture catalog',catalogPilot:'Selected pilot · 10 objects · London',catalogReference:'Modern reference point. Historical position and lifetime are unknown.',catalogUnverified:'Imported from Wikidata; independent verification has not been performed.',search:'Search names or QID',clearSearch:'Clear search',searchEmpty:'No matching visible records. Clear search or enable another layer.',searchCount:'Matching visible records',coordinate:'Reported longitude / latitude',precision:'Source numeric precision (degrees)',precisionLimit:'Numeric precision is not measurement accuracy. Site extent and historical applicability are unknown.',revision:'Wikidata source revision',wikipedia:'Wikipedia context',searchHint:'Search filters this chooser only; the map and open record remain unchanged.'});
   Object.assign(words.ru,{catalog:'Каталог архитектуры Лондона',catalogPilot:'Пилотный каталог · 10 объектов · Лондон',catalogReference:'Современная опорная точка. Историческое положение и период существования не установлены.',catalogUnverified:'Импортировано из Wikidata; независимая проверка не выполнена.',search:'Поиск по названию или QID',clearSearch:'Очистить поиск',searchEmpty:'Нет подходящих видимых записей. Очистите поиск или включите другой слой.',searchCount:'Найдено видимых записей',coordinate:'Указанные долгота / широта',precision:'Численная точность в источнике (градусы)',precisionLimit:'Численная точность не означает точность измерения. Размер объекта и историческая применимость неизвестны.',revision:'Версия источника Wikidata',wikipedia:'Контекст в Wikipedia',searchHint:'Поиск фильтрует только список; карта и открытая запись остаются прежними.'});
@@ -229,7 +229,7 @@
   function renderEpisodeChoices(selected) {
     const host = byId('place-episodes'), group = selected?.kind === 'presence' ? placeGroups(runtime.bundle,runtime.visibleItems).find(value => value.presences.some(presence => presence.presence_item_id === selected.item_id)) : null;
     host.hidden = !group || group.presences.length < 2;
-    if (host.hidden) { host.replaceChildren(); return; }
+    if (host.hidden) { delete host.dataset.signature; host.replaceChildren(); return; }
     const signature = `${runtime.state.language}|${selected.item_id}|${group.presences.map(item => item.presence_item_id).join('|')}`;
     if (host.dataset.signature === signature) return;
     host.dataset.signature = signature; host.replaceChildren(node('span',runtime.state.language === 'ru' ? 'Видимые присутствия в этом месте' : 'Visible presences at this place'));
@@ -237,6 +237,52 @@
       const button = node('button',presence.temporal.source_native?.length < 25 ? presence.temporal.source_native : `${presence.temporal.start} — ${presence.temporal.end}`);
       button.type = 'button'; button.dataset.presenceItemId = presence.presence_item_id; button.setAttribute('aria-pressed',String(presence.presence_item_id === selected.item_id));
       button.addEventListener('click',() => selectItem(presence.presence_item_id)); host.append(button);
+    }
+  }
+  function renderEpisodeNeighbors(selected) {
+    const host = byId('episode-neighbors');
+    const ru = runtime.state.language === 'ru';
+    const path = runtime.bundle.leonardo.lifePath;
+    const neighbors = [];
+    if (selected.kind === 'presence' && path.route_policy?.chronological_connector_permitted) {
+      const emphasis = presentationEmphasis(runtime.bundle,runtime.visibleItems,runtime.state);
+      const highlighted = emphasis.transitions.find(edge => edge.emphasis > 0)?.id;
+      for (const transition of path.transitions) {
+        const earlier = transition.to_presence_ref === selected.presence_id;
+        if (!earlier && transition.from_presence_ref !== selected.presence_id) continue;
+        const ref = earlier ? transition.from_presence_ref : transition.to_presence_ref;
+        const item = runtime.visibleItems.find(record => record.presence_id === ref);
+        if (item) neighbors.push({item, earlier, highlighted:transition.transition_id === highlighted});
+      }
+    }
+    const signature = JSON.stringify([selected.item_id, ru, neighbors.map(({item, highlighted}) => [item.item_id, highlighted])]);
+    if (host.dataset.signature === signature) return;
+    host.dataset.signature = signature;
+    host.hidden = !neighbors.length;
+    host.replaceChildren();
+    if (host.hidden) return;
+    const heading = ru ? 'Соседние записи' : 'Adjacent records';
+    host.setAttribute('aria-label',heading);
+    host.append(node('h3',heading));
+    for (const {item, earlier, highlighted} of neighbors) {
+      const direction = earlier ? (ru ? 'Ранее' : 'Earlier') : (ru ? 'Позднее' : 'Later');
+      const date = item.interval.start === item.interval.end ? item.interval.start : `${item.interval.start}–${item.interval.end}`;
+      const button = node('button','');
+      button.type = 'button';
+      button.append(node('span',direction),node('strong',`${item.label} · ${date}`));
+      if (highlighted) {
+        button.className = 'highlighted-neighbor';
+        const hint = ru ? 'Выделено на карте' : 'Highlighted on map';
+        button.title = hint;
+        button.setAttribute('aria-label',`${direction} · ${item.label} · ${date}. ${hint}`);
+      }
+      button.addEventListener('click',() => {
+        selectItem(item.item_id);
+        selectionUI.open();
+        renderInspector();
+        byId('selection-title').focus({preventScroll:true});
+      });
+      host.append(button);
     }
   }
   function clearSummary() {
@@ -370,7 +416,7 @@
     renderedSelection = selected.item_id; inspector.scrollTop = 0;
     inspector.dataset.itemId = selected.item_id;
     for (const id of ['selection-facts','selection-details','selection-sources','selection-evidence','selection-input']) byId(id).replaceChildren();
-    for (const id of ['record-disclosure','sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
+    for (const id of ['technical-disclosure','record-disclosure','sources-disclosure','evidence-disclosure','input-disclosure']) byId(id).open = false;
     const input = sourceRecord(selected), facts = byId('selection-facts');
     if (selected.kind === 'catalog_reference') {
       renderCatalogFacts(input);
@@ -382,7 +428,8 @@
       const durationKey = {not_established_beyond_source_anchor:'durationUnknown',not_established_in_current_corpus:'durationCorpus',range_not_continuous_position:'durationRange'}[input.presence.duration_status];
       const duration = node('p',durationKey ? t(durationKey) : input.presence.duration_status);
       if (durationKey) duration.dataset.i18n = durationKey;
-      facts.append(node('p',input.presence.temporal.source_native || `${input.presence.temporal.start} — ${input.presence.temporal.end}`));
+      const {source_native, start, end} = input.presence.temporal;
+      facts.append(node('p',source_native || (start === end ? start : `${start} — ${end}`),'presence-date'));
       // Retain the literal candidate label without presenting its survey context
       // as established by the separately amended, still-draft presence Claim.
       if (input.presence.event_ref === 'event-leonardo-cesena-survey') {
@@ -470,6 +517,7 @@
     text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
     text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
     const contextDisclosureOpen = byId('amboise-context-provenance')?.open || false;
+    renderEpisodeNeighbors(selected);
     renderRecordDetails(selected,input);
     renderAmboiseContext(selected,contextDisclosureOpen);
     if (selected.kind === 'catalog_reference') { renderCatalogFacts(input); renderCatalogContext(input); }
@@ -663,7 +711,7 @@
       map.addSource('workspace-features',{type:'geojson',promoteId:'render_key',data:featuresFor(bundle,runtime.visibleItems)});
       map.addLayer({id:'workspace-regions',type:'fill',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'fill-color':['match',['get','native_start'],91,'#36ccb9',106,'#73d0ec','#b6a3f1'],'fill-opacity':['case',['boolean',['feature-state','selected'],false],.4,.24]}});
       map.addLayer({id:'workspace-region-outlines',type:'line',source:'workspace-features',filter:['==',['get','kind'],'region'],paint:{'line-color':'#74d8cf','line-width':['case',['boolean',['feature-state','selected'],false],2.2,1.4]}});
-      map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':'#a8bed0','line-width':['case',['>', ['coalesce',['feature-state','emphasis'],0],0],2.2,1.4],'line-dasharray':[1.5,2.2],'line-opacity':['match',['coalesce',['feature-state','emphasis'],0],2,.95,1,.8,.35]}});
+      map.addLayer({id:'workspace-chronology',type:'line',source:'workspace-features',filter:['==',['get','kind'],'chronology'],paint:{'line-color':['match',['coalesce',['feature-state','emphasis'],0],2,'#ffd590',1,'#79cfff','#a8bed0'],'line-width':['case',['>', ['coalesce',['feature-state','emphasis'],0],0],2.2,1.4],'line-dasharray':[1.5,2.2],'line-opacity':['match',['coalesce',['feature-state','emphasis'],0],2,.95,1,.8,.22]}});
       map.addLayer({id:'workspace-points',type:'circle',source:'workspace-features',filter:['==',['geometry-type'],'Point'],paint:{'circle-radius':['case',['boolean',['feature-state','selected'],false],8,['boolean',['feature-state','current'],false],7,['match',['get','kind'],'reference',5,'catalog_reference',5,6]],'circle-color':['case',['boolean',['feature-state','selected'],false],'#ffd590',['boolean',['feature-state','current'],false],'#79cfff',['match',['get','kind'],'reference','#f0b55a','catalog_reference','#c6d697','#268dad']],'circle-stroke-color':'#c6edff','circle-stroke-width':1.5}});
       runtime.ready = true;
       const scheduleLabels = frameThrottle(layoutPlaceLabels);

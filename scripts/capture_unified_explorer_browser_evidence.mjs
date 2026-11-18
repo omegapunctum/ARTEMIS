@@ -252,6 +252,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       const before=await snapshot();await click('#header-close');const after=await snapshot();
       check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'closing record chooser changed the selected evidence');
     }
+    if (['record-disclosure','evidence-disclosure','input-disclosure'].includes(id)) await disclose('technical-disclosure');
     if(!await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`))await click('#'+id+' > summary',true);
     check(await evaluate(cdp,`document.getElementById(${JSON.stringify(id)}).open`),'native disclosure failed '+id);
   }

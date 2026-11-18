@@ -25,8 +25,8 @@ const add=(parent,id,tag='div')=>{const e=node(tag);e.id=id;parent.append(e);ret
 for(const id of staticIds)add(root,id);
 const find=(n,id)=>n.id===id?n:n.children.map(c=>find(c,id)).find(Boolean);
 const byId=id=>find(root,id);
-for(const id of ['selection-title','selection-scope','selection-facts','selection-details','selection-sources','selection-evidence','selection-input','place-episodes'])add(byId('inspector'),id);
-for(const id of ['record-disclosure','sources-disclosure','evidence-disclosure','input-disclosure'])add(byId('inspector'),id,'details');
+for(const id of ['selection-title','selection-scope','selection-facts','selection-details','selection-sources','selection-evidence','selection-input','place-episodes','episode-neighbors'])add(byId('inspector'),id);
+for(const id of ['technical-disclosure','record-disclosure','sources-disclosure','evidence-disclosure','input-disclosure'])add(byId('inspector'),id,'details');
 const document={activeElement:null,getElementById:byId};
 let projected={x:500,y:400}, occluded=false, popupCount=0;
 class Popup {
@@ -39,7 +39,7 @@ class Popup {
 }
 const runtime={bundle,registry:new Map(bundle.registry.map(i=>[i.item_id,i])),visibleItems:bundle.registry,state:{...h.defaults(),language:'en',presentationView:'map',selectedItemId:null},ready:true,map:{project:()=>projected,getCanvas:()=>({clientWidth:1440,clientHeight:900}),getCenter:()=>({lng:12,lat:44}),isMoving:()=>false}};
 const frames=[];
-const context=vm.createContext({document,runtime,node,byId,t:key=>key,recordLabel:h.recordLabel,architectureTimeRecord:h.architectureTimeRecord,matchingPhases:h.matchingPhases,summaryAnchor:h.summaryAnchor,placeGroups:h.placeGroups,
+const context=vm.createContext({document,runtime,node,byId,t:key=>key,recordLabel:h.recordLabel,architectureTimeRecord:h.architectureTimeRecord,matchingPhases:h.matchingPhases,summaryAnchor:h.summaryAnchor,placeGroups:h.placeGroups,presentationEmphasis:h.presentationEmphasis,
   selectionUI:h.selectionPresentation(),selectionPopup:null,summarySignature:'',clickAnchor:null,renderedSelection:null,mobile:null,desktop:null,
   maplibregl:{Popup},requestAnimationFrame:fn=>frames.push(fn),getComputedStyle:e=>e.style,
   renderCatalogFacts(){},renderCatalogContext(){},renderInspectorLanguage(){},renderSourceRights(){},technicalJson(){},safeLink:()=>null,inputJson(host,value){host.value=value;},layout(){}});
@@ -78,6 +78,28 @@ byId('close-summary').events.click();assert.equal(runtime.state.selectedItemId,n
 assert.equal(document.activeElement,byId('record-select'));
 const region=bundle.registry.find(i=>i.kind==='region');context.selectItem(region.item_id);drain();
 assert.equal(byId('selection-summary').hidden,false);assert(text(byId('selection-card')).includes('reconstruction'));
+// The two Milan episodes share a place marker but have different neighbors.
+const milans=bundle.leonardo.lifePath.presences.filter(p=>p.place_label==='Milan');
+for (const [index,milan] of milans.entries()) {
+  context.selectItem(milan.presence_item_id);drain();
+  byId('open-details').events.click();
+  context.renderEpisodeNeighbors(runtime.registry.get(milan.presence_item_id));
+  const nav=byId('episode-neighbors');
+  assert(!nav.hidden);
+  assert.equal(nav.children[1].className,'highlighted-neighbor');
+  assert(text(nav).includes(index ? 'Florence · 1503' : 'Florence · 1472'));
+  assert(text(nav).includes(index ? 'Rome / Vatican Belvedere' : 'Rimini'));
+  const before={...runtime.state};
+  nav.children[1].events.click();drain();
+  assert.equal(byId('inspector').hidden,false);
+  assert.equal(document.activeElement,byId('selection-title'));
+  assert.notEqual(before.selectedItemId,runtime.state.selectedItemId);
+  assert.deepEqual({...runtime.state,selectedItemId:before.selectedItemId},before);
+}
+runtime.visibleItems=[runtime.registry.get(milans[0].presence_item_id)];
+context.renderEpisodeNeighbors(runtime.visibleItems[0]);
+assert(byId('episode-neighbors').hidden);
+runtime.visibleItems=bundle.registry;
 console.log('COMPACT_SELECTION_DOM_BEHAVIOR_PASS');
 
 // Execute the temporal card and readable evidence functions against actual packet.
