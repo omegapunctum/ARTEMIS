@@ -197,7 +197,7 @@
   let selectionPopup = null, summarySignature = '', clickAnchor = null;
   function node(tag, value, className = '') { const element = document.createElement(tag); element.textContent = value ?? ''; if (className) element.className = className; return element; }
   const pendingJson = new WeakMap(), boundDisclosures = new WeakSet();
-  const inspectData = new URLSearchParams(location.search).get('inspectData') === '1';
+  const inspectData = new URL(location.href).searchParams.get('inspectData') === '1';
   function inputJson(host,value) {
     if (!inspectData) return;
     const pre = node('pre',''), disclosure = host.closest('details'); host.append(pre);
@@ -518,7 +518,7 @@
     const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
     text('selection-scope',selectionScope(selected));
     text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
-    text('sources-summary',`${t('sources')} · ${sourcesFor(input).length}`);
+    text('sources-summary',inspectData ? `${t('sources')} · ${sourcesFor(input).length}` : t('sources'));
     const contextDisclosureOpen = byId('amboise-context-provenance')?.open || false;
     renderEpisodeNeighbors(selected);
     if (inspectData) renderRecordDetails(selected,input);
