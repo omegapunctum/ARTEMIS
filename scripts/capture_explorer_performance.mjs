@@ -63,7 +63,7 @@ try {
     report.diagnostics.readinessFailure=last;
     throw Error('Map readiness timeout');
   }
-  async function navigate(url){const prior=await evaluate(cdp,'performance.timeOrigin');await cdp.send('Page.navigate',{url});await ready(prior);return evaluate(cdp,"({readyObservedMs:performance.now(),resources:performance.getEntriesByType('resource').map(x=>({name:x.name,duration:x.duration,transferSize:x.transferSize,encodedBodySize:x.encodedBodySize,decodedBodySize:x.decodedBodySize}))})");}
+  async function navigate(url){url=new URL(url);url.searchParams.set('inspectData','1');url=String(url);const prior=await evaluate(cdp,'performance.timeOrigin');await cdp.send('Page.navigate',{url});await ready(prior);return evaluate(cdp,"({readyObservedMs:performance.now(),resources:performance.getEntriesByType('resource').map(x=>({name:x.name,duration:x.duration,transferSize:x.transferSize,encodedBodySize:x.encodedBodySize,decodedBodySize:x.decodedBodySize}))})");}
   async function openCompactDetails() {
     if(await evaluate(cdp,"!!document.getElementById('open-details')")) {
       const before=await evaluate(cdp,"JSON.stringify({state:window.__ARTEMIS_EXPLORER.state,url:location.href})");
