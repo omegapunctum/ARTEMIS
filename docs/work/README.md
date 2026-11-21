@@ -1,5 +1,9 @@
 # ARTEMIS working documents registry
 
+## Current bounded user-comprehension research — 2026-11-19 through 2026-11-25
+
+- [Amboise comprehension experiment](2026-11-19_AMBOISE_COMPREHENSION_EXPERIMENT_v1.md) — explicitly owner-authorized research activation; one independent novice session is **NOT RUN / NOT COLLECTED**. Reuses the frozen 2026-11-01 T1–T5 instrument; current live-build preflight unverified. No product runtime, gate, sources or user-value status changed. Seven-day stop on 2026-11-25 even if no participant is available.
+
 ## Current bounded presentation work
 
 - [Explorer inspector and Leonardo chronology](2026-11-18_LEONARDO_INSPECTOR.md) — owner-directed REVIEW, implementation and verification in progress.
