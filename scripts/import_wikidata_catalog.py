@@ -148,10 +148,38 @@ def source_input_paths(source_dir: Path = SOURCE_DIR) -> list[Path]:
             source_dir / "catalog.json"]
 
 
+def _read_legacy_features(path: Path):
+    records, raw = _read(path)
+    backlink = "CONTINUUM — Архитектура"
+    if not isinstance(records, list) or not all(
+        isinstance(row, dict) and isinstance(row.get("fields"), dict) for row in records
+    ):
+        raise CatalogError("Manifest or legacy guard mismatch")
+    if not any(backlink in row["fields"] for row in records):
+        return records, raw
+
+    # Compare the original export bytes after removing only the reciprocal links.
+    # Check the exporter formatting first so unrelated byte drift still fails.
+    def export_bytes(rows):
+        return (json.dumps(rows, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
+
+    if raw != export_bytes(records):
+        raise CatalogError("Manifest or legacy guard mismatch")
+    for row in records:
+        fields = row["fields"]
+        if backlink in fields:
+            links = fields.pop(backlink)
+            if not isinstance(links, list) or not all(
+                isinstance(link, str) and re.fullmatch(r"rec[A-Za-z0-9]{14}", link) for link in links
+            ):
+                raise CatalogError("Invalid CONTINUUM record links")
+    return records, export_bytes(records)
+
+
 def _derive(source_dir: Path, legacy_path: Path) -> dict:
     selection, selection_raw = _read(source_dir / "selection.json")
     manifest, _ = _read(source_dir / "manifest.json")
-    legacy, legacy_raw = _read(legacy_path)
+    legacy, legacy_raw = _read_legacy_features(legacy_path)
     if selection != {"schema_version": "wikidata-catalog-selection-v1", "qids": list(COHORT), "excluded_qids": [EXCLUDED_QID]}:
         raise CatalogError("Bounded cohort drift")
     if (manifest.get("schema_version") != "wikidata-catalog-capture-v1"
@@ -300,7 +328,7 @@ def capture(output: Path, legacy_path: Path = ROOT / "data/features.json") -> di
     selection = {"schema_version": "wikidata-catalog-selection-v1", "qids": list(COHORT), "excluded_qids": [EXCLUDED_QID]}
     selection_raw = canonical_bytes(selection)
     (output / "selection.json").write_bytes(selection_raw)
-    legacy, legacy_raw = _read(legacy_path)
+    legacy, legacy_raw = _read_legacy_features(legacy_path)
     entries = []
     for qid in (*COHORT, EXCLUDED_QID):
         raw, url = _fetch(qid)
