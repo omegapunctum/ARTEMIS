@@ -1,0 +1,117 @@
+{
+  "subject": {
+    "id": "dc4b7dde-e7b6-4a71-8bf2-0b7056266635",
+    "label": "Шартрский собор",
+    "modern_reference_point": [
+      1.4878,
+      48.4478
+    ]
+  },
+  "claims": [
+    {
+      "id": "fire",
+      "input_record": "recvQL2KSWpE4jMNP",
+      "subject": "Собор до перестройки",
+      "label": "Шартрский собор — пожар",
+      "role": "Пожар",
+      "glyph": "marker",
+      "dates": [
+        {
+          "start": 1194,
+          "source": "https://www.cathedrale-chartres.org/cathedrale/monument/lhistoire/les-grandes-dates/",
+          "locator": "1194",
+          "date": "1194-06-10"
+        }
+      ]
+    },
+    {
+      "id": "gothic-rebuild",
+      "input_record": "recrOgPC0vot999OS",
+      "subject": "Основной готический корпус",
+      "label": "Шартрский собор",
+      "role": "Перестройка после пожара",
+      "glyph": "interval",
+      "dates": [
+        {
+          "start": 1194,
+          "end": 1230,
+          "end_precision": "circa_year",
+          "source": "https://www.cathedrale-chartres.org/cathedrale/monument/lhistoire/les-grandes-dates/",
+          "locator": "1194"
+        }
+      ]
+    },
+    {
+      "id": "choir-in-use",
+      "input_record": "recg8JJeyGgX4x4Ly",
+      "subject": "Хор",
+      "label": "Шартрский собор — богослужения в новом хоре",
+      "role": "attested_in_use",
+      "glyph": "marker",
+      "dates": [
+        {
+          "start": 1221,
+          "source": "https://www.cathedrale-chartres.org/cathedrale/monument/lhistoire/les-grandes-dates/",
+          "locator": "1221"
+        }
+      ]
+    },
+    {
+      "id": "gables",
+      "input_record": "rechS0k3eG0VWRKV0",
+      "subject": "Северный, южный и западный фронтоны",
+      "label": "Шартрский собор — строительство трёх фронтонов",
+      "role": "Строительство части здания",
+      "glyph": "interval",
+      "dates": [
+        {
+          "start": 1245,
+          "end": 1250,
+          "end_precision": "year",
+          "source": "https://www.cathedrale-chartres.org/cathedrale/monument/lhistoire/les-grandes-dates/",
+          "locator": "1245"
+        }
+      ]
+    },
+    {
+      "id": "consecration",
+      "input_record": "recOWKV5HUimmjetA",
+      "subject": "Готический собор",
+      "label": "Шартрский собор — освящение",
+      "role": "Освящение",
+      "glyph": "marker",
+      "dates": [
+        {
+          "start": 1260,
+          "source": "https://www.cathedrale-chartres.org/cathedrale/monument/lhistoire/les-grandes-dates/",
+          "locator": "1260",
+          "date": "1260-10-17"
+        }
+      ]
+    },
+    {
+      "id": "north-spire",
+      "input_record": "recX6HfgpFsuVOxAT",
+      "subject": "Северный шпиль",
+      "label": "Шартрский собор — северный шпиль",
+      "role": "Строительство части здания",
+      "glyph": "interval",
+      "dates": [
+        {
+          "start": 1506,
+          "end": 1513,
+          "end_precision": "year",
+          "source": "https://www.cathedrale-chartres.org/cathedrale/monument/lhistoire/les-grandes-dates/",
+          "locator": "1506"
+        },
+        {
+          "start": 1507,
+          "end": 1513,
+          "end_precision": "year",
+          "source": "https://www.cathedrale-chartres.org/wp-content/uploads/2024/09/Dossier-de-presse-Millenaire.pdf",
+          "locator": "PDF page 10, 1507–1513"
+        }
+      ]
+    }
+  ]
+}
