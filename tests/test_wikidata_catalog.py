@@ -138,6 +138,23 @@ def test_duplicate_selection_and_legacy_drift_fail(package):
         catalog.build_catalog(source, legacy)
 
 
+def test_only_continuum_backlinks_are_excluded_from_legacy_guard(package):
+    source, legacy = package
+    rows = json.loads(legacy.read_bytes())
+    fields = rows[0]["fields"]
+    fields["CONTINUUM — Архитектура"] = ["rec12345678901234"]
+
+    def save():
+        legacy.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    save()
+    assert catalog.build_catalog(source, legacy) == catalog.build_catalog()
+    fields["name_en"] += " changed"
+    save()
+    with pytest.raises(catalog.CatalogError, match="legacy guard"):
+        catalog.build_catalog(source, legacy)
+
+
 @pytest.mark.parametrize("value", [{"name_en": "Tower Bridge"}, {"name_ru": "Тауэрский мост"}, {"wikidata_id": "Q83125"}, {"source_url": "https://en.wikipedia.org/wiki/Tower_Bridge"}, {"name_en": "Ｔｏｗｅｒ　Ｂｒｉｄｇｅ"}])
 def test_explicit_external_id_name_and_sitelink_duplicates_rejected(value):
     entity = json.loads((catalog.SOURCE_DIR / "snapshots/Q83125.json").read_bytes())["entities"]["Q83125"]
