@@ -6,6 +6,8 @@
     en: {technicalDetails:'Research details',preview:'Public research prototype · user value unvalidated',globe:'Globe',map:'2D map',layers:'Layers',leonardo:'Leonardo',roman:'Roman Empire',architecture:'Architecture references',eleven:'11 selected presences',three:'3 reconstructions',atemporal:'Atemporal · historical applicability unknown',visible:'Visible records',choose:'Choose a record',focus:'Focus map on this record',evidence:'Claims, evidence and uncertainty',raw:'Source-native input and provenance',range:'Range',scrub:'Scrub',from:'From',to:'To',cursor:'Current year CE',routes:'Leonardo chronology is not a travel route; exact routes and historical positions remain unknown.',sources:'Sources',none:'outside dated coverage / no matching record',off:'off',unknown:'Unknown',interval:'Interval collection; records may come from different eras, not simultaneous context.',trace:'Leonardo accumulates from',reference:'Atemporal imported reference. Historical applicability, lifetime and historical position are unknown.',reconstruction:'Approximate scholarly reconstruction; not exact historical borders.',presence:'Source-bounded documented presence; exact historical position and routes unknown.',sourceScope:'Source links do not mean historical claims have been verified. Other historical sources may exist; no reliability score is assigned.',legacy:'Raw export flags are metadata, not historical acceptance or geometry precision.',context:'Present-day reference context; not historical terrain.',error:'Could not complete the view change. The controls show the current view; try again.'},
     ru: {technicalDetails:'Данные для проверки',preview:'Публичный исследовательский прототип · пользовательская ценность не подтверждена',globe:'Глобус',map:'Карта 2D',layers:'Слои',leonardo:'Леонардо',roman:'Римская империя',architecture:'Архитектурные объекты',eleven:'11 выбранных присутствий',three:'3 реконструкции',atemporal:'Вне времени · историческая применимость неизвестна',visible:'Видимые записи',choose:'Выберите запись',focus:'Фокусировать карту на записи',evidence:'Утверждения, доказательства и неопределённость',raw:'Исходные данные и происхождение',range:'Интервал',scrub:'Курсор',from:'От',to:'До',cursor:'Текущий год н. э.',routes:'Хронология Леонардо не является маршрутом; точные маршруты и исторические положения неизвестны.',sources:'Источники',none:'вне временного покрытия / нет подходящих записей',off:'выключен',unknown:'Неизвестно',interval:'Коллекция интервала: записи могут относиться к разным эпохам, а не одновременному контексту.',trace:'След Леонардо накапливается с',reference:'Импортированная опорная запись вне времени. Историческая применимость, время существования и историческое положение неизвестны.',reconstruction:'Приблизительная научная реконструкция; не точные исторические границы.',presence:'Документированное присутствие в пределах источников; точное историческое положение и маршруты неизвестны.',sourceScope:'Связь с источником не означает проверенность исторических утверждений. Могут существовать другие источники; рейтинг достоверности не назначается.',legacy:'Флаги исходного экспорта — метаданные, а не историческое принятие или точность геометрии.',error:'Не удалось завершить смену вида. Кнопки показывают текущий вид; попробуйте снова.'}
   };
+  Object.assign(words.en, {amboiseDates: 'Settled in autumn 1516 and died here on 2 May 1519.', amboiseResidence: 'Final residence and work period'});
+  Object.assign(words.ru, {amboiseDates: 'Поселился здесь осенью 1516 года и умер 2 мая 1519 года.', amboiseResidence: 'Последнее место проживания и работы Леонардо'});
   Object.assign(words.en,{catalog:'London architecture catalog',catalogPilot:'Selected pilot · 10 objects · London',catalogReference:'Modern reference point. Historical position and lifetime are unknown.',catalogUnverified:'Imported from Wikidata; independent verification has not been performed.',search:'Search names or QID',clearSearch:'Clear search',searchEmpty:'No matching visible records. Clear search or enable another layer.',searchCount:'Matching visible records',coordinate:'Reported longitude / latitude',precision:'Source numeric precision (degrees)',precisionLimit:'Numeric precision is not measurement accuracy. Site extent and historical applicability are unknown.',revision:'Wikidata source revision',wikipedia:'Wikipedia context',searchHint:'Search filters this chooser only; the map and open record remain unchanged.'});
   Object.assign(words.ru,{catalog:'Каталог архитектуры Лондона',catalogPilot:'Пилотный каталог · 10 объектов · Лондон',catalogReference:'Современная опорная точка. Историческое положение и период существования не установлены.',catalogUnverified:'Импортировано из Wikidata; независимая проверка не выполнена.',search:'Поиск по названию или QID',clearSearch:'Очистить поиск',searchEmpty:'Нет подходящих видимых записей. Очистите поиск или включите другой слой.',searchCount:'Найдено видимых записей',coordinate:'Указанные долгота / широта',precision:'Численная точность в источнике (градусы)',precisionLimit:'Численная точность не означает точность измерения. Размер объекта и историческая применимость неизвестны.',revision:'Версия источника Wikidata',wikipedia:'Контекст в Wikipedia',searchHint:'Поиск фильтрует только список; карта и открытая запись остаются прежними.'});
   Object.assign(words.en,{recordDetails:'Record details',sourceRecord:'Technical source record',openSource:'Open source',sourceManifest:'Source manifest · provenance and license',importedStart:'Imported start date',importedConstructionEnd:'Imported construction end',importedEnd:'Imported end date',recordId:'Original record ID',geometryVersion:'Geometry version',durationUnknown:'Duration beyond this documented date is not established.'});
@@ -439,7 +441,14 @@
         notice.dataset.i18n = 'cesenaCandidateContext';
         facts.append(notice);
       }
-      facts.append(node('p',input.presence.short_description || ''),duration);
+      const description = node('p',input.presence.short_description || '');
+      if (selected.presence_id === runtime.bundle.amboiseContext?.residence_ref) {
+        facts.querySelector('.presence-date').dataset.i18n = 'amboiseDates';
+        facts.querySelector('.presence-date').textContent = t('amboiseDates');
+        description.dataset.i18n = 'amboiseResidence';
+        description.textContent = t('amboiseResidence');
+      }
+      facts.append(description,duration);
       inputJson(byId('selection-evidence'),{claims:input.record.claims || [],evidence_links:input.record.evidence_links || [],uncertainties:input.record.uncertainties || [],route_geometry:null,spatial_precision:input.presence.spatial_precision});
     } else {
       facts.append(node('p',`${selected.interval.start}–${selected.interval.end} CE`));
@@ -503,15 +512,29 @@
     if (href) { context.textContent = `${t('wikipedia')} (${language})`; context.href = href; }
   }
   function renderAmboiseContext(selected, open = false) {
+    const detailsOpen = byId('amboise-event')?.open || false;
     byId('amboise-context')?.remove();
     const packet = contextualEvent(runtime.bundle,selected,runtime.state); if (!packet) return;
     const ru = runtime.state.language === 'ru', section = node('section',''); section.id = 'amboise-context';
-    section.append(node('h3',ru ? 'Контекст Амбуаза · 1518' : 'Amboise context · 1518'));
-    section.append(node('p',ru ? 'Крещение дофина Франциска в Амбуазе. Каталог BnF: 25 апреля 1518 (n. st.).' : 'Baptism of dauphin François at Amboise. BnF catalogue: 25 April 1518 (n. st.).'));
-    section.append(node('p',ru ? 'Календарь не установлен: возможны 25 апреля или 5 мая по григорианскому календарю. Общий год — 1518; точный день и длительность неизвестны. Это не событие длиной в год.' : 'Calendar unresolved: 25 April or 5 May in the Gregorian calendar. Both share 1518; exact day and duration remain unknown. This is not a year-long event.'));
-    section.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении. Подлинники не просмотрены; независимость пересказов не установлена.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism. Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
-    for (const source of packet.sources.slice(0,2)) { const line=node('p',''),link=node('a',source.title); link.href=source.url; link.target='_blank'; link.rel='noopener noreferrer'; line.append(link,node('span',' · '+source.locator));section.append(line); }
-    if (inspectData) { technicalJson(section,packet,'amboise-context-provenance'); section.querySelector('details').open=open; }
+    const {start, end} = selected.interval;
+    const year = packet.normalization.year;
+    const details = node('details','');
+    details.id = 'amboise-event';
+    details.open = detailsOpen;
+    const summary = node('summary','');
+    const bounds = node('span','','amboise-bounds');
+    bounds.append(node('span',start), node('span',ru ? 'Проживание в Кло-Люсе' : 'Residence at Clos Lucé'), node('span',end));
+    const track = node('span','','amboise-track');
+    track.setAttribute('aria-hidden','true');
+    track.style.setProperty('--event-position', ((year - start) / (end - start) * 100) + '%');
+    summary.append(bounds,track,node('strong',year + (ru ? ' · Крещение дофина в Амбуазе' : ' · Baptism of the dauphin at Amboise')));
+    details.append(summary);
+    details.append(node('p',ru ? 'Крещение дофина Франциска в Амбуазе. Каталог BnF: 25 апреля 1518 (n. st.).' : 'Baptism of dauphin François at Amboise. BnF catalogue: 25 April 1518 (n. st.).'));
+    details.append(node('p',ru ? 'Календарь не установлен: возможны 25 апреля или 5 мая по григорианскому календарю. Общий год — 1518; точный день и длительность неизвестны. Это не событие длиной в год.' : 'Calendar unresolved: 25 April or 5 May in the Gregorian calendar. Both share 1518; exact day and duration remain unknown. This is not a year-long event.'));
+    details.append(node('p',ru ? 'Проживание Леонардо в Кло-Люсе не доказывает присутствие или участие в крещении. Подлинники не просмотрены; независимость пересказов не установлена.' : 'Leonardo’s residence at Clos Lucé does not establish attendance or involvement in the baptism. Original documents have not been inspected; independence of the mediated accounts is unestablished.'));
+    for (const source of packet.sources.slice(0,2)) { const line=node('p',''),link=node('a',source.title); link.href=source.url; link.target='_blank'; link.rel='noopener noreferrer'; line.append(link,node('span',' · '+source.locator));details.append(line); }
+    section.append(details,node('p',ru ? 'Точный день неизвестен. Участие Леонардо не подтверждено.' : 'Exact day unknown. Leonardo’s attendance is unconfirmed.'));
+    if (inspectData) { technicalJson(section,packet,'amboise-context-provenance'); section.querySelector('#amboise-context-provenance').open=open; }
     byId('selection-facts').append(section);
   }
   function renderInspectorLanguage(selected) {
