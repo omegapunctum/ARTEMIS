@@ -228,3 +228,31 @@ html,body{margin:0;width:100%;height:100%;font-family:Inter,ui-sans-serif,system
 .amboise-bounds { display: inline-flex; justify-content: space-between; align-items: baseline; gap: .4rem; width: calc(100% - 1.6rem); font-size: .85em; }
 .amboise-track { display: block; position: relative; height: .3rem; margin: .65rem .2rem; border-block: 1px solid currentColor; }
 .amboise-track::after { content: ''; position: absolute; left: var(--event-position); top: 50%; width: .65rem; height: .65rem; background: currentColor; transform: translate(-50%, -50%) rotate(45deg); }
+
+@media(max-width:640px),(max-width:960px) and (max-height:500px) {
+  #selection-summary,#inspector {
+    left:0; right:0; top:auto; bottom:0; width:100%; transform:none;
+    border:1px solid #365465; border-bottom:0; border-radius:14px 14px 0 0;
+    background:#0b1b26; z-index:13;
+    padding:8px max(12px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+  }
+  #selection-summary .phone-selection { display:flex; align-items:flex-start; padding:0; max-height:40dvh; }
+  .phone-selection #open-details {
+    position:relative; flex:1; min-width:0; margin:0; padding:4px 22px 4px 4px;
+    border:0; background:transparent; color:inherit; text-align:start;
+  }
+  .phone-selection #open-details::after {
+    content:''; position:absolute; right:6px; top:19px; width:7px; height:7px;
+    border:solid #aec4d0; border-width:1.5px 1.5px 0 0; transform:rotate(-45deg);
+  }
+  .phone-selection strong { font-size:16px; }
+  .phone-date { display:inline-block; margin-inline-start:8px; color:#abc2d0; font-size:12px; }
+  .phone-activity { display:block; margin-top:3px; font-size:13px; line-height:1.4; }
+  .phone-selection #close-summary { min-width:44px; }
+  #inspector { max-height:min(70dvh,calc(100dvh - var(--header-bottom,64px) - 8px)); overflow-y:auto; }
+  #inspector .drawer-header { position:sticky; top:-8px; background:#0b1b26; z-index:1; }
+  #app:has(#selection-summary:not([hidden]),#inspector:not([hidden])) #time-dock { visibility:hidden; }
+  #app:has(#inspector:not([hidden])) :is(#mobile-tools,#attribution-toggle,#attribution) { visibility:hidden; }
+  #amboise-context { margin-block:14px; }
+  #amboise-context .amboise-track { color:#9bd4dc; height:4px; border:0; background:#537b85; border-radius:3px; margin-block:12px; }
+}

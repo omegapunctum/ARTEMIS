@@ -141,7 +141,7 @@
       byId('app').dataset.attributionOpen = 'false'; byId('attribution-toggle').setAttribute('aria-expanded','false');
     });
     function selectionChanged(id) { if (id && id !== selected && mobile()) headerPanel(null); selected = id; }
-    return {render,selectionChanged};
+    return {render,selectionChanged,isCompact:mobile};
   }
   const api = Object.freeze({MIN,MAX,MOBILE_QUERY,temporal,stepDraft,commitDraft,mount});
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

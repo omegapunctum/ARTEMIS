@@ -9,6 +9,7 @@ async function main() {
       await page.goto('http://127.0.0.1:8182/globe/?lang=ru');
       await page.getByText('Карта недоступна. Записи доступны через поиск.').waitFor();
       await page.goto('http://127.0.0.1:8182/globe/?lang=ru&item=catalog:wikidata:Q83125&start=1894&end=1894');
+      if (viewport.width < 640) await page.locator('#open-details').click();
       await page.locator('#selection-title').waitFor();
       assert(await page.locator('#view-map').isDisabled());
       assert(await page.locator('#focus-selection').isHidden());
@@ -21,6 +22,7 @@ async function main() {
       const search = page.locator('#record-search');
       await search.fill('Q83125');
       await page.locator('#record-select').selectOption('catalog:wikidata:Q83125');
+      if (viewport.width < 640) await page.locator('#open-details').click();
       await page.locator('#selection-title').waitFor();
       assert(await page.locator('#fatal-error').isHidden());
       await page.close();
