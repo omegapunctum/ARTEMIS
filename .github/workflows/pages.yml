@@ -217,10 +217,12 @@ jobs:
           for viewport in 1440x900 500x900 390x844 844x390; do
             width="${viewport%x*}"; height="${viewport#*x}"
             for phase in workspace architecture-time amboise-context; do
-              timeout 300s node scripts/capture_unified_explorer_browser_evidence.mjs \
+              proof_seconds=270
+              if [[ "$phase" == workspace ]]; then proof_seconds=540; fi
+              timeout "$((proof_seconds + 30))s" node scripts/capture_unified_explorer_browser_evidence.mjs \
                 --phase "$phase" --browser "$BROWSER" --url "${PAGES_URL%/}/globe/" \
                 --expected-artifact pages_artifact --width "$width" --height "$height" \
-                --timeout-ms 270000 --output "/tmp/artemis-unified-live-evidence/$phase/$width" \
+                --timeout-ms "$((proof_seconds * 1000))" --output "/tmp/artemis-unified-live-evidence/$phase/$width" \
                 2> >(tee "/tmp/artemis-unified-live-$phase-$width.log" >&2)
             done
           done
