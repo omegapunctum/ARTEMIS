@@ -89,6 +89,9 @@
       const button = byId(`mobile-${key}`);
       button.addEventListener('click',() => { headerReturn = button; headerPanel(header.dataset.headerPanel === key ? null : key); });
     }
+    for (const id of ['language-en','language-ru','view-globe','view-map']) {
+      byId(id)?.addEventListener('click',() => { if (mobile()) headerPanel(null,true); });
+    }
     byId('header-close').addEventListener('click',() => headerPanel(null,true));
     byId('attribution-toggle').addEventListener('click',() => { const app = byId('app'); const value = app.dataset.attributionOpen !== 'true'; app.dataset.attributionOpen = String(value); byId('attribution-toggle').setAttribute('aria-expanded',String(value)); layout(); });
     byId('dock-toggle').addEventListener('click',event => { if (event.detail && suppressDockClick) { suppressDockClick = false; return; } setExpanded(!expanded); });

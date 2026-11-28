@@ -237,7 +237,7 @@ html,body{margin:0;width:100%;height:100%;font-family:Inter,ui-sans-serif,system
     padding:8px max(12px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
   }
   #selection-summary .phone-selection { display:flex; align-items:flex-start; padding:0; max-height:40dvh; }
-  .phone-selection #open-details {
+  #selection-summary .phone-selection #open-details {
     position:relative; flex:1; min-width:0; margin:0; padding:4px 22px 4px 4px;
     border:0; background:transparent; color:inherit; text-align:start;
   }
@@ -253,6 +253,11 @@ html,body{margin:0;width:100%;height:100%;font-family:Inter,ui-sans-serif,system
   #inspector .drawer-header { position:sticky; top:-8px; background:#0b1b26; z-index:1; }
   #app:has(#selection-summary:not([hidden]),#inspector:not([hidden])) #time-dock { visibility:hidden; }
   #app:has(#inspector:not([hidden])) :is(#mobile-tools,#attribution-toggle,#attribution) { visibility:hidden; }
+  /* View opens the shared map controls while preserving the selected episode. */
+  #app:has(#workspace-header:not([data-header-panel=""])[data-header-panel]) :is(#mobile-tools,#time-dock) { visibility:visible; }
+
   #amboise-context { margin-block:14px; }
   #amboise-context .amboise-track { color:#9bd4dc; height:4px; border:0; background:#537b85; border-radius:3px; margin-block:12px; }
 }
+
+#app { overflow:clip; }

@@ -377,6 +377,7 @@
     const time = episode?.temporal || selected.interval;
     const date = caption?.[1] || (time && (time.source_native || (time.start === time.end ? time.start : time.start + '–' + time.end)));
     if (date) open.append(node('span',date,'phone-date'));
+    else if (architectureTimeRecord(runtime.bundle,selected)) open.append(node('span',temporalSourceSummary(selected),'phone-activity'));
     let description = caption?.[2] || episode?.short_description;
     if (!caption && episode?.event_ref === 'event-leonardo-cesena-survey') description = 'Leonardo’s presence is documented. His surveying activity remains unconfirmed.';
     if (description) open.append(node('span',description,'phone-activity'));

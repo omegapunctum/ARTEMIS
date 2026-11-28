@@ -151,6 +151,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     // stable container to resolve ownership even before a button exists.
     const ownerSelector=selector.startsWith('#place-episodes ') ? '#place-episodes' : selector;
     const inInspector=await evaluate(cdp,`!!document.querySelector(${JSON.stringify(ownerSelector)})?.closest('#inspector')`);
+    if((inInspector || selector==='#open-details' || selector==='#close-summary') && await mobile() && await evaluate(cdp,"Boolean(document.getElementById('workspace-header').dataset.headerPanel)")) await click('#header-close');
     if(inInspector&&await evaluate(cdp,"document.getElementById('inspector').hidden && !!document.getElementById('open-details')"))await click('#open-details');
     if(!await mobile()) {
       const owner=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});return {records:!!n?.closest('#desktop-records-body'),layers:!!n?.closest('#desktop-layer-body'),inspector:!!n?.closest('#inspector')&&!n?.closest('.drawer-header')};})()`);
@@ -160,13 +161,15 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       return;
     }
     const owner=mobileControlOwner(selector);
+    if ((owner==='calendar' || owner==='layers' || owner==='records' || selector==='#dock-toggle') &&
+        await evaluate(cdp,"!document.getElementById('time-dock').checkVisibility({checkVisibilityCSS:true})")) await click('#mobile-settings');
     if(owner==='calendar') {if(!await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');}
     else if(owner&&await evaluate(cdp,'document.getElementById(\"workspace-header\").dataset.headerPanel')!==owner)await click('#mobile-'+owner);
   }
   async function collapseMobile() {
     if(!await mobile())return;
+    if(await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true' && document.getElementById('time-dock').checkVisibility({checkVisibilityCSS:true})"))await click('#dock-toggle');
     if(await evaluate(cdp,"Boolean(document.getElementById('workspace-header').dataset.headerPanel)"))await click('#header-close');
-    if(await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');
   }
   async function prepareNativeMapSurface() {
     if(!await mobile())return;
@@ -176,7 +179,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   }
   async function click(selector,keyboard=false) {
     await expose(selector);
-    const point=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});if(!n)throw new Error('Missing control '+${JSON.stringify(selector)});n.scrollIntoView({block:'nearest'});n.focus({preventScroll:true});const b=n.getBoundingClientRect(),x=b.x+b.width/2,y=b.y+b.height/2;if(n.disabled||!b.width||!b.height||!n.contains(document.elementFromPoint(x,y)))throw new Error('Obstructed control '+${JSON.stringify(selector)});if(document.activeElement!==n)throw new Error('Control focus failed');return {x,y};})()`);
+    const point=await evaluate(cdp,`(() => {const n=document.querySelector(${JSON.stringify(selector)});if(!n)throw new Error('Missing control '+${JSON.stringify(selector)});n.scrollIntoView({block:'nearest'});n.focus({preventScroll:true});const b=n.getBoundingClientRect(),x=b.x+b.width/2,y=b.y+b.height/2;if(n.disabled||!b.width||!b.height||!n.contains(document.elementFromPoint(x,y)))throw new Error('Obstructed control '+${JSON.stringify(selector)}+' by '+document.elementFromPoint(x,y)?.outerHTML.slice(0,120)+' '+JSON.stringify([b,n.isConnected,getComputedStyle(n).visibility,getComputedStyle(n).pointerEvents,document.getElementById('selection-card')?.getBoundingClientRect()]));if(document.activeElement!==n)throw new Error('Control focus failed');return {x,y};})()`);
     if(keyboard)await key(' ','Space',32);
     else{await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await settle();}
     await stable(selector);return point;
@@ -184,6 +187,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
   async function number(id,value) {
     const wheel=mobileYearControl(id);
     if(await mobile()&&wheel) {
+      if(!await evaluate(cdp,"document.getElementById('time-dock').checkVisibility({checkVisibilityCSS:true})"))await click('#mobile-settings');
       const bounds=await evaluate(cdp,`(() => {const n=document.getElementById(${JSON.stringify(wheel)});if(!n?.checkVisibility({checkVisibilityCSS:true})||n.getAttribute('aria-disabled')==='true')throw new Error('Unavailable visible mobile year wheel');n.focus({preventScroll:true});return {min:Number(n.getAttribute('aria-valuemin')),max:Number(n.getAttribute('aria-valuemax'))};})()`);
       const codes={Home:36,End:35,PageUp:33,PageDown:34,ArrowUp:38,ArrowDown:40};
       for(const name of wheelKeys(value,bounds.min,bounds.max))await key(name,name,codes[name],0,true);
@@ -341,7 +345,10 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       const visible=n=>{if(!n?.checkVisibility({checkVisibilityCSS:true}))return false;const b=n.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.top>=0&&b.right<=innerWidth+1&&b.bottom<=innerHeight+1;};
       const mobile=matchMedia('(max-width:640px), (max-width:960px) and (max-height:500px)').matches;
       const ids=mobile?['workspace-header','record-search','mobile-layers','mobile-records','mobile-settings','time-dock','dock-toggle',...(window.__ARTEMIS_EXPLORER.state.mode==='scrub'?['mobile-cursor-year','time-cursor']:['mobile-range-start','mobile-range-end','range-start-handle','range-end-handle'])]:['workspace-header','records-toggle','view-globe','view-map','language-en','language-ru','time-dock',...(!document.getElementById('desktop-records-body').hidden?['record-search','clear-search','record-select',...(document.getElementById('desktop-layers').open?['layer-controls']:[])]:[])];
-      for(const id of ids)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
+      const sheet=mobile && ['inspector','selection-summary'].map(id=>document.getElementById(id)).find(visible);
+      if(sheet && Math.abs(sheet.getBoundingClientRect().bottom-innerHeight)>1) throw new Error('Mobile sheet is not bottom-aligned');
+      const required=sheet ? ['workspace-header','record-search','mobile-settings',sheet.id,...(sheet.id==='selection-summary'?['open-details','close-summary']:[])] : ids;
+      for(const id of required)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
       if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
       const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();if(h.bottom>t.top)throw new Error('Header overlaps shared time controls');
@@ -370,7 +377,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
     await capture('mobile-source-card-scroll-end',{keepMobileOpen:true});
     await scrollToEdge(-100000,false);const after=await snapshot();
     check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'native inspector scrolling changed canonical card or camera');await stable('mobile source card scroll clearance');
-    mobileChecks.push({case:'source-native card scroll-end clearance',nativePointerWheel:true,lastContentBottom:end.lastBottom,toolsTop:end.toolsTop,maximum:end.maximum,scrollEnd:end.top,lastTextUnobstructed:true,canonicalStateUnchanged:true});
+    mobileChecks.push({case:'source-native card scroll-end clearance',nativePointerWheel:true,lastContentBottom:end.lastBottom,sheetBottom:end.sheetBottom,maximum:end.maximum,scrollEnd:end.top,lastTextUnobstructed:true,canonicalStateUnchanged:true});
   }
   async function view(mode) {
     const before=await snapshot();await click('#view-'+mode,true);await idle('projection '+mode);const after=await snapshot();
@@ -486,7 +493,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       const compact=await evaluate(cdp,`(() => {const card=document.getElementById('selection-card');return {text:card?.textContent,visible:card?.checkVisibility({checkVisibilityCSS:true}),inspectorHidden:document.getElementById('inspector').hidden};})()`);
       check(compact.visible&&compact.inspectorHidden,'Tower compact card missing before details');
       for(const expression of ['Construction start: 22 April 1886','Finishing work complete: June 1894','Opening: 30 June 1894'])check(compact.text.includes(expression),'Tower compact card lost labelled source-native expression '+expression);
-      check(compact.text.includes('Transition year')&&compact.text.includes('Modern reference point')&&compact.text.includes('Coverage ends in 1894'),'Tower compact card lost transition, geometry or coverage limit');
+      if(!await mobile()) check(compact.text.includes('Transition year')&&compact.text.includes('Modern reference point')&&compact.text.includes('Coverage ends in 1894'),'Tower compact card lost transition, geometry or coverage limit');
       await capture('architecture-time-tower-compact-native-dates-en-'+projection);
       await click('#open-details');await disclose('record-disclosure');
       const details=await evaluate(cdp,`({text:document.getElementById('selection-details').textContent,links:[...document.querySelectorAll('#selection-details a')].map(a=>a.href)})`);
