@@ -73,10 +73,15 @@ def _copy_fixture(tmp_path: Path) -> Path:
         json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    data_source = ROOT / "data" / "features.json"
-    if data_source.is_file():
-        (root / "data").mkdir(parents=True)
-        shutil.copy2(data_source, root / "data" / "features.json")
+    projection = json.loads(
+        (root / PACKAGE / "compatibility/architecture_atlas_projection.json").read_text(encoding="utf-8")
+    )
+    source = projection["source_dataset"]
+    target = root / source["path"]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(subprocess.check_output(
+        ["git", "show", f"{source['commit']}:{source['path']}"], cwd=ROOT
+    ))
     return root
 
 
