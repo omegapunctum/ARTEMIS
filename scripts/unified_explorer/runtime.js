@@ -346,7 +346,52 @@
     technicalJson(host,{record,claims:packet.claims.filter(row => row.subject_id === selected.item_id),inferences:packet.inferences.filter(row => row.subject_id === selected.item_id),conflicts:packet.conflicts.filter(row => row.subject_id === selected.item_id)},'temporal-record');
   }
   function selectionScope(selected) { if (architectureTimeRecord(runtime.bundle,selected)) return t('modernAnchor'); return t(selected.kind === 'catalog_reference' ? 'catalogReference' : selected.kind === 'reference' ? 'reference' : selected.kind === 'region' ? 'reconstruction' : 'presence'); }
+  // These short captions describe the dated episode, including what is uncertain.
+  function renderPhoneSummary(selected) {
+    const signature = JSON.stringify(['phone', selected.item_id, runtime.state.language, selected.kind]);
+    if (summarySignature === signature) return;
+    const focusId = document.activeElement?.closest('.selection-card') ? document.activeElement.id : null;
+    clearSummary(); summarySignature = signature;
+    const input = sourceRecord(selected), ru = runtime.state.language === 'ru';
+    const episode = selected.kind === 'presence' ? input.presence : null;
+    const captions = {
+      'presence-leonardo-vinci-birth-1452':['Винчи','15 апреля 1452','Здесь родился Леонардо.'],
+      'presence-leonardo-florence-st-luke-1472':['Флоренция','1472','Леонардо записан в братство художников Святого Луки.'],
+      'presence-leonardo-milan-altarpiece-contract-1483':['Милан','25 апреля 1483','Этим днём датирован договор на алтарный образ для Сан-Франческо-Гранде.'],
+      'presence-rimini-1502-08-08':['Римини','8 августа 1502','Леонардо датировал запись о своём наблюдении в Римини.'],
+      'presence-cesena-1502-08-10':['Чезена','10 августа 1502','Есть свидетельство пребывания Леонардо. Его участие в съёмке местности требует подтверждения.'],
+      'presence-cesenatico-1502-09-06':['Чезенатико','6 сентября 1502','Леонардо сделал запись о порте.'],
+      'presence-imola-autumn-1502':['Имола','Осень 1502','С этим местом связана работа Леонардо над картой Имолы.'],
+      'presence-leonardo-florence-second-period-1503':['Флоренция','1503','Леонардо вновь работал во Флоренции.'],
+      'presence-leonardo-milan-ms-f-1508-09-12':['Милан','12 сентября 1508','Леонардо начал рукопись F.'],
+      'presence-leonardo-rome-belvedere-1513-1516':['Рим','1513–1516','Леонардо жил в Риме. Его работа в Бельведере относится примерно к 1514 году.'],
+      'presence-leonardo-amboise-clos-luce-1516-1519':['Кло-Люсе, Амбуаз','Осень 1516 — 2 мая 1519','Здесь Леонардо жил и работал в последние годы жизни.']
+    };
+    const caption = ru && episode && captions[episode.presence_id];
+    const card = node('article','','selection-card phone-selection');
+    card.id = 'selection-card';
+    const open = node('button','','phone-selection-open');
+    open.id = 'open-details'; open.type = 'button'; open.setAttribute('aria-controls','inspector');
+    const title = node('strong',caption?.[0] || selectionTitle(selected,input)); title.id = 'summary-title';
+    open.append(title);
+    const time = episode?.temporal || selected.interval;
+    const date = caption?.[1] || (time && (time.source_native || (time.start === time.end ? time.start : time.start + '–' + time.end)));
+    if (date) open.append(node('span',date,'phone-date'));
+    else if (architectureTimeRecord(runtime.bundle,selected)) open.append(node('span',temporalSourceSummary(selected),'phone-activity'));
+    let description = caption?.[2] || episode?.short_description;
+    if (!caption && episode?.event_ref === 'event-leonardo-cesena-survey') description = 'Leonardo’s presence is documented. His surveying activity remains unconfirmed.';
+    if (description) open.append(node('span',description,'phone-activity'));
+    open.title = ru ? 'Открыть подробности' : 'Open details';
+    open.addEventListener('click',() => { selectionUI.open(); renderInspector(); byId('selection-title').focus({preventScroll:true}); });
+    const close = node('button','×'); close.id = 'close-summary'; close.type = 'button';
+    close.setAttribute('aria-label',ru ? 'Снять выбор' : 'Clear selection');
+    close.addEventListener('click',() => { selectItem(null); focusSelectionOrigin(); });
+    card.append(open,close);
+    byId('selection-summary').append(card); byId('selection-summary').hidden = false;
+    if (focusId) byId(focusId)?.focus({preventScroll:true});
+  }
   function renderSummary(selected) {
+    if (selected && mobile?.isCompact?.() && (runtime.ready || runtime.readerOnly)) return renderPhoneSummary(selected);
     if (!runtime.ready || !selected) { clearSummary(); return; }
     const point = summaryAnchor(runtime.bundle,selected) || (clickAnchor?.itemId === selected.item_id ? clickAnchor.coordinates : null);
     const projected = point ? runtime.map.project(point) : null, canvas = runtime.map.getCanvas();
@@ -413,7 +458,7 @@
     desktop?.selectionChanged(selected?.item_id || null);
     const presentation = selectionUI.sync(selected?.item_id || null);
     if (!selected) { clearSummary(); inspector.hidden = true; renderedSelection = null; renderEpisodeChoices(null); return; }
-    if (!presentation.details && !runtime.readerOnly) { inspector.hidden = true; renderSummary(selected); return; }
+    if (!presentation.details && (!runtime.readerOnly || mobile?.isCompact?.())) { inspector.hidden = true; renderSummary(selected); return; }
     clearSummary(); inspector.hidden = false;
     // Layer/time/projection changes that retain this item preserve native disclosures.
     if (renderedSelection === selected.item_id) { renderInspectorLanguage(selected); renderEpisodeChoices(selected); return; }
@@ -540,6 +585,7 @@
   function renderInspectorLanguage(selected) {
     const input = sourceRecord(selected); text('selection-title',selectionTitle(selected,input));
     text('selection-scope',selectionScope(selected));
+    byId('back-to-summary').hidden = runtime.readerOnly && !mobile?.isCompact?.();
     text('back-to-summary',runtime.state.language === 'ru' ? 'К карточке' : 'Back to card');
     text('sources-summary',inspectData ? `${t('sources')} · ${sourcesFor(input).length}` : t('sources'));
     const contextDisclosureOpen = byId('amboise-context-provenance')?.open || false;
@@ -711,6 +757,7 @@
     window.addEventListener('popstate',() => applyState(parseUrl(runtime.bundle,location.href,document.documentElement.dataset.entryProfile),{history:false}));
     const observer = new ResizeObserver(layout); for (const id of ['workspace-header','time-dock','attribution']) observer.observe(byId(id));
     window.addEventListener('resize',layout);
+    window.matchMedia(window.ARTEMIS_MOBILE.MOBILE_QUERY).addEventListener?.('change',() => renderInspector());
   }
   async function load(path) {
     const embedded = byId(`embedded-${path.slice(2)}`);
