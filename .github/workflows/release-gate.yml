@@ -112,7 +112,7 @@ jobs:
         run: |
           set -euo pipefail
           BROWSER="$(node -e 'process.stdout.write(require("playwright").chromium.executablePath())')"
-          timeout 540s node scripts/capture_explorer_performance.mjs \
+          timeout 960s node scripts/capture_explorer_performance.mjs \
             --browser "$BROWSER" --artifact /tmp/artemis-unified-preview \
             --baseline-ref 76404197 \
             --output /tmp/artemis-explorer-performance

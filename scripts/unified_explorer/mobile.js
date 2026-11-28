@@ -89,6 +89,9 @@
       const button = byId(`mobile-${key}`);
       button.addEventListener('click',() => { headerReturn = button; headerPanel(header.dataset.headerPanel === key ? null : key); });
     }
+    for (const id of ['language-en','language-ru','view-globe','view-map']) {
+      byId(id)?.addEventListener('click',() => { if (mobile()) headerPanel(null,true); });
+    }
     byId('header-close').addEventListener('click',() => headerPanel(null,true));
     byId('attribution-toggle').addEventListener('click',() => { const app = byId('app'); const value = app.dataset.attributionOpen !== 'true'; app.dataset.attributionOpen = String(value); byId('attribution-toggle').setAttribute('aria-expanded',String(value)); layout(); });
     byId('dock-toggle').addEventListener('click',event => { if (event.detail && suppressDockClick) { suppressDockClick = false; return; } setExpanded(!expanded); });
@@ -141,7 +144,7 @@
       byId('app').dataset.attributionOpen = 'false'; byId('attribution-toggle').setAttribute('aria-expanded','false');
     });
     function selectionChanged(id) { if (id && id !== selected && mobile()) headerPanel(null); selected = id; }
-    return {render,selectionChanged};
+    return {render,selectionChanged,isCompact:mobile};
   }
   const api = Object.freeze({MIN,MAX,MOBILE_QUERY,temporal,stepDraft,commitDraft,mount});
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
