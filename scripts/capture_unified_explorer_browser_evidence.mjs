@@ -351,7 +351,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       for(const id of required)if(!visible(document.getElementById(id)))throw new Error('Control outside viewport '+id);
       if(mobile&&!${keepMobileOpen})for(const id of ['layer-controls','view-globe','view-map','language-en','language-ru','record-select','time-start','time-end','cursor-year'])if(visible(document.getElementById(id)))throw new Error('Collapsed mobile surface exposed desktop control '+id);
       if(document.documentElement.scrollWidth>innerWidth+1)throw new Error('Horizontal overflow');
-      const h=document.getElementById('workspace-header').getBoundingClientRect(),t=document.getElementById('time-dock').getBoundingClientRect();if(h.bottom>t.top)throw new Error('Header overlaps shared time controls');
+      const h=document.getElementById('workspace-header').getBoundingClientRect(),t=(sheet || document.getElementById('time-dock')).getBoundingClientRect();if(h.bottom>t.top)throw new Error('Header overlaps shared time controls');
       const r=window.__ARTEMIS_EXPLORER,s=r.state;
       if(document.getElementById('view-'+s.presentationView).getAttribute('aria-pressed')!=='true'||document.getElementById('language-'+s.language).getAttribute('aria-pressed')!=='true')throw new Error('Projection/language aria state differs');
       if(r.map.getProjection().type!==(s.presentationView==='map'?'mercator':'globe'))throw new Error('Native projection mismatch');
