@@ -161,7 +161,7 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       return;
     }
     const owner=mobileControlOwner(selector);
-    if ((owner==='calendar' || owner==='layers' || owner==='records' || selector==='#dock-toggle') &&
+    if ((owner==='calendar' || selector==='#dock-toggle') &&
         await evaluate(cdp,"!document.getElementById('time-dock').checkVisibility({checkVisibilityCSS:true})")) await click('#mobile-settings');
     if(owner==='calendar') {if(!await evaluate(cdp,"document.getElementById('time-dock').dataset.expanded==='true'"))await click('#dock-toggle');}
     else if(owner&&await evaluate(cdp,'document.getElementById(\"workspace-header\").dataset.headerPanel')!==owner)await click('#mobile-'+owner);
@@ -369,11 +369,11 @@ async function runScenario(cdp,options,url,deadline,expectedBundle) {
       await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});await settle();
       await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaY:delta,deltaX:0});
       const scrollDeadline=Math.min(deadline,Date.now()+2000);let metrics=null;
-      do {metrics=await evaluate(cdp,`(() => {const n=document.getElementById('inspector'),last=document.getElementById('selection-input').lastElementChild;return {top:n.scrollTop,maximum:n.scrollHeight-n.clientHeight,lastBottom:last?.getBoundingClientRect().bottom,sheetBottom:n.getBoundingClientRect().bottom,toolsVisible:document.getElementById('mobile-tools').checkVisibility({checkVisibilityCSS:true})};})()`);if(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1)break;await delay(25);}while(Date.now()<scrollDeadline);
+      do {metrics=await evaluate(cdp,`(() => {const n=document.getElementById('inspector'),last=document.getElementById('selection-input').lastElementChild;return {top:n.scrollTop,maximum:n.scrollHeight-n.clientHeight,lastBottom:last?.getBoundingClientRect().bottom,sheetBottom:n.getBoundingClientRect().bottom,toolsBottom:document.getElementById('mobile-tools').getBoundingClientRect().bottom,sheetTop:n.getBoundingClientRect().top};})()`);if(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1)break;await delay(25);}while(Date.now()<scrollDeadline);
       check(bottom?metrics.top>=metrics.maximum-1:metrics.top<=1,'native inspector wheel did not reach scroll edge '+JSON.stringify({bottom,point,metrics}));return metrics;
     }
     const end=await scrollToEdge(100000,true);
-    check(Number.isFinite(end.lastBottom)&&end.lastBottom<=end.sheetBottom && !end.toolsVisible,'mobile tools obscure final source-native text '+JSON.stringify(end));
+    check(Number.isFinite(end.lastBottom)&&end.lastBottom<=end.sheetBottom && end.toolsBottom<=end.sheetTop,'mobile tools obscure final source-native text '+JSON.stringify(end));
     await capture('mobile-source-card-scroll-end',{keepMobileOpen:true});
     await scrollToEdge(-100000,false);const after=await snapshot();
     check(sameState(before.state,after.state)&&sameState(before.camera,after.camera)&&before.card===after.card,'native inspector scrolling changed canonical card or camera');await stable('mobile source card scroll clearance');
